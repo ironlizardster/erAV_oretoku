@@ -296,8 +296,10 @@ IF LOCAL <= 1 && BASE:MASTER:メダル > 0
 	PRINTFORML 現在の達成度は\@ LOCAL ? 成功  # 失敗 \@です
 	PRINTFORML メダルを一枚使ってだいせいこうにしますか？（現在{BASE:MASTER:メダル}/{MAXBASE:MASTER:メダル}枚持っています）
 	CALL GET_はいいいえ()
-	SIF RESULT
+	IF RESULT
 		LOCAL = 2
+		BASE:MASTER:メダル--
+	ENDIF
 ENDIF
 
 IF LOCAL == 1
