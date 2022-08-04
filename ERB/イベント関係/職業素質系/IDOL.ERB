@@ -1,0 +1,62 @@
+﻿;===========================================================
+;アイドル絡みのイベント
+;===========================================================
+@IDOL_EVENT
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:アイドル == 1
+		CALL START_IDOLEVENT
+	ENDIF
+REND
+;===========================================================
+;イベント開始
+;===========================================================
+@START_IDOLEVENT
+TEMP_NUM = RAND:8
+
+;3/8で歌唱練習
+IF TEMP_NUM <= 2
+	CALL EVENT_IDOLCONCERT
+	DRAWLINE
+;1/8でグラビア撮影
+ELSEIF TEMP_NUM <= 4
+	CALL EVENT_IDOLGRAVURE
+	DRAWLINE
+ENDIF
+
+;===========================================================
+;グラビア撮影
+;===========================================================
+@EVENT_IDOLGRAVURE
+PRINTFORML 休日を利用して、%NAME:COUNT%のグラビア撮影が行われた……
+;グラビア撮影口上
+TARGET = COUNT
+TFLAG:口上番号 = 7
+CALL SELF_KOJO
+PRINTL
+;実際にお外で水着になることも当然あるので…
+IF RAND:2 == 0
+	EXP:COUNT:野外露出経験 += 1
+	PRINTL 野外露出経験＋1
+ENDIF
+PRINTL 被写経験＋5
+EXP:COUNT:被写経験 += 5
+;どうせたまにしか発生しないイベントだし…あーいいっすね～(適当)
+EXP:COUNT:美容トレーニング経験 += 1
+;===========================================================
+;歌唱練習(いきなりコンサートも変だと思ったので)
+;===========================================================
+@EVENT_IDOLCONCERT
+PRINTFORML 休日を利用して、%NAME:COUNT%の歌唱トレーニングが行われた……
+;歌唱練習口上
+TARGET = COUNT
+TFLAG:口上番号 = 8
+CALL SELF_KOJO
+PRINTL
+PRINTL 舞踊経験＋5
+PRINTL 歌唱経験＋5
+EXP:COUNT:歌唱経験 += 5
+EXP:COUNT:舞踊経験 += 5
+;どうせたまにしか発生しないイベントだし…あーいいっすね～(適当)
+EXP:COUNT:運動トレーニング経験 += 1

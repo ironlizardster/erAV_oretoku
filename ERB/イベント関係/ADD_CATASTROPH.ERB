@@ -1,0 +1,26 @@
+﻿;===========================================================
+;崩壊の取得
+;===========================================================
+@ADD_CATASTROPH(ARG)
+
+FOR LOCAL, 0, 800
+	SIF LOCAL == [[TALENT:処女]] || LOCAL == [[TALENT:童貞]] ||  LOCAL == [[TALENT:アナル処女]] ||  LOCAL == [[TALENT:ふたなり]] || LOCAL == [[TALENT:オトコ]] || LOCAL == [[TALENT:母乳体質]] || LOCAL == [[TALENT:妊娠]] || LOCAL == [[TALENT:育児中]] || LOCAL == [[TALENT:褐色肌]] || LOCAL == [[TALENT:喫煙者]]
+		CONTINUE
+	TALENT:ARG:LOCAL = 0
+NEXT
+	TALENT:ARG:崩壊 = 1
+	TALENT:ARG:Ｃ鈍感 = 1
+	TALENT:ARG:Ｖ鈍感 = 1
+	TALENT:ARG:Ａ鈍感 = 1
+	TALENT:ARG:Ｂ鈍感 = 1
+	MAXBASE:ARG:魅力値 = 10
+	SIF BASE:ARG:魅力値 >= MAXBASE:ARG:魅力値
+		BASE:ARG:魅力値 = MAXBASE:ARG:魅力値
+	MAXBASE:ARG:体力 -= 1500
+	SIF MAXBASE:ARG:体力 < 800
+		MAXBASE:ARG:体力 = 800 
+	BASE:ARG:体力 = MAXBASE:ARG:体力
+	MAXBASE:ARG:気力 -= 1000
+	SIF MAXBASE:ARG:気力 < 400
+		MAXBASE:ARG:気力 = 400
+	BASE:ARG:気力 = MAXBASE:ARG:気力

@@ -1,0 +1,441 @@
+﻿;売春中毒のLvUP処理とその可否判定
+;eraIm@s_ver.0.17βdのスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;売春中毒のLvUP
+;-------------------------------------------------
+@ABLUP37
+DRAWLINE
+;PRINTL 奴隷の売春への執着心を高めます
+;PRINTL 売春中毒が高くなると、売春によるセックスや奉仕行為への満足感が深まり、
+;PRINTL 自分の体を売り続けていないと心が落ち着かなくなります
+;DRAWLINE
+;売春中毒はLv10が上限
+;[淫乱][貞操無頓着][娼婦]が付いている場合はLv10まで解放
+IF ABL:売春中毒 >= 5 && (TALENT:淫乱 == 0 && TALENT:貞操無頓着 == 0 && TALENT:風俗嬢 == 0)
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:売春中毒 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な恭順の珠
+A = 0
+;必要な欲情の珠
+B = 0
+;必要な屈服の珠
+C = 0
+;必要な売春経験
+D = 0
+;必要な異常経験回数
+F = 0
+
+;条件別にＯＫかダメかを記録する
+I = 0
+
+CALL CAN_ABLUP37
+
+;ＬＶ２から３、ＬＶ３から４、４から５に上げるときは異常経験必要
+;(素質：[解放][快感に素直][即落ち][淫乱][倒錯的][中毒しやすい][娼婦][傾城]があると緩和、
+;[反抗的][自制心][抑圧][抵抗][快感の否定][恋心][親愛][相愛][求愛]があると増加、[狂気][服従][隷属][使い魔]なら無視できる)
+SIF F > 0
+	PRINTFORML %EXPNAME:[[EXP:異常経験]]%{F}以上(現在{EXP:異常経験})かつ
+
+;欲望が必要
+PRINTFORML %ABLNAME:[[ABL:欲望]]%{ABL:売春中毒 + 1}LV以上(現在{ABL:欲望}LV)かつ
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:恭順]]%の珠×{JUEL:恭順}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+	SIF I & 4
+		PRINT 能力不足 
+ENDIF
+PRINTL 
+PRINTFORML 　　　%PALAMNAME:[[PALAM:欲情]]%の珠×{JUEL:欲情}/{B}
+PRINTFORML 　　　%PALAMNAME:[[PALAM:屈服]]%の珠×{JUEL:屈服}/{C}
+PRINTFORML 　　　%EXPNAME:[[EXP:売春経験]]%　{EXP:売春経験}/{D}
+PRINTL [100] - やめる
+
+INPUT
+IF RESULT != 0 && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:売春中毒 += 1
+IF RESULT == 0
+	JUEL:恭順 -= A
+	JUEL:欲情 -= B
+	JUEL:屈服 -= C
+ENDIF
+
+PRINTFORML %ABLNAME:[[ABL:売春中毒]]%のレベルが{ABL:売春中毒}になりました
+
+RETURN 0
+
+;-------------------------------------------------
+;売春中毒のLvUP可否判定
+;-------------------------------------------------
+@CAN_ABLUP37
+;SIF ABL:売春中毒 + ABL:射精中毒 >= 10
+;	RETURN 0
+SIF ABL:売春中毒 >= 5 && (TALENT:淫乱 == 0 && TALENT:貞操無頓着 == 0 && TALENT:風俗嬢 == 0)
+	RETURN 0
+
+;判定変数を空に
+I = 0
+
+A = 0
+B = 0
+C = 0
+D = 0
+F = 0
+
+IF ABL:売春中毒 == 0
+	A = 2000
+	B = 3000
+	C = 1000
+	D = 50
+ELSEIF ABL:売春中毒 == 1
+	A = 5000
+	B = 8000
+	C = 2500
+	D = 100
+ELSEIF ABL:売春中毒 == 2
+	A = 8000
+	B = 15000
+	C = 5500
+	D = 150
+ELSEIF ABL:売春中毒 == 3
+	A = 14000
+	B = 30000
+	C = 10000
+	D = 250
+ELSEIF ABL:売春中毒 == 4
+	A = 22000
+	B = 50000
+	C = 20000
+	D = 400
+ELSEIF ABL:売春中毒 == 5
+	A = 34000
+	B = 80000
+	C = 30000
+	D = 500
+ELSEIF ABL:売春中毒 == 6
+	A = 55000
+	B = 120000
+	C = 50000
+	D = 800
+ELSEIF ABL:売春中毒 == 7
+	A = 80000
+	B = 180000
+	C = 60000
+	D = 1200
+ELSEIF ABL:売春中毒 == 8
+	A = 150000
+	B = 300000
+	C = 90000
+	D = 2000
+ELSEIF ABL:売春中毒 == 9
+	A = 300000
+	B = 600000
+	C = 150000
+	D = 3000
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	IF ABL:売春中毒 == 3
+		TIMES A , 1.50
+		TIMES B , 1.50
+		TIMES C , 1.50
+		TIMES D , 1.50
+	ELSEIF ABL:売春中毒 == 4
+		TIMES A , 2.00
+		TIMES B , 2.00
+		TIMES C , 2.00
+		TIMES D , 2.00
+	ELSEIF ABL:売春中毒 == 5
+		TIMES A , 2.50
+		TIMES B , 2.50
+		TIMES C , 2.50
+		TIMES D , 2.50
+	ELSEIF ABL:売春中毒 >= 6
+		TIMES A , 3.00
+		TIMES B , 3.00
+		TIMES C , 3.00
+		TIMES D , 3.00
+	ENDIF
+ENDIF
+
+;反抗的
+IF TALENT:ナマイキ
+	TIMES A , 1.50
+	TIMES B , 1.50
+	TIMES C , 1.50
+	TIMES D , 1.50
+ENDIF
+;気丈
+IF TALENT:気丈
+	TIMES A , 1.20
+	TIMES B , 1.20
+	TIMES C , 1.20
+	TIMES D , 1.20
+ENDIF
+;自制心
+IF TALENT:自制心
+	TIMES A , 1.50
+	TIMES B , 1.50
+	TIMES C , 1.50
+	TIMES D , 1.50
+ENDIF
+;保守的
+IF TALENT:保守的
+	TIMES A , 1.50
+	TIMES B , 1.50
+	TIMES C , 1.50
+	TIMES D , 1.50
+ENDIF
+
+;悲観的
+IF TALENT:ネガティブ
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+	TIMES D , 0.90
+ENDIF
+;目立ちたがり
+IF TALENT:目立ちたがり
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+	TIMES D , 0.90
+ENDIF
+
+;貞操観念
+IF TALENT:貞操観念
+	TIMES A , 2.00
+	TIMES B , 2.00
+	TIMES C , 2.00
+	TIMES D , 2.00
+;貞操無頓着
+ELSEIF TALENT:貞操無頓着
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+	TIMES D , 0.90
+ENDIF
+
+;抑圧
+IF TALENT:抑圧
+	TIMES A , 1.20
+	TIMES B , 1.20
+	TIMES C , 1.20
+	TIMES D , 1.20
+;解放
+ELSEIF TALENT:解放
+	TIMES A , 0.80
+	TIMES B , 0.80
+	TIMES C , 0.80
+	TIMES D , 0.80
+ENDIF
+
+;抵抗
+IF TALENT:抵抗
+	TIMES A , 2.00
+	TIMES B , 2.00
+	TIMES C , 2.00
+	TIMES D , 2.00
+ENDIF
+
+;恥じらい
+IF TALENT:恥じらい
+	TIMES A , 1.10
+	TIMES B , 1.10
+	TIMES C , 1.10
+	TIMES D , 1.10
+;恥薄い
+ELSEIF TALENT:恥薄い
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+	TIMES D , 0.90
+ENDIF
+;献身的
+IF TALENT:献身的
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+	TIMES D , 0.90
+ENDIF
+;中毒しやすい
+IF TALENT:中毒しやすい
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+	TIMES D , 0.50
+ENDIF
+;淫乱
+IF TALENT:淫乱
+	TIMES A , 0.80
+	TIMES B , 0.50
+	TIMES C , 0.80
+	TIMES D , 0.80
+ENDIF
+;男嫌い
+IF TALENT:男性不信
+	TIMES A , 3.00
+	TIMES B , 3.00
+	TIMES C , 3.00
+	TIMES D , 3.00
+ENDIF
+;愛
+IF TALENT:恋心
+	TIMES A , 1.50
+	TIMES B , 1.50
+	TIMES C , 1.50
+	TIMES D , 1.50
+ENDIF
+;妊娠
+IF TALENT:妊娠
+	TIMES A , 2.00
+	TIMES B , 2.00
+	TIMES C , 2.00
+	TIMES D , 2.00
+ENDIF
+;狂気
+IF TALENT:狂気
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+	TIMES D , 0.50
+ENDIF
+;崩壊
+IF TALENT:崩壊
+	TIMES A , 0.80
+	TIMES B , 0.80
+	TIMES C , 0.80
+	TIMES D , 0.80
+ENDIF
+;娼婦
+IF TALENT:風俗嬢
+	TIMES A , 0.80
+	TIMES B , 0.80
+	TIMES C , 0.80
+	TIMES D , 0.80
+ENDIF
+;傾城
+IF TALENT:高級娼婦
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+	TIMES D , 0.50
+ENDIF
+;常連客
+IF TALENT:常連客
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+	TIMES D , 0.90
+ENDIF
+;求愛
+IF TALENT:彼氏あり
+	TIMES A , 2.00
+	TIMES B , 2.00
+	TIMES C , 2.00
+	TIMES D , 2.00
+ENDIF
+
+
+;ＬＶ２から３、ＬＶ３から４、４から５に上げるときは異常経験必要
+;(素質：[解放][快感に素直][即落ち][淫乱][倒錯的][中毒しやすい][娼婦][傾城]があると緩和、
+;[反抗的][自制心][抑圧][抵抗][快感の否定][愛][求愛]があると増加、[狂気][崩壊]なら無視できる)
+IF ABL:売春中毒 >= 2 && (TALENT:狂気 == 0 && TALENT:崩壊 == 0)
+	F = ABL:売春中毒 - 1
+	SIF TALENT:解放
+		F -= 1
+	SIF TALENT:快感に素直
+		F -= 1
+	SIF TALENT:中毒しやすい
+		F -= 2
+	SIF TALENT:即落ち
+		F -= 1
+	SIF TALENT:淫乱
+		F -= 1
+	SIF TALENT:倒錯的
+		F -= 1
+	SIF TALENT:風俗嬢
+		F -= 1
+	SIF TALENT:高級娼婦
+		F -= 2
+	SIF TALENT:ナマイキ
+		F += 1
+	SIF TALENT:自制心
+		F += 1
+	SIF TALENT:抑圧
+		F += 1
+	SIF TALENT:抵抗
+		F += 1
+	SIF TALENT:快感の否定
+		F += 1
+	SIF TALENT:恋心
+		F += 1
+	SIF TALENT:彼氏あり
+		F += 2
+	
+	SIF F < 0
+		F = 0
+	IF EXP:異常経験 < F
+		;異常経験が不足
+		I |= 2
+		J |= 2
+	ENDIF
+ENDIF
+
+;最低でも1回・1個は必要
+SIF A < 1
+	A = 1
+SIF B < 1
+	B = 1
+SIF C < 1
+	C = 1
+SIF D < 1
+	D = 1
+
+;欲望が必要
+IF ABL:欲望 < ABL:売春中毒 + 1
+	I |= 4
+	J |= 4
+ENDIF
+
+;恭順の珠は足りている？
+SIF JUEL:恭順 < A
+	I |= 1
+;欲情の珠は足りている？
+SIF JUEL:欲情 < B
+	I |= 1
+;屈服の珠は足りている？
+SIF JUEL:屈服 < C
+	I |= 1
+;売春経験が必要
+SIF EXP:売春経験 < D
+	I |= 2
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+;
+;
+;

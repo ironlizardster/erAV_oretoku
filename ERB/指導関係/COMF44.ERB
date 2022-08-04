@@ -1,0 +1,208 @@
+﻿;-------------------------------------------------
+;縄
+;SM系コマンド
+;-------------------------------------------------
+@COM44
+
+IF TEQUIP:触手召喚
+	PRINTL 触手緊縛
+	SAVESTR:0 = 触手緊縛
+ELSE
+	PRINTL 縄
+	SAVESTR:0 = 縄
+ENDIF
+CALL TRAIN_MESSAGE_B
+
+;緊縛経験が高いと消費減少
+IF EXP:緊縛経験 < EXPLV:3 / 2
+	LOSEBASE:体力 += 100
+	LOSEBASE:気力 += 150
+ELSEIF EXP:緊縛経験 < EXPLV:4 / 2
+	LOSEBASE:体力 += 80
+	LOSEBASE:気力 += 120
+ELSE
+	LOSEBASE:体力 += 60
+	LOSEBASE:気力 += 90
+ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:6 = 800
+SOURCE:10 = 800
+SOURCE:13 = 500
+SOURCE:14 = 500
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES SOURCE:10 , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES SOURCE:10 , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES SOURCE:10 , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES SOURCE:10 , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES SOURCE:10 , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES SOURCE:10 , 0.40
+ELSEIF ABL:信頼 == 1
+	TIMES SOURCE:10 , 0.60
+ELSEIF ABL:信頼 == 2
+	TIMES SOURCE:10 , 0.80
+ELSEIF ABL:信頼 == 3
+	TIMES SOURCE:10 , 1.00
+ELSEIF ABL:信頼 == 4
+	TIMES SOURCE:10 , 1.10
+ELSE
+	TIMES SOURCE:10 , 1.20
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 0
+	TIMES SOURCE:10 , 0.80
+ELSEIF ABL:マゾっ気 == 1
+	TIMES SOURCE:10 , 1.00
+ELSEIF ABL:マゾっ気 == 2
+	TIMES SOURCE:10 , 1.30
+ELSEIF ABL:マゾっ気 == 3
+	TIMES SOURCE:10 , 1.60
+ELSEIF ABL:マゾっ気 == 4
+	TIMES SOURCE:10 , 2.00
+ELSE
+	TIMES SOURCE:10 , 3.00
+ENDIF
+
+;倒錯的
+SIF TALENT:倒錯的
+	TIMES SOURCE:10 , 2.00
+
+						;****スライムパッチ追加ここから****
+IF ITEM:生きている縄 >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:10 , 1.20
+	TIMES SOURCE:13 , 1.20
+	TIMES SOURCE:14 , 0.80
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+EXP:緊縛経験 += 5
+PRINTL 緊縛経験＋５
+
+;縄の着脱
+TEQUIP:縄 = 1 - TEQUIP:縄
+SIF TEQUIP:触手召喚
+	T = 0
+
+;愛情経験
+E = 1
+IF CFLAG:好感度 >= 1000 && (ABL:マゾっ気 >= 3 || TALENT:マゾ) && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;縄で緊縛中
+;-------------------------------------------------
+@EQUIP_COM44
+IF TEQUIP:触手召喚
+	PRINTL ＜触手緊縛中＞
+ELSE
+	PRINTL ＜緊縛中＞
+ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+;緊縛経験が高いと消費減少
+IF EXP:緊縛経験 < EXPLV:3 / 2
+	LOSEBASE:体力 += 50
+	LOSEBASE:気力 += 100
+ELSEIF EXP:緊縛経験 < EXPLV:4 / 2
+	LOSEBASE:体力 += 40
+	LOSEBASE:気力 += 80
+ELSE
+	LOSEBASE:体力 += 30
+	LOSEBASE:気力 += 60
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 0
+	A = 60
+ELSEIF ABL:マゾっ気 == 1
+	A = 180
+ELSEIF ABL:マゾっ気 == 2
+	A = 300
+ELSEIF ABL:マゾっ気 == 3
+	A = 480
+ELSEIF ABL:マゾっ気 == 4
+	A = 700
+ELSE
+	A = 850
+ENDIF
+
+;倒錯的
+SIF TALENT:倒錯的
+	TIMES A , 2.00
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.20
+ENDIF
+
+SOURCE:6 += A
+SOURCE:12 += A
+SOURCE:13 += A
+SOURCE:14 += A
+
+						;****スライムパッチ追加ここから****
+IF ITEM:生きている縄 >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:13 , 1.20
+	TIMES SOURCE:14 , 0.80
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:マゾっ気 >= 2
+	TFLAG:主人経験 += 1
+
+SIF TEQUIP:触手召喚
+	T += 1
+
+EXP:緊縛経験 += 2
+PRINTL 緊縛経験＋２
+;

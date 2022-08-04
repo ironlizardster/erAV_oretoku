@@ -1,0 +1,153 @@
+﻿;Ｃ感覚のLvUP処理とその可否判定
+;eratohoA ver1,204のスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;Ｃ感覚のLvUP
+;-------------------------------------------------
+@ABLUP0
+;最大Lvは5、[自慰狂い]が付いている場合はLv10まで解放
+DRAWLINE
+;IF TALENT:オトコ
+;	PRINT ペニス
+;ELSEIF TALENT:ふたなり
+;	PRINT ペニスとクリトリス
+;ELSE
+;	PRINT クリトリス
+;ENDIF
+;PRINTL の感度をUPします
+;PRINTL Ｃ感覚が高まると、フェラチオやクンニ、自慰行為からより大きな快楽が得られます
+;DRAWLINE
+IF ABL:Ｃ感覚 >= 5 && TALENT:自慰狂い == 0
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:Ｃ感覚 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な快Ｃの珠
+A = 0
+
+;条件別にＯＫかダメかを記録する
+;快Ｃの珠による可否（I=0:可、I&1:珠不足、I&2:経験不足）
+I = 0
+
+CALL CAN_ABLUP0
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:快Ｃ]]%の珠×{JUEL:快Ｃ}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+ENDIF
+PRINTL 
+
+PRINTL [100] - やめる
+
+
+INPUT
+IF (RESULT < 0 || RESULT > 0) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:Ｃ感覚 += 1
+
+IF RESULT == 0
+	JUEL:快Ｃ -= A
+ENDIF
+
+PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%のレベルが{ABL:Ｃ感覚}になりました
+
+RETURN 0
+
+;-------------------------------------------------
+;C感覚LvUP判定
+;-------------------------------------------------
+@CAN_ABLUP0
+;C感覚はLv5が上限、[自慰狂い]が付いている場合はLv10まで解放
+SIF ABL:Ｃ感覚 >= 5 && TALENT:自慰狂い == 0
+	RETURN 0
+SIF ABL:Ｃ感覚 >= 10
+	RETURN 0
+
+;判定変数を空に
+A = 0
+I = 0
+
+IF ABL:Ｃ感覚 == 0
+	A = 1
+ELSEIF ABL:Ｃ感覚 == 1
+	A = 20
+ELSEIF ABL:Ｃ感覚 == 2
+	A = 400
+ELSEIF ABL:Ｃ感覚 == 3
+	A = 8000
+ELSEIF ABL:Ｃ感覚 == 4
+	A = 20000
+ELSEIF ABL:Ｃ感覚 == 5
+	A = 40000
+ELSEIF ABL:Ｃ感覚 == 6
+	A = 60000
+ELSEIF ABL:Ｃ感覚 == 7
+	A = 90000
+ELSEIF ABL:Ｃ感覚 == 8
+	A = 120000
+ELSEIF ABL:Ｃ感覚 == 9
+	A = 180000
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	SIF ABL:Ｃ感覚 == 4
+		TIMES A , 2.00
+	SIF ABL:Ｃ感覚 == 5
+		TIMES A , 2.50
+	SIF ABL:Ｃ感覚 >= 6
+		TIMES A , 3.00
+ENDIF
+;淫魔
+IF TALENT:淫魔
+	TIMES A , 0.01
+ENDIF
+;Ｃ鈍感
+SIF TALENT:Ｃ鈍感
+	TIMES A , 1.20
+
+;Ｃ敏感
+SIF TALENT:Ｃ敏感
+	TIMES A , 0.80
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 0.80
+;色情狂
+SIF TALENT:絶倫
+	TIMES A , 0.20
+;自慰狂い
+SIF TALENT:自慰狂い
+	TIMES A , 0.80
+
+;最低でも1個は必要
+SIF A < 1
+	A = 1
+
+;快Ｃの珠で上げる
+SIF JUEL:快Ｃ < A
+	I |= 1
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;
+;
+;

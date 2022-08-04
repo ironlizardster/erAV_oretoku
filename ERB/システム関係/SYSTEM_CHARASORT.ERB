@@ -1,0 +1,488 @@
+﻿;=================================================
+;キャラの並べ替え
+;=================================================
+;eraIm@s_ver.0.17βより流用して改造
+;;記憶消去薬追加パッチを参考に作成。
+;=================================================
+@CHARA_SORT
+;ローカル変数初期化
+K = 0
+$INPUT_LOOP_0
+
+PRINTL 女優リストの順番を並べ変えます
+PRINTL [0] - キャラ番号順
+PRINTL [1] - 評価額順
+PRINTL [2] - 調教回数順
+PRINTL [3] - 性交経験順
+PRINTL [4] - 愛情経験順
+PRINTL [5] - 売春経験順
+PRINTL [6] - レズ経験順
+PRINTL [7] - 年齢順
+PRINTL [30] - 手動で入れ替える
+PRINTL [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	DRAWLINE
+	PRINTL ソートする順序を選択してください
+	DRAWLINE
+
+	PRINTL [0]昇順（小さいものから大きなものへ）
+	PRINTL [1]降順（大きなものから小さなものへ）
+	PRINTL [2]戻る
+
+	INPUT
+	
+	IF RESULT == 2
+		GOTO INPUT_LOOP_0
+	ELSEIF RESULT == 0 || RESULT == 1
+		;前回の調教対象・助手フラグ
+		LOCAL = -1
+		LOCAL:1 = -1
+		SIF FLAG:前回調教対象 > 0
+			LOCAL = NO:(FLAG:前回調教対象)
+		SIF FLAG:前回助手 > 0
+			LOCAL:1 = NO:(FLAG:前回助手)
+		
+		PRINT キャラリストをキャラ番号の
+		IF RESULT == 0
+			PRINTW 昇順で並べ替えました。
+			SORTCHARA NO:0
+		ELSEIF RESULT == 1
+			PRINTW 降順で並べ替えました。
+			SORTCHARA NO:0,BACK
+		ENDIF
+		
+		SIF LOCAL > 0
+			FLAG:前回調教対象 = GETCHARA(LOCAL)
+		SIF LOCAL:1 > 0
+			FLAG:前回助手 = GETCHARA(LOCAL:1)
+		RETURN 0
+	ENDIF
+ELSEIF RESULT == 1
+	CALL CHARA_SORT_ESTIMATE
+ELSEIF RESULT == 2
+	CALL CHARA_SORT_TRAINCOUNT
+ELSEIF RESULT == 3
+	K = 5
+	CALL CHARA_SORT_EXP
+ELSEIF RESULT == 4
+	K = 23
+	CALL CHARA_SORT_EXP
+ELSEIF RESULT == 5
+	K = 74
+	CALL CHARA_SORT_EXP
+ELSEIF RESULT == 6
+	K = 40
+	CALL CHARA_SORT_EXP
+ELSEIF RESULT == 7
+	CALL CHARA_SORT_OLD
+ELSEIF RESULT == 30
+	CALL CHARA_SORT_MANUAL
+ENDIF
+
+K = 0
+
+SIF RESULT == 999
+	RETURN 0
+
+GOTO INPUT_LOOP_0
+
+;-------------------------------------------------
+;評価額順ソート
+;-------------------------------------------------
+@CHARA_SORT_ESTIMATE
+PRINTL …ソート中…
+
+;ローカル変数初期化
+F = 0
+B = 0
+C = 0
+D = 0
+;@CHARA_SORT_2でのREPEAT用退避変数
+G = 0
+
+REPEAT CHARANUM - 1
+	F = CHARANUM - COUNT
+	CALL CHARA_SORT_ESTIMATE2
+	CALL CHARA_SORT_2
+	COUNT = CHARANUM - F
+REND
+
+DRAWLINE
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	ELSEIF BASE:COUNT:体力 < 1
+		CONTINUE
+	ELSE
+		PRINTFORM [{COUNT}] %NAME:COUNT% 
+		TARGET = COUNT
+		S = 0
+		CALL ESTIMATE_CHARA
+		IF S > 0
+			PRINTFORM [評価額:{S}ポイント]
+		ELSE
+			PRINTFORM [売却不可]
+		ENDIF
+		PRINTL  
+	ENDIF
+REND
+DRAWLINE
+
+PRINTFORML ＜評価額順に女優リストを並べ替えました＞
+WAIT
+
+RETURN 999
+
+@CHARA_SORT_ESTIMATE2
+B = 1
+C = 0
+REPEAT F
+	SIF COUNT == 0
+		CONTINUE
+	TARGET = COUNT
+	S = 0
+	CALL ESTIMATE_CHARA
+	IF S > C
+		B = COUNT
+		C = S
+	ENDIF
+REND
+
+;-------------------------------------------------
+;調教回数順ソート
+;-------------------------------------------------
+@CHARA_SORT_TRAINCOUNT
+PRINTL …ソート中…
+
+;ローカル変数初期化
+F = 0
+B = 0
+C = 0
+D = 0
+;@CHARA_SORT_2でのREPEAT用退避変数
+G = 0
+
+REPEAT CHARANUM - 1
+	F = CHARANUM - COUNT
+	CALL CHARA_SORT_TRAINCOUNT2
+	CALL CHARA_SORT_2
+	COUNT = CHARANUM - F
+REND
+
+
+DRAWLINE
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	ELSEIF BASE:COUNT:体力 < 1
+		CONTINUE
+	ELSE
+		PRINTFORM [{COUNT}] %NAME:COUNT% 
+		PRINTFORM [調教回数:{CFLAG:COUNT:調教経験回数}回]
+		PRINTL  
+	ENDIF
+REND
+DRAWLINE
+
+PRINTFORML ＜調教回数順に女優リストを並べ替えました＞
+WAIT
+
+RETURN 999
+
+@CHARA_SORT_TRAINCOUNT2
+B = 1
+C = 0
+REPEAT F
+	SIF COUNT == 0
+		CONTINUE
+	IF CFLAG:COUNT:調教経験回数 > C
+		B = COUNT
+		C = CFLAG:COUNT:調教経験回数
+	ENDIF
+REND
+
+;-------------------------------------------------
+;経験順ソート
+;-------------------------------------------------
+@CHARA_SORT_EXP
+PRINTL …ソート中…
+;ローカル変数初期化
+F = 0
+B = 0
+C = 0
+D = 0
+;@CHARA_SORT_2でのREPEAT用退避変数
+G = 0
+;チェックする経験
+;K = 呼び出し元で代入
+
+REPEAT CHARANUM - 1
+	F = CHARANUM - COUNT
+	CALL CHARA_SORT_EXP2
+	CALL CHARA_SORT_2
+	COUNT = CHARANUM - F
+REND
+
+
+DRAWLINE
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	ELSEIF BASE:COUNT:体力 < 1
+		CONTINUE
+	ELSE
+		PRINTFORM [{COUNT}] %NAME:COUNT% 
+		PRINTFORM [%EXPNAME:K%:{EXP:COUNT:K}回]
+		PRINTL  
+	ENDIF
+REND
+DRAWLINE
+
+PRINTFORML ＜%EXPNAME:K%の順に女優リストを並べ替えました＞
+WAIT
+
+RETURN 999
+
+@CHARA_SORT_EXP2
+B = 1
+C = 0
+REPEAT F
+	SIF COUNT == 0
+		CONTINUE
+	IF EXP:COUNT:K > C
+		B = COUNT
+		C = EXP:COUNT:K
+	ENDIF
+REND
+
+;-------------------------------------------------
+;年齢順ソート
+;-------------------------------------------------
+@CHARA_SORT_OLD
+PRINTL …ソート中…
+;ローカル変数初期化
+F = 0
+B = 0
+C = 0
+D = 0
+;@CHARA_SORT_2でのREPEAT用退避変数
+G = 0
+;チェックする経験
+;K = 呼び出し元で代入
+
+REPEAT CHARANUM - 1
+	F = CHARANUM - COUNT
+	CALL CHARA_SORT_OLD2
+	CALL CHARA_SORT_2
+	COUNT = CHARANUM - F
+REND
+
+
+DRAWLINE
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	ELSEIF BASE:COUNT:体力 < 1
+		CONTINUE
+	ELSE
+		PRINTFORM [{COUNT}] %NAME:COUNT% 
+		PRINT [
+			;およその見た目が存在するならそちらで表示、でなければ実年齢で表示
+			IF BASE:COUNT:概算年齢 > 0
+				IF BASE:COUNT:外見年齢 == 0
+					PRINT ？歳
+				ELSE
+					PRINTFORM {BASE:COUNT:外見年齢}
+					IF BASE:COUNT:概算年齢 == 1
+						PRINT 代
+					ELSEIF BASE:COUNT:概算年齢 == 2
+						PRINT 代前半
+					ELSEIF BASE:COUNT:概算年齢 == 3
+						PRINT 代半ば
+					ELSEIF BASE:COUNT:概算年齢 == 4
+						PRINT 代後半
+					ELSEIF BASE:COUNT:概算年齢 == 5
+						PRINT 歳前後
+					ENDIF
+				ENDIF
+			ELSE
+				PRINTFORM {BASE:COUNT:実年齢}歳
+			ENDIF
+		PRINT ]
+		PRINTL  
+	ENDIF
+REND
+DRAWLINE
+
+PRINTFORML ＜年齢順に女優リストを並べ替えました＞
+WAIT
+
+RETURN 999
+
+@CHARA_SORT_OLD2
+B = 1
+C = 0
+D = 0
+REPEAT F
+	SIF COUNT == 0
+		CONTINUE
+	;キャラの年齢判定用変数Dを設定（～代など微妙な年齢判定用に3倍値を使う）
+	D = BASE:COUNT:外見年齢 * 3
+	IF BASE:COUNT:概算年齢 == 1
+		D += 28
+	ELSEIF BASE:COUNT:概算年齢 == 2
+		D += 16
+	ELSEIF BASE:COUNT:概算年齢 == 3
+		D += 17
+	ELSEIF BASE:COUNT:概算年齢 == 4
+		D += 29
+	ELSEIF BASE:COUNT:概算年齢 == 5
+		D += 1
+	ENDIF
+	;外見年齢が存在しないなら実年齢の3倍値をDに代入
+	SIF BASE:COUNT:概算年齢 == 0
+		D = BASE:COUNT:実年齢 * 3
+	IF D > C
+		B = COUNT
+		C = D
+	ENDIF
+REND
+
+;-------------------------------------------------
+;手動ソート
+;-------------------------------------------------
+@CHARA_SORT_MANUAL
+;ローカル変数初期化
+A = 0
+B = 0
+;@CHARA_SORT_2でのREPEAT用退避変数
+G = 0
+
+IF CHARANUM < 1
+	PRINTW 奴隷がいません
+	RETURN 0
+ENDIF
+PRINTL 奴隷リストの順番を手動で並べ変えます
+$INPUT_LOOP_0
+PRINTL 誰を一番上に移動させますか？
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN COMMAND_GO_BACK
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	PRINTL 無効な値です
+	GOTO INPUT_LOOP_0
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	PRINTL 無効な値です
+	GOTO INPUT_LOOP_0
+ENDIF
+
+PRINTL …ソート中…
+
+A = RESULT
+
+;Aよりもリスト上位にいるキャラを上から順番に下へ送る
+IF A > 1
+	C = A - 1
+	REPEAT C
+		B = 1
+		CALL CHARA_SORT_2
+	REND
+ENDIF
+;;※この段階でAは既にリスト先頭に来ている事に注意
+;Aよりもリスト下位にいるキャラを上から順番に下へ送る
+IF A < CHARANUM - 1
+	C = CHARANUM - A - 1
+	REPEAT C
+		B = 2
+		CALL CHARA_SORT_2
+	REND
+ENDIF
+
+A = 1
+PRINTFORML ＜%NAME:A%を一番上に移動しました＞
+GOTO INPUT_LOOP_0
+
+;-------------------------------------------------
+;登録番号Bのキャラをリストの一番下に移動
+;-------------------------------------------------
+@CHARA_SORT_2
+;現在のCOUNTを退避
+G = COUNT
+
+ADDCHARA NO:B
+C = CHARANUM-1
+;気力・体力コピー
+REPEAT 100
+	MAXBASE:C:COUNT = MAXBASE:B:COUNT
+	BASE:C:COUNT = BASE:B:COUNT
+REND
+;助手経験コピー
+ISASSI:C = ISASSI:B
+;素質コピー
+REPEAT 999
+	TALENT:C:COUNT = TALENT:B:COUNT
+REND
+;能力コピー
+REPEAT 99
+	ABL:C:COUNT = ABL:B:COUNT
+REND
+;経験コピー
+REPEAT 999
+	EXP:C:COUNT = EXP:B:COUNT
+REND
+;珠コピー
+REPEAT 101
+	JUEL:C:COUNT = JUEL:B:COUNT
+REND
+;刻印コピー
+REPEAT 6
+	MARK:C:COUNT = MARK:B:COUNT
+REND
+;CFLAGコピー
+REPEAT 999
+	CFLAG:C:COUNT = CFLAG:B:COUNT
+REND
+;相性コピー
+REPEAT 999
+	RELATION:C:COUNT = RELATION:B:COUNT
+REND
+;相性コピー
+REPEAT 100
+	CSTR:C:COUNT = %CSTR:B:COUNT%
+REND
+	NAME:C = %NAME:B%
+	CALLNAME:C = %CALLNAME:B%
+	NICKNAME:C = %NICKNAME:B%
+
+;念のため調教対象と助手を空に
+TARGET = -1
+ASSI = -1
+
+;前回の調教対象・助手フラグを書き換え
+IF FLAG:前回調教対象 == B
+	FLAG:前回調教対象 = C-1
+ELSEIF B < FLAG:前回調教対象
+	FLAG:前回調教対象 -= 1
+ENDIF
+IF FLAG:前回助手 == B
+	FLAG:前回助手 = C-1
+ELSEIF B < FLAG:前回助手
+	FLAG:前回助手 -= 1
+ENDIF
+
+DELCHARA B
+
+;退避していたCOUNTを復帰
+COUNT = G
+
+RETURN 0

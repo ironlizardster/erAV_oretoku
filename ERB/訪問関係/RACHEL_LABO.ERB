@@ -1,0 +1,82 @@
+﻿;=================================================
+;レイチェルラボ
+;=================================================
+@RACHEL_LABO
+
+$INPUT_LOOP
+
+DRAWLINE
+PRINTL レイチェルの工房
+PRINTL 《レイチェルが精製した秘薬などを入手できます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [0] - 体力強化の秘薬（材料費：300000ポイント）
+PRINTL  [1] - 気力強化の秘薬（材料費：500000ポイント）
+PRINTL  [2] - 惚れ薬（材料費：1500000ポイント）
+PRINTL  [3] - 超強力媚薬（材料費：1500000ポイント）
+PRINTL  [4] - 若返りの秘薬（材料費：1000000ポイント）
+IF FLAG:淫魔召還回数 <= 3
+	PRINTL  [5] - 淫魔の召喚（材料費：2000000ポイント）
+ENDIF
+IF FLAG:リーナ雇用 == 0
+	PRINTL  [6] - パラディススの密偵を紹介してもらう（紹介料：500000ポイント）
+ENDIF
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:リーナ・レスピーチオ]]
+		IF CFLAG:COUNT:売却助手可能 == 2 && !FLAG:リーナスタッフ動向調査
+			PRINTL  [7] - リーナにスタッフの動向を調査してもらう
+		ENDIF
+	ENDIF
+REND
+;触手扱うなら秘密知識ぐらい持っててほしい
+;そのうえで価格は適当
+IF TALENT:MASTER:秘密知識 == 1 && ITEM:触手生物 == 0
+	PRINTL  [10] - 触手生物の召喚（材料費：75000ポイント）
+ENDIF
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	CALL BASEHP_UP
+ELSEIF RESULT == 1
+	CALL BASESP_UP
+ELSEIF RESULT == 2
+	CALL ADD_LOVE
+ELSEIF RESULT == 3
+	CALL ADD_LEWD
+ELSEIF RESULT == 4
+	CALL ANTIAGING
+ELSEIF RESULT == 5
+	CALL ADD_SUCCUBUS
+ELSEIF RESULT == 6
+	IF FLAG:リーナ雇用 == 0
+		CALL ADD_REENA
+	ENDIF
+ELSEIF RESULT == 7
+	IF FLAG:リーナ雇用 == 1 && FLAG:リーナスタッフ動向調査 == 0
+		CALL REENA_SEARCH
+	ENDIF
+ELSEIF RESULT == 10 && TALENT:MASTER:秘密知識 == 1 && ITEM:触手生物 == 0
+	CALL ADD_TENTACLE
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+GOTO INPUT_LOOP
+

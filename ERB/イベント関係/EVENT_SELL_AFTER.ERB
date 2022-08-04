@@ -1,0 +1,228 @@
+﻿;===========================================================
+;売却ではなく引退なのでsellafterとは名ばかりな
+;===========================================================
+@EVENT_SELL_AFTER
+
+PRINTL
+SETCOLOR 0xDDBBCC
+CHKFONT "あくびん"
+IF RESULT
+	SETFONT "あくびん"
+ENDIF
+
+
+;恋心あり淫乱なし永遠の愛なし、寝取られ度激高でかなで以外のとき駆け落ちエンド
+;セリフ
+IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント >= CFLAG:寝取られ完了値 - 10
+	PRINTFORML 「%CSTR:一人称%のことを構ってくれない%CALLNAME:MASTER%なんて、もう知らない……」
+	PRINTFORML 「%CSTR:一人称%は%CSTR:一人称%で、幸せになるんだから……！」
+	PRINTFORML 「うん、愛してるよダーリンｖ　ダーリンの赤ちゃん産んであげるからねｖ」
+	PRINTFORML 「あぁん、もう気が早いよぉ♪　こんなところでエッチなことしちゃだめぇｖ」
+	
+;恋心あり淫乱なし永遠の愛なし、寝取られ度高めでかなで以外のとき浮気エンド
+;セリフ
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント >= CFLAG:寝取られ完了値 / 2
+	PRINTFORML 「お願い、もっと激しくパンパンしてぇｖ」
+	PRINTFORML 「カントクが悪いんだよ、%CSTR:一人称%のことほっとくからぁ！」
+	PRINTFORML 「ねぇ～、もっと%CSTR:一人称%の膣内にドピュドピュしてぇｖ」
+	PRINTFORML 「あんな粗チンじゃもう満足できない、逞しいザーメンいっぱいほしいのぉｖ」
+	PRINTFORML 「ああん、浮気セックスでナカダシ最高ぉぉぉぉぉぉぉっｖ」
+	
+;淫魔エンド　恋心あり淫乱あり永遠の愛ありで淫魔であり、かなで、エリス、リリス以外　NTR？いいえ、真の愛です
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && TALENT:永遠の愛 == 1 && TALENT:淫魔 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && NO:TARGET != [[キャラ:エリス]] && NO:TARGET != [[キャラ:リリス]]
+	PRINTFORML 「マスター、マスター♪　今日もいろんな人にエッチしてもらってきたよ♪」
+	PRINTFORML 「でも、やっぱりマスターにエッチしてもらわないと安心して眠れないよぉ♪」
+	PRINTFORML 「ねぇマスター、安心して眠れるように今日もオマ○コにいっぱいどぴゅどぴゅってザーメン注ぎ込んでねｖ」
+	PRINTFORML 「あぁん、マスターだぁいすきｖ　永遠に一緒だからねっｖ」
+	
+;人妻寝取りエンド・愛　恋心あり淫乱なし永遠の愛あり
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 1 && TALENT:人妻 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]]
+	PRINTFORML 「あの人のことは……もういいんです。%CSTR:一人称%、本当の愛を見つけましたから……」
+	PRINTFORML 「うふふ……お腹の赤ちゃん、今動きました。本当のパパがわかるんですね……ｖ」
+	PRINTFORML 「愛してます、あ・な・た……チュッｖ」
+;人妻寝取りエンド・淫乱　淫乱あり
+ELSEIF TALENT:淫乱 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:人妻 == 1 
+	PRINTFORML 「もうあの人なんかじゃ満足できないのぉｖ　もっとパンパンしてぇｖ」
+	PRINTFORML 「子宮の奥が疼いちゃってるぅｖ　あぁん、浮気セックスさいこぉぉぉｖ」
+	PRINTFORML 「こんなの知っちゃったら、もう普通の主婦なんてできないぃぃぃｖ」
+	PRINTFORML 「あなた、ごめんなさぁい♪　あなたとのセックスなんかより何万倍も気持ちいいのぉ♪」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]]
+	PRINTFORML  「ねえ%CALLNAME:MASTER%、今日も帰りが遅いの？」
+	PRINTFORML  「そっか……しょうがないよね、借金を返さなきゃいけないんだもの」
+	PRINTFORML  「他の女の子とえっちするのはいいけど……%CALLNAME:TARGET%のことも可愛がってね？」
+	PRINTFORML  「うんっ、それじゃあいってらっしゃい、%CALLNAME:MASTER%ｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]]
+	PRINTFORML  「おかえり%CALLNAME:MASTER%ｖガマンできなくて先にしちゃってたよぉｖ」
+	PRINTFORML  「%CALLNAME:TARGET%のオマ○コ、こ～んなに太いバイブ食べちゃっててもうヌレヌレなのぉｖ」
+	PRINTFORML  「あはっ、%CALLNAME:MASTER%のオチ○ポ、セーエキと愛液の味で美味し♪」
+	PRINTFORML  「いまオマ○コにバイブ入ってるから挿れるのはアナルで、ね？」
+	PRINTFORML  「ほらぁ、アナルでもオナニーしてたから%CALLNAME:MASTER%のオチ○ポもすぐ挿れられるでしょ♪」
+	PRINTFORML  「ね、またＡＶ出たいなぁ……もちろん監督も男優も%CALLNAME:MASTER%で、ねｖ」
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 0&& NO:TARGET != [[キャラ:宮間かなで]]
+	PRINTFORML  「あッ、オチ○ポキモチイイっｖ%CALLNAME:TARGET%のオマ○コ壊れちゃうっｖ」
+	PRINTFORML  「ほらっ、あなたのオチ○ポもお口でくわえてあげるからこっちに来てぇ♪」
+	PRINTFORML  「やぁン、アナルとオマ○コ同時にゴリゴリ擦らないでぇｖ」
+	PRINTFORML  「もうダメぇッ！全身ザーメンまみれになってイっちゃうぅぅぅぅぅぅぅッｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:褐色肌 == 0 && TALENT:永遠の愛 == 1 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+	PRINTFORML  「ねえお兄ちゃん、今日も帰りが遅いの？」
+	PRINTFORML  「そっか……しょうがないよね、お父さんたちの借金を返さなきゃいけないんだもの」
+	PRINTFORML  「他の女の子とえっちするのはいいけど……私のことも可愛がってね？」
+	PRINTFORML  「うんっ、それじゃあいってらっしゃい、私の旦那さまっｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:永遠の愛 == 1 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+	PRINTFORML  「なーアニキ、今日も帰りが遅い？」
+	PRINTFORML  「そっか……しゃーないよね、オヤジたちの借金を返さなきゃいけないんだし」
+	PRINTFORML  「他のオンナと生ハメすんのはいいけど……アタシのことも可愛がってくれるよね♪」
+	PRINTFORML  「ＯＫ、それじゃあいってら、ダーリンっｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:褐色肌 == 0 && TALENT:永遠の愛 == 0 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+	PRINTFORML  「ねえお兄ちゃん、今日も帰りが遅いの？」
+	PRINTFORML  「そっか……しょうがないよね、お父さんたちの借金を返さなきゃいけないんだもの」
+	PRINTFORML  「他の女の子とえっちするのはいいけど……私のことも可愛がってね？」
+	PRINTFORML  「うんっ、それじゃあいってらっしゃい、お兄ちゃんっｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:永遠の愛 == 0 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+	PRINTFORML  「なーアニキ、今日も帰りが遅い？」
+	PRINTFORML  「そっか……しゃーないよね、オヤジたちの借金を返さなきゃいけないんだし」
+	PRINTFORML  「他のオンナと生ハメすんのはいいけど……アタシのことも可愛がってくれるよね♪」
+	PRINTFORML  「ＯＫ、それじゃあいってら、アニキっｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && TALENT:褐色肌 == 0 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+	PRINTFORML  「おかえりお兄ちゃんｖガマンできなくて先にしちゃってたよぉｖ」
+	PRINTFORML  「かなでのオマ○コ、こ～んなに太いバイブ食べちゃっててもうヌレヌレなのぉｖ」
+	PRINTFORML  「あはっ、お兄ちゃんのオチ○ポ、セーエキと愛液の味で美味し♪」
+	PRINTFORML  「いまオマ○コにバイブ入ってるから挿れるのはアナルで、ね？」
+	PRINTFORML  「ほらぁ、アナルでもオナニーしてたからお兄ちゃんのオチ○ポもすぐ挿れられるでしょ♪」
+	PRINTFORML  「ね、またＡＶ出たいなぁ……もちろん監督も男優さんもお兄ちゃんで、ねｖ」
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1  && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+	PRINTFORML  「おかえりアニキｖガマンできなくて先にオナってたよぉｖ」
+	PRINTFORML  「アタシのマンコ、こんなに太いバイブ食べちゃっててもうヌレヌレなのぉｖ」
+	PRINTFORML  「アハっ、アニキのチンポ、セーエキと愛液の味で美味し♪」
+	PRINTFORML  「いまマンコにバイブ入ってるからハメんのはケツ穴でいい？」
+	PRINTFORML  「ほらぁ、アナルでもオナニーしてたからアニキのチンポもすぐハメれるでしょ♪」
+	PRINTFORML  「ね、またＡＶ出たいなぁ……もちろん監督も男優もアニキで、ねｖ」
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 0&& NO:TARGET == [[キャラ:宮間かなで]] && TALENT:褐色肌 == 0
+	PRINTFORML  「あッ、オチ○ポキモチイイっｖかなでのオマ○コ壊れちゃうっｖ」
+	PRINTFORML  「ほらっ、あなたのオチ○ポもお口でくわえてあげるからこっちに来てぇ♪」
+	PRINTFORML  「やぁン、アナルとオマ○コ同時にゴリゴリ擦らないでぇｖ」
+	PRINTFORML  「もうダメぇッ！全身ザーメンまみれになってイっちゃうぅぅぅぅぅぅぅッｖ」
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 0&& NO:TARGET == [[キャラ:宮間かなで]] && TALENT:褐色肌 == 1
+	PRINTFORML  「あッ、生ハメキモチイイっｖヌレヌレマンコ壊れちゃうっｖ」
+	PRINTFORML  「ほらっ、アンタのチンポもフェラしてやっからこっちに来てぇ♪」
+	PRINTFORML  「やぁン、ケツ穴とマンコ同時にゴリゴリ擦らないでぇｖ」
+	PRINTFORML  「もうダメぇッ！全身セーエキまみれになってイっちゃうぅぅぅぅぅぅぅッｖ」
+ELSE
+	PRINTFORML  「お願いします……もう壊れちゃうからアソコにおちん○ん挿れないでぇ……」
+	PRINTFORML  「風俗で働いてるからって、えっちが好きなわけじゃありません……」
+	PRINTFORML  「イヤっ、お尻の穴なんか舐めないでくださいっ！」
+	PRINTFORML  「もうイヤぁ……奥に精液出されてるぅ……妊娠しちゃうよぉ……」
+ENDIF
+RESETCOLOR
+SETFONT ""
+PRINTL
+
+;本文
+IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント >= CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORM しばらく%CALLNAME:TARGET%と同棲生活を送っていた%CALLNAME:TARGET%だが、あまりにも%CALLNAME:MASTER%に
+	PRINTFORML 構ってもらえない生活に次第に嫌気がさし、指導によって火照った体を持て余しはじめた……
+	PRINTFORM ある日、仕事から帰ってきた%CALLNAME:MASTER%は、明りの消えた真っ暗な部屋の中で、紙切れ一枚の書き置きが
+	PRINTFORML 残されているのを見つけた
+	PRINTFORML 「探さないでください」
+	PRINTFORML %CALLNAME:TARGET%を永遠に失ったことを理解した%CALLNAME:MASTER%は、しばらく喪失感に打ちひしがれていた
+	PRINTFORML 仕事にかまけてばかりで構ってやれなかったのが悪いのか。２人の絆がもっと深まっていれば、あるいは……
+	PRINTFORML いくら後悔しても、もう取り返しは付かない……
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && TALENT:永遠の愛 == 1 && TALENT:淫魔 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && NO:TARGET != [[キャラ:エリス]] && NO:TARGET != [[キャラ:リリス]]
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORML %CALLNAME:MASTER%の手によって淫魔となった%CALLNAME:TARGET%には、『食餌』として異性の精が必要だった
+	PRINTFORML そこで%CALLNAME:MASTER%は%CALLNAME:TARGET%を夜の街に放し、自由に異性の精を絞ってくるように命じた……
+	PRINTFORML 以来、淫魔の性質に従って自由気ままに精を摂取してくる%CALLNAME:TARGET%だが、その食餌の最後には必ず
+	PRINTFORML 主人である%CALLNAME:MASTER%の精を求めてくるのだった
+	PRINTFORM まるで狩りの成果を誇る猫のように今日一日でどれだけの男からどのように精を絞ってきたのかを得意げに報告しながら、
+	PRINTFORML %CALLNAME:TARGET%は恭順と愛情に潤んだ瞳を揺らして%CALLNAME:MASTER%の上で腰を振り続ける
+	PRINTFORML 主従の愛の絆は、%CALLNAME:MASTER%の命が尽きる日まで永遠に続くだろう……
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 1 && TALENT:人妻 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]]
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORML 夫と離婚しないまま、毎週末は%CALLNAME:MASTER%の家に通って愛を交わす日々を送っていた
+	PRINTFORM %CALLNAME:MASTER%の夫も、うすうす妻が別の男に寝取られてしまったことに気付いているようだが、
+	PRINTFORML 特に何も言ってくることはない
+	PRINTFORML 今、%CALLNAME:TARGET%の大きく膨れたお腹の中では、%CALLNAME:MASTER%の子が息づいていた
+	PRINTFORML 夫を裏切り、別の男との愛を育む生活……その背徳感に、%CALLNAME:TARGET%はうっとりと微笑むのだった……
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && TALENT:永遠の愛 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:人妻 == 1 
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORML %CALLNAME:MASTER%の調教によって熟れきった体を開発された%CALLNAME:TARGET%は、夜な夜な街に繰り出しては
+	PRINTFORML 男を漁る淫蕩な浮気妻に成り果ててしまっていた
+	PRINTFORML 中でも一番のお気に入りは、やはり%CALLNAME:TARGET%を調教した%CALLNAME:MASTER%自身だ
+	PRINTFORM ラブホテルの一室で%CALLNAME:TARGET%と撮影中の浮気シーンは、この後匿名で%CALLNAME:TARGET%の夫のＰＣに
+	PRINTFORML 送られる予定だ
+	PRINTFORML 帰ったときの夫の表情を想像して、%CALLNAME:TARGET%の情欲は一層燃え上がるのだった……
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 &&NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORM 事務所から同棲中の%CALLNAME:TARGET%が待つ我が家へと帰った%CALLNAME:MASTER%が目にしたのは、
+	PRINTFORML 玄関口でバイブを片手に、裸エプロンで激しくオナニーをしている%CALLNAME:TARGET%の姿だった
+	PRINTFORM 度重なる指導で淫欲に目覚め、様々な意味で%CALLNAME:MASTER%無しでは生きていけなくなった
+	PRINTFORML %CALLNAME:TARGET%は、ＡＶ女優を引退した後でもこうして毎日のように誘ってくる
+	PRINTFORM %CALLNAME:TARGET%のかつての仲間である女優候補たちの指導や撮影をした後で疲れてはいるものの、
+	PRINTFORML %CALLNAME:MASTER%のペニスはその淫猥な姿に再び硬くなっていた
+	PRINTFORM %CALLNAME:TARGET%のリクエスト通り、%CALLNAME:MASTER%は高く掲げられた尻肉を掴み、
+	PRINTFORM 女優を辞めてもなお続けられた開発ですっかり快楽器官となった%CALLNAME:TARGET%のアナルに
+	PRINTFORML 怒張を一息に奥まで突き入れた……
+	PRINTFORML どうやら今夜も寝るのが遅くなりそうだ……
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORM 事務所から愛しの妻であり……実の妹である%CALLNAME:TARGET%が待つ我が家へと帰った
+	PRINTFORM %CALLNAME:MASTER%が目にしたのは、玄関口でバイブを片手に、
+	PRINTFORML 裸エプロンで激しくオナニーをしているかなでの姿だった
+	PRINTFORM 度重なる指導で淫欲に目覚め、以前にも増して様々な意味で%CALLNAME:MASTER%無しでは生きていけなくなった
+	PRINTFORML %CALLNAME:TARGET%は、ＡＶ女優を引退した後でもこうして毎日のように誘ってくる
+	PRINTFORM %CALLNAME:TARGET%のかつての仲間である女優候補たちの指導や撮影をした後で疲れてはいるものの、
+	PRINTFORML %CALLNAME:MASTER%のペニスはその淫猥な姿に再び硬くなっていた
+	PRINTFORM %CALLNAME:TARGET%のリクエスト通り、%CALLNAME:MASTER%は高く掲げられた尻肉を掴み、
+	PRINTFORM 女優を辞めてもなお続けられた開発ですっかり快楽器官となった%CALLNAME:TARGET%のアナルに
+	PRINTFORML 怒張を一息に奥まで突き入れた……
+	PRINTFORML どうやら今夜も寝るのが遅くなりそうだ……
+ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORM ある日の休日、撮影のために家を出ようとする%CALLNAME:MASTER%を、同棲中の%CALLNAME:TARGET%が
+	PRINTFORML 巾着袋を片手に呼び止めた
+	PRINTFORM ＡＶ女優を引退後、こうして甲斐甲斐しく%CALLNAME:MASTER%の出勤を見守り、弁当まで作ってくれる
+	PRINTFORML ……いわば押し掛け妻のような存在に%CALLNAME:TARGET%はなっていた
+	PRINTFORM かなでとは仲良くやっているようで、料理を教え合ったり女の子ならではの悩みを聞いていたりと、
+	PRINTFORML 仲睦まじい様子を見かけることがある
+	PRINTFORM 礼を言って弁当を受け取ろうとした%CALLNAME:MASTER%の頬に、%CALLNAME:TARGET%が突然軽いキスを
+	PRINTFORML してきた……
+	PRINTFORML どうやら今日も頑張れそうだ……
+ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:永遠の愛 == 0 && NO:MASTER == [[キャラ:あなた]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORM ある日の休日、撮影のために家を出ようとする%CALLNAME:MASTER%を、%CALLNAME:TARGET%が
+	PRINTFORML 巾着袋を片手に呼び止めた
+	PRINTFORM ＡＶ女優を引退後、こうして以前にも増して甲斐甲斐しく%CALLNAME:MASTER%の出勤を見守り、
+	PRINTFORML 弁当まで作ってくれる……まるで%CALLNAME:MASTER%の妻のような存在に%CALLNAME:TARGET%はなっていた
+	PRINTFORM 礼を言って弁当を受け取ろうとした%CALLNAME:MASTER%の頬に、%CALLNAME:TARGET%が突然軽いキスを
+	PRINTFORML してきた……
+	PRINTFORML どうやら今日も頑張れそうだ……
+ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:永遠の愛 == 1 && NO:MASTER == [[キャラ:あなた]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORM ある日の休日、撮影のために家を出ようとする%CALLNAME:MASTER%を、最愛の妹であり……
+	PRINTFORML 最愛の妻でもある%CALLNAME:TARGET%が巾着袋を片手に呼び止めた
+	PRINTFORM ＡＶ女優を引退後、こうして以前にも増して甲斐甲斐しく%CALLNAME:MASTER%の出勤を見守り、
+	PRINTFORML 弁当まで作ってくれる……まさしく良き妻と言える存在に%CALLNAME:TARGET%はなっていた
+	PRINTFORML そして……%CALLNAME:TARGET%のおなかには%CALLNAME:MASTER%との愛の結晶が宿っていた
+	PRINTFORML ＡＶ女優を引退後、%CALLNAME:TARGET%にせがまれて避妊せずに何度も交わった結果だ
+	PRINTFORML 婚姻届は出せないが、書類の上での夫婦という関係なんかどうでもいい、と二人揃って考えている
+	PRINTFORM 世間から後ろ指を指されようとも%CALLNAME:TARGET%とその子どもを守っていこうと誓い、
+	PRINTFORM 礼を言って弁当を受け取ろうとした%CALLNAME:MASTER%の頬に、%CALLNAME:TARGET%が突然軽いキスを
+	PRINTFORML してきた……
+	PRINTFORML どうやら今日も頑張れそうだ……
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 0 && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORML どうやら名前を変えて別のレーベルから再デビューしたようだった
+	PRINTFORM %CALLNAME:MASTER%が撮影してきたどの作品よりも淫らに映っている%CALLNAME:TARGET%の姿に、
+	PRINTFORM %CALLNAME:MASTER%は軽い嫉妬と、もったいないことをしたという思いを抱きながら、
+	PRINTFORML その日の指導の準備を始めた……
+ELSE
+	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
+	PRINTFORML どうやら桐生組の経営するなんでもありの地下風俗で働いているらしい
+	PRINTFORML 以前様子を見に行ったスタッフが言うには、どんどんやつれていって目からも生気が失われていっているらしい
+	PRINTFORM その時に見せてもらった%CALLNAME:TARGET%の写真は、身体のあちこちにアザがあり、
+	PRINTFORM もはや別のものとしか思えない巨大な乳房と、股間から腕ぐらいの太さの長いペニスが生え……
+	PRINTFORML 極めつけには左腕を喪っていた……
+	PRINTFORML 嫌なものを思い出してしまった%CALLNAME:MASTER%は軽く頭を振り、意識をその日の撮影内容に切り替えた……
+ENDIF
+PRINTW

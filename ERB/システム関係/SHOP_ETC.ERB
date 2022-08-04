@@ -1,0 +1,140 @@
+﻿;=========================================================
+;その他のメニュー
+;=========================================================
+@ETC_MAIN
+
+;指示可能なキャラ数の確認
+E = 0
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	;指示を出すには従順4以上必要
+	SIF ABL:COUNT:信頼 < 4
+		CONTINUE
+	E += 1
+REND
+
+DRAWLINE
+PRINTL 何を行いますか？
+DRAWLINE
+SIF E > 0
+	PRINTL  [1] - 朝のフェラチオ係を決める
+DRAWLINE
+;エクストラで勲章があればいつでも強くてニューゲーム開始
+SIF FLAG:難易度 == 9 && TALENT:MASTER:勲章
+	PRINTL  [10] - 強くてニューゲームの開始
+;エクストラ以外で二週目以降であれば、目標額さえ満たせばいつでも最終日まで飛ばせる
+;妊娠関連で不具合が起こるので現在は封印
+;SIF FLAG:難易度 < 9 && FLAG:周回数 > 0 && MONEY >= FLAG:目標金額 
+;	PRINTL  [11] - 一気に最終日まで進める
+DRAWLINE
+PRINTL  [999] - 戻る
+INPUT
+
+IF RESULT == 1 && E > 0
+	CALL FELLATIO_ORDER
+ELSEIF RESULT == 10 && FLAG:難易度 == 9 && TALENT:MASTER:勲章
+	CALL GAME_CONTINUE
+	RETURN 1
+;ELSEIF RESULT == 11 && FLAG:難易度 < 9 && MONEY >= FLAG:目標金額 && FLAG:周回数 > 0
+;	$INPUT_LOOP_01
+;	PRINTL “オチタとの約束の日”前日まで進めますか？
+;	PRINTL  [0] - はい
+;	PRINTL  [1] - いいえ
+;	INPUT
+;	IF RESULT == 0
+;		PRINTL 
+;		PRINTL 　　――　最終日までの出来事は省略されます　――
+;		PRINTL 
+;		WAIT
+;		DAY = FLAG:期限日数 - 1
+;		TIME = 1
+;		RETURN 0
+;	ELSEIF RESULT != 1
+;		GOTO INPUT_LOOP_01
+;	ENDIF
+;	RESTART
+ELSEIF RESULT != 999
+	RESTART
+ENDIF
+
+RETURN 0
+
+;-------------------------------------------------
+;朝のフェラチオ係
+;-------------------------------------------------
+@FELLATIO_ORDER
+$INPUT_LOOP_01
+DRAWLINE
+PRINTL 誰を朝フェラ係にしますか？　
+DRAWLINE
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	;最大体力500以下だとダメ
+	SIF MAXBASE:COUNT:体力 <= 500
+		CONTINUE
+	;育児中や臨月だとダメ
+	SIF TALENT:COUNT:育児中 || (CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠)
+		CONTINUE
+	;奉仕しないがあるとダメ
+	SIF TALENT:COUNT:奉仕しない
+		CONTINUE
+	;反発刻印があるとダメ
+	SIF MARK:COUNT:反発刻印 > 0
+		CONTINUE
+	;条件を満たしてないとダメ
+	SIF ABL:COUNT:欲望 < 4 || ABL:COUNT:奉仕精神 < 4 || ABL:COUNT:精液中毒 < 1
+		CONTINUE
+	TARGET = COUNT
+	PRINTFORM  [{COUNT}] %NAME:COUNT%
+	SIF CFLAG:COUNT:朝フェラ係に任命 & 1
+		PRINT  - 現在の朝フェラ係
+	PRINTL 
+REND
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 999
+	RETURN 0
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_01
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP_01
+ELSEIF MAXBASE:RESULT:体力 <= 500
+	PRINTW 体が弱っていて朝フェラ係は勤まりそうにありません
+ELSEIF TALENT:RESULT:育児中
+	PRINTW 育児に忙しくて朝フェラ係は勤まりそうにありません
+ELSEIF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+	PRINTW 身重で朝フェラ係は勤まりそうにありません
+ELSEIF TALENT:RESULT:奉仕しない
+	PRINTW 朝フェラをやるようなタイプではありません
+ELSEIF MARK:RESULT:反発刻印 > 0
+	PRINTW 反発心が強くて指示に従いません
+ELSEIF ABL:RESULT:欲望 < 4 || ABL:RESULT:奉仕精神 < 4 || ABL:RESULT:精液中毒 < 1
+	PRINTW 能力不足です。もっと育ててください
+ELSEIF CFLAG:RESULT:朝フェラ係に任命 & 1
+	PRINTFORML %NAME:RESULT%を朝のフェラチオ係から外しました
+	CFLAG:RESULT:朝フェラ係に任命 -= 1
+	WAIT
+ELSE
+	REPEAT CHARANUM
+		CFLAG:COUNT:朝フェラ係に任命 -= CFLAG:COUNT:朝フェラ係に任命 & 1
+	REND
+	PRINTFORML %NAME:RESULT%を朝のフェラチオ係に任命しました
+	CFLAG:RESULT:朝フェラ係に任命 |= 1
+	WAIT
+ENDIF
+
+RESTART

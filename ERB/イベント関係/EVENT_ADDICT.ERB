@@ -1,0 +1,317 @@
+﻿;=================================================
+;媚薬中毒関連の関数群
+;=================================================
+;-------------------------------------------------
+;媚薬中毒の発病と回復
+;-------------------------------------------------
+@APHRODISIAC_ADDICT
+;体内媚薬残留度を7日ごとに1減らす
+;IF (DAY + 1) % 7 == 0
+	IF CFLAG:体内媚薬残留度 > 0
+		CFLAG:体内媚薬残留度 -= 1
+		SIF CFLAG:体内媚薬残留度 < 0
+			CFLAG:体内媚薬残留度 = 0
+	ENDIF
+			
+;【媚薬中毒】の消失判定
+;体内媚薬残留度が0になれば[媚薬中毒]消失
+IF CFLAG:体内媚薬残留度 == 0 && TALENT:薬物中毒
+	PRINTFORML %CALLNAME:TARGET%の様子が変わった……
+	PRINTFORML 体内から媚薬の効果がすっかり抜けきり、%CALLNAME:TARGET%は依存症から脱した
+	PRINTFORML %NAME:TARGET%は【%TALENTNAME:[[TALENT:薬物中毒]]%】を失った
+	WAIT
+	TALENT:薬物中毒 = 0
+ENDIF
+
+	;[媚薬中毒]の場合は禁断症状チェックも行う
+	IF TALENT:薬物中毒
+		IF CFLAG:媚薬中毒の禁断症状判定
+			CFLAG:媚薬中毒の禁断症状判定 = 0
+		ELSE
+			CALL PRECIPITATE_WITHDRAWAL
+		ENDIF
+	ENDIF
+;ENDIF
+
+;【媚薬中毒】の取得判定
+;[中毒しやすい]がなければ体内媚薬残留度が12以上、あれば9以上で[媚薬中毒]取得
+IF ((TALENT:妄信 == 0 && CFLAG:体内媚薬残留度 >= 12) || (TALENT:中毒しやすい && CFLAG:体内媚薬残留度 >= 9)) && TALENT:薬物中毒 == 0
+	PRINTFORML %CALLNAME:TARGET%の様子がおかしい……
+	PRINTFORML 媚薬の使い過ぎで、%CALLNAME:TARGET%は中毒になってしまった
+	PRINTFORML %NAME:TARGET%は【%TALENTNAME:[[TALENT:薬物中毒]]%】を得た
+	WAIT
+	TALENT:薬物中毒 = 1
+	;中毒になりたてということで、ボーナスとして体内媚薬残留度を一律15以上に（おめでとう！）
+	SIF CFLAG:体内媚薬残留度 < 15
+		CFLAG:体内媚薬残留度 = 15
+ENDIF
+;【狂気】の取得判定
+;[中毒しやすい]がなければ体内媚薬残留度が40以上、あれば30以上で[狂気]取得
+IF (CFLAG:体内媚薬残留度 >= 40 || (TALENT:中毒しやすい && CFLAG:体内媚薬残留度 >= 30)) && TALENT:狂気 == 0
+	PRINTFORML %CALLNAME:TARGET%の様子がおかしい……
+	PRINTFORML %CALLNAME:TARGET%は媚薬の使い過ぎで、気が触れてしまった
+	PRINTFORML %NAME:TARGET%は【%TALENTNAME:[[TALENT:狂気]]%】を得た
+	PRINTL 
+	TALENT:狂気 = 1
+ENDIF
+;【廃人】の取得判定
+;[中毒しやすい]がなければ体内媚薬残留度が100以上、あれば75以上で[崩壊]取得
+IF (CFLAG:体内媚薬残留度 >= 100 || (TALENT:中毒しやすい && CFLAG:体内媚薬残留度 >= 75)) && TALENT:崩壊 == 0
+	PRINTFORML %CALLNAME:TARGET%の様子がおかしい……
+	PRINTFORML %CALLNAME:TARGET%は媚薬の使い過ぎで、完全に廃人と化してしまった
+	PRINTFORML %NAME:TARGET%の精神は【%TALENTNAME:[[TALENT:崩壊]]%】してしまった
+	PRINTL 
+	TALENT:崩壊 = 1
+ENDIF
+;-------------------------------------------------
+;禁断症状イベント
+;-------------------------------------------------
+@PRECIPITATE_WITHDRAWAL
+;U=[治療][献身的]持ちによる禁断症状緩和効果
+;V=禁断症状の酷さ
+;W=ステータス悪化の内容(＆ステータス悪化が生じたか否か)
+U = 0
+V = 0
+W = 0
+PRINTFORML %CALLNAME:TARGET%が体の不調を訴えてきた
+PRINTL どうやら、媚薬中毒の禁断症状が出てきているらしい……
+WAIT
+
+IF ITEM:プリンセスポイズン
+	$INPUT_LOOP_01
+	PRINTFORML %CALLNAME:TARGET%に媚薬を与えますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		PRINTFORML %CALLNAME:TARGET%は媚薬のエキス入りアンプルを奪い取ると、
+		PRINTFORML すぐさま貪るように一気に飲み干して、ほっと一息をついた
+		WAIT
+		CFLAG:体内媚薬残留度 += 1
+		ITEM:プリンセスポイズン -= 1
+		RETURN 0
+	ELSEIF RESULT != 1
+		GOTO INPUT_LOOP_01
+	ENDIF	
+ENDIF
+
+
+;[治療][献身的]持ちの人数をカウント
+REPEAT CHARANUM
+	SIF TALENT:COUNT:治療
+		U += 1
+	SIF TALENT:COUNT:献身的
+		U += 1
+REND
+
+;体内媚薬残留度と[治療][献身的]持ちによる禁断症状緩和効果に応じてチェック回数決定
+V = (CFLAG:体内媚薬残留度 / 10) + 1 - U
+IF V < 1
+	V = 1
+ELSEIF V > 10
+	V = 10
+ENDIF
+
+;チェック回数は最低1回～最高10回
+REPEAT V
+	;40%の確率でステータス悪化イベント発生
+	;最高の10回チェックした場合は99.996%の確率で発生する計算
+	IF RAND:100 < 40
+		CALL SUFFER_FROM_WITHDRAWAL
+		BREAK
+	ENDIF
+REND
+
+IF W
+	PRINTFORML 禁断症状の苦しみにのたうちまわっていた%CALLNAME:TARGET%だったが
+	PRINTL 暴れ疲れたのか症状が収まったのか、数時間後、やっと大人しくなった
+	PRINTL しかし、本人だけでなく看病していた側も疲れ果ててしまった……
+	WAIT 
+	PRINTFORML %CALLNAME:TARGET%は体力と気力が衰えた
+
+	;とりあえず表示はせずにこっそり減らす方向で
+	MAXBASE:体力 -= 50
+	SIF BASE:体力 > MAXBASE:体力
+		BASE:体力 = MAXBASE:体力
+	;最大体力は600まで下がる（それ以下にはならない）
+	SIF MAXBASE:体力 < 600
+		MAXBASE:体力 = 600
+	
+	MAXBASE:気力 -= 50
+	SIF BASE:気力 > MAXBASE:気力
+		BASE:気力 = MAXBASE:気力
+	;最大気力は100まで下がる（それ以下にはならない）
+	SIF MAXBASE:気力 < 100
+		MAXBASE:気力 = 100
+	
+	BASE:体力 -= 500
+	SIF BASE:体力 < 1
+		BASE:体力 = 1
+
+	;看病していた人もぐったりします
+	REPEAT CHARANUM
+		;[治療][献身的]持ちは確実に看病している
+		IF TALENT:COUNT:治療 || TALENT:COUNT:献身的
+			BASE:COUNT:体力 -= 200
+			SIF BASE:COUNT:体力 < 1
+				BASE:COUNT:体力 = 1
+		;そうでない場合でも1/3の確率で看病に当たっている
+		ELSEIF RAND:3 == 0
+			BASE:COUNT:体力 -= 200
+			SIF BASE:COUNT:体力 < 1
+				BASE:COUNT:体力 = 1
+		ENDIF
+	REND
+ELSE
+	PRINTFORML 数時間後、%CALLNAME:TARGET%の体のふるえがようやく止まった
+	PRINTL 看病していた側も一苦労だったが
+	PRINTL 今回はどうにか無事に乗り越えることができた
+	WAIT
+	;でも体力は減る
+	BASE:体力 -= 300
+	SIF BASE:体力 < 1
+		BASE:体力 = 1
+
+	;看病していた人もぐったりします
+	REPEAT CHARANUM
+		;[治療][献身的]持ちは確実に看病している
+		IF TALENT:COUNT:治療 || TALENT:COUNT:献身的
+			BASE:COUNT:体力 -= 100
+			SIF BASE:COUNT:体力 < 1
+				BASE:COUNT:体力 = 1
+		;そうでない場合でも1/3の確率で看病に当たっている
+		ELSEIF RAND:3 == 0
+			BASE:COUNT:体力 -= 100
+			SIF BASE:COUNT:体力 < 1
+				BASE:COUNT:体力 = 1
+		ENDIF
+	REND
+ENDIF
+PRINTL 
+
+@SUFFER_FROM_WITHDRAWAL
+W = RAND:50 - V + (U * 2)
+
+IF W < 5
+	IF TALENT:崩壊 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_WRECK
+	ELSEIF TALENT:狂気 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_CRAZY
+	ELSEIF RELATION:0 == 0 || RELATION:0 > 50
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_MISANTHROPIST
+	ELSEIF TALENT:抵抗 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_RESISTER
+	ELSEIF TALENT:ネガティブ == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_DEPRESSION
+	ELSEIF TALENT:感情乏しい == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+	ELSE
+		CALL PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+	ENDIF
+ELSEIF W < 10
+	IF TALENT:狂気 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_CRAZY
+	ELSEIF RELATION:0 == 0 || RELATION:0 > 50
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_MISANTHROPIST
+	ELSEIF TALENT:抵抗 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_RESISTER
+	ELSEIF TALENT:ネガティブ == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_DEPRESSION
+	ELSEIF TALENT:感情乏しい == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+	ELSE
+		CALL PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+	ENDIF
+ELSEIF W < 15
+	IF (TALENT:弱味 == 0 && TALENT:MASTER:剛毛) || (TALENT:38 == 0 && TALENT:MASTER:剛毛 == 0)
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_MISANTHROPIST
+	ELSEIF TALENT:抵抗 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_RESISTER
+	ELSEIF TALENT:ネガティブ == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_DEPRESSION
+	ELSEIF TALENT:感情乏しい == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+	ELSE
+		CALL PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+	ENDIF
+ELSEIF W < 20
+	IF TALENT:抵抗 == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_RESISTER
+	ELSEIF TALENT:ネガティブ == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_DEPRESSION
+	ELSEIF TALENT:感情乏しい == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+	ELSE
+		CALL PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+	ENDIF
+ELSEIF W < 25
+	IF TALENT:ネガティブ == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_DEPRESSION
+	ELSEIF TALENT:感情乏しい == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+	ELSE
+		CALL PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+	ENDIF
+ELSEIF W < 30
+	IF TALENT:感情乏しい == 0
+		CALL PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+	ELSE
+		CALL PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+	ENDIF
+ELSE
+	PRINTL 
+ENDIF
+PRINTL 
+
+W = 1
+
+
+@PRECIPITATE_WITHDRAWAL_FALL_INTO_DISFAVOR
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさですっかり%CALLNAME:MASTER%を嫌ってしまったようだ
+;こっそり好感度をマイナス
+CFLAG:好感度 -= 200
+
+@PRECIPITATE_WITHDRAWAL_BE_A_ATHYMIA
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさですっかり感情を失ってしまったようだ
+PRINTFORMW %NAME:TARGET%は【感情乏しい】を得た
+TALENT:感情乏しい = 1
+
+@PRECIPITATE_WITHDRAWAL_BE_A_DEPRESSION
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさですっかり悲観的になってしまったようだ
+PRINTFORMW %NAME:TARGET%は【悲観的】を得た
+TALENT:ネガティブ = 1
+
+@PRECIPITATE_WITHDRAWAL_BE_A_RESISTER
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさですっかり気難しくなってしまったようだ
+PRINTFORMW %NAME:TARGET%は【抵抗】を得た
+TALENT:抵抗 = 1
+
+@PRECIPITATE_WITHDRAWAL_BE_A_MISANTHROPIST
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさですっかり%CALLNAME:MASTER%を嫌ってしまったようだ
+IF RELATION:0 == 0
+	RELATION:0 = 50
+ELSE
+	RELATION:0 -= 50
+	SIF RELATION:0 < 30
+		RELATION:0 = 30
+ENDIF
+;こっそり好感度もマイナス
+CFLAG:好感度 -= 200
+
+@PRECIPITATE_WITHDRAWAL_BE_A_CRAZY
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさで気が触れてしまったようだ
+PRINTFORMW %NAME:TARGET%は【狂気】を得た
+TALENT:狂気 = 1
+
+@PRECIPITATE_WITHDRAWAL_BE_A_WRECK
+PRINTFORMW %CALLNAME:TARGET%の様子が明らかにおかしい……
+PRINTFORMW %CALLNAME:TARGET%は禁断症状の苦しさで完全に廃人と化してしまったようだ
+PRINTFORMW %NAME:TARGET%の精神は【崩壊】してしまった……
+TALENT:19 = 1
+

@@ -1,0 +1,68 @@
+﻿;-------------------------------------------------
+;奴隷の評価額算出
+;-------------------------------------------------
+@PRINT_BODYPIERCE
+A = CFLAG:着衣状態
+CALL WEARING_CLOTH_ALL
+B = CFLAG:着衣状態
+CFLAG:着衣状態 = A
+
+IF (CFLAG:着衣状態 & 4)
+	IF (CFLAG:着衣状態 & 2) == 0 && (B & 2) && (TALENT:貧乳 == 0 && TALENT:絶壁 == 0)
+		PRINT ノーブラの乳房が服の下で揺れている様子が
+		IF TALENT:巨乳 || TALENT:爆乳
+			PRINT はっきり
+		ELSE
+			PRINT 微かに
+		ENDIF
+		PRINTL わかり、目を楽しませてくれる。
+	ENDIF
+ENDIF
+
+
+
+;乳房ピアスでノーブラの場合
+IF (CFLAG:ピアスの装着状況 & 1) && (CFLAG:着衣状態 & 2) == 0
+	IF (CFLAG:着衣状態 & 4) == 1
+		PRINTFORML 服の布地ごしに、%CALLNAME:TARGET%の両乳首に施されたピアスの形が浮かびあがっていた。
+	ELSE
+		PRINTFORML %CALLNAME:TARGET%が身動きするたび、その両乳首に施されたピアスが小さく揺れた。
+	ENDIF
+ENDIF
+
+;ノーパンで下半身着衣、かつ露出癖Lv3未満の場合
+IF  (CFLAG:着衣状態 & 1) == 0 && ((CFLAG:着衣状態 & 8) || (CFLAG:着衣状態 & 16))
+	SIF (B & 1) && TALENT:未熟 == 0 && ABL:露出癖 < 3
+		PRINTL ノーパンの下半身が頼りないらしく、しきりに股間のあたりを気にしている……。
+ENDIF
+
+;ノーパンでスカートタイプ、かつ露出癖Lv3以上の場合
+IF  (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 8)
+	SIF (B & 1) && ABL:露出癖 >= 3
+		PRINTFORML %CALLNAME:TARGET%はスカートの裾を捲りあげ、下着を着けていない秘部を晒してみせた。
+ENDIF
+
+;下半身ピアスでノーパン、かつズボンタイプでない場合
+IF (CFLAG:ピアスの装着状況 & 4) || (CFLAG:ピアスの装着状況 & 8) && (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 16) == 0
+	IF (CFLAG:着衣状態 & 8) == 1
+		PRINT スカートの間から覗く
+	ELSE
+		PRINT 裸のままの
+	ENDIF
+	PRINT 秘部では、
+		SIF (CFLAG:ピアスの装着状況 & 4)
+			PRINT 両方のラビア
+		SIF (CFLAG:ピアスの装着状況 & 4) && (CFLAG:ピアスの装着状況 & 8)
+			PRINT と
+		SIF (CFLAG:ピアスの装着状況 & 8)
+			PRINT クリトリス
+	PRINTL では、柔らかい肉を貫いて金属製のピアスが光っている……
+ENDIF
+;乳房ピアスでノーブラの場合
+IF (CFLAG:ピアスの装着状況 & 16)
+		PRINTFORML 客に自己アピールする%CALLNAME:TARGET%の舌にはピアスが施されていた……。
+ENDIF
+;乳房ピアスでノーブラの場合
+IF (CFLAG:ピアスの装着状況 & 2) && (CFLAG:着衣状態 & 4) == 0
+		PRINTFORML %CALLNAME:TARGET%のおへそに施されたピアスが金属の輝きを放っていた……。
+ENDIF

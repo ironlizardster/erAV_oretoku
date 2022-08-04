@@ -1,0 +1,556 @@
+﻿;-------------------------------------------------
+;避妊
+;-------------------------------------------------
+@KILL_PREGNANCY
+C = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+PRINTFORML 「避妊治療だねー、うん、できるよー」
+PRINTFORML 事務所のそばに居を構えていた郁美のラボの一室、いつも通りだらけた様子でパイプ
+PRINTFORML 椅子の背もたれを抱えるように座っていた郁美はなんでもないことのように言った
+PRINTFORML %CALLNAME:MASTER%が持ち掛けた相談は女優候補たちが本番行為をするにあたって妊娠しないよう
+PRINTFORML にできないものだろうか、ということだった
+PRINTFORML 女優候補たちとの本番行為は妊娠というリスクが付きまとうし、かといってコンド
+PRINTFORML ームを使用すると売上が下がってしまう
+PRINTFORML ピルなどといった排卵を抑制する薬の存在は知っていたが、それもそこまで確実で
+PRINTFORML はないらしい
+PRINTFORML 一応普通の病院でも不妊手術は受けられるのだろうが、さすがにまだ年若い女性が
+PRINTFORMW 受けるのは明らかに『何かがある』と勘ぐられてしまうかもしれない……
+PRINTFORML 「まーそうなると確かにモグリの医者に頼むしかないよねー。
+PRINTFORML 一番手っ取り早いのは卵管を縛っちゃうことだけど、それだと手術痕が残ったりで
+PRINTFORML この仕事をやっていく上では問題も多いだろうしー。
+PRINTFORML 根本的には危険日に中出しバンバンしなけりゃいいって話だけど、それでも実際、
+PRINTFORML 危険日なんて俗説だしねー……
+PRINTFORML それにみんなの年齢を考えると排卵をストップさせてホルモンバランス崩すと、後
+PRINTFORML で取り返しがつかないようなことがあるだろうし、もちろんそうならない技術は私
+PRINTFORML の知っている限りだと『まだ』その辺の医者が知っているはずもないんだよねー」
+PRINTFORML 不妊手術は既婚者で子供が複数いる、または妊娠・出産が母体に重大な悪影響があ
+PRINTFORML る場合のみ受けられる、という事実を交えて郁美は資料が積み上げられた机を漁り
+PRINTFORML 始めた……
+PRINTFORMW
+PRINTFORML 「これが避妊治療の資料ねー。
+PRINTFORML 学会なんかでは発表『できない』し、ふしぎなくすりを患者さんに飲んでもらうわ
+PRINTFORML けだから、副作用も怖いんだよねー……なんせ、臨床もしてないような代物だしー」
+PRINTFORML 副作用が怖い、という言葉に%CALLNAME:MASTER%はどきりとした
+PRINTFORML 「まーでも私が作るわけだからそんなひどい副作用は起きないと思うよー。
+PRINTFORML 魔法とか使える人なら副作用なしの避妊方法とか知ってるとは思うけど、そんな人
+PRINTFORML なんか世界中を見てもパラディススの王族ぐらいかなー。
+PRINTFORML 考えられる副作用は、その人の体力を数値化して、避妊中はそのポテンシャルの
+PRINTFORML 最大値から５００ぐらい減る、ってことぐらいかなー」
+PRINTFORML 体力のない女優候補にはかなり厳しい治療かもしれないが、よりリスクの高い指導
+PRINTFORML や撮影などを実行できることを考えたらメリットもちゃんとある
+PRINTFORML そう考えたあなたは郁美に避妊治療を依頼することにした……
+PRINTFORML 
+PRINTW  
+PRINTFORML 「私の作ったＭＩＩとか、他にはパラディススの王族とかそういった妊娠しないよ
+PRINTFORML うな人たちには治療できないからねー。
+PRINTFORML あと妊娠中の女の子とか、体力が低い子に投薬したら多分副作用で死ぬからそれも
+PRINTFORML 無理かなー
+PRINTFORML あ、それと逆に避妊治療した子を妊娠できるようにもできるよー」
+PRINTW
+
+$INPUT_LOOP
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は妊娠しなさそうです
+	RETURN 0
+;サキュバスは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】は避妊魔法のおかげで妊娠しなさそうです
+	RETURN 0
+;レイチェルは排除
+ELSEIF TALENT:RESULT:異界知識
+	PRINTFORMW %CALLNAME:RESULT%は避妊魔法のおかげで妊娠しなさそうです
+	RETURN 0
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象者は避妊治療ができません
+	RETURN 0
+;妊娠中は排除
+ELSEIF TALENT:RESULT:妊娠
+	PRINTFORMW %CALLNAME:RESULT%は妊娠中のため母体に悪影響が及ぶ可能性があります
+	RETURN 0
+;虚弱な女の子は排除
+ELSEIF MAXBASE:RESULT:体力 <= 1000
+	PRINTFORMW %CALLNAME:RESULT%は体力がないため悪影響が及ぶ可能性があります
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+
+PRINTFORML %NAME:T%でいいですか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	IF TALENT:T:避妊治療済 == 0
+		PRINTFORMW %NAME:T%を郁美のラボに連れていった……
+		PRINTFORML 避妊治療を受けてもらうことを伝えると%CALLNAME:T%はしぶしぶながらも頷いた……
+		PRINTFORMW %CALLNAME:T%は【%TALENTNAME:[[TALENT:避妊治療済]]%】になった
+		TALENT:T:避妊治療済 = 1
+		MAXBASE:T:体力 -= 500
+		BASE:T:体力 -= 500
+	ELSEIF TALENT:T:避妊治療済 == 1
+		PRINTFORMW %NAME:T%を郁美のラボに連れていった……
+		PRINTFORML 不妊治療を受けてもらうことを伝えると%CALLNAME:T%はしぶしぶながらも頷いた……
+		PRINTFORMW %CALLNAME:T%は【%TALENTNAME:[[TALENT:避妊治療済]]%】ではなくなった
+		TALENT:T:避妊治療済 = 0
+		MAXBASE:T:体力 += 500
+		BASE:T:体力 += 500
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+PRINTW
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;素質開花（未実装）
+;-------------------------------------------------
+@ABLCHANGE
+C = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML 「感覚の増強とかだねー、うん、できるよー」
+PRINTFORML 事務所のそばに居を構えていた郁美のラボの一室、いつも通りだらけた様子でパイプ
+PRINTFORML 椅子の背もたれを抱えるように座っていた郁美はなんでもないことのように言った
+PRINTFORML %CALLNAME:MASTER%が持ち掛けた相談は女優候補たちの潜在意識をコントロールできないだろうか、
+PRINTFORML ということだった
+PRINTFORML 女優候補たちを指導し、新たな快楽に目覚めていくさまを見るのは確かに指導する側
+PRINTFORML としては喜ばしいことである
+PRINTFORML だがしかし、自身の技巧をもってしてでも覚醒させられない潜在意識などがあるのも
+PRINTFORML 事実だった
+PRINTFORML 簡単な素質程度なら桐生組に紹介されたアングラな研究所でも洗脳できるみたいだが、
+PRINTFORMW それ以外の根本的な潜在意識などはそうもいかないのが現実である
+PRINTFORML 「まーあの研究所の洗脳技術はそこまで大したことじゃないからねー
+PRINTFORML やってることといえば一種のトラウマを植えつけてるだけだし、それぐらいなら民間
+PRINTFORML の病院の精神科でもやってるようなことだよー。
+PRINTFORML それ以上のことになるとスッペシャルなマッスィーンの出番だし、そんなもの開発し
+PRINTFORML てたのは某国とか某国とか――おっと誰か来たようだー、きゃー拉致られるー。
+PRINTFORML ……こほん、それで偶然にもそんな『わんだほー』なマッスィーンなら某国に依頼さ
+PRINTFORML れたやつのプロトタイプがあるから、あの研究所以上のことは期待してもいいよー」
+PRINTFORML ただー、とそこで郁美は言葉を区切ると%CALLNAME:MASTER%に諸経費のことの説明を始めた……
+PRINTW
+PRINTFORML ・完成品とほぼ遜色ないプロトタイプだけど、消費電力が半端じゃないんだよねー
+PRINTFORML ・具体的にはポイント換算で最高３０万Ｐぐらいー
+PRINTFORML ・でもその代わり、限界突破もできるよー
+PRINTFORML ・ちょっと、いやかなーりアブノーマルな洗脳だからその辺は注意してねー
+PRINTFORMW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+INPUT
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+;ELSEIF RESULT == 0
+;	CALL ABLCHANGE_DETAIL
+ENDIF
+PRINTW
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;素質開花まわり
+;-------------------------------------------------
+@ABLCHANGE_DATAIL
+T = TARGET
+
+$INPUT_LOOP
+
+PRINTFORML 《どの素質を開花させますか？》
+DRAWLINE
+PRINTFORML [ 0] 純真無垢
+PRINTFORML [ 1] プライド高い
+PRINTFORML [ 2] プライド低い
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;淫魔化
+;-------------------------------------------------
+@SUCCUBUS_CHANGE
+C = 5000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+	PRINTFORML 「ついにサキュバスの遺伝子の解析が完了したよー」
+	PRINTFORML 事務所のそばに居を構えていた郁美のラボの一室、いつも通りだらけた様子でパイプ
+	PRINTFORML 椅子の背もたれを抱えるように座っていた郁美はなんでもないことのように言った
+	PRINTFORML %CALLNAME:MASTER%は別の相談を持ち掛けるつもりで訪れていたのだが、郁美が口にしたのはそん
+	PRINTFORML な耳を疑うようなことだった
+	PRINTFORML レイチェルによって召喚された淫魔――異常なまでに成長が早く、どんな男でもその
+	PRINTFORML 吸精能力の前では枯れ果てるまでなにもかも搾り取られるほどの悪魔そのものの超常
+	PRINTFORML の存在
+	PRINTFORML 幸いにも%CALLNAME:MASTER%はレイチェルの秘薬のおかげでそうなることはなかったものの、例え
+	PRINTFORML ば痴漢なんかは精気を根こそぎ絞り取られ、廃人になっていたのが確認されている
+	PRINTFORML 吸精能力を抜きにしてもその性技は並々ならぬもので、どんな清楚な美少女でも淫蕩
+	PRINTFORML に快楽を貪る姿が好事家に人気がある
+	PRINTFORML そんな淫魔の遺伝子が解析できたということは――稀代の天才・郁美ならクローンを
+	PRINTFORMW 生み出すことも簡単なのかもしれない
+	PRINTFORML 「あー……それは無理なんだよねー……どうも遺伝子情報をそっくりそのまんまコピ
+	PRINTFORML ーするとプログラムが反応して自動的にプロテクトをかけるみたいなんだよねー。
+	PRINTFORML でー、レイっちにも聞いてみたけどクローンと近いホムンクルスも不可能だってー。
+	PRINTFORML でも私のクローンで実験した結果だけどー、塩基配列に因子を注入する形ならプロテ
+	PRINTFORML クトが反応しないみたいー。
+	PRINTFORML ちなみにこの因子注入がサキュバスが個体を増やす方法みたいなんだよねー。
+	PRINTFORML 吸血鬼に噛まれた人間が吸血鬼になるってのと同じ方法で、噛むことによって因子を
+	PRINTFORML 注入するんだってー。
+	PRINTFORML ただー、サキュバスにとって人間はエサだから、むやみやたらに同族を増やさないの
+	PRINTFORML がサキュバスにとっての不文律みたいー。
+	PRINTFORML でも私たちにそんなルールなんて関係ないからどれだけ増やしたって後は知ったこと
+	PRINTFORMW じゃないしねー」
+	PRINTFORML その後も講釈は続き、なんとか郁美の言っていることが理解できたあなたは、女優候
+	PRINTFORML 補のクローンを作り、そこから新たに淫魔を生み出すことはできないかを聞くことに
+	PRINTFORMW したが……
+	PRINTFORML 「クローンでもホムンクルスでも、まともに作ろうとしたら返済期限は超えちゃうか
+	PRINTFORML なー……実験に使ったクローンは前もって臨床用に作った急速培養のだからすぐ死ん
+	PRINTFORML じゃったしー。
+	PRINTFORML 仮に期間内に人工淫魔を作るなら……そだねー、今いる子たちの遺伝子をいじくるし
+	PRINTFORMW かないかなー……これはレイっちに聞いても同じ答えが返ってくると思うよー」
+	PRINTFORML という回答だった。
+	PRINTFORML 淫魔召喚の時とベクトルは違えど同じくやはり、倫理観を無視した施術だ。
+	PRINTFORML 「ま、そんな倫理観なんてクソ食らえだけどねー……さんざん生娘を弄んできた人間
+	PRINTFORML が気にかけることではないし、倫理観なんて気にしてたら科学は発展しないから私も
+	PRINTFORML そんなのは無視するしねー」
+	PRINTFORMW と、考え込んでいるとレイチェルの時と同じようなことを言われてしまった。
+	PRINTFORML 「まーでも、そういう悪人になりきれない、根っこのところで人間味があるから、私
+	PRINTFORML はキミを気に入ったんだけどねー。
+	PRINTFORML 例えば桐生組へ借金を返すのに一番手っ取り早いのはレイっちに麻薬を作ってもらう
+	PRINTFORML とか、私の技術を軍事転用させて諸外国に売り込むとかー、あとはスナッフビデオを
+	PRINTFORML 撮影するとかー？
+	PRINTFORML そういう外道もいいとこな方法だってあったはずなんだけど、キミはそういう方法を
+	PRINTFORML 選ばずに、馬鹿正直に桐生組に言われるままにＡＶとか風俗とか『まだまっとうな方
+	PRINTFORML 法』で借金返済しようだなんてねー……イマイチ悪人になりきれてないんだよねー。
+	PRINTFORML まーそれに今後、遺伝子操作での治療は研究者が確立させて医療の上では認知される
+	PRINTFORMW だろうから、それが早いか遅いかだけの違いだと思うよー？」
+	PRINTFORML 淫魔の召喚の時と同じように腹をくくるしかない、ただそれだけのことだ
+	PRINTFORML しかし女優候補たちがいくら淫魔と交流があるとしても、自分自身が『人間ではない
+	PRINTFORML 何か』になるにはかなりの抵抗があるだろう
+	PRINTFORML それだけに――条件は厳しそうだった
+	PRINTW
+	PRINTFORML 「まー単純にキミのことを信頼していることが絶対条件だろうねー――それも普通に
+	PRINTFORML 仲がいいレベルじゃなくて恋してるとかそういうレベルの。
+	PRINTFORML それとキミに尽くしてくれるような子じゃないと無理だろうねー。
+	PRINTFORMW それと、ＭＩＩとかはそもそも遺伝子がないわけだから無理かなー……」
+	$INPUT_LOOP
+	PRINT 
+	CALL LIFE_LIST_NEW,LL_MODE_全部
+
+	IF RESULT == COMMAND_GO_BACK
+		RETURN 1
+	ELSEIF RESULT < 0 || RESULT >= CHARANUM
+		GOTO INPUT_LOOP
+	;臨死中のキャラは排除
+		ELSEIF BASE:RESULT:体力 < 1
+		GOTO INPUT_LOOP
+	;郁美排除
+	ELSEIF TALENT:RESULT:最先端科学
+		PRINTFORMW %CALLNAME:TARGET%自身を淫魔にすることはできません
+		GOTO INPUT_LOOP
+	;アンドロイドは排除
+	ELSEIF TALENT:RESULT:アンドロイド
+		PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】を淫魔にすることはできません
+		GOTO INPUT_LOOP
+	;ミッションはだめ
+	ELSEIF TALENT:RESULT:ミッション
+		PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象を淫魔にすることはできません
+		GOTO INPUT_LOOP
+	;サキュバスは排除
+	ELSEIF TALENT:RESULT:淫魔
+		PRINTFORMW 既に【%TALENTNAME:[[TALENT:淫魔]]%】になっています
+		GOTO INPUT_LOOP
+	ELSEIF TALENT:RESULT:恋心 == 0 && TALENT:RESULT:セフレ == 0
+		PRINTFORMW %NAME:RESULT%は%CALLNAME:MASTER%に好意を寄せていません
+		GOTO INPUT_LOOP
+	ELSEIF ABL:RESULT:奉仕精神 <= 6
+		PRINTFORMW %NAME:RESULT%は%CALLNAME:MASTER%に尽くすことを躊躇っている節があります
+		GOTO INPUT_LOOP
+	ELSEIF ABL:RESULT:信頼 <= 6
+		PRINTFORMW %NAME:RESULT%は%CALLNAME:MASTER%に身も心も捧げたいとはまだ思っていないようです
+		GOTO INPUT_LOOP
+;	;勲章特典：人間に戻す(Hoには存在しない)
+;	ELSEIF CFLAG:RESULT:900 == 1
+;		PRINTFORMW %CALLNAME:TARGET%を淫魔にすることはもう二度とできません
+;		GOTO INPUT_LOOP
+	ENDIF
+
+	TARGET = RESULT
+
+	PRINTL  [0] - はい
+	PRINTL  [1] - やめる
+
+	INPUT
+
+	IF RESULT == 1
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 0
+
+	PRINTFORMW %NAME:TARGET%を郁美のラボに連れていった……
+	PRINTFORML この改造手術を受けるとこれから%CALLNAME:TARGET%は人間ではなく淫魔として生きていかなけれ
+	PRINTFORML ばならないことを説明すると、長い沈黙の末にようやく%CALLNAME:TARGET%は頷いた
+	PRINTFORML 人外の存在になることへの恐怖よりも、%CALLNAME:MASTER%の為になれるという喜びの方が勝った
+	PRINTFORML らしい……
+	PRINTFORML %CALLNAME:TARGET%はラボに設置された、今回のために作られたカプセルのような手術台に横たわ
+	PRINTFORML り、手術の始まりを緊張した面持ちで待っている……
+	PRINTW
+	PRINTFORML 事務所で待機していたあなたの元に、改造手術が終わったらしく郁美がやってきた
+	PRINTFORML しかしその面持ちは微妙なもので、いつもはだらけているものの言いたいことははっ
+	PRINTFORMW きりと言う郁美にしては珍しく歯切れが悪そうだった
+	PRINTFORML 「手術は一応成功したよー、でもー……」
+	PRINTFORML 郁美は言葉を区切ると、ラボの方向を顎で示す
+	PRINTFORML あなたがラボに到着すると、そこにはぼんやりとした表情で裸のままカプセルに横た
+	PRINTFORML わっている%CALLNAME:TARGET%がいた
+	PRINTFORML その髪と瞳からは色素が失われ、顔立ちや体型以外には面影がなくなっていた……
+	PRINTFORML しかし%CALLNAME:TARGET%は%CALLNAME:MASTER%の姿を見るとまるで初対面の人物を相手するような、どことな
+	PRINTFORML くぎこちない仕草で、小さな口を開いて――『はじめまして』と挨拶した……
+	PRINTFORMW
+	PRINTFORML 「たぶんー……淫魔の因子を注入したことによって記憶が全部リセットされちゃった
+	PRINTFORML んだろうねー……副作用というか、異物を受け入れることへの脳の防衛システムとい
+	PRINTFORML うかー。
+	PRINTFORML 確かに臨床実験はやったけど、それは記憶もまっさらなクローンでのことだったから
+	PRINTFORML 記憶が無くなるっていう事例は確認できるわけもないしー……はっきり言ってこれは
+	PRINTFORML 私の予測が甘すぎたせいだねー……異性の精気を糧とするような、人間とは異なる方
+	PRINTFORMW 法で養分を摂るような存在だから、なにがあってもおかしくないっていうのに……っ！」
+	PRINTFORML 珍しく声を荒げ、科学に携わる者としてしなければならない危険予測を怠った自分を
+	PRINTFORML 悔いている郁美
+	PRINTFORML 『わたしのごしゅじんさまは、あなたですか？』
+	PRINTFORML あなたの袖を引っ張りながら、幼くたどたどしい口調で%CALLNAME:TARGET%はそう言った
+	PRINTFORML 先のレイチェルによる召喚で淫魔はマスターを必要とするということはわかっていた
+	PRINTFORML しかし、大切にしてきたはずの%CALLNAME:TARGET%の口からそんな他人行儀な言葉が出たとは――
+	PRINTFORML あなたは思いたくもなかった
+	PRINTFORMW
+	PRINTFORML だがしかし――記憶を失っても、人間でなくなったとしても、彼女は%CALLNAME:MASTER%を慕って
+	PRINTFORML くれていた%NAME:TARGET%であることには違いない
+	PRINTFORML %CALLNAME:TARGET%と過ごした日々を思い返していた%CALLNAME:MASTER%は、このまま彼女を放っておくことは
+	PRINTFORML できないと判断し、一からのやり直しになるが新たな関係を築いていこうと思った…
+	PRINTFORML …
+	PRINTFORMW
+	PRINTFORMW 《%NAME:TARGET%のありとあらゆる記憶がリセットされました》
+	PRINTFORMW 《%NAME:TARGET%は淫魔として生まれ変わりました》
+	CALL SUCCUBUS_STATUS_ACH(TARGET)
+	
+	$INPUT_LOOP_RENAME
+	PRINTFORML 生まれ変わった%NAME:TARGET%に新たな名前を与えますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTL 名前を入力してください
+			INPUTS
+			$INPUT_LOOP_NAMEDECIDE1
+			PRINTFORML %NAME:TARGET%の新たな名前は%RESULTS%でよろしいですか？
+				PRINTL [0] - はい
+				PRINTL [1] - いいえ
+				INPUT
+					IF RESULT == 0
+						PRINTFORMW %NAME:TARGET%の新たな名前を%RESULTS%に決定しました
+						NAME:TARGET = %RESULTS%
+					ELSEIF RESULT == 1
+						PRINTFORML 再入力してください
+						INPUTS
+						GOTO INPUT_LOOP_NAMEDECIDE1
+					ELSE
+						GOTO INPUT_LOOP_NAMEDECIDE1
+					ENDIF
+		
+			PRINTL 続いて呼び方を入力してください
+			INPUTS
+			$INPUT_LOOP_NAMEDECIDE2
+			PRINTFORML %NAME:TARGET%の新たな呼び方は%RESULTS%でよろしいですか？
+				PRINTL [0] - はい
+				PRINTL [1] - いいえ
+				INPUT
+					IF RESULT == 0
+						PRINTFORMW %CALLNAME:TARGET%の新たな名前を%RESULTS%に決定しました
+						CALLNAME:TARGET = %RESULTS%
+					ELSEIF RESULT == 1
+						PRINTFORML 再入力してください
+						INPUTS
+						GOTO INPUT_LOOP_NAMEDECIDE2
+					ELSE
+						GOTO INPUT_LOOP_NAMEDECIDE2
+					ENDIF
+
+			PRINTL 最後に新たな芸名を入力してください
+			INPUTS
+			$INPUT_LOOP_NAMEDECIDE3
+			PRINTFORML %NAME:TARGET%の新たな芸名は%RESULTS%でよろしいですか？
+				PRINTL [0] - はい
+				PRINTL [1] - いいえ
+				INPUT
+					IF RESULT == 0
+						PRINTFORMW %CALLNAME:TARGET%の新たな名前を%RESULTS%に決定しました
+						NICKNAME:TARGET = %RESULTS%
+					ELSEIF RESULT == 1
+						PRINTFORML 再入力してください
+						INPUTS
+						GOTO INPUT_LOOP_NAMEDECIDE3
+					ELSE
+						GOTO INPUT_LOOP_NAMEDECIDE3
+					ENDIF
+						
+			PRINTFORML 名前を《%NAME:TARGET%》、呼び方を《%CALLNAME:TARGET%》、芸名を《%NICKNAME:TARGET%》に変更しました
+		ELSEIF RESULT == 1
+			PRINTFORML 名前を変更しませんでした
+		ELSE
+			GOTO INPUT_LOOP_RENAME
+		ENDIF
+	ENDIF
+PRINTW
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;アンドロイド製作
+;-------------------------------------------------
+@ADD_ANDROID
+
+C = 5000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+;この部分は_Hoで書かれる予定はない
+;……誰か書くなら喜んで選択肢復帰するけど
+;$INPUT_LOOP_CAUTION
+;PRINTFORML ※この項目では当バリアントの舞台設定を垣間見ることができます……が、かなり厨二病な内容で長いです
+;PRINTFORML  それでも読みますか？
+;PRINTL [0] - はい
+;PRINTL [1] - いいえ
+;INPUT
+;IF RESULT == 0
+;	PRINTFORMW まだ書き上がっていないので要約になります
+;	PRINTFORML 要約すると「必要資金５００万ポイント・プレイ期間５０週延長」になります
+;ELSEIF RESULT == 1
+;	PRINTFORML 書いてあることを要約すると「必要資金５００万ポイント・プレイ期間５０週延長」になります
+;ELSE
+;	GOTO INPUT_LOOP_CAUTION
+;ENDIF
+;代わりの文章は仮置き
+PRINTL 郁美に新型アンドロイドを制作してもらいます
+PRINTL なんやかんやで「必要資金５００万ポイント・プレイ期間５０週延長」になります
+
+$INPUT_LOOP_DECIDE
+PRINTFORML 新型アンドロイドを制作しますか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+INPUT
+IF RESULT == 0
+	CALL キャラ追加([[キャラ:アンドロイド]])
+	CALL ADD_IKUMI_ANDROID
+	FLAG:新型アンドロイド製作 = 1
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_DECIDE
+ENDIF
+
+MONEY -= C
+
+FLAG:期限日数 += 50
+
+RETURN 1
+;
+;-------------------------------------------------
+;排卵誘発剤の強化
+;-------------------------------------------------
+@BOOST_ITEM40
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML 「どんな生き物でも妊娠できるようにしたいんだよね。うん、いけるよー」
+PRINTFORML 事務所のそばに居を構えていた郁美のラボの一室、いつも通りだらけた様子でパイプ
+PRINTFORML 椅子の背もたれを抱えるように座っていた郁美はなんでもないことのように言った
+PRINTFORML 「キミのおかげで貴重なサンプルが取れたからねー。もちろん費用はかかるけど……
+PRINTFORML 　排卵誘発剤を使うときに一緒に飲んでもらえば効果が出る感じになるかなー。
+PRINTFORML 　素材があるから、50万ポイントぐらいで済むよー。それでいいー？」
+PRINTW  
+
+$INPUT_LOOP_DECIDE
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PBAND:303 = 3
+	PRINTL 排卵誘発剤強化剤が入った容器を受け取った。
+	PRINTL 「これを使えばアンドロイドだろうが天使だろうが子孫を残せるよー。
+	PRINTL 　毎日自動生成されるようにしてあるから、なくなる心配とかはしなくていいからねー。
+	PRINTL 　あ、それと、うちとかで避妊治療とかしてても貫通しちゃうからご利用は計画的にねー」
+ELSE
+	GOTO INPUT_LOOP_DECIDE
+ENDIF
+PRINTW
+
+MONEY -= C
+
+RETURN 1

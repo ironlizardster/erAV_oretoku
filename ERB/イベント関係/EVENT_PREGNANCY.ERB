@@ -1,0 +1,1122 @@
+﻿;EVENT_P、EVENT_PREGNANCY、妊娠関連のイベント
+;eratohoAより流用
+
+;---------------------------------------------------------
+;フラグ管理　口上用のフラグと被るので、変更
+;---------------------------------------------------------
+
+;CFLAG
+;101→マスターによる膣内射精カウント用
+;102→誰によって妊娠させられたか（マスター = 1, 助手 = 2, 奴隷 = 3）
+;103、104→助手と奴隷間での膣内射精カウント用
+;105→娼館などの客と奴隷間の膣内射精カウント用
+;106→ノラ犬から奴隷への膣内射精カウント用
+						;****追加ここから****
+;107→触手から奴隷への膣内射精カウント用
+						;****追加ここまで****
+;109→排卵誘発剤の使用の有無
+;110→出産日
+;111→父親は？？
+;121→妊娠時の増加体重
+;122→妊娠時の増加バスト
+;123→妊娠時の増加ウェスト
+;124→妊娠時の増加ヒップ
+;追加 FLAG
+;97→臨月or育児中の奴隷はいるか？
+;98→射精箇所選択機能および妊娠機能のON・OFF
+;99→射精選択の自動モード時射精先選択機能のON・OFF
+;TFLAG
+;700→育児部屋コマンド実行した？
+
+;---------------------------------------------------------
+;関数群統括関数
+;---------------------------------------------------------
+
+@IN_VAGINA_ALL
+						;****あなた妊娠パッチ追加ここから****
+CALL IN_VAGINA_A_TO_M
+CALL IN_VAGINA_T_TO_M
+						;****あなた妊娠パッチ追加ここまで****
+CALL IN_VAGINA_M_TO_T
+CALL IN_VAGINA_M_TO_A
+CALL IN_VAGINA_A_TO_T
+CALL IN_VAGINA_T_TO_A
+CALL IN_VAGINA_D_TO_T
+						;****追加ここから****
+CALL IN_VAGINA_S_TO_T
+						;****追加ここまで****
+						;****スライムパッチ追加ここから****
+CALL IN_VAGINA_G_TO_T
+						;****スライムパッチ追加ここまで****
+;売春による妊娠判定は@EVENTTURNENDでまとめて行う
+;CALL IN_VAGINA_EXTRA
+
+@CONCEPTION_CHECK_ALL
+						;****あなた妊娠パッチ追加ここから****
+CALL CONCEPTION_CHECK_A_TO_M
+CALL CONCEPTION_CHECK_T_TO_M
+						;****あなた妊娠パッチ追加ここまで****
+CALL CONCEPTION_CHECK_M_TO_T
+CALL CONCEPTION_CHECK_M_TO_A
+CALL CONCEPTION_CHECK_A_TO_T
+CALL CONCEPTION_CHECK_T_TO_A
+CALL CONCEPTION_CHECK_D_TO_T
+						;****追加ここから****
+CALL CONCEPTION_CHECK_S_TO_T
+						;****追加ここまで****
+						;****スライムパッチ追加ここから****
+CALL CONCEPTION_CHECK_G_TO_T
+						;****スライムパッチ追加ここまで****
+;売春による妊娠判定は@EVENTTURNENDでまとめて行う
+;CALL CONCEPTION_CHECK_EXTRA
+
+@GET_CHILD_ALL
+REPEAT CHARANUM
+	CALL GET_CHILD
+REND
+
+;---------------------------------------------------------
+;膣内射精・妊娠フラグに絡む関数群
+;---------------------------------------------------------
+
+						;****あなた妊娠パッチ追加ここから****
+@IN_VAGINA_A_TO_M
+;助手→奴隷への膣内射精による妊娠判定
+;助手とターゲットがいるか
+IF ASSI >= 1
+	;奴隷の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = MASTER
+		P = 2
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+
+@IN_VAGINA_T_TO_M
+;奴隷→助手への膣内射精による妊娠判定
+;助手の妊娠チェック
+IF TALENT:MASTER:妊娠 == 0
+	T = MASTER
+	P = 3
+	CALL NAKADASHI_CHECK
+ENDIF
+						;****あなた妊娠パッチ追加ここまで****
+@IN_VAGINA_M_TO_T
+;膣内射精による妊娠、非妊娠のチェック
+IF TARGET >= 1
+	;奴隷の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = TARGET
+		P = 1
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+
+@IN_VAGINA_M_TO_A
+;膣内射精による妊娠、非妊娠のチェック
+;助手がいるか
+IF ASSI >= 1
+	;助手の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = ASSI
+		P = 1
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+
+
+@IN_VAGINA_A_TO_T
+;助手→奴隷への膣内射精による妊娠判定
+;助手とターゲットがいるか
+IF ASSI >= 1 && TARGET >= 1
+	;奴隷の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = TARGET
+		P = 2
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+
+@IN_VAGINA_T_TO_A
+;奴隷→助手への膣内射精による妊娠判定
+;助手がいるか
+IF ASSI >= 1
+	;助手の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = ASSI
+		P = 3
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+
+@IN_VAGINA_D_TO_T
+;ノラ犬→奴隷への膣内射精による妊娠判定
+IF TARGET >= 1
+	;奴隷の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = TARGET
+		P = 5
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+
+						;****追加ここから****
+@IN_VAGINA_S_TO_T
+;触手→奴隷への膣内射精による妊娠判定
+IF TARGET >= 1
+	;奴隷の妊娠チェック
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = TARGET
+		P = 6
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+						;****追加ここまで****
+						;****スライムパッチ追加ここから****
+@IN_VAGINA_G_TO_T
+;スライム→奴隷への膣内射精？による妊娠判定
+IF TARGET >= 1
+	;奴隷の妊娠チェック
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0
+		T = TARGET
+		P = 8
+		CALL NAKADASHI_CHECK
+	ENDIF
+ENDIF
+						;****スライムパッチ追加ここまで****
+@IN_VAGINA_EXTRA
+;娼館やレンタル時に客に膣射された場合の妊娠判定
+REPEAT CHARANUM
+						;****スライムパッチ追加ここから****
+	IF TALENT:COUNT:妊娠 == 0 && TALENT:COUNT:抱卵 == 0
+						;****スライムパッチ追加ここまで****
+		T = COUNT
+		P = 4
+		CALL NAKADASHI_CHECK
+	ENDIF
+REND
+
+@NAKADASHI_CHECK
+;中出しされた精子量に応じて確率処理
+
+;妊娠フィルタ部分
+SIF FLAG:妊娠なし == 1
+	RETURN 0
+SIF CFLAG:T:33 != 0
+	RETURN 0
+
+;チェックするフラグ設定
+F = 101 + P
+SIF P == 1
+	F = 101
+SIF P == 8
+	F = 112
+
+;対象が男か未熟なら関数終了
+SIF TALENT:T:オトコ || TALENT:T:未熟
+	RETURN 0
+
+						;****あなた妊娠パッチ追加ここから****
+						;****追加ここから****(加筆)
+
+;対象がアンドロイド、淫魔、避妊治療済なら関数終了
+IF !CAN_GET_PREGNANT(T)
+	CFLAG:T:F = 0
+	RETURN 0
+ENDIF
+
+;獣姦で対象が動物耳じゃないなら関数終了
+IF (P == 5 && TALENT:T:動物耳 == 0) && (CFLAG:T:排卵促進剤使用 == 0 || PBAND:303 < 3)
+	CFLAG:T:F = 0
+	RETURN 0
+ENDIF
+						;****追加ここまで****(加筆)
+;中だしされてないなら関数終了
+SIF CFLAG:T:F == 0
+	RETURN 0
+
+;妊娠が既に確定している場合は関数終了
+IF CFLAG:T:出産日 > 0
+	CFLAG:T:F = 0
+	RETURN 0
+ENDIF
+
+;妊娠中もしくは育児中は関数終了
+						;****スライムパッチ追加ここから****
+IF TALENT:T:妊娠 || TALENT:T:育児中 || TALENT:T:抱卵
+						;****スライムパッチ追加ここまで****
+	CFLAG:T:F = 0
+	RETURN 0
+ENDIF
+
+IF CFLAG:T:排卵促進剤使用 == -1
+	CFLAG:T:F = 0
+	RETURN 0
+ENDIF
+						;****あなた妊娠パッチ追加ここまで****
+;排卵剤の有無による定数設定
+C = 3 - (CFLAG:T:排卵促進剤使用 * 2)
+SIF C < 0
+	C = 1
+
+IF CFLAG:T:F >= 30
+	SIF RAND:((1 + TALENT:T:小柄体型 * 2) * C) == 0
+		CFLAG:T:誰によって妊娠させられたか = P
+ELSEIF CFLAG:T:F >= 20
+	SIF RAND:((2 + TALENT:T:小柄体型 * 2) * C) == 0
+		CFLAG:T:誰によって妊娠させられたか = P
+ELSEIF CFLAG:T:F >= 15
+	SIF RAND:((3 + TALENT:T:小柄体型 * 2) * C) == 0
+		CFLAG:T:誰によって妊娠させられたか = P
+ELSEIF CFLAG:T:F >= 10
+	SIF RAND:((4 + TALENT:T:小柄体型 * 2) * C) == 0
+		CFLAG:T:誰によって妊娠させられたか = P
+ELSEIF CFLAG:T:F >= 5
+	SIF RAND:((5 + TALENT:T:小柄体型 * 2) * C) == 0
+		CFLAG:T:誰によって妊娠させられたか = P
+ELSEIF CFLAG:T:F >= 1
+	SIF RAND:((6 + TALENT:T:小柄体型 * 2) * C) == 0
+		CFLAG:T:誰によって妊娠させられたか = P
+ENDIF
+
+;判定を行った膣射のリセット
+CFLAG:T:F = 0
+
+@CAN_GET_PREGNANT(ARG)
+#FUNCTION
+RETURNF !TALENT:ARG:妊娠 && !TALENT:ARG:抱卵 && !TALENT:ARG:育児中 && CFLAG:ARG:危険日 == 1 && CFLAG:ARG:排卵促進剤使用 != -1 && (!(TALENT:ARG:アンドロイド || TALENT:ARG:淫魔 || TALENT:ARG:避妊治療済 || TALENT:ARG:性魔術 || TALENT:ARG:異界知識 || TALENT:ARG:最先端科学 || TALENT:ARG:天使 || TALENT:ARG:幽霊) || (CFLAG:ARG:排卵促進剤使用 > 0 && PBAND:303 >= 3))
+
+;---------------------------------------------------------
+;妊娠判定関数郡
+;---------------------------------------------------------
+
+						;****あなた妊娠パッチ追加ここから****
+@CONCEPTION_CHECK_A_TO_M
+;助手の精液でマスター妊娠確定時の処理
+;助手と奴隷がいるか
+IF ASSI >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:MASTER:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:MASTER:誰によって妊娠させられたか == 2 && CFLAG:MASTER:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:MASTER:出産日 = DAY + 10 + RAND:3
+		CFLAG:MASTER:父親のキャラ番号 = NO:ASSI
+		CSTR:MASTER:妊娠精液 = %NAME:ASSI%
+	ENDIF
+ENDIF
+
+@CONCEPTION_CHECK_T_TO_M
+;奴隷の精液でマスター妊娠確定時の処理
+;助手がいるか
+IF TARGET >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:MASTER:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:MASTER:誰によって妊娠させられたか == 3 && CFLAG:MASTER:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:MASTER:出産日 = DAY + 10 + RAND:3
+		CFLAG:MASTER:父親のキャラ番号 = NO:TARGET
+		CSTR:MASTER:妊娠精液 = %NAME:TARGET%
+	ENDIF
+ENDIF
+						;****あなた妊娠パッチ追加ここまで****
+@CONCEPTION_CHECK_M_TO_T
+;マスターの精液でターゲット妊娠確定時の処理
+;奴隷がいるか
+IF TARGET >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 1 && CFLAG:TARGET:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:TARGET:出産日 = DAY + 10 + RAND:3
+		CFLAG:TARGET:父親のキャラ番号 = NO:MASTER
+						;****あなた妊娠パッチ追加ここから****
+		CSTR:TARGET:妊娠精液 = %CALLNAME:MASTER%
+						;****あなた妊娠パッチ追加ここまで****
+	ENDIF
+ENDIF
+
+@CONCEPTION_CHECK_M_TO_A
+;マスターの精液で助手妊娠確定時の処理
+;助手がいるか
+IF ASSI >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:ASSI:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:ASSI:誰によって妊娠させられたか == 1 && CFLAG:ASSI:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:ASSI:出産日 = DAY + 10 + RAND:3
+		CFLAG:ASSI:父親のキャラ番号 = NO:MASTER
+						;****あなた妊娠パッチ追加ここから****
+		CSTR:ASSI:妊娠精液 = %CALLNAME:MASTER%
+						;****あなた妊娠パッチ追加ここまで****
+	ENDIF
+ENDIF
+
+@CONCEPTION_CHECK_A_TO_T
+;助手の精液で奴隷妊娠確定時の処理
+;助手と奴隷がいるか
+IF ASSI >= 1 && TARGET >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 2 && CFLAG:TARGET:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:TARGET:出産日 = DAY + 10 + RAND:3
+		CFLAG:TARGET:父親のキャラ番号 = NO:ASSI
+						;****あなた妊娠パッチ追加ここから****
+		CSTR:TARGET:妊娠精液 = %NAME:ASSI%
+						;****あなた妊娠パッチ追加ここまで****
+	ENDIF
+ENDIF
+
+
+@CONCEPTION_CHECK_T_TO_A
+;奴隷の精液で助手妊娠確定時の処理
+;助手がいるか
+IF ASSI >= 1 && TARGET >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:ASSI:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:ASSI:誰によって妊娠させられたか == 3 && CFLAG:ASSI:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:ASSI:出産日 = DAY + 10 + RAND:3
+		CFLAG:ASSI:父親のキャラ番号 = NO:TARGET
+						;****あなた妊娠パッチ追加ここから****
+		CSTR:ASSI:妊娠精液 = %NAME:TARGET%
+						;****あなた妊娠パッチ追加ここまで****
+	ENDIF
+ENDIF
+
+@CONCEPTION_CHECK_D_TO_T
+;犬の精液で奴隷妊娠確定時の処理
+;奴隷がいるか
+IF TARGET >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 5 && CFLAG:TARGET:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		;犬の仔なら妊娠期間短い
+		CFLAG:TARGET:出産日 = DAY + 10 + RAND:3
+		CFLAG:TARGET:父親のキャラ番号 = -2
+						;****追加ここから****
+		CSTR:妊娠精液 = 犬
+						;****追加ここまで****
+	ENDIF
+ENDIF
+
+
+						;****追加ここから****
+@CONCEPTION_CHECK_S_TO_T
+;触手の精液で奴隷妊娠確定時の処理
+;奴隷がいるか
+IF TARGET >= 1
+						;****スライムパッチ追加ここから****
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 6 && CFLAG:TARGET:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		;触手の仔なら妊娠期間短い
+		CFLAG:TARGET:出産日 = DAY + 5 + RAND:3
+		CFLAG:TARGET:父親のキャラ番号 = -3
+		CSTR:妊娠精液 = 触手
+	ENDIF
+ENDIF
+						;****追加ここまで****
+						;****スライムパッチ追加ここから****
+@CONCEPTION_CHECK_G_TO_T
+;スライムの精液で奴隷妊娠確定時の処理
+;奴隷がいるか
+IF TARGET >= 1
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 8 && CFLAG:TARGET:出産日 == 0
+		;出産系のフラグ設定
+		;抱卵は妊娠期間短い
+		CFLAG:TARGET:出産日 = DAY + 5 + RAND:3
+		CFLAG:TARGET:父親のキャラ番号 = -6
+		CSTR:妊娠精液 = スライム
+	ENDIF
+ENDIF
+						;****スライムパッチ追加ここまで****
+@CONCEPTION_CHECK_EXTRA
+;娼館やレンタル時の客の精液で妊娠確定時の処理
+;CFLAG:108→素質の消滅をカウントする変数
+REPEAT CHARANUM
+						;****スライムパッチ追加ここから****
+	IF TALENT:COUNT:妊娠 == 0 && TALENT:COUNT:抱卵 == 0 && CFLAG:COUNT:誰によって妊娠させられたか == 4 && CFLAG:COUNT:出産日 == 0
+						;****スライムパッチ追加ここまで****
+		;出産系のフラグ設定
+		CFLAG:COUNT:出産日 = DAY + 9 + RAND:6
+		CFLAG:COUNT:父親のキャラ番号 = -1
+		CSTR:COUNT:妊娠精液 = 知らないオトコの人
+	ENDIF
+REND
+
+
+;---------------------------------------------------------
+;妊娠処理関数郡
+;---------------------------------------------------------
+
+@GET_CHILD
+;既に妊娠中・育児中ならそのまま戻る
+						;****スライムパッチ追加ここから****
+SIF TALENT:COUNT:妊娠 || TALENT:COUNT:育児中 || TALENT:COUNT:抱卵
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+
+;マスターの精液で妊娠発覚時の処理
+IF  CFLAG:COUNT:誰によって妊娠させられたか == 1 && CFLAG:COUNT:出産日 <= DAY+13
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%は%CALLNAME:MASTER%の子供を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+;助手の精液で妊娠発覚時の処理
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 2 && CFLAG:COUNT:出産日 <= DAY+13
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%は%CSTR:COUNT:妊娠精液%の子供を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+;奴隷の精液で妊娠発覚時の処理
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 3 && CFLAG:COUNT:出産日 <= DAY+13
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%は%CSTR:COUNT:妊娠精液%の子供を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+;客の精液で妊娠発覚時の処理
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 4 && CFLAG:COUNT:出産日 <= DAY+13
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%は名も知らぬ男の子供を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	CSTR:COUNT:妊娠精液 = 知らないオトコの人
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+;犬の精液で妊娠発覚時の処理
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 5 && CFLAG:COUNT:出産日 <= DAY+8
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%は野良犬の仔を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+						;****追加ここから****
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 6 && CFLAG:COUNT:出産日 <= DAY+8
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%は触手の仔を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+						;****追加ここまで****
+						;****スライムパッチ追加ここから****
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 8 && CFLAG:COUNT:出産日 <= DAY+8
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%はスライムの卵を身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:抱卵]]%】した
+	WAIT
+	TALENT:COUNT:抱卵 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+						;****スライムパッチ追加ここまで****
+ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 7 && CFLAG:COUNT:出産日 <= DAY+13
+	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
+	PRINTFORML %CALLNAME:COUNT%はカレシの子どもを身篭った様だ
+	PRINTL 
+	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
+	IF TALENT:COUNT:人妻 == 0 && BASE:COUNT:実年齢 >= 16
+		PRINTFORMW
+		PRINTFORML カレシの子どもを妊娠してしまった%CALLNAME:COUNT%は、悩みに悩んだ末にカレシと結婚することにしたようだ……
+		PRINTFORMW 《%NAME:COUNT%は【人妻】になり、名前が%CSTR:COUNT:彼氏姓%%CALLNAME:COUNT%に変わった》
+		NAME:COUNT = %CSTR:COUNT:彼氏姓%%CALLNAME:COUNT%
+		TALENT:COUNT:人妻 = 1
+	ENDIF
+	WAIT
+	TALENT:COUNT:妊娠 = 1
+	T = COUNT
+	CALL CHANGE_N_STATUS
+ENDIF
+
+@CHANGE_N_STATUS
+;妊娠時のステータスの変化
+;共通処理
+;体力上限を減らす
+MAXBASE:T:体力 -= 500
+SIF BASE:T:体力 > MAXBASE:T:体力
+	BASE:T:体力 = MAXBASE:T:体力
+
+;近親相姦のチェック
+I  = 0
+F = 0
+
+SIF CFLAG:T:誰によって妊娠させられたか != 2 && CFLAG:T:誰によって妊娠させられたか != 3
+	GOTO INCEST_CHECK_END
+
+G = COUNT
+REPEAT CHARANUM
+	SIF NO:COUNT == CFLAG:T:父親のキャラ番号
+		F = COUNT
+REND
+REPEAT 5
+	B = COUNT + 21
+	IF CFLAG:T:B % 1000 == CFLAG:T:父親のキャラ番号
+		;父親・母親の子供を妊娠
+		IF CFLAG:T:B < 1000
+			I = 1
+			IF F > 0 && TALENT:F:オトコ
+				PRINTFORML %CALLNAME:T%は自分の父親である%CALLNAME:F%の子種で妊娠した
+			ELSEIF F > 0
+				PRINTFORML %CALLNAME:T%は自分の母親である%CALLNAME:F%の子種で妊娠した
+			ELSE
+				PRINTFORML %CALLNAME:T%は自分の親の子種で妊娠した
+			ENDIF
+		;息子・娘の子供を妊娠
+		ELSEIF  CFLAG:T:B < 2000
+			I = 2
+			IF F > 0 && TALENT:F:オトコ
+				PRINTFORML %CALLNAME:T%は自分の息子である%CALLNAME:F%の子種で妊娠した
+			ELSEIF F > 0
+				PRINTFORML %CALLNAME:T%は自分の娘である%CALLNAME:F%の子種で妊娠した
+			ELSE
+				PRINTFORML %CALLNAME:T%は自分の子供の子種で妊娠した
+			ENDIF
+		;兄・姉の子供を妊娠
+		ELSEIF  CFLAG:T:B < 3000
+			I = 3
+			IF F > 0 && TALENT:F:オトコ
+				PRINTFORML %CALLNAME:T%は自分の兄である%CALLNAME:F%の子種で妊娠した
+			ELSEIF F > 0
+				PRINTFORML %CALLNAME:T%は自分の姉である%CALLNAME:F%の子種で妊娠した
+			ELSE
+				PRINTFORML %CALLNAME:T%は自分の兄弟姉妹の子種で妊娠した
+			ENDIF
+		;弟・妹の子供を妊娠
+		ELSEIF  CFLAG:T:B < 4000
+			I = 4
+			IF F > 0 && TALENT:F:オトコ
+				PRINTFORML %CALLNAME:T%は自分の弟である%CALLNAME:F%の子種で妊娠した
+			ELSEIF F > 0
+				PRINTFORML %CALLNAME:T%は自分の妹である%CALLNAME:F%の子種で妊娠した
+			ELSE
+				PRINTFORML %CALLNAME:T%は自分の兄弟姉妹の子種で妊娠した
+			ENDIF
+;		;従弟の子供を妊娠
+;Im@s用処理。AV_Hoではたぶん必要ないのでなかったことに。
+;		ELSEIF  CFLAG:T:B == 516
+;			I = 5
+;			IF F > 0 && TALENT:F:オトコ
+;				PRINTFORML %CALLNAME:T%は自分の従弟である%CALLNAME:F%の子種で妊娠した
+;			ENDIF
+		ENDIF
+	BREAK
+	ENDIF
+REND
+COUNT = G
+
+$INCEST_CHECK_END
+
+;乳がワンランクパワーアップする
+CALL GROW_B_SIZE
+
+;母乳出るようになる
+						;****あなた妊娠パッチ追加ここから****
+IF TALENT:T:母乳体質 == 1
+	MARK:T:6 = 1
+ELSEIF TALENT:T:母乳体質 == 0
+						;****あなた妊娠パッチ追加ここまで****
+	PRINTFORML %CALLNAME:T%は母乳が出るようになった
+	WAIT
+	TALENT:T:母乳体質 = 1
+ENDIF
+
+;父親が誰なのかと母親の状態によるストレス値の分岐
+S = 0
+A = CFLAG:T:父親のキャラ番号
+
+;父親が主人で母親が【恋心】持ち
+IF TALENT:T:恋心 && CFLAG:T:誰によって妊娠させられたか == 1
+	S += 0
+;父親が主人で母親が【淫乱】持ち
+ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 1
+	S += 30
+ENDIF
+
+;父親が助手・奴隷で母親が【恋心】持ち
+IF TALENT:T:恋心 && (CFLAG:T:誰によって妊娠させられたか == 2 || CFLAG:T:誰によって妊娠させられたか == 3)
+	IF RELATION:T:A != 0
+		S += 30 * ((200-RELATION:T:A) / 100) + 30
+	ELSE
+		S += 60
+	ENDIF
+;父親が助手・奴隷で母親が【淫乱】持ち
+ELSEIF TALENT:T:淫乱 && (CFLAG:T:誰によって妊娠させられたか == 2 || CFLAG:T:誰によって妊娠させられたか == 3)
+	IF RELATION:T:A != 0
+		S += 30 * ((200-RELATION:T:A) / 100)
+	ELSE
+		S += 30
+	ENDIF
+ENDIF
+
+;父親が顧客で母親が【恋心】持ち
+IF TALENT:T:恋心 && CFLAG:T:誰によって妊娠させられたか == 4
+	S += 80
+;父親が顧客で母親が【淫乱】持ち
+ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 4
+	S += 50
+ENDIF
+
+;父親がノラ犬で母親が【恋心】持ち
+IF TALENT:T:恋心 && CFLAG:T:誰によって妊娠させられたか == 5
+	S += 120
+	;【牝犬】が付いてればかなり減る
+	SIF TALENT:T:牝犬
+		S -= 40
+;父親がノラ犬で母親が【淫乱】持ち
+ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 5
+	S += 80
+	;【牝犬】が付いてればかなり減る
+	SIF TALENT:T:牝犬
+		S -= 40
+;それ以外で父親がノラ犬。「陥落素質なし」とあわせて+140
+ELSEIF CFLAG:T:誰によって妊娠させられたか == 5
+	S += 40
+	;【牝犬】が付いてればかなり減る
+	SIF TALENT:T:牝犬
+		S -= 40
+ENDIF
+
+						;****追加ここから****
+;父親が触手で母親が【恋心】持ち
+IF TALENT:T:恋心 && !TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 6
+	S += 120
+	;触手経験である程度軽減
+	SIF EXP:T:触手経験 > 100
+		S -= LIMIT((EXP:T:触手経験-300*MARK:T:反発刻印)/20, 0, 150)
+;父親が触手で母親が【淫乱】持ち
+ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 6
+	S += 80
+	;触手経験である程度軽減
+	SIF EXP:T:触手経験 > 100
+		S -= LIMIT((EXP:T:触手経験-300*MARK:T:反発刻印)/20, 0, 150)
+;それ以外で父親が触手。「陥落素質なし」とあわせて+140
+ELSEIF CFLAG:T:誰によって妊娠させられたか == 6
+	S += 40
+	;触手経験である程度軽減
+	SIF EXP:T:触手経験 > 100
+		S -= LIMIT((EXP:T:触手経験-300*MARK:T:反発刻印)/20, 0, 150)
+ENDIF
+						;****追加ここまで****
+
+;父親が自分の親か子供
+SIF I == 1 || I == 2
+	S += 100
+;父親が自分の兄弟姉妹
+SIF I == 3 || I == 4
+	S += 60
+
+;陥落素質がついていない
+SIF TALENT:T:恋心 == 0 && TALENT:T:淫乱 == 0
+	S += 100
+SIF TALENT:T:彼氏あり == 1 && CFLAG:T:誰によって妊娠させられたか == 7
+	S = 0
+
+
+;気丈
+SIF TALENT:T:気丈
+	S -= 20
+;母性
+SIF TALENT:T:母性
+	S -= 40
+;心弱い
+SIF TALENT:T:心弱い
+	S += 20
+;出産経験あり
+SIF EXP:T:出産経験
+	S -= 20
+
+						;****あなた妊娠パッチ追加ここから****
+;主人は崩壊しない
+SIF T == MASTER
+	S = 0
+						;****あなた妊娠パッチ追加ここまで****
+
+;ストレス値の累積が100を超えた場合
+IF S >= 100 && TALENT:T:崩壊 == 0
+	PRINTFORML %CALLNAME:T%は呆然とした面持ちをしている
+	PRINTFORML %CALLNAME:T%の中で何かが壊れてしまったようだ……
+	PRINTFORML %CALLNAME:T%の精神は【%TALENTNAME:[[TALENT:崩壊]]%】してしまった
+	WAIT
+	IF TALENT:T:恋心
+		PRINTFORML %CALLNAME:T%は【%TALENTNAME:[[TALENT:恋心]]%】を失った
+		TALENT:T:恋心 = 0
+	ENDIF
+	IF TALENT:T:淫乱
+		PRINTFORML %CALLNAME:T%は【%TALENTNAME:[[TALENT:淫乱]]%】を失った
+		TALENT:T:淫乱 = 0
+	ENDIF
+	TALENT:T:崩壊 = 1
+	WAIT
+ENDIF
+;妊娠発覚時のイベント口上
+TARGET = T
+TFLAG:口上番号 = 11
+CALL SELF_KOJO
+
+DRAWLINE
+
+;臨月到達
+@REACH_FULL_TERM(ARG)
+PRINTFORML %NAME:ARG%は臨月を迎えました
+PRINTFORML %CALLNAME:ARG%は出産に備え育児室へ移動します
+WAIT
+;営業フラグ外れる
+CFLAG:ARG:労役中のフラグ = 0
+SIF TARGET == ARG
+	TARGET = -1
+SIF ASSI == ARG
+	ASSI = -1
+
+;出産
+@CHILD_BIRTH
+F = -1
+REPEAT CHARANUM
+	SIF NO:COUNT == CFLAG:C:父親のキャラ番号
+		F = COUNT
+REND
+
+EXP:C:Ｖ拡張経験 += 1
+EXP:C:出産経験 += 1
+
+IF CFLAG:C:父親のキャラ番号 >= 0 && F >= 0
+	PRINTFORML %NAME:C%は、%NAME:F%の子供を無事出産しました
+ELSEIF CFLAG:C:父親のキャラ番号 == -4 && TALENT:C:彼氏あり == 1
+	PRINTFORML %NAME:C%は、カレシとの子供を無事出産しました
+ELSEIF CFLAG:C:父親のキャラ番号 == -5 && TALENT:C:彼氏あり == 0
+	PRINTFORML %NAME:C%は、元カレとの子供を無事出産しました
+ELSEIF CFLAG:C:父親のキャラ番号 == -1
+	PRINTFORML %NAME:C%は、父親のわからない子供を無事出産しました
+ELSEIF CFLAG:C:父親のキャラ番号 == -2
+	PRINTFORML %NAME:C%は、犬耳と尻尾の生えた子供を何匹も産み落としました
+	;犬の仔なら育児期間短縮
+	CFLAG:C:出産日 -= 10
+						;****追加ここから****
+ELSEIF CFLAG:C:父親のキャラ番号 == -3
+	PRINTFORML %NAME:C%は、得体の知れない卵を産み落としました
+	;触手の仔なら育児期間短縮
+	CFLAG:C:出産日 -= 10
+						;****追加ここまで****
+ELSE
+	PRINTFORML %NAME:C%は、父親のいない子供を無事出産しました
+ENDIF
+WAIT
+
+;出産時のイベント口上
+TARGET = C
+TFLAG:口上番号 = 12
+CALL SELF_KOJO
+
+;【恋心】持ちの奴隷に産ませた子供が3人以上でマスターに【父性】が付く
+SIF TALENT:C:恋心 && CFLAG:C:父親のキャラ番号 == NO:MASTER
+	FLAG:恋心子供 += 1
+IF FLAG:恋心子供 >= 3 && TALENT:MASTER:父性 == 0 && TALENT:MASTER:オトコ
+	PRINTFORML %CALLNAME:MASTER%は【%TALENTNAME:[[TALENT:父性]]%】に目覚めた
+	WAIT
+	TALENT:MASTER:父性 = 1
+ENDIF
+
+;妊娠を失う
+TALENT:C:妊娠 = 0
+
+$INPUT_LOOP
+;育児放棄をした場合
+						;****あなた妊娠パッチ追加ここから****
+IF TALENT:C:崩壊 || C == MASTER
+						;****あなた妊娠パッチ追加ここまで****
+	;育児放棄の際の赤子の処置
+	A = 0
+	REPEAT CHARANUM
+						;****あなた妊娠パッチ追加ここから****
+		SIF (TALENT:COUNT:妊娠 == 0 && (TALENT:COUNT:育児中 || TALENT:COUNT:母性) && TALENT:COUNT:崩壊 == 0 && CFLAG:COUNT:売却助手可能 == 2) || C == MASTER
+			A += 1
+						;****あなた妊娠パッチ追加ここまで****
+	REND
+	IF A > 0
+		PRINTFORML 産まれた赤ん坊を他の奴隷に任せるか、里子に出すかを選択してください
+		WAIT
+		PRINTL 誰に任せますか？
+		DRAWLINE
+		REPEAT CHARANUM
+			;現在[妊娠]状態でなく、[育児中]か[母性]持ちで崩壊してなく、かつ助手可能なキャラを羅列
+						;****あなた妊娠パッチ追加ここから****
+			IF (TALENT:COUNT:妊娠 == 0 && (TALENT:COUNT:育児中 || TALENT:COUNT:母性) && TALENT:COUNT:崩壊 == 0 && CFLAG:COUNT:売却助手可能 == 2) || (COUNT == MASTER && C == MASTER)
+						;****あなた妊娠パッチ追加ここまで****
+				PRINTFORML  [{COUNT}] %NAME:COUNT% 
+			ENDIF
+		REND
+		DRAWLINE
+		PRINTFORML  [100] - 里子に出す
+		INPUT
+		IF RESULT == 100
+			PRINTFORML %CALLNAME:MASTER%はやむなく、赤ん坊を里子に出しました
+			WAIT
+		ELSEIF RESULT < 0 || RESULT >= CHARANUM
+			GOTO INPUT_LOOP
+						;****あなた妊娠パッチ追加ここから****
+		ELSEIF (TALENT:RESULT:妊娠 == 1 || (TALENT:RESULT:育児中 ==0 && TALENT:RESULT:母性 == 0) || TALENT:RESULT:崩壊 || CFLAG:RESULT:売却助手可能 < 2) && RESULT != MASTER
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == MASTER && C != MASTER
+			GOTO INPUT_LOOP
+						;****あなた妊娠パッチ追加ここまで****
+		ENDIF
+		IF RESULT != 100 && RESULT == MASTER
+			PRINTFORML %CALLNAME:MASTER%は仕事を休んで育児をすることにしました
+			TALENT:C:育児中 = 1
+			;３サイズ設定キャラは乳サイズ以外減らす
+			SIF  BASE:C:バスト > 0 && FLAG:ＩＷＳなし > 0
+			CALL REVERSE_3_SIZE_IWS
+			WAIT
+		ELSEIF RESULT != 100
+			PRINTFORML %CALLNAME:MASTER%は%CALLNAME:RESULT%に乳母をやってもらうことにしました
+			;育児期間を設定する
+			CFLAG:RESULT:出産日 = DAY
+			;犬の仔なら育児期間短縮
+						;****追加ここから****(加筆)
+			SIF CFLAG:C:父親のキャラ番号 == -2 || CFLAG:C:父親のキャラ番号 == -3
+				CFLAG:RESULT:出産日 -= 10
+						;****追加ここまで****(加筆)
+			;営業フラグ外す
+			CFLAG:RESULT:労役中のフラグ = 0
+			IF TALENT:RESULT:育児中 == 0
+				TALENT:RESULT:育児中 = 1
+				SIF RESULT == TARGET
+					TARGET = -1
+				SIF RESULT == ASSI
+					ASSI = -1
+				;育児中でない奴隷なら乳がワンランクパワーアップする
+				T = RESULT
+				PRINTFORM %CALLNAME:C%の子供に乳を与えるために
+				CALL GROW_B_SIZE
+				;母乳出るようになる
+						;****あなた妊娠パッチ追加ここから****
+				IF TALENT:T:母乳体質 == 1
+					MARK:T:6 = 1
+				ELSEIF TALENT:T:母乳体質 == 0
+						;****あなた妊娠パッチ追加ここまで****
+					PRINTFORML %CALLNAME:T%は母乳が出るようになった
+					TALENT:T:母乳体質 = 1
+				ENDIF
+			ENDIF
+			WAIT
+		ENDIF
+	ELSE
+		PRINTFORML %CALLNAME:MASTER%はやむなく、赤ん坊を里子に出しました
+		WAIT
+	ENDIF
+						;****あなた妊娠パッチ追加ここから****
+	IF C != MASTER || RESULT != MASTER
+		;妊娠時に減った体力の最大値が回復
+		MAXBASE:C:体力 += 500
+		CALL CLEAR_FLAG
+		;妊娠時に大きくなった胸のサイズを一段小さくする
+		CALL REVERSE_B_SIZE
+		PRINTFORML %NAME:C%の胸は母乳を与える役割を放棄したため小さくなりました
+		;母乳出なくなる
+		IF TALENT:C:母乳体質 == 1 && MARK:C:6 >= 1
+			MARK:T:6 = 0
+		ELSEIF TALENT:C:母乳体質 == 1
+			TALENT:C:母乳体質 = 0
+			PRINTFORML %CALLNAME:C%は母乳が出なくなった
+		ENDIF
+	ENDIF
+						;****あなた妊娠パッチ追加ここまで****
+;育児に入った場合
+ELSE
+	PRINTFORML %CALLNAME:C%は育児室で育児を始めた
+	TALENT:C:育児中 = 1
+	;【恋心】持ちで父親が主人なら【母性】に目覚める
+	IF TALENT:C:恋心 && CFLAG:C:父親のキャラ番号 == NO:MASTER && TALENT:C:母性 == 0
+		PRINTFORML どうやら%CALLNAME:C%は【%TALENTNAME:[[TALENT:母性]]%】に目覚めたようだ
+		TALENT:C:母性 = 1
+	ENDIF
+	;３サイズ設定キャラは乳サイズ以外減らす
+	SIF  BASE:C:バスト > 0 && FLAG:ＩＷＳなし > 0
+	CALL REVERSE_3_SIZE_IWS
+	WAIT
+ENDIF
+
+DRAWLINE
+
+						;****スライムパッチ追加ここから****
+;産卵
+@EGG_BIRTH
+
+IF TALENT:C:処女 == 1
+	CSTR:C:処女喪失の相手 = スライムの卵
+	TALENT:C:処女 = 0
+	CFLAG:C:初体験の相手 = 4
+	SETCOLOR 0xF58F98
+	PRINTL 【処女喪失】
+	RESETCOLOR
+ENDIF
+EXP:C:Ｖ拡張経験 += 1
+EXP:C:産卵経験 += 1
+
+PRINTFORML %NAME:C%は、スライムの卵を無事産卵しました
+CALL EGG_ITEM
+WAIT
+
+;出産時のイベント口上
+;TARGET = C
+;TFLAG:口上番号 = XX
+;CALL SELF_KOJO
+
+;抱卵を失う
+TALENT:C:抱卵 = 0
+
+MAXBASE:C:体力 += 500
+TALENT:C:育児中 = 0
+IF TALENT:C:貧乳 == 0 && TALENT:C:絶壁 == 0
+	PRINTFORML %NAME:C%の胸は母乳を与える役割を終えたことで小さくなりました
+	WAIT
+		;母乳出なくなる
+	IF TALENT:C:母乳体質 == 1 && MARK:C:6 >= 1
+		MARK:C:6 = 0
+	ELSEIF TALENT:C:母乳体質 == 1
+		PRINTFORML %CALLNAME:C%は母乳が出なくなった
+		TALENT:C:母乳体質 = 0
+	ENDIF
+	;妊娠時に大きくなった胸のサイズを一段小さくする
+	CALL REVERSE_B_SIZE
+ENDIF
+CALL CLEAR_FLAG
+
+DRAWLINE
+
+						;****スライムパッチ追加ここまで****
+;親離れ
+@DEPEARENT
+PRINTFORML %CALLNAME:C%の育てていた子供が親離れしました
+PRINTFORML %CALLNAME:C%は再び調教可能になりました
+WAIT
+;妊娠時に減った体力の最大値が回復
+MAXBASE:C:体力 += 500
+TALENT:C:育児中 = 0
+IF TALENT:C:貧乳 == 0 && TALENT:C:絶壁 == 0
+	PRINTFORML %NAME:C%の胸は母乳を与える役割を終えたことで小さくなりました
+	WAIT
+		;母乳出なくなる
+						;****あなた妊娠パッチ追加ここから****
+	IF TALENT:C:母乳体質 == 1 && MARK:C:6 >= 1
+		MARK:C:6 = 0
+	ELSEIF TALENT:C:母乳体質 == 1
+						;****あなた妊娠パッチ追加ここまで****
+		PRINTFORML %CALLNAME:C%は母乳が出なくなった
+		TALENT:C:母乳体質 = 0
+	ENDIF
+	;妊娠時に大きくなった胸のサイズを一段小さくする
+	CALL REVERSE_B_SIZE
+ENDIF
+CALL CLEAR_FLAG
+
+DRAWLINE
+
+;妊娠パッチまわりのフラグをリセット
+@CLEAR_FLAG
+CFLAG:C:マスターによる膣内射精カウント = 0
+CFLAG:C:誰によって妊娠させられたか = 0
+CFLAG:C:助手から奴隷への膣内射精カウント = 0
+CFLAG:C:奴隷から助手への膣内射精ウント = 0
+CFLAG:C:娼館などの客から奴隷への中田氏カウント = 0
+						;****追加ここから****
+CFLAG:C:ノラ犬からの中田氏カウント = 0
+CFLAG:C:触手からの中田氏カウント = 0
+						;****追加ここまで****
+CFLAG:C:出産日 = 0
+CFLAG:C:父親のキャラ番号 = 0
+						;****スライムパッチ追加ここから****
+CFLAG:C:スライム抱卵判定用 = 0
+						;****スライムパッチ追加ここまで****
+
+
+;妊娠or子育て開始時の胸サイズの膨張処理
+@GROW_B_SIZE
+;バストサイズが設定されているキャラは毎日成長なのでスルー
+IF BASE:T:バスト > 0 && FLAG:ＩＷＳなし > 0
+ELSE
+;乳がワンランクパワーアップする
+;絶→貧　貧→普　普→巨　巨→爆　爆→そのまま
+	IF TALENT:T:絶壁 == 1
+		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:絶壁]]%】から【%TALENTNAME:[[TALENT:貧乳]]%】ぐらいに大きくなった
+		TALENT:T:絶壁 = 0
+		TALENT:T:貧乳 = 1
+	ELSEIF TALENT:T:貧乳 == 1
+		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:貧乳]]%】から普通程度に大きくなった
+		TALENT:T:貧乳 = 0
+	ELSEIF TALENT:T:巨乳 == 0 && TALENT:T:爆乳 == 0
+		PRINTFORML %CALLNAME:T%の胸が普通程度から【%TALENTNAME:[[TALENT:巨乳]]%】サイズに大きくなった
+		TALENT:T:巨乳 = 1
+	ELSEIF TALENT:T:巨乳 == 1
+		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:巨乳]]%】から【%TALENTNAME:[[TALENT:爆乳]]%】サイズになった
+		TALENT:T:巨乳 = 0
+		TALENT:T:爆乳 = 1
+						;****あなた妊娠パッチ追加ここから****
+	ELSEIF TALENT:T:爆乳 == 1
+		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:爆乳]]%】から更に大きくなった
+		MARK:T:5 = 1
+						;****あなた妊娠パッチ追加ここまで****
+	ENDIF
+ENDIF
+
+;子育て終了or妊娠強制終了時の胸サイズの縮小処理
+@REVERSE_B_SIZE
+;バストサイズが設定されているキャラは３サイズの縮小処理を行う
+IF BASE:T:バスト > 0 && FLAG:ＩＷＳなし > 0
+	CALL REVERSE_3_SIZE_IWS
+ELSE
+;爆→巨　巨→普　普→貧　貧・絶→そのまま
+						;****あなた妊娠パッチ追加ここから****
+	IF TALENT:C:爆乳 && MARK:C:5 >= 1
+		MARK:C:5 = 0
+	ELSEIF TALENT:C:爆乳
+						;****あなた妊娠パッチ追加ここまで****
+		TALENT:C:爆乳 = 0
+		TALENT:C:巨乳 = 1
+	ELSEIF TALENT:C:巨乳
+		TALENT:C:巨乳 = 0
+	ELSEIF TALENT:C:貧乳 == 0 && TALENT:C:絶壁 == 0
+		TALENT:C:貧乳 = 1
+	ENDIF
+ENDIF
+
+;育児室にいるかの判定
+@CHECK_CHILD_CARE
+SIF (TALENT:C:妊娠 && CFLAG:C:出産日 - 3 <= DAY) || (TALENT:C:育児中 && CFLAG:C:出産日 + 30 > DAY)
+	RETURN 1
+
+RETURN 0

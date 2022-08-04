@@ -1,0 +1,97 @@
+﻿;-------------------------------------------------
+;クンニ
+;愛撫系コマンド：調教者が調教対象のクリトリスを口で刺激
+;-------------------------------------------------
+@COM1
+
+;前回と今回の調教者が同じで
+IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0) && TEQUIP:獣姦プレイ == 0
+	;縄使用中でなく、前回の調教がフェラチオかクンニ強制かシックスナインだとシックスナインに
+	IF (PREVCOM == 31 || PREVCOM == 61 || PREVCOM == 69) && TEQUIP:縄 == 0
+		CALL COM_ABLE69
+		SIF RESULT == 1
+			JUMP COM69
+	ENDIF
+ENDIF
+
+PRINTL クンニ
+SAVESTR:0 = クンニ
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 50
+
+;△COMF69との液体系ソース量の差が大きい（10倍）のでこっちを倍にしてみる
+;こっち50:50で向こうを50:950とかでもいいんだけど、100:900のほうがなんとなく好みなので……
+SOURCE:9 = 100
+SOURCE:10 = 100
+SOURCE:12 = 220
+SOURCE:14 = 50
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 40
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 160
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 700
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 1500
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 2400
+ELSE
+	SOURCE:0 = 3300
+ENDIF
+
+;調教者のTALENT:舌使いをみる
+IF TALENT:PLAYER:舌使い || TEQUIP:獣姦プレイ
+	TIMES SOURCE:0 , 2.00
+	SOURCE:16 += SOURCE:0/20
+ENDIF
+
+;獣姦の場合はここで終了
+SIF TEQUIP:獣姦プレイ
+	RETURN 1
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+;奴隷のＶ⇔調教者の口の汚れが移動
+STAIN:3 |= STAIN:PLAYER:0
+STAIN:PLAYER:0 |= STAIN:3
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;レズ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +3
+	EXP:レズ経験 += 3
+ENDIF
+
+P = 0
+
+
+;調教者のファーストキス記録
+IF CFLAG:PLAYER:ファーストキスの相手 == -1
+	TFLAG:620 |= 1
+	IF TALENT:オトコ || TALENT:ふたなり
+		TFLAG:620 |= 2
+	ELSE
+		TFLAG:620 |= 8
+	ENDIF
+ENDIF
+
+;愛情経験
+E = 1
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+RETURN 1

@@ -1,0 +1,204 @@
+﻿;===========================================================
+;主にフレーバーの計算
+;===========================================================
+;===========================================================
+;タバコの銘柄の決定
+;===========================================================
+@CIGARETTES
+CFLAG:タバコの種類 = RAND:21
+	IF CFLAG:タバコの種類 == 0
+		CSTR:タバコの銘柄 = セブンスター
+	ELSEIF CFLAG:タバコの種類 == 1
+		CSTR:タバコの銘柄 = ブラックストーン
+	ELSEIF CFLAG:タバコの種類 == 2
+		CSTR:タバコの銘柄 = セーラムピアニッシモ
+	ELSEIF CFLAG:タバコの種類 == 3
+		CSTR:タバコの銘柄 = ベヴェルフレアーメンソール
+	ELSEIF CFLAG:タバコの種類 == 4
+		CSTR:タバコの銘柄 = マルボロメンソールライト
+	ELSEIF CFLAG:タバコの種類 == 5
+		CSTR:タバコの銘柄 = セブンスターメンソール
+	ELSEIF CFLAG:タバコの種類 == 6
+		CSTR:タバコの銘柄 = 赤ラーク
+	ELSEIF CFLAG:タバコの種類 == 7
+		CSTR:タバコの銘柄 = ハイライト
+	ELSEIF CFLAG:タバコの種類 == 8
+		CSTR:タバコの銘柄 = ラッキーストライク
+	ELSEIF CFLAG:タバコの種類 == 9
+		CSTR:タバコの銘柄 = KENT
+	ELSEIF CFLAG:タバコの種類 == 10
+		CSTR:タバコの銘柄 = KOOL
+	ELSEIF CFLAG:タバコの種類 == 11
+		CSTR:タバコの銘柄 = アメリカンスピリット
+	ELSEIF CFLAG:タバコの種類 == 12
+		CSTR:タバコの銘柄 = キースアロマメルティ
+	ELSEIF CFLAG:タバコの種類 == 13
+		CSTR:タバコの銘柄 = ガラム
+	ELSEIF CFLAG:タバコの種類 == 14
+		CSTR:タバコの銘柄 = 中南海
+	ELSEIF CFLAG:タバコの種類 == 15
+		CSTR:タバコの銘柄 = ゴロワーズ
+	ELSEIF CFLAG:タバコの種類 == 16
+		CSTR:タバコの銘柄 = JPS
+	ELSEIF CFLAG:タバコの種類 == 17
+		CSTR:タバコの銘柄 = ブラックデビル
+	ELSEIF CFLAG:タバコの種類 == 18
+		CSTR:タバコの銘柄 = DEATH
+	ELSEIF CFLAG:タバコの種類 == 19
+		CSTR:タバコの銘柄 = わかば
+	ELSE
+		CSTR:タバコの銘柄 = 赤マルボロ
+	ENDIF
+;===========================================================
+;彼氏による削除
+;===========================================================
+@KILL_TARGET_4COUNT
+;助手の情報を取得
+;N = -1
+;SIF ASSI >= 0
+;	N = NO:ASSI
+
+;キャラ削除
+CALL キャラ削除, G
+
+;;前回の助手・調教対象だった場合はフラグを空に
+;SIF FLAG:前回調教対象 == G
+;	FLAG:前回調教対象 = -1
+;SIF FLAG:前回助手 == G
+;	FLAG:前回助手 = -1
+
+;;前回の助手・調教対象より前だった場合はフラグを減算
+;SIF FLAG:前回調教対象 > G
+;	FLAG:前回調教対象 -= 1
+;SIF FLAG:前回助手 > G
+;	FLAG:前回助手 -= 1
+
+;;調教対象を空に
+;TARGET = -1
+
+;;助手を戻す
+;ASSI = -1
+;REPEAT CHARANUM
+;	SIF NO:COUNT == N
+;		ASSI = COUNT
+;REND
+;	
+;===========================================================
+;危険日算出
+;===========================================================
+@OVULATION_CALC
+REPEAT CHARANUM
+	IF TALENT:COUNT:オトコ == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:アンドロイド
+		CONTINUE
+		IF CFLAG:COUNT:30 > 5
+			CFLAG:COUNT:ファーストキスの相手 = 0
+		ELSEIF DAY:2 == 1 && CFLAG:COUNT:30 == 1
+			CFLAG:COUNT:口上の表示 = 1
+		ELSEIF DAY:2 == 2 && CFLAG:COUNT:30 == 2
+			CFLAG:COUNT:口上の表示 = 1
+		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 3
+			CFLAG:COUNT:口上の表示 = 1
+		ELSEIF DAY:2 == 4 && CFLAG:COUNT:30 == 4
+			CFLAG:COUNT:口上の表示 = 1
+		ELSEIF DAY:2 == 5 && CFLAG:COUNT:30 == 5
+			CFLAG:COUNT:口上の表示 = 1
+		ELSEIF DAY:2 == 5 && CFLAG:COUNT:30 == 0
+			CFLAG:COUNT:口上の表示 = 1
+		ELSEIF DAY:2 == 1 && CFLAG:COUNT:30 == 3
+			CFLAG:COUNT:口上の表示 = 2
+		ELSEIF DAY:2 == 2 && CFLAG:COUNT:30 == 4
+			CFLAG:COUNT:口上の表示 = 2
+		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 5
+			CFLAG:COUNT:口上の表示 = 2
+		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 0
+			CFLAG:COUNT:口上の表示 = 2
+		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 1
+			CFLAG:COUNT:口上の表示 = 2
+		ELSEIF DAY:2 == 4 && CFLAG:COUNT:30 == 2
+			CFLAG:COUNT:口上の表示 = 2
+		ENDIF
+	ENDIF
+REND
+;===========================================================
+;タバコの銘柄の決定
+;===========================================================
+@CIGARETTES_4COUNT
+CFLAG:COUNT:タバコの種類 = RAND:21
+	IF CFLAG:COUNT:タバコの種類 == 0
+		CSTR:COUNT:タバコの銘柄 = セブンスター
+	ELSEIF CFLAG:COUNT:タバコの種類 == 1
+		CSTR:COUNT:タバコの銘柄 = ブラックストーン
+	ELSEIF CFLAG:COUNT:タバコの種類 == 2
+		CSTR:COUNT:タバコの銘柄 = セーラムピアニッシモ
+	ELSEIF CFLAG:COUNT:タバコの種類 == 3
+		CSTR:COUNT:タバコの銘柄 = ベヴェルフレアーメンソール
+	ELSEIF CFLAG:COUNT:タバコの種類 == 4
+		CSTR:COUNT:タバコの銘柄 = マルボロメンソールライト
+	ELSEIF CFLAG:COUNT:タバコの種類 == 5
+		CSTR:COUNT:タバコの銘柄 = セブンスターメンソール
+	ELSEIF CFLAG:COUNT:タバコの種類 == 6
+		CSTR:COUNT:タバコの銘柄 = 赤ラーク
+	ELSEIF CFLAG:COUNT:タバコの種類 == 7
+		CSTR:COUNT:タバコの銘柄 = ハイライト
+	ELSEIF CFLAG:COUNT:タバコの種類 == 8
+		CSTR:COUNT:タバコの銘柄 = ラッキーストライク
+	ELSEIF CFLAG:COUNT:タバコの種類 == 9
+		CSTR:COUNT:タバコの銘柄 = KENT
+	ELSEIF CFLAG:COUNT:タバコの種類 == 10
+		CSTR:COUNT:タバコの銘柄 = KOOL
+	ELSEIF CFLAG:COUNT:タバコの種類 == 11
+		CSTR:COUNT:タバコの銘柄 = アメリカンスピリット
+	ELSEIF CFLAG:COUNT:タバコの種類 == 12
+		CSTR:COUNT:タバコの銘柄 = キースアロマメルティ
+	ELSEIF CFLAG:COUNT:タバコの種類 == 13
+		CSTR:COUNT:タバコの銘柄 = ガラム
+	ELSEIF CFLAG:COUNT:タバコの種類 == 14
+		CSTR:COUNT:タバコの銘柄 = 中南海
+	ELSEIF CFLAG:COUNT:タバコの種類 == 15
+		CSTR:COUNT:タバコの銘柄 = ゴロワーズ
+	ELSEIF CFLAG:COUNT:タバコの種類 == 16
+		CSTR:COUNT:タバコの銘柄 = JPS
+	ELSEIF CFLAG:COUNT:タバコの種類 == 17
+		CSTR:COUNT:タバコの銘柄 = ブラックデビル
+	ELSEIF CFLAG:COUNT:タバコの種類 == 18
+		CSTR:COUNT:タバコの銘柄 = DEATH
+	ELSEIF CFLAG:COUNT:タバコの種類 == 19
+		CSTR:COUNT:タバコの銘柄 = わかば
+	ELSE
+		CSTR:COUNT:タバコの銘柄 = 赤マルボロ
+	ENDIF
+;===========================================================
+;ＡＶパートの計算
+;===========================================================
+@AV_CALC
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+F = 0
+G = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:褐色肌 == 1 && CFLAG:COUNT:売却助手可能 == 2 && TALENT:COUNT:ＡＶ女優 == 1
+		A = 1
+			IF FLAG:かなで男優契約 == 1 && TALENT:COUNT:ふたなり == 1
+				E = 1
+			ENDIF
+	ELSEIF NO:COUNT == [[キャラ:渡来桔梗]] && CFLAG:COUNT:売却助手可能 == 2 && TALENT:COUNT:ＡＶ女優 == 1
+		B = 1
+			IF FLAG:桔梗男優契約 == 1 && TALENT:COUNT:ふたなり == 1
+				F = 1
+			ENDIF
+	ELSEIF TALENT:COUNT:はるうられ == 1
+		C = 1
+	ELSEIF NO:COUNT == [[キャラ:榊あゆむ]] && CFLAG:COUNT:売却助手可能 == 2
+		D = 1
+	ELSEIF TALENT:COUNT:褐色肌 == 1
+		G = 1
+	ENDIF
+REND

@@ -1,0 +1,222 @@
+﻿;===========================================================
+;売上ポイントの計算式
+;===========================================================
+@AV_POINTCALC
+
+;素質:崩壊を見る
+SIF TALENT:崩壊
+	TIMES ビデオ売上 , 0.50
+;素質:処女を見る
+SIF TALENT:処女
+	TIMES ビデオ売上 , 1.20
+;素質:無関心を見る
+SIF TALENT:クール && ABL:欲望 <= 3
+	TIMES ビデオ売上 , 0.70
+;素質:感情乏しいを見る
+SIF TALENT:感情乏しい
+	TIMES ビデオ売上 , 0.70
+;素質:恥じらいを見る
+SIF TALENT:恥じらい
+	TIMES ビデオ売上 , 1.10
+;素質:淫乱を見る
+SIF TALENT:淫乱
+	TIMES ビデオ売上 , 1.50
+;素質:色情狂を見る
+SIF TALENT:絶倫
+	TIMES ビデオ売上 , 1.50
+;素質:小柄体系を見る
+SIF TALENT:小柄体型
+	TIMES ビデオ売上 , 1.20
+;素質:巨乳を見る
+SIF TALENT:巨乳
+	TIMES ビデオ売上 , 1.20
+;素質:爆乳を見る
+SIF TALENT:爆乳
+	TIMES ビデオ売上 , 1.40
+;素質:肥満を見る
+SIF TALENT:肥満
+	TIMES ビデオ売上 , 0.20
+;素質:ふたなりを見る
+SIF TALENT:ふたなり
+	TIMES ビデオ売上 , 1.20
+;素質:狂気を見る
+SIF TALENT:狂気
+	TIMES ビデオ売上 , 0.80
+;素質:動物耳を見る
+SIF TALENT:動物耳
+	TIMES ビデオ売上 , 1.10
+;素質:人気者を見る
+SIF TALENT:人気者
+	TIMES ビデオ売上 , 1.30
+;素質:謎の魅力を見る
+SIF TALENT:謎の魅力
+	TIMES ビデオ売上 , 1.30
+;素質:魅力を見る
+SIF TALENT:魅力
+	TIMES ビデオ売上 , 1.30
+;素質:肥満を見る
+SIF TALENT:肥満
+	TIMES ビデオ売上 , 0.20
+;素質:オトコを見る。オトコの娘なら大丈夫
+SIF TALENT:オトコ && TALENT:オトコの娘 == 0
+	TIMES ビデオ売上 , 0.20
+;素質:母乳体質を見る
+SIF TALENT:母乳体質
+	TIMES ビデオ売上 , 1.20
+;素質:未熟を見る
+SIF TALENT:未熟
+	TIMES ビデオ売上 , 1.30
+;素質:教師を見る
+SIF TALENT:プロデューサー
+	TIMES ビデオ売上 , 1.10
+;素質:アイドルを見る
+SIF TALENT:アイドル
+	TIMES ビデオ売上 , 1.50
+SIF TALENT:運動部
+	TIMES ビデオ売上 , 1.20
+SIF TALENT:大和撫子
+	TIMES ビデオ売上 , 1.20
+SIF TALENT:優等生
+	TIMES ビデオ売上 , 1.20
+;素質:令嬢を見る
+SIF TALENT:令嬢
+	TIMES ビデオ売上 , 2.00
+;素質:人妻を見る
+SIF TALENT:人妻
+	TIMES ビデオ売上 , 1.10
+;素質:未亡人を見る
+SIF TALENT:未亡人
+	TIMES ビデオ売上 , 1.50
+;素質:高校生を見る
+SIF TALENT:高校生
+	TIMES ビデオ売上 , 1.20
+;素質:中学生を見る
+SIF TALENT:中学生
+	TIMES ビデオ売上 , 1.30
+;素質:小学生を見る
+SIF TALENT:小学生
+	TIMES ビデオ売上 , 1.40
+;素質:ファッションモデルを見る
+SIF TALENT:ファッションモデル
+	TIMES ビデオ売上 , 1.40
+;素質:お姫様
+SIF TALENT:お姫様
+	TIMES ビデオ売上 , 1.50
+;素質:外国人を見る
+SIF TALENT:外国人
+	TIMES ビデオ売上 , 1.40
+;素質:ハーフを見る
+SIF TALENT:ハーフ
+	TIMES ビデオ売上 , 1.30
+;素質:クオーターを見る
+SIF TALENT:クオーター
+	TIMES ビデオ売上 , 1.20
+;素質:オトコの娘を見る
+SIF TALENT:オトコの娘
+	TIMES ビデオ売上 , 1.20
+;素質:ロリ系を見る
+SIF TALENT:童顔
+	TIMES ビデオ売上 , 1.50
+;素質:キャバ嬢を見る
+SIF TALENT:キャバ嬢
+	TIMES ビデオ売上 , 1.30
+;素質:褐色肌を見る
+SIF TALENT:褐色肌
+	TIMES ビデオ売上 , 1.10
+;素質:聖職者を見る
+SIF TALENT:聖職者
+	TIMES ビデオ売上 , 1.10
+;素質:警察官を見る
+SIF TALENT:警察官
+	TIMES ビデオ売上 , 1.10
+;素質:ギャル系を見る
+SIF TALENT:ギャル系
+	TIMES ビデオ売上 , 1.10
+;素質:医者を見る
+SIF TALENT:医者
+	TIMES ビデオ売上 , 1.40
+;素質:はるうられを見る
+SIF TALENT:はるうられ
+	TIMES ビデオ売上 , 1.50
+;素質:淫魔を見る
+SIF TALENT:淫魔
+	TIMES ビデオ売上 , 1.50
+;素質:極道の娘を見る
+SIF TALENT:極道の娘
+	TIMES ビデオ売上 , 1.50
+;素質:極道の妻を見る
+SIF TALENT:極道の妻
+	TIMES ビデオ売上 , 1.50
+;素質:ＣＰＧを見る
+SIF TALENT:ColorfulPureGirls
+	TIMES ビデオ売上 , 3.00
+;素質:オリジナルユニットを見る
+SIF TALENT:オリジナルユニット
+	TIMES ビデオ売上 , 2.50
+;素質:Mermaid girlを見る
+SIF TALENT:[[TALENT:Mermaid girl]]
+	TIMES ビデオ売上 , 3.0
+;素質:Triptychを見る
+SIF TALENT:Triptych
+	TIMES ビデオ売上 , 3.0
+;素質:Emerald Queenを見る
+SIF TALENT:[[TALENT:Emerald Queen]]
+	TIMES ビデオ売上 , 3.0
+;素質:Lily Princessを見る
+SIF TALENT:[[TALENT:Lily Princess]]
+	TIMES ビデオ売上 , 3.0
+;素質:熱血娘を見る
+SIF TALENT:熱血娘
+	TIMES ビデオ売上 , 3.0
+;素質:グランドマスターを見る
+SIF TALENT:グランドマスター
+	TIMES ビデオ売上 , 3.00
+;素質:平和の歌姫？を見る
+SIF TALENT:[[TALENT:平和の歌姫？]]
+	TIMES ビデオ売上 , 1.25
+	;オリジナルユニットと共存出来る為ボーナスは低めに
+;素質:堕ちた歌姫を見る
+SIF TALENT:堕ちた歌姫
+	TIMES ビデオ売上 , 1.25
+	;オリジナルユニットと共存出来る為ボーナスは低めに
+;素質:ONLY ONE IDOLを見る
+SIF TALENT:[[TALENT:ONLY ONE IDOL]]
+	TIMES ビデオ売上 , 1.80
+	;ＣＰＧと共存出来る為ボーナスは低めに
+;素質:SUPER HEROINEを見る
+SIF TALENT:[[TALENT:SUPER HEROINE]]
+	TIMES ビデオ売上 , 1.50
+	;ＣＰＧと共存出来る為ボーナスは低めに
+;素質:ILMATARを見る
+SIF TALENT:ILMATAR
+	TIMES ビデオ売上 , 3.0
+;素質:AVALOKITESVARAを見る
+SIF TALENT:AVALOKITESVARA
+	TIMES ビデオ売上 , 3.0
+;素質:QueenBを見る
+SIF TALENT:QueenB
+	TIMES ビデオ売上 , 3.0
+;素質:ブースト大を見る
+SIF TALENT:ブースト大
+	TIMES ビデオ売上 , 2.50
+;素質:ブースト中を見る
+SIF TALENT:ブースト中
+	TIMES ビデオ売上 , 2.00
+;素質:ブースト小を見る
+SIF TALENT:ブースト小
+	TIMES ビデオ売上 , 1.50
+
+;ABL:被写技能をみる
+ビデオ売上 = ビデオ売上 * (10 + ABL:被写技能) / 10
+
+;ABL:露出癖をみる
+ビデオ売上 = ビデオ売上 * (10 + ABL:露出癖) / 10
+
+;難易度補正
+;HARD
+IF FLAG:難易度 == 3
+	TIMES ビデオ売上 , 0.70
+;POWERFUL
+ELSEIF FLAG:難易度 == 4
+	TIMES ビデオ売上 , 0.50
+ENDIF

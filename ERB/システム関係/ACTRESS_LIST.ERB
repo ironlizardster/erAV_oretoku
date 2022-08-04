@@ -1,0 +1,179 @@
+﻿;列数を複数にすると若干ずれて気持ち悪いですが
+;ヘルプ→設定の表示タブで、描画インターフェースをGDIにするとずれなくなります
+;というか、GDI+はけっこういろんなところでずれたりするんで基本的におすすめしません
+
+;===========================================================
+;女優名鑑
+;===========================================================
+@ACTRESS_LIST(MODE = 0)
+
+#DIM LIST, CURRENT_MAX_CHARA_ID
+#DIM PAGE
+#DIM MAXPAGE
+;1ページあたりの表示人数の定義
+#DIM CONST SHOWNUM = 40
+;1ページあたりの列数の定義
+#DIM CONST SHOWCOLUMN = 4
+;0でプロファイル、1でクリアボーナス、2で元カノ
+#DIM MODE
+
+LOADGLOBAL
+X = 0
+
+;------------------------------------------------------------
+;リスト作成
+;------------------------------------------------------------
+VARSET LIST, -1
+LOCAL:1 = 0
+FOR LOCAL, 0, CURRENT_MAX_CHARA_ID
+	;CSVが存在しない場合ははじく
+	SIF !EXISTCSV(LOCAL, 0)
+		CONTINUE
+	SIF LOCAL == MASTER
+		CONTINUE
+	IF MODE == ACTRESS_LIST_GF_MODE
+		SIF LOCAL == [[キャラ:宮間かなで]] || LOCAL == [[キャラ:桐生歌音]] || LOCAL == [[キャラ:新島みひろ]] || LOCAL == [[キャラ:エリス]] || LOCAL == [[キャラ:リリス]] || LOCAL == [[キャラ:アイリス]] || LOCAL == [[キャラ:雛見まゆ]] || LOCAL == [[キャラ:ユーニス・パラディスス]] || LOCAL == [[キャラ:アンドロイド]] || LOCAL == [[キャラ:李美鈴]] || LOCAL == [[キャラ:羽瀬川みこと]] || LOCAL == [[キャラ:桐生エレン]] || LOCAL == [[キャラ:エルファリア・ラーグラーデ]] || LOCAL == [[キャラ:槇原さち]] || LOCAL == [[キャラ:赤坂姫乃]] || LOCAL == [[キャラ:桜野環]] || LOCAL == [[キャラ:マルチナ・パラディスス]] || LOCAL >= 200
+			CONTINUE
+	ENDIF
+	IF MODE == ACTRESS_LIST_BUY_MODE
+		RESULT = CSVCFLAG(LOCAL,[[CFLAG:値段]])
+		SIF !RESULT
+			CONTINUE
+	ENDIF
+	;条件満たした番号をリストに登録
+	LIST:(LOCAL:1) = LOCAL
+	LOCAL:1++
+NEXT
+
+MAXPAGE = LOCAL:1 / SHOWNUM
+SIF MAXPAGE * SHOWNUM < LOCAL:1
+	MAXPAGE++
+PAGE = 0
+
+$INPUT_LOOP
+DRAWLINE
+IF MODE == ACTRESS_LIST_BUY_MODE
+	PRINTL 女優候補やスタッフのスカウト
+	PRINTL 《ＡＶ女優やスタッフになってくれるキャラと契約できます》
+	PRINTV DAY+1
+	PRINT 週目
+	IF TIME == 0
+		PRINTL  前半
+	ELSE
+		PRINTL  後半
+	ENDIF
+
+	PRINTFORML 所持金：{MONEY}ポイント
+	PRINTFORM 契約人数：{CHARANUM-1}人 / {FLAG:事務所規模}人
+	SIF FLAG:事務所規模 == CHARANUM-1
+		PRINT 《誰かを引退させないと、これ以上契約できません》
+	PRINTL
+	PRINTFORML page[{PAGE + 1}/{MAXPAGE}]
+ELSE
+	PRINTFORML 女優名鑑 page[{PAGE + 1}/{MAXPAGE}]
+	PRINTL 《これまでに契約したことのある女優を確認できます》
+ENDIF
+DRAWLINE
+LOCAL:1 = 0
+FOR LOCAL, PAGE * SHOWNUM, (PAGE + 1) * SHOWNUM
+	SIF LOCAL >= 250
+		CONTINUE
+	IF LIST:LOCAL < 0
+		PRINTFORM %"", SHOWLENGTH / SHOWCOLUMN, LEFT%	
+	ELSE
+		TEMP_STR '= CSVNAME(LIST:LOCAL, 0)
+		SIF TEMP_STR == "面接相手"
+			TEMP_STR '= "【求人広告】"
+		SIF TEMP_STR == "レイチェル・パラディスス"
+			TEMP_STR '= "レイチェル・Ｐ"
+		TEMP_STR '= @"[%TEMP_STR%]"
+		STRLENS TEMP_STR
+		TEMP_STR '= @"%TEMP_STR, SHOWLENGTH / SHOWCOLUMN, LEFT%"
+		IF MODE == ACTRESS_LIST_BUY_MODE
+			RESULT = CSVCFLAG(LIST:LOCAL,[[CFLAG:複数購入可]])
+			TEMP_NUM = FLAG:事務所規模 >= CHARANUM && ((RESULT && FLAG:求人広告回数 < 求人広告上限回数) || GETCHARA(LIST:LOCAL) == -1) && MONEY >= CSVCFLAG(LIST:LOCAL,[[CFLAG:値段]])
+		ELSE
+			TEMP_NUM = GLOBAL:(200 + LIST:LOCAL)
+		ENDIF
+		CALL PRINT_BUTTON(TEMP_STR,TEMP_NUM,LIST:LOCAL)
+	ENDIF
+	SIF LOCAL:1 % SHOWCOLUMN == SHOWCOLUMN - 1
+		PRINTL 
+	LOCAL:1++
+NEXT
+SIF !LINEISEMPTY()
+	PRINTL 
+DRAWLINE
+
+CALL PRINT_PAGE_NAVI(PAGE > 0,PAGE + 1 < MAXPAGE)
+
+INPUT
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN COMMAND_GO_BACK
+ELSEIF RESULT == COMMAND_PREV_PAGE && PAGE > 0
+	PAGE -= 1
+ELSEIF RESULT == COMMAND_NEXT_PAGE && PAGE + 1 < MAXPAGE
+	PAGE += 1
+ELSEIF RESULT >= 0 && RESULT < 250 && MATCH(LIST, RESULT)
+	X = RESULT
+	IF MODE == ACTRESS_LIST_CB_MODE && GLOBAL:(200 + RESULT) > 0 
+		CALL キャラ追加(X)
+		PRINTFORML %NAME:TARGET%と契約した状態で開始しますか？
+		PRINTFORML [0] - はい
+		PRINTFORML [1] - いいえ
+		WHILE 1
+			INPUT
+			IF RESULT == 0
+				PRINTFORMW %NAME:TARGET%と契約しました
+				CALL DEFOLT_GENITALCALL
+				CALL CLEARBONUS_CALL_CHARA
+				SIF TALENT:ミッション == 1
+					TALENT:ミッション = 0
+				RETURN 1
+			ELSEIF RESULT
+				PRINTFORMW %NAME:TARGET%と契約しましせんでした
+				CALL キャラ削除, TARGET
+				LOADGLOBAL
+				GLOBAL:(200 + X) -= 1
+				SAVEGLOBAL
+				BREAK
+			ENDIF
+		WEND
+	ELSEIF MODE == ACTRESS_LIST_GF_MODE && GLOBAL:(200 + RESULT) > 0 
+		CALL キャラ追加(X)
+		PRINTFORM %NAME:TARGET%を
+							;****カノ設定改造追加ここから****
+		IF FLAG:元カノ存在 && FLAG:今カノ存在 == 0
+							;****カノ設定改造追加ここまで****
+			PRINTFORM 元
+		ELSEIF FLAG:今カノ存在
+			PRINTFORM 今
+		ENDIF
+		PRINTFORML カノとして登場させ、契約した状態で開始しますか？
+		PRINTFORML [0] - はい
+		PRINTFORML [1] - いいえ
+		WHILE 1
+			INPUT
+			IF RESULT == 0
+				PRINTFORMW %NAME:TARGET%と契約しました
+				CALL DEFOLT_GENITALCALL
+				CALL CLEARBONUS_CALL_CHARA
+				CALL MOTOKANO_EXTRASETUP
+				RETURN
+			ELSEIF RESULT
+				PRINTFORMW %NAME:TARGET%と契約しましせんでした
+				CALL キャラ削除, TARGET
+				LOADGLOBAL
+				GLOBAL:(200 + X) -= 1
+				SAVEGLOBAL
+				BREAK
+			ENDIF
+		WEND
+	ELSEIF MODE == ACTRESS_LIST_BUY_MODE
+		RETURN X
+	ELSE
+		CALL ACTRESS_PROF
+	ENDIF
+ENDIF
+GOTO INPUT_LOOP

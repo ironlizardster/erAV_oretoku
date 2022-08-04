@@ -1,0 +1,250 @@
+﻿@COM67
+;足コキする
+
+PRINTL 足コキする
+
+;-------------------------------------------------
+;実行できるかの判定
+;-------------------------------------------------
+A = 0
+S = 0
+
+;すべての命令に共通の要素を考慮
+;(従順が高いと命令に従いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 1
+	PRINTS ABLNAME:[[ABL:欲望]]
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 1,')
+	S = 1
+ENDIF
+;ABL:マゾっ気
+IF ABL:マゾっ気
+	SIF S
+		PRINT  + 
+	A += ABL:マゾっ気 * 4
+	PRINTS ABLNAME:[[ABL:マゾっ気]]
+	PRINTV 'LV,ABL:マゾっ気,'(,ABL:マゾっ気 * 4,')
+	S = 1
+ENDIF
+
+IF MARK:快楽刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快楽刻印 * 1
+	PRINTS MARKNAME:[[MARK:快楽刻印]]
+	PRINTV 'LV,MARK:快楽刻印,'(,MARK:快楽刻印 * 1,')
+	S = 1
+ENDIF
+
+;PALAM:欲情
+IF PALAM:欲情 < PALAMLV:1
+	L = 0
+ELSEIF PALAM:欲情 < PALAMLV:2
+	L = 1
+ELSEIF PALAM:欲情 < PALAMLV:3
+	L = 2
+ELSEIF PALAM:欲情 < PALAMLV:4
+	L = 3
+ELSEIF PALAM:欲情 < PALAMLV:5
+	L = 4
+ELSE
+	L = 5
+ENDIF
+IF L
+	SIF S
+		PRINT  + 
+	A += L * 1
+	PRINTS PALAMNAME:[[PALAM:欲情]]
+	PRINTV 'LV,L,'(,L * 1,')
+	S = 1
+ENDIF
+
+;保守的
+IF TALENT:保守的
+	SIF S
+		PRINT  - 
+	A -= 3
+	PRINTS TALENTNAME:[[TALENT:保守的]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;恥じらい
+IF TALENT:恥じらい
+	PRINT  - 
+	A -= 1
+	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+
+;快感に素直
+IF TALENT:快感に素直
+	SIF S
+		PRINT  + 
+	A += 3
+	PRINTS TALENTNAME:[[TALENT:快感に素直]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;快感の否定
+IF TALENT:快感の否定
+	PRINT  - 
+	A -= 1
+	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+
+;ABL:精液中毒
+IF ABL:PLAYER:精液中毒
+	SIF S
+		PRINT  + 
+	A += ABL:PLAYER:精液中毒 * 1
+	PRINTFORM %NAME:PLAYER%の
+	PRINTS ABLNAME:[[ABL:精液中毒]]
+	PRINTV 'LV,ABL:PLAYER:精液中毒,'(,ABL:PLAYER:精液中毒 * 1,')
+	S = 1
+ENDIF
+
+;サド
+IF TALENT:PLAYER:サド
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINTFORM %NAME:PLAYER%が
+	PRINTS TALENTNAME:[[TALENT:サド]]
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+;小悪魔
+IF TALENT:PLAYER:小悪魔
+	SIF S
+		PRINT  + 
+	A += 3
+	PRINTFORM %NAME:PLAYER%が
+	PRINTS TALENTNAME:[[TALENT:小悪魔]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+
+;合計を表示(16以上で実行)
+PRINT  = 
+PRINTV A
+
+V = 16
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 実行値
+PRINTV V
+
+WAIT
+
+;実行できない
+SIF A < V
+	RETURN 0
+
+SAVESTR:0 = 足コキ
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;実行決定
+;-------------------------------------------------
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 30
+LOSEBASE:気力 += 150
+
+SOURCE:14 = 100
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 40
+	SOURCE:13 = 40
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 160
+	SOURCE:13 = 160
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 700
+	SOURCE:13 = 700
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 1500
+	SOURCE:13 = 1500
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 2400
+	SOURCE:13 = 2400
+ELSE
+	SOURCE:0 = 3300
+	SOURCE:13 = 3300
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 0
+	SOURCE:5 = 150
+ELSEIF ABL:マゾっ気 == 1
+	SOURCE:5 = 300
+ELSEIF ABL:マゾっ気 == 2
+	SOURCE:5 = 600
+ELSEIF ABL:マゾっ気 == 3
+	SOURCE:5 = 900
+ELSEIF ABL:マゾっ気 == 4
+	SOURCE:5 = 1500
+ELSE
+	SOURCE:5 = 2200
+ENDIF
+
+;プレイヤーのABL:技巧をみる
+IF ABL:PLAYER:技巧 == 0
+	TIMES SOURCE:0 , 0.50
+	TIMES SOURCE:13 , 0.50
+ELSEIF ABL:PLAYER:技巧 == 1
+	TIMES SOURCE:0 , 0.80
+	TIMES SOURCE:13 , 0.80
+ELSEIF ABL:PLAYER:技巧 == 2
+	TIMES SOURCE:0 , 1.00
+	TIMES SOURCE:13 , 1.00
+ELSEIF ABL:PLAYER:技巧 == 3
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:13 , 1.50
+ELSEIF ABL:PLAYER:技巧 == 4
+	TIMES SOURCE:0 , 1.50
+	TIMES SOURCE:13 , 2.50
+ELSE
+	TIMES SOURCE:0 , 2.00
+	TIMES SOURCE:13 , 4.00
+ENDIF
+
+;倒錯的
+SIF TALENT:倒錯的
+	TIMES SOURCE:5 , 1.80
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +4
+	EXP:レズ経験 += 4
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +4
+	EXP:ＢＬ経験 += 4
+ENDIF
+
+TFLAG:快楽経験 = 1
+
+;調教者がふたなり
+IF TALENT:PLAYER:ふたなり
+	SOURCE:13 /= 2
+ENDIF
+
+RETURN 1

@@ -1,0 +1,1135 @@
+﻿;===========================================================
+;コンサート関係の処理はここで
+;===========================================================
+;eraIm@s_ver.0.17βdより流用して改造(pawapokya-)
+;===========================================================
+@CONCERT
+DRAWLINE
+
+;特殊チケットフラグ初期化
+FLAG:特殊営業で夜の部を開催フラグ = 0
+
+;お揃いフラグ初期化
+FLAG:特殊営業時お揃い衣装 = 0
+
+;夜の場合、通常コンサートか特殊コンサートかを選択
+PRINTL どのチケットを販売しますか？
+PRINTL  [0] - 通常チケット
+SIF TIME == 1
+	PRINTL  [1] - 特殊チケット
+PRINTL  [100] - やめる
+	
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	PRINTFORMW 通常チケットを販売します
+ELSEIF RESULT == 1 && TIME == 1
+	PRINTFORMW 特殊チケットを販売します。コンサート後にお楽しみがあります
+	FLAG:特殊営業で夜の部を開催フラグ = 1
+	;コンドーム使用フラグ外す
+	CFLAG:労役でコンドーム使用 = 0
+ELSEIF RESULT == 100
+	RETURN 100
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+DRAWLINE
+
+;ローカル変数初期化
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+F = 0
+
+G = 0
+H = 0
+I = 0
+J = 0
+N = 0
+O = 0
+P = 0
+Q = 0
+R = 0
+S = 0
+
+;COUNT用待避変数
+X = 0
+
+REPEAT 101
+	TCVAR:COUNT = 0
+	U:COUNT = 0
+REND
+
+;調教対象と助手を空に
+TARGET = -1
+ASSI = -1
+;参加人数が一人の場合はTARGETにそのキャラを代入
+IF FLAG:特殊営業参加人数 == 1
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130
+			TARGET = COUNT
+	REND
+;参加人数が二人の場合は歌唱経験の高い方をTARGETに、もう一人をASSIに代入
+ELSEIF FLAG:特殊営業参加人数 == 2
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF TARGET == -1
+			TARGET = COUNT
+		ELSEIF EXP:COUNT:歌唱経験 > EXP:TARGET:歌唱経験
+			ASSI = TARGET
+			TARGET = COUNT
+		ELSE
+			ASSI = COUNT
+		ENDIF
+	REND
+;参加人数が３人以上の場合は、最も歌唱経験の高い者をTARGETに代入
+ELSEIF FLAG:特殊営業参加人数 >= 3
+	E = -1
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF E < EXP:COUNT:歌唱経験
+			TARGET = COUNT
+			E = EXP:COUNT:歌唱経験
+		ENDIF
+	REND
+	E = 0
+ENDIF
+
+;特殊営業参加キャラの相性をチェック
+CALL WORK_SUB_RELATION
+
+;キャラの衣装がお揃いかをチェック
+IF FLAG:特殊営業参加人数 >= 2 && FLAG:着衣使用
+	FLAG:特殊営業時お揃い衣装 = 1
+	E = -1
+	F = 0
+	S = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF E == -1
+			S = CFLAG:COUNT:着衣状態
+			E = CFLAG:COUNT:上着のタイプ
+			F = CFLAG:COUNT:特別コスチュームのタイプ
+		;すっぱだか
+		ELSEIF S == 0 && CFLAG:COUNT:着衣状態 == 0
+			CONTINUE
+		;裸＋特別コス
+		ELSEIF F == CFLAG:COUNT:特別コスチュームのタイプ && S == 64 && CFLAG:COUNT:着衣状態 == 64
+			CONTINUE
+		;下着姿。ランナウェイズ……
+		ELSEIF S > 0 && S < 4 && CFLAG:COUNT:着衣状態 > 0 && CFLAG:COUNT:着衣状態 < 4
+			CONTINUE
+		;下着＋特別コス
+		ELSEIF F == CFLAG:COUNT:特別コスチュームのタイプ && S > 64 && S < 68 && CFLAG:COUNT:着衣状態 > 64 && CFLAG:COUNT:着衣状態 < 68
+			CONTINUE
+		ELSEIF (CFLAG:COUNT:上着上の状態 || CFLAG:COUNT:上着下の状態 || CFLAG:COUNT:特別コスチュームの状態)
+			FLAG:特殊営業時お揃い衣装 = 0
+		ELSEIF (CFLAG:COUNT:着衣状態 & 92) == 0
+			FLAG:特殊営業時お揃い衣装 = 0
+		ELSEIF E != CFLAG:COUNT:上着のタイプ || F != CFLAG:COUNT:特別コスチュームのタイプ
+			FLAG:特殊営業時お揃い衣装 = 0
+		ELSEIF ((S & 92) != (CFLAG:COUNT:着衣状態 & 92))
+			FLAG:特殊営業時お揃い衣装 = 0
+		ENDIF
+	REND
+	E = 0
+	F = 0
+	S = 0
+ELSEIF FLAG:着衣使用
+	FLAG:特殊営業時お揃い衣装 = 1
+ENDIF
+
+;客の数を計算
+;参加するキャラの人気の最大値に応じて客が来ます
+E = 0
+REPEAT CHARANUM
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+		E = EXP:COUNT:人気
+REND
+C = E / 4
+G = C / 2
+IF C
+	IF C < 13
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 16
+		TIMES G , 1.20
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 20
+		TIMES G , 1.50
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 24
+		TIMES G , 2.00
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSE
+		TIMES G , 2.50
+		REPEAT C
+			G += RAND:3
+		REND
+	ENDIF
+ENDIF
+
+;娼館の人気に応じてさらにプラス
+C = (EXP:MASTER:人気 / 5)
+IF C
+	REPEAT C
+		G += RAND:2
+	REND
+ENDIF
+
+;参加者が特定の素質を持っていた場合ボーナス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	;社会的ステータスが影響
+	;人気者
+	SIF TALENT:COUNT:人気者
+		G += 5
+	;アイドル
+	SIF TALENT:COUNT:アイドル
+		G += 10
+	;娼婦
+	SIF TALENT:COUNT:風俗嬢
+		G += 2
+	;傾城
+	SIF TALENT:COUNT:高級娼婦
+		G += 3
+	;饒舌
+	SIF TALENT:COUNT:饒舌
+		G += 2
+	;常連客
+	SIF TALENT:COUNT:常連客
+		G += 2
+	;求愛
+	SIF TALENT:COUNT:彼氏あり
+		G += 1
+	;歌姫
+	SIF TALENT:COUNT:歌姫
+		G += 15
+	;舞姫
+	SIF TALENT:COUNT:舞姫
+		G += 5
+	;美姫
+	SIF TALENT:COUNT:美姫
+		G += 10
+	;優等生
+	SIF TALENT:COUNT:優等生
+		G += 5
+	;ファッションモデル
+	SIF TALENT:COUNT:ファッションモデル
+		G += 3
+		
+	;専用素質(まあ(差別化する必要もあるし)多少はね？)
+	;極道の娘
+	SIF TALENT:COUNT:極道の娘
+		G += 20
+	;淫魔
+	SIF TALENT:COUNT:淫魔
+		G += 5
+	;声優
+	SIF TALENT:COUNT:声優
+		G += 25
+	;はるうられ
+	SIF TALENT:COUNT:はるうられ
+		G += 15
+	;ColorfulPureGirls
+	SIF TALENT:COUNT:ColorfulPureGirls
+		G += 30
+	;神巫
+	SIF TALENT:COUNT:神巫
+		G += 5
+	;天使
+	SIF TALENT:COUNT:天使
+		G += 10
+	;グランドマスター
+	SIF TALENT:COUNT:グランドマスター
+		G += 10
+	;極道の妻
+	SIF TALENT:COUNT:極道の妻
+		G += 15
+	;Mermaid girl
+	SIF TALENT:COUNT:[[TALENT:Mermaid girl]] || TALENT:COUNT:熱血娘 || TALENT:COUNT:[[TALENT:ONLY ONE EMPRESS]]
+		G += 20
+	;Triptych
+	SIF TALENT:COUNT:Triptych
+		G += 30
+	;Emerald Queen
+	SIF TALENT:COUNT:[[TALENT:Emerald Queen]]
+		G += 25
+	;堕ちた歌姫
+	SIF TALENT:COUNT:[[TALENT:平和の歌姫？]] || TALENT:COUNT:堕ちた歌姫
+		G += 20
+	;ルーンマスター 
+	SIF TALENT:COUNT:ルーンマスター || TALENT:COUNT:奇蹟
+		G += 20
+	;ONLY ONE IDOL
+	SIF TALENT:COUNT:[[TALENT:ONLY ONE IDOL]] || TALENT:COUNT:ILMATAR || TALENT:COUNT:AVALOKITESVARA || TALENT:COUNT:QueenB
+		G += 40
+	;SUPER HEROINE
+	SIF TALENT:COUNT:[[TALENT:SUPER HEROINE]]
+		G += 25
+REND
+
+	;警備員の数に応じて観客数の限界が伸びます。500000Pをケチってはいけない(戒め)
+	IF G > 50 && FLAG:警備員人数 < 10
+		IF (50 + (FLAG:警備員人数 * 10)) < G
+			G = (50 + (FLAG:警備員人数 * 10))
+		ENDIF
+	ENDIF
+
+;10人以下だった場合、10人にします
+SIF G < 10
+	G = 10
+
+;コンサートの種類
+;現状形だけ
+PRINTL 曲のジャンルを選んでください
+PRINTL  [0] - 歌謡曲
+PRINTL  [1] - ポップス
+PRINTL  [2] - ロック
+PRINTL  [3] - テクノ
+PRINTL  [4] - R&B
+PRINTL  [5] - アニソン
+PRINTL  [6] - 演歌
+$INPUT_LOOP2
+INPUT
+
+IF RESULT == 0
+	PRINTFORMW 歌謡曲を主に歌います
+ELSEIF RESULT == 1
+	PRINTFORMW ポップスを主に歌います
+ELSEIF RESULT == 2
+	PRINTFORMW ロックを主に歌います
+ELSEIF RESULT == 3
+	PRINTFORMW テクノを主に歌います
+ELSEIF RESULT == 4
+	PRINTFORMW R&Bを主に歌います
+ELSEIF RESULT == 5
+	PRINTFORMW アニソンを主に歌います
+ELSEIF RESULT == 6
+	PRINTFORMW 演歌を主に歌います
+ELSE
+	GOTO INPUT_LOOP2
+ENDIF
+
+DRAWLINE
+
+CALL WORK_SUB_PRINT_FULLNAME
+PRINTFORMW のコンサートを開いた……
+PRINTFORML 今回のコンサートには{G}人の聴衆が集まり
+
+WAIT
+
+;歌う曲数
+L = 0
+K = 0
+REPEAT CHARANUM
+	SIF L < MAXBASE:COUNT:気力 && CFLAG:COUNT:130
+		L = MAXBASE:COUNT:気力 / 100
+REND
+;
+K = L / 10
+
+;次に成功か失敗かの判定を計算
+;参加者の歌唱経験の最低値によって基礎値が決定
+;（※下手な歌い手は他のメンバーの足まで引っぱります）
+E = 0
+REPEAT CHARANUM
+	SIF E > EXP:COUNT:歌唱経験 && CFLAG:COUNT:130
+		E = EXP:COUNT:歌唱経験
+REND
+
+IF E < 50
+	D = 0 + RAND:2 + RAND:L + K
+ELSEIF E < 100
+	D = 0 + RAND:3 + RAND:L + K
+ELSEIF E < 200
+	D = 2 + RAND:3 + RAND:L + K
+ELSEIF E < 300
+	D = 4 + RAND:4 + RAND:L + (K * 2)
+ELSEIF E < 400
+	D = 7 + RAND:4 + RAND:L + (K * 2)
+ELSEIF E < 500
+	D = 10 + RAND:5 + RAND:L + (K * 2)
+ELSEIF E < 600
+	D = 13 + RAND:6 + RAND:L + (K * 3)
+ELSEIF E < 800
+	D = 16 + RAND:7 + RAND:L + (K * 3)
+ELSEIF E < 1000
+	D = 20 + RAND:8 + RAND:L + (K * 3)
+ELSEIF E < 1500
+	D = 25 + RAND:9 + RAND:L + (K * 4)
+ELSEIF E < 2500
+	D = 30 + RAND:9 + RAND:L + (K * 4)
+ELSEIF E < 4000
+	D = 40 + RAND:10 + RAND:L + (K * 4)
+ELSE
+	D = 50 + RAND:10 + RAND:L + (K * 5)
+ENDIF
+
+;参加者全員の技能・素質による修正値を加算
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+
+	;全員の歌唱技能をプラス
+	D += ABL:COUNT:歌唱技能
+
+	;被写技能と舞踊技能は1/2をプラス
+	D += ABL:COUNT:被写技能 / 2
+	D += ABL:COUNT:舞踊技能 / 2
+
+	;話術と露出癖は1/3をプラス
+	D += ABL:COUNT:話術 / 3
+	D += ABL:COUNT:露出癖 / 3
+
+	;全員の美容感覚をプラス
+	D += ABL:COUNT:美容感覚
+
+	;素質に応じて加減
+	;臆病
+	SIF TALENT:COUNT:臆病
+		D -= 2
+	;大人しい
+	SIF TALENT:COUNT:大人しい
+		D -= 2
+	;プライド高い
+	SIF TALENT:COUNT:プライド高い
+		D += 3
+	;活発
+	SIF TALENT:COUNT:活発
+		D += 5
+	;プライド低い
+	SIF TALENT:COUNT:プライド低い
+		D -= 1
+	;感情乏しい
+	SIF TALENT:COUNT:感情乏しい
+		D -= 2
+	;好奇心
+	SIF TALENT:COUNT:好奇心
+		D += 3
+	;目立ちたがり
+	SIF TALENT:COUNT:目立ちたがり
+		D += 5
+	;抑圧
+	SIF TALENT:COUNT:抑圧
+		D -= 3
+	;解放
+	SIF TALENT:COUNT:解放
+		D += 3
+	;抵抗
+	SIF TALENT:COUNT:抵抗
+		D -= 5
+	;恥じらい
+	SIF TALENT:COUNT:恥じらい
+		D -= 3
+	;恥薄い
+	SIF TALENT:COUNT:恥薄い
+		D += 3
+	;献身的
+	SIF TALENT:COUNT:献身的
+		D += 3
+	;露出狂
+	SIF TALENT:COUNT:露出狂
+		D += 3
+	;魅惑
+	SIF TALENT:COUNT:魅惑
+		D += 5
+	;謎の魅力
+	SIF TALENT:COUNT:謎の魅力
+		D += 10
+	;貧乳
+	SIF TALENT:COUNT:貧乳
+		D -= 2
+	;巨乳
+	SIF TALENT:COUNT:巨乳
+		D += 2
+	;魅力
+	SIF TALENT:COUNT:魅力
+		D += 5
+	;爆乳
+	SIF TALENT:COUNT:爆乳
+		D += 2
+	;絶壁
+	SIF TALENT:COUNT:絶壁
+		D -= 3
+
+	;肥満
+	SIF TALENT:COUNT:肥満
+		D /= 2
+
+	;狂気・崩壊があると満足度激減
+	SIF TALENT:COUNT:狂気 || TALENT:COUNT:崩壊
+		D /= 5
+
+REND
+
+;相性による修正
+IF FLAG:特殊営業時のキャラの相性 >= 200
+	TIMES D , 2.00
+ELSEIF FLAG:特殊営業時のキャラの相性 >= 150
+	TIMES D , 1.50
+ELSEIF FLAG:特殊営業時のキャラの相性 >= 120
+	TIMES D , 1.20
+ELSEIF FLAG:特殊営業時のキャラの相性 < 100
+	TIMES D , 0.50
+ENDIF
+
+;満足度Dが目標値Pを上回れば成功、下回れば失敗
+;２週目以降は相性値込でなければまず超成功は狙えないでしょう。
+IF FLAG:周回数 > 1
+	P = 41 + RAND:10
+ELSE
+	P = 21 + RAND:5
+ENDIF
+
+;特殊チケットの場合は客の目的が目的なのでちょっと下がる
+SIF FLAG:特殊営業で夜の部を開催フラグ == 1
+	P -= 5
+
+;満足度DがPの50%未満だったら大失敗
+IF D < (P / 2)
+	A = 0
+;P未満だったら小失敗
+ELSEIF D < P
+	A = 1
+;Pの150%未満だったら普通
+ELSEIF D < (P * 3) / 2
+	A = 2
+;Pの200%未満だったら小成功
+ELSEIF D < P * 2
+	A = 3
+;Pの400%未満だったら大成功
+ELSEIF D < P * 4
+	A = 4
+;それ以上だったら超成功
+ELSE
+	A = 5
+ENDIF
+Z = 0
+Z = A
+
+IF FLAG:特殊営業時お揃い衣装
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINT は
+	SIF FLAG:特殊営業参加人数 >= 2
+		PRINT お揃いの
+	IF CFLAG:着衣状態 == 0
+		PRINT 一糸まとわぬ姿
+	ELSEIF CFLAG:着衣状態 < 4
+		PRINT 下着姿
+	ELSE
+		CALL PRINT_CLOTHTYPE_MAIN2
+		IF CFLAG:特別コスチュームのタイプ
+			PRINT に
+			CALL PRINT_CLOTHTYPE_SPECIAL
+		ENDIF
+		PRINT 姿
+	ENDIF
+	PRINTFORML でステージに上がり
+ENDIF
+
+PRINTFORMW 通常の演目{L}曲に加えアンコール{K}曲を歌った
+
+PRINTL 「♪～♪～」
+IF FLAG:特殊営業参加人数 >= 2 && FLAG:特殊営業時のキャラの相性 >= 175
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINTFORML の歌声は絶妙なハーモニーを奏でている
+ELSEIF FLAG:特殊営業参加人数 >= 2 && FLAG:特殊営業時のキャラの相性 >= 120
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINTFORML の歌声はそこそこ揃っている
+ELSEIF FLAG:特殊営業参加人数 >= 2 && FLAG:特殊営業時のキャラの相性 <= 100
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINTFORML の歌声は揃っているとは言い難い……
+ENDIF
+
+WAIT
+
+PRINTL      
+;結果を一応視覚化しておく。デバッグ用なので、消してもいい。
+PRINTFORML 満足度:{D}％
+P *= 4
+PRINTFORMW 目標満足度:{P}％
+PRINTL      
+
+;失敗時メッセージ
+IF A <= 1
+	PRINTFORM 緊張しすぎたのか、歌っている最中に
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINTL は固まってしまった
+	PRINTFORMW どうやら今回のコンサートは失敗したようだ……
+	TFLAG:口上番号 = 110
+;成功時メッセージ
+ELSE
+	PRINTFORMW いい感じに成功したようだ
+	IF FLAG:特殊営業で夜の部を開催フラグ == 0
+		CALL WORK_SUB_PRINT_MEMBER
+		PRINTFORMW は照れくさそうに微笑むと、ステージから消えていった……
+	ENDIF
+	TFLAG:口上番号 = 111
+ENDIF
+
+;特殊コンサート用処理
+IF FLAG:特殊営業で夜の部を開催フラグ == 1
+	IF A <= 1
+		PRINTFORM 不満を覚えた聴衆達は
+		CALL WORK_SUB_PRINT_MEMBER
+		PRINTFORMW に向かってなだれ込んでいった……
+	ELSE
+		PRINTFORM %CALLNAME:TARGET%
+		SIF FLAG:特殊営業参加人数 >= 2
+			PRINT たち
+		PRINTFORML の魅力と歌声に魅せられたのか
+		PRINTFORM 興奮した聴衆達は一斉に
+		CALL WORK_SUB_PRINT_MEMBER
+		PRINTFORMW のもとへなだれ込んでいった……
+	ENDIF
+	PRINTW      ･
+	PRINTW      ･
+	PRINTW      ･
+
+	CALL WORK_SP_SEX_01
+
+	;口上の判定
+	IF A <= 1
+		TFLAG:口上番号 = 112
+	ELSE
+		TFLAG:口上番号 = 113
+	ENDIF
+	
+	WAIT
+ENDIF
+
+;口上処理
+X = TARGET
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	TARGET = COUNT
+	CALL SELF_KOJO
+REND
+TARGET = X
+;念のため口上用フラグを空に
+TFLAG:口上番号 = 0
+
+;/_/_/_/_/_/※ここから下の処理ではTARGETは保存されていません/_/_/_/_/_/
+
+DRAWLINE
+
+;パラメータ変化
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	
+	TARGET = COUNT
+
+	PRINTFORML %NAME:TARGET%のパラメータが以下の通り変化しました
+
+	;失敗時経験値
+	IF Z <= 1
+		TCVAR:歌唱経験 = (G / 10) + 1
+		TCVAR:被写経験 = (G / 20) + 1
+		TCVAR:舞踊経験 = (G / 15) + 1
+		U:7 = (G * L / 10) + 1
+		U:4 = (G * L / 15) + 1
+		U:8 = (G * L / 20) + 1
+	;成功時経験値
+	ELSE
+	;今後技能が充実してくれば書き換える可能性有
+		TCVAR:歌唱経験 = ((G / (7 - Z)) * ABL:歌唱技能) + L + (K * 10)
+		TCVAR:被写経験 = ((G / (10 - Z)) * ABL:被写技能) + (L / 4) + (K * 3)
+		TCVAR:舞踊経験 = ((G / (9 - Z)) * ABL:舞踊技能) + (L / 2) + (K * 5)
+		U:7 = ((G * L * Z) / 5 ) + (K * 500)
+		U:4 = ((G * L * Z) / 6 ) + (K * 300)
+		U:8 = ((G * L * Z) / 7 ) + (K * 100)
+	ENDIF
+
+	;参加者が複数の場合は得られる経験がやや目減り
+	IF FLAG:特殊営業参加人数 == 2
+		TIMES TCVAR:歌唱経験 , 0.50
+		TIMES TCVAR:被写経験 , 0.50
+		TIMES TCVAR:舞踊経験 , 0.50
+		TIMES U:7 , 0.80
+		TIMES U:4 , 0.80
+		TIMES U:8 , 0.80
+	ELSEIF FLAG:特殊営業参加人数 >= 3
+		TIMES TCVAR:歌唱経験 , 0.30
+		TIMES TCVAR:被写経験 , 0.30
+		TIMES TCVAR:舞踊経験 , 0.30
+		TIMES U:7 , 0.60
+		TIMES U:4 , 0.60
+		TIMES U:8 , 0.60
+	ENDIF
+
+	;否定の珠の計算（基礎値は人数ベースで、従順に応じて減少）
+	;特殊チケットだと一気に溜まる
+	
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		M = 15 - ABL:信頼
+	ELSE
+		M = 9 - ABL:信頼
+	ENDIF
+
+	;否定の珠が増加しないという事はない
+	SIF M <= 0
+		M = 1
+
+	U:100 = G * M
+
+	;素質補正
+	;無関心だと少なくなる
+	SIF TALENT:クール
+		TIMES U:100 , 0.90
+	;感情乏しいと少なくなる
+	SIF TALENT:感情乏しい
+		TIMES U:100 , 0.90
+	;プライドが高いと増える
+	SIF TALENT:プライド高い
+		TIMES U:100 , 1.50
+	;目立ちたがりだと少なくなる
+	SIF TALENT:目立ちたがり
+		TIMES U:100 , 0.80
+	;抑圧だと増える
+	SIF TALENT:抑圧
+		TIMES U:100 , 1.20
+	;解放だと少なくなる
+	SIF TALENT:解放
+		TIMES U:100 , 0.80
+	;アイドルだと少なくなる
+	SIF TALENT:アイドル
+		TIMES U:100 , 0.80
+	;コンサート失敗かつ恥じらいだと結構増える
+	SIF TALENT:恥じらい && A <= 1
+		TIMES U:100 , 1.50
+
+	;特殊コンサート用処理その２
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		CALL WORK_SP_SEX_02
+		;客は輪姦目的で来ているので、営業が成功しても失敗しても一定の満足を得る
+		A += 1
+	ELSE
+		;昼の部の参加人数による否定の珠補正
+		IF FLAG:特殊営業参加人数 == 2
+			TIMES U:100 , 0.80
+		ELSEIF FLAG:特殊営業参加人数 >= 3
+			TIMES U:100 , 0.60
+		ENDIF
+	ENDIF
+
+	DRAWLINE
+
+	X = COUNT
+	CALL WORK_EXP
+	COUNT = X
+
+	;反発刻印取得の判定
+	;通常チケットは従順の200倍+1000まで、特殊チケットは100倍まで許容します
+	O = ABL:信頼
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		O *= 100
+	ELSE
+		O *= 200
+		O += 1000
+	ENDIF
+	
+	;反発刻印LV2はLV1の√3倍、LV3は√5倍で獲得
+	I = O
+	TIMES I , 2.23
+	J = O
+	TIMES J , 1.73
+	
+	IF MARK:反発刻印 != 3 && JUEL:否定 > I
+		PRINTL  反発刻印LV3を取得
+		MARK:反発刻印 = 3
+	ELSEIF MARK:反発刻印 != 2 && JUEL:否定 > J
+		PRINTL  反発刻印LV2を取得
+		MARK:反発刻印 = 2
+	ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > O
+		PRINTL  反発刻印LV1を取得
+		MARK:反発刻印 = 1
+	ENDIF
+
+	DRAWLINE
+
+	;体力減少の計算
+	LOSEBASE:体力 = G * L
+
+	;アンコールはかなり疲れる
+	IF K == 1
+		TIMES LOSEBASE:体力 , 1.10
+	ELSEIF K == 2
+		TIMES LOSEBASE:体力 , 1.20
+	ELSEIF K >= 3
+		TIMES LOSEBASE:体力 , 1.30
+	ENDIF
+
+	;小柄だと疲労増加
+	SIF TALENT:小柄体型
+		TIMES LOSEBASE:体力 , 1.20
+	;アイドルだと疲労半減
+	SIF TALENT:アイドル
+		TIMES LOSEBASE:体力 , 0.50
+	
+	;特殊チケットの場合
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		;特殊チケットだと人数ベースでかなり疲れる
+		LOSEBASE:体力 += G * 40
+		;処女喪失だとかなり増える
+		SIF CFLAG:Ｖ売春で処女喪失フラグ
+			TIMES LOSEBASE:体力 , 2.00
+	
+		;売春中毒のレベルに応じてちょっとずつ減る
+		IF ABL:売春中毒 == 1
+			TIMES LOSEBASE:体力 , 0.90
+		ELSEIF ABL:売春中毒 == 2
+			TIMES LOSEBASE:体力 , 0.80
+		ELSEIF ABL:売春中毒 == 3
+			TIMES LOSEBASE:体力 , 0.70
+		ELSEIF ABL:売春中毒 == 4
+			TIMES LOSEBASE:体力 , 0.60
+		ELSEIF ABL:売春中毒 >= 5
+			TIMES LOSEBASE:体力 , 0.50
+		ENDIF
+	
+		;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
+		SIF EXP:Ｖ経験 <= 200 && TALENT:オトコ == 0
+			TIMES LOSEBASE:体力 , 1.10
+		SIF EXP:Ａ経験 <= 200
+			TIMES LOSEBASE:体力 , 1.20
+	
+	ENDIF
+
+	;運動能力に応じて疲労軽減
+	IF ABL:運動能力 == 1
+		TIMES LOSEBASE:体力 , 0.95
+	ELSEIF ABL:運動能力 == 2
+		TIMES LOSEBASE:体力 , 0.90
+	ELSEIF ABL:運動能力 == 3
+		TIMES LOSEBASE:体力 , 0.85
+	ELSEIF ABL:運動能力 == 4
+		TIMES LOSEBASE:体力 , 0.80
+	ELSEIF ABL:運動能力 == 5
+		TIMES LOSEBASE:体力 , 0.75
+	ELSEIF ABL:運動能力 == 6
+		TIMES LOSEBASE:体力 , 0.70
+	ELSEIF ABL:運動能力 == 7
+		TIMES LOSEBASE:体力 , 0.65
+	ELSEIF ABL:運動能力 == 8
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF ABL:運動能力 == 9
+		TIMES LOSEBASE:体力 , 0.55
+	ELSEIF ABL:運動能力 >= 10
+		TIMES LOSEBASE:体力 , 0.50
+	ENDIF
+
+	;参加人数に応じて疲労軽減
+	IF FLAG:特殊営業で夜の部を開催フラグ
+		LOSEBASE:体力 /= FLAG:特殊営業参加人数
+	ELSEIF FLAG:特殊営業参加人数 >= 3
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF FLAG:特殊営業参加人数 >= 2
+		TIMES LOSEBASE:体力 , 0.80
+	ENDIF
+	
+	;警備員の人数に応じてちょっとずつ減る（最大1～2割減）
+	;特殊チケットなら警備員とても大事（効果2倍）
+	LOSEBASE:体力 *= 100 - FLAG:警備員人数 * (1 + FLAG:特殊営業で夜の部を開催フラグ)
+	LOSEBASE:体力 /= 100
+	
+	;警備員の人数に応じて即死回避
+	IF LOSEBASE:体力 >= BASE:体力
+		;警備員の人数*9+9%の確率で体力が1残る（救済フラグを立てる）
+		SIF RAND:100 < (FLAG:警備員人数 * 9 + 9)
+		LOSEBASE:体力 = BASE:体力 - 1
+	ENDIF
+
+	SIF LOSEBASE:体力 >= BASE:体力
+		LOSEBASE:体力 = BASE:体力
+	
+	PRINT  体力消費　　:
+	N = BASE:体力
+	CALL FIGURE_INDENT
+	PRINTV BASE:体力
+	PRINT  - 
+	N = LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTV LOSEBASE:体力
+	PRINT  = 
+	N = BASE:体力 - LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTVL BASE:体力 - LOSEBASE:体力
+	
+	BASE:体力 -= LOSEBASE:体力
+	
+	PRINT  体力　　　　:
+	BAR BASE:体力, MAXBASE:体力, 32
+	PRINTFORML ({BASE:体力}/{MAXBASE:体力})
+	
+	;体力が0以下、または500以下だった場合の処理
+	IF BASE:体力 <= 0
+		PRINTFORML %CALLNAME:TARGET%は、最後のステージの後に突っ伏すように倒れた
+		PRINTFORML 何をやっても反応がない……
+		WAIT
+		;キャラの死亡確認
+		CALL CHARADEAD_CHECK
+	ELSEIF BASE:体力 <= 500
+		PRINTFORML 体力が限界に来ています。休ませてあげてください
+	ENDIF
+
+	DRAWLINE
+	WAIT
+REND
+
+;売上金を計算します
+Q = 0
+
+;基準額は参加キャラの歌唱技能の平均値に大きく左右されます
+;（※素人の歌を金を払って聞きに来る人はあまりいません）
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:歌唱技能
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = (1 * L) + (5 * K)
+ELSEIF E == 1
+	V = (2 * L) + (10 * K)
+ELSEIF E == 2
+	V = (3 * L) + (15 * K)
+ELSEIF E == 3
+	V = (5 * L) + (20 * K)
+ELSEIF E == 4
+	V = (8 * L) + (25 * K)
+ELSEIF E == 5
+	V = (10 * L) + (30 * K)
+ELSEIF E == 6
+	V = (15 * L) + (40 * K)
+ELSEIF E == 7
+	V = (20 * L) + (50 * K)
+ELSEIF E == 8
+	V = (30 * L) + (60 * K)
+ELSEIF E == 9
+	V = (40 * L) + (80 * K)
+ELSEIF E >= 10
+	V = (50 * L) + (100 * K)
+ENDIF
+PRINT 歌唱
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV +{V}
+Q += V
+V = 0
+
+;参加キャラの素質補正
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	;カリスマ
+	SIF TALENT:COUNT:カリスマ
+		V += 500
+	;鼓舞
+	SIF TALENT:COUNT:鼓舞
+		V += 100
+	IF V
+		PRINTFORML %NAME:COUNT% +{V}
+		Q += V
+		V = 0
+	ENDIF
+REND
+
+;能力補正
+;話術の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:話術
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 100
+ELSEIF E == 1
+	V = 110
+ELSEIF E == 2
+	V = 120
+ELSEIF E == 3
+	V = 130
+ELSEIF E == 4
+	V = 140
+ELSEIF E == 5
+	V = 150
+ELSEIF E == 6
+	V = 160
+ELSEIF E == 7
+	V = 170
+ELSEIF E == 8
+	V = 180
+ELSEIF E == 9
+	V = 190
+ELSEIF E >= 10
+	V = 200
+ENDIF
+PRINT 話術
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;被写技能の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:被写技能
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 70
+ELSEIF E == 1
+	V = 80
+ELSEIF E == 2
+	V = 85
+ELSEIF E == 3
+	V = 90
+ELSEIF E == 4
+	V = 95
+ELSEIF E == 5
+	V = 100
+ELSEIF E == 6
+	V = 110
+ELSEIF E == 7
+	V = 120
+ELSEIF E == 8
+	V = 130
+ELSEIF E == 9
+	V = 140
+ELSEIF E >= 10
+	V = 150
+ENDIF
+PRINT 被写
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;舞踊技能の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:舞踊技能
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 50
+ELSEIF E == 1
+	V = 70
+ELSEIF E == 2
+	V = 100
+ELSEIF E == 3
+	V = 110
+ELSEIF E == 4
+	V = 120
+ELSEIF E == 5
+	V = 130
+ELSEIF E == 6
+	V = 140
+ELSEIF E == 7
+	V = 150
+ELSEIF E == 8
+	V = 160
+ELSEIF E == 9
+	V = 180
+ELSEIF E >= 10
+	V = 200
+ENDIF
+PRINT 舞踏
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;魅力値の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += BASE:COUNT:魅力値
+REND
+E /= FLAG:特殊営業参加人数
+V = E
+PRINT 魅力値
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+E = 0
+
+;特殊チケット
+IF FLAG:特殊営業で夜の部を開催フラグ == 1
+	V = 150
+	;Ｖ使用不可キャラがいると減る
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+			TIMES V , 0.70
+	REND
+	PRINT 特殊チケット
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;共通する獲得資金処理
+CALL WORK_SP_MONEY_CM
+
+PRINTFORML 今回のコンサートでは{Q}ポイントのチケットを{G}人に販売し、
+
+;チケット一枚あたりの金額×客の人数が収入となる
+Q *= G
+
+PRINTFORML 合計{Q}ポイント稼ぎました
+MONEY += Q
+
+;素質【歌姫】の判定
+;コンサート終了時に生きていて、技巧LV5以上、歌唱技能LV5以上で歌唱経験1000以上かつ【舞姫】【美姫】をもっていない場合に通常コンサートをした時に取得
+
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	IF BASE:COUNT:体力 > 0 && ABL:COUNT:技巧 >= 5 && ABL:COUNT:歌唱技能 >= 5 && EXP:COUNT:歌唱経験 >= 1000 && TALENT:COUNT:歌姫 == 0 && FLAG:特殊営業で夜の部を開催フラグ == 0
+		PRINTFORMW %CALLNAME:COUNT%の歌の素晴らしさは世間でも評判になっているようだ……
+		PRINTFORMW 素質【歌姫】を取得しました
+		TALENT:COUNT:歌姫 = 1
+	ENDIF
+REND
+
+;特殊営業終了処理
+CALL WORK_SP_AFTER
+
+WAIT
+
+BEGIN TURNEND
+
+RETURN 1

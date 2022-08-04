@@ -1,0 +1,113 @@
+﻿;===========================================================
+;実績・はるうられ
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_9
+RESULTS = はるうられ
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_9
+; 条件を満たす人数の計算 (※ これは例文です)
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:はるうられ == 1 && CFLAG:COUNT:売却助手可能 >= 1
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:9 == 0 && DIFFICULTY_CHECK() && LOCAL >= 3
+	GLOBAL:9 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:9
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_9
+; 解説文
+PRINTFORML とある売春組織から解放された「春風南」「神園すみれ」「二葉志乃」……
+PRINTFORML しかしそんな彼女たちはやはり、性を売り物にする運命から逃れられなかったようです
+PRINTFORMW ですが、とある売春組織にいた頃よりは自由も保障されている分、幸せなのかもしれません
+; ボーナスなどの処理はここ以降に記述する
+IF GETCHARA([[キャラ:春風南_重複1]],0) < 0 || GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0 || !FLAG:はるうられ解放
+	PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
+	PRINTFORMW 以下のボーナスの中からお好みのものを選んで下さい
+	$INPUT_LOOP_7
+	DRAWLINE
+	SIF GETCHARA([[キャラ:春風南_重複1]],0) < 0
+		PRINTFORML  [0] - 春風南が「かわいそうなこと」になっていないＩＦ
+	SIF GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0
+		PRINTFORML  [1] - 神園すみれが「かわいそうなこと」になっていないＩＦ
+	SIF !FLAG:はるうられ解放
+		PRINTFORML  [2] - 他の「かわいそうなこと」になった女の子たちの解放
+	DRAWLINE
+	PRINTFORML  [999] - 戻る
+	INPUT
+	IF RESULT == 0 && GETCHARA([[キャラ:春風南_重複1]],0) < 0
+		PRINTFORML 春風南が「かわいそうなこと」になっていない「もしも」を実現します
+		PRINTFORML 能力が全て初期化され、最初から育成し直しになりますがよろしいですか？
+		PRINTFORML また、このボーナスは全てのセーブデータで一度しか受けられません！
+		$INPUT_LOOP_MINAMI
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		INPUT
+		IF RESULT == 0
+			PRINTFORMW 春風南は「かわいそうなこと」になっていなかったようです
+			CALL キャラ追加([[キャラ:春風南_重複1]])
+			SIF GETCHARA([[キャラ:春風南]], 0) >= 0
+				CALL キャラ削除(GETCHARA([[キャラ:春風南]], 0))
+		ELSEIF RESULT == 1
+			GOTO INPUT_LOOP_7
+		ELSE
+			GOTO INPUT_LOOP_MINAMI
+		ENDIF
+	ELSEIF RESULT == 0 && GETCHARA([[キャラ:春風南_重複1]],0) > 0
+		PRINTFORMW 春風南が「かわいそうなこと」になっていなかったＩＦを既に実現しています
+		GOTO INPUT_LOOP_7
+	ELSEIF RESULT == 1 && GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0
+		PRINTFORML 神園すみれが「かわいそうなこと」になっていない「もしも」を実現します
+		PRINTFORML 能力が全て初期化され、最初から育成し直しになりますがよろしいですか？
+		PRINTFORML また、このボーナスは全てのセーブデータで一度しか受けられません！
+		$INPUT_LOOP_SUMIRE
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		INPUT
+		IF RESULT == 0
+			PRINTFORMW 神園すみれは「かわいそうなこと」になっていなかったようです
+			CALL キャラ追加([[キャラ:神園すみれ_重複1]])
+			SIF GETCHARA([[キャラ:神園すみれ]], 0) >= 0
+				CALL キャラ削除(GETCHARA([[キャラ:神園すみれ]], 0))
+		ELSEIF RESULT == 1
+			GOTO INPUT_LOOP_7
+		ELSE
+			GOTO INPUT_LOOP_SUMIRE
+		ENDIF
+	ELSEIF RESULT == 1 && GETCHARA([[キャラ:神園すみれ_重複1]],0) > 0
+			PRINTFORMW 神園すみれが「かわいそうなこと」になっていなかったＩＦを既に実現しています
+			GOTO INPUT_LOOP_7
+	ELSEIF RESULT == 2 && FLAG:はるうられ解放 == 0
+		PRINTFORML 他の「かわいそうなこと」になった女の子たちを解放しますか？
+		$INPUT_LOOP_URARE
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		INPUT
+		IF RESULT == 0
+			PRINTFORML 他の「かわいそうなこと」になった女の子たちを解放しました
+			PRINTFORMW 桐生組へ依頼することで勧誘することができます
+			FLAG:はるうられ解放 = 1
+		ELSEIF RESULT == 1
+			GOTO INPUT_LOOP_7
+		ELSE
+			GOTO INPUT_LOOP_URARE
+		ENDIF
+	ELSEIF RESULT == 2 && FLAG:はるうられ解放 == 1
+		PRINTFORML 他の「かわいそうなこと」になった女の子たちを解放しています
+			PRINTFORMW 桐生組へ依頼することで勧誘することができます
+			GOTO INPUT_LOOP_7
+	ELSEIF RESULT == 999
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP_7
+	ENDIF
+ENDIF

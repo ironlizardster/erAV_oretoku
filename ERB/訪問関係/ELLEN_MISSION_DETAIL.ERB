@@ -1,0 +1,672 @@
+﻿;-------------------------------------------------
+;ミッションスタート！
+;-------------------------------------------------
+@MISSION_START
+
+CALL MISSION_CALC
+
+PRINTFORML ある日のこと、エレンから%CALLNAME:MASTER%は桐生組の事務所に顔を出すように言われた……
+PRINTFORML 大広間では歌音とエレンが待っていることから、どうやら組としての仕事らしいのが察せられる
+PRINTFORM ここ最近は桐生組も幹部の刷新や引き継ぎなどでゴタゴタしており、しばらく顔を出していなかった上、
+PRINTFORML 歌音とエレンもあちこちを奔走していたので顔を見るのは久しぶりのことだった
+PRINTFORML 桐生組の内部抗争もエレンの寝返りにより『歌音派』の勝利で終幕、先代組長はますます隠居状態となっている
+PRINTFORM 当面は信頼出来る幹部が組を運営していくことになるらしいが、その実権は歌音とエレンが握っており、
+PRINTFORM その過程で%CALLNAME:MASTER%も、そのつもりはなくとも組の一員として認知されているようで、
+PRINTFORML 以前よりも自分の裁量で様々なことができるようになっていた
+PRINTFORM %CALLNAME:MASTER%に課せられた借金という問題は残ってはいるものの、
+PRINTFORML どうやら以前までとはだいぶ条件が変わったらしく、コンクリを抱いて海に沈められるようなことはなくなったらしい……
+PRINTFORML 
+PRINTFORML 「まずはありがとう、と言っておこうかしら♪
+PRINTFORML 　幹部も歌音ちゃんの息のかかったメンツで揃えられたし、キミの組での発言権も無視できないレベルになったし
+IF R == 1 && I == 1
+	PRINTFORM 　レイチェルちゃんと郁美ちゃんがキミのおかげでウチに手を貸してくれるって言ってくれたし……
+ELSEIF R == 1 && I == 0
+	PRINTFORM 　レイチェルちゃんがキミのおかげでウチに手を貸してくれるって言ってくれたし……
+ELSEIF R == 0 && I == 1
+	PRINTFORM 　郁美ちゃんがキミのおかげでウチに手を貸してくれるって言ってくれたし……
+ENDIF
+PRINTL
+PRINTFORML 　キミのおかげでウチにとってはイイコトばっかり
+PRINTFORML 　それで多分ね、近い将来にはウチがこの国を裏から操れるようになると思うの
+PRINTFORML 　でも、そのためにはエライ人たちをあたしたちが飼い慣らす必要があるの
+PRINTFORML 　簡単そうに思えるかもしれないけど、『暴力とお金』だけじゃああいうエライ人たちってそう簡単に落とせないの
+PRINTFORMW 　飼い慣らすためにはそれに加えて、エライ人たちの支配欲を満たせるような人材を充てがってあげる必要があるのよ♪
+PRINTL
+PRINTFORML 　エライ人って大体が人様には言えないヘンタイちっくな趣味持っているよね？
+PRINTFORML 　例えば未通女ちゃんなのにオナニー狂いのちっちゃい娘が好きだったり、とかね
+PRINTFORML 　キミに任せている娼館で接待している中にそういうお客さんがいるくらいだもの
+PRINTFORML 　今まではそういう『払い下げ』はウチの調教師がやってたんだけど、その人は『組長派』だった
+PRINTFORML 　今回歌音ちゃんがこうして実権を握るようになったから、その人は指詰めて引退しちゃったの
+PRINTFORMW 　キミの事業もそうだけど脱法・犯罪行為を見逃してもらえていたのは『払い下げ』のおかげでもあるのよねぇ……
+PRINTL
+PRINTFORML 　じゃあここからが本題ね……キミにその調教師の後継者になって欲しいの♪
+PRINTFORML 　調教師って言うと抵抗があるかもしれないけど……こう言えばキミも納得できるかな？
+PRINTFORML 　……あたしがお願いする人材を、あたしが指定した条件通りに、いつも通り『指導』する
+PRINTFORML 　単純に言っちゃえばいつもキミが事業としてやっていることの延長線上にある、というわけね
+PRINTFORML 　違うのは『条件が指定されている』ということぐらいかな？
+PRINTFORML 　そんなに難しいことじゃないから、そう構えなくてもいいとは思うけど……どうする？
+PRINTFORML 　キミが『無理！』って言うんなら、誰か適当な若いのにやらせるけど」
+PRINTFORML 　
+PRINTFORML 要約すると『客の好みに合わせた人材を育てて欲しい』という依頼のようだった
+PRINTFORML エレンの言う通り、そういう内容で、かつ権限がある程度ある人間ならば%CALLNAME:MASTER%以外に適任はいないだろう
+PRINTFORML 恐らく『適当に若いのにやらせる』とは言っているものの、それなりに腕の立つ人間がやることになるのだろうが……
+PRINTFORMW
+PRINTFORML 「もちろんタダとは言わないわよ♪
+PRINTFORML 　指導してもらう人材をその過程で女優にしてもいいし、組からもボーナスポイントが出るわ
+PRINTFORML 　今となっては形だけ、みたいなものだけどキミの借金返済の期限延長なんかも考えているの
+PRINTFORML 　それと、お願いする人材は『買い取り』のお客さんじゃなければ、依頼が終わってもキミの事務所で使っていい
+PRINTFORML 　ただ希望する人材と『遊びたい』っていう人もいるから、ね
+PRINTFORML 　どう？　条件としてはかなり破格だと思うけど……」
+PRINTFORMW
+PRINTFORML エレンの言うとおり、確かにかなりの好条件だ
+PRINTFORML さて、このお願いを受けるべきだろうか……
+$INPUTLOOP_DECIDE
+PRINTL [0] - 依頼を受ける
+PRINTL [1] - 依頼を断る
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 「よかった、正直この仕事はキミ以外に回したくなかったのよね
+	PRINTFORML 　ただ、この仕事をこなすにはやってはいけないことがあるの
+	PRINTFORML 　ひとつ、特殊な薬物の投与の禁止
+	PRINTFORML 　ひとつ、特殊な人体改造の禁止
+	PRINTFORML 　ひとつ、性格が変わるようなことの禁止
+	PRINTFORMW 　……どうかしら？　そんなに難しい禁止事項じゃないはずよ」
+	PRINTFORML
+	PRINTFORML エレンの注意事項を受けながら、指導することになる人材の資料に目を通してみた……
+	PRINTFORML 当然と言うべきか、水準以上のルックスの持ち主ばかりが添付された写真に写っている
+	PRINTFORML %CALLNAME:MASTER%は頭の中で指導プランを立てながら、歌音やエレンとの世間話を始めた……
+	PRINTFORMW
+	PRINTFORML 《ミッションが解禁されました！》
+	PRINTFORML ※今後はメイン画面の「ミッション」より依頼を受領できます
+	FLAG:ミッションモード解禁 = 1
+ELSEIF RESULT == 1
+	PRINTFORML 「そう……気が変わったらまた言ってね♪」
+	PRINTFORMW
+	PRINTFORML 今はまだ自分の事務所のことで手一杯だと判断した%CALLNAME:MASTER%は、この話を断ることにした……
+ELSE
+	GOTO INPUTLOOP_DECIDE
+ENDIF
+PRINTFORMW
+
+RETURN 0
+
+;-------------------------------------------------
+;ミッション分岐計算用
+;-------------------------------------------------
+@MISSION_CALC
+
+R = 0
+I = 0
+S = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]]
+		IF CFLAG:COUNT:売却助手可能 == 2
+			R = 1
+		ENDIF
+	ELSEIF NO:COUNT == [[キャラ:須野郁美]]
+		IF CFLAG:COUNT:売却助手可能 == 2
+			I = 1
+		ENDIF
+	ELSEIF NO:COUNT == [[キャラ:清水桜子]]
+		IF CFLAG:COUNT:売却助手可能 == 2
+			S = 1
+		ENDIF
+	ENDIF
+REND
+
+;-------------------------------------------------
+;ミッション分岐計算用
+;-------------------------------------------------
+@KOISORA_ADD
+#DIM ページ数
+#DIM 行数
+
+IF FLAG:神那悠喜仲間救出 < (16 + 8 + 4 + 2 + 1)
+	IF !FLAG:愛を誓った黒ギャルの遊びを許す
+		PRINTFORML 「そういえば悠喜ちゃん、アイドルとしても頑張っているみたいね？」
+		PRINTL
+		PRINTFORML あなたが顔を見せに来たというのにも関わらず、紙束をハイペースで読み進めていたエレンが話題にしたのは
+		PRINTFORML 神那悠喜に関することだった
+		PRINTL
+		PRINTFORML 「さすがにＣＰＧのみひろちゃんとかと比べると人気はワンランク下がるけど、それでもデビュー曲が
+		PRINTFORML 　ウィークリーチャートのトップ１０以内に入るのは、新人アイドルとしては上出来よね♪
+		PRINTFORML 　それにイジられると面白いレスポンスがあるみたいだから、お茶の間のウケもいいみたいだし……
+		PRINTFORML 　きっと悠喜ちゃんならＣＰＧのみひろちゃん、才能が爆発した場合の燐子ちゃんまでとは行かなくても、
+		PRINTFORML 　その次ぐらいにまではなれると思うのよね
+		PRINTFORML 　だからね、キミは悠喜ちゃんの人気がもっと出るようにフォローしてあげて欲しいの
+		PRINTFORMW 　――そうすればあたしたちの目的が達成できる材料になるから」
+		PRINTL
+		PRINTFORML そう言うと、エレンは読んでいた紙束をあなたに手渡した
+		PRINTFORML どうやら紙束は何かの資料らしく、表紙には『ＸＸ島の海底エネルギー資源についての調査と報告』と書かれ
+		PRINTFORML てある
+		SIF GETCHARA([[キャラ:須野郁美]], 0) >= 0
+			PRINTFORML そして題名と共に『研究主任：須野郁美』という名前が添えられていた
+		PRINTW
+		PRINTFORML 「中身は読まなくてもいいわよ♪
+		PRINTFORML 　そう、この資料は悠喜ちゃんの生まれ故郷であるＸＸ島の海底に埋まっていると言われているエネルギー資
+		PRINTFORML 　源について、あたしが信頼できる科学者に極秘裏に調査をお願いしたの
+		PRINTFORML 　彼女、地質学とかは専門分野ではないけど、それでも少なくとも国内の専門家が束になっても敵わないほど
+		PRINTFORML 　の膨大な知識を『全ての科学分野で』持っているわ
+		PRINTFORMW 　……そう、あたしたちの狙いはＸＸ島
+		PRINTL
+		PRINTFORML 　でもＸＸ島はもう海底エネルギー資源の利権を狙っていた地上げ屋に、島の土地のおよそ９０％が買われて
+		PRINTFORML 　しまっているのよね
+		PRINTFORML 　今から乗り出しても、地上げ屋側がどんどん値段を釣り上げているから……例えばね、ＸＸ島にある廃校に
+		PRINTFORML 　なった中学校の敷地ですら１０億もするのよ？
+		PRINTFORML 　つまり、ＸＸ島は土地バブルが始まっている場所なのよ
+		PRINTFORML 　――『ＸＸ島出身の神那悠喜を通してなら残り１０％の土地を簡単に取得できるかもしれない
+		PRINTFORML 　だからエレンさんは神那悠喜をアイドルにしてＸＸ島の人間にアピールしようとしている』
+		PRINTFORMW 　たぶん今、キミはこんな風に考えているんじゃないかな？
+		PRINTL
+		PRINTFORML 　……残念ながらそれは不正解なのよ
+		PRINTFORML 　まずそもそもあたしたち……特に歌音ちゃんはＸＸ島にちょっとした縁があるの
+		PRINTFORML 　そしてこの資料についてだけど『ＸＸ島には海底エネルギー資源は存在しない』――それが結論よ
+		PRINTFORML 　つまりどこかの研究者と地上げ屋……多分バックには大物政治家がいるでしょうね、その３グループが結託
+		PRINTFORML 　して土地転がしをして、莫大なカネを巻き上げようとしている――それがあたしと歌音ちゃんの推測する
+		PRINTFORML 　ＸＸ島の地上げ騒動の真相
+		PRINTFORML 　そして悠喜ちゃんをアイドルにした理由はね……今度はこの資料を見て貰えるかしら？」
+		PRINTW
+;	ENDIF
+	CUSTOMDRAWLINE ==
+	IF (FLAG:神那悠喜仲間救出 & 1) == 0
+		DRAWLINE
+		PRINTL 【伊原琴乃】（いはら・ことの）
+		SETCOLOR 0xDDBBCC
+		CHKFONT "あくびん"
+		IF RESULT
+		SETFONT "あくびん"
+		ENDIF
+		PRINTL 「なんで私の周りの男の人ってヘンタイとケダモノとド変態しかいないんですかっ！」
+		SETFONT "ＭＳ ゴシック"
+		RESETCOLOR
+		PRINTL  ○○県の、風光明媚と言えば聞こえはいいものの、実際は田舎と表現するのがしっくり
+		PRINTL  くる○○島の、今は廃校してしまった学園に通っていた高○生
+		PRINTL  空気のいい場所でなければすぐに体調を崩してしまうほどの病弱体質で、幼少より○○
+		PRINTL  島で暮らしていたのだが、先の地上げ騒動の最中に拉致されてしまった
+		PRINTL  その後さる成金の好事家に売られたが、性的な行為は一切されず孫娘のように可愛がら
+		PRINTL  れていた（好事家の異常性を強いて言うなら『着せ替え人形』のように大事に扱われて
+		PRINTL  いたことだろうか）
+		PRINTL  慣れない空気に当然のように体調を崩し、空気の綺麗な離島の別荘で療養生活をしてお
+		PRINTL  り、時折本土から来る若くして腕利きの漢方医の診断を受けており、現在は小康状態に
+		PRINTL  ある
+		PRINTL  常に不機嫌そうな表情をしており、また兄がいつの間にかオタクとなってしまったせい
+		PRINTL  で男性不信気味
+		PRINTL  なお、同じく病弱な白波縁とはもはや魂の双子とでも言うべきほどの仲の良さを見せて
+		PRINTL  いる
+		PRINTL  
+		PRINTL  いろんな人に会わせてみたけど、一向に男性にはデレないのでツンデレじゃなくてツン
+		PRINTL  ドラって言うのかもね♪（エレン談）
+		PRINTL 
+		PRINTW  年齢：15歳　難易度：Ｃ　成長度：Ｄ　貢献度：Ｃ　売却値：Ｂ
+	ENDIF
+	IF (FLAG:神那悠喜仲間救出 & 2) == 0
+		DRAWLINE
+		PRINTL 【後藤彩香】（ごとう・あやか）
+		SETCOLOR 0xDDBBCC
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		PRINTL 「犬っぽい……って、あたしは犬じゃないよぅっ！」
+		SETFONT "ＭＳ ゴシック"
+		RESETCOLOR
+		PRINTL  ○○県の、風光明媚と言えば聞こえはいいものの、実際は田舎と表現するのがしっくり
+		PRINTL  くる○○島の、今は廃校してしまった学園に通っていた高○生
+		PRINTL  明朗快活な性格で男子と交じって遊ぶ元気っ子で、色気が欠けた「外見だけ成長した子
+		PRINTL  ども」と表現するのがぴったりで、精神年齢の低さから下ネタには奥手で、その話題に
+		PRINTL  なるとしどろもどろになる
+		PRINTL  先の地上げ騒動の際にはなぜか彼女だけ見逃されたため、一足遅く○○島の土地買収劇
+		PRINTL  に乗り出してきた桐生組により保護され、現在はエレンの力を借りてあなた（＝監督）
+		PRINTL  とは別の学園に通っている
+		PRINTL  ただ以前の仲間が気がかりなのか、時折大胆にも桐生組の事務所にやってきてはエレン
+		PRINTL  に捜索願いを出しているのだが、先に（結果的に）桐生組に保護された神那悠喜の無事
+		PRINTL  をどういうわけか知らされてはいない
+		PRINTL  ちなみに、ＴＶや雑誌で活躍する悠喜のことは『よく似た別人』としか思っていないら
+		PRINTL  しい
+		PRINTL 
+		PRINTW  年齢：16歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ｃ　売却値：Ｂ
+	ENDIF
+	IF (FLAG:神那悠喜仲間救出 & 4) == 0
+		DRAWLINE
+		PRINTL 【柑野凛佳】（かんの・りんか）
+		SETCOLOR 0xDDBBCC
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		PRINTL 「五月蝿い、黙れ。私は皆を助けたいだけなんだ……！」
+		SETFONT "ＭＳ ゴシック"
+		RESETCOLOR
+		PRINTL
+		PRINTL  ○○県の、風光明媚と言えば聞こえはいいものの、実際は田舎と表現するのがしっくり
+		PRINTL  くる○○島の、今は廃校してしまった学園に通っていた高○生
+		PRINTL  人付き合いが苦手で性格はキツく、いつも不機嫌そうな顔をしている為、周りからも近
+		PRINTL  付いては来ない
+		PRINTL  性格や雰囲気はともかく、素材は良い為、男子生徒たちの間での学内ランキングでは常
+		PRINTL  に上位をキープしていたらしい
+		PRINTL  先の地上げ騒動の後に拉致されたのだが自力で地上げ屋たちの元から逃亡し、それ以降
+		PRINTL  はいつか必ず仲間たちを奪還することを固く誓い、裏社会で用心棒の真似事をしながら
+		PRINTL  生活していた
+		PRINTL  そんな折にアイドルとして活動している神那悠喜らしき人物を見た彼女は、そのアイド
+		PRINTL  ルが所属する芸能事務所に押し掛け、アイドルとの面会を求めていたという報告を受け
+		PRINTL  たエレンにより保護されることになった
+		PRINTL 
+		PRINTW  年齢：16歳　難易度：Ａ　成長度：Ｃ　貢献度：Ｃ　売却値：Ｂ
+	ENDIF
+	IF (FLAG:神那悠喜仲間救出 & 8) == 0
+		DRAWLINE
+		PRINTL 【篠崎聖沙】（しのざき・みさ）
+		SETCOLOR 0xDDBBCC
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		PRINTL 「さあて、楽しませてもらおうかしら？」
+		SETFONT "ＭＳ ゴシック"
+		RESETCOLOR
+		PRINTL
+		PRINTL  ○○県の、風光明媚と言えば聞こえはいいものの、実際は田舎と表現するのがしっくり
+		PRINTL  くる○○島の、今は廃校してしまった学園に通っていた高○生
+		PRINTL  唯我独尊を地で行くタイプなのだが、成績はトップクラスと意外と抜け目のない天才肌
+		PRINTL  で、学園では風紀委員会に在籍し、神那悠喜とタッグを組んで活動をしていたが、その
+		PRINTL  理由が教師側からの受けが良くなるから、という不純なモノ
+		PRINTL  先の地上げ騒動の後はとある地下カジノにバニーガールとして売られたのだが、本人は
+		PRINTL  あまり悲観的ではなくむしろその境遇を楽しんでいたようで、地下カジノに招待された
+		PRINTL  歌音を、自分を満足させてくれそうな挑戦者だと決めてかかり、イカサマありのポーカ
+		PRINTL  ーで勝負した
+		PRINTL  結果は彼女のイカサマを逆手に取った歌音の奇策に敗れ、ついでにカジノを荒らす勢い
+		PRINTL  で勝ち続けた歌音に勝ち金の代わりとして彼女の身柄が桐生組に引き渡されることにな
+		PRINTL  った
+		PRINTL  もちろん彼女もかつての仲間を探すことを諦めていたわけではなく、地下カジノであれ
+		PRINTL  ばそういった人身売買に詳しい人間といつか巡りあうことができる、と確信していたら
+		PRINTL  しく、まさに彼女にとって歌音との出会いは千載一遇の好奇だったと言えるかもしれな
+		PRINTL  い
+		PRINTL  そしてＴＶでかつてのパートナーがアイドルとして活動していること、悠喜が所属して
+		PRINTL  いるのが桐生組の関連会社であることを知り、あなた（＝監督）との面会を求めてきた
+		PRINTL  のだった
+		PRINTL  
+		PRINTW  年齢：16歳　難易度：Ｃ　成長度：Ｂ　貢献度：Ｃ　売却値：Ｂ
+	ENDIF
+	IF (FLAG:神那悠喜仲間救出 & 16) == 0
+		DRAWLINE
+		PRINTL 【椎名海静】（しいな・みしず）
+		SETCOLOR 0xDDBBCC
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		PRINTL 「キミの手、大きい……やっぱりオトコのコ、なんですよね」
+		SETFONT "ＭＳ ゴシック"
+		RESETCOLOR
+		PRINTL
+		PRINTL  ○○県の、風光明媚と言えば聞こえはいいものの、実際は田舎と表現するのがしっくり
+		PRINTL  くる○○島の、今は廃校してしまった学園に通っていた高○生
+		PRINTL  容姿端麗、頭脳明晰、品行方正と三拍子の揃ったお嬢様で、学園内では生徒会長として、
+		PRINTL  全生徒から厚い信頼を寄せられていた生徒の鑑
+		PRINTL  おっとりとした雰囲気からは想像も付かないが、こうだと決めたら梃子でも動かないと
+		PRINTL  いう頑固な一面もある
+		PRINTL  子供の頃から蝶よ花よと育てられてきたが、そういうものを息苦しいと感じており、そ
+		PRINTL  の為か、都会や自由への憧れが強い
+		PRINTL  先の地上げ騒動の際には大地主の娘ということもあり、表面的には穏便に有力者の許へ
+		PRINTL  と嫁がされることになったが、その実態は身売りと同義であった
+		PRINTL  しかし彼女が嫁いだ有力者の様々なスキャンダルが何者かにより明らかにされ、その騒
+		PRINTL  動の隙をついて、神那悠喜のかつての仲間である彼女の捜索を続けていた桐生組により、
+		PRINTL  その純潔が穢される前に無事救出された
+		PRINTL  その後は桐生エレンの、彼女たちにとっても非常にメリットのある『とある計画』の為
+		PRINTL  に桐生組の息がかかった温泉旅館に匿われている
+		PRINTL  
+		PRINTW  年齢：17歳　難易度：Ｃ　成長度：Ｂ　貢献度：Ｃ　売却値：Ａ
+	ENDIF
+	DRAWLINE
+;	IF !FLAG:愛を誓った黒ギャルの遊びを許す
+		PRINTFORML 「このコたち、地上げ騒動の際に悠喜ちゃんと同じく最後まで抵抗していたコたちなのよ
+		PRINTFORML 　その結果、地上げ計画を止められなくて拉致されて売り飛ばされたりしたんだけど、悠喜ちゃんにアイドル
+		PRINTFORML 　になってもらったおかげでこのコたちの消息をつかむことができたわ
+		PRINTFORML 　ちなみに、このコたちも今はまだ話せないけど、あたしたちの計画のカギになるコたちよ♪
+		PRINTFORML 　でもねぇ……やっぱりあたしたちと地上げ屋の区別ってできないでしょ？
+		PRINTFORML 　だからイマイチ信用を得られないのよね
+		PRINTFORML 　そこで、キミにこのコたちを預けたいんだけどどうかしら？
+		PRINTFORML 　ただちょーっとばかりこのコたちの救出にお金がかかっちゃったから、その一部を負担してもらいたいのよ
+		PRINTFORML 　ねぇ……」
+		PRINTW
+		FLAG:愛を誓った黒ギャルの遊びを許す = 1
+	ENDIF
+	$BEFORE_CHOICE
+	PRINTFORML エレンから渡された、神那悠喜のかつての仲間の写真が添付された資料を読みながらあなたはどうするべきか
+	PRINTFORML 考えていた……
+	PRINTFORML 写真の少女たちは誰もが魅力的な美少女たちで、もしもＡＶに出演してもらえるようになったら、その分は
+	PRINTFORML すぐに回収できるのは間違いないだろう……
+	
+		SIF (FLAG:神那悠喜仲間救出 & 1) == 0
+			PRINTL  [0] - 伊原琴美を紹介してもらう （1000000ポイント）
+		SIF (FLAG:神那悠喜仲間救出 & 2) == 0
+			PRINTL  [1] - 後藤彩香を紹介してもらう （1000000ポイント）
+		SIF (FLAG:神那悠喜仲間救出 & 4) == 0
+			PRINTL  [2] - 柑野凛佳を紹介してもらう （2000000ポイント） 
+		SIF (FLAG:神那悠喜仲間救出 & 8) == 0
+			PRINTL  [3] - 篠原聖沙を紹介してもらう （2000000ポイント） 
+		SIF (FLAG:神那悠喜仲間救出 & 16) == 0
+			PRINTL  [4] - 椎名海静を紹介してもらう （3000000ポイント） 
+		PRINTL  [5] - やっぱりやめる
+		PRINTL  [9] - 資料をもう一度熟読する
+		PRINTL ※CAUTION※
+		PRINTL 払い下げした場合、これらのキャラは今後の周回プレイ時に復活しません！
+		$INPUT_LOOP_KOISORA
+		INPUT
+		
+		IF RESULT == 0 && (FLAG:神那悠喜仲間救出 & 1) == 0 && MONEY >= 1000000
+			PRINTW 《伊原琴美の身柄を預かりました》
+			CALL キャラ追加([[キャラ:伊原琴乃]])
+			FLAG:神那悠喜仲間救出 |= 1
+			MONEY -= 1000000
+		ELSEIF RESULT == 0 && (FLAG:神那悠喜仲間救出 & 1) == 0 && MONEY < 1000000
+			PRINTW 所持金不足です
+			GOTO INPUT_LOOP_KOISORA
+		ELSEIF RESULT == 1 && (FLAG:神那悠喜仲間救出 & 2) == 0 && MONEY >= 1000000
+			PRINTW 《後藤彩香の身柄を預かりました》
+			CALL キャラ追加([[キャラ:後藤彩香]])
+			FLAG:神那悠喜仲間救出 |= 2
+			MONEY -= 1000000
+		ELSEIF RESULT == 1 && (FLAG:神那悠喜仲間救出 & 2) == 0 && MONEY < 1000000
+			PRINTW 所持金不足です
+			GOTO INPUT_LOOP_KOISORA
+		ELSEIF RESULT == 2 && (FLAG:神那悠喜仲間救出 & 4) == 0 && MONEY >= 2000000
+			PRINTW 《柑野凛佳の身柄を預かりました》
+			CALL キャラ追加([[キャラ:柑野凛佳]])
+			FLAG:神那悠喜仲間救出 |= 4
+			MONEY -= 2000000
+		ELSEIF RESULT == 2 && (FLAG:神那悠喜仲間救出 & 4) == 0 && MONEY < 2000000
+			PRINTW 所持金不足です
+			GOTO INPUT_LOOP_KOISORA
+		ELSEIF RESULT == 3 && (FLAG:神那悠喜仲間救出 & 8) == 0 && MONEY >= 2000000
+			PRINTW 《篠原聖沙の身柄を預かりました》
+			CALL キャラ追加([[キャラ:篠崎聖沙]])
+			FLAG:神那悠喜仲間救出 |= 8
+		ELSEIF RESULT == 3 && (FLAG:神那悠喜仲間救出 & 8) == 0 && MONEY < 2000000
+			PRINTW 所持金不足です
+			GOTO INPUT_LOOP_KOISORA
+		ELSEIF RESULT == 4 && (FLAG:神那悠喜仲間救出 & 16) == 0 && MONEY >= 3000000
+			PRINTW 《椎名海静の身柄を預かりました》
+			CALL キャラ追加([[キャラ:椎名海静]])
+			FLAG:神那悠喜仲間救出 |= 16
+			MONEY -= 3000000
+		ELSEIF RESULT == 4 && (FLAG:神那悠喜仲間救出 & 16) == 0 && MONEY < 3000000
+			PRINTW 所持金不足です
+			GOTO INPUT_LOOP_KOISORA
+		ELSEIF RESULT == 5
+			RETURN 0
+		ELSEIF RESULT == 9
+			CALL KOISORA_ADD_SIRYOU
+			GOTO BEFORE_CHOICE
+		ELSE
+			GOTO INPUT_LOOP_KOISORA
+		ENDIF
+ELSE
+	PRINTFORMW 「今のところ紹介できそうな女はいないわよ？」
+	RETURN 0
+ENDIF
+
+RETURN 0
+
+
+;=================================================
+;秘密ラボ
+;=================================================
+@ELLEN_EXTRAACTRESS
+
+PRINTFORML 「どう、依頼の方ははかどっているかしら？
+PRINTFORML 　キミのおかげであたしたちの勢力も以前にもまして裏社会では無視できないほどの発言力を持つようにな
+PRINTFORML 　ってきているし……やっぱりカノンちゃんの人を見る目は確かだったみたいね
+PRINTFORML 　――それでね、そんな頑張っているキミにご褒美があるの♪
+PRINTFORML 　あたしはあたしで、カノンちゃんとは全く別のルートでのコネがあるのね
+PRINTFORML 　ゆくゆくは何らかの形で『利用』しようと思っていたコネなんだけど、特別サービスでキミにこの人たち
+PRINTFORML 　を紹介してあげちゃおっかなー、と思ってるの
+PRINTFORMW 　もちろん、これは依頼じゃないからキミがどういう風に『指導』して撮影するかは自由よ♪
+PRINTFORML 　……あらいい顔ね、それじゃあこの書類を見てもらえるかしら？
+PRINTW
+IF (FLAG:エレン紹介雇用 & 1) == 0 && (FLAG:歌音紹介雇用 & 1) == 1
+	DRAWLINE
+	PRINTL 【佐倉由希】（さくら・ゆき）
+	SETCOLOR 0xDDBBCC
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTL 「みひろにだけは負けられない……っ！」
+	SETFONT ""
+	RESETCOLOR
+	PRINTL
+	PRINTL  国民的アイドルグループ【Colorful Pure Girls】の結成時からのメンバー
+	PRINTL  トップアイドルのひとりであることに誇りを持っているが、ＣＰＧ総選挙で新島みひ
+	PRINTL  ろにダブルスコアも離されての第２位であり、世間やマスコミの評価がみひろに次ぐ
+	PRINTL  『永遠の二番手』に留まっていることに不満があるようだ
+	PRINTL  彼女がＡＶ業界に興味を示した理由は、新島みひろの想い人であるあなた（＝監督）
+	PRINTL  をみひろから奪うことで、みひろに『勝っている』点を見出したいから、とのことら
+	PRINTL  しい
+	PRINTL  そんな打算的な性格もあってか、ありとあらゆる芸能活動で高いポテンシャルを誇る
+	PRINTL  みひろとは違い、バラエティ番組でのトークスキルに高い適正を示しており、ちょっ
+	PRINTL  とマニアックなトークも行けるアイドルとして制作側から重宝されている
+	PRINTL  かつて姉である佐倉結衣花がジュニアアイドルとして微エロＤＶＤを出していた時期
+	PRINTL  に、桐生エレンにより考案されたアイドルプロジェクト【ぴゅあガール】の候補生と
+	PRINTL  してスカウトされたのだが、その後同プロジェクトは形を変えてＣＰＧとなり、エレ
+	PRINTL  ンの手を離れたため、スカウトされた恩義は感じていてもそれ以上の信頼関係は築か
+	PRINTL  れていない
+	PRINTL 
+	PRINTL  年齢：１６歳　難易度：Ｄ　成長度：Ａ　貢献度：Ａ　売却値：SS
+	DRAWLINE
+	PRINTW
+ENDIF
+IF (FLAG:エレン紹介雇用 & 2) == 0
+	DRAWLINE
+	PRINTL 【小鳥遊乃絵美】（たかなし・のえみ）
+	SETCOLOR 0xDDBBCC
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTL 「あらあら、困ったコですね♪」
+	SETFONT ""
+	RESETCOLOR
+	PRINTL
+	PRINTL  １８歳という若さで桐生組の事業のひとつである『娼館』のすべてを任されている幹
+	PRINTL  部で、幼いころから桐生組お付きの『調教師』のひとりとして育てられてきた
+	PRINTL  桐生組内部の水面下での派閥争いでは珍しく中立を保っており、特定の誰かに肩入れ
+	PRINTL  をしたりはしていない
+	PRINTL  『娼館』を任されているだけあって指導技術は目を見張るものがあり、特に借金のカ
+	PRINTL  タで売られてきたような生娘をオーダーに沿った一流の娼婦に育て上げることに定評
+	PRINTL  がある
+	PRINTL  しかしそんな彼女ではあるが、なんと意外にも未だに自身の純潔を守っている
+	PRINTL  歪んだ環境で生まれ育ったからこそ、純潔を大事にしているようだが……
+	PRINTL  桐生歌音の意向により、右も左も分からないあなた（＝監督）のために指導役として、
+	PRINTL  そして組長派の意向により、歌音の行動の監視役としてあなたの事務所に送り込まれ
+	PRINTL  ることになった
+	PRINTL 
+	PRINTL  年齢：１８歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ａ　売却値：Ｃ
+	DRAWLINE
+	PRINTW
+ENDIF
+IF (FLAG:エレン紹介雇用 & 4) == 0
+	DRAWLINE
+	PRINTL 【新堂あゆみ】（しんどう・―）
+	SETCOLOR 0xDDBBCC
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTL 「ＡＶ女優になるのも一つの勉強と思って、色々チャレンジしたいですね」
+	SETFONT ""
+	RESETCOLOR
+	PRINTL
+	PRINTL  有名私大のミスコンで優勝経験を持つ、ラクロス部に所属している女子大生
+	PRINTL  大学の合コンで彼女を狙っていた男に酔い潰され、あわや『お持ち帰り』されそうに
+	PRINTL  なっていたタイミングで桐生エレン（と、その配下）に助けだされ、エレンが彼女の
+	PRINTL  通う大学のＯＧであったことから、それ以降は学業のことだけではなくプライベート
+	PRINTL  のことまでも何かとエレンに世話になっているらしい
+	PRINTL  実家は関西の旧家で箱入りに育てられてきたが、前述の通りミスコンに参加するなど
+	PRINTL  様々なことにチャレンジするアクティブさを持つ
+	PRINTL  貞操観念は強い方ではあるもののそのチャレンジ精神からか、ＡＶ女優という仕事に
+	PRINTL  も抵抗はさほど無いようだ
+	PRINTL  年齢不相応な『オトナの色香』に溢れており、仕草一つ一つがいちいち無駄にエロい
+	PRINTL  ことから不名誉なあだ名でネット上で呼ばれていることを本人は知らない
+	PRINTL 
+	PRINTL  年齢：１９歳　難易度：Ｄ　成長度：Ｂ　貢献度：Ｂ　売却値：Ａ
+	DRAWLINE
+	PRINTW
+ENDIF
+IF (FLAG:エレン紹介雇用 & 8) == 0 && CFLAG:MASTER:238 == 2
+	DRAWLINE
+	PRINTFORML 【%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%】（ののみや・もとか）
+	SETCOLOR 0xDDBBCC
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTL 「えっ、なんで！？　なんでキミがここにいるの！？」
+	SETFONT ""
+	RESETCOLOR
+	PRINTL
+	PRINTL  あなた（＝監督）がかつて付き合っていた少女
+	PRINTL  破局してからそれなりに時間が経っているため、どういう性格だったか忘れてしまっ
+	PRINTL  ているが、基本的に『いい子』だったはずだ
+	PRINTL  交際時には知らなかったが、あなたの女性遍歴を調査していたエレンによって、実は
+	PRINTL  桐生組のフロント企業のひとつである関連会社に勤める社員の娘だということが判明
+	PRINTL  した
+	PRINTL  容姿もかなり整っていることもあり、興味を持ったエレンの手練手管で籠絡され、Ａ
+	PRINTL  Ｖ女優候補としてあなたの前に再び姿を現すこととなった
+	PRINTL  あなたとの破局にいまひとつ納得がいっていないのか、最初からかなり好感度は高い
+	PRINTL  ようだ
+	PRINTL 
+	PRINTL  年齢：１６歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ｃ　売却値：Ｃ
+	DRAWLINE
+	PRINTW
+ENDIF
+
+
+PRINTFORML ……とまあ、こんなところかしら？
+PRINTFORML あたしも歌音ちゃん同様にそれぞれ個別に『紹介料』を頂いているんだけど……まあ『依頼』をこなしていれば
+PRINTFORML はした金レベルだと思うんだけど？」
+
+PRINTFORMW
+PRINTFORML エレンから渡された写真の女たちは誰もが魅力的で、もしもＡＶに出演してもらえるようになったら、その分は
+PRINTFORML すぐに回収できるのは間違いないだろう……
+SIF (FLAG:エレン紹介雇用 & 1) == 0 && (FLAG:歌音紹介雇用 & 1)
+	PRINTL  [0] - 佐倉由希を紹介してもらう     （1000000ポイント）
+SIF (FLAG:エレン紹介雇用 & 2) == 0
+	PRINTL  [1] - 小鳥遊乃絵美を紹介してもらう （1000000ポイント）
+SIF (FLAG:エレン紹介雇用 & 4) == 0
+	PRINTL  [2] - 新堂あゆみを紹介してもらう   （1000000ポイント）
+SIF (FLAG:エレン紹介雇用 & 8) == 0 && CFLAG:MASTER:238 == 2
+	PRINTFORML  [3] - %CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%を紹介してもらう   （10000ポイント） 
+PRINTL  [9] - やっぱりやめる
+PRINTL ※CAUTION※
+PRINTL 払い下げした場合、これらのキャラは今後の周回プレイ時に復活しません！
+$INPUTLOOP_00
+INPUT
+
+IF RESULT == 0 && (FLAG:エレン紹介雇用 & 1) == 0 && MONEY >= 1000000 && (FLAG:歌音紹介雇用 & 1)
+	PRINTFORML %CALLNAME:MASTER%は佐倉由希を紹介してもらうことにした……
+	PRINTFORMW
+	PRINTFORML 彼女の所属する芸能事務所はどうやら桐生組の関連会社で既に話が通っているらしく、すぐに面会の場がセッティ
+	PRINTFORML ングされた
+	PRINTFORML 小さな喫茶店に呼び出された佐倉由希は【Colorful Pure Girls】の初期メンバーで人気ナンバー2というだけあっ
+	PRINTFORML てかトップクラスのルックスを誇っており、また本人も自身のルックスや肩書きに自信があるのか、プライドの高
+	PRINTFORML さをにじませている
+	PRINTW
+	PRINTFORML 「アナタと新島みひろの関係ってどうなの？
+	PRINTFORML 　恋人？ それともセフレ？
+	PRINTFORML 　別にどっちでもいいけど……私、みひろにだけは負けたくないの
+	PRINTFORML 　だからその為ならどんなことだってするし、アナタだって利用させてもらうから」
+	PRINTFORMW
+	PRINTFORML %CALLNAME:MASTER%から話を聞く前に由希はそう宣言すると、%CALLNAME:MASTER%から書類をひったくりサインしはじめた……
+	PRINTFORML 先行きがやや不安だが、どうやら一応やってくれることには変わりないらしい
+	PRINTL
+	PRINTFORML 《佐倉由希と契約しました》
+	FLAG:エレン紹介雇用 |= 1
+	LOADGLOBAL
+		GLOBAL:350 += 1
+	SAVEGLOBAL
+	CALL キャラ追加([[キャラ:佐倉由希]])
+ELSEIF RESULT == 0 && (FLAG:エレン紹介雇用 & 1) == 0 && MONEY < 1000000
+	PRINTFORMW 《所持金が足りません》
+	GOTO INPUTLOOP_00
+ELSEIF RESULT == 1 && (FLAG:エレン紹介雇用 & 2) == 0 && MONEY >= 1000000
+	PRINTFORML %CALLNAME:MASTER%は小鳥遊乃絵美を紹介してもらうことにした……
+	PRINTFORMW
+	PRINTFORML %CALLNAME:MASTER%の事務所の女優たちも『お世話』になっている娼館の支配人室が小鳥遊乃絵美との面談の場となった
+	PRINTFORML 内部抗争以前からの桐生組の幹部のひとりであり、中立派だった彼女は歌音が実権を握った今もなお幹部として
+	PRINTFORML 桐生組の『接待』のほぼすべてを担っている
+	PRINTFORML ――そんな彼女だが、%CALLNAME:MASTER%と年の差はさほど無いように見えた
+	PRINTW
+	PRINTFORML 「組の方針なら従うだけだし、それにウチの娼館に何人か紹介してもらったけど、私とは違うアプローチの『指
+	PRINTFORML 　導』を知れるいい機会だもの、喜んで引き受けさせてもらうわね
+	PRINTFORML 　その代わり……ウチの娼館をこれまで通りごひいきにしてもらえればいいわよ？」
+	PRINTFORMW
+	PRINTFORML %CALLNAME:MASTER%から話を聞くと、乃絵美は%CALLNAME:MASTER%の腕を信頼しているのかあっさりとＯＫしてくれた
+	PRINTFORML それにどうやら、撮影の『パートナー』役としても協力してくれるらしい
+	PRINTL
+	PRINTFORML 《小鳥遊乃絵美と契約しました》
+	FLAG:エレン紹介雇用 |= 2
+	LOADGLOBAL
+		GLOBAL:351 += 1
+	SAVEGLOBAL
+	CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
+ELSEIF RESULT == 1 && (FLAG:エレン紹介雇用 & 2) == 0 && MONEY < 1000000
+	PRINTFORMW 《所持金が足りません》
+	GOTO INPUTLOOP_00
+ELSEIF RESULT == 2 && (FLAG:エレン紹介雇用 & 4) == 0 && MONEY >= 1000000
+	PRINTFORML %CALLNAME:MASTER%は新堂あゆみを紹介してもらうことにした……
+	PRINTFORMW
+	PRINTFORML 新堂あゆみの通う大学そばの喫茶店が彼女との面談の場となった
+	PRINTFORML 記憶が確かならば、この大学はかなでが進路希望調査で書いた大学だったはずだ
+	PRINTFORML エレンの出身校でもあり各界の有力者の出身校でもあるこの大学は当然、その子女も数多く通っているというわ
+	PRINTFORML けで――あゆみも例に漏れず関西の名士の娘だ
+	PRINTFORML 面談の場にやってきたあゆみは上品なワンピースに身を包んだ、いかにもお嬢様然とした立ち居振る舞いで、到
+	PRINTFORML 底ＡＶ女優なんかとは無縁の世界の住人に見える
+	PRINTW
+	PRINTFORML 「ハダカを見られるのは恥ずかしいですけど、エレンさんからお話を聞いたときはこれもなにかのチャンスだと
+	PRINTFORML 　思ったんです
+	PRINTFORML 　私、本当にやりたいことが分からなくて、だからいろいろとチャレンジしてみよう、と
+	PRINTFORML 　ふふっ、こんなお仕事なんてめったに経験できませんから、ね？」
+	PRINTFORMW
+	PRINTFORML %CALLNAME:MASTER%から話を聞くと、あゆみは比較的すんなりとＯＫしてくれた
+	PRINTFORML しかしその仕草ひとつひとつがいちいち無駄にエロティックなのは天然なのだろうか……
+	PRINTL
+	PRINTFORML 《新堂あゆみと契約しました》
+	FLAG:エレン紹介雇用 |= 4
+	LOADGLOBAL
+		GLOBAL:352 += 1
+	SAVEGLOBAL
+	CALL キャラ追加([[キャラ:新堂あゆみ]])
+ELSEIF RESULT == 3 && (FLAG:エレン紹介雇用 & 8) == 0 && MONEY >= 10000 && CFLAG:MASTER:238 == 2
+	PRINTFORML %CALLNAME:MASTER%は%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%を紹介してもらうことにした……
+	PRINTFORMW
+	PRINTFORML 気まずい空気が流れる事務所が彼女との面談の場となった
+	PRINTFORML %CSTR:MASTER:元カノ名%は事務所にいる他の、あなたへ熱視線を向ける者たちに困惑しながらも、あなたの話をきちんと聞いている
+	PRINTFORML ……
+	CALL MOTOKANO_SETUPFINISH
+	PRINTFORMW
+	PRINTFORML %CALLNAME:MASTER%が最後まで説明すると、%CSTR:MASTER:元カノ名%は比較的すんなりとＯＫしてくれた
+	PRINTL
+	PRINTFORML 《%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%と契約しました》
+	FLAG:エレン紹介雇用 |= 8
+	LOADGLOBAL
+		GLOBAL:380 += 1
+	SAVEGLOBAL
+	IF GLOBAL:200 >= 0 && FLAG:寝取られなし == 0
+		IF GETCHARA([[キャラ:野々宮初佳]], 0) >= 0
+			TARGET = GETCHARA([[キャラ:野々宮初佳]])
+			CALL CLEARBONUS_CALL
+		ENDIF
+	ENDIF
+ELSEIF RESULT == 2 && (FLAG:エレン紹介雇用 & 4) == 0 && MONEY < 1000000
+	PRINTFORMW 《所持金が足りません》
+	GOTO INPUTLOOP_00
+ELSEIF RESULT == 9
+	RETURN 0
+ELSE
+	GOTO INPUTLOOP_00
+ENDIF

@@ -1,0 +1,330 @@
+﻿@COM59
+;コスプレ
+
+PRINTL コスプレ
+SAVESTR:0 = コスプレ
+CALL TRAIN_MESSAGE_B
+
+;エプロンのセット
+;終了時は修正なし
+IF TEQUIP:コスプレ
+	TEQUIP:コスプレ = 0
+	RETURN 1
+ENDIF
+
+LOSEBASE:体力 += 0
+LOSEBASE:気力 += 30
+
+
+A = 500
+B = 100
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.20
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.30
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.40
+ENDIF
+
+;ABL:露出癖をみる
+IF ABL:露出癖 == 0
+	SOURCE:11 += 0
+	SOURCE:10 += 0
+	SOURCE:12 += 100
+	SOURCE:14 += 100
+	SOURCE:15 += 100
+	TIMES A, 0.60
+ELSEIF ABL:露出癖 == 1
+	SOURCE:11 += 50
+	SOURCE:10 += 150
+	SOURCE:12 += 500
+	SOURCE:14 += 300
+	TIMES A, 1.00
+ELSEIF ABL:露出癖 == 2
+	SOURCE:11 += 100
+	SOURCE:10 += 300
+	SOURCE:12 += 100
+	SOURCE:14 += 50
+	TIMES A, 1.60
+ELSEIF ABL:露出癖 == 3
+	SOURCE:11 += 150
+	SOURCE:10 += 600
+	SOURCE:12 += 50
+	SOURCE:14 += 0
+	TIMES A, 2.00
+ELSEIF ABL:露出癖 == 4
+	SOURCE:11 += 200
+	SOURCE:10 += 1000
+	SOURCE:12 += 0
+	SOURCE:14 += 0
+	TIMES A, 2.60
+ELSE
+	SOURCE:11 += 300
+	SOURCE:10 += 2000
+	SOURCE:12 += 0
+	SOURCE:14 += 0
+	TIMES A, 3.80
+ENDIF
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 1.00
+ELSEIF ABL:信頼 == 1
+	TIMES A , 1.20
+ELSEIF ABL:信頼 == 2
+	TIMES A , 1.40
+ELSEIF ABL:信頼 == 3
+	TIMES A , 1.60
+ELSEIF ABL:信頼 == 4
+	TIMES A , 1.80
+ELSE
+	TIMES A , 2.00
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	TIMES A , 1.00
+ELSEIF ABL:奉仕精神 == 1
+	TIMES A , 1.20
+ELSEIF ABL:奉仕精神 == 2
+	TIMES A , 1.40
+ELSEIF ABL:奉仕精神 == 3
+	TIMES A , 1.60
+ELSEIF ABL:奉仕精神 == 4
+	TIMES A , 1.80
+ELSE
+	TIMES A , 2.00
+ENDIF
+
+;無関心
+SIF TALENT:クール
+	TIMES A , 0.80
+;感情乏しい
+SIF TALENT:感情乏しい
+	TIMES A , 0.80
+;好奇心
+SIF TALENT:好奇心
+	TIMES A , 1.50
+;献身的
+SIF TALENT:献身的
+	TIMES A , 1.50
+;臆病
+SIF TALENT:臆病
+	TIMES B , 1.50
+;恥じらい
+SIF TALENT:恥じらい
+	TIMES B , 1.20
+;貞操観念
+SIF TALENT:解放
+	TIMES A , 0.50
+;プライド高い
+SIF TALENT:プライド高い
+	TIMES B , 2.00
+;恋心
+SIF TALENT:恋心
+	TIMES A , 2.50
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 1.80
+;未亡人
+SIF TALENT:人妻
+	TIMES A , 0.50
+
+SOURCE:3 += A
+SOURCE:14 += B
+SOURCE:16 += A
+
+TEQUIP:コスプレ = 1
+
+SIF ASSIPLAY == 0 && ABL:信頼>= 3
+	TFLAG:主人経験 += 10
+SIF ASSIPLAY == 0 && TALENT:TARGET:恋心
+	TFLAG:主人経験 += 20
+SIF ASSIPLAY == 0 && TALENT:TARGET:淫乱
+	TFLAG:主人経験 += 5
+SIF ASSIPLAY == 0 && TALENT:TARGET:マゾ
+	TFLAG:主人経験 += 30
+
+;愛情経験
+E = 2
+EXP:コスプレ経験 += E
+						;****スライムパッチ追加ここから****
+IF TFLAG:コスプレ衣装 == 28
+	IF CFLAG:好感度 >= 1000 && (ABL:マゾっ気 >= 3 || TALENT:マゾ) && ASSIPLAY == 0
+		PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+		EXP:愛情経験 += E
+	ENDIF
+ENDIF
+						;****スライムパッチ追加ここまで****
+E = 0
+
+RETURN 1
+
+
+@EQUIP_COM59
+;コスプレ
+
+PRINTL ＜コスプレ中＞
+
+LOSEBASE:体力 += 0
+LOSEBASE:気力 += 0
+
+A = 500
+B = 100
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.20
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.30
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.40
+ENDIF
+
+;ABL:露出癖をみる
+IF ABL:露出癖 == 0
+	SOURCE:11 += 0
+	SOURCE:10 += 0
+	SOURCE:12 += 100
+	SOURCE:14 += 100
+	SOURCE:15 += 100
+	TIMES A, 0.60
+ELSEIF ABL:露出癖 == 1
+	SOURCE:11 += 50
+	SOURCE:10 += 150
+	SOURCE:12 += 500
+	SOURCE:14 += 300
+	TIMES A, 1.00
+ELSEIF ABL:露出癖 == 2
+	SOURCE:11 += 100
+	SOURCE:10 += 300
+	SOURCE:12 += 100
+	SOURCE:14 += 50
+	TIMES A, 1.60
+ELSEIF ABL:露出癖 == 3
+	SOURCE:11 += 150
+	SOURCE:10 += 600
+	SOURCE:12 += 50
+	SOURCE:14 += 0
+	TIMES A, 2.00
+ELSEIF ABL:露出癖 == 4
+	SOURCE:11 += 200
+	SOURCE:10 += 1000
+	SOURCE:12 += 0
+	SOURCE:14 += 0
+	TIMES A, 2.60
+ELSEIF ABL:露出癖 >= 5
+	SOURCE:11 += 300
+	SOURCE:10 += 2000
+	SOURCE:12 += 0
+	SOURCE:14 += 0
+	TIMES A, 3.80
+ENDIF
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 1.00
+ELSEIF ABL:信頼 == 1
+	TIMES A , 1.20
+ELSEIF ABL:信頼 == 2
+	TIMES A , 1.40
+ELSEIF ABL:信頼 == 3
+	TIMES A , 1.60
+ELSEIF ABL:信頼 == 4
+	TIMES A , 1.80
+ELSEIF ABL:信頼 >= 5
+	TIMES A , 2.00
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	TIMES A , 1.00
+ELSEIF ABL:奉仕精神 == 1
+	TIMES A , 1.20
+ELSEIF ABL:奉仕精神 == 2
+	TIMES A , 1.40
+ELSEIF ABL:奉仕精神 == 3
+	TIMES A , 1.60
+ELSEIF ABL:奉仕精神 == 4
+	TIMES A , 1.80
+ELSEIF ABL:奉仕精神 >= 5
+	TIMES A , 2.00
+ENDIF
+
+;無関心
+SIF TALENT:クール
+	TIMES A , 0.80
+;感情乏しい
+SIF TALENT:感情乏しい
+	TIMES A , 0.80
+;好奇心
+SIF TALENT:好奇心
+	TIMES A , 1.50
+;献身的
+SIF TALENT:献身的
+	TIMES A , 1.50
+;臆病
+SIF TALENT:臆病
+	TIMES B , 1.50
+;恥じらい
+SIF TALENT:恥じらい
+	TIMES B , 1.20
+;貞操観念
+SIF TALENT:解放
+	TIMES A , 0.50
+;プライド高い
+SIF TALENT:プライド高い
+	TIMES B , 2.00
+;恋心
+SIF TALENT:恋心
+	TIMES A , 2.50
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 1.80
+
+SOURCE:3 += A
+SOURCE:14 += B
+SOURCE:16 += A
+
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:信頼>= 3
+	TFLAG:主人経験 += 10
+SIF ASSIPLAY == 0 && TALENT:TARGET:恋心
+	TFLAG:主人経験 += 20
+SIF ASSIPLAY == 0 && TALENT:TARGET:淫乱
+	TFLAG:主人経験 += 5
+SIF ASSIPLAY == 0 && TALENT:TARGET:マゾ
+	TFLAG:主人経験 += 30
+E = 1
+EXP:コスプレ経験 += E
+						;****スライムパッチ追加ここから****
+IF TFLAG:コスプレ衣装 == 28
+	IF CFLAG:好感度 >= 1000 && (ABL:マゾっ気 >= 3 || TALENT:マゾ) && ASSIPLAY == 0
+		PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+		EXP:愛情経験 += E
+	ENDIF
+ENDIF
+						;****スライムパッチ追加ここまで****
+E = 0
+
+RETURN 1
+;
+;
+;

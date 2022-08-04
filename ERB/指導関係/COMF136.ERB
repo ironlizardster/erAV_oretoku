@@ -1,0 +1,96 @@
+﻿;-------------------------------------------------
+;褒める
+;愛撫系コマンド：調教者が調教対象を褒める
+;-------------------------------------------------
+@COM136
+
+PRINTL 褒める
+
+SAVESTR:0 = 褒める
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 50
+
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:4 = 50
+	SOURCE:5 = 10
+	TIMES SOURCE:8 , 4.00
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:4 = 150
+	SOURCE:5 = 50
+	TIMES SOURCE:8 , 2.50
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:4 = 200
+	SOURCE:5 = 100
+	TIMES SOURCE:8 , 1.50
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:4 = 250
+	SOURCE:5 = 180
+	TIMES SOURCE:8 , 1.00
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:4 = 300
+	SOURCE:5 = 300
+	TIMES SOURCE:8 , 0.50
+ELSE
+	SOURCE:4 = 350
+	SOURCE:5 = 500
+	TIMES SOURCE:8 , 0.10
+ENDIF
+;	RETURN 1
+;ENDIF
+
+;TALENT:愛をみる
+SIF TALENT:恋心
+	TIMES SOURCE:3 , 2.00
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+;奴隷の口⇔調教者の口の汚れが移動
+STAIN:0 |= STAIN:PLAYER:0
+STAIN:PLAYER:0 |= STAIN:0
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +3
+	EXP:レズ経験 += 3
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +3
+	EXP:ＢＬ経験 += 3
+ENDIF
+
+;愛情経験
+;基本値
+E = 1
+
+;愛かつ主人なら基本値に＋２
+SIF TALENT:恋心 && ASSIPLAY == 0
+	E += 2
+
+
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+TFLAG:快楽経験 = 1
+
+SIF ASSIPLAY == 0
+	TFLAG:主人経験 += 1
+
+RETURN 1

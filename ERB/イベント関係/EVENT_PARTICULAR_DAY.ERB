@@ -1,0 +1,518 @@
+﻿;========================================================
+;SYSTEM_PARTICULAR_DATE 特定日付に発生するイベントを扱ってます
+;
+;========================================================;
+;フラグメモ（今後の使用予定）
+;CFLAG:150	誕生日を祝われた
+;CFLAG:151	バレンタインチョコを贈ったか
+;		(0=贈ってない、1=今年贈った(ホワイトデーまで有効)、2=以前贈ったことがある)
+;CFLAG:152	ホワイトデーのお返し
+;CFLAG:153	クリスマスイブを一緒に過ごした
+;CFLAG:154	元旦を一緒に過ごした
+;CFLAG:海デート	夏休み(前半)を一緒に過ごした
+;-------------------------------------------------
+
+;-------------------------------------------------
+;特定日かどうかのチェック
+;EVENT_NEXTDAY.ERBから呼び出される関数
+;-------------------------------------------------
+@PARTICULAR_DATE
+IF DAY:1 == 2 && DAY:2 == 3
+	CALL VALENTINE_DAY
+;ELSEIF DAY:1 == 3 && DAY:2 == 3
+;	CALL WHITE_DAY
+ELSEIF DAY:1 == 7 && DAY:2 == 3
+	CALL SUMMER_VACATION1
+;ELSEIF DAY:1 == 12 && DAY:2 == 4
+;	CALL CHRISTMAS_EVE
+;ELSEIF DAY:1 == 1 && DAY:2 == 1
+;	CALL NEWYEAR_DAY
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;バレンタインデー
+;-------------------------------------------------
+@VALENTINE_DAY
+N = 0
+REPEAT CHARANUM
+	;%CALLNAME:MASTER%の好感度はチェックしない
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:好感度 >= 200
+		DRAWLINE
+		N += 1 
+		;３人目まで
+		IF N < 4
+			PRINTFORML 朝食を終えて一旦自室に戻る途中、%CALLNAME:MASTER%は%CALLNAME:COUNT%に呼び止められた。
+		;４人目以降
+		ELSE
+			PRINTFORML %CALLNAME:MASTER%が午前の予定を考えていると、自室を%CALLNAME:COUNT%がノックしてきた。
+		ENDIF
+
+		;好感度1000以上＋【淫乱】
+		IF CFLAG:COUNT:好感度 >= 1000 && TALENT:COUNT:淫乱
+			PRINTFORMW 少し経ってから、自分の部屋に来て欲しいらしい。
+			PRINTL
+			PRINTFORM 言われた通り%CALLNAME:MASTER%が%CALLNAME:COUNT%の部屋を訪れると、
+
+			;マゾっ気３で緊縛経験100以上、またはマゾっ気４以上で緊縛経験50以上の場合
+			IF (ABL:COUNT:マゾっ気 == 3 && EXP:COUNT:緊縛経験 >= 100) || (ABL:COUNT:マゾっ気 >= 4 && EXP:COUNT:緊縛経験 >= 50) 
+				PRINTL リボンで飾られた巨大な箱が部屋の中央に置かれていた。
+				PRINTFORML 蓋を開けてみると、中には溶けたチョコレートまみれになった%CALLNAME:COUNT%が入っていた。
+				PRINTFORML 自分で縛ったのだろうか、%CALLNAME:COUNT%の身体にはリボンが何重にも巻きつけられ、うっとりしたような瞳が箱の中から%CALLNAME:MASTER%を見上げた。
+
+				;%CALLNAME:MASTER%がサド
+				IF TALENT:MASTER:サド
+					PRINTFORMW どろどろに汚れた%CALLNAME:COUNT%の肌を靴で踏みにじると、%CALLNAME:COUNT%はうめき声をあげつつも被虐の快楽に息を荒くしていた…
+					PRINTL
+					PRINTL 被虐快楽経験＋2
+					EXP:COUNT:被虐快楽経験 += 2
+				ELSE
+					PRINTFORMW 指先で%CALLNAME:COUNT%の肌からチョコレートを掬い取ると、その刺激に感じたのか、%CALLNAME:COUNT%は小さく喘ぎ声をあげた。
+					PRINTL
+				ENDIF
+				PRINTL 緊縛経験＋2
+				EXP:COUNT:緊縛経験 += 2
+				PRINTL 恭順の珠＋500
+				JUEL:COUNT:恭順 += 500
+				PRINTW 欲情の珠＋200
+				JUEL:COUNT:欲情 += 200
+
+			;全裸か、露出癖４以上の場合
+			ELSEIF (CFLAG:COUNT:上着のタイプ == 0 && CFLAG:COUNT:特別コスチュームのタイプ == 0) || FLAG:着衣使用 == 0 || ABL:COUNT:露出癖 >= 4
+				PRINTFORML 全裸の%CALLNAME:COUNT%が%CALLNAME:MASTER%を待っていた。
+				;露出癖5以上、Ｖ感覚3以上
+				IF ABL:COUNT:露出癖 >= 5 && ABL:COUNT:Ｖ感覚 >= 3
+					PRINTFORML %CALLNAME:COUNT%はＭ字開脚の格好になって両手で陰唇を拡げ、膣内に詰め込んだ粒状のチョコレートを%CALLNAME:MASTER%に見せつけた。
+					PRINTFORML その中を指でチョコレートごと掻き回してやると、%CALLNAME:COUNT%は羞恥と快感に身もだえした。
+					PRINTFORML チョコレートと愛液で汚れた指を%CALLNAME:COUNT%の口元に近づけると、%CALLNAME:COUNT%はうっとりしたように%CALLNAME:MASTER%の指を舐めしゃぶった…
+					PRINTL
+					PRINTL 快Ｖの珠＋200
+					JUEL:COUNT:快Ｖ += 200
+					PRINTL 欲情の珠＋300
+					JUEL:COUNT:欲情 += 300
+					PRINTW 恥情の珠＋500
+					JUEL:COUNT:恥情 += 500
+
+				;露出癖5以上
+				ELSEIF ABL:COUNT:露出癖 >= 5
+					PRINTFORML %CALLNAME:COUNT%の素肌にはチョコレートソースでハート形が描かれ、乳首にはホイップクリームが載せられている。
+					PRINTFORML %CALLNAME:MASTER%がチョコレートを舐め取っていくと%CALLNAME:COUNT%は興奮したのか、あえぎ声と共に身をくねらせた…
+					PRINTL
+					PRINTL 欲情の珠＋300
+					JUEL:COUNT:欲情 += 300
+					PRINTW 恥情の珠＋500
+					JUEL:COUNT:恥情 += 500
+
+				;爆乳以上
+				ELSEIF TALENT:COUNT:爆乳 || TALENT:COUNT:超乳 || TALENT:COUNT:魔乳 || TALENT:COUNT:神乳
+					PRINTFORML %CALLNAME:COUNT%は巨大な乳房の谷間にハート形のチョコレートを乗せ、%CALLNAME:MASTER%に差し出してきた。
+					PRINTFORML %CALLNAME:COUNT%の胸の感触を存分に愉しみつつ%CALLNAME:MASTER%がチョコを食べ終えた頃には、%CALLNAME:COUNT%は頬を紅潮させて上気した吐息を漏らしていた…
+					PRINTL
+					PRINTL 快Ｂの珠＋200
+					JUEL:COUNT:快Ｂ += 200
+					PRINTL 欲情の珠＋300
+					JUEL:COUNT:欲情 += 300
+					PRINTW 恥情の珠＋300
+					JUEL:COUNT:恥情 += 300
+
+				;それ以外
+				ELSE
+					PRINTFORML %CALLNAME:COUNT%は用意していたチョコレートを咥えると、そのまま%CALLNAME:MASTER%の唇へと差し出してきた。
+					PRINTFORML 唇を重ねるうちに溶け出したチョコと互いの唾液が混じり合い、%CALLNAME:MASTER%と%CALLNAME:COUNT%は濃厚なキスを繰り返した…
+					PRINTL
+					PRINTL 欲情の珠＋300
+					JUEL:COUNT:欲情 += 300
+					PRINTW 恥情の珠＋300
+					JUEL:COUNT:恥情 += 300
+				ENDIF
+
+			;それ以外の場合
+			ELSE
+				PRINTFORML 下着姿の%CALLNAME:COUNT%が%CALLNAME:MASTER%を待っていた。
+
+				;爆乳以上
+				IF TALENT:COUNT:爆乳 || TALENT:COUNT:超乳 || TALENT:COUNT:魔乳 || TALENT:COUNT:神乳
+					PRINTFORML %CALLNAME:COUNT%は巨大な乳房の谷間にハート形のチョコレートを乗せ、%CALLNAME:MASTER%に差し出してきた。
+					PRINTFORML %CALLNAME:COUNT%の胸の感触を存分に愉しみつつ%CALLNAME:MASTER%がチョコを食べ終えた頃には、%CALLNAME:COUNT%は頬を紅潮させて上気した吐息を漏らしていた…
+					PRINTL
+					PRINTL 快Ｂの珠＋200
+					JUEL:COUNT:快Ｂ += 200
+					PRINTL 欲情の珠＋300
+					JUEL:COUNT:欲情 += 300
+					PRINTW 恥情の珠＋200
+					JUEL:COUNT:恥情 += 200
+				;それ以外
+				ELSE
+					PRINTFORML %CALLNAME:COUNT%は用意していたチョコレートを咥えると、そのまま%CALLNAME:MASTER%の唇へと差し出してきた。
+					PRINTFORML 唇を重ねるうちに溶け出したチョコと互いの唾液が混じり合い、%CALLNAME:MASTER%と%CALLNAME:COUNT%は濃厚なキスを繰り返した…
+					PRINTL
+					PRINTL 欲情の珠＋300
+					JUEL:COUNT:欲情 += 300
+					PRINTW 恥情の珠＋300
+					JUEL:COUNT:恥情 += 300
+				ENDIF
+			ENDIF
+		;好感度1000以上＋【恋心】
+		ELSEIF CFLAG:COUNT:好感度 >= 1000 && TALENT:COUNT:恋心
+			;素質ごとに描写（臆病・恥じらい／素直／好奇心・楽観的／プライド高い／それ以外）
+			IF TALENT:COUNT:臆病 || TALENT:COUNT:恥じらい
+				PRINT 顔を真っ赤にした
+			ELSEIF TALENT:COUNT:素直
+				PRINT うきうきした様子の
+			ELSEIF TALENT:COUNT:好奇心 || TALENT:COUNT:ポジティブ
+				PRINT 楽しげな様子の
+			ELSEIF TALENT:COUNT:プライド高い
+				PRINT そわそわした様子の
+			ELSE
+				PRINT 頬を染めた
+			ENDIF
+
+			PRINTFORM %CALLNAME:COUNT%が
+			
+			;素質ごとに描写（自制心／恥薄い・目立ちたがり／無関心／臆病）
+			IF TALENT:COUNT:自制心
+				PRINT 辺りを窺うようにしつつ
+			ELSEIF TALENT:COUNT:恥薄い || TALENT:COUNT:目立ちたがり
+				PRINT 勢いよく
+			ELSEIF TALENT:COUNT:クール
+				PRINT 何気なく
+			ELSEIF TALENT:COUNT:臆病
+				PRINT おずおずと
+			ENDIF
+
+			PRINTFORM %CALLNAME:MASTER%に手渡してきたのは、
+
+			;素質ごとに描写（令嬢／目立ちたがり／自制心・無関心／それ以外）
+			IF TALENT:COUNT:令嬢
+				PRINT 華麗な
+			ELSEIF TALENT:COUNT:目立ちたがり
+				PRINT 派手な
+			ELSEIF TALENT:COUNT:自制心 || TALENT:COUNT:クール
+				PRINT シックな
+			ELSE
+				PRINT 可愛らしい
+			ENDIF
+
+			PRINT 包装が施された
+
+			;小学生・中学生の場合のみ
+			SIF TALENT:COUNT:中学生 || TALENT:COUNT:小学生
+				PRINT 小さな
+			PRINT 包みだった。
+
+			PRINTFORM %CALLNAME:MASTER%がそれを受け取ると、%CALLNAME:COUNT%は
+
+			;素質ごとに描写（好感度1500未満／好感度2000未満／小柄体型／無関心／臆病）
+			IF CFLAG:COUNT:好感度 < 1500
+				PRINT にっこりと微笑み、
+			ELSEIF CFLAG:COUNT:好感度 < 2000
+				PRINTFORM %CALLNAME:MASTER%をぎゅっと抱きしめ
+			ELSEIF TALENT:COUNT:小柄体型
+				PRINTFORM 背伸びして%CALLNAME:MASTER%に口づけし、
+			ELSE
+				PRINTFORM 微笑んで%CALLNAME:MASTER%に口づけし、
+			ENDIF
+
+			;素質ごとに描写（素直・ツンデレ／臆病・大人しい／それ以外）
+			IF TALENT:COUNT:素直 || TALENT:COUNT:ツンデレ
+				PRINTL 幸せそうに去っていった。
+			ELSEIF TALENT:COUNT:臆病 || TALENT:COUNT:恥じらい
+				PRINTL 逃げるように去っていった。
+			ELSE
+				PRINTL 手を振って去っていった。
+			ENDIF
+
+			PRINTL どうやら、本命チョコのようだ。
+
+			PRINTFORM 一緒に添えられていたメッセージカードには、%CALLNAME:MASTER%を想う
+			;雪歩の場合はポエム
+			IF NO:COUNT == [[キャラ:鎌瀬縫子]]
+				PRINT ポエムらしきもの
+			ELSE
+				PRINT 言葉
+			ENDIF
+
+			;欲望５・好感度2000以上ならキスマークも添える
+			SIF ABL:COUNT:欲望 >= 5 && CFLAG:COUNT:好感度 >= 2000
+				PRINTFORM と、%CALLNAME:COUNT%のキスマーク
+
+			PRINTL が添えられていた。
+
+			;料理技能あれば手作り
+			IF ABL:COUNT:料理技能 > 2
+				PRINTFORML チョコレートは%CALLNAME:COUNT%の手作りのようだったが、丁寧に作られたそれは見た目も味も一級といって良いほどだった。
+				PRINTL 料理経験＋5
+				EXP:COUNT:料理経験 += 5
+			ELSEIF ABL:COUNT:料理技能 > 0
+				PRINTFORML チョコレートは%CALLNAME:COUNT%の手作りらしくやや不恰好なところもあったものの、%CALLNAME:MASTER%には十分美味しく感じられた。
+				PRINTL 料理経験＋3
+				EXP:COUNT:料理経験 += 3
+			ENDIF
+			PRINTL
+			PRINTL 愛情経験＋5
+			EXP:COUNT:愛情経験 += 5
+			PRINTW 恭順の珠＋1000
+			JUEL:COUNT:恭順 += 1000
+
+		;好感度500以上
+		ELSEIF CFLAG:COUNT:好感度 >= 500
+			PRINTFORML 少し戸惑いがちな様子の%CALLNAME:COUNT%が%CALLNAME:MASTER%に差し出してきたのは、小さな包みだった。
+			PRINTFORML バレンタインチョコ、ということらしい。
+			PRINTFORML %CALLNAME:MASTER%がそれを受け取ると、%CALLNAME:COUNT%は微笑んで去っていった。
+			PRINTFORMW 恭順の珠＋200
+			JUEL:COUNT:恭順 += 200
+
+		;好感度200以上
+		ELSEIF CFLAG:COUNT:好感度 >= 200
+			PRINTFORML %CALLNAME:COUNT%が%CALLNAME:MASTER%に差し出してきたのは、簡素な包装が施された小さな包みだった。
+			PRINTFORML いわゆる義理チョコというやつだろう。
+			PRINTL
+			PRINTFORMW 恭順の珠＋100
+			JUEL:COUNT:恭順 += 100
+		ENDIF		
+	ENDIF
+REND
+
+RETURN 1
+
+
+;-------------------------------------------------
+;夏休み前半(海)
+;-------------------------------------------------
+@SUMMER_VACATION1
+DRAWLINE
+PRINTFORML 今日は海の日だ……
+PRINTFORML 天気も良く、絶好の海水浴日和だ。
+PRINTFORML 
+$SUMMER_VACATION_LOOP
+PRINTL 女優、及び女優候補を海に連れていきますか？
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+
+INPUT
+IF RESULT == 1
+	RETURN 1
+ELSEIF RESULT == 0
+	PRINTL 
+	GOTO SUMMER_VACATION_LOOP2
+ELSE
+	GOTO SUMMER_VACATION_LOOP
+ENDIF
+
+$SUMMER_VACATION_LOOP2
+PRINTFORML 海に連れていく女優、及び女優候補を１人選んでください
+DRAWLINE
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	;【恋心】【永遠の愛】持ちでないキャラは排除
+	;△と見せかけて[セフレ]でも可になってるんですが。下コメでは淫乱とか言ってるしわけわかめ。
+	SIF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:永遠の愛 == 0
+		CONTINUE
+	PRINTFORM  [{COUNT}] %NAME:COUNT% 
+	PRINTL 
+REND
+DRAWLINE
+PRINTFORML  [999] - やっぱりやめる
+
+INPUT
+
+IF RESULT == 999
+	RETURN 1
+ELSEIF RESULT == 0
+	GOTO SUMMER_VACATION_LOOP2
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO SUMMER_VACATION_LOOP2
+;【恋心】【淫乱】持ちでないキャラは排除
+;△実際には淫乱は見ていない
+ELSEIF TALENT:RESULT:恋心 == 0 && TALENT:RESULT:永遠の愛 == 0
+	GOTO SUMMER_VACATION_LOOP2
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO SUMMER_VACATION_LOOP2
+ENDIF
+
+TARGET = RESULT
+PRINTFORMW %NAME:TARGET%と海に遊びに行きます。
+
+DRAWLINE
+;露出癖のLvに応じて文章が変わります
+IF PBAND:68 >= 3 && ABL:露出癖 >= 5
+	PRINTFORM ほとんど紐にしか見えないエロティックなスリングショット
+ELSEIF ABL:露出癖 >= 5
+	PRINTFORM 露出の多いマイクロビキニ
+ELSE
+	PRINTFORM 控え目なワンピースビキニ
+ENDIF
+PRINTFORM を着た%CALLNAME:TARGET%は
+;おっぱいおっぱい(絶望)
+IF TALENT:巨乳 == 1 || TALENT:爆乳 == 1
+	PRINTFORM 大きな胸を揺らしながら
+ENDIF
+PRINTFORML 元気よく%CALLNAME:MASTER%とじゃれ合っている……
+PRINTW 
+
+IF TALENT:褐色肌 == 0 && ABL:露出癖 >= 3
+	PRINTFORM ひとしきり%CALLNAME:TARGET%と遊んだ後、ビーチチェアにうつ伏せで寝転がり休憩していた%CALLNAME:TARGET%は
+	PRINTFORML %CALLNAME:MASTER%にサンオイルを塗って欲しい、とせがんできた
+	PRINTFORML どうやらせっかく海に来たのだからこういうことでいちゃつきたい、とのことだが……
+	PRINTFORML 《%CALLNAME:TARGET%にサンオイルを塗ってあげますか？》
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP_SUNOIL
+	INPUT
+		IF RESULT == 0
+			PRINTFORML %CALLNAME:MASTER%はうつ伏せになった%CALLNAME:TARGET%の全身にくまなくサンオイルを塗りこんであげた
+			PRINTFORML %CALLNAME:TARGET%はくすぐったそうな声を漏らしながらも、%CALLNAME:MASTER%とのスキンシップを楽しんでいるようだ……
+			TFLAG:日焼けさせる = 1
+		ELSEIF RESULT == 1
+			PRINTFORML せっかくの綺麗な肌を日焼けさせるのはもったいない、との%CALLNAME:MASTER%の言葉に%CALLNAME:TARGET%は残念そうにしていた
+			PRINTFORM しかしその埋め合わせとして%CALLNAME:MASTER%が気恥ずかしさをこらえて海の家で買ってきた、カップル向けの
+			PRINTFORM 二股に分かれたストローが刺さったトロピカルジュースを見せると、
+			PRINTFORML %CALLNAME:TARGET%は嬉しそうにはにかみながらストローに口をつけ、%CALLNAME:MASTER%も早く飲むように急かしてきた……
+		ELSE
+			GOTO INPUT_LOOP_SUNOIL
+		ENDIF
+	PRINTW
+ENDIF
+
+;口上21番使用
+TFLAG:口上番号 = 21
+CALL SELF_KOJO
+PRINTL
+
+PRINTL 恭順の珠＋1000
+JUEL:恭順 += 1000
+PRINTL 欲情の珠＋500
+JUEL:欲情 += 500
+PRINTL 野外露出経験＋5
+EXP:野外露出経験 += 5
+PRINT 愛情経験＋5
+EXP:愛情経験 += 5
+
+WAIT
+
+;お楽しみはこれからだ
+	;処女ではなく、露出癖4以上、性交中毒2以上
+	IF TALENT:処女 == 0 && ABL:性交中毒 >= 2 && ABL:露出癖 >= 4
+		DRAWLINE
+		PRINTFORML 陽もだいぶ暮れてきたようだが
+		PRINTFORML %CALLNAME:TARGET%はまだ帰ろうとしない……
+		PRINTFORML そればかりか人気のない岩場に潜り込み
+		PRINTFORMW 今すぐ抱いてほしいとせがんできた……
+		PRINTL 
+		;口上22番使用
+		TFLAG:口上番号 = 22
+		CALL SELF_KOJO
+		PRINTL 
+		PRINTFORML %CALLNAME:MASTER%は満天の星空の下、%CALLNAME:TARGET%を夜通し抱き続けた……
+		N = 0
+		N = ((ABL:欲望 + ABL:性交中毒) * 5) + RAND:5
+		IF TALENT:絶倫 == 1
+			TIMES N , 1.80
+		ELSEIF TALENT:絶倫 == 1
+			TIMES N , 1.50
+		ENDIF
+		N /= 10
+		PRINTFORML 性交経験＋{N}
+		EXP:性交経験 += N
+		PRINTFORML Ｖ経験＋{N + RAND:51}
+		EXP:Ｖ経験 += N * ABL:Ｖ感覚 / 2
+		PRINTFORML 絶頂経験＋{N - RAND:11}
+		EXP:絶頂経験 += N / 4
+		PRINTFORML 野外露出経験＋{N / 3}
+		EXP:野外露出経験 += N * ABL:露出癖 / 10
+		IF (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
+			PRINTFORML 精液経験＋{N / 5}
+			EXP:精液経験 += N * ABL:精液中毒 / 5
+		ENDIF
+		PRINTFORML 奉仕快楽経験＋{N * 2}
+		EXP:奉仕快楽経験 += N * ABL:奉仕精神 / 5
+		IF (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
+			PRINTFORML フェラ経験＋{N / 3}
+			EXP:フェラ経験 += N * ABL:奉仕技術 / 3
+		ENDIF
+
+		PRINTFORML 愛情経験＋{N / 3}
+		EXP:愛情経験 += N * ABL:信頼 / 2
+		IF CFLAG:ファーストキスの相手 == -1
+			CFLAG:ファーストキスの相手 = 1
+			IF NO:TARGET != [[キャラ:宮間かなで]]
+				CSTR:ファーストキスの相手 = %CALLNAME:MASTER%
+			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 0
+				CSTR:ファーストキスの相手 = お兄ちゃん
+			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 1
+				CSTR:ファーストキスの相手 = アニキ
+			ENDIF
+			CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+			CFLAG:ファーストキス喪失月 = DAY:1
+			CFLAG:ファーストキス喪失日 = DAY:2
+			;4は海
+			CFLAG:ファーストキス喪失場所 = 4
+			SETCOLOR 0xDDBBCC
+				PRINTFORML 【ファーストキス】
+			RESETCOLOR
+		ENDIF
+		IF CFLAG:MASTER:ファーストキスの相手 == -1
+			CFLAG:MASTER:ファーストキスの相手 = 1
+			CSTR:MASTER:ファーストキスの相手 = %NAME:TARGET%
+			CFLAG:MASTER:ファーストキス喪失年齢 = BASE:MASTER:実年齢
+			CFLAG:MASTER:ファーストキス喪失月 = DAY:1
+			CFLAG:MASTER:ファーストキス喪失日 = DAY:2
+			CFLAG:MASTER:ファーストキス喪失場所 = 4
+			SETCOLOR 0xDDBBCC
+				PRINTFORML 【ファーストキス】（%CALLNAME:MASTER%）
+			RESETCOLOR
+		ENDIF
+		IF TALENT:MASTER:童貞 == 1 && (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
+			TALENT:MASTER:童貞 = 0
+			CSTR:MASTER:童貞喪失の相手 = %NAME:TARGET%
+			SETCOLOR 0xDDBBCC
+				PRINTFORML 【童貞喪失】（%CALLNAME:MASTER%）
+			RESETCOLOR
+			CFLAG:MASTER:ファーストキスの相手 = 1
+		ENDIF
+	ENDIF
+
+PRINTFORML 
+PRINTFORMW %CALLNAME:MASTER%との夏の想い出を、%CALLNAME:TARGET%は胸に刻みつけたようだ……
+IF CFLAG:海デート == 0
+	CFLAG:海デート = 1
+ENDIF
+IF TFLAG:日焼けさせる == 1 || RAND:11 >= 8
+	PRINTFORML 《夏の海を満喫した%CALLNAME:TARGET%はすっかり日焼けしてしまったようだ……》
+	TALENT:褐色肌 = 1
+	CFLAG:614 = 4 + RAND:4
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;ホワイトデー
+;-------------------------------------------------
+;@WHITE_DAY
+;PRINTL
+;PRINTFORMW （ホワイトデーイベントは未実装です）
+
+;-------------------------------------------------
+;クリスマスイブ
+;-------------------------------------------------
+;@CHRISTMAS_EVE
+;PRINTL
+;PRINTFORMW （クリスマスイブイベントは未実装です）
+
+;-------------------------------------------------
+;元旦
+;-------------------------------------------------
+;@NEWYEAR_DAY
+;PRINTL
+;PRINTFORMW （元旦イベントは未実装です）
+
+

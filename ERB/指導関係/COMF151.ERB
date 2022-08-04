@@ -1,0 +1,284 @@
+﻿;-------------------------------------------------
+;スライム膣内進入
+;道具使用コマンド：調教対象のヴァギナにスライムを進入させる
+;-------------------------------------------------
+@COM151
+
+	PRINTL スライム膣内進入
+	SAVESTR:0 = スライム膣内進入
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 15
+LOSEBASE:気力 += 70
+
+;ABL:Ｖ感覚をみる
+IF ABL:Ｖ感覚 == 0
+	SOURCE:1 = 40
+ELSEIF ABL:Ｖ感覚 == 1
+	SOURCE:1 = 125
+ELSEIF ABL:Ｖ感覚 == 2
+	SOURCE:1 = 300
+ELSEIF ABL:Ｖ感覚 == 3
+	SOURCE:1 = 500
+ELSEIF ABL:Ｖ感覚 == 4
+	SOURCE:1 = 650
+ELSE
+	SOURCE:1 = 850
+ENDIF
+
+;EXP:Ｖ経験をみる
+IF EXP:Ｖ経験 < EXPLV:1
+	TIMES SOURCE:1 , 0.20
+	SOURCE:6 = 5500
+ELSEIF EXP:Ｖ経験 < EXPLV:2
+	TIMES SOURCE:1 , 0.60
+	SOURCE:6 = 300
+ELSEIF EXP:Ｖ経験 < EXPLV:3
+	TIMES SOURCE:1 , 1.00
+	SOURCE:6 = 50
+ELSEIF EXP:Ｖ経験 < EXPLV:4
+	TIMES SOURCE:1 , 1.20
+	SOURCE:6 = 10
+ELSEIF EXP:Ｖ経験 < EXPLV:5
+	TIMES SOURCE:1 , 1.40
+	SOURCE:6 = 0
+ELSE
+	TIMES SOURCE:1 , 1.60
+	SOURCE:6 = 0
+ENDIF
+
+;PALAM:潤滑をみる
+IF PALAM:潤滑 < PALAMLV:1
+	TIMES SOURCE:1 , 0.10
+	SOURCE:6 += 1000
+	TIMES SOURCE:6 , 3.00
+ELSEIF PALAM:潤滑 < PALAMLV:2
+	TIMES SOURCE:1 , 0.40
+	SOURCE:6 += 400
+	TIMES SOURCE:6 , 1.00
+ELSEIF PALAM:潤滑 < PALAMLV:3
+	TIMES SOURCE:1 , 1.00
+	TIMES SOURCE:6 , 0.50
+ELSEIF PALAM:潤滑 < PALAMLV:4
+	TIMES SOURCE:1 , 1.40
+	TIMES SOURCE:6 , 0.20
+ELSEIF PALAM:潤滑 >= PALAMLV:4
+	TIMES SOURCE:1 , 1.80
+	TIMES SOURCE:6 , 0.10
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES SOURCE:1 , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES SOURCE:1 , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES SOURCE:1 , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES SOURCE:1 , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES SOURCE:1 , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES SOURCE:1 , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES SOURCE:1 , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES SOURCE:1 , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES SOURCE:1 , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES SOURCE:1 , 1.20
+ELSE
+	TIMES SOURCE:1 , 1.30
+ENDIF
+
+;大柄
+SIF TALENT:大柄
+	TIMES SOURCE:6 , 0.80
+;小柄体型
+SIF TALENT:小柄体型
+	TIMES SOURCE:6 , 2.00
+;未熟
+SIF TALENT:未熟
+	TIMES SOURCE:6 , 4.00
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+S = 0
+;Ｖ感覚が高いほどＶ経験が入る
+IF ABL:Ｖ感覚 <= 1
+	S = 1
+ELSEIF ABL:Ｖ感覚 <= 4
+	S = 2
+ELSEIF ABL:Ｖ感覚 <= 7
+	S = 3
+ELSE
+	S = 4
+ENDIF
+EXP:Ｖ経験 += S
+PRINTFORML Ｖ経験+{S}
+S = 0
+
+;レズ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;バイブの着脱
+;-------------------------------------------------
+TEQUIP:スライム膣内進入 = 1 - TEQUIP:スライム膣内進入
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;バイブ挿入中
+;-------------------------------------------------
+@EQUIP_COM151
+
+	PRINTL ＜スライム膣内進入中＞
+
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 25
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+;ABL:Ｖ感覚をみる
+IF ABL:Ｖ感覚 == 0
+	A = 20
+ELSEIF ABL:Ｖ感覚 == 1
+	A = 60
+ELSEIF ABL:Ｖ感覚 == 2
+	A = 150
+ELSEIF ABL:Ｖ感覚 == 3
+	A = 250
+ELSEIF ABL:Ｖ感覚 == 4
+	A = 325
+ELSE
+	A = 425
+ENDIF
+
+;EXP:Ｖ経験をみる
+IF EXP:Ｖ経験 < EXPLV:1
+	TIMES A , 0.40
+	B = 100
+ELSEIF EXP:Ｖ経験 < EXPLV:2
+	TIMES A , 0.60
+	B = 75
+ELSEIF EXP:Ｖ経験 < EXPLV:3
+	TIMES A , 1.00
+	B = 10
+ELSEIF EXP:Ｖ経験 < EXPLV:4
+	TIMES A , 1.20
+	B = 0
+ELSEIF EXP:Ｖ経験 < EXPLV:5
+	TIMES A , 1.40
+	B = 0
+ELSE
+	TIMES A , 1.60
+	B = 0
+ENDIF
+
+;PALAM:潤滑をみる
+IF PALAM:潤滑 < PALAMLV:1
+	TIMES A , 0.10
+	B += 200
+	TIMES B , 3.00
+	C += 500
+ELSEIF PALAM:潤滑 < PALAMLV:2
+	TIMES A , 0.40
+	B += 75
+	TIMES B , 1.00
+	C += 100
+ELSEIF PALAM:潤滑 < PALAMLV:3
+	TIMES A , 1.00
+	TIMES B , 0.50
+	C += 40
+ELSEIF PALAM:潤滑 < PALAMLV:4
+	TIMES A , 1.40
+	TIMES B , 0.20
+ELSEIF PALAM:潤滑 >= PALAMLV:4
+	TIMES A , 1.80
+	TIMES B , 0.10
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES A , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES A , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES A , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES A , 1.20
+ELSE
+	TIMES A , 1.30
+ENDIF
+
+
+;大柄
+SIF TALENT:大柄
+	TIMES B , 0.80
+;小柄体型
+SIF TALENT:小柄体型
+	TIMES B , 2.00
+;未熟
+SIF TALENT:未熟
+	TIMES B , 4.00
+
+;貞操観念
+IF EXP:Ｖ経験 && TALENT:貞操観念
+	TIMES B, 3.00
+ENDIF
+
+SOURCE:1 += A
+SOURCE:6 += B
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+S = 0
+;自慰実行時は経験＋１
+SIF SELECTCOM == 3
+	S = 1
+;Ｖ感覚が高いほどＶ経験が入る
+IF ABL:Ｖ感覚 <= 1
+	S += 1
+ELSEIF ABL:Ｖ感覚 <= 4
+	S += 2
+ELSEIF ABL:Ｖ感覚 <= 7
+	S += 3
+ELSE
+	S += 4
+ENDIF
+EXP:Ｖ経験 += S
+PRINTFORML Ｖ経験+{S}
+S = 0
+
+RETURN 1

@@ -1,0 +1,203 @@
+﻿;-------------------------------------------------
+;シャワー
+;道具使用コマンド：調教対象にシャワーをかけて汚れを落す
+;-------------------------------------------------
+@COM18
+
+PRINTL シャワー
+SAVESTR:0 = シャワー
+CALL TRAIN_MESSAGE_B
+
+LOSEBASE:体力 += 0
+LOSEBASE:気力 += 10
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:14 = 50
+SOURCE:5 = 400
+SOURCE:16 = 200
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	SOURCE:12 = 10
+ELSEIF PALAM:欲情 < PALAMLV:2
+	SOURCE:12 = 30
+ELSEIF PALAM:欲情 < PALAMLV:3
+	SOURCE:12 = 60
+ELSEIF PALAM:欲情 < PALAMLV:4
+	SOURCE:12 = 100
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	SOURCE:12 = 150
+ENDIF
+
+;奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:3 = 0
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:3 = 20
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:3 = 40
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:3 = 70
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:3 = 110
+ELSE
+	SOURCE:3 = 150
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES SOURCE:5 , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES SOURCE:5 , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES SOURCE:5 , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES SOURCE:5 , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES SOURCE:5 , 1.20
+ELSE
+	TIMES SOURCE:5 , 1.30
+ENDIF
+
+;動物耳の場合
+IF TALENT:動物耳
+	TIMES SOURCE:14 , 1.60
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:15 , 2.00
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;シャワーの開始と終了
+;-------------------------------------------------
+TEQUIP:シャワー = 1 - TEQUIP:シャワー
+
+;-------------------------------------------------
+;シャワーで汚れがリセット
+;-------------------------------------------------
+STAIN:0 = 0
+STAIN:1 = 0
+STAIN:2 = 2
+STAIN:3 = 1
+STAIN:4 = 8
+STAIN:5 = 0
+
+;（できれば）潤滑が半分に
+PALAM:潤滑 /= 2
+PALAM:不快 /= 2
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;シャワー使用中
+;-------------------------------------------------
+@EQUIP_COM18
+
+PRINTL ＜シャワー使用中＞
+
+LOSEBASE:体力 += 0
+LOSEBASE:気力 += 10
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:5 = 400
+SOURCE:16 = 300
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	SOURCE:12 = 10
+ELSEIF PALAM:欲情 < PALAMLV:2
+	SOURCE:12 = 30
+ELSEIF PALAM:欲情 < PALAMLV:3
+	SOURCE:12 = 60
+ELSEIF PALAM:欲情 < PALAMLV:4
+	SOURCE:12 = 100
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	SOURCE:12 = 150
+ENDIF
+
+;奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:3 = 0
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:3 = 20
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:3 = 40
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:3 = 70
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:3 = 110
+ELSE
+	SOURCE:3 = 150
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES SOURCE:5 , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES SOURCE:5 , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES SOURCE:5 , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES SOURCE:5 , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES SOURCE:5 , 1.20
+ELSE
+	TIMES SOURCE:5 , 1.30
+ENDIF
+
+SOURCE:11 += 50
+SOURCE:12 += 50
+
+;動物耳の場合
+IF TALENT:動物耳
+	SOURCE:15 = 150
+	TIMES SOURCE:14 , 1.60
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:15 , 2.00
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;シャワーで汚れがリセット
+;-------------------------------------------------
+STAIN:0 = 0
+STAIN:1 = 0
+STAIN:2 = 2
+STAIN:3 = 1
+STAIN:4 = 8
+STAIN:5 = 0
+
+PALAM:潤滑 /= 2
+PALAM:不快 /= 2
+
+RETURN 1
+;

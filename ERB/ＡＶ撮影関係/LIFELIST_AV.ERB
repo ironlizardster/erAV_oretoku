@@ -1,0 +1,31 @@
+﻿;-------------------------------------------------
+;現在生きている調教対象キャラのリスト
+;-------------------------------------------------
+@LIFE_LIST_AV
+DRAWLINE
+PRINTFORML  [0] %NAME:MASTER% （調教者）
+DRAWLINE
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	PRINTFORM  [{COUNT}] %NAME:COUNT%（芸名：%NICKNAME:COUNT%）
+	PRINT (体力：
+	A = BASE:COUNT:体力
+	SIF BASE:COUNT:体力 < 0
+		A = 0
+	PRINTFORM {A}/{MAXBASE:COUNT:体力})
+	
+	IF CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠
+		PRINT [臨月]
+	ELSEIF TALENT:COUNT:妊娠
+		PRINT [妊娠]
+	ELSEIF TALENT:COUNT:育児中
+		PRINT [育児]
+	ENDIF
+	PRINTL 
+REND
+DRAWLINE

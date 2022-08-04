@@ -1,0 +1,632 @@
+﻿;=================================================
+; ミッションタイトル
+;--------------------------------------------
+; RESULTS = の後にミッションのタイトルを記述する
+;=================================================
+@MISSION_TITLE_88
+RESULTS = 地上に降りた堕天使達
+
+;=================================================
+; ミッション可視条件
+;--------------------------------------------
+; 特定のキャラクターの存在や、他のミッション結果などを、
+; このミッションの表示条件に使用したい時に編集する
+;=================================================
+@MISSION_VISIBLE_88
+; 不可視なら0、可視なら1を戻す
+A = GETCHARA([[キャラ:闇崎燐子]])
+B = GETCHARA([[キャラ:渡来桔梗]])
+C = GETCHARA([[キャラ:小日向詩織]])
+D = GETCHARA([[キャラ:桐生歌音]])
+RETURN D != -1 && A != -1 && DAY:1 >= 7 && DAY:1 <= 8 && TALENT:D:アイドル && TALENT:A:恋心
+
+;=================================================
+; ミッション報酬
+;--------------------------------------------
+; ミッションの報酬を記述する
+; P:1 報酬ポイント
+; P:2 報酬貢献度
+; P:3 失敗時の没収ポイント
+; P:4 失敗時の没収貢献度
+; P:5 延長期間
+;=================================================
+@MISSION_FEE_88
+P:1 = 2000000
+P:2 = 50
+P:3 = 5000000
+P:4 = 0
+P:5 = 0
+
+;=================================================
+; ミッション解説文
+;--------------------------------------------
+; ミッションの解説文を記述する
+;=================================================
+@MISSION_INFO_88
+DRAWLINE
+PRINTL 【地上に降りた堕天使達】
+PRINTL
+PRINTL 依頼人：桐生歌音、芸能事務所『αoneプロダクション』
+;アニマス制作A-1picのパロ
+PRINTL
+PRINTL 歌音
+PRINTL 「…？…どうしたんだい？ハトが豆鉄砲喰らったような顔しちゃってさ
+PRINTL 　ああ…、アタシの格好のことか…？
+PRINTL 　…アタシが都子のやつに無理やりアイドルにされちまったことは知ってるだろう？
+PRINTL 　…で、たまにはこんな格好をして歌わないといけないんだそうだ
+PRINTL 　まったく、柄じゃないってのにねぇ
+PRINTL 　…ちなみに都子はアタシのこの姿を見た途端、鼻血を出してぶっ倒れちまったよ、ど
+PRINTW 　うしたんだろうねぇ？
+PRINTL 
+PRINTL 　そうそう、アンタを呼んだのにはちゃんと理由があるさ
+PRINTL 　ダイバータウンは知っているだろう？
+;Zeppとかがあるダイバーシティのパロ
+PRINTL 　その街一帯を一日中貸し切って、各芸能事務所やテレビ局に声をかけて、全国から集
+PRINTL 　めたアイドル達による、観客評価型アイドルトーナメントが、よりによってこの暑い
+PRINTL 　時期に開催されるそうだ
+PRINTL 　…どういうわけかアタシはそれの総合司会として抜擢されてしまってね…
+PRINTW 　アタシ個人はあまり目立ちたくはないんだが…、ここからが本題でね
+PRINTL 
+PRINTL 　ウチの組の系列の芸能事務所の社長が『我が社の闇崎燐子を是非、大会のヒロインに
+PRINTL 　してほしい』と注文をしてきている
+PRINTL 　…御存知だろう？アンタにえらくご執心の自称堕天使様だよ
+PRINTL 　元々はＣＰＧをも越す逸材としてウチの系列が拾ってくるだけあるし、…まあ悔しい
+PRINTL 　がアタシなんかよりも遙かに才能があるというのは認めなきゃいけないがね…
+PRINTL 　…でもねぇ、あの子が１人でやっていけると思うかい？
+PRINTL 　…………
+PRINTL 　…だねぇ、今のままでは無理さね…
+PRINTL 　あの喋り方じゃあトーク番組とかでは使い物にならないだろうね
+PRINTL 　みんながみんな、アンタみたいにあの子の言葉の真意を読み取れるわけではないだろ
+PRINTW 　うからねぇ
+PRINTL 　
+PRINTL 　…アタシがもしこの件に対して本腰を入れて動くなら、闇崎燐子をうまく乗せられる
+PRINTL 　ようなメンバーを集めて、それでユニットを組んで挑戦するだろう、という方法を提
+PRINTL 　案したら、向こうもそれで納得してくれたみたいでね、他に２人の新人アイドルを選
+PRINTL 　んでくれと言ってきたんだよ
+PRINTL 　メンバーの人選はこっち、要するにアンタに一任するそうだ
+PRINTL 　…それと、どうもこの大会にはＣＰＧも出演する方向らしくてね…
+PRINTL 　ＣＰＧ側としては、このイベントに圧勝でもして他のアイドル達との差を見せつけて
+PRINTL 　人気を盤石のものにしたいんだろうがね
+PRINTL 　…もし、そのイベントでＣＰＧを負かすようなアイドルグループに燐子達がなれれば
+PRINTW 　彼女達は次の世代のアイドル達を引っ張れる存在になるのは間違いないだろうけど…
+PRINTL 　
+PRINTL 　さて、メンバーの人選のことだが、アタシの考えをいくつか意見として伝えておくよ
+PRINTL 　まずアンタの命令に絶対忠実な子じゃないとこういうのには乗ってこないだろうね
+PRINTL 　そして、アイドルとしての実力では少なくともＣＰＧセンターの新島みひろと同格の
+PRINTL 　ものがないと厳しいだろうし、サービス精神だってうんと高くないといけないだろう
+PRINTL 　見栄えに対するこだわりもできるだけ高い方がいいだろうし、一日中歌って踊るわけ
+PRINTL 　だから体力もないといけない
+PRINTL 　何より勝敗を決定するのは観客なわけだから…、早い話、その子自身の持ってる組織
+PRINTL 　票、つまり人気も必須だね
+PRINTL 　当たり前だけど、既に別のグループに所属していたらいけないし、人間相手の商売な
+PRINTL 　んだから純粋な人間じゃないといけないよ
+PRINTL 　あと一番重要なのは…、やっぱり年齢だろうかね
+PRINTL 　燐子と同年齢の子達でグループを編成すれば、３～４年後もまだまだ現役、いや、更
+PRINTL 　に上を目指せるかもしれないし、燐子にとっても同年代の方が気が置けなくていいん
+PRINTW 　じゃないかねぇ…
+PRINTL 　
+PRINTL 　アンタ、燐子と同年齢で、今まで言った条件に合致して、しかも燐子と同じ趣味を持
+PRINTL 　ってたり、趣味は違っても強い目的意識を持ってる子、それも２人なんて、心当たり
+PRINTL 　あるかい？
+IF GETCHARA([[キャラ:渡来桔梗]]) != -1 && GETCHARA([[キャラ:小日向詩織]]) != -1
+	PRINTL 　…どうやらあるみたいだね……やっぱりアンタは流石だよ
+ELSE
+	PRINTL 　ないなら無理しないほうがいいだろうねぇ
+ENDIF
+PRINTL 　…イベントは７～８月の期間ならいつでも開催時期をずらせるらしいけど、あんまり
+PRINTL 　待たせ過ぎたら開催自体できなくなるそうだ
+PRINTL 　司会の立場で、できる限りアンタや燐子よりに話を持っていこうとは思っているから
+PRINTL 　あとはアンタら次第だよ、コンディションはちゃんと整えておきな」
+PRINTL 　
+PRINTL 報酬：１００万ポイント＋貢献度５０
+PRINTL エクストラ報酬：燐子、？？、？？の最大魅力値上昇と各種能力の取得
+SETCOLOR 0xF58F98
+FONTSTYLE 1
+PRINTL ※ミッション終了後、対象の服装、髪色が変更されます！
+FONTSTYLE 0
+RESETCOLOR
+DRAWLINE
+
+;=================================================
+; ミッション達成条件詳細
+;--------------------------------------------
+; ミッションの解説文を記述する
+; この関数は存在しなくても動作する
+; ※達成条件確認の表示が行われなくなります
+;=================================================
+@MISSION_COND_88
+DRAWLINE
+PRINTL 　　　　ミッション達成条件：闇崎燐子、？？？？、？？？？？の奉仕精神LV10＋話術LV5以上＋露出壁LV5以上＋レズっ気LV5以上
+PRINTL 　　　　　　　　　　　　　　被写技能LV5以上＋歌唱技能LV5以上＋舞踊技能LV5以上＋美容感覚Lv8以上
+PRINTL 　　　　　　　　　　　　　　最大体力2500以上＋最大気力2500以上＋ミッション参加時点での魅力値がそれぞれ100以上
+PRINTL 　　　　　　　　　　　　　　【アイドル】【永遠の愛】取得済かつ【オリジナルユニット】【淫魔】【天使】を所持していない
+PRINTL ミッション終了後の状態変化：成功時共通…【歌姫】【舞姫】【Triptych】取得、愛情経験、レズ経験、キャラ間相性値、ギャラが激増
+PRINTL 　　　　　　　　　　　　　　闇崎燐子　…【魅惑】【献身的】取得、魅力値＋40
+PRINTL 　　　　　　　　　　　　　　？？？？　…【魅惑】取得、魅力値＋40
+PRINTL 　　　　　　　　　　　　　　？？？？？…【両刀】【小悪魔】【人気者】取得、魅力値＋20
+PRINTL 　　　　　　　　　　　　　　ミッション成否を問わず、歌唱・舞踊・被写経験激増、ミッション後は体力が１になる
+PRINTL 　　　　　　　　　　　　　　ミッションに失敗した場合、全員【臆病】【ネガティブ】【抑圧】を取得
+PRINTL 
+PRINTL 　　　ミッション対象キャラ：闇崎燐子　？？？？　？？？？？
+DRAWLINE
+
+;=================================================
+; ミッション受領時処理
+;--------------------------------------------
+; キャラクターの追加など、
+; ミッションの受領時に行う処理を記述する
+;=================================================
+@MISSION_RECEIVE_88
+; キャラクターを選択
+CALL MISSION_LIFELIST_DECIDE([[キャラ:闇崎燐子]])
+
+; 即座に報告処理を呼び出す
+CALL MISSION_EXEC_REPORT(88)
+
+;=================================================
+; ミッション達成判定計算
+;--------------------------------------------
+; ミッションの成否判定を記述する
+;=================================================
+@MISSION_CALC_88
+#DIM 燐子
+#DIM 桔梗
+#DIM 詩織
+
+桔梗 = GETCHARA([[キャラ:渡来桔梗]])
+詩織 = GETCHARA([[キャラ:小日向詩織]])
+
+; 失敗なら0, 成功なら1, 大成功なら2をRETURNで戻す
+LOCAL:1 = 0
+
+;燐子分
+SIF NO:TARGET == [[キャラ:闇崎燐子]]
+	LOCAL:1++
+SIF ABL:TARGET:話術 >= 5
+	LOCAL:1++
+SIF ABL:TARGET:奉仕精神 == 10
+	LOCAL:1++
+SIF ABL:TARGET:露出癖 >= 5
+	LOCAL:1++
+SIF ABL:TARGET:レズっ気 >= 5
+	LOCAL:1++
+SIF ABL:TARGET:美容感覚 >= 8
+	LOCAL:1++
+SIF ABL:TARGET:被写技能 >= 5
+	LOCAL:1++
+SIF ABL:TARGET:歌唱技能 >= 5
+	LOCAL:1++
+SIF ABL:TARGET:舞踊技能 >= 5
+	LOCAL:1++
+SIF MAXBASE:TARGET:体力 >= 2500
+	LOCAL:1++
+SIF MAXBASE:TARGET:気力 >= 2500
+	LOCAL:1++
+SIF TALENT:TARGET:アイドル == 1
+	LOCAL:1++
+SIF TALENT:TARGET:永遠の愛 == 1
+	LOCAL:1++
+SIF TALENT:TARGET:オリジナルユニット == 0
+	LOCAL:1++
+SIF TALENT:TARGET:淫魔 == 0
+	LOCAL:1++
+SIF TALENT:TARGET:天使 == 0
+	LOCAL:1++
+SIF BASE:TARGET:魅力値 >= 100
+	LOCAL:1++
+
+;桔梗分
+IF 桔梗 != -1
+	SIF NO:B == [[キャラ:渡来桔梗]]
+		LOCAL:1++
+	SIF ABL:桔梗:話術 >= 5
+		LOCAL:1++
+	SIF ABL:桔梗:奉仕精神 == 10
+		LOCAL:1++
+	SIF ABL:桔梗:露出癖 >= 5
+		LOCAL:1++
+	SIF ABL:桔梗:レズっ気 >= 5
+		LOCAL:1++
+	SIF ABL:桔梗:美容感覚 >= 8
+		LOCAL:1++
+	SIF ABL:桔梗:被写技能 >= 5
+		LOCAL:1++
+	SIF ABL:桔梗:歌唱技能 >= 5
+		LOCAL:1++
+	SIF ABL:桔梗:舞踊技能 >= 5
+		LOCAL:1++
+	SIF MAXBASE:桔梗:体力 >= 2500
+		LOCAL:1++
+	SIF MAXBASE:桔梗:気力 >= 2500
+		LOCAL:1++
+	SIF TALENT:桔梗:アイドル == 1
+		LOCAL:1++
+	SIF TALENT:桔梗:永遠の愛 == 1
+		LOCAL:1++
+	SIF TALENT:桔梗:オリジナルユニット == 0
+		LOCAL:1++
+	SIF TALENT:桔梗:淫魔 == 0
+		LOCAL:1++
+	SIF TALENT:桔梗:天使 == 0
+		LOCAL:1++
+	SIF BASE:桔梗:魅力値 >= 100
+		LOCAL:1++
+ENDIF
+
+;詩織分
+IF 詩織 != -1
+	SIF NO:C == [[キャラ:小日向詩織]]
+		LOCAL:1++
+	SIF ABL:詩織:話術 >= 5
+		LOCAL:1++
+	SIF ABL:詩織:奉仕精神 == 10
+		LOCAL:1++
+	SIF ABL:詩織:露出癖 >= 5
+		LOCAL:1++
+	SIF ABL:詩織:レズっ気 >= 5
+		LOCAL:1++
+	SIF ABL:詩織:美容感覚 >= 8
+		LOCAL:1++
+	SIF ABL:詩織:被写技能 >= 5
+		LOCAL:1++
+	SIF ABL:詩織:歌唱技能 >= 5
+		LOCAL:1++
+	SIF ABL:詩織:舞踊技能 >= 5
+		LOCAL:1++
+	SIF MAXBASE:詩織:体力 >= 2500
+		LOCAL:1++
+	SIF MAXBASE:詩織:気力 >= 2500
+		LOCAL:1++
+	SIF TALENT:詩織:アイドル == 1
+		LOCAL:1++
+	SIF TALENT:詩織:永遠の愛 == 1
+		LOCAL:1++
+	SIF TALENT:詩織:オリジナルユニット == 0
+		LOCAL:1++
+	SIF TALENT:詩織:淫魔 == 0
+		LOCAL:1++
+	SIF TALENT:詩織:天使 == 0
+		LOCAL:1++
+	SIF BASE:詩織:魅力値 >= 100
+		LOCAL:1++
+ENDIF
+
+SIF LOCAL:1 >= 51
+	RETURN 2
+RETURN 0
+
+;=================================================
+; ミッション報告後処理
+;--------------------------------------------
+; 経験や素質の変化など、
+; ミッション報告後に行う処理を記述する
+;--------------------------------------------
+; 引数
+;  ARG 成否判定の結果(0:失敗, 1:成功, 2:大成功)
+;=================================================
+@MISSION_REPORT_88(ARG)
+#DIM 燐子
+#DIM 桔梗
+#DIM 詩織
+燐子 = GETCHARA([[キャラ:闇崎燐子]])
+桔梗 = GETCHARA([[キャラ:渡来桔梗]])
+詩織 = GETCHARA([[キャラ:小日向詩織]])
+
+BASE:TARGET:魅力値 -= 30
+BASE:TARGET:体力 = 1
+CFLAG:TARGET:130 = 1
+
+IF 桔梗 != -1
+	BASE:桔梗:魅力値 -= 30
+	BASE:桔梗:体力 = 1
+	CFLAG:桔梗:130 = 1
+ENDIF
+
+IF 詩織 != -1
+	BASE:詩織:魅力値 -= 30
+	BASE:詩織:体力 = 1
+	CFLAG:詩織:130 = 1
+ENDIF
+
+; 経験増加処理の呼び出し
+TCVAR:被写経験 += 200 + RAND:100 - RAND:100
+TCVAR:歌唱経験 += 300 + RAND:200 - RAND:200
+TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
+TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
+TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
+IF CFLAG:ファーストキスの相手 == -1
+	CFLAG:ファーストキスの相手 = 1
+	CSTR:ファーストキスの相手 = 渡会桔梗
+		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:ファーストキス喪失月 = DAY:1
+		CFLAG:ファーストキス喪失日 = DAY:2
+		CFLAG:ファーストキス喪失場所 = 10
+ENDIF
+CALL MISSION_ADD_EXP(TARGET)
+
+A = TARGET
+
+IF 桔梗 != -1
+	TARGET = 桔梗
+	TCVAR:被写経験 += 200 + RAND:100 - RAND:100
+	TCVAR:歌唱経験 += 300 + RAND:200 - RAND:200
+	TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
+	TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
+	TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
+	CALL MISSION_ADD_EXP(TARGET)
+	B = TARGET
+	IF CFLAG:ファーストキスの相手 == -1
+		CFLAG:ファーストキスの相手 = 1
+		CSTR:ファーストキスの相手 = 闇崎燐子
+		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:ファーストキス喪失月 = DAY:1
+		CFLAG:ファーストキス喪失日 = DAY:2
+		CFLAG:ファーストキス喪失場所 = 10
+	ENDIF
+ENDIF
+
+IF 詩織 != -1
+	TARGET = 詩織
+	TCVAR:被写経験 += 200 + RAND:100 - RAND:100
+	TCVAR:歌唱経験 += 300 + RAND:200 - RAND:200
+	TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
+	TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
+	TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
+	CALL MISSION_ADD_EXP(TARGET)
+	C = TARGET
+	IF CFLAG:ファーストキスの相手 == -1
+		CFLAG:ファーストキスの相手 = 1
+		CSTR:ファーストキスの相手 = 渡会桔梗
+		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:ファーストキス喪失月 = DAY:1
+		CFLAG:ファーストキス喪失日 = DAY:2
+		CFLAG:ファーストキス喪失場所 = 10
+	ENDIF
+ENDIF
+
+IF ARG == 0
+	;燐子分
+		TALENT:燐子:臆病 = 1
+		TALENT:燐子:ネガティブ = 1
+		TALENT:燐子:抑圧 = 1
+		CFLAG:燐子:130 = 0
+	;桔梗分
+		TALENT:桔梗:臆病 = 1
+		TALENT:桔梗:ネガティブ = 1
+		TALENT:桔梗:抑圧 = 1
+		CFLAG:桔梗:130 = 0
+	;詩織分
+		TALENT:詩織:臆病 = 1
+		TALENT:詩織:ネガティブ = 1
+		TALENT:詩織:抑圧 = 1
+		CFLAG:詩織:130 = 0
+ELSE
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		
+		TARGET = COUNT
+	REND
+	;燐子分
+	RELATION:燐子:5 = 500
+	RELATION:燐子:39 = 500
+	BASE:燐子:ギャラ *= 10
+	BASE:燐子:魅力値 += 40
+	MAXBASE:燐子:魅力値 += 40
+	TALENT:燐子:献身的 = 1
+	TALENT:燐子:魅惑 = 1
+	TALENT:燐子:歌姫 = 1
+	TALENT:燐子:舞姫 = 1
+	TALENT:燐子:Triptych = 1
+	CFLAG:燐子:着衣状態 = 15
+	CFLAG:燐子:上着のタイプ = 52
+	CFLAG:燐子:靴下の種類 = 7
+	CFLAG:燐子:靴の種類 = 8
+	CFLAG:燐子:靴下の着用状態 = 0
+	CFLAG:燐子:ブラの色 = 0
+	CFLAG:燐子:ブラの種類 = 5
+	CFLAG:燐子:パンツの色 = 0
+	CFLAG:燐子:パンツの種類 = 5
+	CFLAG:燐子:髪の色 = 3
+	CFLAG:燐子:染髪の有無 = 1
+	CFLAG:燐子:髪型 = 11
+	CFLAG:燐子:130 = 0
+
+	;桔梗分
+	RELATION:桔梗:38 = 500
+	RELATION:桔梗:39 = 500
+	BASE:桔梗:ギャラ *= 10
+	BASE:桔梗:魅力値 += 40
+	MAXBASE:桔梗:魅力値 += 40
+	TALENT:桔梗:魅惑 = 1
+	TALENT:桔梗:歌姫 = 1
+	TALENT:桔梗:舞姫 = 1
+	TALENT:桔梗:Triptych = 1
+	CFLAG:桔梗:着衣状態 = 15
+	CFLAG:桔梗:上着のタイプ = 52
+	CFLAG:桔梗:靴下の種類 = 7
+	CFLAG:桔梗:靴の種類 = 12
+	CFLAG:桔梗:靴下の着用状態 = 0
+	CFLAG:桔梗:ブラの色 = 2
+	CFLAG:桔梗:ブラの種類 = 17
+	CFLAG:桔梗:パンツの色 = 2
+	CFLAG:桔梗:パンツの種類 = 17
+	CFLAG:桔梗:髪の色 = 13
+	CFLAG:桔梗:染髪の有無 = 1
+	CFLAG:桔梗:髪型 = 2
+	CFLAG:桔梗:130 = 0
+
+	;詩織分
+	RELATION:詩織:5 = 500
+	RELATION:詩織:38 = 500
+	BASE:詩織:ギャラ *= 10
+	BASE:詩織:魅力値 += 30
+	MAXBASE:詩織:魅力値 += 30
+	TALENT:詩織:両刀 = 1
+	TALENT:詩織:小悪魔 = 1
+	TALENT:詩織:人気者 = 1
+	TALENT:詩織:歌姫 = 1
+	TALENT:詩織:舞姫 = 1
+	TALENT:詩織:Triptych = 1
+	CFLAG:詩織:着衣状態 = 15
+	CFLAG:詩織:上着のタイプ = 52
+	CFLAG:詩織:靴下の種類 = 7
+	CFLAG:詩織:靴の種類 = 12
+	CFLAG:詩織:靴下の着用状態 = 0
+	CFLAG:詩織:ブラの色 = 4
+	CFLAG:詩織:ブラの種類 = 9
+	CFLAG:詩織:パンツの色 = 4
+	CFLAG:詩織:パンツの種類 = 3
+	CFLAG:詩織:髪の色 = 2
+	CFLAG:詩織:染髪の有無 = 1
+	CFLAG:詩織:髪型 = 5
+	CFLAG:詩織:130 = 0
+
+	PRINTL
+	PRINTFORML 　※ここから先の内容は能力変化に関係ありません
+	PRINTFORMW 　※飛ばしたいときは右クリックをしてください
+	PRINTL
+	PRINTW 　………………
+	PRINTW 　…………
+	PRINTL 　……
+	PRINTW
+	PRINTFORML 　夏真っ盛りの{DAY:1}月、全国から集められた現役、卵を問わないアイドル達とその追っかけとで
+	PRINTFORML 　ダイバータウンの熱気は朝９時にも関わらず外気温３０度を超すほどの熱気を醸し出していた
+	PRINTFORMW 　桐生組関係者の特設テントで涼んでいた%CALLNAME:MASTER%の元に３人のステージ用ゴスロリ衣装を来た少女達がやってきた…
+	PRINTL
+	PRINTFORML 　燐子
+	PRINTFORML 　「ｸｸｸ…、我が血塗られた魂の獣が目を覚ます…！(いよいよですね…、私、頑張ります…！)」
+	PRINTL
+	PRINTFORML 　エキセントリックな話し方に反して、繊細な心を持っている燐子だが
+	PRINTFORMW 　今日は持って生まれた才能を存分に使ってほしいものだ
+	PRINTL
+	PRINTFORML 　桔梗
+	PRINTFORML 　「…………」
+	PRINTL
+	PRINTFORML 　元々インターネットを中心に活動してきた桔梗はユニット加入前から人気があり、しかも燐子とはプライベートでも仲が良いらしく
+	PRINTFORML 　気心の知れた桔梗とユニット活動ができることで燐子のポテンシャルが更に引き出せれば良いだろう
+	PRINTFORMW 　桔梗自身は相変わらず何を考えているのかよく分からない節があるが…
+	PRINTL
+	PRINTFORML 　詩織
+	PRINTFORML 　「監督さ～ん！この大会で優勝したら、いっぱいギャラが出るって本当ですよね！？」
+	PRINTFORML 　「お給料のためなら、ものすごくがんばりますですよ～！」
+	PRINTFORML 　「(燐子ちゃんも桔梗ちゃんも練習の時、歌はちゃんと歌うくせに結局それ以外では一度もまともに喋らなかったよ…)」
+	PRINTFORML 　「(この２人、ちゃんとトークコーナーで喋れるのかなぁ…？)」
+	PRINTL
+	PRINTFORML 　強欲なところもあるが、基本的には他者を思いやる心が深い詩織なら
+	PRINTFORMW 　いまいち自信のない燐子や、マイペースな桔梗を上手にフォローしてくれるだろう…
+	PRINTL
+	PRINTFORML 　３人のユニット、【Triptych】は今日のために練習を重ねてきたようだ
+	PRINTFORML 　%CALLNAME:MASTER%は３人それぞれに合った励ましの言葉をかけてあげた
+	PRINTFORMW 　３人は嬉しそうに最初のステージに向かって走っていった…
+	PRINTL
+	PRINTW 　………………
+	PRINTW 　…………
+	PRINTL 　……
+	PRINTW
+	PRINTFORML 　昼下がりになり、陽も照ってくると会場のあちこちで熱中症で倒れる観客やアイドルの姿が見られるようになった
+	PRINTFORML 　燐子達は大丈夫なのだろうか…不安になった%CALLNAME:MASTER%は直接様子を見に行くことにした
+	PRINTFORML 　%CALLNAME:MASTER%が会場に近づくにつれ地鳴りのような観衆の声援が聞こえてきた
+	PRINTFORML 　どうやら好評なようだ
+	PRINTFORML 　しかし、いくら固定客が混じっているとはいえ、尋常ではない盛り上がり方である…
+	PRINTFORMW 　人ごみをかき分けて燐子達の姿を確認するとそこには…
+	PRINTL
+	PRINTFORML 　歌音
+	PRINTFORML 　「えっとだね…、曲も終わったことだし…、メンバーの自己紹介をしてもらいたいんだけど…」
+	PRINTFORML 　「…いつまでキスしてるんだい、燐子ちゃんに桔梗ちゃん…」
+	;もともと曲の合間にキスするようなパフォーマンスをしているという設定
+	;あまり想像できない人は、１０年くらい前ちょびっとだけ流行ったロシアのドタキャンメスガキ２匹を思い出して、どうぞ
+	PRINTL
+	PRINTFORML 　桔梗
+	PRINTFORML 　「…んむぅ……(…燐子……好き……)」
+	PRINTL
+	PRINTFORML 　燐子
+	PRINTFORML 　「はぁん…あふぁ…！(桔梗ちゃん…！…こんな大勢の目の前で…激し過ぎるよ…！)」
+	PRINTL
+	PRINTFORML 　詩織
+	PRINTFORML 　「(な、なんか私も興奮してきた…！)」
+	PRINTFORML 　「ふっふっふ…、この２人にこれから更に私が混じるんですよ～！そしたら…」
+	PRINTL
+	PRINTFORML 　歌音
+	PRINTFORML 　「混ざらんでいい」
+	PRINTFORML 　「(…これ、どう見ても放送事故だねぇ…)」
+	PRINTL
+	PRINTFORMW 　歌音に心底申し訳ないと思いつつ、%CALLNAME:MASTER%は燐子達のレズキスを観客と楽しく鑑賞した…
+	PRINTL
+	PRINTW 　………………
+	PRINTW 　…………
+	PRINTL 　……
+	PRINTW
+	PRINTFORML 　夜も21時を回り、いよいよ大会もクライマックスの時を迎えようとしている
+	PRINTFORML 　決勝に残ったのはＣＰＧ…
+	PRINTFORML 　そして燐子達のユニット、【Triptych】である
+	PRINTFORMW 　%CALLNAME:MASTER%の姿を認めた歌音が近づいてきた
+	PRINTL
+	PRINTFORML 　歌音
+	PRINTFORML 　「アタシとしては予想以上の結果…、と言いたいところだけど…」
+	PRINTFORML 　「アンタのやることなんだ、これくらいの番狂わせはやってもらわないとねぇ…」
+	PRINTFORML 　「…渡会桔梗は…今日も燐子のことをよく支えているね」
+	PRINTFORML 　「プライベートで仲が良い桔梗をお供に据えたお蔭で、燐子がのびのびとパフォーマンスできたのが分かるよ」
+	PRINTFORML 　「…小日向詩織は…目的のためとはいえ３人の中では一番前向きだねぇ」
+	PRINTFORMW 　「そしてとにかく喋る喋る…、燐子と桔梗が口下手なのをよく助けてくれたよ」
+	PRINTL
+	PRINTFORML 　「さて、ここからはもうアタシが壇上でフォローするとかしないとかの問題じゃない」
+	PRINTFORML 　「…行ってあげたらどうだい？」
+	PRINTFORML 　「アタシがなんだって…？…心外だね…アタシはそんなに独占欲が強いように見えるのかい？」
+	;極道は嘘つき
+	PRINTL
+	PRINTFORMW 　歌音に今日一日の礼を述べつつ、%CALLNAME:MASTER%は燐子達の控室へ向かった…
+	PRINTL
+	PRINTW 　………………
+	PRINTW 　…………
+	PRINTL 　……
+	PRINTW
+	PRINTFORMW 　さすがに燐子達は疲労困憊の様子で、%CALLNAME:MASTER%の姿を見ても笑顔にはならなかった
+	PRINTL
+	PRINTFORML 　詩織
+	PRINTFORML 　「今の気持ちですか…？…首も腰も足も痛いです…キスし過ぎで唇もヒリヒリしますです…！」
+	PRINTL
+	PRINTFORML 　桔梗
+	PRINTFORML 　「…………はぁ……はぁ…………」
+	PRINTL
+	PRINTFORML 　燐子
+	PRINTFORML 　「パパスは力を溜めている…！(ここが勝負時…ここが…！)」
+	PRINTL
+	PRINTFORML 　%CALLNAME:MASTER%は燐子達を元気づけるために、優勝したら何かしてあげるということを伝えた
+	PRINTFORMW 　するとさっきまで生気の無かった３人の目に光が戻った
+	PRINTL
+	PRINTFORML 　詩織
+	PRINTFORML 　「何かしてくれるっていうなら…私の旦那さんになってほしいです…！」
+	PRINTL
+	PRINTFORML 　桔梗
+	PRINTFORML 　「…私だけの男になって……！」
+	PRINTL
+	PRINTFORML 　燐子
+	PRINTFORML 　「陰陽の契りを結ばん…！(私と結婚してください…！)」
+	PRINTL
+	PRINTFORML 　３人同時に逆プロポーズをされた%CALLNAME:MASTER%が固まってしまうと
+	PRINTFORMW 　その様子を見た３人は顔を見合わせクスクスと笑い始めた
+	PRINTL
+	PRINTFORML 　桔梗
+	PRINTFORML 　「…今はそれでもいい…」
+	PRINTFORML 　「…いつか、証明してみせるから…桐生歌音よりも、あなたを愛していることを……」
+	PRINTL
+	PRINTFORML 　燐子
+	PRINTFORML 　「あなたのおかげでここまで来れました…」
+	PRINTFORML 　「いつか覚めてしまうかもしれないけれど、今はまだ夢を見させてください…！」
+	PRINTL
+	PRINTFORML 　詩織
+	PRINTFORML 　「監督さん、かなり情けないですよ……！……でもそういうところも可愛いです！」
+	PRINTFORML 　「(ていうか…燐子ちゃんも桔梗ちゃんも普通に喋れるじゃん！私の苦労はいったい…！)」
+	PRINTL
+	PRINTFORMW 　３人はハイタッチをして颯爽とステージに上っていった…
+	PRINTL
+	PRINTW 　………………
+	PRINTW 　…………
+	PRINTL 　……
+	PRINTW
+	PRINTFORML 　翌日、各社スポーツ紙の一面、及びテレビのワイドショーは、結成から今日まで
+	PRINTFORML 　ありとあらゆる分野で無敗を誇っていたColorfulPureGirlsをお祭りイベントの中とはいえ破った新鋭アイドル
+	PRINTFORMW 　Triptychの話題で持ちきりだった…
+DRAWLINE
+ENDIF

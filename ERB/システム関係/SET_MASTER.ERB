@@ -1,0 +1,289 @@
+﻿;主人公のセットアップ
+@SET_MASTER
+
+CALL SET_MASTER_SEX
+CALL SET_MASTER_FIRSTKISS
+CALL SET_MASTER_LOSTVIRGIN
+
+
+RETURN
+
+;主人公の性別設定
+@SET_MASTER_SEX
+PRINTL あなたの名前は？（未入力で「あなた」になります）
+INPUTS
+
+SIF RESULTS == ""
+	RESULTS = %NAME:MASTER%
+
+NAME:MASTER = %RESULTS%
+PRINTFORML %NAME:MASTER%の呼び方は？（未入力で「あなた」になります）
+INPUTS
+
+SIF RESULTS == ""
+	RESULTS = %CALLNAME:MASTER%
+
+CALLNAME:MASTER = %RESULTS%
+
+PRINTFORML %CALLNAME:MASTER%の性別は？
+PRINTFORML [0] - オトコ
+PRINTFORML [1] - オンナ
+PRINTFORML [2] - オトコの娘
+PRINTFORML [3] - ふたなり
+
+$INPUT_LOOP_SEX
+INPUT
+
+IF RESULT == 0
+	PRINTW オトコで始めます
+ELSEIF RESULT == 1
+	TALENT:MASTER:処女 = 1
+	TALENT:MASTER:童貞 = 0
+	TALENT:MASTER:オトコ = 0
+	PRINTW オンナで始めます
+ELSEIF RESULT == 2
+	TALENT:MASTER:オトコの娘 = 1
+	PRINTW オトコの娘で始めます
+ELSEIF RESULT == 3
+	TALENT:MASTER:処女 = 1
+	TALENT:MASTER:ふたなり = 1
+	TALENT:MASTER:オトコ = 0
+	PRINTW ふたなりで始めます
+ELSEIF RESULT == 4
+	TALENT:MASTER:処女 = 1
+	TALENT:MASTER:具現 = 1
+	TALENT:MASTER:オトコ = 0
+	PRINTW 【具現】で始めます
+ELSE
+	GOTO INPUT_LOOP_SEX
+ENDIF
+RETURN
+
+;主人公のファーストキスの相手設定
+@SET_MASTER_FIRSTKISS
+
+PRINTL ファーストキスの相手は？
+PRINTFORML [0] - 実はまだ
+PRINTFORML [1] - 元カノ
+PRINTFORML [2] - 元カレ
+PRINTFORML [3] - 今カノ
+
+$INPUT_LOOP_FIRSTKISS
+INPUT
+
+IF RESULT == 0
+ELSEIF RESULT == 1
+	CSTR:MASTER:ファーストキスの相手 = 元カノ
+	CFLAG:MASTER:ファーストキスの相手 = 1
+						;****カノ設定改造追加ここから****
+	FLAG:元カノ存在 |= 2
+						;****カノ設定改造追加ここまで****
+ELSEIF RESULT == 2
+	CSTR:MASTER:ファーストキスの相手 = 元カレ
+	CFLAG:MASTER:ファーストキスの相手 = 1
+ELSEIF RESULT == 3
+	CSTR:MASTER:ファーストキスの相手 = 今カノ
+	CFLAG:MASTER:ファーストキスの相手 = 1
+						;****カノ設定改造追加ここから****
+	FLAG:今カノ存在 |= 2
+						;****カノ設定改造追加ここまで****
+ELSE
+	GOTO INPUT_LOOP_FIRSTKISS
+ENDIF
+RETURN
+
+;主人公の童貞、処女、アナル処女喪失設定
+@SET_MASTER_LOSTVIRGIN
+
+;童貞喪失の相手
+IF TALENT:MASTER:オトコ == 1 || TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:具現 == 1
+	PRINTL 童貞喪失の相手は？
+	PRINTFORML [0] - 実はまだ
+	PRINTFORML [1] - 元カノ
+	PRINTFORML [2] - 元カレ
+	PRINTFORML [3] - 今カノ
+
+	$SET_MASTER_LOSTVIRGIN1
+	INPUT
+
+	IF RESULT == 0
+	ELSEIF RESULT == 1
+		TALENT:MASTER:童貞 = 0
+		CSTR:MASTER:童貞喪失の相手 = 元カノ
+		EXP:MASTER:射精経験 += 1
+		EXP:MASTER:挿入経験 += 1
+		EXP:MASTER:性交経験 += 1
+						;****カノ設定改造追加ここから****
+		FLAG:元カノ存在 |= 4
+						;****カノ設定改造追加ここまで****
+	ELSEIF RESULT == 2
+		TALENT:MASTER:童貞 = 0
+		CSTR:MASTER:童貞喪失の相手 = 元カレ
+		EXP:MASTER:射精経験 += 1
+		EXP:MASTER:挿入経験 += 1
+		EXP:MASTER:性交経験 += 1
+		SIF TALENT:MASTER:オトコ == 1
+			EXP:MASTER:ＢＬ経験 += 3
+	ELSEIF RESULT == 3
+		TALENT:MASTER:童貞 = 0
+		CSTR:MASTER:童貞喪失の相手 = 今カノ
+		EXP:MASTER:射精経験 += 1
+		EXP:MASTER:挿入経験 += 1
+		EXP:MASTER:性交経験 += 1
+						;****カノ設定改造追加ここから****
+		FLAG:今カノ存在 |= 4
+						;****カノ設定改造追加ここまで****
+	ELSE
+		GOTO SET_MASTER_LOSTVIRGIN1
+	ENDIF
+ELSE
+ENDIF
+
+;処女喪失の相手
+IF TALENT:MASTER:オトコ == 0
+	PRINTL 処女喪失の相手は？
+	PRINTFORML [0] - 実はまだ
+	PRINTFORML [1] - 元カノ
+	PRINTFORML [2] - 元カレ
+	PRINTFORML [3] - 今カノ
+
+	$SET_MASTER_LOSTVIRGIN2
+	INPUT
+
+	IF RESULT == 0
+	ELSEIF RESULT == 1
+		TALENT:MASTER:処女 = 0
+		CFLAG:MASTER:初体験の相手 = 1
+		CSTR:MASTER:処女喪失の相手 = 元カノ
+		EXP:MASTER:Ｖ経験 += 5
+		EXP:MASTER:性交経験 += 1
+		SIF TALENT:MASTER:オトコ == 0
+			EXP:MASTER:レズ経験 += 3
+	ELSEIF RESULT == 2
+		TALENT:MASTER:処女 = 0
+		CFLAG:MASTER:初体験の相手 = 1
+		CSTR:MASTER:処女喪失の相手 = 元カレ
+		EXP:MASTER:Ｖ経験 += 5
+		EXP:MASTER:性交経験 += 1
+		SIF TALENT:MASTER:オトコ == 1
+			EXP:MASTER:ＢＬ経験 += 3
+	ELSEIF RESULT == 3
+		TALENT:MASTER:処女 = 0
+		CFLAG:MASTER:初体験の相手 = 1
+		CSTR:MASTER:処女喪失の相手 = 今カノ
+		EXP:MASTER:Ｖ経験 += 5
+		EXP:MASTER:性交経験 += 1
+		SIF TALENT:MASTER:オトコ == 0
+			EXP:MASTER:レズ経験 += 3
+	ELSE
+		GOTO SET_MASTER_LOSTVIRGIN2
+	ENDIF
+ELSE
+ENDIF
+
+;アナル処女喪失の相手
+PRINTL アナル処女喪失の相手は？
+PRINTFORML [0] - 実はまだ
+PRINTFORML [1] - 元カノ
+PRINTFORML [2] - 元カレ
+
+$SET_MASTER_LOSTVIRGIN3
+INPUT
+
+IF RESULT == 0
+ELSEIF RESULT == 1
+	TALENT:MASTER:アナル処女 = 0
+	CSTR:MASTER:アナル処女喪失の相手 = 元カノ
+	EXP:MASTER:Ａ経験 += 5
+	EXP:MASTER:性交経験 += 1
+	SIF TALENT:MASTER:オトコ == 0
+		EXP:MASTER:レズ経験 += 3
+ELSEIF RESULT == 2
+	TALENT:MASTER:アナル処女 = 0
+	CSTR:MASTER:アナル処女喪失の相手 = 元カレ
+	EXP:MASTER:Ａ経験 += 5
+	EXP:MASTER:性交経験 += 1
+	SIF TALENT:MASTER:オトコ == 1
+		EXP:MASTER:ＢＬ経験 += 3
+ELSEIF RESULT == 3
+	TALENT:MASTER:アナル処女 = 0
+	CSTR:MASTER:アナル処女喪失の相手 = 今カノ
+	EXP:MASTER:Ａ経験 += 5
+	EXP:MASTER:性交経験 += 1
+	SIF TALENT:MASTER:オトコ == 1
+		EXP:MASTER:ＢＬ経験 += 3
+ELSE
+	GOTO SET_MASTER_LOSTVIRGIN3
+ENDIF
+
+;ペニスサイズ決定
+IF TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1 || TALENT:MASTER:具現 == 1
+	PRINTFORML ところでアレのサイズには自信がありますか？
+	PRINTL [0] - 全くない
+	PRINTL [1] - 平均ぐらいだと思う……
+	PRINTL [2] - かなりデカいと自負している
+	
+	$SET_MASTER_PENISSIZE
+	INPUT
+
+	IF RESULT == 0
+		CFLAG:MASTER:ペニスのサイズ = 0
+		BASE:MASTER:ペニスサイズ = 9 + RAND:4
+	ELSEIF RESULT == 1
+		CFLAG:MASTER:ペニスのサイズ = 1
+		BASE:MASTER:ペニスサイズ = 13 + RAND:4
+	ELSEIF RESULT == 2
+		CFLAG:MASTER:ペニスのサイズ = 2
+		BASE:MASTER:ペニスサイズ = 17 + RAND:4
+	ELSE
+		GOTO SET_MASTER_PENISSIZE
+	ENDIF
+	PRINTL
+	PRINTL ちなみに皮はムケてますか？
+	PRINTL [0] - 真性包茎です……
+	PRINTL [1] - 普段は皮を被っているけど勃起したらムケます
+	PRINTL [2] - ズル剥けですよ？
+
+	$SET_MASTER_PENISFORM
+	INPUT
+
+	IF RESULT == 0
+		CFLAG:MASTER:包皮の状態 = 0
+	ELSEIF RESULT == 1
+		CFLAG:MASTER:包皮の状態 = 1
+	ELSEIF RESULT == 2
+		CFLAG:MASTER:包皮の状態 = 3
+	ELSE
+		GOTO SET_MASTER_PENISFORM
+	ENDIF
+ENDIF
+
+						;****カノ設定改造追加ここから****
+IF FLAG:今カノ存在 == 0
+	PRINTL
+	PRINTL 今更ですが付き合っている彼女はいますか？
+	PRINTL [0] - 実はいます
+	PRINTL [1] - 昔いました
+	SIF FLAG:元カノ存在 == 0
+		PRINTL [2] - 年齢＝彼女いない暦です
+
+	$SET_MASTER_MOTOKANO
+	INPUT
+
+	IF RESULT == 0
+		FLAG:今カノ存在 |= 1
+		CALL MOTOKANO_STANDBY
+	ELSEIF RESULT == 1
+		FLAG:元カノ存在 |= 1
+		CALL MOTOKANO_STANDBY
+	ELSEIF RESULT == 2 && FLAG:元カノ存在 == 0
+		
+	ELSE
+		GOTO SET_MASTER_MOTOKANO
+	ENDIF
+ELSE
+	CALL MOTOKANO_STANDBY
+ENDIF
+						;****カノ設定改造追加ここまで****
+
+RETURN

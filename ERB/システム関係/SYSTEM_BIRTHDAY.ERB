@@ -1,0 +1,447 @@
+﻿;========================================================
+;SYSTEM_BIRTHDAY 誕生日関連のシステム・コンフィグを扱ってます
+;				ファイル名が紛らわしいですが月日の設定もここで行なっています
+;SYSTEM_IWS.ERBの構文を参考にさせて頂きました
+;というよりもほぼ書き写しに近いです。ありがとうございました
+;========================================================;
+;フラグメモ
+;BASE:外見年齢		外見年齢
+;BASE:概算年齢		見た目年代、1以上なら外見年齢で表示する
+;			（1=BASE:7代、2=BASE:7代前半、
+;			　3=BASE:7代半ば、4=BASE:7代後半、5=BASE:7歳前後）
+;BASE:実年齢		実年齢
+;BASE:誕生月	誕生月
+;BASE:誕生日	誕生日
+;BASE:血液型	血液型(0=不明,1=A,2=B,3=O,4=AB)
+;
+;-------------------------------------------------
+;年齢と誕生日、血液型の表示
+;INFO.ERBから呼び出される関数
+;-------------------------------------------------
+@SHOW_INFO_BIRTHDAY
+PRINT 　年齢：
+						;****年齢表示修正追加ここから****
+;見た目年代が存在するなら外見年齢で表示,【恋心】があれば実年齢を表示
+IF  BASE:外見年齢 > 0 && TALENT:恋心 == 0
+	IF BASE:外見年齢 == 999
+		PRINT 不詳
+	ELSE
+		SIF BASE:概算年齢 == 6
+			PRINT 自称
+		PRINTFORM {BASE:外見年齢}
+		IF  BASE:概算年齢 == 0
+			PRINT 歳
+		ELSEIF  BASE:概算年齢 == 1
+			PRINT 代
+		ELSEIF BASE:概算年齢 == 2
+			PRINT 代前半
+		ELSEIF BASE:概算年齢 == 3
+			PRINT 代半ば
+		ELSEIF BASE:概算年齢 == 4
+			PRINT 代後半
+		ELSEIF BASE:概算年齢 == 5
+			PRINT 歳前後
+		ELSEIF BASE:概算年齢 == 6
+			PRINT 歳
+		ENDIF
+	ENDIF
+ELSEIF BASE:実年齢 == 999
+	PRINT 不詳
+ELSE
+	PRINTFORM {BASE:実年齢}歳
+ENDIF
+						;****年齢表示修正追加ここまで****
+IF BASE:誕生月 == 0
+	PRINTFORM  　？月
+ELSE 
+	PRINTFORM  　{BASE:誕生月}月
+ENDIF
+
+IF BASE:誕生日 == 0
+	PRINTFORM ？日生
+ELSE 
+	PRINTFORM {BASE:誕生日}日生
+ENDIF
+
+PRINT  　血液型：
+IF BASE:血液型 == 0
+	PRINTL 不明
+ELSEIF BASE:血液型 == 1
+	PRINTL Ａ型
+ELSEIF BASE:血液型 == 2
+	PRINTL Ｂ型
+ELSEIF BASE:血液型 == 3
+	PRINTL Ｏ型
+ELSE
+	PRINTL ＡＢ型
+ENDIF
+
+
+;-------------------------------------------------
+;誕生日かどうかのチェック
+;EVENT_NEXTDAY.ERBから呼び出される関数
+;-------------------------------------------------
+@HAPPY_BIRTHDAY
+VARSET LOCAL
+FOR LOCAL,0,CHARANUM
+	IF DAY:1 == BASE:LOCAL:誕生月
+		;3,5,8,10月は5週目がある
+		IF DAY:1 == 3 || DAY:1 == 5 || DAY:1 == 8 || DAY:1 == 10
+			IF (DAY:2 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:2 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:2 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:2 == 4 && 22 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 28) ||  (DAY:2 == 5 && 29 <= BASE:LOCAL:誕生日)
+				PRINTL *****************************************************
+				PRINTFORML %CALLNAME:LOCAL%が誕生日を迎えました
+				PRINTW *****************************************************
+				SIF !FLAG:加齢なしフラグ
+					BASE:LOCAL:実年齢 += 1
+				;誕生日イベント（口上等）をする場合はここから呼び出して下さい
+				IF LOCAL != 0
+					TARGET = LOCAL
+					CALL EVENT_BIRTHDAY
+				ENDIF
+			ENDIF
+		ELSE
+			IF (DAY:2 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:2 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:2 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:2 == 4 && 22 <= BASE:LOCAL:誕生日)
+				PRINTL *****************************************************
+				PRINTFORML %CALLNAME:LOCAL%が誕生日を迎えました
+				PRINTW *****************************************************
+				SIF !FLAG:加齢なしフラグ
+					BASE:LOCAL:実年齢 += 1
+				;誕生日イベント（口上等）をする場合はここから呼び出して下さい
+				TARGET = LOCAL
+				CALL EVENT_BIRTHDAY
+			ENDIF
+		ENDIF
+	ENDIF
+NEXT
+;-------------------------------------------------
+;年齢・誕生日・血液型の手動設定
+;SYSTEM_CONFIG.ERBから呼び出される関数
+;IWSの手動設定からいくつかの処理を省いているため、
+;既存の値があるキャラでも設定できてしまいます。
+;ご利用は計画的に。
+;-------------------------------------------------
+@MANUAL_SET_BIRTHDAY
+$INPUT_LOOP
+DRAWLINE
+
+PRINTL 年齢・誕生日・血液型を手動により設定します
+PRINTL どのキャラを設定しますか？
+REPEAT CHARANUM
+		PRINTFORML [{COUNT}] - %CALLNAME:COUNT%
+REND
+DRAWLINE
+PRINTL  [999] - やめる
+
+INPUT
+IF RESULT == 999
+		RETURN 0
+ELSEIF RESULT >= 0 && RESULT < COUNT
+	A = TARGET
+	TARGET = RESULT
+	PRINTFORML %NAME:TARGET%の年齢・誕生日・血液型設定は以下のとおりです
+	CALL SHOW_INFO_BIRTHDAY
+
+	;実年齢
+	$INPUT_LOOP_1
+	PRINTFORML %NAME:TARGET%の年齢を設定してください(10-60、不明なら0)
+	INPUT
+	IF RESULT == 0
+		BASE:実年齢 = RESULT
+		PRINTL 実年齢は不明とします。外見年齢を設定してください(10代-50代)
+		;長くなったので下の方に別関数として呼びに行く
+		CALL AGE_UNKNOWN
+	ELSEIF RESULT < 10 || RESULT > 60
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_1
+	ELSE
+		BASE:実年齢 = RESULT
+		;見た目年代処理を行なわなくする
+		;加齢フラグがONなら年を取るようになります
+		BASE:概算年齢 = 0
+	ENDIF
+
+	;誕生月
+	;入力月の格納用にMを使用します
+	M = 0
+	$INPUT_LOOP_2
+	PRINTFORML %NAME:TARGET%の生まれた月を設定してください(1-12、不明なら0) 
+	INPUT
+	IF RESULT < 0 || RESULT > 12
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_2
+	ELSEIF RESULT == 0
+		PRINTL 生まれ月は不明とします
+	ELSE
+		M = RESULT
+		BASE:誕生月 = RESULT
+	ENDIF
+
+	;誕生日
+	$INPUT_LOOP_3
+	PRINTFORML %NAME:TARGET%の生まれた日を設定してください(1-31、不明なら0)
+	INPUT
+	IF RESULT < 0
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_3
+	ELSEIF RESULT == 0
+		PRINTL 生まれた日は不明とします
+	ELSEIF RESULT > 28 && M == 2
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_3
+	ELSEIF RESULT > 30 && ( M == 4 || M == 6 || M == 9 || M == 11 )
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_3
+	ELSEIF RESULT > 31 && ( M == 1 || M == 3 || M == 5 || M == 7 || M == 8 || M == 10 || M == 12)
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_3
+	ELSE
+		BASE:誕生日 = RESULT
+	ENDIF
+
+	;血液型
+	$INPUT_LOOP_4
+	PRINTFORML %NAME:TARGET%の血液型を設定してください(0-4)
+	PRINT 　[0] 不明
+	PRINT  　[1] Ａ型
+	PRINTL  　[2] Ｂ型
+	PRINT  　　　　　　[3] Ｏ型
+	PRINTL  　[4] ＡＢ型
+	INPUT
+	IF RESULT < 0 || RESULT > 4
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_4
+	ELSE
+		BASE:血液型 = RESULT
+	ENDIF
+
+	
+	;設定の確認
+	PRINTFORML %NAME:TARGET%の年齢・誕生日・血液型設定は以下のとおりです
+	CALL SHOW_INFO_BIRTHDAY
+	PRINTL これでよろしいですか？
+	PRINTL [0] - はい
+	PRINTL [1] - 設定しなおす
+	PRINTL [2] - このキャラの設定をやめる(既存の値は０になってしまいます)
+	$INPUT_LOOP_6
+	INPUT
+	IF RESULT == 0
+		PRINTFORMW %NAME:TARGET%の年齢・誕生日・血液型を設定しました
+		TARGET = A
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 1
+		PRINTW 設定をやり直します
+		GOTO INPUT_LOOP_1
+	ELSEIF RESULT == 2
+		PRINTW このキャラの設定を中止します(既存の値は０になってしまいます)
+		BASE:実年齢 = 0
+		BASE:誕生月 = 0
+		BASE:誕生日 = 0
+		BASE:血液型 = 0
+		TARGET = A
+		GOTO INPUT_LOOP
+	ELSE
+		GOTO INPUT_LOOP_6
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;実年齢を決めない場合の外見年齢
+@AGE_UNKNOWN
+$INPUT_LOOP_7
+	PRINT   [0] 10代前半
+	PRINT   [1] 10代半ば
+	PRINTL   [2] 10代後半
+	PRINT   [3] 20代前半
+	PRINT   [4] 20代半ば
+	PRINTL   [5] 20代後半
+	PRINT   [6] 30代前半
+	PRINT   [7] 30代半ば
+	PRINTL   [8] 30代後半
+	PRINT   [9] 40代前半
+	PRINT  [10] 40代後半
+	PRINT  [11] 50代前半
+	PRINTL  [12] 50代後半
+	PRINTL  [99] 年齢不詳
+INPUT
+	IF RESULT == 99
+		BASE:外見年齢 = 0
+		BASE:概算年齢 = 1
+	ELSEIF RESULT == 0
+		BASE:外見年齢 = 10
+		BASE:概算年齢 = 2
+	ELSEIF RESULT == 1
+		BASE:外見年齢 = 10
+		BASE:概算年齢 = 3
+	ELSEIF RESULT == 2
+		BASE:外見年齢 = 10
+		BASE:概算年齢 = 4
+	ELSEIF RESULT == 3
+		BASE:外見年齢 = 20
+		BASE:概算年齢 = 2
+	ELSEIF RESULT == 4
+		BASE:外見年齢 = 20
+		BASE:概算年齢 = 3
+	ELSEIF RESULT == 5
+		BASE:外見年齢 = 20
+		BASE:概算年齢 = 4
+	ELSEIF RESULT == 6
+		BASE:外見年齢 = 30
+		BASE:概算年齢 = 2
+	ELSEIF RESULT == 7
+		BASE:外見年齢 = 30
+		BASE:概算年齢 = 3
+	ELSEIF RESULT == 8
+		BASE:外見年齢 = 30
+		BASE:概算年齢 = 4
+	ELSEIF RESULT == 9
+		BASE:外見年齢 = 20
+		BASE:概算年齢 = 2
+	ELSEIF RESULT == 10
+		BASE:外見年齢 = 20
+		BASE:概算年齢 = 4
+	ELSEIF RESULT == 11
+		BASE:外見年齢 = 50
+		BASE:概算年齢 = 2
+	ELSEIF RESULT == 12
+		BASE:外見年齢 = 50
+		BASE:概算年齢 = 4
+	ELSE
+		GOTO INPUT_LOOP_7
+	ENDIF
+;-------------------------------------------------
+;今日の日付の手動設定
+;SYSTEM_CONFIG.ERBから呼び出される関数
+;-------------------------------------------------
+@MANUAL_SET_DATE
+DRAWLINE
+PRINTL 今日の日付を手動により設定します
+
+;現在の月の設定
+$INPUT_LOOP_0
+;入力月の格納用にMを使用します
+M = 0
+PRINTL 現在は何月ですか？
+PRINTL  [999] - 戻る
+INPUT
+	IF RESULT == 999
+		RETURN 0
+	ELSEIF  RESULT <= 0 || RESULT > 12
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_0
+	ELSE
+		M = RESULT
+	ENDIF
+
+;現在の日の設定
+$INPUT_LOOP_1
+PRINTL 現在は何日ですか？
+PRINTL  [999] - 戻る
+INPUT
+	IF RESULT == 999
+		RETURN 0
+	;存在しない日付を弾く
+	;初心者丸出しの処理です……
+	ELSEIF  RESULT < 1
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_1
+	ELSEIF RESULT > 28 && M == 2
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_1
+	ELSEIF RESULT > 30 && ( M == 4 || M == 6 || M == 9 || M == 11 )
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_1
+	ELSEIF RESULT > 31 && ( M == 1 || M == 3 || M == 5 || M == 7 || M == 8 || M == 10 || M == 12)
+		PRINTL 不適切な値です。もう一度入力してください
+		GOTO INPUT_LOOP_1
+	ELSE
+		DAY:1 = M
+		DAY:2 = RESULT
+	ENDIF
+
+PRINTFORML 今日の日付は{DAY:1}月{DAY:2}日に変更されました
+
+FLAG:80 = 0
+FLAG:81 = 0
+FLAG:82 = 0
+PRINTL また、FLAG:80～FLAG:82を0に修正しました
+
+;確認
+$INPUT_LOOP_2
+PRINTL これでよろしいですか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+INPUT
+	IF RESULT == 1
+		PRINTW 設定をやり直します
+		GOTO INPUT_LOOP_0
+	ELSEIF RESULT != 0
+		GOTO INPUT_LOOP_2
+	ENDIF
+
+
+;-------------------------------------------------
+;途中導入時のCSVデータ読み込み
+;SYSTEM_CONFIG.ERBから呼び出される関数
+;SYSTEM_IWS.ERBの構文をほぼ丸ごと使わせて頂きました
+;-------------------------------------------------
+@READ_CSV_BIRTHDAY
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL CSVファイルから年齢、誕生日、血液型情報を読み込みます。
+	PRINTL 読み込むキャラの種別を選択してください。
+	PRINTL 
+	PRINTL  [0] - 未設定キャラのみ（パッチを当てた時に使ってください）
+	PRINTL  [1] - 登録キャラすべて（［高校生］や［中学生］を考慮しません）
+	PRINTL  [9] - やめる
+	INPUT
+	IF RESULT == 9
+		RETURN 0
+	ELSEIF RESULT == 0
+		REPEAT CHARANUM
+			;実年齢が0歳のキャラクター全員
+			IF BASE:COUNT:実年齢 == 0
+				BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, 7, 0)
+				BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, 8, 0)
+				BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, 9, 0)
+			ENDIF
+			;誕生月が不明なキャラクター全員
+			IF BASE:COUNT:誕生月 == 0
+				BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, 11, 0)
+				BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, 12, 0)
+				BASE:COUNT:血液型 = CSVBASE(NO:COUNT, 13, 0)
+			ENDIF
+		REND
+	ELSEIF RESULT == 1	
+		REPEAT CHARANUM
+			BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, 7, 0)
+			BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, 8, 0)
+			BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, 9, 0)
+			BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, 11, 0)
+			BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, 12, 0)
+			BASE:COUNT:血液型 = CSVBASE(NO:COUNT, 13, 0)
+		REND
+	ELSE
+			GOTO INPUT_LOOP
+	ENDIF
+PRINTW 完了しました
+;-------------------------------------------------
+;途中導入時のCSVデータ読み込み
+;SYSTEM_CONFIG.ERBから呼び出される関数
+;SYSTEM_IWS.ERBの構文をほぼ丸ごと使わせて頂きました
+;-------------------------------------------------
+@ADD_CSV_BIRTHDAY
+IF DAY:1 == BASE:LOCAL:誕生月
+	;3,5,8,10月は5週目がある
+	IF DAY:1 == 3 || DAY:1 == 5 || DAY:1 == 8 || DAY:1 == 10
+		IF (DAY:2 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:2 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:2 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:2 == 4 && 22 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 28) ||  (DAY:2 == 5 && 29 <= BASE:LOCAL:誕生日)
+			SIF !FLAG:加齢なしフラグ
+				BASE:LOCAL:実年齢 += 1
+		ENDIF
+	ELSE
+		IF (DAY:2 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:2 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:2 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:2 == 4 && 22 <= BASE:LOCAL:誕生日)
+			SIF !FLAG:加齢なしフラグ
+				BASE:LOCAL:実年齢 += 1
+		ENDIF
+	ENDIF
+ENDIF

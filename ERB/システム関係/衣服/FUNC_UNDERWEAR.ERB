@@ -1,0 +1,258 @@
+﻿;===========================================================
+;下着の処理
+;===========================================================
+@PRINT_UNDERWEAR_COLOR_TOPS
+IF CFLAG:ブラの色 == 0
+	PRINTFORM 白
+ELSEIF CFLAG:ブラの色 == 1
+	PRINTFORM 黒
+ELSEIF CFLAG:ブラの色 == 2
+	PRINTFORM ピンク
+ELSEIF CFLAG:ブラの色 == 3
+	PRINTFORM 薄緑
+ELSEIF CFLAG:ブラの色 == 4
+	PRINTFORM 水色
+ELSEIF CFLAG:ブラの色 == 5
+	PRINTFORM 赤
+ELSEIF CFLAG:ブラの色 == 6
+	PRINTFORM 紫
+ELSEIF CFLAG:ブラの色 == 7
+	PRINTFORM 橙色
+ELSEIF CFLAG:ブラの色 == 8
+	PRINTFORM 黄色
+ELSEIF CFLAG:ブラの色 == 9
+	PRINTFORM ベージュ
+ELSEIF CFLAG:ブラの色 == 10
+	PRINTFORM 灰色
+ELSEIF CFLAG:ブラの色 == 11
+	PRINTFORM シャンパンゴールド
+ELSEIF CFLAG:ブラの色 == 12
+	PRINTFORM ポリッシュシルバー
+ELSEIF CFLAG:ブラの色 == 13
+	PRINTFORM チェリーピンク
+ELSEIF CFLAG:ブラの色 == 14
+	PRINTFORM ペールブルー
+ELSEIF CFLAG:ブラの色 == 15
+	PRINTFORM パールホワイト
+ELSEIF CFLAG:ブラの色 == 16
+	PRINTFORM ライムグリーン
+ELSEIF CFLAG:ブラの色 == 17
+	PRINTFORM ターコイズブルー
+ELSEIF CFLAG:ブラの色 == 18
+	PRINTFORM ロイヤルブルー
+ELSEIF CFLAG:ブラの色 == 19
+	PRINTFORM ワインレッド
+ELSEIF CFLAG:ブラの色 == 20
+	PRINTFORM ブラックパープル
+ELSEIF CFLAG:ブラの色 == 21
+	PRINTFORM ヒョウ柄
+ELSEIF CFLAG:ブラの色 == 99 
+	PRINT
+ENDIF
+
+;===========================================================
+;下着の処理
+;===========================================================
+@PRINT_UNDERWEAR_TOPS
+
+IF CFLAG:ブラの種類 == -1
+	PRINTFORM なし
+ELSEIF CFLAG:ブラの種類 == 0
+	PRINTFORM シンプルブラ
+ELSEIF CFLAG:ブラの種類 == 1
+	PRINTFORM ハーフカップブラ
+ELSEIF CFLAG:ブラの種類 == 2
+	PRINTFORM フリルブラ
+ELSEIF CFLAG:ブラの種類 == 3
+	PRINTFORM スポーツブラ
+ELSEIF CFLAG:ブラの種類 == 4
+	PRINTFORM 刺繍入りブラ
+ELSEIF CFLAG:ブラの種類 == 5
+	PRINTFORM シルクブラ
+ELSEIF CFLAG:ブラの種類 == 6
+	PRINTFORM マイクロビキニブラ
+ELSEIF CFLAG:ブラの種類 == 7
+	PRINTFORM しましまブラ
+ELSEIF CFLAG:ブラの種類 == 8
+	PRINTFORM スパンコールブラ
+ELSEIF CFLAG:ブラの種類 == 9
+	PRINTFORM チューブトップブラ
+ELSEIF CFLAG:ブラの種類 == 10
+	PRINTFORM バンソーコー
+ELSEIF CFLAG:ブラの種類 == 11
+	PRINTFORM ニップレス
+ELSEIF CFLAG:ブラの種類 == 12
+	PRINTFORM フェザーモチーフブラ
+ELSEIF CFLAG:ブラの種類 == 13
+	PRINTFORM ワイルドレザーブラ
+ELSEIF CFLAG:ブラの種類 == 14
+	PRINTFORM さらし
+ELSEIF CFLAG:ブラの種類 == 15
+	PRINTFORM チェックプリントブラ
+ELSEIF CFLAG:ブラの種類 == 16
+	PRINTFORM オープンブラ
+ELSEIF CFLAG:ブラの種類 == 17
+	PRINTFORM シースルーレースブラ
+ELSEIF CFLAG:ブラの種類 == 18
+	PRINTFORM シルクビスチェ
+ELSEIF CFLAG:ブラの種類 == 19
+	PRINTFORM レザービスチェ
+ELSE
+	PRINTFORM ブラ
+ENDIF
+
+;===========================================================
+;下着の処理
+;===========================================================
+@PRINT_UNDERWEAR_COLOR_UNDER
+IF CFLAG:パンツの色 == 0
+	PRINTFORM 白
+ELSEIF CFLAG:パンツの色 == 1
+	PRINTFORM 黒
+ELSEIF CFLAG:パンツの色 == 2
+	PRINTFORM ピンク
+ELSEIF CFLAG:パンツの色 == 3
+	PRINTFORM 薄緑
+ELSEIF CFLAG:パンツの色 == 4
+	PRINTFORM 水色
+ELSEIF CFLAG:パンツの色 == 5
+	PRINTFORM 赤
+ELSEIF CFLAG:パンツの色 == 6
+	PRINTFORM 紫
+ELSEIF CFLAG:パンツの色 == 7
+	PRINTFORM 橙
+ELSEIF CFLAG:パンツの色 == 8
+	PRINTFORM 黄色
+ELSEIF CFLAG:パンツの色 == 9
+	PRINTFORM ベージュ
+ELSEIF CFLAG:パンツの色 == 10
+	PRINTFORM 灰色
+ELSEIF CFLAG:パンツの色 == 11
+	PRINTFORM シャンパンゴールド
+ELSEIF CFLAG:パンツの色 == 12
+	PRINTFORM ポリッシュシルバー
+ELSEIF CFLAG:パンツの色 == 13
+	PRINTFORM チェリーピンク
+ELSEIF CFLAG:パンツの色 == 14
+	PRINTFORM ペールブルー
+ELSEIF CFLAG:パンツの色 == 15
+	PRINTFORM パールホワイト
+ELSEIF CFLAG:パンツの色 == 16
+	PRINTFORM ライムグリーン
+ELSEIF CFLAG:パンツの色 == 17
+	PRINTFORM ターコイズブルー
+ELSEIF CFLAG:パンツの色 == 18
+	PRINTFORM ロイヤルブルー
+ELSEIF CFLAG:パンツの色 == 19
+	PRINTFORM ワインレッド
+ELSEIF CFLAG:パンツの色 == 20
+	PRINTFORM ブラックパープル
+ELSEIF CFLAG:パンツの色 == 21
+	PRINTFORM ヒョウ柄
+ELSEIF CFLAG:パンツの色 == 99 
+	PRINT
+ENDIF
+
+;===========================================================
+;下着の処理
+;===========================================================
+@PRINT_UNDERWEAR_UNDER
+
+IF CFLAG:パンツの種類 == -1
+	PRINTFORM なし
+ELSEIF CFLAG:パンツの種類 == 0
+	PRINTFORM シンプルショーツ
+ELSEIF CFLAG:パンツの種類 == 1
+	PRINTFORM ハイレグショーツ
+ELSEIF CFLAG:パンツの種類 == 2
+	PRINTFORM フリルショーツ
+ELSEIF CFLAG:パンツの種類 == 3
+	PRINTFORM ローライズ＆ローレグ
+ELSEIF CFLAG:パンツの種類 == 4
+	PRINTFORM 刺繍入りショーツ
+ELSEIF CFLAG:パンツの種類 == 5
+	PRINTFORM シルクショーツ
+ELSEIF CFLAG:パンツの種類 == 6
+	PRINTFORM マイクロビキニショーツ
+ELSEIF CFLAG:パンツの種類 == 7
+	PRINTFORM しまぱん
+ELSEIF CFLAG:パンツの種類 == 8
+	PRINTFORM スパンコールショーツ
+ELSEIF CFLAG:パンツの種類 == 9
+	PRINTFORM プリントぱんつ
+ELSEIF CFLAG:パンツの種類 == 10
+	PRINTFORM バンソーコー
+ELSEIF CFLAG:パンツの種類 == 11
+	PRINTFORM ドロワーズ
+ELSEIF CFLAG:パンツの種類 == 12
+	PRINTFORM フェザーモチーフショーツ
+ELSEIF CFLAG:パンツの種類 == 13
+	PRINTFORM ワイルドレザーショーツ
+ELSEIF CFLAG:パンツの種類 == 14
+	PRINTFORM ふんどし
+ELSEIF CFLAG:パンツの種類 == 15
+	PRINTFORM チェックプリントショーツ
+ELSEIF CFLAG:パンツの種類 == 16
+	PRINTFORM オープンショーツ
+ELSEIF CFLAG:パンツの種類 == 17
+	PRINTFORM シースルーレースショーツ
+ELSEIF CFLAG:パンツの種類 == 18
+	PRINTFORM トランクス
+ELSEIF CFLAG:パンツの種類 == 19
+	PRINTFORM ボクサーパンツ
+ELSEIF CFLAG:パンツの種類 == 20
+	PRINTFORM ブーメランパンツ
+ELSE
+	PRINTFORM ショーツ
+ENDIF
+
+;===========================================================
+;下着などの表示の処理
+;===========================================================
+
+;===========================================================
+;下着などの表示の処理
+;===========================================================
+@SHOW_INFO_CASUALWEAR
+
+PRINTFORM  現在の衣装：
+	CALL PRINT_CLOTHTYPE_MAIN2
+PRINTFORML 　　　
+
+IF CFLAG:予備の衣装 != 0
+	PRINTFORM  予備の衣装：
+		CALL PRINT_CLOTHTYPE_CASUALWEAR
+	PRINTFORML 
+ENDIF
+
+IF !TALENT:絶壁 && !TALENT:未熟 && !TALENT:オトコ && (!TALENT:幼稚 || !TALENT:貧乳)
+	PRINTFORM  ブラ：
+		CALL PRINT_UNDERWEAR_COLOR_TOPS
+	SIF CFLAG:ブラの種類 != 12 &&  CFLAG:ブラの種類 != 11 && CFLAG:ブラの種類 != 14 && CFLAG:ブラの種類 != 10 && CFLAG:ブラの種類 != -1
+		PRINTFORM の
+			CALL PRINT_UNDERWEAR_TOPS
+		PRINTFORML 　　　
+ENDIF
+
+IF !TALENT:オトコ || (TALENT:オトコ && TALENT:オトコの娘)
+	PRINTFORM  ショーツ
+ELSE
+	PRINTFORM  パンツ
+ENDIF
+
+PRINTFORM ：
+	CALL PRINT_UNDERWEAR_COLOR_UNDER
+SIF CFLAG:パンツの色 != 99 && CFLAG:ブラの種類 != -1
+PRINTFORM の
+	CALL PRINT_UNDERWEAR_UNDER
+PRINTL
+
+PRINTFORM  靴下：
+	CALL PRINT_SHOESTYPE_MAIN
+PRINTFORM 　　　
+
+PRINTFORM 靴：
+	CALL PRINT_SHOESTYPE_MAIN2
+PRINTFORM 
+
+PRINTL

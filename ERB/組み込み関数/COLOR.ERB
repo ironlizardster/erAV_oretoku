@@ -1,0 +1,88 @@
+﻿;-------------------------------------------------
+;色セット関数@GET_COLOR_CODE
+;-------------------------------------------------
+@GET_COLOR_CODE, ARGS
+#FUNCTION
+ ;LOCALに色を代入
+SELECTCASE ARGS
+	CASE "濃赤"
+		RESULT:1 = 0x701000
+		RETURNF 0xF06050
+	CASE "紺"
+		RESULT:1 = 0x000000
+		RETURNF 0x6666FF
+	CASE "黄"
+		RESULT:1 = 0x505020
+		RETURNF 0xC0B050
+	CASE "桃"
+		RESULT:1 = 0x300020
+		RETURNF 0xFFCCFF
+	CASE "灰"
+		RESULT:1 = 0x333333
+		RETURNF 0x666666
+	CASE "赤"
+		RESULT:1 = 0x502020
+		RETURNF 0xC07070
+	CASE "薄赤"
+		RESULT:1 = 0x803040
+		RETURNF 0xF07090
+	CASE "青"
+		RESULT:1 = 0x202050
+		RETURNF 0x7070C0
+	CASE "緑"
+		RESULT:1 = 0x205020
+		RETURNF 0x70C070
+	CASE "紫"
+		RESULT:1 = 0x502050
+		RETURNF 0xC070C0
+	CASE "黄色"
+		RESULT:1 = 0x505020
+		RETURNF 0xC0C070
+	CASE "青緑"
+		RESULT:1 = 0x205050
+		RETURNF 0x70C0C0
+	CASE "白"
+		RESULT:1 = 0x202020
+		RETURNF 0xC0C0C0
+	CASE "オレンジ"
+		RESULT:1 = 0x504010
+		RETURNF 0xFF8000
+	CASE "水色"
+		RESULT:1 = 0x203030
+		RETURNF 0x5090FF
+	CASE "EXTRA"
+		RESULT:1 = 0x505020
+		RETURNF 0xFFFFDD
+	CASE "EXTRA2"
+		RESULT:1 = 0x505020
+		RETURNF 0xFFFFDD
+	 ;白
+	 CASEELSE
+		RESULT:1 = 0x202020
+		RETURNF 0xCCFFCC
+ENDSELECT
+
+;-------------------------------------------------
+;ハートマーク関数@HEART
+;	引数0：ハートの数（省略すると1つ）
+;	引数1：使用するフォント名（省略するとVerdana）
+;中抜きのハートマークを表示します
+;-------------------------------------------------
+@HEART(ARG = 1, ARGS)
+LOCALS = %GETFONT()%
+SETFONT "Times New Roman"
+PRINTFORM %UNICODE(0x2665)*ARG%
+SETFONT LOCALS
+
+;ハート文字を返す
+;フォントは考慮していない
+@GET_HEART()
+#FUNCTIONS
+RETURNF UNICODE(0x2665)
+
+;ハート文字で挟む
+@CLIP_HEART(文字列)
+#FUNCTIONS
+#DIMS 文字列
+文字列 = %GET_HEART() + 文字列 + GET_HEART()%
+RETURNF 文字列

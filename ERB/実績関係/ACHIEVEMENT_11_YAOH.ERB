@@ -1,0 +1,29 @@
+﻿;===========================================================
+;実績・夜王
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_11
+RESULTS = 夜王
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_11
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:11 == 0 && DIFFICULTY_CHECK() && EXP:MASTER:貢献度 >= 500
+	GLOBAL:11 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:11
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_11
+; 解説文
+PRINTFORML 数多くの要人の接待をこなした%CALLNAME:MASTER%にぴったりの実績ですね
+PRINTFORML そんな%CALLNAME:MASTER%はいつしか裏社会で『夜王』とまで呼ばれるようになっているとか……
+PRINTFORMW これからも定期的に要人の接待を欠かさずにいるといいことがあるかもしれません
+; ボーナスなどの処理はここ以降に記述する
+IF FLAG:特殊営業解禁 == 0
+	PRINTFORML そんな%CALLNAME:MASTER%の運営する娼館に、特殊営業が追加されました
+	PRINTFORMW ボーナスとして特殊営業【乱交パーティー】が解禁され、常時特殊営業が行えるようになります
+	FLAG:特殊営業解禁 = 1
+ENDIF

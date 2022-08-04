@@ -1,0 +1,648 @@
+﻿;========================================================
+;IWS（このアイドルはわしが育てた）システム関連
+;言うまでもなく某erastaのパクリ
+;========================================================
+;スリーサイズを表示したり、おっぱいを大きくしたりします。
+;魔改造や妊娠時の処理もここで。
+
+;使用フラグ
+;FLAG:ＩＷＳなし IWSシステム強度
+;CFLAG:カップサイズ カップサイズ
+;CFLAG:妊娠時の増加体重 妊娠時の増加体重
+;CFLAG:妊娠時の増加バストIWS除く 妊娠時の増加バスト（IWSによるボーナス除く）
+;CFLAG:妊娠時の増加ウェスト 妊娠時の増加ウェスト
+;CFLAG:妊娠時の増加ヒップ 妊娠時の増加ヒップ
+
+;自分用覚え書き
+;その他のファイルで改造したところ
+;INFO.ERB スリーサイズ表示@SHOW_INFO_BODYSIZEへリンク
+;SYSTEM_CONFIG.ERB コンフィグにIWS設定をプラス
+;SYSTEM_SOURCE.ERB 絶頂時の成長処理@CHECK_IWSへリンク
+;SHOP_LABO.ERB 巨乳化@MODIFY_BUSTUP_IWS・貧乳化@MODIFY_BUSTDOWN_IWSへリンク
+;EVENT_PREGNANCY.ERB 妊娠発覚時の処理に分岐を作った（複数箇所）
+;EVENT_NEXTDAY.ERB 妊娠時の成長処理@GROW_3_SIZE_IWSへリンク
+
+;-------------------------------------------------
+;スリーサイズの表示
+;-------------------------------------------------
+@SHOW_INFO_BODYSIZE
+IF BASE:身長 == 0 
+	PRINTFORM 身長：不明
+ELSE 
+	PRINTFORM 身長：{BASE:身長}cm
+ENDIF
+
+IF BASE:体重 == 0 
+	PRINTFORM   体重：不明
+ELSE 
+	PRINTFORM   体重：{BASE:体重}kg
+ENDIF
+
+IF BASE:バスト == 0 
+	PRINTFORM   Ｂ：不明
+ELSEIF FLAG:ＩＷＳなし == 0
+	PRINTFORM   Ｂ：{BASE:バスト}cm
+ELSE
+	PRINTFORM   Ｂ：{BASE:バスト}.
+		SIF BASE:[[BASE:バスト（小数）]] < 10
+		PRINT 0
+	PRINTFORM {BASE:[[BASE:バスト（小数）]]}cm
+ENDIF
+PRINT (
+CALL SHOW_CUPSIZE
+PRINT )
+
+IF BASE:ウェスト == 0 
+	PRINTFORM   Ｗ：不明
+ELSE 
+	PRINTFORM   Ｗ：{BASE:ウェスト}cm
+ENDIF
+
+IF BASE:ヒップ == 0 
+	PRINTFORM   Ｈ：不明
+ELSE 
+	PRINTFORM   Ｈ：{BASE:ヒップ}cm
+ENDIF
+PRINTL
+IF TALENT:ふたなり == 1 || TALENT:オトコ == 1
+	PRINTFORM 　
+	PRINTFORM 勃起時のペニスサイズ：{BASE:ペニスサイズ}cm（
+	IF CFLAG:包皮の状態 == 3
+		PRINTFORM ズル剥け
+	ELSEIF CFLAG:包皮の状態 == 2
+		PRINTFORM 仮性包茎
+	ELSEIF CFLAG:包皮の状態 == 1
+		PRINTFORM 仮性包茎
+	ELSE
+		PRINTFORM 真性包茎
+	ENDIF
+	PRINTFORML ）
+ENDIF
+
+;-------------------------------------------------
+;カップサイズ測定
+;-------------------------------------------------
+@CHECK_CUPSIZE
+;Sはカップサイズ用変数、Xはバスト補正値、Yはウェスト補正値、Zは身長補正値
+X = ((((BASE:バスト * 100) - (BASE:身長 * 54)) * 100) / 250)
+Y = ((((BASE:身長 * 38) - (BASE:ウェスト * 100)) * 100) / 342)
+;妊娠時は妊娠発覚時のウェストから計算
+SIF TALENT:妊娠
+	Y = ((((BASE:身長 * 38) - ((BASE:ウェスト - (CFLAG:妊娠時の増加ウェスト / 100)) * 100)) * 100) / 342)
+Z = ((((BASE:身長 * 100) - 15880) * 100) / 2300)
+S = X + Y + Z
+CFLAG:カップサイズ = 0
+	$CHECK_LOOP
+	IF S > -450
+		CFLAG:カップサイズ += 1
+		S -= 100
+		GOTO CHECK_LOOP
+	ELSE
+		X = 0
+		Y = 0
+		Z = 0
+		S = 0
+	ENDIF
+
+
+;-------------------------------------------------
+;カップサイズ表示
+;-------------------------------------------------
+@SHOW_CUPSIZE
+CALL CHECK_CUPSIZE
+	IF CFLAG:カップサイズ == 0
+		PRINT 測定不能
+	ELSEIF CFLAG:カップサイズ == 1
+		PRINT ＡＡ
+	ELSEIF CFLAG:カップサイズ == 2
+		PRINT Ａ
+	ELSEIF CFLAG:カップサイズ == 3
+		PRINT Ｂ
+	ELSEIF CFLAG:カップサイズ == 4
+		PRINT Ｃ
+	ELSEIF CFLAG:カップサイズ == 5
+		PRINT Ｄ
+	ELSEIF CFLAG:カップサイズ == 6
+		PRINT Ｅ
+	ELSEIF CFLAG:カップサイズ == 7
+		PRINT Ｆ
+	ELSEIF CFLAG:カップサイズ == 8
+		PRINT Ｇ
+	ELSEIF CFLAG:カップサイズ == 9
+		PRINT Ｈ
+	ELSEIF CFLAG:カップサイズ == 10
+		PRINT Ｉ
+	ELSEIF CFLAG:カップサイズ == 11
+		PRINT Ｊ
+	ELSEIF CFLAG:カップサイズ == 12
+		PRINT Ｋ
+	ELSEIF CFLAG:カップサイズ == 13
+		PRINT Ｌ
+	ELSEIF CFLAG:カップサイズ == 14
+		PRINT Ｍ
+	ELSEIF CFLAG:カップサイズ == 15
+		PRINT Ｎ
+	ELSEIF CFLAG:カップサイズ == 16
+		PRINT Ｏ
+	ELSEIF CFLAG:カップサイズ == 17
+		PRINT Ｐ
+	ELSEIF CFLAG:カップサイズ == 18
+		PRINT Ｑ
+	ELSEIF CFLAG:カップサイズ == 19
+		PRINT Ｒ
+	ELSEIF CFLAG:カップサイズ == 20
+		PRINT Ｓ
+	ELSEIF CFLAG:カップサイズ == 21
+		PRINT Ｔ
+	ELSEIF CFLAG:カップサイズ == 22
+		PRINT ∪
+	ELSEIF CFLAG:カップサイズ == 23
+		PRINT Ｖ
+	ELSEIF CFLAG:カップサイズ == 24
+		PRINT Ｗ
+	ELSEIF CFLAG:カップサイズ == 25
+		PRINT Ｘ
+	ELSEIF CFLAG:カップサイズ == 26
+		PRINT Ｙ
+	ELSEIF CFLAG:カップサイズ == 27
+		PRINT Ｚ
+	ELSE
+		PRINT 測定不能
+	ENDIF
+
+;-------------------------------------------------
+;絶頂時の成長処理
+;-------------------------------------------------
+@CHECK_IWS
+;バスト成長計算
+U = 0
+IF B
+	U = ((B + ABL:Ｂ感覚) * FLAG:ＩＷＳなし)
+		;絶壁持ちは成長しない。それが自然の摂理。
+		SIF TALENT:絶壁
+			U = 0
+	BASE:[[BASE:バスト（小数）]] += U
+;バスト成長処理
+	IF BASE:[[BASE:バスト（小数）]] >= 100
+			BASE:バスト += BASE:[[BASE:バスト（小数）]] /100
+			BASE:[[BASE:バスト（小数）]] = BASE:[[BASE:バスト（小数）]] % 100
+	ENDIF
+;バスト成長表示
+	DRAWLINE
+	IF U % 100 < 10
+		PRINTFORML %CALLNAME:TARGET%のバストは{U / 100}.0{U % 100}cm成長した。
+	ELSE
+		PRINTFORML %CALLNAME:TARGET%のバストは{U / 100}.{U % 100}cm成長した。
+	ENDIF
+	CALL BUST_RANKUP
+ENDIF
+
+;-------------------------------------------------
+;部位のランク変化処理
+;-------------------------------------------------
+@BUST_RANKUP
+CALL CHECK_CUPSIZE
+	IF CFLAG:カップサイズ > 1 && TALENT:絶壁
+		TALENT:絶壁 = 0
+		TALENT:貧乳 = 1
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【絶壁】から【貧乳】になった。
+	ELSEIF CFLAG:カップサイズ > 3 && TALENT:貧乳
+		TALENT:貧乳 = 0
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【貧乳】では無くなった。
+	ELSEIF CFLAG:カップサイズ > 5 && TALENT:巨乳 == 0 && TALENT:爆乳 == 0 && TALENT:超乳 == 0 && TALENT:魔乳 == 0 && TALENT:神乳 == 0
+		TALENT:巨乳 = 1
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【巨乳】になった。
+	ELSEIF CFLAG:カップサイズ > 7  && TALENT:巨乳
+		TALENT:巨乳 = 0
+		TALENT:爆乳 = 1
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【巨乳】から【爆乳】になった。
+	ELSEIF CFLAG:カップサイズ > 10 && TALENT:爆乳 && TALENT:超乳 == 0 && TALENT:魔乳 == 0 && TALENT:神乳 == 0
+		TALENT:超乳 = 1
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【爆乳】から【超乳】になった。
+	ELSEIF CFLAG:カップサイズ > 14 && TALENT:超乳
+		TALENT:超乳 = 0
+		TALENT:魔乳 = 1
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【超乳】から【魔乳】になった。
+	ELSEIF CFLAG:カップサイズ > 19 && TALENT:魔乳
+		TALENT:魔乳 = 0
+		TALENT:神乳 = 1
+		PRINTL ＊バストランクアップ！＊
+		PRINTFORMW %CALLNAME:TARGET%は【魔乳】から【神乳】になった。
+	ENDIF
+	
+@BUST_RANKDOWN
+CALL CHECK_CUPSIZE
+	IF CFLAG:カップサイズ <= 19 && TALENT:神乳
+		TALENT:魔乳 = 1
+		TALENT:神乳 = 0
+		PRINTL ＊バストランクダウン！＊＊
+		PRINTFORMW %CALLNAME:TARGET%は【神乳】から【魔乳】になった。
+	ELSEIF CFLAG:カップサイズ <= 14 && TALENT:魔乳
+		TALENT:超乳 = 1
+		TALENT:魔乳 = 0
+		PRINTL ＊バストランクダウン！＊
+		PRINTFORMW %CALLNAME:TARGET%は【魔乳】から【超乳】になった。
+	ELSEIF CFLAG:カップサイズ <= 10 && TALENT:超乳
+		TALENT:爆乳 = 1
+		TALENT:超乳 = 0
+		PRINTL ＊バストランクダウン！＊
+		PRINTFORMW %CALLNAME:TARGET%は【超乳】から【爆乳】になった。
+	ELSEIF CFLAG:カップサイズ <= 7  && TALENT:爆乳
+		TALENT:巨乳 = 1
+		TALENT:爆乳 = 0
+		PRINTL ＊バストランクダウン！＊
+		PRINTFORMW %CALLNAME:TARGET%は【爆乳】から【巨乳】になった。
+	ELSEIF CFLAG:カップサイズ <= 5 && TALENT:巨乳
+		TALENT:巨乳 = 0
+		PRINTL ＊バストランクダウン！＊
+		PRINTFORMW %CALLNAME:TARGET%は【巨乳】では無くなった。
+	ELSEIF CFLAG:カップサイズ <= 3 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0
+		TALENT:貧乳 = 1
+		PRINTL ＊バストランクダウン！＊
+		PRINTFORMW %CALLNAME:TARGET%は【貧乳】になった。
+	ELSEIF CFLAG:カップサイズ <= 1 && TALENT:貧乳
+		TALENT:絶壁 = 1
+		TALENT:貧乳 = 0
+		PRINTL ＊バストランクダウン！＊
+		PRINTFORMW %CALLNAME:TARGET%は【貧乳】から【絶壁】になった。
+	ENDIF
+
+;-------------------------------------------------
+;魔改造時のバストカップ変更処理
+;-------------------------------------------------
+;完全に別仕様。カップサイズを１個引き上げなので元より効果少。ただし無制限。
+
+@MODIFY_BUSTUP_IWS
+;変更対象を一時TARGETに。動作的には不安だが･･･
+A = TARGET
+TARGET = RESULT
+
+;価格決定。育成システムがあるので値段は高め。
+CALL CHECK_CUPSIZE
+C = (20000 + (CFLAG:カップサイズ * 3000))
+
+$INPUT_LOOP
+
+PRINTFORML %NAME:TARGET%を巨乳化させるには、{C}ポイント必要です
+PRINTFORML %NAME:TARGET%を巨乳化しますか？
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	TARGET = A
+	RETURN 0
+ELSEIF RESULT == 0
+	IF MONEY < C
+		PRINTW お金が足りません
+		TARGET = A
+		RETURN 0
+	ENDIF
+	;カップサイズが１個上がるまで1cmずつ成長させる。
+	P = CFLAG:カップサイズ
+	$LOOP_BUSTUP
+	IF CFLAG:カップサイズ == P
+		BASE:バスト += 1
+		CALL CHECK_CUPSIZE
+		GOTO LOOP_BUSTUP
+	ELSE
+		IF BASE:[[BASE:バスト（小数）]] < 10 
+			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.0{BASE:[[BASE:バスト（小数）]]}cm(
+		ELSE
+			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.{BASE:[[BASE:バスト（小数）]]}cm(
+		ENDIF
+		CALL SHOW_CUPSIZE
+		PRINTFORMW カップ)になった》
+		CALL BUST_RANKUP
+		P = 0
+		MONEY -= C
+		TARGET = A
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+@MODIFY_BUSTDOWN_IWS
+;変更対象を一時TARGETに。動作的には不安だが･･･
+A = TARGET
+TARGET = RESULT
+CALL CHECK_CUPSIZE
+
+;無いモノは減らせない
+IF CFLAG:カップサイズ <= 1
+	PRINTFORMW %NAME:TARGET%のバストはこれ以上小さくなりません。
+	TARGET = A
+	RETURN 0
+ENDIF
+
+;価格決定。基本的には安い。
+C = 10000
+	;貧乳は希少価値。
+	SIF CFLAG:カップサイズ <= 4 
+		C = 160000 - (CFLAG:カップサイズ * 30000)
+
+$INPUT_LOOP
+
+PRINTFORML %NAME:TARGET%を貧乳化させるには、{C}ポイント必要です
+PRINTFORML %NAME:TARGET%を貧乳化しますか？
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	TARGET = A
+	RETURN 0
+ELSEIF RESULT == 0
+	IF MONEY < C
+		PRINTW お金が足りません
+		TARGET = A
+		RETURN 0
+	ENDIF
+	;カップサイズが１個下がるまで1cmずつ縮ませる。
+	P = CFLAG:カップサイズ
+	$LOOP_BUSTDOWN
+	IF CFLAG:カップサイズ == P
+		BASE:バスト -= 1
+		CALL CHECK_CUPSIZE
+		GOTO LOOP_BUSTDOWN
+	ELSE
+		IF BASE:[[BASE:バスト（小数）]] < 10 
+			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.0{BASE:[[BASE:バスト（小数）]]}cm(
+		ELSE
+			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.{BASE:[[BASE:バスト（小数）]]}cm(
+		ENDIF
+		CALL SHOW_CUPSIZE
+		PRINTFORMW カップ)になった》
+		CALL BUST_RANKDOWN
+		P = 0
+		MONEY -= C
+		TARGET = A
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+;-------------------------------------------------
+;妊娠・出産時のスリーサイズ変更処理
+;-------------------------------------------------
+@GROW_3_SIZE_IWS
+;毎日ちょっとずつ成長する。
+
+A = TARGET
+TARGET = COUNT
+
+;体重増加
+IF TALENT:妊娠
+	U = 10 + RAND:5
+	BASE:[[BASE:体重（小数）]] += U
+	CFLAG:妊娠時の増加体重 += U
+	IF BASE:[[BASE:体重（小数）]] >= 100
+		BASE:体重 += BASE:[[BASE:体重（小数）]] / 100
+		BASE:[[BASE:体重（小数）]] = BASE:[[BASE:体重（小数）]] % 100
+	ENDIF
+ENDIF
+
+;バスト成長
+U = 15 + RAND:5
+;IWSがオンの場合成長値にボーナスが付く。
+;ボーナス分は出産育児後にも維持される。
+BASE:[[BASE:バスト（小数）]] += U + (FLAG:ＩＷＳなし * (RAND:5 + 5))
+CFLAG:妊娠時の増加バストIWS除く += U
+IF BASE:[[BASE:バスト（小数）]] >= 100
+		BASE:バスト += BASE:[[BASE:バスト（小数）]] /100
+		BASE:[[BASE:バスト（小数）]] = BASE:[[BASE:バスト（小数）]] % 100
+ENDIF
+CALL BUST_RANKUP
+
+;ウェスト成長
+IF TALENT:妊娠
+	U = 70 + RAND:20
+	BASE:[[BASE:ウェスト（小数）]] += U
+	CFLAG:妊娠時の増加ウェスト += U
+	IF BASE:[[BASE:ウェスト（小数）]] >= 100
+		BASE:ウェスト += BASE:[[BASE:ウェスト（小数）]] /100
+		BASE:[[BASE:ウェスト（小数）]] = BASE:[[BASE:ウェスト（小数）]] % 100
+	ENDIF
+ENDIF
+
+;ヒップ成長
+IF TALENT:妊娠
+	U = 10 + RAND:5
+	BASE:[[BASE:ヒップ（小数）]] += U
+	CFLAG:妊娠時の増加ヒップ += U
+	IF BASE:[[BASE:ヒップ（小数）]] >= 100
+		BASE:ヒップ += BASE:[[BASE:ヒップ（小数）]] /100
+		BASE:[[BASE:ヒップ（小数）]] = BASE:[[BASE:ヒップ（小数）]] % 100
+	ENDIF
+ENDIF
+
+TARGET = A
+
+@REVERSE_3_SIZE_IWS
+;引き下げは一気に行う
+
+A= TARGET
+TARGET = C
+
+;体重減少
+BASE:[[BASE:体重（小数）]] -= CFLAG:妊娠時の増加体重
+IF BASE:[[BASE:体重（小数）]] < 0
+	BASE:体重 += BASE:[[BASE:体重（小数）]] / 100
+	BASE:[[BASE:体重（小数）]] = 0 - (BASE:[[BASE:体重（小数）]] % 100)
+ENDIF
+CFLAG:妊娠時の増加体重 = 0
+
+;バスト縮小
+IF TALENT:育児中 == 1
+ELSE
+	BASE:[[BASE:バスト（小数）]] -= CFLAG:妊娠時の増加バストIWS除く
+	IF BASE:[[BASE:バスト（小数）]] < 0
+		BASE:バスト += BASE:[[BASE:バスト（小数）]] / 100
+		BASE:[[BASE:バスト（小数）]] = 0 - (BASE:[[BASE:バスト（小数）]] % 100)
+	ENDIF
+	CFLAG:妊娠時の増加バストIWS除く = 0
+	;複数ランクダウンが有り得る
+	CALL BUST_RANKDOWN
+	CALL BUST_RANKDOWN
+
+ENDIF
+;ウェスト縮小
+BASE:[[BASE:ウェスト（小数）]] -= CFLAG:妊娠時の増加ウェスト
+IF BASE:[[BASE:ウェスト（小数）]] < 0
+	BASE:ウェスト += BASE:[[BASE:ウェスト（小数）]] / 100
+	BASE:[[BASE:ウェスト（小数）]] = 0 - (BASE:[[BASE:ウェスト（小数）]] % 100)
+ENDIF
+CFLAG:妊娠時の増加ウェスト = 0
+
+;ヒップ縮小
+BASE:[[BASE:ヒップ（小数）]] -= CFLAG:妊娠時の増加ヒップ
+IF BASE:[[BASE:ヒップ（小数）]] < 0
+	BASE:ヒップ += BASE:[[BASE:ヒップ（小数）]] / 100
+	BASE:[[BASE:ヒップ（小数）]] = 0 - (BASE:[[BASE:ヒップ（小数）]] % 100)
+ENDIF
+CFLAG:妊娠時の増加ヒップ = 0
+
+TARGET = A
+
+;-------------------------------------------------
+;スリーサイズの手動設定
+;-------------------------------------------------
+@MANUAL_SET_3SIZE
+$INPUT_LOOP
+DRAWLINE
+PRINTL スリーサイズを手動により設定します
+PRINTL 設定できるのはスリーサイズ未設定のキャラに限ります
+PRINTL どのキャラを設定しますか？
+REPEAT CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF BASE:COUNT:身長 == 0
+		PRINTFORML [{COUNT}] - %CALLNAME:COUNT%
+REND
+DRAWLINE
+PRINTL  [999] - やめる
+
+INPUT
+IF RESULT == 999
+		RETURN 0
+ELSEIF BASE:RESULT:身長 == 0
+
+	A = TARGET
+	TARGET = RESULT
+
+	;身長
+	$INPUT_LOOP_1
+	PRINTFORML %NAME:TARGET%の身長を設定してください(140-180)
+	INPUT
+	IF RESULT < 140 || RESULT > 180
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_1
+	ELSE
+		B = RESULT
+		BASE:身長 = RESULT
+	ENDIF
+
+	;体重
+	$INPUT_LOOP_2
+	PRINTFORML %NAME:TARGET%の体重を設定してください({B * 25 / 100}-{B * 30 / 100}) 
+	INPUT
+	IF RESULT < B * 25 / 100 || RESULT > B * 30 / 100
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_2
+	ELSE
+		BASE:体重 = RESULT
+	ENDIF
+
+	;バスト
+	$INPUT_LOOP_3
+	PRINTFORML %NAME:TARGET%のバストを設定してください({B * 45 / 100}-{B * 55 / 100})
+	INPUT
+	IF RESULT < B * 45 / 100 || RESULT > (B * 55 / 100)
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_3
+	ELSE
+		C = RESULT
+		BASE:バスト = RESULT
+	ENDIF
+
+	;ウェスト
+	$INPUT_LOOP_4
+	PRINTFORML %NAME:TARGET%のウェストを設定してください({B * 35 / 100}-{B * 40 / 100})
+	INPUT
+	IF RESULT < B * 35 / 100 || RESULT > B * 40 / 100
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_4
+	ELSE
+		BASE:ウェスト = RESULT
+	ENDIF
+
+	;ヒップ
+	$INPUT_LOOP_5
+	PRINTFORML %NAME:TARGET%のヒップを設定してください({C * 95 / 100}-{C * 105 / 100})
+	INPUT
+	IF RESULT < C * 95 / 100 || RESULT > C * 105 / 100
+		PRINTL 不適切な値です。再設定してください
+		GOTO INPUT_LOOP_5
+	ELSE
+		BASE:ヒップ = RESULT
+	ENDIF
+	
+	;設定の確認
+	PRINTFORML %NAME:TARGET%のスリーサイズ設定は以下のとおりです
+	CALL SHOW_INFO_BODYSIZE
+	PRINTL これでよろしいですか？
+	PRINTL [0] - はい
+	PRINTL [1] - 設定しなおす
+	PRINTL [2] - このキャラの設定をやめる
+	$INPUT_LOOP_6
+	INPUT
+	IF RESULT == 0
+		PRINTFORMW %NAME:TARGET%のスリーサイズを設定しました
+		TARGET = A
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 1
+		PRINTW 設定をやり直します
+		GOTO INPUT_LOOP_1
+	ELSEIF RESULT == 2
+		PRINTW このキャラの設定を中止します
+		BASE:身長 = 0
+		BASE:体重 = 0
+		BASE:バスト = 0
+		BASE:ウェスト = 0
+		BASE:ヒップ = 0
+		TARGET = A
+		GOTO INPUT_LOOP
+	ELSE
+		GOTO INPUT_LOOP_6
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;-------------------------------------------------
+;途中導入時のCSVデータ読み込み
+;-------------------------------------------------
+@READ_CSV_IWS
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL CSVファイルからスリーサイズ情報を読み込みます。
+	PRINTL 読み込むキャラの種別を選択してください。
+	PRINTL 
+	PRINTL  [0] - 未設定キャラのみ（パッチを当てた時に使ってください）
+	PRINTL  [1] - 登録キャラすべて（全員のサイズがリセットされます！）
+	PRINTL  [9] - やめる
+	INPUT
+	IF RESULT == 9
+		RETURN 0
+	ELSEIF RESULT == 0
+			REPEAT CHARANUM
+			IF BASE:COUNT:身長 == 0
+				BASE:COUNT:身長 = CSVBASE(NO:COUNT, 20, 0)
+				BASE:COUNT:体重 = CSVBASE(NO:COUNT, 21, 0)
+				BASE:COUNT:バスト = CSVBASE(NO:COUNT, 22, 0)
+				BASE:COUNT:ウェスト = CSVBASE(NO:COUNT, 23, 0)
+				BASE:COUNT:ヒップ = CSVBASE(NO:COUNT, 24, 0)
+			ENDIF
+			REND
+	ELSEIF RESULT == 1	
+		REPEAT CHARANUM
+			BASE:COUNT:身長 = CSVBASE(NO:COUNT, 20, 0)
+			BASE:COUNT:体重 = CSVBASE(NO:COUNT, 21, 0)
+			BASE:COUNT:バスト = CSVBASE(NO:COUNT, 22, 0)
+			BASE:COUNT:ウェスト = CSVBASE(NO:COUNT, 23, 0)
+			BASE:COUNT:ヒップ = CSVBASE(NO:COUNT, 24, 0)
+		REND
+	ELSE
+			GOTO INPUT_LOOP
+	ENDIF
+PRINTW 完了しました
+

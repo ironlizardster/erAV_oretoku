@@ -1,0 +1,208 @@
+﻿;===========================================================
+;不良のレイプ・計算
+;===========================================================
+@BADBOY_RAPE_CALC
+
+SIF FLAG:治安悪化レベル == 0
+	RETURN 1
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:オトコ == 1
+		CONTINUE
+	ELSEIF CFLAG:COUNT:護衛の有無 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:妊娠 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:育児中 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:警察官 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:極道の娘 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:護身術 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:アンドロイド == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:淫魔 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:グランドマスター == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:天使 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:極道の妻 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:永遠の愛 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:探偵 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:幽霊 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:[[TALENT:ONLY ONE EMPRESS]] == 1
+		CONTINUE
+	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスチュームのタイプ == 79
+		CONTINUE
+	ELSE
+		LOCAL = RAND:100
+		LOCAL -= ABL:COUNT:運動能力
+		IF TALENT:COUNT:臆病 == 1
+			LOCAL += RAND:10
+		ENDIF
+		IF TALENT:COUNT:大人しい == 1
+			LOCAL += RAND:10
+		ENDIF
+		IF TALENT:COUNT:貞操無頓着 == 1
+			LOCAL += RAND:10
+		ENDIF
+		IF TALENT:COUNT:淫乱 == 1
+			LOCAL += RAND:10
+		ENDIF
+		IF TALENT:COUNT:妊娠 == 1
+			LOCAL += RAND:10
+		ENDIF
+		IF TALENT:COUNT:気丈 == 1
+			LOCAL -= RAND:5
+		ENDIF
+		IF TALENT:COUNT:活発 == 1
+			LOCAL -= RAND:5
+		ENDIF
+		IF TALENT:COUNT:目立ちたがり == 1
+			LOCAL -= RAND:5
+		ENDIF
+		IF TALENT:COUNT:ボーイッシュ == 1
+			LOCAL -= RAND:5
+		ENDIF
+		IF TALENT:COUNT:男性不信 == 1
+			LOCAL -= RAND:5
+		ENDIF
+		IF TALENT:COUNT:カリスマ == 1
+			LOCAL -= RAND:5
+		ENDIF
+		SIF FLAG:治安悪化レベル == 1
+			LOCAL += 10
+		SIF FLAG:治安悪化レベル == 2
+			LOCAL += 20
+		SIF FLAG:治安悪化レベル == 3
+			LOCAL += 30
+		IF LOCAL >= 98 && FLAG:治安巡回 == 0
+			CALL BADBOY_RAPE
+		ELSE
+			LOCAL = 0
+		ENDIF
+	ENDIF
+	LOCAL = 0
+REND
+
+;===========================================================
+;不良のレイプ・本体
+;===========================================================
+@BADBOY_RAPE
+S = 1
+F = 5
+A = 0
+D = 1
+E = 0
+
+PRINTFORM 今日は%CALLNAME:COUNT%を指導する日だが……これまで一度も指導をサボったことがない%CALLNAME:COUNT%が、
+PRINTFORML 今日に限っていつまで経っても%CALLNAME:MASTER%が待つ事務所に姿を見せていない
+PRINTFORML 急病や急用ならメールの一通でも寄越しそうなものだが、それすらも無いのは%CALLNAME:COUNT%にしては珍しいことだった
+PRINTFORM そう言えば最近、最寄りの駅周辺にガラの悪い連中がたむろしているのを見かけたが……もしかしたら絡まれているのかも
+PRINTFORML しれない
+PRINTFORM 万が一のことを考え、腕っ節に自身のある事務所のスタッフを連れて、あなたはとりあえず駅まで%CALLNAME:COUNT%を
+PRINTFORML 迎えに行った……
+PRINTW
+PRINTFORML 駅周辺には%CALLNAME:COUNT%の姿はなく、それどころかいつもの不良連中がいないのも気になった
+PRINTFORM あなたは近くの、%CALLNAME:COUNT%がよく事務所に来る前に差し入れのお菓子を買ってくるコンビニに足を運び、
+PRINTFORM 携帯に保存していた%CALLNAME:COUNT%の写真を店員に見せて、今日は
+PRINTFORMW %CALLNAME:COUNT%が寄っていないか聞いてみることにした……
+PRINTL
+PRINTFORM すると１時間以上前に%CALLNAME:COUNT%によく似た女性が店の前でたむろしていた不良に取り囲まれ、
+PRINTFORML その後どこかに強引に引っ張られていったのを見かけた、との証言を得られた
+PRINTFORM あなたは嫌な胸騒ぎがしてコンビニを飛び出し、不良たちが溜まり場にしてそうな場所をしらみ潰しに駆けずり回り……
+PRINTFORMW ここ最近不景気のあおりで潰れた町工場の中でようやく酷い有様の%CALLNAME:COUNT%を発見した
+PRINTL
+PRINTFORM 強引に脱がされたのだろうか、乱雑に床に捨てられていた%CALLNAME:COUNT%の服はところどころがほつれ、
+PRINTFORM 壁にもたれかかった%CALLNAME:COUNT%の目はうつろで、その身体のあちこちに精液をこびりつかせ、腕には
+PRINTFORML 痛々しい注射の痕が残っていた……
+PRINTFORM 赤く充血して腫れた、%CALLNAME:COUNT%の膣穴からは
+	IF TALENT:COUNT:処女 == 1
+		PRINTFORM 破瓜の血が混ざった
+	ENDIF
+PRINTFORML 精液が垂れ落ち、地面にシミを作っている……
+PRINTFORMW どうやら%CALLNAME:COUNT%は不良たちに強姦されたようだった……
+
+S += RAND:5
+F += RAND:10
+A += RAND:3
+D += RAND:3
+
+PRINTFORML Ｖ経験＋{S}
+IF CFLAG:COUNT:初体験の相手 == 0 && TALENT:COUNT:処女 == 1
+	SETCOLOR 0xF58F98
+	PRINTFORML 【処女喪失】
+	CFLAG:COUNT:初体験の相手 = 11
+	TALENT:COUNT:処女 = 0
+	CSTR:COUNT:処女喪失の相手 = 不良
+	E += 1
+	RESETCOLOR
+	BASE:COUNT:魅力値 -= 10
+	CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
+	CFLAG:COUNT:処女喪失月 = DAY:1
+	CFLAG:COUNT:処女喪失日 = DAY:2
+	CFLAG:COUNT:処女喪失場所 = 6
+	CFLAG:COUNT:処女喪失シチュ = 4
+ENDIF
+IF A > 0
+	PRINTFORML Ａ経験＋{A}
+	IF TALENT:COUNT:アナル処女 == 1
+		SETCOLOR 0xF58F98
+		PRINTFORML 【アナル処女喪失】
+		TALENT:COUNT:アナル処女 = 0
+		CSTR:COUNT:アナル処女喪失の相手 = 不良
+		RESETCOLOR
+		E += 1
+		BASE:COUNT:魅力値 -= 5
+		CFLAG:COUNT:アナル処女喪失の相手 = 11
+		CFLAG:COUNT:アナル処女喪失年齢 = BASE:COUNT:実年齢
+		CFLAG:COUNT:アナル処女喪失月 = DAY:1
+		CFLAG:COUNT:アナル処女喪失日 = DAY:2
+		CFLAG:COUNT:アナル処女喪失場所 = 6
+		CFLAG:COUNT:アナル処女喪失シチュ = 4
+	ENDIF
+ENDIF
+;初強姦で異常+1
+SIF EXP:COUNT:強姦回数 == 0
+	E += 1 
+PRINTFORML 性交経験＋{S}
+PRINTFORML フェラ経験＋{F}
+IF CFLAG:COUNT:ファーストキスの相手 == -1
+	SETCOLOR 0xDDBBCC
+	PRINTFORML ファーストキス
+	CFLAG:COUNT:ファーストキスの相手 = 11
+	CSTR:COUNT:ファーストキスの相手 = 不良
+	RESETCOLOR
+	BASE:COUNT:魅力値 -= 10
+	CFLAG:COUNT:ファーストキス喪失年齢 = BASE:COUNT:実年齢
+	CFLAG:COUNT:ファーストキス喪失月 = DAY:1
+	CFLAG:COUNT:ファーストキス喪失日 = DAY:2
+	CFLAG:COUNT:ファーストキス喪失場所 = 6
+	CFLAG:COUNT:ファーストキス喪失シチュ = 1
+ENDIF
+PRINTFORML 精液経験＋{A+S+F}
+PRINTFORML 薬物経験＋{D}
+SIF E
+	PRINTFORML 異常経験＋{E}
+
+LOCAL = 0 
+CFLAG:COUNT:不良によるレイプイベントの発生の累積 = 0 
+
+EXP:COUNT:Ｖ経験 += S
+EXP:COUNT:Ａ経験 += A
+EXP:COUNT:性交経験 += A
+EXP:COUNT:精液経験 += S+A+F
+EXP:COUNT:異常経験 += E
+EXP:COUNT:薬物経験 += D
+EXP:COUNT:強姦回数 += 1
+BASE:COUNT:魅力値 -= 5
+DRAWLINE

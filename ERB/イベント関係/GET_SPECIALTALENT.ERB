@@ -1,0 +1,870 @@
+﻿;-------------------------------------------------
+;キャラの特殊技能獲得判定
+;2009/11/14 EVENTCHECK_Mより改名
+;erapokeへの改造に際して親愛(TALENT:マゾ)は廃止
+;-------------------------------------------------
+@CHECK_SPECIALSKILL
+;調教対象がいないとダメ
+SIF TARGET < 0
+	RETURN 0
+;【崩壊】してるとダメ
+SIF TALENT:崩壊
+	RETURN 0
+
+;レズ経験が500以下、反発刻印がない場合、
+;主人による調教経験他依存で特殊技能を獲得
+IF MARK:反発刻印 == 0
+	;調教経験2000以上で【恋心】か【淫乱】で【売却不可】がなければ売却・助手可能に
+	IF CFLAG:好感度 >= 2000 && CFLAG:売却助手可能 < 2 && (TALENT:淫乱 || TALENT:恋心) && TALENT:売却不可 == 0
+			PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+			PRINTFORML %CALLNAME:TARGET%は身も心も%CALLNAME:MASTER%に依存しきっているようだ…
+			IF ABL:信頼 < 5
+				ABL:信頼 = 5
+				PRINTL 従順がLV5になった
+			ENDIF
+			SIF CFLAG:売却助手可能 < 1
+				PRINTFORML %NAME:TARGET%が引退可能になりました
+			PRINTFORMW %NAME:TARGET%が助手可能になりました
+			CFLAG:売却助手可能 = 2
+	;主人による調教経験1000以上で
+	ELSEIF CFLAG:好感度 >= 1000
+		;淫魔アンドロ天使は
+		IF TALENT:淫魔 == 1 || TALENT:アンドロイド == 1 || TALENT:天使 == 1
+			;従順3以上、奉仕快楽経験200以上で【彼氏あり】がなければ【恋心】を獲得
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= 200 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏の有無 != 1
+				CALL 恋心GET
+			ENDIF
+		ELSE
+			;普通はこっち
+			;信頼3以上、奉仕快楽経験200以上でレズ経験が1200以下であり、【淫乱】【彼氏あり】がなければ【恋心】を獲得
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && EXP:レズ経験 <= 1200 && CFLAG:彼氏の有無 != 1 && FLAG:恋心レズ経験無視 == 0
+				CALL 恋心GET
+			ENDIF
+			;実績ボーナスによるレズ経験の無視
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏の有無 != 1 && FLAG:恋心レズ経験無視 == 1
+				CALL 恋心GET
+			ENDIF
+		ENDIF
+		;欲望3以上、CVAB感覚合計10以上、異常経験3以上で【恋心】がなければ【淫乱】に
+		;両方処女だとだめ
+		IF TALENT:淫魔 == 0 && TALENT:アンドロイド == 0 && TALENT:天使 == 0 && TALENT:[[TALENT:ONLY ONE EMPRESS]] == 0
+			IF ABL:欲望 >= 3 && ABL:Ｃ感覚+ABL:Ｂ感覚+ABL:Ｖ感覚+ABL:Ａ感覚 >= 10 && EXP:異常経験 >= 3 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && (TALENT:処女 == 0 || TALENT:アナル処女 == 0)
+				CALL 淫乱GET
+			ENDIF		
+		ELSE
+			;淫魔天使アンドロだと両処女でも大丈夫
+			IF ABL:欲望 >= 3 && ABL:Ｃ感覚+ABL:Ｂ感覚+ABL:Ｖ感覚+ABL:Ａ感覚 >= 10 && EXP:異常経験 >= 2 && TALENT:淫乱 == 0
+				CALL 淫乱GET
+			ENDIF			
+		ENDIF
+	ENDIF
+		;主人による調教経験5000以上、従順LV5以上、快楽・屈服刻印LV3で、【売却不可】【自慰しない】【奉仕しない】【洗脳されない】が消滅
+		IF CFLAG:好感度 >= 5000 && ABL:信頼 >= 5 && MARK:快楽刻印 == 3 && MARK:屈服刻印 == 3
+			IF TALENT:自慰しない
+				PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰しない]]%】を失った
+				TALENT:自慰しない = 0
+			ENDIF
+			IF TALENT:奉仕しない
+				PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:奉仕しない]]%】を失った
+				TALENT:奉仕しない = 0
+			ENDIF
+			IF TALENT:洗脳されない
+				PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:洗脳されない]]%】を失った
+				TALENT:洗脳されない = 0
+			ENDIF
+			IF TALENT:売却不可
+				PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:売却不可]]%】を失った
+				TALENT:売却不可 = 0
+			ENDIF
+		ENDIF
+ENDIF
+
+;---------------------------------------------------------
+;特殊技能素質
+;---------------------------------------------------------
+IF TALENT:習得遅い
+	;技巧Lv7以上かつ奉仕技術Lv7以上かつフェラ経験1500以上（[習得遅い]ありの場合）で【舌使い】
+	IF ABL:技巧 >= 7 && ABL:奉仕技術 >= 7 && EXP:フェラ経験 >= 1500 && TALENT:舌使い == 0
+		PRINTFORMW %CALLNAME:TARGET%の奉仕もかなりのものとなってきた……
+		PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:舌使い]]%】を得た
+		TALENT:舌使い = 1
+	ENDIF
+ELSE
+	;技巧Lv5以上かつ奉仕技術Lv5以上かつフェラ経験1000以上（[習得遅い]なしの場合）で【舌使い】
+	IF ABL:技巧 >= 5 && ABL:奉仕技術 >= 5 && EXP:フェラ経験 >= 1000 && TALENT:舌使い == 0
+		PRINTFORMW %CALLNAME:TARGET%の奉仕もかなりのものとなってきた……
+		PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:舌使い]]%】を得た
+		TALENT:舌使い = 1
+	ENDIF
+ENDIF
+
+;---------------------------------------------------------
+;特殊性癖素質
+;---------------------------------------------------------
+
+;サドっ気Lv４以上かつ技巧Lv４以上、嗜虐快楽経験３００以上で【サド】に
+;淫魔以外は[マゾ]と両立しない
+IF ABL:サドっ気 >= 4 && ABL:技巧 >= 4 && EXP:嗜虐快楽経験 >= 300 && TALENT:サド == 0 && ((TALENT:淫魔 == 0 && TALENT:マゾ == 0) || TALENT:淫魔 == 1)
+	PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+	PRINTFORML %CALLNAME:TARGET%は人を痛めつける喜びに目覚めたようだ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:サド]]%】を得た
+	TALENT:サド = 1
+ENDIF
+
+;マゾっ気Lv４以上かつ露出癖Lv２以上、被虐快楽経験３００以上で【マゾ】に
+;淫魔以外は[サド]と両立しない
+IF ABL:マゾっ気 >= 4 && ABL:露出癖 >= 2 && EXP:被虐快楽経験 >= 300 && TALENT:マゾ == 0 && ((TALENT:淫魔 == 0 && TALENT:サド == 0) || TALENT:淫魔 == 1)
+	PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+	PRINTFORML %CALLNAME:TARGET%は体を痛めつけられる喜びに目覚めたようだ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:マゾ]]%】を得た
+	TALENT:マゾ = 1
+ENDIF
+
+;露出癖LV4以上、野外露出経験100以上、自慰経験200以上、絶頂経験100以上で【露出狂】に
+IF ABL:露出癖 >= 4 && EXP:自慰経験 >= 200 && EXP:絶頂経験 >= 100 && TALENT:露出狂 == 0 && EXP:野外露出経験 >= 100
+	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+	PRINTFORML 自分の恥ずかしい姿を他人に見られるのが嬉しくてたまらないようだ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:露出狂]]%】を得た
+	TALENT:露出狂 = 1
+;目立ちたがり、恥薄い、淫魔で条件緩和(3,50,100,50)
+;恥薄いで条件緩和ってあまりぴんと来ないね（恥ずかしいのが好き、だろうから）
+ELSEIF ABL:露出癖 >= 3 && EXP:自慰経験 >= 100 && EXP:絶頂経験 >= 50 && TALENT:露出狂 == 0 && EXP:野外露出経験 >= 50 && (TALENT:目立ちたがり == 1 || TALENT:淫魔 == 1 || TALENT:恥薄い == 1)
+	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+	PRINTFORML 自分の恥ずかしい姿を他人に見られるのが嬉しくてたまらないようだ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:露出狂]]%】を得た
+	TALENT:露出狂 = 1
+ENDIF
+
+;欲望Lv５以上かつ獣姦中毒Lv３以上、獣姦経験３００以上で【牝犬】に
+IF ABL:欲望 >= 5 && ABL:獣姦中毒 >= 3 && EXP:獣姦経験 >= 300 && TALENT:牝犬 == 0
+	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+	PRINTFORML 床に四つん這いになって腰を振りながらこちらを見上げる目付きは、
+	PRINTFORML まるでさかりの付いた牝犬のそれだ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:牝犬]]%】を得た
+	TALENT:牝犬 = 1
+ENDIF
+
+;欲望Lv５以上かつ触手中毒Lv３以上、触手経験３００以上で【苗床】に
+;復旧
+IF ABL:欲望 >= 5 && ABL:触手中毒 >= 3 && EXP:触手経験 >= 300 && TALENT:苗床 == 0
+	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+	PRINTFORML 触手に犯されることに依存しきっている様は、
+	PRINTFORML もはや触手の苗床といってもいいだろう
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:苗床]]%】を得た
+	TALENT:苗床 = 1
+ENDIF
+
+;---------------------------------------------------------
+;特殊性感素質 [快感の否定]を失う
+;---------------------------------------------------------
+;Ｃ感覚４以上、自慰経験１００以上で絶頂経験１００以上で【自慰狂い】
+IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:自慰狂い == 0
+	IF ABL:Ｃ感覚 >= 4 && EXP:絶頂経験 >= 100 && TALENT:自慰狂い == 0 && EXP:自慰経験 >= 100
+		PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+		PRINTFORM 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%の目も憚らず、
+		IF TALENT:ふたなり || TALENT:オトコ
+			PRINT ペニス
+		ELSE
+			PRINT クリトリス
+		ENDIF
+		PRINTFORML をいじり続けている
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰狂い]]%】を得た
+		TALENT:自慰狂い = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:自慰狂い == 0
+	IF ABL:Ｃ感覚 >= 3 && EXP:絶頂経験 >= 50 && TALENT:自慰狂い == 0 && EXP:自慰経験 >= 50
+		PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+		PRINTFORM 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%の目も憚らず、
+		IF TALENT:ふたなり || TALENT:オトコ
+			PRINT ペニス
+		ELSE
+			PRINT クリトリス
+		ENDIF
+		PRINTFORML をいじり続けている
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰狂い]]%】を得た
+		TALENT:自慰狂い = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ENDIF
+
+;Ｖ感覚４以上、Ｖ経験１５０以上、絶頂経験１００以上で【セックス狂い】
+IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:セックス狂 == 0
+	IF ABL:Ｖ感覚 >= 4 && EXP:Ｖ経験 >= 150 && EXP:絶頂経験 >= 100 && TALENT:セックス狂 == 0
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%にしなだれかかり抱いて欲しいと懇願してきた
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:セックス狂]]%】を得た
+		TALENT:セックス狂 = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:セックス狂 == 0
+	IF ABL:Ｖ感覚 >= 3 && EXP:Ｖ経験 >= 80 && EXP:絶頂経験 >= 50 && TALENT:セックス狂 == 0
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%にしなだれかかり抱いて欲しいと懇願してきた
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:セックス狂]]%】を得た
+		TALENT:セックス狂 = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ENDIF
+
+;Ａ感覚４以上、Ａ快楽経験３００以上、絶頂経験１００以上で【尻穴狂い】
+IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:尻穴狂い == 0
+	IF ABL:Ａ感覚 >= 4 && EXP:Ａ快楽経験 >= 300 && EXP:絶頂経験 >= 100 && TALENT:尻穴狂い == 0
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%はアナルを弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:尻穴狂い]]%】を得た
+		TALENT:尻穴狂い = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:尻穴狂い == 0
+	IF ABL:Ａ感覚 >= 3 && EXP:Ａ快楽経験 >= 150 && EXP:絶頂経験 >= 50 && TALENT:尻穴狂い == 0
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%はアナルを弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:尻穴狂い]]%】を得た
+		TALENT:尻穴狂い = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ENDIF
+
+;;Ｂ感覚４以上、噴乳経験１００以上、絶頂経験１００以上で【乳狂い】
+;噴乳前提は一つだけ厳しいってことでどっかで変更入ってた模様（そんな記憶はある）
+;Ｂ感覚４以上、Ｂ開発経験１５０以上、絶頂経験１００以上
+IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:乳狂い == 0
+	IF ABL:Ｂ感覚 >= 4 && EXP:Ｂ開発経験 >= 150 && EXP:絶頂経験 >= 100 && TALENT:乳狂い == 0
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は乳首を弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:乳狂い]]%】を得た
+		TALENT:乳狂い = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:乳狂い == 0
+	IF ABL:Ｂ感覚 >= 3 && EXP:Ｂ開発経験 >= 80 && EXP:絶頂経験 >= 50 && TALENT:乳狂い == 0
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は乳首を弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:乳狂い]]%】を得た
+		TALENT:乳狂い = 1
+		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+			TALENT:快感の否定 = 0
+		ENDIF
+	ENDIF
+ENDIF
+
+
+
+;---------------------------------------------------------
+;強化素質:絶倫か淫魔が必要
+;---------------------------------------------------------
+;素質強化を適応している場合
+IF FLAG:強化素質なし == 0
+	;Ｃ感覚５以上、調教自慰経験１００以上で絶頂経験３００以上で【淫核】
+	IF ABL:Ｃ感覚 >= 5 && TALENT:自慰狂い == 1 && TALENT:淫核 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫)
+		PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+		PRINTFORM %CALLNAME:TARGET%は調教が終わった後にもかかわらず、%CALLNAME:MASTER%に
+		IF TALENT:ふたなり || TALENT:オトコ
+			PRINT ペニス
+		ELSE
+			PRINT クリトリス
+		ENDIF
+			PRINTL の疼きを鎮めて欲しいとせがんできた…
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:淫核]]%】を得た
+		TALENT:淫核 = 1
+	ENDIF
+
+	;Ｖ感覚５以上、Ｖ経験３００以上、絶頂経験３００以上で【淫壷】
+	IF ABL:Ｖ感覚 >= 5 && TALENT:セックス狂 == 1 && TALENT:淫壺 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫 == 1)
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML %CALLNAME:TARGET%は調教が終わった後にもかかわらず、%CALLNAME:MASTER%に子宮の渇きを癒してほしいと縋りついてきた…
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:淫壺]]%】を得た
+		TALENT:淫壺 = 1
+	ENDIF
+
+	;Ａ感覚５以上、Ａ快楽経験３００以上、絶頂経験３００以上で【淫肛】
+	IF ABL:Ａ感覚 >= 5 && TALENT:尻穴狂い == 1 && TALENT:淫肛 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫 == 1)
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML %CALLNAME:TARGET%は調教が終わった後にもかかわらず、%CALLNAME:MASTER%にお尻をいじめて欲しいと懇願してきた…
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:淫肛]]%】を得た
+		TALENT:淫肛 = 1
+	ENDIF
+
+	;Ｂ感覚５以上、噴乳経験１００以上、絶頂経験３００以上で【淫乳】
+	IF ABL:Ｂ感覚 >= 5 && TALENT:乳狂い == 1 && TALENT:淫乳 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫 == 1)
+		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+		PRINTFORML %CALLNAME:TARGET%は調教が終わった後にもかかわらず、%CALLNAME:MASTER%に胸を弄って欲しいとねだってきた…
+		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:淫乳]]%】を得た
+		TALENT:淫乳 = 1
+	ENDIF
+
+	;強化素質を全部取得した場合【性豪】
+	IF TALENT:淫核 && TALENT:淫乳 && TALENT:淫壺 && TALENT:淫肛 && TALENT:性豪 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫 == 1)
+		PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:性豪]]%】を得た
+		TALENT:性豪 = 1
+		;【Ｃ鈍感】【Ｖ鈍感】【Ａ鈍感】【Ｂ鈍感】は消える
+		IF TALENT:Ｃ鈍感
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｃ鈍感]]%】を失った
+			TALENT:Ｃ鈍感 = 0
+		ENDIF
+		IF TALENT:Ｖ鈍感
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｖ鈍感]]%】を失った
+			TALENT:Ｖ鈍感 = 0
+		ENDIF
+		IF TALENT:Ａ鈍感
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ａ鈍感]]%】を失った
+			TALENT:Ａ鈍感 = 0
+		ENDIF
+		IF TALENT:Ｂ鈍感
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｂ鈍感]]%】を失った
+			TALENT:Ｂ鈍感 = 0
+		ENDIF
+		;【Ｃ敏感】【Ｖ敏感】【Ａ敏感】【Ｂ敏感】を得る
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｃ敏感]]%】になった
+			TALENT:Ｃ敏感 = 1
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｖ敏感]]%】になった
+			TALENT:Ｖ敏感 = 1
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ａ敏感]]%】になった
+			TALENT:Ａ敏感 = 1
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｂ敏感]]%】になった
+			TALENT:Ｂ敏感 = 1
+			PRINTFORML
+	ENDIF
+ENDIF
+
+;---------------------------------------------------------
+;常時発情
+;---------------------------------------------------------
+;常時発情システムを使用している場合
+IF FLAG:常時発情なし == 0
+	IF TALENT:常時発情 == 0
+		;潤滑の蓄積が700以上、と欲情の蓄積が2250以上
+		IF CFLAG:常時発情システム使用時潤滑蓄積量 >= 700 && CFLAG:常時発情システム使用時欲情蓄積量 >= 2250
+			PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+			PRINTFORM %CALLNAME:TARGET%の
+			SIF TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり
+				PRINT ペニスの先端
+			SIF TALENT:TARGET:ふたなり
+				PRINT と
+			SIF TALENT:TARGET:オトコ == 0
+				PRINT ヴァギナ
+			PRINTFORML から透明な液体がこんこんと湧き出ている…
+			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:常時発情]]%】を得た
+			TALENT:常時発情 = 1
+			;【濡れにくい】がなければ【濡れやすい】追加
+			IF TALENT:濡れにくい == 0 && TALENT:濡れやすい == 0
+				PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:濡れやすい]]%】を得た
+				TALENT:濡れやすい = 1
+			;【濡れにくい】は消える
+			ELSEIF TALENT:濡れにくい
+				PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:濡れにくい]]%】を失った
+				TALENT:濡れにくい = 0
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+			
+;---------------------------------------------------------
+;精愛味覚の習得
+;---------------------------------------------------------
+;精愛味覚を持たず、強制精飲絶頂の回数が規定値を超えた
+IF TFLAG:精愛味覚取得用のフラグ && TALENT:精愛味覚 == 0
+	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+	PRINTFORML %CALLNAME:TARGET%は性的な刺激が無くても精液を飲んだだけでイくようになってしまったようだ。
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:精愛味覚]]%】を得た
+	TALENT:精愛味覚 = 1
+	;汚臭敏感がなくなる
+	IF TALENT:汚臭敏感 == 1
+		PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:汚臭敏感]]%】でなくなった
+		TALENT:汚臭敏感 = 0
+	ENDIF
+	;精液中毒がLV5に上がる
+	IF ABL:精液中毒 < 5
+		PRINTFORMW %CALLNAME:TARGET%の精液中毒がLV5になった
+		ABL:精液中毒 = 5
+	ENDIF
+;取得フラグのリセット
+	TFLAG:精愛味覚取得用のフラグ = 0
+ENDIF
+
+;---------------------------------------------------------
+;マイナス素質の消滅
+;---------------------------------------------------------
+;奉仕精神5以上で【奉仕しない】があれば【売却不可】でない限り消滅
+IF ABL:奉仕精神 >= 5 && TALENT:奉仕しない && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:奉仕しない]]%】を失った
+	TALENT:奉仕しない = 0
+ENDIF
+;自慰中毒5以上で【自慰しない】があれば【売却不可】でない限り消滅
+IF ABL:自慰中毒 >= 5 && TALENT:自慰しない && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰しない]]%】を失った
+	TALENT:自慰しない = 0
+ENDIF
+
+;---------------------------------------------------------
+;フレーバー（？）素質の獲得
+;---------------------------------------------------------
+;サドっ気、技巧ともに4
+IF ABL:サドっ気 >= 4 && ABL:技巧 >= 4 && !TALENT:小悪魔
+	PRINTFORMW %NAME:TARGET%の様子がおかしい……
+	PRINTFORML 最近の%CALLNAME:TARGET%は奉仕の際にわざと手を抜いたりして、相手の反応を見て楽しんでいる節がある
+	IF TALENT:素直
+		PRINTFORM 素直に言われたことに従ってきた
+	ENDIF
+	PRINTFORM %CALLNAME:TARGET%が男を手玉にとるような【%TALENTNAME:[[TALENT:小悪魔]]%】的な魅力を身につけたことに、
+	PRINTFORMW %CALLNAME:MASTER%は喜んでいいのかどうか分からない複雑な思いを抱えていた
+	TALENT:小悪魔 = 1
+ENDIF
+
+;信頼7,奉仕精神7,恋心,愛情経験500,彼氏なし,屈服刻印3
+;TALENT:532はルーンマスター＝マルチナ
+IF ((!TALENT:ルーンマスター && ABL:信頼 >= 7 && ABL:奉仕精神 >= 7 && EXP:愛情経験 > 499) || (ABL:信頼 >= 10 && ABL:奉仕精神 >= 10  && EXP:愛情経験 > 999)) && TALENT:恋心 && !TALENT:永遠の愛 && MARK:屈服刻印 == 3 && !TALENT:彼氏あり
+	PRINTFORMW %NAME:TARGET%は%CALLNAME:MASTER%に何かを言いたそうにしている……
+	PRINTFORM %CALLNAME:TARGET%に話を促すと、%CALLNAME:TARGET%は顔を真っ赤にして
+	PRINTFORM %CALLNAME:MASTER%に結婚してもらえなくてもいい、それでもそばにいさせてほしい
+	PRINTFORMW ……と、%CALLNAME:MASTER%に【%TALENTNAME:[[TALENT:永遠の愛]]%】を誓った
+	TALENT:永遠の愛 = 1
+	IF CFLAG:スタッフ寝取られイベントの進行度 == 1
+		CFLAG:スタッフ寝取られイベントの進行度 = 0
+		CFLAG:彼氏の有無 = 0
+	ENDIF
+	SIF RELATION:TARGET:(NO:MASTER) <= 200
+			RELATION:TARGET:(NO:MASTER) = 200
+ENDIF
+
+;IF (ABL:欲望 >= 7 && EXP:異常経験 >= 5 && TALENT:淫乱 == 1 && TALENT:絶倫 == 0 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && TALENT:淫魔 == 0 && TALENT:アンドロイド == 0&& TALENT:天使 == 0 && (TALENT:処女 == 0 || TALENT:アナル処女 == 0)) || (ABL:欲望 >= 7 && EXP:異常経験 >= 3 && TALENT:淫乱 == 1 && TALENT:絶倫 == 0 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && (TALENT:淫魔 == 1 || TALENT:アンドロイド == 1 || TALENT:天使 == 1 || TALENT:[[TALENT:ONLY ONE EMPRESS]] == 1))
+;長かったので縮める。それでも長い……
+;絶倫取得の条件：
+;欲望が7以上であり[淫乱]持ち、[絶倫]を取得していないときに、いずれかの感覚が10であり、
+;淫魔アンドロイド天使以外であれば：異常経験5以上とどっちかの処女喪失済
+;淫魔アンドロイド天使であれば：異常経験3
+IF ABL:欲望 >= 7 && TALENT:淫乱 && !TALENT:絶倫 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && ((EXP:異常経験 >= 5 && !TALENT:淫魔 && !TALENT:アンドロイド && !TALENT:天使 && (!TALENT:処女 || !TALENT:アナル処女)) || (EXP:異常経験 >= 3 && (TALENT:淫魔 || TALENT:アンドロイド || TALENT:天使 || TALENT:[[TALENT:ONLY ONE EMPRESS]])))
+	PRINTFORMW %NAME:TARGET%の様子がおかしい……
+	PRINTFORM 指導が終わった後にも何度も
+	IF ABL:Ｖ感覚 == 10
+		PRINTFORM %CALLNAME:MASTER%の腰に足を絡めて精を子宮で受け止め
+	ELSEIF ABL:Ａ感覚 == 10 && TALENT:アナル処女 == 0
+		PRINTFORM %CALLNAME:MASTER%の精を足を絡めて直腸で受け止め
+	ELSEIF ABL:Ｃ感覚 == 10
+		IF TALENT:ふたなり == 0
+			PRINTFORM 硬くしこったクリトリスで
+		ELSE
+			PRINTFORM 硬く屹立したふたなりペニスで
+		ENDIF
+		PRINTFORM オナニーし
+	ELSEIF ABL:Ｂ感覚 == 10
+		PRINTFORM 勃起し紅潮した乳首を弄び
+	ENDIF
+	PRINTFORML 、呂律の回っていない卑猥な言葉を何度も連呼しながらの絶頂を繰り返していたにも関わらず、なおも快楽を求めている
+	PRINTFORMW 淫乱という言葉を通り越した%CALLNAME:TARGET%の底なしの性欲は、まさに【%TALENTNAME:[[TALENT:絶倫]]%】と言うに相応しいものだった……
+	TALENT:絶倫 = 1
+ENDIF
+
+IF TALENT:性魔術 && (BASE:魔力 == 0 ||  BASE:魅力値 <= 0) 
+	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
+	PRINTFORMW どうやら%CALLNAME:TARGET%は性魔術の反動に耐え切れず精神が【%TALENTNAME:[[TALENT:崩壊]]%】してしまったようだ
+	CALL ADD_CATASTROPH(TARGET)
+ENDIF
+
+;[彼氏あり],[貞操観念]なし,[淫乱],[セフレあり],[恋心]なし,信頼3以上,欲望5以上,性交中毒2以上,どっちか非処女,奉仕快楽経験300以上
+IF TALENT:彼氏あり == 1 && TALENT:貞操観念 == 0 && TALENT:淫乱 == 1 && TALENT:セフレあり == 1 && TALENT:恋心 == 0 && ABL:信頼 >= 3 && ABL:欲望 >= 5 && ABL:性交中毒 >= 2 && (TALENT:処女 == 0 || TALENT:アナル処女 == 0) && EXP:奉仕快楽経験 >= 300 && TALENT:セフレ == 0
+	PRINTFORM つい先ほどまでベッドの上で%CALLNAME:MASTER%に
+	IF ABL:Ｖ感覚 >= ABL:Ａ感覚
+		PRINTFORM ヴァギナ
+	ELSE
+		PRINTFORM アナル
+	ENDIF
+	PRINTFORM を後背位で激しく貫かれ嬌声を上げていた
+	CALL PRINT_CLOTHTYPE
+	SIF CFLAG:着衣状態 != 0
+		PRINTFORM 姿
+	PRINTFORM の%CALLNAME:TARGET%は、%CALLNAME:MASTER%のペニスに貫かれ拡がった
+	IF ABL:Ｖ感覚 >= ABL:Ａ感覚
+		PRINTFORM 膣口
+	ELSE
+		PRINTFORM アナル
+	ENDIF
+	PRINTFORM からこぼれ落ちる%CALLNAME:MASTER%の精液もそのままに、
+	SIF TALENT:ＡＶ女優 == 1
+		PRINTFORM ＡＶ女優と監督という関係だけではなく、
+	PRINTFORM お互いの性欲を満たすためだけの関係に
+	SIF TALENT:ＡＶ女優 == 1
+		PRINTFORM も
+	PRINTFORMW ならないかと持ちかけてきた……
+	SIF CFLAG:初体験の相手 == 8
+		PRINTFORM 彼氏に処女を捧げてから、何度もその肢体を貫かれ
+	PRINTFORML すっかりセックスの味を覚えてしまった%CALLNAME:TARGET%には、彼氏とのセックスだけでは満足できないらしい……
+	PRINTFORM プライベートでも%CALLNAME:TARGET%の肢体を味わえるという魅力的な提案に、%CALLNAME:MASTER%は黙って
+	IF ABL:Ｖ感覚 >= ABL:Ａ感覚
+		PRINTFORM ヴァギナ
+	ELSE
+		PRINTFORM アナル
+	ENDIF
+	PRINTFORML の奥までペニスを挿入することで応えた……
+	PRINTL
+	PRINTFORMW 《%CALLNAME:MASTER%は%NAME:TARGET%の数いる【セフレ】の一人になった》
+	TALENT:セフレ = 1
+ENDIF
+
+;主人調教経験1500以上,レズっ気4以上,レズ中毒3以上,レズ経験2000以上,[男性不信]を持たないとき両刀
+IF TALENT:両刀 == 0 && CFLAG:好感度 >= 1500 && EXP:レズ経験 >= 2000 && ABL:レズっ気 >= 4 && ABL:レズ中毒 >= 3 && TALENT:男性不信 == 0
+	PRINTFORMW %NAME:TARGET%の様子がおかしい……
+	PRINTFORM 指導を重ねるうちに幾度となく同性と交わり続けてきた最近の%CALLNAME:TARGET%は
+	PRINTFORML レズプレイにも抵抗がなくなってきたようだ
+	PRINTFORMW 《%NAME:TARGET%は【両刀】を得た》
+	TALENT:両刀 = 1
+ENDIF
+
+;EXP:104はセフレとの経験
+IF EXP:セフレとのSEX回数 >= 20 && TALENT:貞操観念
+	PRINTFORMW %NAME:TARGET%の様子がおかしい……
+	PRINTFORM 以前は性的な行為にも抵抗があったようだが、何人ものセフレに抱かれていくうちに
+	PRINTFORML 性行為にも抵抗がなくなってきたようだ
+	PRINTFORMW 《%NAME:TARGET%は【貞操観念】を失った》
+	TALENT:貞操観念 = 0
+ENDIF
+
+;TALENT:432なしでEXP:104は現状稼げないはず。死に分岐
+IF EXP:セフレとのSEX回数 >= 30 && TALENT:影響されやすい && TALENT:恋心 == 0 && TALENT:ギャル系 == 0
+	PRINTFORMW %NAME:TARGET%の様子がおかしい……
+	PRINTFORM %CALLNAME:TARGET%の『お気に入り』のセフレである%CSTR:セフレ姓%にだいぶ感化されたのか、
+	PRINTFORML 趣味嗜好がいわゆる【ギャル系】のそれに変わっていったようだ……
+	PRINTFORMW 《%NAME:TARGET%は【ギャル系】になった》
+	TALENT:ギャル系 = 1
+ENDIF
+
+IF EXP:セフレとのSEX回数 >= 50 && TALENT:貞操無頓着 == 0 && TALENT:淫乱 == 1
+	;△現状EXP:104の増加には要黒ギャル。
+	;どうもそれっぽいテクストじゃないような
+	;（あと前口上に移動予定）
+	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:恋心 == 0
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		SETCOLOR 0xDDBBCC
+		
+		PRINTFORML 「ふぅ、んふぅんっ……ちゅろちゅろっ……！ 
+		PRINTFORML 　あむっ……はむっはむっ……ちゃぷ……ちゅ……っ！
+		PRINTFORML 　……ちゅ、ちゅ……はぁ――ンっ！！ 
+		PRINTFORML 　あはっ、君の%CSTR:男性器呼び方%、くっさぁいチンカス溜まってるよ？
+		PRINTFORML 　そんなに%CSTR:一人称%のフェラでチンカスお掃除して欲しかったの？
+		PRINTFORM 　……でもぉ、このニオイ嗅いでると%CSTR:女性器呼び方%がきゅんきゅんしちゃって
+		PRINTFORML ハメハメしたくなっちゃうのぉ%UNICODE(0x2665)%
+		PRINTFORML 　だからホラ……君の%CSTR:男性器呼び方%、ナマで挿れちゃうね？
+		PRINTFORM 　――あァんっ%UNICODE(0x2665)%君の%CSTR:男性器呼び方%
+		PRINTFORML カタくて大きくて、%CSTR:女性器呼び方%の奥までごりごりされてるぅ%UNICODE(0x2665)%
+		PRINTFORML 　授業中なのに生ハメＳＥＸしたくなっちゃって……んっ、%CSTR:女性器呼び方%うずうずしてたのぉ%UNICODE(0x2665)%
+		PRINTFORM 　うんっそうっ%UNICODE(0x2665)%%CSTR:男性器呼び方%っ、%CSTR:男性器呼び方%欲しいって
+		PRINTFORML ずっと考えちゃってたんだよ%UNICODE(0x2665)%
+		PRINTFORML 　春乃ちゃんやエリちゃんと話してるときも、頭のなかは%CSTR:男性器呼び方%のことで一杯だったのぉ%UNICODE(0x2665)%
+		PRINTFORML 　みんなが思っているような優等生なんかじゃないのっ、%CSTR:一人称%%UNICODE(0x2665)%
+		PRINTFORML 　生ハメ乱交ＳＥＸ大好きなヤリマンなのっ%UNICODE(0x2665)%
+		PRINTFORML 　――えっ、好きな人？
+		PRINTFORML 　いたけどあんな人どうでもいいの%UNICODE(0x2665)%
+		PRINTFORML 　だってＳＥＸしてくれないし、%CSTR:一人称%が好きなのは人じゃなくて勃起したカタぁい%CSTR:男性器呼び方%%UNICODE(0x2665)%
+		PRINTFORM 　あんな人と一緒にいるぐらいなら
+		PRINTFORML 君たちとＳＥＸしてた方が何倍も楽しいしキモチいいからぁ%UNICODE(0x2665)%
+		PRINTFORML 　だから今日も……あはァっ！　ザーメン出なくなるまでかなでを犯してぇ%UNICODE(0x2665)%」
+		PRINTFORML
+		SETFONT ""
+		RESETCOLOR
+		PRINTFORMW 放課後、%NAME:TARGET%が複数人のクラスメイトたちと校舎裏へ向かっていく姿を見かけた……
+		PRINTFORM 学園中の男子の間で、かなでが『頼めば誰とでもヤらせてくれる』と噂されているのと
+		PRINTFORML なにか関係があるのだろうか
+		PRINTFORM 気になったあなたはかなでの後を追って校舎裏に向かうと、普段は鍵がかかってある
+		PRINTFORML 体育倉庫の扉が少し開いており、複数の男のくぐもった声が聞こえてきた
+		PRINTFORM 扉の隙間から中を窺ってみると
+		IF NO:TARGET == [[キャラ:宮間かなで]]
+			PRINTFORM スカートが捲れあがり、
+			CALL PRINT_UNDERWEAR_COLOR_UNDER
+			PRINTFORM の
+			CALL PRINT_UNDERWEAR_UNDER
+			PRINTFORM が見えているのもお構いなしに、下品ながに股姿で男子生徒の上にまたがり、
+			PRINTFORML それだけでなく両手に握った男子生徒のペニスを交互にフェラしているかなでの姿があった
+			PRINTFORM これまでに見たこともない淫猥な表情で肉棒を頬張りながら犯されている
+			PRINTFORML かなでは自ら腰をくねらせ、かつての清純さはどこへいったのか、ただただ無心に快楽を貪っていた
+			PRINTFORM しかも男子生徒たちの口ぶりから察するに、
+			PRINTFORML 彼らがかなでとＳＥＸするのはこれが初めてではないようだ……
+			PRINTFORM 『あの』大人しくて清楚なはずのかなでがＳＥＸに溺れ、名前も知らないオトコの肉棒で
+			PRINTFORML 犯される様に、あなたのペニスは知らずうちに痛いほどに張り詰めていた
+		ENDIF
+	ELSEIF NO:TARGET != [[キャラ:宮間かなで]]
+		PRINTFORMW %NAME:TARGET%について妙な噂話が流れている……
+		PRINTFORM なんでも%CALLNAME:TARGET%は
+		SIF TALENT:大人しい == 1
+			PRINTFORM 大人しいフリをして
+		PRINTFORM 『頼めば誰でもヤらせてくれる』ヤリマンで、実際に%CALLNAME:TARGET%と
+		PRINTFORML ＳＥＸしたことがあるという者もいるという
+		PRINTFORML %CALLNAME:TARGET%に事実を確認してみると、今日も指導前にセフレたちと『遊んで』きたようだった
+	ENDIF
+
+	PRINTFORMW 《%NAME:TARGET%は【貞操無頓着】を得た》
+	TALENT:貞操無頓着 = 1
+ENDIF
+
+;---------------------------------------------------------
+;【不良】獲得（フレーバー要素、Blackgirlに持ってったほうがいい？）
+;---------------------------------------------------------
+;20歳未満で5回補導された場合に不良を所持する
+IF BASE:実年齢 < 20 && EXP:補導経験 >= 5 && TALENT:不良 == 0
+	PRINTFORML これまでに未成年飲酒や喫煙を繰り返し、幾度も補導されてきた%CALLNAME:TARGET%は、周囲にも札付きのワルとして認識されるようになった。
+	PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:不良]]%】になった。
+	TALENT:不良 = 1
+ENDIF
+
+
+;---------------------------------------------------------
+;【人気ＡＶ女優】獲得（フレーバー要素）
+;---------------------------------------------------------
+;ビデオ売り上げ50万以上、出演11本以上で入手
+IF CFLAG:総売上 >= 500000 && EXP:ＡＶ出演経験 >= 11 && TALENT:人気ＡＶ女優 == 0
+	;（キャラステータスの3ページ目の表記がぶれるから、獲得要件に売上は外すべき？）
+
+	DRAWLINE
+	PRINTFORML %NAME:MASTER%は、ネット配信した動画に寄せられる閲覧者の意見に目を通した。
+	PRINTFORML
+ 	PRINTFORML 　
+	IF BASE:実年齢 < 27 
+	;27歳未満で以下の通りに若手扱いに分岐。いつで切るか微妙だがとりあえず。	
+	PRINTFORML 「新作の『%CSTR:新作タイトル1%%CSTR:新作タイトル2%』で、
+	PRINTFORML 　%NICKNAME:TARGET%ちゃんを知ったんだけど、とってもエッチでかわいい。マジ抜ける。」
+	PRINTFORML 　
+	PRINTFORML 「代表作の『%CSTR:代表作タイトル1%%CSTR:代表作タイトル2%』は、
+	PRINTFORML 　名作だったよ。今後もエロいのよろしく。」
+	PRINTFORML 　
+	PRINTFORML 「デビュー作『%CSTR:デビュー作タイトル1%%CSTR:デビュー作タイトル2%』から、
+	PRINTFORML 　ずっと%NICKNAME:TARGET%ちゃんのファンだよ。一度でいいからヤりたい！」
+	ENDIF
+	
+	IF BASE:実年齢 >= 27 
+	;27歳以上で以下の通りに熟女系扱いに分岐。	
+	PRINTFORML 「新作の『%CSTR:新作タイトル1%%CSTR:新作タイトル2%』で	、
+	PRINTFORML 　%NICKNAME:TARGET%さんを知ったんですけど、とってもスケベで色気がありますね。抜くのには最適です。」
+	PRINTFORML 　
+	PRINTFORML 「代表作の『%CSTR:代表作タイトル1%%CSTR:代表作タイトル2%』は、
+	PRINTFORML 　名作ですね。今後も、色気タップリな動画、期待していますよ。」	
+	PRINTFORML 　
+	PRINTFORML 「デビュー作『%CSTR:デビュー作タイトル1%%CSTR:デビュー作タイトル2%』から、
+	PRINTFORML ずっと%NICKNAME:TARGET%さんのファンです。いつか、一晩だけでもお相手したいものです。」
+	ENDIF
+	PRINTFORML 　
+	PRINTFORML 　 
+	PRINTFORML ＡＶデビュー以来、数々の作品でファンを魅了し続けた結果、
+	PRINTFORML %NICKNAME:TARGET%は【%TALENTNAME:[[TALENT:人気ＡＶ女優]]%】になったようだ。
+	PRINTFORML %CALLNAME:TARGET%にそのことを伝えると、満更でもないといった表情を浮かべながら微笑んだ。 
+;人気ＡＶ女優付与、最大魅力、魅力20上昇
+	TALENT:人気ＡＶ女優 = 1
+	MAXBASE:魅力値 += 20
+	BASE:魅力値 += 20
+
+
+ENDIF
+
+;Talent表示上の問題でフォルダ『システム関係』の『info』もいじっている。
+;---------------------------------------------------------
+;【饒舌】獲得（キャバ嬢持ち限定、職業素質のほうにもってくべき？）
+;---------------------------------------------------------
+;話術レベル5以上、会話経験200、指名経験20以上、かつ【キャバ嬢】で入手
+IF ABL:話術 >= 5 && EXP:会話経験 >= 200 && EXP:指名経験 >= 20 && Talent:421 == 1 && Talent:182 == 0
+	PRINTFORML  %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:キャバ嬢]]%】の仕事にも慣れ、お客様とのおしゃべりも上手になった。
+	PRINTFORML  %CALLNAME:TARGET%は、【%TALENTNAME:[[TALENT:饒舌]]%】になった。
+	TALENT:饒舌 = 1
+ENDIF
+
+
+;---------------------------------------------------------
+;マスターの特殊能力
+;---------------------------------------------------------
+;堕とした人数が5人以上で、【謎の魅力】が付く
+IF FLAG:陥落人数 >= 5 && TALENT:MASTER:謎の魅力 == 0
+	PRINTFORMW %NAME:MASTER%は【%TALENTNAME:[[TALENT:謎の魅力]]%】を身につけた
+	TALENT:MASTER:謎の魅力 = 1
+ENDIF
+;ロリコンフラグ4以上で、【ロリコン】がつく
+IF FLAG:ロリコン >= 4 && TALENT:MASTER:ロリコン == 0
+	PRINTFORMW %NAME:MASTER%は【%TALENTNAME:[[TALENT:ロリコン]]%】を身につけた
+	TALENT:MASTER:ロリコン = 1
+ENDIF
+
+@恋心GET
+PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+PRINTFORML %CALLNAME:TARGET%は%CALLNAME:MASTER%との行為に悦びを感じているようだ…
+PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:恋心]]%】を得た
+TALENT:恋心 = 1
+;寝取られ進行値をリセット、完了値を倍に
+CFLAG:寝取られ進行ポイント = 0
+CFLAG:寝取られ完了値 *= 2
+;堕とした人数＋１。既に淫乱だとなし
+SIF TALENT:淫乱 == 0
+	FLAG:陥落人数 += 1
+;ロリコンフラグ
+IF FLAG:ロリコンなし == 0 && TALENT:淫乱 == 0
+	;【小学生】だと＋2/【中学生】だと＋1/【高校生】だと＋0/それ以外は－1
+	IF TALENT:小学生
+		FLAG:ロリコン += 2
+	ELSEIF TALENT:中学生
+		FLAG:ロリコン += 1
+	ELSEIF TALENT:高校生
+		FLAG:ロリコン += 0
+	ELSE
+		FLAG:ロリコン -= 1
+	ENDIF
+	;ロリコンフラグの値を０から５までの範囲に収める
+	SIF FLAG:ロリコン > 5
+		FLAG:ロリコン = 5
+	SIF FLAG:ロリコン < 0
+		FLAG:ロリコン = 0
+ENDIF
+
+;【ツンデレ】なら【ナマイキ】が【素直】に変化
+IF TALENT:ナマイキ && TALENT:ツンデレ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:ナマイキ]]%】を失い、【%TALENTNAME:[[TALENT:素直]]%】を得た
+	TALENT:ナマイキ = 0
+	TALENT:素直 = 1
+ENDIF
+;【ツンデレ】以外での【ナマイキ】は消滅
+IF TALENT:ナマイキ
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:ナマイキ]]%】を失った
+	TALENT:ナマイキ = 0
+ENDIF
+;クーデレや自制しながら我慢していたのに淫乱堕ちするのがイイのではないか？
+;【自制心】か【無関心】なら【売却不可】でない限り消える
+IF (TALENT:自制心 || TALENT:クール) && !TALENT:売却不可
+	PRINTFORML %NAME:TARGET%は否定の珠が半分になった
+	JUEL:否定 /= 2
+ENDIF
+;【一線を越えない】持ちの場合は【売却不可】でない限り消える
+IF TALENT:一線越えない && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:一線越えない]]%】を失った
+	TALENT:一線越えない = 0
+ENDIF
+;[ツンデレ]持ちで[ナマイキ]なしの場合に[素直]を持たせる処理
+IF TALENT:ナマイキ == 0 && TALENT:素直 == 0 && TALENT:ツンデレ == 1
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:素直]]%】を得た
+	TALENT:素直 = 1
+ENDIF
+;【奉仕しない】持ちの場合は【売却不可】でない限り消える
+IF TALENT:奉仕しない == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:奉仕しない]]%】でなくなった
+	TALENT:奉仕しない = 0
+ENDIF
+;【嫉妬】持ちの場合は【売却不可】でない限り消える
+IF TALENT:嫉妬 == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:嫉妬]]%】でなくなった
+	TALENT:嫉妬 = 0
+ENDIF
+;【大ドジ】持ちの場合は【売却不可】でない限り消える
+IF TALENT:大ドジ == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:大ドジ]]%】が緩和された
+	TALENT:大ドジ = 0
+ENDIF
+;[男性不信]から[両刀]へ。
+IF TALENT:男性不信 == 1 && TALENT:両刀 == 0
+	PRINTFORM オトコが苦手だった%NAME:TARGET%は【%TALENTNAME:[[TALENT:男性不信]]%】
+	PRINTFORMW ではなく【%TALENTNAME:[[TALENT:両刀]]%】になった
+	TALENT:男性不信 = 0
+	TALENT:両刀 = 1
+ENDIF
+;【事実の真相】持ちなら、主人公が【事実の真相】を知らなければ教えてくれる
+IF TALENT:事実の真相 == 1 && TALENT:MASTER:事実の真相 == 0 && FLAG:難易度 != 9
+	PRINTFORMW %NAME:TARGET%から、%CALLNAME:MASTER%は【%TALENTNAME:[[TALENT:事実の真相]]%】を知らされた
+	TALENT:MASTER:事実の真相 = 1
+ENDIF
+SIF RELATION:TARGET:MASTER <= 100
+	RELATION:TARGET:MASTER = 100
+
+@淫乱GET
+PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
+PRINTFORML %CALLNAME:TARGET%は%CALLNAME:MASTER%に与えられる快楽に溺れているようだ…
+PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:淫乱]]%】を得た
+TALENT:淫乱 = 1
+;堕とした人数。既に恋心だとなし
+SIF TALENT:恋心 == 0
+	FLAG:陥落人数 += 1
+;ロリコンフラグ
+IF FLAG:ロリコンなし == 0 && TALENT:恋心 == 0
+	;【小学生】だと＋2（上限5）
+	SIF TALENT:小学生 && FLAG:ロリコン < 4
+		FLAG:ロリコン += 2
+	SIF TALENT:小学生 && FLAG:ロリコン == 4
+		FLAG:ロリコン = 5
+	;【中学生】だと＋1（上限5）
+	SIF TALENT:中学生 && FLAG:ロリコン < 5
+		FLAG:ロリコン += 1
+	;【中学生】でも【高校生】でもないと－1
+	SIF TALENT:中学生 == 0 && TALENT:高校生 == 0 && FLAG:ロリコン > 0
+		FLAG:ロリコン -= 1
+ENDIF
+
+;クーデレや自制しながら我慢していたのに淫乱堕ちするのがイイのではないか？
+;【自制心】か【無関心】なら【売却不可】でない限り消える
+IF (TALENT:自制心 || TALENT:クール) && !TALENT:売却不可
+	PRINTFORML %NAME:TARGET%は否定の珠が半分になった
+	JUEL:否定 /= 2
+ENDIF
+;【一線を越えない】持ちの場合は【売却不可】でない限り消える
+IF TALENT:一線越えない == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:一線越えない]]%】を失った
+	TALENT:一線越えない = 0
+ENDIF
+;【抑圧】か【抵抗】か【嫉妬】なら【売却不可】でない限り消える
+IF (TALENT:抑圧 || TALENT:抵抗 || TALENT:嫉妬) && TALENT:売却不可 == 0
+	PRINTFORM %NAME:TARGET%は
+	IF TALENT:抑圧
+		PRINTFORM 【%TALENTNAME:[[TALENT:抑圧]]%】
+		TALENT:抑圧 = 0
+	ENDIF
+	IF TALENT:抵抗
+		PRINTFORM 【%TALENTNAME:[[TALENT:抵抗]]%】
+		TALENT:抵抗 = 0
+	ENDIF
+	IF TALENT:嫉妬
+		PRINTFORM 【%TALENTNAME:[[TALENT:抑圧]]%】
+		TALENT:嫉妬 = 0
+	ENDIF
+	PRINTL を失った
+	PRINTL 否定の珠が半分になった
+	JUEL:否定 /= 2
+ENDIF
+;【快感の否定】持ちの場合は【売却不可】でない限り消える
+IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
+	TALENT:快感の否定 = 0
+ENDIF
+IF TALENT:男性不信 == 1 && TALENT:両刀 == 0
+	PRINTFORM オトコが苦手だった%NAME:TARGET%は【%TALENTNAME:[[TALENT:男性不信]]%】
+	PRINTFORMW ではなく【%TALENTNAME:[[TALENT:両刀]]%】になった
+	TALENT:男性不信 = 0
+	TALENT:両刀 = 1
+ENDIF
+;【自慰しない】持ちの場合は【売却不可】でない限り消える
+IF TALENT:自慰しない == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰しない]]%】でなくなった
+	TALENT:自慰しない = 0
+ENDIF
+;【大ドジ】持ちの場合は【売却不可】でない限り消える
+IF TALENT:大ドジ == 1 && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:大ドジ]]%】が緩和された
+	TALENT:大ドジ = 0
+ENDIF
+SIF RELATION:TARGET:MASTER <= 100
+	RELATION:TARGET:MASTER = 100

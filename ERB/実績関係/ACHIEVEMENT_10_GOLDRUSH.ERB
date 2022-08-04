@@ -1,0 +1,43 @@
+﻿;===========================================================
+;実績・GOLD RUSH
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_10
+RESULTS = GOLD RUSH
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_10
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:10 == 0 && DIFFICULTY_CHECK() && MONEY:2 >= 5000000
+	GLOBAL:10 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:10
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_10
+; 解説文
+PRINTFORML あなたが女の子を指導し、そして撮影してきたＡＶは素晴らしい総売上を誇ります
+PRINTFORML そんなあなたの後に続かんと、新規でレーベルを立ち上げる者たちが後を絶たないようです
+PRINTFORMW この現象を業界では、歴史に倣って『ゴールドラッシュ』と呼んでいるそうです
+; ボーナスなどの処理はここ以降に記述する
+IF FLAG:報奨金受け取り == 0
+	PRINTFORML ゴールドラッシュの立役者であるあなたは桐生組から報奨金を貰うことができます
+	PRINTFORML 《報奨金を受け取りますか？》
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	PRINTL ※報奨金を受け取ると一部実績を解除・使用することができなくなります！
+	$INPUTLOOP
+	INPUT
+	IF RESULT == 0
+		PRINTFORMW 《桐生組から報奨金１０万ポイント貰いました》
+		FLAG:報奨金受け取り = 1
+		MONEY += 100000
+	ELSEIF RESULT == 1
+		PRINTFORMW 《桐生組から報奨金を受け取りませんでした》
+		RETURN
+	ELSE
+		GOTO INPUTLOOP
+	ENDIF
+ENDIF

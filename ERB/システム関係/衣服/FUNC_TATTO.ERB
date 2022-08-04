@@ -1,0 +1,43 @@
+﻿;===========================================================
+;ヘアスタイルの処理
+;===========================================================
+@PRINT_TATTO
+
+PRINT  
+IF (CFLAG:タトゥーの有無 & 1)
+	PRINTFORM %CSTR:タトゥー1場所%に%CSTR:タトゥー1モチーフ%
+	LOCAL = 1
+ENDIF
+IF (CFLAG:タトゥーの有無 & 2)
+	IF LOCAL
+		PRINTL タトゥーと、
+		PRINT  
+	ENDIF
+	PRINTFORM %CSTR:タトゥー2場所%に%CSTR:タトゥー2モチーフ%
+	LOCAL = 1
+ENDIF
+IF (CFLAG:タトゥーの有無 & 4)
+	IF LOCAL
+		PRINTL タトゥーと、
+		PRINT  
+	ENDIF
+	PRINTFORM %CSTR:タトゥー3場所%に%CSTR:タトゥー3モチーフ%
+	LOCAL = 1
+ENDIF
+IF (CFLAG:タトゥーの有無 & 8)
+	IF LOCAL
+		PRINTL タトゥーと、
+		PRINT  
+	ENDIF
+	PRINTFORM %CSTR:タトゥー4場所%に%CSTR:タトゥー4モチーフ%
+	LOCAL = 1
+ENDIF
+IF (CFLAG:タトゥーの有無 & 16)
+	IF LOCAL
+		PRINTL タトゥーと、
+		PRINT  
+	ENDIF
+	PRINTFORM %CSTR:タトゥー5場所%に%CSTR:タトゥー5モチーフ%
+	LOCAL = 1
+ENDIF
+

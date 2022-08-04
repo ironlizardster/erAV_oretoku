@@ -1,0 +1,206 @@
+﻿@GET_SP_TITLE(ARG:0)
+TEMP_STR = %UNICODE(0x2665)%
+ビデオタイトル1 '= REPLACE(STR:(ARG:0), "UNICODE0x2665", TEMP_STR)
+ビデオタイトル1 '= REPLACE(ビデオタイトル1, "%NICKNAME:TARGET%", NICKNAME:TARGET)
+SIF ASSI > 0
+	ビデオタイトル1 '= REPLACE(ビデオタイトル1, "%NICKNAME:ASSI%", NICKNAME:ASSI)
+
+;===========================================================
+;特殊タイトルの計算
+;===========================================================
+@SPECIAL_TITLE_CALC
+#FUNCTION
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:ASSI == [[キャラ:宮間かなで]]) && (NO:TARGET == [[キャラ:宮間未依]] || NO:ASSI == [[キャラ:宮間未依]])
+	RETURNF 12
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:ASSI == [[キャラ:宮間かなで]]) && (NO:TARGET == [[キャラ:雛見春乃]] || NO:ASSI == [[キャラ:雛見春乃]]) && !TALENT:(GETCHARA([[キャラ:宮間かなで]])):ギャル系 && !TALENT:(GETCHARA([[キャラ:雛見春乃]])):ギャル系
+	RETURNF 13
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:ASSI == [[キャラ:宮間かなで]]) && (NO:TARGET == [[キャラ:宮間カナ]] || NO:ASSI == [[キャラ:宮間カナ]]) && !TALENT:(GETCHARA([[キャラ:宮間かなで]])):ギャル系 && TALENT:(GETCHARA([[キャラ:宮間カナ]])):ギャル系
+	RETURNF 14
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:久留米紗英]] || NO:ASSI == [[キャラ:久留米紗英]]) && (NO:TARGET == [[キャラ:赤羽真理]] || NO:ASSI == [[キャラ:赤羽真理]])
+	RETURNF 15
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:飯野美樹]] || NO:ASSI == [[キャラ:飯野美樹]]) && (NO:TARGET == [[キャラ:神田ひより]] || NO:ASSI == [[キャラ:神田ひより]])
+	RETURNF 16
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:渡来桔梗]] || NO:ASSI == [[キャラ:渡来桔梗]]) && (NO:TARGET == [[キャラ:清水桜子]] || NO:ASSI == [[キャラ:清水桜子]])
+	RETURNF 17
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:多々良ひな]] || NO:ASSI == [[キャラ:多々良ひな]]) && (NO:TARGET == [[キャラ:多々良ゆな]] || NO:ASSI == [[キャラ:多々良ゆな]])
+	RETURNF 18
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:レイチェル・パラディスス]] || NO:ASSI == [[キャラ:レイチェル・パラディスス]]) && (NO:TARGET == [[キャラ:ユーニス・パラディスス]] || NO:ASSI == [[キャラ:ユーニス・パラディスス]])
+	RETURNF 19
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:桐生歌音]] || NO:ASSI == [[キャラ:桐生歌音]]) && (NO:TARGET == [[キャラ:橘乙姫]] || NO:ASSI == [[キャラ:橘乙姫]])
+	RETURNF 20
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:須野郁美]] || NO:ASSI == [[キャラ:須野郁美]]) && (NO:TARGET == [[キャラ:清水桜子]] || NO:ASSI == [[キャラ:清水桜子]])
+	RETURNF 21
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:三上聖佳]] && NO:ASSI == [[キャラ:蒼井遙]]
+	RETURNF 22
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:蒼井遙]] && NO:ASSI == [[キャラ:三上聖佳]]
+	RETURNF 23
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:知吉綾乃]] || NO:ASSI == [[キャラ:知吉綾乃]]) && (NO:TARGET == [[キャラ:桜井プリシラ]] || NO:ASSI == [[キャラ:桜井プリシラ]])
+	RETURNF 24
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:新島みひろ]] || NO:ASSI == [[キャラ:新島みひろ]]) && (NO:TARGET == [[キャラ:佐倉由希]] || NO:ASSI == [[キャラ:佐倉由希]])
+	RETURNF 25
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:相田エレナ]] || NO:ASSI == [[キャラ:相田エレナ]]) && (NO:TARGET == [[キャラ:相田アリサ]] || NO:ASSI == [[キャラ:相田アリサ]])
+	RETURNF 26
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:中島葉月]] || NO:ASSI == [[キャラ:中島葉月]]) && (NO:TARGET == [[キャラ:川岸あさひ]] || NO:ASSI == [[キャラ:川岸あさひ]])
+	RETURNF 27
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:桐生歌音]] && NO:ASSI == [[キャラ:桐生エレン]]
+	RETURNF 28
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:桐生エレン]] && NO:ASSI == [[キャラ:桐生歌音]]
+	RETURNF 29
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:織部真菜香]] && NO:ASSI == [[キャラ:織部夏美]]
+	RETURNF 30
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:織部夏美]] && NO:ASSI == [[キャラ:織部真菜香]]
+	RETURNF 31
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:渡来桔梗]] || NO:ASSI == [[キャラ:渡来桔梗]]) && (NO:TARGET == [[キャラ:榊あゆむ]] || NO:ASSI == [[キャラ:榊あゆむ]])
+	RETURNF 32
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:雛見春乃]] || NO:ASSI == [[キャラ:雛見春乃]]) && (NO:TARGET == [[キャラ:雛見まゆ]] || NO:ASSI == [[キャラ:雛見まゆ]])
+	RETURNF 33
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:レイチェル・パラディスス]] && NO:ASSI == [[キャラ:リーナ・レスピーチオ]]
+	RETURNF 34
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:リーナ・レスピーチオ]] && NO:ASSI == [[キャラ:レイチェル・パラディスス]]
+	RETURNF 35
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:飯野美樹]] || NO:ASSI == [[キャラ:飯野美樹]]) && (NO:TARGET == [[キャラ:アイーシャ・アルハズラッド]] || NO:ASSI == [[キャラ:アイーシャ・アルハズラッド]])
+	RETURNF 36
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:渡来桔梗]] || NO:ASSI == [[キャラ:渡来桔梗]]) && (NO:TARGET == [[キャラ:恋歌・ロックウェル]] || NO:ASSI == [[キャラ:恋歌・ロックウェル]])
+	RETURNF 37
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:相田エレナ]] || NO:ASSI == [[キャラ:相田エレナ]]) && (NO:TARGET == [[キャラ:李美鈴]] || NO:ASSI == [[キャラ:李美鈴]])
+	RETURNF 38
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:李美鈴]] || NO:ASSI == [[キャラ:李美鈴]]) && (NO:TARGET == [[キャラ:相田アリサ]] || NO:ASSI == [[キャラ:相田アリサ]])
+	RETURNF 39
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:秋名未澪]] || NO:ASSI == [[キャラ:秋名未澪]]) && (NO:TARGET == [[キャラ:小野原あんず]] || NO:ASSI == [[キャラ:小野原あんず]])
+	RETURNF 40
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:桐島翔子]] && NO:ASSI == [[キャラ:御弦伊月]]
+	RETURNF 41
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:御弦伊月]] && NO:ASSI == [[キャラ:桐島翔子]]
+	RETURNF 42
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:小日向詩織]] || NO:ASSI == [[キャラ:小日向詩織]]) && (NO:TARGET == [[キャラ:高階美夜]] || NO:ASSI == [[キャラ:高階美夜]])
+	RETURNF 43
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:羽生理沙]] || NO:ASSI == [[キャラ:羽生理沙]]) && (NO:TARGET == [[キャラ:相葉瀬理奈]] || NO:ASSI == [[キャラ:相葉瀬理奈]])
+	RETURNF 44
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:天海瑠衣]] || NO:ASSI == [[キャラ:天海瑠衣]]) && (NO:TARGET == [[キャラ:黒井都子]] || NO:ASSI == [[キャラ:黒井都子]])
+	RETURNF 45
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:桐生歌音]] && NO:ASSI == [[キャラ:黒井都子]]
+	RETURNF 46
+
+SIF ASSI > 0 && NO:TARGET == [[キャラ:黒井都子]] && NO:ASSI == [[キャラ:桐生歌音]]
+	RETURNF 47
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:赤城ゆうひ]] || NO:ASSI == [[キャラ:赤城ゆうひ]]) && (NO:TARGET == [[キャラ:赤城ひかる]] || NO:ASSI == [[キャラ:赤城ひかる]])
+	RETURNF 48
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:雛見春乃]] || NO:ASSI == [[キャラ:雛見春乃]]) && (NO:TARGET == [[キャラ:浅神智子]] || NO:ASSI == [[キャラ:浅神智子]])
+	RETURNF 49
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:御弦伊月]] || NO:ASSI == [[キャラ:御弦伊月]]) && (NO:TARGET == [[キャラ:高屋敷春海]] || NO:ASSI == [[キャラ:高屋敷春海]])
+	RETURNF 50
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:エリス]] || NO:ASSI == [[キャラ:エリス]]) && (NO:TARGET == [[キャラ:アイリス]] || NO:ASSI == [[キャラ:アイリス]])
+	RETURNF 51
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:レイチェル・パラディスス]] || NO:ASSI == [[キャラ:レイチェル・パラディスス]]) && (NO:TARGET == [[キャラ:エリス]] || NO:ASSI == [[キャラ:エリス]])
+	RETURNF 52
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間未依]] || NO:ASSI == [[キャラ:宮間未依]]) && (NO:TARGET == [[キャラ:アンドロイド]] || NO:ASSI == [[キャラ:アンドロイド]])
+	RETURNF 53
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間未依]] || NO:ASSI == [[キャラ:宮間未依]]) && (NO:TARGET == [[キャラ:ヒトミちゃん]] || NO:ASSI == [[キャラ:ヒトミちゃん]])
+	RETURNF 54
+
+SIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:交渉上手 && TALENT:サド && CFLAG:上着のタイプ == 241 && CFLAG:着衣状態 == 76 && CFLAG:特別コスチュームのタイプ == 85
+	RETURNF 55
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:佐々木美乃里]] || NO:ASSI == [[キャラ:佐々木美乃里]]) && (NO:TARGET == [[キャラ:赤坂姫乃]] || NO:ASSI == [[キャラ:赤坂姫乃]])
+	RETURNF 56
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:マルチナ・パラディスス]] || NO:ASSI == [[キャラ:マルチナ・パラディスス]]) && (NO:TARGET == [[キャラ:アスカ]] || NO:ASSI == [[キャラ:アスカ]])
+	RETURNF 57
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:桜野環]] || NO:ASSI == [[キャラ:桜野環]]) && (NO:TARGET == [[キャラ:本城愛衣子]] || NO:ASSI == [[キャラ:本城愛衣子]])
+	RETURNF 58
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:リリス]] || NO:ASSI == [[キャラ:リリス]]) && (NO:TARGET == [[キャラ:上坂美紅]] || NO:ASSI == [[キャラ:上坂美紅]])
+	RETURNF 59
+
+SIF ASSI > 0 && (NO:TARGET == [[キャラ:羽瀬川みこと]] || NO:ASSI == [[キャラ:羽瀬川みこと]]) && (NO:TARGET == [[キャラ:雛見まゆ]] || NO:ASSI == [[キャラ:雛見まゆ]])
+	RETURNF 60
+
+SIF ASSI > 0 && TALENT:高校生 && TALENT:ギャル系 && TALENT:ASSI:高校生 && TALENT:ASSI:ギャル系
+	RETURNF 557
+
+SIF F & 128
+	RETURNF 558
+
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 243 && TALENT:褐色肌
+	RETURNF 500
+
+SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 99 && CFLAG:特別コスチュームのタイプ == 99 && CFLAG:靴下の種類 == 99 && TALENT:小悪魔
+	RETURNF 501
+
+SIF (ASSI > 0 && CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 52 && CFLAG:髪の色 == 2 && CFLAG:髪型 == 4 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:髪の色 == 3 && CFLAG:ASSI:髪型 == 5) || (ASSI > 0 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:髪の色 == 2 && CFLAG:ASSI:髪型 == 4 && CFLAG:着衣状態 >= 12 && CFLAG:上着のタイプ == 52 && CFLAG:着衣状態 != 64 && CFLAG:髪の色 == 3 && CFLAG:髪型 == 5)
+	RETURNF 502
+
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 51 && CFLAG:髪の色 == 2 && CFLAG:髪型 == 8 && TALENT:アイドル && TALENT:カリスマ
+	RETURNF 503
+
+SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 40 && CFLAG:特別コスチュームのタイプ == 74 && (TALENT:小悪魔 || TALENT:ギャル系)
+	RETURNF 504
+
+SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 240 && CFLAG:特別コスチュームのタイプ == 61 && TALENT:永遠の愛 && TFLAG:ビデオ撮影内容 & 1
+	RETURNF 505
+
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 30 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0
+	RETURNF 506
+
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 244
+	RETURNF 507
+
+SIF TFLAG:コスプレ衣装 == 1 && CFLAG:髪の色 == 6 && CFLAG:髪型 == 4
+	RETURNF 508
+
+SIF TFLAG:コスプレ衣装 == 16 && CFLAG:髪の色 == 11 && CFLAG:髪型 == 5
+	RETURNF 509
+
+SIF TFLAG:コスプレ衣装 == 20 && TFLAG:ビデオ撮影内容 & 1 && TALENT:妹
+	RETURNF 510
+
+SIF TFLAG:コスプレ衣装 == 8 && A:3 && CFLAG:髪の色 == 10 && CFLAG:髪型 == 5 && BASE:実年齢 <= 22
+	RETURNF 511
+
+SIF ASSI > 0 && TALENT:ファッションモデル && TALENT:カリスマ && TALENT:ASSI:ファッションモデル && TALENT:ASSI:カリスマ
+	RETURNF 512
+
+RETURNF -1

@@ -1,0 +1,289 @@
+﻿;=================================================
+;歌姫の騎士団支部オープニング
+;=================================================
+@MIYAKO_LABO_OP
+
+PRINTFORML 最近都子の様子がおかしい、何か企んでいる気がすると歌音から相談を受けた%CALLNAME:MASTER%は放課後どこかに向かう都子を尾行することにした
+PRINTFORML 都子は尾行されていることにも気付かず歌音の家の近くにあるビルに入っていく
+PRINTFORMW また歌音の部屋の盗撮でもしようとしているのだろうと呆れながら追いかけてみるとそこには予想だにしていない物が存在していた
+PRINTFORML ガーヴ兵だ、ビルの一室を警護していたガーヴ兵は都子の姿を見つけると彼女に敬礼し道を空けた
+PRINTFORMW 何かおかしいと都子に声をかけてみると都子は奇妙な叫び声を上げこちらに目をむけた
+PRINTFORML 「ひょんわぁぁ！！えっ？%CALLNAME:MASTER%な、なんでここに気付いたんですの！？ここのことはおねーさまにも内緒にしていたのに」
+PRINTFORMW 問い詰めてみると都子は渋々と事情の説明を始めた
+PRINTFORML 「この間おねーさまを狙った憎っくき平和の歌姫ミーナ・クレインを捕らえたのは憶えているですの？
+PRINTFORML 　彼女をこのまま逃がせばまたおねーさまを狙うに違いないとここにある洗脳装置を使ってワタクシの命令を絶対遵守するようにしましたの
+PRINTFORML 　そうしたら彼女の部下達…ここからは歌姫の騎士団と呼びますの…は彼女の傀儡しかいなかったみたいで彼らはワタクシの命令に従うようになりましたの
+PRINTFORML 　っと言ってもコイツらを放置しておくとあの女がまた懲りずに内乱の準備を始める力になる
+PRINTFORML 　だからワタクシはあの女とコイツらを引き離す為にここにコイツらを待機させて定期的に監視していましたの」
+PRINTFORML 歌姫の騎士団をミーナから引き離すのは間違っていないだろうが彼らをここに放り込んだままにするのは無理がありすぎる
+PRINTFORML しかし都子が歌姫の騎士団に命令できるのなら何かできるのではないだろうか、
+PRINTFORML 「コイツらを利用する？そうは言ってもコイツらにさせられることといってもちょっとした情報操作くらいですの…AVの売れ筋をある程度こちらの思うように変えられる程度の…」
+PRINTFORML それだけできれば十分だ%CALLNAME:MASTER%は都子に歌姫の騎士団にAVの売れ筋を操作させるようお願いした
+PRINTFORMW 「わかりましたの、でも…売れ筋が変わるのには時間がかかるからそこだけは注意してほしいですの」
+FLAG:歌姫の騎士団 = 1
+FLAG:売れ筋操作1 = RAND:31
+FLAG:売れ筋操作2 = RAND:31
+FLAG:売れ筋操作3 = RAND:31
+FLAG:124 = RAND:100
+FLAG:売れ筋操作中 = 0
+FLAG:来月売れ筋 = 0
+FLAG:127 = 0
+FLAG:128 = 0
+FLAG:129 = 0
+
+RETURN 0
+
+;=================================================
+;歌姫の騎士団支部
+;=================================================
+@MIYAKO_LABO
+
+SIF GETCHARA([[キャラ:桐生歌音]], 0) != -1
+	LOCAL:0 = GETCHARA([[キャラ:桐生歌音]])
+
+SIF GETCHARA([[キャラ:須野郁美]], 0) != -1
+	LOCAL:1 = GETCHARA([[キャラ:須野郁美]])
+
+PRINTFORMW 「あら%CALLNAME:MASTER%、今日はどうするですの？」
+
+$INPUT_LOOP
+DRAWLINE
+PRINTL 歌姫の騎士団支部
+PRINTL 《来月の売れ筋の変更他歌姫の騎士団の関係者を手配してくれます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 0] - ビデオの売れ筋を操作する              （技術料： 500000ポイント）
+PRINTL 
+;ユーニスが現在手持ちにない状態で、歌音組長ルート（勝手に命名）に進んでおらず
+;かつ歌音が処女でエメクイの場合のみ『歌音―超時空アイドルルート()』へ
+IF GETCHARA([[キャラ:ユーニス・パラディスス]], 0) > 0
+	PRINTL  [ -] 
+ELSEIF TALENT:(LOCAL:0):処女 && TALENT:(LOCAL:0):[[TALENT:Emerald Queen]] && TALENT:(LOCAL:1):恋心 && !FLAG:歌音超時空アイドルルート && PBAND:145 < 3
+	PRINTL  [ 1] - ソウル・バイブレーション・システムを開発する        （技術料：1000000ポイント）
+ENDIF
+PRINTL 
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	CALL MIYAKO_LABO_VIDEOSELL
+ELSEIF RESULT == 1
+	CALL MIYAKO_LABO_SYMPHOGEAR
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+GOTO INPUT_LOOP
+;=================================================
+;歌姫の騎士団支部売れ筋操作
+;=================================================
+@MIYAKO_LABO_VIDEOSELL
+IF MONEY < 500000
+	PRINTFORML 「お金が足りませんの…流石にお金が無いと無理ですの」
+ELSEIF FLAG:売れ筋操作中 != 0
+	PRINTFORML 「何をいっていますの？もう既に準備は済ませてますの」
+ELSE
+	$INPUT_LOOP
+	PRINTFORML 「了解ですの、来月の売れ筋にできそうなのはこれですの」
+	CALL MIYAKO_LABO_VIDEOSELL_SELECT, FLAG:売れ筋操作1, 0
+	CALL MIYAKO_LABO_VIDEOSELL_SELECT, FLAG:売れ筋操作2, 1
+	CALL MIYAKO_LABO_VIDEOSELL_SELECT, FLAG:売れ筋操作3, 2
+	PRINTL  [ 3] - 歌音おねーさま
+	DRAWLINE
+	PRINTL  [999] - 戻る
+
+	INPUT
+
+	IF RESULT == 0
+		PRINTFORM 「それでは歌姫の騎士団に売れ筋を
+		CALL MIYAKO_VIDEOSALE_PRINT, FLAG:売れ筋操作1
+		PRINTFORMW にするよう指示を出しますの」
+		FLAG:来月売れ筋 = FLAG:売れ筋操作1
+		FLAG:売れ筋操作中 = 1
+		MONEY -= 500000
+		RETURN 0
+	ELSEIF RESULT == 1
+		PRINTFORM 「それでは歌姫の騎士団に売れ筋を
+		CALL MIYAKO_VIDEOSALE_PRINT, FLAG:売れ筋操作2
+		PRINTFORMW にするよう指示を出しますの」
+		FLAG:来月売れ筋 = FLAG:売れ筋操作2
+		FLAG:売れ筋操作中 = 1
+		MONEY -= 500000
+		RETURN 0
+	ELSEIF RESULT == 2
+		PRINTFORM 「それでは歌姫の騎士団に売れ筋を
+		CALL MIYAKO_VIDEOSALE_PRINT, FLAG:売れ筋操作3
+		PRINTFORMW にするよう指示を出しますの」
+		FLAG:来月売れ筋 = FLAG:売れ筋操作3
+		FLAG:売れ筋操作中 = 1
+		MONEY -= 500000
+		RETURN 0
+	ELSEIF RESULT == 3
+		PRINTFORMW 「その言葉を待っていましたの見ていてくださいおねーさまこのワタクシの力でおねーさまの素晴らしさを世界全土に広めて見せますの！！」
+		IF FLAG:124 > 0
+			PRINTFORMW なんと都子の凶行は成功してしまったようだ
+			FLAG:来月売れ筋 = -1
+		ELSE
+			PRINTFORMW 当然のことながら歌音に阻止されました支度金は歌音に没収されたようだ
+			FLAG:来月売れ筋 = RAND:31
+		ENDIF
+		FLAG:売れ筋操作中 = 1
+		MONEY -= 500000
+		RETURN 0
+	ELSEIF RESULT == 999
+		PRINTFORMW 「やめるんですの？わかりましたの、ただ…月が変わらないと変えれる売れ筋もかわりませんの」
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+	GOTO INPUT_LOOP
+ENDIF
+
+;=================================================
+;歌姫の騎士団支部売れ筋操作選択肢と表示
+;=================================================
+@MIYAKO_LABO_VIDEOSELL_SELECT, ARG, ARG:1
+
+IF ARG == 0
+	PRINTFORML  [ {ARG:1}] - ロリ系
+ELSEIF ARG == 1
+	PRINTFORML  [ {ARG:1}] - お姉さま系
+ELSEIF ARG == 2
+	PRINTFORML  [ {ARG:1}] - 女子校生系
+ELSEIF ARG == 3
+	PRINTFORML  [ {ARG:1}] - 貧乳
+ELSEIF ARG == 4
+	PRINTFORML  [ {ARG:1}] - コスプレ系
+ELSEIF ARG == 5
+	PRINTFORML  [ {ARG:1}] - セレブ系
+ELSEIF ARG == 6
+	PRINTFORML  [ {ARG:1}] - 巨乳
+ELSEIF ARG == 7
+	PRINTFORML  [ {ARG:1}] - 野外露出モノ
+ELSEIF ARG == 8
+	PRINTFORML  [ {ARG:1}] - 外国人・ハーフ・クォーター
+ELSEIF ARG == 9
+	PRINTFORML  [ {ARG:1}] - 芸能人モノ
+ELSEIF ARG == 10
+	PRINTFORML  [ {ARG:1}] - 人妻
+ELSEIF ARG == 11
+	PRINTFORML  [ {ARG:1}] - 処女喪失モノ
+ELSEIF ARG == 12
+	PRINTFORML  [ {ARG:1}] - サキュバス
+ELSEIF ARG == 13
+	PRINTFORML  [ {ARG:1}] - ＳＭ
+ELSEIF ARG == 14
+	PRINTFORML  [ {ARG:1}] - キャバ嬢
+ELSEIF ARG == 15
+	PRINTFORML  [ {ARG:1}] - レズ系
+ELSEIF ARG == 16
+	PRINTFORML  [ {ARG:1}] - 風俗嬢
+ELSEIF ARG == 17
+	PRINTFORML  [ {ARG:1}] - オトコの娘
+ELSEIF ARG == 18
+	PRINTFORML  [ {ARG:1}] - オナニー系
+ELSEIF ARG == 19
+	PRINTFORML  [ {ARG:1}] - アナルＳＥＸ系
+ELSEIF ARG == 20
+	PRINTFORML  [ {ARG:1}] - 妊婦モノ
+ELSEIF ARG == 21
+	PRINTFORML  [ {ARG:1}] - ふたなり
+ELSEIF ARG == 22
+	PRINTFORML  [ {ARG:1}] - らぶらぶＳＥＸモノ
+ELSEIF ARG == 23
+	PRINTFORML  [ {ARG:1}] - メガネっ娘
+ELSEIF ARG == 24
+	PRINTFORML  [ {ARG:1}] - パイパン
+ELSEIF ARG == 25
+	PRINTFORML  [ {ARG:1}] - ギャル系
+ELSEIF ARG == 26
+	PRINTFORML  [ {ARG:1}] - モデル
+ELSEIF ARG == 27
+	PRINTFORML  [ {ARG:1}] - メイド
+ELSEIF ARG == 28
+	PRINTFORML  [ {ARG:1}] - ナース
+ELSEIF ARG == 29
+	PRINTFORML  [ {ARG:1}] - 女教師
+ELSEIF ARG == 30
+	PRINTFORML  [ {ARG:1}] - ＯＬ
+ENDIF
+
+@MIYAKO_VIDEOSALE_PRINT, ARG
+
+IF ARG == 0
+	PRINTFORM ロリ系
+ELSEIF ARG == 1
+	PRINTFORM お姉さま系
+ELSEIF ARG == 2
+	PRINTFORM 女子校生系
+ELSEIF ARG == 3
+	PRINTFORM 貧乳
+ELSEIF ARG == 4
+	PRINTFORM コスプレ系
+ELSEIF ARG == 5
+	PRINTFORM セレブ系
+ELSEIF ARG == 6
+	PRINTFORM 巨乳
+ELSEIF ARG == 7
+	PRINTFORM 野外露出モノ
+ELSEIF ARG == 8
+	PRINTFORM 外国人・ハーフ・クォーター
+ELSEIF ARG == 9
+	PRINTFORM 芸能人モノ
+ELSEIF ARG == 10
+	PRINTFORM 人妻
+ELSEIF ARG == 11
+	PRINTFORM 処女喪失モノ
+ELSEIF ARG == 12
+	PRINTFORM サキュバス
+ELSEIF ARG == 13
+	PRINTFORM ＳＭ
+ELSEIF ARG == 14
+	PRINTFORM キャバ嬢
+ELSEIF ARG == 15
+	PRINTFORM レズ系
+ELSEIF ARG == 16
+	PRINTFORM 風俗嬢
+ELSEIF ARG == 17
+	PRINTFORM オトコの娘
+ELSEIF ARG == 18
+	PRINTFORM オナニー系
+ELSEIF ARG == 19
+	PRINTFORM アナルＳＥＸ系
+ELSEIF ARG == 20
+	PRINTFORM 妊婦モノ
+ELSEIF ARG == 21
+	PRINTFORM ふたなり
+ELSEIF ARG == 22
+	PRINTFORM らぶらぶＳＥＸモノ
+ELSEIF ARG == 23
+	PRINTFORM メガネっ娘
+ELSEIF ARG == 24
+	PRINTFORM パイパン
+ELSEIF ARG == 25
+	PRINTFORM ギャル系
+ELSEIF ARG == 26
+	PRINTFORM モデル
+ELSEIF ARG == 27
+	PRINTFORM メイド
+ELSEIF ARG == 28
+	PRINTFORM ナース
+ELSEIF ARG == 29
+	PRINTFORM 女教師
+ELSEIF ARG == 30
+	PRINTFORM ＯＬ
+ENDIF

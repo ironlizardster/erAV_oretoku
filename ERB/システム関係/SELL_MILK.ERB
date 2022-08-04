@@ -1,0 +1,42 @@
+﻿;-------------------------------------------------
+;母乳売却
+;-------------------------------------------------
+@SELL_MILK
+
+A = TFLAG:搾乳中 * 100
+O = A * 5
+IF A > 0
+	DRAWLINE
+
+	IF EXP:噴乳経験 <= EXPLV:3
+		TIMES O , 1.00
+	ELSEIF EXP:噴乳経験 <= EXPLV:4
+		TIMES O , 1.20
+	ELSEIF EXP:噴乳経験 <= EXPLV:5
+		TIMES O , 1.50
+	ELSE
+		TIMES O , 2.00
+	ENDIF
+
+	;処女なら売却額三倍
+	SIF TALENT:処女
+		O = O * 3
+	;乳狂いなら売却額ニ倍
+	SIF TALENT:乳狂い
+		O = O * 2
+
+	PRINTFORML 搾乳器を使って%CALLNAME:TARGET%から{A}ccの母乳を搾り出した。
+	IF ASSI > 0
+		IF TALENT:ASSI:交渉上手 && ABL:ASSI:話術
+			PRINTFORML %CALLNAME:ASSI%の巧みな加工で、%CALLNAME:TARGET%の母乳は通常より高く売れた。
+			O *= 100 + ABL:ASSI:話術 * 5
+			O /= 100
+		ENDIF
+	ENDIF
+	PRINTFORML %NAME:TARGET%の母乳には{O}ポイントの買値が付いた。
+	MONEY += O
+	PRINTFORML 所持金 {O}ポイント増加
+	WAIT
+ENDIF
+
+RETURN 0

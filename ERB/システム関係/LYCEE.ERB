@@ -1,0 +1,634 @@
+﻿;総契約女優数に使ってるLOCAL:2とかCHARANUM-2でいいんじゃないのかこれ
+;===========================================================
+;女子寮
+;===========================================================
+@LYCEE_MAIN
+
+$LYCEE_TOP
+LOCAL:1 = 0
+LOCAL:2 = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:入寮中 == 0
+		CONTINUE
+	ELSE
+		LOCAL:1++
+	ENDIF
+REND
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		LOCAL:2++
+	ENDIF
+REND
+DRAWLINE
+PRINTFORML 《女子寮》
+PRINTFORML 契約済みの女優を女子寮に入れることができます
+PRINTFORM 現在入寮中の人数（
+SIF LOCAL:1 < 10
+	PRINT 0
+PRINTFORM {LOCAL:1}人 / 
+SIF LOCAL:2 < 10
+	PRINT 0
+PRINTFORML {LOCAL:2}人）
+DRAWLINE
+PRINTL  [0] - 入寮させる
+PRINTL  [1] - 呼び戻す
+PRINTL  [2] - 施設を拡張する
+IF FLAG:女子寮拡張
+	PRINTL  [3] - 入寮中の女優に施設を利用させる
+ELSE
+	PRINTL  [-] - －－－－－－－
+ENDIF
+;IF (FLAG:女子寮拡張 & 16)
+;	PRINTL  [4] - 秘密の地下室に赴く
+;ELSE
+;	PRINTL  [-] - －－－－－－－
+;ENDIF
+DRAWLINE
+PRINTL [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL LYCEE_IN
+ELSEIF RESULT == 1
+	CALL LYCEE_OUT
+ELSEIF RESULT == 2
+	CALL LYCEE_LABO
+ELSEIF RESULT == 3 && FLAG:女子寮拡張
+	CALL LYCEE_LABO_USE
+;ELSEIF RESULT == 4 && (FLAG:女子寮拡張 & 16)
+;	CALL UNDERGROUND_LABO
+ELSEIF RESULT == 999
+	RETURN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;リストから999で抜けるとSHOPに戻るのはよくない
+GOTO LYCEE_TOP
+;RETURN 0
+
+;===========================================================
+;入寮処理
+;===========================================================
+@LYCEE_IN
+
+LOCAL:1 = 0
+LOCAL:2 = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:入寮中 == 0
+		CONTINUE
+	ELSE
+		LOCAL:1++
+	ENDIF
+REND
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		LOCAL:2++
+	ENDIF
+REND
+
+PRINTFORML 《入寮させる》
+PRINTFORM 現在入寮中の人数（
+SIF LOCAL:1 < 10
+	PRINT 0
+PRINTFORM {LOCAL:1}人 / 
+SIF LOCAL:2 < 10
+	PRINT 0
+PRINTFORML {LOCAL:2}人）
+DRAWLINE
+$INPUT_LOOP
+
+CALL LIFE_LIST_NEW,LL_MODE_指導可
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSE
+	TARGET = RESULT
+	PRINTFORML 《%NAME:TARGET%を女子寮に入寮させますか？》
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP_1
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 《%NAME:TARGET%を女子寮に入寮させました》
+			CFLAG:入寮中 = 1
+			RESTART
+		ELSEIF RESULT == 1
+			PRINTFORMW 《入寮させませんでした》
+			RESTART
+		ELSE
+			GOTO INPUT_LOOP_1
+		ENDIF
+ENDIF
+
+RETURN 0
+
+;===========================================================
+;出寮処理
+;===========================================================
+@LYCEE_OUT
+
+LOCAL:1 = 0
+LOCAL:2 = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:入寮中 == 0
+		CONTINUE
+	ELSE
+		LOCAL:1++
+	ENDIF
+REND
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		LOCAL:2++
+	ENDIF
+REND
+
+PRINTFORML 《呼び戻す》
+PRINTFORM 現在入寮中の人数（
+SIF LOCAL:1 < 10
+	PRINT 0
+PRINTFORM {LOCAL:1}人 / 
+SIF LOCAL:2 < 10
+	PRINT 0
+PRINTFORML {LOCAL:2}人）
+DRAWLINE
+$INPUT_LOOP
+
+CALL LIFE_LIST_NEW,LL_MODE_入寮中
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSE
+	TARGET = RESULT
+	PRINTFORML 《%NAME:TARGET%を女子寮から呼び戻しますか？》
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP_1
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 《%NAME:TARGET%を女子寮から呼び戻しました》
+			CFLAG:入寮中 = 0
+			CFLAG:寮施設利用 = 0
+			RESTART
+		ELSEIF RESULT == 1
+			PRINTFORMW 《呼び戻しませんでした》
+			RESTART
+		ELSE
+			GOTO INPUT_LOOP_1
+		ENDIF
+ENDIF
+
+RETURN 0
+
+;===========================================================
+;寮施設利用
+;===========================================================
+@LYCEE_LABO_USE
+
+LOCAL:1 = 0
+LOCAL:2 = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:入寮中 == 0
+		CONTINUE
+	ELSE
+		LOCAL:1++
+	ENDIF
+REND
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		LOCAL:2++
+	ENDIF
+REND
+
+PRINTFORML 《施設を利用させる》
+PRINTFORM 現在入寮中の人数（
+SIF LOCAL:1 < 10
+	PRINT 0
+PRINTFORM {LOCAL:1}人 / 
+SIF LOCAL:2 < 10
+	PRINT 0
+PRINTFORML {LOCAL:2}人）
+DRAWLINE
+$INPUT_LOOP
+
+CALL LIFE_LIST_NEW,LL_MODE_入寮中
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSE
+	TARGET = RESULT
+	PRINTFORML 《%NAME:TARGET%にどの施設を利用させますか？》
+	SIF (FLAG:女子寮拡張 & 1)
+		PRINTL [0] - エステルーム
+	SIF (FLAG:女子寮拡張 & 2)
+		PRINTL [1] - 談話室
+	SIF (FLAG:女子寮拡張 & 8)
+		PRINTL [2] - 託児所
+	SIF (FLAG:女子寮拡張 & 32)
+		PRINTL [3] - 豪華カラオケルーム
+	SIF (FLAG:女子寮拡張 & 64)
+		PRINTL [4] - ダンススタジオ
+	$INPUT_LOOP_1
+	INPUT
+		IF RESULT == 0 && (FLAG:女子寮拡張 & 1)
+			PRINTFORMW 《%NAME:TARGET%にエステルームを利用させます》
+			CFLAG:寮施設利用 = 1
+			RESTART
+		ELSEIF RESULT == 1 && (FLAG:女子寮拡張 & 2)
+			PRINTFORMW 《%NAME:TARGET%に談話室を利用させます》
+			CFLAG:寮施設利用 = 2
+			RESTART
+		ELSEIF RESULT == 2 && (FLAG:女子寮拡張 & 8)
+			PRINTFORMW 《%NAME:TARGET%に託児所を利用させます》
+			CFLAG:寮施設利用 = 3
+			RESTART
+		ELSEIF RESULT == 3 && (FLAG:女子寮拡張 & 32)
+			PRINTFORMW 《%NAME:TARGET%に豪華カラオケルームを利用させます》
+			CFLAG:寮施設利用 = 4
+			RESTART
+		ELSEIF RESULT == 4 && (FLAG:女子寮拡張 & 64)
+			PRINTFORMW 《%NAME:TARGET%にダンススタジオを利用させます》
+			CFLAG:寮施設利用 = 5
+			RESTART
+		ELSE
+			GOTO INPUT_LOOP_1
+		ENDIF
+ENDIF
+
+RETURN 0
+
+;===========================================================
+;寮施設拡張
+;===========================================================
+@LYCEE_LABO
+
+DRAWLINE
+PRINTL どの施設を拡張しますか？
+PRINTFORML 《運営資金 {MONEY}ポイント》(現在の貢献度：{EXP:MASTER:貢献度})
+DRAWLINE
+SIF (FLAG:女子寮拡張 & 1) == 0
+	PRINTL  [0] - エステルーム　　　　　　(300000ポイント)
+SIF (FLAG:女子寮拡張 & 2) == 0
+	PRINTL  [1] - 談話室　　　　　　　　　(150000ポイント)
+SIF (FLAG:女子寮拡張 & 4) == 0
+	PRINTL  [2] - 全天候型プール　　　　　(100000ポイント)
+SIF (FLAG:女子寮拡張 & 8) == 0
+	PRINTL  [3] - 託児所　　　　　　　　　(300000ポイント)
+SIF (FLAG:女子寮拡張 & 16) == 0 && GETCHARA([[キャラ:レイチェル・パラディスス]]) != 0
+	PRINTL  [4] - 秘密の地下室　　　　　　(500000ポイント)
+SIF (FLAG:女子寮拡張 & 32) == 0
+	PRINTL  [5] - 豪華カラオケルーム　　　(100000ポイント)
+SIF (FLAG:女子寮拡張 & 64) == 0 
+	PRINTL  [6] - ダンススタジオ　　　　　(100000ポイント)
+SIF (FLAG:女子寮拡張 & 128) == 0
+	PRINTL  [7] - 警備員　　        　　　(80000ポイント)
+DRAWLINE
+PRINTL  [99] - 拡張状況確認
+DRAWLINE
+PRINTL  [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0 && (FLAG:女子寮拡張 & 1) == 0
+	PRINTFORML  エステルームを設置しました
+	PRINTFORMW  週初めに施設を利用しているキャラクターの魅力値がわずかに回復します
+	MONEY -= 300000
+	FLAG:女子寮拡張 |= 1
+	RESTART
+ELSEIF RESULT == 1 && (FLAG:女子寮拡張 & 2) == 0
+	PRINTFORML  談話室を設置しました
+	PRINTFORMW  週初めに施設を利用しているキャラクター同士の相性が微増します
+	MONEY -= 150000
+	FLAG:女子寮拡張 |= 2
+	RESTART
+ELSEIF RESULT == 2 && (FLAG:女子寮拡張 & 4) == 0
+	PRINTFORML  全天候型プールを設置しました
+	PRINTFORMW  ビデオ撮影時に「全天候型プール」を選択できるようになります
+	MONEY -= 100000
+	FLAG:女子寮拡張 |= 4
+	RESTART
+ELSEIF RESULT == 3 && (FLAG:女子寮拡張 & 8) == 0
+	PRINTFORML  託児所を設置しました
+	PRINTFORMW  施設を利用している【育児中】のキャラの現場復帰が早くなります
+	MONEY -= 300000
+	FLAG:女子寮拡張 |= 8
+	RESTART
+ELSEIF RESULT == 4 && (FLAG:女子寮拡張 & 16) == 0
+	PRINTFORML  秘密の地下室を設置しました
+	PRINTFORMW  ビデオ撮影時に「秘密の地下室」を選択できるようになります
+	MONEY -= 500000
+	FLAG:女子寮拡張 |= 16
+	RESTART
+ELSEIF RESULT == 5 && (FLAG:女子寮拡張 & 32) == 0
+	PRINTFORML  豪華カラオケルームを設置しました
+	PRINTFORMW  週初めに施設を利用しているキャラクターの歌唱経験が増加します
+	MONEY -= 300000
+	FLAG:女子寮拡張 |= 32
+	RESTART
+ELSEIF RESULT == 6 && (FLAG:女子寮拡張 & 64) == 0
+	PRINTFORML  ダンススタジオを設置しました
+	PRINTFORMW  週初めに施設を利用しているキャラクターの舞踊経験が増加します
+	MONEY -= 300000
+	FLAG:女子寮拡張 |= 64
+	RESTART
+ELSEIF RESULT == 7 && (FLAG:女子寮拡張 & 128) == 0
+	PRINTFORML  警備員と契約しました
+	PRINTFORMW  施設を利用しているキャラクターが【彼氏あり】の場合、彼氏とのイベントが発生しないようになります
+	MONEY -= 800000
+	FLAG:女子寮拡張 |= 128
+	RESTART
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;===========================================================
+;女子寮イベント
+;===========================================================
+@LYCEE_EVENT_WEEKEND
+#DIM SKIP_DETAILS
+
+LOCAL = 0
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:入寮中 == 0
+		CONTINUE
+	ELSE
+		LOCAL++
+	ENDIF
+REND
+
+SKIP_DETAILS = LOCAL > 10
+[IF_DEBUG]
+SKIP_DETAILS = 1
+[ENDIF]
+
+IF (FLAG:女子寮拡張 & 1)
+	SIF SKIP_DETAILS
+		PRINTFORML 女優が女子寮のエステルームでオイルマッサージを受けている……
+
+	LOCAL = 0
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+[IF_NDEBUG]
+		ELSEIF CFLAG:COUNT:入寮中 == 0
+			CONTINUE
+		ELSEIF CFLAG:COUNT:寮施設利用 != 1
+			CONTINUE
+[ENDIF]
+		ELSE
+			SIF !SKIP_DETAILS
+				PRINTFORML %NAME:COUNT%は女子寮のエステルームでオイルマッサージを受けている……
+
+			LOCAL = MAXBASE:COUNT:魅力値 * 3
+			LOCAL /= 100
+			SIF LOCAL <= 1
+				LOCAL = 1
+			SIF BASE:COUNT:魅力値 + LOCAL >= MAXBASE:COUNT:魅力値
+				LOCAL = MAXBASE:COUNT:魅力値 - BASE:COUNT:魅力値
+			IF BASE:COUNT:魅力値 >= MAXBASE:COUNT:魅力値
+				SIF !SKIP_DETAILS
+					PRINTFORML 《%CALLNAME:COUNT%にはこれ以上効果がありません》
+			ELSE
+				SIF !SKIP_DETAILS
+					PRINTFORML 《%CALLNAME:COUNT%の魅力値が{LOCAL}回復した》
+				BASE:COUNT:魅力値 += LOCAL
+			ENDIF
+			IF !SKIP_DETAILS
+				DRAWLINE
+				WAIT
+			ENDIF
+		ENDIF
+	REND
+ENDIF
+
+;△同じ組み合わせが二回発生するのはいやなので一回にして双方からの相性が上がるようにしたい
+;スキップ機能もほしいかもしれない。長い。
+IF (FLAG:女子寮拡張 & 2)
+	SIF SKIP_DETAILS
+		PRINTFORML 女優が女子寮の談話室でスキンシップしている……
+	VARSET LOCAL, 0
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF CFLAG:COUNT:寮施設利用 == 2
+			LOCAL:2 ++
+		ENDIF
+	REND
+	FOR LOCAL, 0, CHARANUM - 1
+		IF LOCAL == 0
+			CONTINUE
+[IF_NDEBUG]
+		ELSEIF CFLAG:LOCAL:入寮中 == 0
+			CONTINUE
+		ELSEIF CFLAG:LOCAL:寮施設利用 != 2
+			CONTINUE
+[ENDIF]
+		ELSE
+			FOR LOCAL:1, LOCAL + 1, CHARANUM
+				IF LOCAL == 0
+					CONTINUE
+[IF_NDEBUG]
+				ELSEIF CFLAG:(LOCAL:1):入寮中 == 0
+					CONTINUE
+				ELSEIF CFLAG:(LOCAL:1):寮施設利用 != 2
+					CONTINUE
+[ENDIF]
+				ELSEIF LOCAL:1 == LOCAL
+					CONTINUE
+				ELSEIF RELATION:LOCAL:(NO:(LOCAL:1)) >= 1000 && RELATION:(LOCAL:1):(NO:LOCAL) >= 1000
+					CONTINUE
+;△発生率調整用に確保
+;				ELSEIF RAND:3 == 0
+;					CONTINUE
+				ELSE
+					IF ABL:LOCAL:レズっ気 >= 2 && ABL:(LOCAL:1):レズっ気 >= 2 && (RELATION:LOCAL:(NO:(LOCAL:1)) >= 250 || RELATION:(LOCAL:1):(NO:LOCAL) >= 250)
+						IF !SKIP_DETAILS
+							PRINTFORM 談話室で密着するほどの近い距離で、
+							SIF LOCAL:2 >= 3						
+								PRINTFORM 人目もはばからずに
+							PRINTFORM スキンシップを交えながら他愛もないおしゃべりをしていた%NAME:LOCAL%と%NAME:(LOCAL:1)%だが、
+							PRINTFORML やがてそのスキンシップは過激なものとなり、舌を絡めて唾液を交換するようなキスをしながら、お互いの秘部を愛撫し始めた……
+							PRINTFORM %CALLNAME:LOCAL%と%CALLNAME:(LOCAL:1)%の喘ぎ声はどんどん甘ったるいものとなり、
+							SIF LOCAL:2 >= 3
+								PRINTFORM 他の者が見ている前で
+							PRINTFORML ほぼ同時に絶頂に達した
+							PRINTFORML %CALLNAME:LOCAL%と%CALLNAME:(LOCAL:1)%はレズプレイを通じて、お互いのことを深く知ったようだ……
+						ENDIF
+						RELATION:LOCAL:(NO:(LOCAL:1)) += 10
+						RELATION:(LOCAL:1):(NO:LOCAL) += 10
+[IF_NDEBUG]
+						IF CFLAG:LOCAL:ファーストキスの相手 == -1
+							PRINTL
+							CFLAG:LOCAL:ファーストキスの相手 = 1
+							SETCOLOR 0xF58F98
+								PRINTFORM 【ファーストキス】
+							RESETCOLOR
+							PRINTFORML （%CALLNAME:LOCAL%）
+							CSTR:LOCAL:ファーストキスの相手 = %NAME:(LOCAL:1)%
+							CFLAG:LOCAL:ファーストキス喪失年齢 = BASE:LOCAL:実年齢
+							CFLAG:LOCAL:ファーストキス喪失月 = DAY:1
+							CFLAG:LOCAL:ファーストキス喪失日 = DAY:2
+							;△そのうち場所に談話室とか突っ込んでおくこと
+							;ここに限らず日付を合わせる処理はどっかでしないと……
+							;どう考えてもファーストキス関数作るべきなんですが今回はパス
+						ENDIF
+						IF CFLAG:(LOCAL:1):ファーストキスの相手 == -1
+							PRINTL
+							CFLAG:(LOCAL:1):ファーストキスの相手 = 1
+							SETCOLOR 0xF58F98
+								PRINTFORM 【ファーストキス】
+							RESETCOLOR
+							PRINTFORML （%CALLNAME:(LOCAL:1)%） 
+							CSTR:(LOCAL:1):ファーストキスの相手 = %NAME:LOCAL%
+							CFLAG:(LOCAL:1):ファーストキス喪失年齢 = BASE:(LOCAL:1):実年齢
+							CFLAG:(LOCAL:1):ファーストキス喪失月 = DAY:1
+							CFLAG:(LOCAL:1):ファーストキス喪失日 = DAY:2							
+						ENDIF
+						SIF !SKIP_DETAILS
+							PRINTL
+[ENDIF]
+						LOCAL:3 = RAND:11 + 1
+						SIF LOCAL:3 <= 1
+							LOCAL:3 = 1
+						SIF TALENT:LOCAL:淫乱
+							LOCAL:3 *= 2
+						SIF TALENT:(LOCAL:1):淫乱
+							LOCAL:3 *= 2
+						EXP:LOCAL:レズ経験 += LOCAL:3
+						EXP:LOCAL:絶頂経験 += LOCAL:3
+						JUEL:LOCAL:快Ｃ += LOCAL:3 * 100
+						JUEL:LOCAL:欲情 += LOCAL:3 * 500
+						EXP:(LOCAL:1):レズ経験 += LOCAL:3
+						EXP:(LOCAL:1):絶頂経験 += LOCAL:3
+						JUEL:(LOCAL:1):快Ｃ += LOCAL:3 * 100
+						JUEL:(LOCAL:1):欲情 += LOCAL:3 * 500
+						IF !SKIP_DETAILS
+							PRINTFORML %EXPNAME:[[EXP:レズ経験]]%（%CALLNAME:LOCAL%）＋{LOCAL:3}
+							PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%（%CALLNAME:LOCAL%）＋{LOCAL:3}
+							PRINTFORML %PALAMNAME:[[PALAM:快Ｃ]]%の珠（%CALLNAME:LOCAL%）＋{LOCAL:3 * 100}
+							PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠（%CALLNAME:LOCAL%）＋{LOCAL:3 * 500}
+							PRINTFORML %EXPNAME:[[EXP:レズ経験]]%（%CALLNAME:(LOCAL:1)%）＋{LOCAL:3}
+							PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%（%CALLNAME:(LOCAL:1)%）＋{LOCAL:3}
+							PRINTFORML %PALAMNAME:[[PALAM:快Ｃ]]%の珠（%CALLNAME:(LOCAL:1)%）＋{LOCAL:3 * 100}
+							PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠（%CALLNAME:(LOCAL:1)%）＋{LOCAL:3 * 500}
+							PRINTL
+						ENDIF
+					ELSE
+						SIF !SKIP_DETAILS
+							PRINTFORML %NAME:LOCAL%は%NAME:(LOCAL:1)%と談話室での他愛もないおしゃべりを通じて、お互いのことを深く知ったようだ……
+						RELATION:LOCAL:(NO:(LOCAL:1)) += 5
+						RELATION:(LOCAL:1):(NO:LOCAL) += 5
+					ENDIF
+					SIF RELATION:LOCAL:(NO:(LOCAL:1)) <= 100
+						RELATION:LOCAL:(NO:(LOCAL:1)) = 100
+					SIF RELATION:(LOCAL:1):(NO:LOCAL) <= 100
+						RELATION:(LOCAL:1):(NO:LOCAL) = 100
+					SIF RELATION:LOCAL:(NO:(LOCAL:1)) >= 1000
+						RELATION:LOCAL:(NO:(LOCAL:1)) = 1000
+					SIF RELATION:(LOCAL:1):(NO:LOCAL) >= 1000
+						RELATION:(LOCAL:1):(NO:LOCAL) = 1000
+					IF !SKIP_DETAILS
+						PRINTFORML %NAME:LOCAL%の%NAME:(LOCAL:1)%との相性が{RELATION:LOCAL:(NO:(LOCAL:1))}％になった
+						PRINTFORML %NAME:(LOCAL:1)%の%NAME:LOCAL%との相性が{RELATION:(LOCAL:1):(NO:LOCAL)}％になった
+						DRAWLINE
+						WAIT
+					ENDIF
+				ENDIF
+			NEXT
+		ENDIF
+	NEXT
+ENDIF
+
+
+IF (FLAG:女子寮拡張 & 32)
+	SIF SKIP_DETAILS
+		PRINTFORML 女優が女子寮の豪華カラオケルームを利用している……
+	LOCAL = 0
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+[IF_NDEBUG]
+		ELSEIF CFLAG:COUNT:入寮中 == 0
+			CONTINUE
+		ELSEIF CFLAG:COUNT:寮施設利用 != 4
+			CONTINUE
+[ENDIF]
+		ELSE
+			SIF !SKIP_DETAILS
+				PRINTFORML %NAME:COUNT%は女子寮の豪華カラオケルームを利用している……
+			LOCAL = RAND:6
+			SIF LOCAL <= 1
+				LOCAL = 1
+			EXP:COUNT:歌唱経験 += LOCAL
+			IF !SKIP_DETAILS
+				PRINTFORML 歌唱経験（%CALLNAME:COUNT%）＋{LOCAL}
+				DRAWLINE
+				WAIT
+			ENDIF
+		ENDIF
+	REND
+ENDIF
+
+IF (FLAG:女子寮拡張 & 64)
+	SIF SKIP_DETAILS
+		PRINTFORML 女優が女子寮のダンススタジオでレッスンを受けている……
+	LOCAL = 0
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+[IF_NDEBUG]
+		ELSEIF CFLAG:COUNT:入寮中 == 0
+			CONTINUE
+		ELSEIF CFLAG:COUNT:寮施設利用 != 5
+			CONTINUE
+[ENDIF]
+		ELSE
+			SIF !SKIP_DETAILS
+				PRINTFORML %NAME:COUNT%は女子寮のダンススタジオでレッスンを受けている……
+			LOCAL = RAND:6
+			SIF LOCAL <= 1
+				LOCAL = 1
+			EXP:COUNT:舞踊経験 += LOCAL
+			IF !SKIP_DETAILS
+				PRINTFORML 舞踊経験（%CALLNAME:COUNT%）＋{LOCAL}
+				DRAWLINE
+				WAIT
+			ENDIF
+		ENDIF
+	REND
+ENDIF

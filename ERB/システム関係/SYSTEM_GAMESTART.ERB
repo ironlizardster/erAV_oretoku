@@ -1,0 +1,197 @@
+﻿;このバリアントはeratohoRR v1.31.6およびeratohoA ver1,204およびeraIm@s_ver.0.17βdから
+;多数のスクリプトやルーチンを使用させてもらっています。
+;さらにeraIm@s（ver.poke）仮はeraIm@s、erapokeを元に作らせて戴いています。
+;
+;↑そんなバリアントを元にできたerAVを元に適当に手を入れたのがerAV_Hoです
+;
+;=================================================
+;ニューゲームスタート後最初に呼び出されるイベント関数
+;=================================================
+@EVENTFIRST
+
+LOADGLOBAL
+
+DRAWLINE
+PRINTL 
+PRINTL 　　　　　　　 このゲームには性的に過激な描写が多数含まれており、
+PRINTL 　　　　　　　18才未満の方、現実と仮想の区別がつかない方
+PRINTL 　　　　　　 自己の行動に責任を持てない方のプレイははお断りします。
+PRINTL 　　　　　　　　　　　　　　　　
+PRINTL                以上の点を確認の上で、ゲームを開始してください。
+PRINTL 
+DRAWLINE
+WAIT
+
+;一日目の午後からスタート（DAYは初期値で0）
+DAY = 0
+TIME = 0
+
+;調教対象と助手を空白にしておく
+TARGET = -1
+ASSI = -1
+
+;前回の調教対象と助手フラグも空白に
+FLAG:前回調教対象 = -1
+FLAG:前回助手 = -1
+
+;デフォルトでは陰毛設定使用
+FLAG:陰毛を生やす = 1
+;デフォルトでは着衣設定使用
+FLAG:着衣使用 = 1
+;デフォルトでは妊娠設定使用
+FLAG:妊娠なし = 0
+
+FLAG:失神なし = 1
+
+CALL CHARA_PRICE
+
+$BEFORE_MODE_SELECT
+;ゲームモード選択
+PRINTL 
+PRINTL ★★モードを選択してください★★
+PRINTL [0] EASY     (120週期限、目標金額3000000Pt)
+IF FLAG:EASYモードを経由したデータ
+	PRINTL [1] NORMAL   (100週期限、目標金額5000000Pt)
+ELSE
+	PRINTL [1] 実績チャレンジ   (100週期限、目標金額5000000Pt)
+ENDIF
+PRINTL [9] EXTRA    (   無期限、目標金額$???????)
+PRINTL [10] モードの説明を読む
+$INPUT_LOOP_0
+INPUT
+IF RESULT == 0
+	CALL SETUP_MASTER	;主人公セットアップ
+	FLAG:期限日数 = 120
+	FLAG:目標金額 = 3000000
+	FLAG:難易度 = 1
+	FLAG:瀕死時自動終了 = 1
+	ITEM:ビデオカメラ = 1
+;	ITEM:ビデオテープ = 1
+	MONEY = 2000
+	MASTER = NO:0
+	DAY:1 = 4
+	DAY:2 = 1
+	FLAG:事務所規模 = 10
+	FLAG:EASYモードを経由したデータ = 1
+	CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
+	ABL:MASTER:技巧 += 1
+ELSEIF RESULT == 1
+	CALL SETUP_MASTER	;主人公セットアップ
+	FLAG:期限日数 = 100
+	FLAG:目標金額 = 5000000
+	FLAG:難易度 = 2
+	FLAG:瀕死時自動終了 = 1
+	ITEM:ビデオカメラ = 1
+;	ITEM:ビデオテープ = 1
+	MONEY = 1000
+	MASTER = NO:0
+	DAY:1 = 4
+	DAY:2 = 1
+	FLAG:事務所規模 = 10
+ELSEIF RESULT == 9
+	FLAG:期限日数 = 0
+	FLAG:目標金額 = 0
+	FLAG:難易度 = 9
+	MONEY = 30000
+	FLAG:事務所規模 = 30
+ELSEIF RESULT == 10
+	PRINTL EASYモードは期限が120週（行動回数+40回）、目標金額3000000Pt（NORMALの3/5）のほか、
+	PRINTL 初期ポイントが2000pt（NORMALの倍）、主人公技巧が+1、女優候補「小鳥遊乃絵美」が加入する特典があります
+	PRINTL また、ミッション報告の時に強制成功にできるメダルを実績達成以外からもらえることがあります
+	PRINT ただし、
+	CALL HINT_CHARA("EASYモードを経由したデータ")
+	PRINTL では実績が達成できません
+	PRINTL 実績達成を目指すのであれば、新しく実績チャレンジモードで開始するのがよいでしょう
+	PRINTL なお、もう一つのボーナスであるキャラクリボーナスはEASYモードでも取得することができます
+	PRINTL 実績チャレンジで遊ぶ前にEASYを極めても無駄にはならないはずです……労力に見合うかはともかく
+	PRINTW
+	GOTO BEFORE_MODE_SELECT
+ELSE
+	GOTO INPUT_LOOP_0
+ENDIF
+
+;ここで「開始前にコンフィグを変更しますか？」あたりにしたい。要検討
+PRINTL 寝取られ機能をＯＮにしますか？
+$INPUT_LOOP_2
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+PRINTL [2] - どういうこと？
+INPUT
+	IF RESULT == 0
+		PRINTL 寝取られ機能をＯＮにしました
+		PRINTL
+		FLAG:寝取られなし = 0
+	ELSEIF RESULT == 1
+		PRINTL 寝取られ機能をＯＦＦにしました
+		PRINTL
+		FLAG:寝取られなし = 1
+	ELSEIF RESULT == 2
+		PRINTL 登場する女性キャラたちは常に他の男たちからモーションをかけられています
+		PRINTL それはクラスメイトであったり、ホストであったり、痴漢であったり……
+		PRINTL 女性キャラたちが他の男のモノになってしまうのが嫌な方はＯＦＦにするのを推奨します 
+		PRINTW
+		GOTO INPUT_LOOP_2
+	ELSE
+		GOTO INPUT_LOOP_2
+	ENDIF
+
+[IF_DEBUG]
+LOADGLOBAL
+SIF GLOBAL:200 < 100000
+	GLOBAL:200 += 100000
+SAVEGLOBAL
+[ENDIF]
+
+LOADGLOBAL
+IF GLOBAL:200 > 0
+	CALL CLEARBONUS
+ENDIF
+
+CALL SET_VIDEOSALE
+
+SIF FLAG:難易度 == 1
+	PRINTFORMW 《桐生組より風俗嬢「小鳥遊乃絵美」が派遣されました》
+CALL START_SELECT_OPENING
+BEGIN SHOP
+
+RETURN 0
+
+;オープニング表示
+@START_SELECT_OPENING
+
+FOR LOCAL, 0, MAX_ACHIEVEMENT + 1
+	BASE:MASTER:メダル += GLOBAL:LOCAL
+NEXT
+
+$INPUT_LOOP_2
+PRINTL ★オープニングストーリーを省略しますか？★
+PRINTL [0] - 省略する
+PRINTL [1] - 省略しない
+PRINTL [2] - 三行で
+INPUT
+IF RESULT == 0
+	DRAWLINE
+	PRINTL （オープニングストーリーを省略します）
+ELSEIF RESULT == 1
+	CALL OPENING
+ELSEIF RESULT == 2
+	CALL SIMPLE_OPENING
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+;主人公セットアップ用サブルーチン
+@SETUP_MASTER
+$INPUT_LOOP_MASTER
+PRINTL 主人公のセットアップを行ないますか？
+PRINTFORML [0] - はい
+PRINTFORML [1] - いいえ
+
+INPUT
+IF RESULT == 0
+	CALL SET_MASTER
+ELSEIF RESULT == 1
+	RETURN 1
+ELSE
+	GOTO INPUT_LOOP_MASTER
+ENDIF

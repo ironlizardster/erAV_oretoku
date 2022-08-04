@@ -1,0 +1,244 @@
+﻿;-------------------------------------------------
+;搾乳器
+;道具使用コマンド：調教対象の乳房を搾乳器で刺激
+;-------------------------------------------------
+@COM16
+
+IF TEQUIP:触手召喚
+	PRINTL 触手搾乳
+	SAVESTR:0 = 触手搾乳
+ELSE
+	PRINTL 搾乳器
+	SAVESTR:0 = 搾乳器
+ENDIF
+CALL TRAIN_MESSAGE_B
+
+LOSEBASE:体力 += 50
+LOSEBASE:気力 += 100
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:4 = 100
+SOURCE:5 = 100
+SOURCE:6 = 100
+SOURCE:7 = 100
+SOURCE:12 = 100
+SOURCE:13 = 100
+SOURCE:16 = 100
+
+
+;ABL:Ｂ感覚をみる
+IF ABL:Ｂ感覚 == 0
+	A = 200
+ELSEIF ABL:Ｂ感覚 == 1
+	A = 400
+ELSEIF ABL:Ｂ感覚 == 2
+	A = 900
+ELSEIF ABL:Ｂ感覚 == 3
+	A = 1600
+ELSEIF ABL:Ｂ感覚 == 4
+	A = 2400
+ELSE
+	A = 3000
+ENDIF
+
+IF TALENT:巨乳
+	TIMES A , 1.50
+ENDIF
+IF TALENT:Ｂ敏感
+	TIMES A , 1.50
+ELSEIF TALENT:Ｂ鈍感
+	TIMES A , 0.60
+ENDIF
+
+;絶壁
+SIF TALENT:絶壁
+	TIMES SOURCE:6 , 1.80
+;貧乳
+SIF TALENT:貧乳
+	TIMES SOURCE:6 , 1.50
+
+SOURCE:17 += A
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式搾乳器 >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:6 , 0.80
+	TIMES SOURCE:7 , 1.20
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:13 , 1.20
+	TIMES SOURCE:16 , 1.20
+	TIMES SOURCE:17 , 1.20
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;搾乳器の着脱
+;-------------------------------------------------
+TEQUIP:搾乳機 = 1 - TEQUIP:搾乳機
+SIF TEQUIP:触手召喚
+	T = 0
+
+;-------------------------------------------------
+;汚れ（触手）
+;-------------------------------------------------
+IF TEQUIP:触手召喚 && TEQUIP:搾乳機
+	STAIN:5 |= 2
+	STAIN:5 |= 4
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;搾乳器装備中
+;-------------------------------------------------
+@EQUIP_COM16
+
+IF TEQUIP:触手召喚
+	PRINTL ＜触手搾乳中＞
+ELSE
+	PRINTL ＜搾乳器装備中＞
+ENDIF
+
+LOSEBASE:体力 += 15
+LOSEBASE:気力 += 15
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+;ABL:B感覚をみる
+IF ABL:Ｂ感覚 == 0
+	A = 40
+ELSEIF ABL:Ｂ感覚 == 1
+	A = 120
+ELSEIF ABL:Ｂ感覚 == 2
+	A = 250
+ELSEIF ABL:Ｂ感覚 == 3
+	A = 450
+ELSEIF ABL:Ｂ感覚 == 4
+	A = 600
+ELSE
+	A = 750
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES A , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES A , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES A , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES A , 1.20
+ELSE
+	TIMES A , 1.30
+ENDIF
+
+;EXP:噴乳経験をみる
+IF EXP:噴乳経験 <= EXPLV:0
+	TIMES A , 1.00
+ELSEIF EXP:噴乳経験 <= EXPLV:1
+	TIMES A , 1.20
+ELSEIF EXP:噴乳経験 <= EXPLV:2
+	TIMES A , 1.40
+ELSEIF EXP:噴乳経験 <= EXPLV:3
+	TIMES A , 1.80
+ELSEIF EXP:噴乳経験 <= EXPLV:4
+	TIMES A , 2.25
+ELSE
+	TIMES A , 4.00
+ENDIF
+
+IF TALENT:巨乳
+	TIMES A , 1.3
+ENDIF
+IF TALENT:Ｂ敏感
+	TIMES A , 1.4
+ELSEIF TALENT:Ｂ鈍感
+	TIMES A , 0.6
+ENDIF
+
+
+;絶壁
+SIF TALENT:絶壁
+	TIMES SOURCE:6 , 1.80
+;貧乳
+SIF TALENT:貧乳
+	TIMES SOURCE:6 , 1.50
+
+SOURCE:17 += A
+SOURCE:4 += 150
+SOURCE:6 += 100
+SOURCE:7 += 100
+SOURCE:11 += 50
+SOURCE:12 += 50
+SOURCE:13 += 50
+SOURCE:14 += 50
+SOURCE:16 += 50
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式搾乳器 >= 1 && TEQUIP:触手召喚 == 0
+	LOSEBASE:体力 -= 3
+	LOSEBASE:気力 -= 3
+	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:6 , 0.80
+	TIMES SOURCE:7 , 1.20
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:13 , 1.20
+	TIMES SOURCE:16 , 1.20
+	TIMES SOURCE:17 , 1.20
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+IF TEQUIP:触手召喚
+	T += 1
+	CALL SYOKUSYU_MILK
+ENDIF
+
+RETURN 1
+;

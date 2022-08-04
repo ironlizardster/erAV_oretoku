@@ -1,0 +1,158 @@
+﻿;-------------------------------------------------
+;クリキャップ
+;道具使用コマンド：調教対象のクリトリスをクリキャップで刺激
+;-------------------------------------------------
+@COM14
+
+IF TEQUIP:触手召喚
+	PRINTL 触手クリ責め
+	SAVESTR:0 = 触手クリ責め
+ELSE
+	PRINTL 電動クリキャップ
+	SAVESTR:0 = 電動クリキャップ
+ENDIF
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 10
+LOSEBASE:気力 += 80
+
+SOURCE:12 = 120
+SOURCE:14 = 70
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 200
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 400
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 900
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 1600
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 2400
+ELSE
+	SOURCE:0 = 3000
+ENDIF
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式クリキャップ >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:14 , 0.80
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;レズ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;クリキャップの着脱
+;-------------------------------------------------
+TEQUIP:クリキャップ = 1 - TEQUIP:クリキャップ
+SIF TEQUIP:触手召喚
+	T = 0
+
+;-------------------------------------------------
+;汚れ（触手）
+;-------------------------------------------------
+IF TEQUIP:触手召喚 && TEQUIP:クリキャップ
+	STAIN:3 |= 2
+	STAIN:3 |= 4
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;クリキャップ装備中
+;-------------------------------------------------
+@EQUIP_COM14
+IF TEQUIP:触手召喚
+	PRINTL ＜触手クリ責め中＞
+ELSE
+	PRINTL ＜クリキャップ装備中＞
+ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 20
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	A = 40
+ELSEIF ABL:Ｃ感覚 == 1
+	A = 120
+ELSEIF ABL:Ｃ感覚 == 2
+	A = 250
+ELSEIF ABL:Ｃ感覚 == 3
+	A = 450
+ELSEIF ABL:Ｃ感覚 == 4
+	A = 600
+ELSE
+	A = 750
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES A , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES A , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES A , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES A , 1.20
+ELSE
+	TIMES A , 1.30
+ENDIF
+
+SOURCE:0 += A
+SOURCE:11 += 50
+SOURCE:12 += 50
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式クリキャップ >= 1 && TEQUIP:触手召喚 == 0
+	LOSEBASE:体力 -= 1
+	LOSEBASE:気力 -= 4
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:14 , 0.80
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+SIF TEQUIP:触手召喚
+	T += 1
+
+RETURN 1
+;
+;
+;

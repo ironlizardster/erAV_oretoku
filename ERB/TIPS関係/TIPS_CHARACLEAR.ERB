@@ -1,0 +1,191 @@
+﻿;===========================================================
+;TIPS 陥落系素質取得条件
+;===========================================================
+@TIPS_CHARACLEAR
+PRINTFORML 《ＴＩＰＳ》
+PRINTFORML 女優候補の陥落・引退可能条件
+DRAWLINE
+PRINTL  [0] - 引退可能条件
+PRINTL  [1] - 助手可能条件
+PRINTL  [2] - 【恋心】取得条件
+PRINTL  [3] - 【淫乱】取得条件
+PRINTL  [4] - 【永遠の愛】取得条件
+PRINTL  [5] - 【絶倫】取得条件
+PRINTL  [6] - 【セフレ】取得条件
+PRINTL  [7] - 陥落系素質の重複取得条件
+DRAWLINE
+PRINTL [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL TIPS_RETIRE
+ELSEIF RESULT == 1
+	CALL TIPS_ASSI
+ELSEIF RESULT == 2
+	CALL TIPS_LOVE
+ELSEIF RESULT == 3
+	CALL TIPS_LEWDNESS
+ELSEIF RESULT == 4
+	CALL TIPS_TRUELOVE
+ELSEIF RESULT == 5
+	CALL TIPS_PEERLESS
+ELSEIF RESULT == 6
+	CALL TIPS_SEXFRIEND
+ELSEIF RESULT == 7
+	CALL TIPS_OVERLAP
+ELSEIF RESULT == 999
+	CALL TIPS_MAIN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+
+;===========================================================
+;引退可能条件
+;===========================================================
+@TIPS_RETIRE
+
+DRAWLINE
+PRINTFORML ◆引退可能条件◆
+PRINTFORML 【売却不可】を持っておらず【ＡＶ女優】を持っており
+PRINTFORML 
+PRINTFORML ○信頼＋欲望が6LV以上
+PRINTFORML ○Ｃ・Ｖ・Ａ・Ｂ感覚のいずれかが最低LV3
+PRINTFORML ○【ナマイキ】か【気丈】を持っている場合、従順がLV4以上
+PRINTFORML ○【自制心】【抑圧】【抵抗】を持っている場合、欲望がLV4以上
+PRINTFORML 
+PRINTFORML 上記条件を満たした上で
+PRINTFORML 
+PRINTFORML ○技巧LV3以上で奉仕精神LV3以上
+PRINTFORML ○露出癖LV3以上で自慰中毒LV2以上
+PRINTFORML ○Ｃ・Ｖ・Ａ・Ｂ感覚のLV合計が13以上
+PRINTFORML ○信頼か欲望のどちらかがLV5
+PRINTFORML 
+PRINTFORML のいずれかを満たしている
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;助手可能条件
+;===========================================================
+@TIPS_ASSI
+
+DRAWLINE
+PRINTFORML ◆助手可能条件◆
+PRINTFORML 引退可能条件を満たしており
+PRINTFORML 
+PRINTFORML ○信頼・欲望・技巧・Ｃ感覚・レズっ気がすべてLV3以上
+PRINTFORML ○信頼がLV5以上かつ欲望がLV4以上
+PRINTFORML
+PRINTFORML のいずれかを満たしており、ＡＶ出演経験3以上
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;恋心取得条件
+;===========================================================
+@TIPS_LOVE
+
+DRAWLINE
+PRINTFORML ◆【恋心】取得条件◆
+PRINTFORML 反発刻印を所持しておらず【彼氏あり】ではない状態で
+PRINTFORML
+PRINTFORML ○レズ経験1200以下、信頼LV3以上、奉仕快楽経験200以上
+PRINTFORML
+PRINTFORML かつ好感度100以上で他の陥落素質を所持していない
+PRINTFORML ※ただし【淫魔】【アンドロイド】【天使】【ONLY ONE EMPRESS】を取得している、または
+PRINTFORML 　実績「Strawberry Panic!」を使用した場合はレズ経験を無視する
+PRINTFORML 　また、【淫魔】【アンドロイド】【天使】【ONLY ONE EMPRESS】を取得しているキャラクターは
+PRINTFORML 　他の陥落系素質との重複が可能となる
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;淫乱取得条件
+;===========================================================
+@TIPS_LEWDNESS
+
+DRAWLINE
+PRINTFORML ◆【淫乱】取得条件◆
+PRINTFORML 反発刻印を所持しておらず【非処女】または【アナル非処女】で
+PRINTFORML 
+PRINTFORML ○Ｃ・Ｖ・Ａ・Ｂ感覚のLV合計が10以上、欲望LV3以上、異常経験3以上
+PRINTFORML 
+PRINTFORML かつ好感度100以上で他の陥落素質を所持していない
+PRINTFORML ※ただし【淫魔】【アンドロイド】【天使】【ONLY ONE EMPRESS】を取得している場合は
+PRINTFORML 　他の陥落素質との重複が可能
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;永遠の愛取得条件
+;===========================================================
+@TIPS_TRUELOVE
+
+DRAWLINE
+PRINTFORML ◆【永遠の愛】取得条件◆
+PRINTFORML 反発刻印を所持しておらず【恋心】を所持しており
+PRINTFORML 
+PRINTFORML ○信頼・奉仕精神共にLV7以上、愛情経験500以上
+PRINTFORML 
+PRINTFORML かつ屈服刻印がLV3
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;絶倫取得条件
+;===========================================================
+@TIPS_PEERLESS
+
+DRAWLINE
+PRINTFORML ◆【絶倫】取得条件◆
+PRINTFORML 反発刻印を所持しておらず【淫乱】を所持しており
+PRINTFORML 
+PRINTFORML ○欲望LV7以上、Ｃ・Ｖ・Ａ・Ｂ感覚のいずれかのLVが10、異常経験5以上
+PRINTFORML 
+PRINTFORML かつ快楽刻印がLV3
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;セフレ取得条件
+;===========================================================
+@TIPS_SEXFRIEND
+
+DRAWLINE
+PRINTFORML ◆【セフレ】取得条件◆
+PRINTFORML 反発刻印を所持しておらず【淫乱】【彼氏あり】【セフレあり】を所持しており
+PRINTFORML 
+PRINTFORML ○信頼LV3以上、欲望LV5以上、性交中毒LV2以上、奉仕快楽経験300以上
+PRINTFORML 
+PRINTFORML かつ【貞操観念】【一線超えない】を所持していない
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR
+
+;===========================================================
+;陥落系素質の重複取得条件
+;===========================================================
+@TIPS_OVERLAP
+
+DRAWLINE
+PRINTFORML ◆陥落系素質の重複取得条件◆
+PRINTFORML 【淫魔】【アンドロイド】【天使】【ONLY ONE EMPRESS】を取得していないキャラクターが
+PRINTFORML 陥落系素質を重複して取得する方法は以下の通りである
+PRINTFORML
+PRINTFORML レイチェル・パラディススが助手可能で【秘密知識】を所持している場合、「研究所」のリ
+PRINTFORML ストにアンロックされる「レイチェルの工房に行く」より『惚れ薬』または『超強力媚薬』
+PRINTFORML を投与する
+PRINTFORML ただし『惚れ薬』を【彼氏あり】を所持しているキャラクターに投与することはできない
+PRINTFORML また【セフレ】を所持していて【彼氏あり】を所持していないキャラクターに『惚れ薬』を
+PRINTFORML 使用すると【セフレ】が消失し【恋心】へと変化する
+DRAWLINE
+WAIT
+CALL TIPS_CHARACLEAR

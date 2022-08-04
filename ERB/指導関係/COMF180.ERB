@@ -1,0 +1,51 @@
+﻿;-------------------------------------------------
+;具現
+;助手系コマンド
+;-------------------------------------------------
+@COM180
+
+PRINTL 具現
+IF TALENT:ふたなり == 1
+	SAVESTR:0 = 具現（ペニス消去）
+ELSEIF TALENT:ふたなり == 1
+	SAVESTR:0 = 具現（ペニス生成）
+ENDIF
+CALL TRAIN_MESSAGE_B
+
+LOSEBASE:体力 += 0
+;マゾっ気が高いと気力消費減少
+IF ABL:射精中毒 == 0
+	LOSEBASE:気力 += 60
+ELSEIF ABL:射精中毒 <= 2 
+	LOSEBASE:気力 += 45
+ELSE
+	LOSEBASE:気力 += 30
+ENDIF
+
+;ボンデージルックの装着
+IF TALENT:ふたなり == 0
+	TALENT:ふたなり = 1
+	SIF CFLAG:ファーストキスの相手 == 0
+		TALENT:童貞 = 1
+	IF MAXBASE:ペニスサイズ == 0
+		MAXBASE:ペニスサイズ = 15 + RAND:6
+		BASE:ペニスサイズ = MAXBASE:ペニスサイズ
+		CFLAG:包皮の状態 = 1 + RAND:3
+		IF MAXBASE:ペニスサイズ <= 16
+			CFLAG:ペニスのサイズ = 1
+		ELSEIF MAXBASE:ペニスサイズ >= 17
+			CFLAG:ペニスのサイズ = 2
+		ENDIF
+	ENDIF
+ELSEIF TALENT:ふたなり == 1
+	TALENT:ふたなり = 0
+	SIF CFLAG:ファーストキスの相手 == 0
+		TALENT:童貞 = 0
+ENDIF
+
+
+
+RETURN 1
+
+
+		

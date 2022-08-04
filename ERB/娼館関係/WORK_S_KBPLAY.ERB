@@ -1,0 +1,750 @@
+﻿;===========================================================
+;公衆便所プレイの処理はここで
+;===========================================================
+;eraIm@s_ver.0.17βdより流用して改造(pawapokya-)
+;===========================================================
+@KB_PLAY
+DRAWLINE
+
+;コンドーム使用フラグ外す
+CFLAG:労役でコンドーム使用 = 0
+
+;ローカル変数初期化
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+G = 0
+M = 0
+N = 0
+O = 0
+I = 0
+J = 0
+S = 0
+Q = 0
+R = 0
+X = 0
+
+REPEAT 101
+	TCVAR:COUNT = 0
+	U:COUNT = 0
+REND
+
+;調教対象と助手を空に
+TARGET = -1
+ASSI = -1
+;参加人数が一人の場合はTARGETにそのキャラを代入
+IF FLAG:特殊営業参加人数 == 1
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130
+			TARGET = COUNT
+	REND
+;参加人数が二人の場合は性交経験の高い方をTARGETに、もう一人をASSIに代入
+ELSEIF FLAG:特殊営業参加人数 == 2
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF TARGET == -1
+			TARGET = COUNT
+		ELSEIF EXP:COUNT:性交経験 > EXP:TARGET:性交経験
+			ASSI = TARGET
+			TARGET = COUNT
+		ELSE
+			ASSI = COUNT
+		ENDIF
+	REND
+;参加人数が３人以上の場合は、最も性交経験の高い者をTARGETに代入
+ELSEIF FLAG:特殊営業参加人数 >= 3
+	E = -1
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF E < EXP:COUNT:性交経験
+			TARGET = COUNT
+			E = EXP:COUNT:性交経験
+		ENDIF
+	REND
+	E = 0
+ENDIF
+
+;参加者が２人の場合はキャラ同志の近親チェック
+TFLAG:近親相姦 = 0
+IF FLAG:特殊営業参加人数 == 2
+	PLAYER = ASSI
+	CALL INCEST
+ENDIF
+;近親同士なら年上の方をTARGET、年下の方をASSIにする
+IF TFLAG:近親相姦
+	IF TFLAG:近親相姦 == 1
+		X = TARGET
+		TARGET = ASSI
+		ASSI = X
+		TFLAG:近親相姦 = 2
+	ELSEIF TFLAG:近親相姦 == 3
+		X = TARGET
+		TARGET = ASSI
+		ASSI = X
+		TFLAG:近親相姦 = 4
+	ENDIF
+ENDIF
+
+;特殊営業参加キャラの相性をチェック
+CALL WORK_SUB_RELATION
+
+;客の数を計算
+;参加するキャラの人気の最大値に応じて客が来ます
+E = 0
+REPEAT CHARANUM
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+		E = EXP:COUNT:人気
+REND
+C = E / 5
+G = C / 3
+IF C
+	REPEAT C
+		G += RAND:2
+	REND
+ENDIF
+
+;娼館の人気に応じてさらにプラス
+C = (EXP:MASTER:人気 / 10)
+IF C
+	REPEAT C
+		G += RAND:2
+	REND
+ENDIF
+
+;参加者が特定の素質を持っていた場合ボーナス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	;人気者
+	SIF TALENT:COUNT:人気者
+		G += 1
+	;娼婦
+	SIF TALENT:COUNT:風俗嬢
+		G += 2
+	;傾城
+	SIF TALENT:COUNT:高級娼婦
+		G += 3
+	;アイドル
+	SIF TALENT:COUNT:アイドル
+		G += 3
+	;令嬢
+	SIF TALENT:COUNT:令嬢
+		G += 3
+	;貴族
+	SIF TALENT:COUNT:貴族
+		G += 5
+REND
+
+;10人以下だった場合、10人にします
+SIF G < 10
+	G = 10
+
+CALL WORK_SUB_PRINT_FULLNAME
+PRINTFORML の公衆便所プレイを行った……
+PRINTFORML 今回のプレイには{G}人集まった
+
+WAIT
+
+IF FLAG:特殊営業参加人数 == 1 && TARGET > 0
+	PRINTFORM %CALLNAME:TARGET%
+ELSEIF FLAG:特殊営業参加人数 == 2 && TARGET > 0 && ASSI > 0
+	PRINTFORM %CALLNAME:TARGET%と%CALLNAME:ASSI%
+ELSEIF FLAG:特殊営業参加人数 ==3
+	PRINT ３人
+ELSE
+	PRINTFORM {FLAG:特殊営業参加人数}人
+ENDIF
+PRINTFORML は身動きを取れないように縛り上げられ、{G}人の客に囲まれながら、
+;メンバー全員が男性か貞操帯着用ならＶ使用なし
+F = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF TALENT:COUNT:オトコ
+		CONTINUE
+	SIF CFLAG:COUNT:特別コスチュームのタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)
+		CONTINUE
+	F = 0
+REND
+SIF F == 0
+	PRINT 膣と
+PRINTFORMW アヌスを何度も何度も貫かれ、精液を繰り返し注ぎこまれ続けた
+PRINTFORM 客達が離れた%CALLNAME:TARGET%
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT たち
+PRINTFORMW の体からは、止めどなく精液があふれ出している
+
+;処女喪失
+S = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF CFLAG:営業でＶ使用不能フラグ
+		CONTINUE
+	IF TALENT:COUNT:処女
+		CFLAG:COUNT:Ｖ売春で処女喪失フラグ = 1
+		SIF S == 0
+			PRINTL  
+		SIF S
+			PRINT と
+		PRINTFORM %CALLNAME:COUNT%
+		S = 1
+	ENDIF
+REND
+IF S
+	PRINTL の膣から流れた精液は、
+	PRINTW 失われた純潔を示すかのように赤く染まっていた……
+ENDIF
+S = 0
+
+PRINTL 
+
+CALL WORK_SUB_PRINT_MEMBER
+IF FLAG:特殊営業参加人数 >= 2 && FLAG:特殊営業時のキャラの相性 >= 175
+	PRINTFORML は必死でお互いの名前を呼び続けていたが、
+ELSE
+	PRINTFORML は必死で助けを求め続けていたが、
+ENDIF
+PRINT やがて
+S = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	IF TALENT:COUNT:淫乱 || ABL:COUNT:性交中毒 >= 4
+		SIF S
+			PRINT と
+		PRINTFORM %CALLNAME:COUNT%
+		S = 1
+	ENDIF
+REND
+IF S
+	PRINTL の声は淫らな喘ぎ声に変わり、自分から腰を振りはじめた……
+ELSE
+	PRINTL その声は次第に弱々しくなり、次々と体の上にのしかかる群集の下に
+	PRINTL かき消されてしまった……
+ENDIF
+S = 0
+
+WAIT
+
+;口上処理
+TFLAG:口上番号 = 116
+X = TARGET
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	TARGET = COUNT
+	CALL SELF_KOJO
+REND
+TARGET = X
+;念のため口上用フラグを空に
+TFLAG:口上番号 = 0
+
+;奴隷のどちらかが淫乱かつ娼婦かつマゾor露出狂or尻穴狂いの場合、公開浣腸ショーが同時に行われます
+X = TARGET
+TARGET = -1
+IF TALENT:X:淫乱 && (TALENT:X:マゾ || TALENT:X:露出狂 || TALENT:X:尻穴狂い)
+	IF ASSI > 0
+		IF TALENT:ASSI:淫乱 && (TALENT:ASSI:マゾ || TALENT:ASSI:露出狂 || TALENT:ASSI:尻穴狂い)
+			CFLAG:X:公衆便所プレイで公開浣腸ショー = 1
+			CFLAG:ASSI:公衆便所プレイで公開浣腸ショー = 1
+			PRINTFORMW 最後に、客の誰かが持ってきた浣腸器で%CALLNAME:X%と%CALLNAME:ASSI%のアヌスに浣腸液が注ぎ込まれた
+			PRINTFORMW %CALLNAME:X%たちは切ない声を上げて、客が見守る中、卑猥な音を立てて汚物を噴出した
+			PRINTFORMW その姿に興奮した客達は、嬉しそうな声を上げて彼女に拍手を送っている
+			PRINTFORML 歓声を上げる客達に囲まれて、%CALLNAME:X%と%CALLNAME:ASSI%は虚ろな目で虚空を見つめていた
+			;口上の判定
+			TFLAG:口上番号 = 117
+			TARGET = X
+			CALL SELF_KOJO
+			TARGET = ASSI
+			CALL SELF_KOJO
+			WAIT
+			TARGET = -1
+		ELSE
+			TARGET = X
+		ENDIF
+	ELSE
+		TARGET = X
+	ENDIF
+ELSEIF ASSI > 0
+	SIF TALENT:ASSI:淫乱 && (TALENT:ASSI:マゾ || TALENT:ASSI:露出狂 || TALENT:ASSI:尻穴狂い)
+		TARGET = ASSI
+ENDIF
+IF TARGET > 1
+	CFLAG:公衆便所プレイで公開浣腸ショー = 1
+	PRINTFORMW 最後に、客の誰かが持ってきた浣腸器で%CALLNAME:TARGET%のアヌスに浣腸液が注ぎ込まれた
+	PRINTFORMW %CALLNAME:TARGET%は切ない声を上げて、客が見守る中、卑猥な音を立てて汚物を噴出した
+	PRINTFORMW その姿に興奮した客達は、嬉しそうな声を上げて彼女に拍手を送っている
+	PRINTFORML 喜びの声を上げる客達に囲まれて、%CALLNAME:TARGET%は虚ろな目で虚空を見つめていた
+	;口上の判定
+	TFLAG:口上番号 = 117
+	CALL SELF_KOJO
+	WAIT
+ENDIF
+TARGET = X
+X = 0
+;念のため口上用フラグを空に
+TFLAG:口上番号 = 0
+
+;成否判定
+;客の欲望をチェック、公衆便所プレイでの値は5です
+A = 0
+B = 0
+C = 0
+
+A = 5
+;客の欲望Aをキャラの欲望の平均値が上回った場合は二倍、下回った場合は等倍が加算されます
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:欲望
+REND
+E /= FLAG:特殊営業参加人数
+
+IF E >= A 
+	B += E * 2
+ELSE
+	B += E
+ENDIF
+E = 0
+
+;参加者全員の技能・素質による修正値を加算
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+
+	;全員の売春中毒を加算
+	B += ABL:COUNT:売春中毒
+
+	;性交中毒・精液中毒は1/2を加算
+	B += (ABL:COUNT:性交中毒 / 2) + (ABL:COUNT:自慰中毒 / 2)
+
+	;奉仕技術、性交技術は1/2を加算
+	B += (ABL:COUNT:奉仕技術 / 2) + (ABL:COUNT:性交技術 / 2)
+
+	;各素質に応じて加減
+	;処女だった
+	SIF CFLAG:COUNT:Ｖ売春で処女喪失フラグ
+		B += 10
+	;反抗的
+	SIF TALENT:COUNT:ナマイキ && ABL:COUNT:欲望 <= 3
+		B -= 3
+	;無関心
+	SIF TALENT:COUNT:クール && ABL:COUNT:欲望 <= 3
+		B -= 5
+	;感情乏しい
+	SIF TALENT:COUNT:感情乏しい
+		B -= 5
+	;抑圧
+	SIF TALENT:COUNT:抑圧
+		B -= 3
+	;舌使い
+	SIF TALENT:COUNT:舌使い
+		B += 1
+	;献身的
+	SIF TALENT:COUNT:献身的
+		B += 2
+	;快感に素直
+	SIF TALENT:COUNT:快感に素直
+		B += 3
+	;淫乱
+	SIF TALENT:COUNT:淫乱
+		B += 10
+	;倒錯的
+	SIF TALENT:COUNT:倒錯的
+		B += 3
+	;マゾ
+	SIF TALENT:COUNT:マゾ
+		B += 5
+	;露出狂
+	SIF TALENT:COUNT:露出狂
+		B += 5
+	;魅惑
+	SIF TALENT:COUNT:魅惑
+		B += 2
+	;謎の魅力
+	SIF TALENT:COUNT:謎の魅力
+		B += 5
+	;爆乳
+	SIF TALENT:COUNT:爆乳
+		B += 3
+	;巨乳
+	SIF TALENT:COUNT:巨乳
+		B += 2
+	;貧乳をみる
+	;小柄体型・幼稚・未熟があれば逆にボーナス
+	IF TALENT:COUNT:貧乳
+		IF TALENT:COUNT:小柄体型 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+			B += 2
+		ELSE
+			B -= 2
+		ENDIF
+	ENDIF
+	;絶壁をみる
+	;幼稚・未熟があれば逆にボーナス
+	IF TALENT:COUNT:絶壁
+		IF TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+			B += 3
+		ELSE
+			B -= 3
+		ENDIF
+	ENDIF
+	;人気者
+	SIF TALENT:COUNT:人気者
+		B += 3
+	;娼婦
+	SIF TALENT:COUNT:風俗嬢
+		B += 5
+	;傾城
+	SIF TALENT:COUNT:高級娼婦
+		B += 10
+	;常連客
+	SIF TALENT:COUNT:常連客
+		B += 3
+	;公開浣腸ショー
+	SIF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー == 1
+		B += 5
+	
+	;Ｖ使用不可キャラ
+	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+		B -= 10
+
+	;狂気・崩壊があると満足度激減
+	SIF TALENT:COUNT:狂気 || TALENT:COUNT:崩壊
+		B /= 5
+	
+REND
+	
+C = 30 + A
+
+;合計が目標値C以上なら大成功、C*3/4以上なら成功、下回れば失敗
+IF B >= C
+	PRINTFORML 今回の公衆便所プレイに客達は大変満足したようだ
+	A = 4
+ELSEIF B >= C * 3 / 4
+	PRINTFORML 今回の公衆便所プレイに客達は満足したようだ
+	A = 2
+ELSE
+	PRINTFORML どうやら、客達の欲望を満たすことは出来なかったようだ……
+	A = 1
+ENDIF
+
+WAIT
+
+DRAWLINE
+
+PLAYER = TARGET
+;パラメータ変化
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	
+	TARGET = COUNT
+
+	PRINTFORML %NAME:TARGET%のパラメータが以下の通り変化しました
+
+	;緊縛経験
+	TCVAR:緊縛経験 = G / (2 * FLAG:特殊営業参加人数)
+
+	;否定の珠の計算（基礎値は人数ベースで、従順に応じて減少）
+	M = 15 - ABL:信頼
+	;否定の珠が増加しないという事はない
+	SIF M <= 0
+		M = 1
+	U:100 = G * M
+
+	;プライドが高いと増える
+	SIF TALENT:活発
+		TIMES U:100 , 1.50
+	;無関心だと少なくなる
+	SIF TALENT:クール
+		TIMES U:100 , 0.90
+	;感情乏しいと少なくなる
+	SIF TALENT:感情乏しい
+		TIMES U:100 , 0.90
+	;目立ちたがりだと少なくなる
+	SIF TALENT:目立ちたがり
+		TIMES U:100 , 0.80
+	;抑圧だと増える
+	SIF TALENT:抑圧
+		TIMES U:100 , 1.20
+	;解放だと少なくなる
+	SIF TALENT:解放
+		TIMES U:100 , 0.80
+	;恥じらいだと増える
+	SIF TALENT:恥じらい
+		TIMES U:100 , 1.10
+	;露出狂だと一気に少なくなる
+	SIF TALENT:露出狂
+		TIMES U:100 , 0.50
+
+	;成否に応じてさらに上下
+	IF A >= 2
+		TIMES U:100 , 0.80
+	ELSE
+		TIMES U:100 , 1.20
+	ENDIF
+
+	BASE:魅力値 -= 15	
+
+	;輪姦によって発生する経験・珠
+	CALL WORK_SP_SEX_02
+
+	DRAWLINE
+
+	X = COUNT
+	CALL WORK_EXP
+	COUNT = X
+
+	;反発刻印取得の判定
+	;従順の100倍+100まで許容します
+	O = ABL:信頼 * 100 + 100
+
+	;反発刻印LV2はLV1の√3倍、LV3は√5倍で獲得
+	I = O
+	TIMES I , 2.23
+	J = O
+	TIMES J , 1.73
+
+	IF MARK:反発刻印 != 3 && JUEL:否定 > I
+		PRINTL  反発刻印LV3を取得
+		MARK:反発刻印 = 3
+		IF MARK:4 <= 2
+			MARK:4 = 3
+			;従順がLV8以下ならば従順が2LVダウン（[感情乏しい]の場合はダウンなし）
+			IF ABL:信頼 <= 8 && TALENT:感情乏しい == 0
+				ABL:信頼 -= 2
+				PRINTFORML  そして%ABLNAME:[[ABL:信頼]]%がLV{ABL:信頼}に下がった
+			ENDIF
+		ENDIF
+	ELSEIF MARK:反発刻印 != 2 && JUEL:否定 > J
+		PRINTL  反発刻印LV2を取得
+		MARK:反発刻印 = 2
+		IF MARK:4 <= 1
+			MARK:4 = 2
+			;従順がLV4以下ならば従順が1LVダウン（[感情乏しい]の場合はダウンなし）
+			IF ABL:信頼 <= 4 && TALENT:感情乏しい == 0
+				ABL:信頼 -= 1
+				PRINTFORML  そして%ABLNAME:[[ABL:信頼]]%がLV{ABL:信頼}に下がった
+			ENDIF
+		ENDIF
+	ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > O
+		PRINTL  反発刻印LV1を取得
+		MARK:反発刻印 = 1
+	ENDIF
+
+	DRAWLINE
+
+	;体力減少の計算
+	LOSEBASE:体力 = G * 40
+
+	;処女喪失だとかなり増える
+	SIF CFLAG:Ｖ売春で処女喪失フラグ
+		TIMES LOSEBASE:体力 , 2.00
+
+	;売春中毒のレベルに応じてちょっとずつ減る
+	IF ABL:売春中毒 == 1
+		TIMES LOSEBASE:体力 , 0.90
+	ELSEIF ABL:売春中毒 == 2
+		TIMES LOSEBASE:体力 , 0.80
+	ELSEIF ABL:売春中毒 == 3
+		TIMES LOSEBASE:体力 , 0.70
+	ELSEIF ABL:売春中毒 == 4
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF ABL:売春中毒 >= 5
+		TIMES LOSEBASE:体力 , 0.50
+	ENDIF
+	
+	;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
+	SIF EXP:Ｖ経験 <= 200 && CFLAG:営業でＶ使用不能フラグ == 0
+		TIMES LOSEBASE:体力 , 1.10
+	SIF EXP:Ａ経験 <= 200
+		TIMES LOSEBASE:体力 , 1.20
+	
+	;公開浣腸ショーをするとかなり増える
+	SIF CFLAG:公衆便所プレイで公開浣腸ショー
+		TIMES LOSEBASE:体力 , 1.50
+
+	;参加人数に応じて疲労軽減
+	IF FLAG:特殊営業で夜の部を開催フラグ
+		LOSEBASE:体力 /= FLAG:特殊営業参加人数
+	ELSEIF FLAG:特殊営業参加人数 >= 3
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF FLAG:特殊営業参加人数 >= 2
+		TIMES LOSEBASE:体力 , 0.80
+	ENDIF
+
+	;警備員の人数に応じてちょっとずつ減る（最大2割減）
+	LOSEBASE:体力 *= 100 - FLAG:警備員人数 * 2
+	LOSEBASE:体力 /= 100
+	
+	;警備員の人数に応じて即死回避
+	IF LOSEBASE:体力 >= BASE:体力
+		;警備員の人数*9+9%の確率で体力が1残る（救済フラグを立てる）
+		SIF RAND:100 < (FLAG:警備員人数 * 9 + 9)
+		LOSEBASE:体力 = BASE:体力 - 1
+	ENDIF
+
+	SIF LOSEBASE:体力 >= BASE:体力
+		LOSEBASE:体力 = BASE:体力
+
+	PRINT  体力消費　　:
+	N = BASE:体力
+	CALL FIGURE_INDENT
+	PRINTV BASE:体力
+	PRINT  - 
+	N = LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTV LOSEBASE:体力
+	PRINT  = 
+	N = BASE:体力 - LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTVL BASE:体力 - LOSEBASE:体力
+
+	BASE:体力 -= LOSEBASE:体力
+
+	PRINT  体力　　　　:
+	BAR BASE:体力, MAXBASE:体力, 32
+	PRINTFORML ({BASE:体力}/{MAXBASE:体力})
+
+	;体力が0以下、または500以下だった場合の処理
+	IF BASE:体力 <= 0
+		PRINTFORML %CALLNAME:TARGET%は{G}人目の客に精液を注ぎ込まれている途中で、ぴくりとも動かなくなった
+		PRINTFORML 何をやっても反応がない……
+		WAIT
+		;キャラの死亡確認
+		CALL CHARADEAD_CHECK
+	ELSEIF BASE:体力 <= 500
+		PRINTFORML 体力が限界に来ています。休ませてあげてください
+	ENDIF
+
+	DRAWLINE
+	WAIT
+REND
+TARGET = PLAYER
+
+;売上金を計算します
+Q = 0
+
+;基準額
+V = 2300
+PRINT 基準額
+PRINTFORML  +{V}
+Q += V
+V = 0
+
+;近親によるボーナス
+IF TFLAG:近親相姦 == 2
+	V = 150
+	SIF TALENT:オトコ
+		PRINT 父
+	SIF TALENT:オトコ == 0
+		PRINT 母
+	SIF TALENT:ASSI:オトコ
+		PRINT 子
+	SIF TALENT:ASSI:オトコ == 0
+		PRINT 娘
+	PRINT 丼
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ELSEIF TFLAG:近親相姦 == 4
+	V = 120
+	SIF TALENT:オトコ
+		PRINT 兄
+	SIF TALENT:オトコ == 0
+		PRINT 姉
+	SIF TALENT:ASSI:オトコ
+		PRINT 弟
+	SIF TALENT:ASSI:オトコ == 0
+		PRINT 妹
+	PRINT 丼
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;大成功によるボーナス
+IF A >= 3
+	V = 130
+	PRINT 大成功
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;参加者による補正
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	;処女喪失ならば増える
+	IF CFLAG:COUNT:Ｖ売春で処女喪失フラグ
+		V = 200
+		PRINTFORM 処女喪失(%CALLNAME:COUNT%)
+		PRINTFORML  ×{V/100}.{V%100}
+		Q *= V
+		Q /= 100
+		V = 0
+	ENDIF
+	;公開浣腸ショーがあれば増える
+	IF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー
+		V = 130
+		PRINTFORM 公開排泄(%CALLNAME:COUNT%)
+		PRINTFORML  ×{V/100}.{V%100}
+		Q *= V
+		Q /= 100
+		V = 0
+	ENDIF
+	;Ｖ使用不可キャラがいると減る
+	IF CFLAG:COUNT:営業でＶ使用不能フラグ
+		V = 70
+		IF TALENT:COUNT:オトコ
+			PRINT オトコ
+		ELSE
+			PRINT Ｖ不可
+		ENDIF
+		PRINTFORM (%CALLNAME:COUNT%)
+		PRINTFORML  ×{V/100}.{V%100}
+		Q *= V
+		Q /= 100
+		V = 0
+	ENDIF
+REND
+
+;共通する獲得資金処理
+CALL WORK_SP_MONEY_CM
+
+PRINTFORML 今回の公衆便所プレイでは{Q}ポイントの代金で{G}人に利用させ、
+
+;チケット一枚あたりの金額×客の人数が収入となる
+Q *= G
+
+PRINTFORML 合計{Q}ポイント稼ぎました
+MONEY += Q
+
+;処女喪失フラグ、Ａ・Ｖ経験判定フラグ、公開浣腸ショー実行フラグはここで消す
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	CFLAG:Ｖ売春で処女喪失フラグ = 0
+	CFLAG:Ｖ売春で否定の珠増加フラグ = 0
+	CFLAG:Ａ売春で否定の珠増加フラグ = 0
+	CFLAG:公衆便所プレイで公開浣腸ショー = 0
+REND
+
+;特殊営業終了処理
+CALL WORK_SP_AFTER
+
+WAIT
+
+BEGIN TURNEND
+
+RETURN 1
+

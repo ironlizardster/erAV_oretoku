@@ -1,0 +1,49 @@
+﻿;=================================================
+;綾乃ラボ
+;=================================================
+@AYANO_ORDER
+
+$INPUT_LOOP
+DRAWLINE
+PRINTL ＸＸ市警察署
+PRINTL 《綾乃に様々な『お願い』をすることができます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+;IF FLAG:治安悪化 != 0
+;	PRINTL  [ 0] - 治安取締を強化してもらう     　   （依頼料：  10000ポイント）
+;ENDIF
+IF FLAG:治安巡回 == 0
+	PRINTL  [ 0] - 治安取締を強化してもらう     　   （依頼料：  10000ポイント）
+ELSE
+	PRINTL  [ 0] - 治安取締を緩めてもらう　     　   （依頼料：  10000ポイント）
+ENDIF
+IF FLAG:加瀬芙美香雇用 == 0
+	PRINTL  [ 1] - 綾乃の家のメイドを紹介してもらう　（依頼料： 100000ポイント）
+ENDIF
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0 && !FLAG:治安巡回
+	CALL SECURITY_UP
+ELSEIF RESULT == 0 && FLAG:治安巡回
+	CALL SECURITY_DOWN
+ELSEIF RESULT == 1 && !FLAG:加瀬芙美香雇用
+	CALL ADD_FUMIKA
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+GOTO INPUT_LOOP

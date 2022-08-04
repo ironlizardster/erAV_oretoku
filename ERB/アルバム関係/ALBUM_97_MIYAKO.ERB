@@ -1,0 +1,165 @@
+﻿;=================================================
+;数字にはキャラ番号を入れてください
+;一度鑑賞した後はGLOBAL:1000+キャラ番号に1を加算し
+;今後いつでも見れるようにしとくと便利？
+;=================================================
+
+;=================================================
+; アルバム可視条件
+;--------------------------------------------
+; 特定のキャラクターの存在や、他のミッション結果などを、
+; このミッションの表示条件に使用したい時に編集する
+;=================================================
+@ALBUM_VISIBLE_97
+; 不可視なら0、可視なら1を戻す
+; GLOBALには1000 + キャラ番号
+LOADGLOBAL
+IF GLOBAL:1097 == 1
+	RETURN 1
+ELSEIF PBAND:147 == 4
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;=================================================
+; アルバムタイトル
+;--------------------------------------------
+; RESULTS = の後にアルバムのタイトルを記述する
+;=================================================
+@ALBUM_TITLE_97
+RESULTS = FIRST IMPRESSION ですの！
+
+;=================================================
+; アルバム内容
+;--------------------------------------------
+; アルバムの内容を記述する
+; 口上の発展みたいな感じで
+;=================================================
+@ALBUM_SS_97
+DRAWLINE
+PRINTL
+PRINTL 【FIRST IMPRESSION ですの！】
+PRINTW
+PRINTW 　………………
+PRINTW 　…………
+PRINTL 　……
+PRINTW
+PRINTFORML 「――随分と派手に痛めつけられたじゃないか、黒井都子
+PRINTFORML 　…おやおや、まあ……あんた、結構美少女で通ってるんだよ？
+PRINTFORML 　それなのにそんなに顔をボコボコにされちゃってさ…
+PRINTFORML 　中学生同士とはいえ、さすがに１０人相手はキツかったんじゃないかい？」
+PRINTFORML 
+PRINTFORML 「……なんで、高等部の生徒会長が、しゃしゃり出てくるんですの…
+PRINTFORML 　どうせ、教師から、止めるように、言われたんでしょうけど
+PRINTFORML 　点数、稼ぎなら、よそでやってほしいですの…！
+PRINTFORML 　もう、みんな、放っておいて、ほしいですの…！」
+PRINTFORML 
+PRINTFORML 「ふん、息も絶え絶えじゃないか
+PRINTFORML 　…しかし、成績優秀、品行方正、良家のご令嬢、三拍子揃ったあんたが
+PRINTFORML 　ここまで荒れるほどのものなのかい？
+PRINTFORML 　…自分の親父が、自分が生まれる前から不倫してた、って事実はさ」
+PRINTFORML 
+PRINTFORML 「……！」
+PRINTFORMW 
+PRINTFORML 「黒井家といえば戦前から続く由緒ある貴族の家系…
+PRINTFORML 　この○○県はおろか、全国でも指折り数える程の大財閥さね
+PRINTFORML 　そんな家の筆頭主ともなれば…女のアタシからすればなかなか許容することは難しいが
+PRINTFORML 　正妻以外に女を娶ることも、まあ嗜みといえばそうなんだろうね
+PRINTFORML 　…しかしその相手が悪かったねえ…よりによってかの大女優が相手とは…
+PRINTFORML 　しかも２０年前、つまりあんたの母親と婚姻する前から関係が続いていて
+PRINTFORML 　隠し子までいるときたもんだ……
+PRINTFORML 　……これまで良家のご令嬢として何不自由なく過ごしてきたあんたはいい笑われ者さね
+PRINTFORML 　当然、周囲の好奇と蔑みの目は強くなる…
+PRINTFORML 　そんな目線と降りかかる火の粉を払っていってたつもりだろうが
+PRINTFORML 　その挙句がこの有様だ……あんた、このままだと死ぬか、殺されるよ？」
+PRINTFORML 
+PRINTFORML 「…う、うるさいですの！
+PRINTFORML 　あなたに、何が、分かるんですの…！
+PRINTFORML 　その、小賢しい口を、つぐませて、あげ…る……です……の…………」
+PRINTFORML 
+PRINTFORML 「…おやおや、勝手に気絶しちまったよ…」
+PRINTW
+PRINTW 　………………
+PRINTW 　…………
+PRINTL 　……
+PRINTW
+PRINTFORML 「――どうやら目が覚めたみたいだね…
+PRINTFORML 　随分とひどいケガをしてたから、ちょいとアタシの友人に頼んで治してもらったよ」
+PRINTFORML 
+PRINTFORML 「…………」
+PRINTFORML 
+PRINTFORML 「やれやれ、お礼もなしかい？」
+PRINTFORML 
+PRINTFORML 「…あのまま死なせてくれれば良かったですの…！
+PRINTFORML 　もうワタクシに構わないでほしいですの……！
+PRINTFORML 　みんな嫌いですの…！
+PRINTFORML 　誰もワタクシの気持ちなんて分かってくれないですの……！」
+PRINTFORML 
+PRINTFORML 「……アタシが『妹がいること』を知ったのはいつだったかな…」
+PRINTFORML 
+PRINTFORML 「……？」
+PRINTFORMW 
+PRINTFORML 「女遊びも華のうち、なんてのはね、相手全員を平等に愛することができるならともかく
+PRINTFORML 　そうでないなら男側の勝手な屁理屈さね
+PRINTFORML 　愛が無くなったと思うならさっさと別れればいいんだよ、そうは思わないかい？
+PRINTFORML 　それをしないで付き合い続けるのは打算としか言い様がないさね…！
+PRINTFORML 　しかも、社会的に認められてる娘よりも、そうでない娘のほうを可愛がるなんて
+PRINTFORML 　…それはどんな嫌がらせだ、と思うところさね…！」
+PRINTFORML 
+PRINTFORML 「（…まさか…、この方もワタクシと同じように……！？）」
+PRINTFORML 
+PRINTFORML 「…なあ、黒井都子、アタシ達はさ…
+PRINTFORML 　お互いに自分の分にそぐわない家元で産まれてきてしまって…
+PRINTFORML 　…それでも、女だてらによくやってきたほうだとは…思わないかい？
+PRINTFORML 　……周囲からは、やれお嬢様だ、とか、やれ苦労知らずの幸せ者だ、とか色々言われてきて…
+PRINTFORML 　家の地位に負けないくらい自分を磨き上げて、律して……
+PRINTFORML 　でも、そんなアタシ達がたどり着いた今現在の立ち位置は…結局のところ…
+PRINTFORML 　『父親に見捨てられた子』さね」
+PRINTFORML 
+PRINTFORML 「……う……うう……！」
+PRINTFORML 
+PRINTFORML 「…誰も入らないように言ってある…
+PRINTFORML 　泣きたいときは泣いたほうがいいさね…」
+PRINTW
+PRINTW 　………………
+PRINTW 　…………
+PRINTL 　……
+PRINTW
+PRINTFORML 「黒井都子、アタシには野望がある
+PRINTFORML 　この○○学園はそのための足がかりさね
+PRINTFORML 　…高等部に進学したら、アタシのいる生徒会に入りな
+PRINTFORML 　そこを野望の第一歩とするさね」
+PRINTFORML 
+PRINTFORML 「承知しました、ですの」
+PRINTFORML 
+PRINTFORML 「（なんだい、素直ないい子じゃないか…！）
+PRINTFORML 　それと、えっと、あんたのことはなんて呼べばいい？」
+PRINTFORML 
+PRINTFORML 「都子、で結構ですの、お、おねーさま…！」
+PRINTFORML 
+PRINTFORML 「…まあ、アタシのことをなんて呼ぼうが勝手だけどさ
+PRINTFORML 　一応聞いておこうか……なんで『おねーさま』？」
+PRINTFORMW 
+PRINTFORML 「顔も名前も知らない方を姉と呼べるほど、ワタクシは厚かましくないですの…！
+PRINTFORML 　…だけど、ワタクシとおねーさまは同じ想いを共有していることが分かったから…
+PRINTFORML 　…そういう御方なら、姉と呼びたいですの…」
+PRINTFORML 
+PRINTFORML 「……アタシも同じ考えだよ、都子…
+PRINTFORML 　そうさね、あんたみたいな妹なら、アタシは大歓迎だよ」
+;この後変態になると分かっていれば…
+PRINTFORML 
+PRINTFORML 「おねーさま！」
+PRINTW
+PRINTW 　………………
+PRINTW 　…………
+PRINTL 　……
+PRINTW
+PRINTFORML 　桐生歌音と黒井都子
+PRINTFORML 　後に日本国の光と闇、両方の歴史に深く名を刻むことになる
+PRINTFORML 　２人の女傑の、これが出逢いの日…………
+WAIT
+GLOBAL:1097 = 1
+SAVEGLOBAL
+DRAWLINE
+

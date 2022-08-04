@@ -1,0 +1,268 @@
+﻿;射精中毒のLvUP処理とその可否判定
+;eraIm@s_ver.0.17βdのスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;射精中毒のLvUP
+;-------------------------------------------------
+@ABLUP38
+DRAWLINE
+;PRINTL 奴隷の射精への執着心を高めます
+;PRINTL 
+;PRINTL 頻繁に射精をしていないと心が落ち着かなくなります
+;DRAWLINE
+;射精中毒はLv5が上限
+;[淫核]が付いている場合はLv10まで解放
+IF ABL:射精中毒 >= 5 && TALENT:淫核 == 0
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:射精中毒 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な快Ｃの珠
+A = 0
+;必要な欲情の珠
+B = 0
+;必要な射精経験
+C = 0
+;必要な異常経験
+F = 0
+
+
+CALL CAN_ABLUP38
+
+;上げるときは異常経験必要（素質：[淫乱][中毒しやすい]なら無視できる）
+SIF F > 0
+	PRINTFORML %EXPNAME:[[EXP:異常経験]]%{F}以上(現在{EXP:異常経験})かつ
+
+;欲望が必要
+PRINTFORML %ABLNAME:[[ABL:欲望]]%{ABL:射精中毒 + 1}以上(現在{ABL:欲望})かつ
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:快Ｃ]]%の珠×{JUEL:快Ｃ}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+	SIF I & 4
+		PRINT 能力不足 
+ENDIF
+PRINTL 
+PRINTFORML 　　　%PALAMNAME:[[PALAM:欲情]]%の珠×{JUEL:欲情}/{B}
+PRINTFORML 　　　%EXPNAME:[[EXP:射精経験]]%　{EXP:射精経験}/{C}
+PRINTL [100] - やめる
+
+INPUT
+IF (RESULT < 0 || RESULT > 0) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:射精中毒 += 1
+IF RESULT == 0
+	JUEL:快Ｃ -= A
+	JUEL:欲情 -= B
+ENDIF
+
+PRINTFORML %ABLNAME:[[ABL:射精中毒]]%のレベルが{ABL:射精中毒}になりました
+
+RETURN 0
+
+;--------------------------------------------------
+;レベルアップに必要な珠計算、レベルアップ予告処理
+;--------------------------------------------------
+@CAN_ABLUP38
+;Lv5が上限
+;[淫核]が付いている場合はLv10まで解放
+SIF ABL:射精中毒 >= 10
+	RETURN 0
+SIF ABL:射精中毒 >= 5 && TALENT:淫核 == 0
+	RETURN 0
+
+
+;条件別にＯＫかダメかを記録する
+I = 0
+
+IF ABL:射精中毒 == 0
+	A = 3000
+	B = 10000
+	C = 2
+ELSEIF ABL:射精中毒 == 1
+	A = 8000
+	B = 20000
+	C = 10
+ELSEIF ABL:射精中毒 == 2
+	A = 15000
+	B = 35000
+	C = 30
+ELSEIF ABL:射精中毒 == 3
+	A = 30000
+	B = 60000
+	C = 75
+	F = 1
+ELSEIF ABL:射精中毒 == 4
+	A = 50000
+	B = 130000
+	C = 150
+	F = 2
+ELSEIF ABL:射精中毒 == 5
+	A = 65000
+	B = 190000
+	C = 180
+ELSEIF ABL:射精中毒 == 6
+	A = 900000
+	B = 3000000
+	C = 250
+ELSEIF ABL:射精中毒 == 7
+	A = 120000
+	B = 500000
+	C = 350
+ELSEIF ABL:射精中毒 == 8
+	A = 200000
+	B = 800000
+	C = 500
+	F = 5
+ELSEIF ABL:射精中毒 == 9
+	A = 500000
+	B = 1500000
+	C = 600
+	F = 7
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	IF ABL:射精中毒 == 3
+		TIMES A , 2.00
+		TIMES B , 2.00
+		TIMES C , 2.00
+	ELSEIF ABL:射精中毒 == 4
+		TIMES A , 2.50
+		TIMES B , 2.50
+		TIMES C , 2.50
+	ELSEIF ABL:射精中毒 >= 5
+		TIMES A , 3.00
+		TIMES B , 3.00
+		TIMES C , 3.00
+	ENDIF
+ENDIF
+
+F = 0
+;２以上に上げるときは異常経験必要（素質：[中毒しやすい][淫乱]なら無視できる）
+SIF ABL:射精中毒 >= 2 && (TALENT:中毒しやすい == 0 && TALENT:淫乱 == 0)
+		F = ABL:射精中毒 + 1
+
+;自制心
+IF TALENT:自制心
+	TIMES A , 2.50
+	TIMES B , 2.50
+	TIMES C , 1.50
+ENDIF
+
+;快感に素直
+IF TALENT:快感に素直
+	TIMES A , 0.75
+	TIMES B , 0.75
+ENDIF
+
+;快感の否定
+IF TALENT:快感の否定
+	TIMES A , 1.75
+	TIMES B , 1.75
+ENDIF
+
+;中毒しやすい
+IF TALENT:中毒しやすい
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+ENDIF
+
+;倒錯的
+IF TALENT:倒錯的
+	TIMES A , 0.75
+	TIMES B , 0.75
+	TIMES C , 0.75
+ENDIF
+
+;C鈍感
+IF TALENT:Ｃ鈍感
+	TIMES A , 1.50
+	TIMES B , 1.50
+	TIMES C , 1.50
+ENDIF
+;C敏感
+IF TALENT:Ｃ敏感
+	TIMES A , 0.90
+	TIMES B , 0.90
+	TIMES C , 0.90
+ENDIF
+
+;淫乱
+IF TALENT:淫乱
+	TIMES A , 0.75
+	TIMES B , 0.75
+	TIMES C , 0.75
+ENDIF
+
+;色情狂
+IF TALENT:絶倫
+	TIMES A , 0.40
+	TIMES B , 0.40
+	TIMES C , 0.40
+ENDIF
+
+;淫魔
+IF TALENT:淫魔
+	TIMES A , 0.01
+	TIMES B , 0.01
+	TIMES C , 0.01
+ENDIF
+
+;淫核
+IF TALENT:淫核
+	TIMES A , 0.75
+	TIMES B , 0.75
+	TIMES C , 0.75
+ENDIF
+
+;最低でも１回・１個は必要
+SIF A < 1
+	A = 1
+SIF B < 1
+	B = 1
+SIF C < 1
+	C = 1
+
+;欲望が必要
+SIF ABL:欲望 < ABL:射精中毒 + 1
+	I |= 4
+;快Cの珠は足りている？
+SIF JUEL:快Ｃ < A
+	I |= 1
+;欲情の珠は足りている？
+SIF JUEL:欲情 < B
+	I |= 1
+
+;射精経験は足りている？
+SIF EXP:射精経験 < C
+	I |= 2
+;異常経験は足りている？
+SIF EXP:異常経験 < F
+	I |= 2
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;
+;
+;

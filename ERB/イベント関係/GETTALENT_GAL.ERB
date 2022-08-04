@@ -1,0 +1,30 @@
+﻿;===========================================================
+;ギャル系取得の処理
+;===========================================================
+@GETTALENT_GAL
+SIF FLAG:85
+	RETURN 0
+VARSET LOCAL
+;FORで人数分回す
+FOR LOCAL,0,CHARANUM
+	;LOCALがMASTER、影響されやすいを持ってない、既にギャル系を持ってる場合は飛ばして次の人
+	SIF LOCAL == MASTER || TALENT:LOCAL:影響されやすい == 0 || TALENT:LOCAL:ギャル系 == 1
+		CONTINUE
+	;またFORで人数分回す
+	FOR LOCAL:1,0,CHARANUM
+		;同一人物じゃない、LOCAL:1がギャル系を持っている、相性が良い（とりあえず120以上））時にランダムで（とりあえず1割くらいで）
+		IF LOCAL != LOCAL:1 && TALENT:(LOCAL:1):ギャル系 && RELATION:LOCAL:(NO:(LOCAL:1)) >= 120 && RAND:100 < 10 && ((NO:LOCAL != [[キャラ:宮間かなで]] && NO:(LOCAL:1) != [[キャラ:宮間カナ]]) || (NO:LOCAL != [[キャラ:宮間カナ]] && NO:(LOCAL:1) != [[キャラ:宮間かなで]]))
+			PRINTFORMW %NAME:LOCAL%の様子がおかしい……
+			PRINTFORM 以前はコスメやアクセ、ネイルなどにあまり興味を示しておらず、どちらかと言うと
+			PRINTFORML 地味目なファッションだったが最近ではそういったモノを好み、言動もどこか軽い感じになっている
+			PRINTFORM 今日も事務所で%NAME:(LOCAL:1)%とファッション誌を広げて、コーデがどうだのどこそこのネイルサロンがいいだの、
+			PRINTFORML そういった話をしている……
+			PRINTFORMW どうやら%CALLNAME:LOCAL%は%CALLNAME:(LOCAL:1)%の影響を受けて【ギャル系】になったようだ……
+			DRAWLINE
+			TALENT:LOCAL:ギャル系 = 1
+			TALENT:LOCAL:大和撫子 = 0
+			;既に取得したのでこのループから脱出して次の人に
+			BREAK
+		ENDIF
+	NEXT
+NEXT

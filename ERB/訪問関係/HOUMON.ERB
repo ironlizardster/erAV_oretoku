@@ -1,0 +1,83 @@
+﻿;=================================================
+;訪問
+;=================================================
+@HOUMON
+
+$INPUT_LOOP
+
+DRAWLINE
+PRINTL 訪問
+PRINTL 《あちこちを訪ねて特殊な行動を取れます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL どこを訪ねようか……
+PRINTL [10] - 桐生組事務所
+;一文字変数UはSHOW_SHOPで秘密知識有無の判定に使われている。
+;訪問内でいじらない限りは問題なさそう
+IF U == 1
+PRINTL [11] - 秘密ラボ
+ENDIF
+LOCAL:2 = GETCHARA([[キャラ:レイチェル・パラディスス]]) > 0 && CFLAG:GETCHARA([[キャラ:レイチェル・パラディスス]]):売却助手可能 == 2
+SIF LOCAL:2
+	PRINTL [12] - レイチェルの工房
+LOCAL:3 = GETCHARA([[キャラ:須野郁美]]) > 0 && CFLAG:GETCHARA([[キャラ:須野郁美]]):売却助手可能 == 2
+SIF LOCAL:3
+	PRINTL [13] - 郁美のラボ
+LOCAL:4 = GETCHARA([[キャラ:清水桜子]]) > 0 && CFLAG:GETCHARA([[キャラ:清水桜子]]):売却助手可能 == 2
+SIF LOCAL:4
+	PRINTL [14] - ＲＢ団アジト
+LOCAL:5 = GETCHARA([[キャラ:知吉綾乃]]) > 0 && CFLAG:GETCHARA([[キャラ:知吉綾乃]]):売却助手可能 == 2
+SIF LOCAL:5
+	PRINTL [15] - 知吉邸
+LOCAL:6 = GETCHARA([[キャラ:ユーニス・パラディスス]]) > 0 && CFLAG:GETCHARA([[キャラ:ユーニス・パラディスス]]):売却助手可能 == 2
+SIF LOCAL:6
+	PRINTL [16] - アーカーシャ本部
+						;****都子ラボ追加ここから****
+LOCAL:7 = GETCHARA([[キャラ:黒井都子]]) > 0 && TALENT:GETCHARA([[キャラ:黒井都子]]):[[TALENT:平和の歌姫？]]
+SIF LOCAL:7 && !FLAG:歌姫の騎士団
+	PRINTL [17] - 都子を尾行してみる
+SIF LOCAL:7 && FLAG:歌姫の騎士団
+	PRINTL [17] - 歌姫の騎士団支部に行く
+						;****都子ラボ追加ここまで****
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 10
+	CALL KIRYU_GUMI
+ELSEIF RESULT == 11
+	CALL SECRET_LABO
+ELSEIF RESULT == 12 && LOCAL:2 == 1
+	CALL RACHEL_LABO
+ELSEIF RESULT == 13 && LOCAL:3 == 1
+	CALL IKUMI_LABO
+ELSEIF RESULT == 14 && LOCAL:4 == 1
+	CALL SAKURA_AZITO
+ELSEIF RESULT == 15 && LOCAL:5 == 1
+	CALL AYANO_ORDER
+ELSEIF RESULT == 16 && LOCAL:6 == 1
+	CALL EUNICE_LABO
+						;****都子ラボ追加ここから****
+ELSEIF RESULT == 17 && LOCAL:7 && !FLAG:歌姫の騎士団
+	CALL MIYAKO_LABO_OP
+ELSEIF RESULT == 17 && LOCAL:7 && FLAG:歌姫の騎士団
+	CALL MIYAKO_LABO
+						;****都子ラボ追加ここまで****
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+GOTO INPUT_LOOP

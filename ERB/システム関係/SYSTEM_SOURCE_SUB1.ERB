@@ -1,0 +1,1968 @@
+﻿;=================================================
+;@SOURCE_CHECK関連の関数群
+;=================================================
+;INDEX
+;@SOURCE_SEX_CHECK:同性の場合のチェック
+;;;@SOURCE_LESBIAN_SEX_CHECK:女性同士の場合のチェック（SYSTEM_SOURCE_SUB2.ERBに記述）
+;;;@SOURCE_GAY_SEX_CHECK:男性同士の場合のチェック（SYSTEM_SOURCE_SUB2.ERBに記述）
+;@PLAYER_SKILL_CHECK:調教者のスキルによるチェック
+;@MASTER_SKILL_CHECK:調教者のスキルによるチェック
+;@INCEST_SEX_CHECK:近親相姦のチェック
+;;;@INCEST:親族関係の判定（汎用関数\FUNCTIONS.ERBに記述）
+;@LOST_VIRGIN_CHECK:処女喪失のチェック
+;@TARGET_EJAC_CHECK:調教対象の射精チェック
+;@TARGET_MILK_CHECK:調教対象の噴乳チェック
+;@UP_TALENT_CVA_CHECK:素質などによる上下の処理（快楽系）
+;@UP_TALENT_CHECK:素質などによる上下の処理
+;@MARK_GOT_CHECK:刻印取得のチェック
+;@YOKUBO_UP_CHECK:欲望の上昇による[抑圧][抵抗]の消滅をチェック
+;@JUJUN_UP_CHECK:信頼の上昇による[反抗的]の反転をチェック
+;@EXP_GOT_CHECK:被虐快楽経験、奉仕快楽経験のチェック
+;@SOKUOCHI_CHECK:[即落ち]のチェック
+;@ECST_CHECK:絶頂時の追加処理
+;@PISSING_ECST_CHECK:絶頂時のおもらし処理
+;@MASTER_FLAG_CHECK:主人による調教の経験値
+;=================================================
+;-------------------------------------------------
+;同性の場合のチェック
+;-------------------------------------------------
+@SOURCE_SEX_CHECK
+;レズ
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	;女性同士の場合のチェック
+	;関数はSOURCE_SUB_SUB.ERBに記述
+	CALL SOURCE_LESBIAN_SEX_CHECK
+ELSEIF TALENT:オトコ && TALENT:PLAYER:オトコ
+	;男性同士の場合のチェック
+	;関数はSOURCE_SUB_SUB.ERBに記述
+	CALL SOURCE_GAY_SEX_CHECK
+ENDIF
+;-------------------------------------------------
+;調教者のスキルによるチェック
+;-------------------------------------------------
+@PLAYER_SKILL_CHECK
+;調教者のTALENT:解放をみる
+IF TALENT:PLAYER:解放
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:17 , 1.20
+ENDIF
+;調教者のTALENT:小悪魔をみる
+IF TALENT:PLAYER:小悪魔
+	TIMES SOURCE:12 , 1.60
+ENDIF
+;調教者のTALENT:魅惑をみる
+IF TALENT:PLAYER:魅惑
+	TIMES SOURCE:8 , 0.50
+	TIMES SOURCE:14 , 0.50
+
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:17 , 1.20
+ENDIF
+;調教者のTALENT:謎の魅力をみる
+IF TALENT:PLAYER:謎の魅力
+	TIMES SOURCE:8 , 0.50
+	TIMES SOURCE:14 , 0.50
+
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:17 , 1.20
+ENDIF
+;調教者が【母性】で調教対象が【マザコン】
+IF TALENT:PLAYER:母性 && TALENT:TARGET:マザコン
+	TIMES SOURCE:8 , 0.50
+	TIMES SOURCE:14 , 0.50
+
+	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:5 , 1.20
+ENDIF
+;調教者が【父性】で調教対象が【ファザコン】
+IF TALENT:PLAYER:父性 && TALENT:TARGET:ファザコン
+	TIMES SOURCE:8 , 0.50
+	TIMES SOURCE:14 , 0.50
+
+	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:5 , 1.20
+ENDIF
+;調教者が【妹】で調教対象が【妹想い】
+IF TALENT:PLAYER:妹 && TALENT:TARGET:妹想い
+	TIMES SOURCE:8 , 0.50
+	TIMES SOURCE:14 , 0.50
+
+	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:5 , 1.20
+ENDIF
+;調教者が【巫女】で調教対象が【精霊】か【幽霊】
+IF TALENT:PLAYER:巫女 && (TALENT:TARGET:ボーイッシュ || TALENT:TARGET:嫉妬)
+	TIMES SOURCE:8 , 0.50
+	TIMES SOURCE:14 , 0.50
+
+	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:5 , 1.20
+ENDIF
+;調教者が【ロリコン】で調教対象が【中学生】
+IF TALENT:PLAYER:ロリコン && TALENT:TARGET:中学生
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+	TIMES SOURCE:17 , 1.20
+		
+	TIMES SOURCE:14 , 0.80
+ENDIF
+;調教者が【ロリコン】で調教対象が【中学生】でも【高校生】でもない
+IF TALENT:PLAYER:ロリコン && TALENT:TARGET:中学生 == 0 && TALENT:TARGET:高校生 == 0
+	TIMES SOURCE:0 , 0.80
+	TIMES SOURCE:1 , 0.80
+	TIMES SOURCE:2 , 0.80
+	TIMES SOURCE:17 , 0.80
+	
+	TIMES SOURCE:14 , 1.20
+ENDIF
+
+;調教者のABL:技巧
+IF ABL:PLAYER:技巧 == 0
+	TIMES SOURCE:0 , 0.50
+	TIMES SOURCE:1 , 0.50
+	TIMES SOURCE:2 , 0.50
+	TIMES SOURCE:17 , 0.50
+ELSEIF ABL:PLAYER:技巧 == 1
+	TIMES SOURCE:0 , 0.80
+	TIMES SOURCE:1 , 0.80
+	TIMES SOURCE:2 , 0.80
+	TIMES SOURCE:17 , 0.80
+ELSEIF ABL:PLAYER:技巧 == 2
+	TIMES SOURCE:0 , 1.00
+	TIMES SOURCE:1 , 1.00
+	TIMES SOURCE:2 , 1.00
+	TIMES SOURCE:17 , 1.00
+ELSEIF ABL:PLAYER:技巧 == 3
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+	TIMES SOURCE:17 , 1.20
+ELSEIF ABL:PLAYER:技巧 == 4
+	TIMES SOURCE:0 , 1.50
+	TIMES SOURCE:1 , 1.50
+	TIMES SOURCE:2 , 1.50
+	TIMES SOURCE:17 , 1.50
+ELSEIF ABL:PLAYER:技巧 >= 5
+	TIMES SOURCE:0 , 2.00
+	TIMES SOURCE:1 , 2.00
+	TIMES SOURCE:2 , 2.00
+	TIMES SOURCE:17 , 2.00
+ENDIF
+;-------------------------------------------------
+;主人による調教のボーナス
+;-------------------------------------------------
+@MASTER_SKILL_CHECK
+;主人による調教経験
+IF ASSIPLAY == 0
+	IF CFLAG:好感度 >= 500
+		TIMES SOURCE:8 , 0.70
+		TIMES SOURCE:14 , 0.70
+
+		TIMES SOURCE:0 , 1.20
+		TIMES SOURCE:1 , 1.20
+		TIMES SOURCE:2 , 1.20
+		TIMES SOURCE:3 , 1.30
+		TIMES SOURCE:17 , 1.20
+	ELSEIF CFLAG:好感度 >= 300
+		TIMES SOURCE:8 , 0.80
+		TIMES SOURCE:14 , 0.80
+
+		TIMES SOURCE:0 , 1.10
+		TIMES SOURCE:1 , 1.10
+		TIMES SOURCE:2 , 1.10
+		TIMES SOURCE:3 , 1.20
+		TIMES SOURCE:17 , 1.10
+	ELSEIF CFLAG:好感度 >= 100
+		TIMES SOURCE:8 , 0.90
+		TIMES SOURCE:14 , 0.90
+
+		TIMES SOURCE:3 , 1.10
+	ENDIF
+ENDIF
+
+;淫乱
+;主人経験との重複前提で計算
+IF TALENT:淫乱 && ASSIPLAY == 0
+	TIMES SOURCE:0 , 1.80
+	TIMES SOURCE:1 , 1.80
+	TIMES SOURCE:2 , 1.80
+	TIMES SOURCE:17 , 1.80
+ENDIF
+
+;愛
+;主人経験との重複前提で計算
+IF TALENT:恋心 && ASSIPLAY == 0
+	TIMES SOURCE:0 , 1.30
+	TIMES SOURCE:1 , 1.30
+	TIMES SOURCE:2 , 1.30
+	TIMES SOURCE:3 , 1.80
+	TIMES SOURCE:17 , 1.30
+ENDIF
+;-------------------------------------------------
+;近親相姦のチェック
+;-------------------------------------------------
+@INCEST_SEX_CHECK
+
+;親族関係の判定
+TFLAG:近親相姦 = 0
+CALL INCEST
+
+IF TFLAG:近親相姦 && TFLAG:V経験を伴うコマンド
+	IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
+		PRINTL 父娘相姦
+	ELSEIF  TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
+		PRINTL 母娘相姦
+	ELSEIF  TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ
+		PRINTL 母子相姦
+	ELSEIF  TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ == 0
+		PRINTL 母娘相姦
+	ELSEIF  TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
+		PRINTL 兄妹相姦
+	ELSEIF  TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
+		PRINTL 姉妹相姦
+	ELSEIF  TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
+		PRINTL 姉弟相姦
+	ELSEIF  TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
+		PRINTL 姉妹相姦
+	ELSEIF  TFLAG:近親相姦 == 5 && TALENT:PLAYER:オトコ == 0
+		PRINTL 従弟相姦
+	ELSEIF  TFLAG:近親相姦 == 6 && TALENT:PLAYER:オトコ
+		PRINTL 従姉相姦
+	ENDIF
+
+	IF TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2
+		TIMES SOURCE:3 , 2.00
+		TIMES SOURCE:14 , 2.00
+		TIMES SOURCE:16 , 2.00
+	ELSEIF TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4
+		TIMES SOURCE:3 , 1.50
+		TIMES SOURCE:14 , 1.50
+		TIMES SOURCE:16 , 1.50
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;処女喪失のチェック
+;-------------------------------------------------
+@LOST_VIRGIN_CHECK
+;処女でないかＶ経験を伴うコマンドフラグが立ってなければそのまま終了
+SIF TALENT:処女 == 0 || TFLAG:V経験を伴うコマンド == 0
+	RETURN 0
+
+SETCOLOR 0xF58F98
+PRINTL 【処女喪失】
+RESETCOLOR
+
+TALENT:処女 = 0
+SIF RELATION:TARGET:(NO:PLAYER) <= 1000
+	RELATION:TARGET:(NO:PLAYER) += 20
+
+;処女喪失フラグ(今回のコマンド)
+TFLAG:処女喪失 = 1
+;処女喪失フラグ(今回の調教)
+TFLAG:今回の調教で処女喪失 = 1
+;処女喪失フラグ(ビデオ撮影)
+SIF TEQUIP:撮影中
+	TFLAG:ビデオ撮影内容 |= 1
+
+TFLAG:処女喪失 = 1
+
+;親族関係の判定
+TFLAG:近親相姦 = 0
+CALL INCEST
+
+IF CFLAG:初体験の相手 == 0
+	CFLAG:処女喪失年齢 = BASE:実年齢
+	CFLAG:処女喪失月 = DAY:1
+	CFLAG:処女喪失日 = DAY:2
+	IF TEQUIP:野外プレイ == 1
+		CFLAG:処女喪失場所 = 10
+	ELSEIF TEQUIP:野外プレイ == 2
+		CFLAG:処女喪失場所 = 5
+	ELSEIF TEQUIP:野外プレイ == 3
+		CFLAG:処女喪失場所 = 11
+	ELSEIF TEQUIP:野外プレイ == 4
+		CFLAG:処女喪失場所 = 12
+	ELSE
+		CFLAG:処女喪失場所 = 0
+	ENDIF
+	IF (TFLAG:ビデオ撮影内容 & 1)
+		CFLAG:処女喪失シチュ = 2
+	ELSEIF MARK:反発刻印 >= 2
+		CFLAG:処女喪失シチュ = 4
+	ELSE
+		CFLAG:処女喪失シチュ = 1
+	ENDIF
+ENDIF
+
+IF CFLAG:初体験の相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]]
+	;初体験の相手を記録
+	CFLAG:初体験の相手 = 16
+	CSTR:処女喪失の相手 = お兄ちゃん
+	;初体験がバイブの場合
+	IF SELECTCOM == 11
+		IF TALENT:淫乱 == 0
+			CSTR:処女喪失の相手 = バイブ
+			CFLAG:初体験の相手 = 4
+		ELSEIF TALENT:淫乱 == 1
+			CSTR:処女喪失の相手 = 極太バイブ
+			CFLAG:初体験の相手 = 5
+		ENDIF
+	ELSEIF TEQUIP:触手召喚 == 1
+			CSTR:処女喪失の相手 = 触手生物
+			CFLAG:初体験の相手 = 14
+	ENDIF
+ELSEIF CFLAG:初体験の相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]]
+	;初体験の相手を記録
+	CFLAG:初体験の相手 = 16
+	CSTR:処女喪失の相手 = アニキ
+	;初体験がバイブの場合
+	IF SELECTCOM == 11
+		IF TALENT:淫乱 == 0
+			CSTR:処女喪失の相手 = バイブ
+			CFLAG:初体験の相手 = 4
+		ELSEIF TALENT:淫乱 == 1
+			CSTR:処女喪失の相手 = 極太バイブ
+			CFLAG:初体験の相手 = 5
+		ENDIF
+	ELSEIF TEQUIP:触手召喚 == 1
+			CSTR:処女喪失の相手 = 触手生物
+			CFLAG:初体験の相手 = 14
+	ENDIF
+ELSEIF CFLAG:初体験の相手 == 0
+	;初体験の相手を記録
+	CFLAG:初体験の相手 = 1
+	CSTR:処女喪失の相手 = %NAME:PLAYER%
+	SIF NO:PLAYER == MASTER
+		CFLAG:初体験の相手 = 16
+;erAVにおいてはCFLAG:15の役割が違うため封印
+;	;初体験が近親相姦
+;	;初体験の相手が自分の息子・娘という状況は生物学的にありえないので省く
+;	IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
+;		CFLAG:初体験の相手 = 300
+;	ELSEIF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
+;		CFLAG:初体験の相手 = 301
+;	ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
+;		CFLAG:初体験の相手 = 304
+;	ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
+;		CFLAG:初体験の相手 = 305
+;	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
+;		CFLAG:初体験の相手 = 306
+;	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
+;		CFLAG:初体験の相手 = 307
+;	ELSEIF TFLAG:近親相姦 == 5 && TALENT:PLAYER:オトコ == 0
+;		CFLAG:初体験の相手 = 308
+;	ELSEIF TFLAG:近親相姦 == 6 && TALENT:PLAYER:オトコ
+;		CFLAG:初体験の相手 = 309
+	;初体験がバイブの場合
+	IF SELECTCOM == 11
+		IF TALENT:淫乱 == 0
+			CSTR:処女喪失の相手 = バイブ
+			CFLAG:初体験の相手 = 4
+		ELSEIF TALENT:淫乱 == 1
+			CSTR:処女喪失の相手 = 極太バイブ
+			CFLAG:初体験の相手 = 5
+		ENDIF
+	ELSEIF TEQUIP:触手召喚 == 1
+			CSTR:処女喪失の相手 = 触手生物
+			CFLAG:初体験の相手 = 14
+	ENDIF
+ENDIF
+
+;初体験の相手が主人で【恋心】
+IF PLAYER == MASTER && TALENT:恋心
+	;反発刻印回避
+	TFLAG:反発刻印の回避 = 1
+	TIMES SOURCE:3 , 2.00
+	TIMES SOURCE:15 , 0.30
+;初体験の時点で既に【淫乱】
+ELSEIF TALENT:淫乱
+	;反発刻印回避
+	TFLAG:反発刻印の回避 = 1
+	TIMES SOURCE:3 , 2.00
+	TIMES SOURCE:6 , 0.50
+	TIMES SOURCE:15 , 0.30
+;初体験の相手が助手で相性最高で親族でない
+ELSEIF ASSIPLAY && RELATION:R >= 200 && TFLAG:近親相姦 == 0
+	;反発刻印回避
+	TFLAG:反発刻印の回避 = 1
+ENDIF
+
+
+;-------------------------------------------------
+;ファーストキスのチェック：調教者
+;-------------------------------------------------
+@FIRSTKISS_PLAYER_CHECK
+;処女でないかＶ経験を伴うコマンドフラグが立ってなければそのまま終了
+SIF CFLAG:PLAYER:ファーストキスの相手 != -1 || TFLAG:620 == 0
+	RETURN 0
+
+SETCOLOR 0xF58F98
+PRINTFORML 【ファーストキス】（%CALLNAME:PLAYER%）
+RESETCOLOR
+CFLAG:PLAYER:ファーストキスの相手 = 1
+
+CFLAG:PLAYER:ファーストキス喪失年齢 = BASE:PLAYER:実年齢
+CFLAG:PLAYER:ファーストキス喪失月 = DAY:1
+CFLAG:PLAYER:ファーストキス喪失日 = DAY:2
+
+IF (TFLAG:620 & 2)
+	CSTR:PLAYER:ファーストキスの相手 = %NAME:TARGET%
+ELSEIF (TFLAG:620 & 4)
+	CSTR:PLAYER:ファーストキスの相手 = %NAME:TARGET%
+ELSEIF (TFLAG:620 & 8)
+	CSTR:PLAYER:ファーストキスの相手 = %NAME:TARGET%
+ELSE
+	CSTR:PLAYER:ファーストキスの相手 = %NAME:TARGET%
+ENDIF
+
+;フラグを折っておく
+TFLAG:620 = 0
+
+;-------------------------------------------------
+;ファーストキスのチェック：助手
+;-------------------------------------------------
+@FIRSTKISS_ASSI_CHECK
+;処女でないかＶ経験を伴うコマンドフラグが立ってなければそのまま終了
+SIF ASSIPLAY == 0
+	RETURN 0
+SIF CFLAG:ASSI:ファーストキスの相手 != -1 || TFLAG:622 == 0
+	RETURN 0
+
+SETCOLOR 0xF58F98
+PRINTFORML 【ファーストキス】（%CALLNAME:ASSI%）
+RESETCOLOR
+CFLAG:ASSI:ファーストキスの相手 = 1
+
+CFLAG:ASSI:ファーストキス喪失年齢 = BASE:ASSI:実年齢
+CFLAG:ASSI:ファーストキス喪失月 = DAY:1
+CFLAG:ASSI:ファーストキス喪失日 = DAY:2
+
+IF (TFLAG:620 & 2)
+	CSTR:ASSI:ファーストキスの相手 = %NAME:TARGET%
+ELSEIF (TFLAG:620 & 4)
+	CSTR:ASSI:ファーストキスの相手 = %NAME:TARGET%
+ELSEIF (TFLAG:620 & 8)
+	CSTR:ASSI:ファーストキスの相手 = %NAME:TARGET%
+ELSE
+	CSTR:ASSI:ファーストキスの相手 = %NAME:TARGET%
+ENDIF
+
+;-------------------------------------------------
+;ファーストキスのチェック
+;-------------------------------------------------
+@FIRSTKISS_TARGET_CHECK
+;キス経験済か唇を使うコマンドフラグが立ってなければそのまま終了
+SIF CFLAG:ファーストキスの相手 != -1 || TFLAG:621 == 0
+	RETURN 0
+
+SETCOLOR 0xF58F98
+PRINTL 【ファーストキス】
+RESETCOLOR
+CFLAG:ファーストキスの相手 = 1
+
+CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+CFLAG:ファーストキス喪失月 = DAY:1
+CFLAG:ファーストキス喪失日 = DAY:2
+
+;CFLAG:ファーストキスの相手=16にするとこの辺の特殊処理をガン無視することになるんだなあと頭を抱えるなど
+IF (TFLAG:621 & 2)
+	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ちゃん
+		CFLAG:ファーストキスの相手 = 16
+	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ぃの
+		CFLAG:ファーストキスの相手 = 16
+	ELSE
+		CSTR:ファーストキスの相手 = %NAME:PLAYER%
+		SIF NO:PLAYER == MASTER
+			CFLAG:ファーストキスの相手 = 16
+	ENDIF
+	CFLAG:ファーストキス喪失シチュ = 1
+ELSEIF (TFLAG:621 & 4)
+	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ちゃん
+		CFLAG:ファーストキスの相手 = 16
+	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ぃ
+		CFLAG:ファーストキスの相手 = 16
+	ELSE
+		CSTR:ファーストキスの相手 = %NAME:PLAYER%
+		SIF NO:PLAYER == MASTER
+			CFLAG:ファーストキスの相手 = 16
+	ENDIF
+	CFLAG:ファーストキス喪失シチュ = 2
+ELSEIF (TFLAG:621 & 8) 
+	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ちゃん
+		CFLAG:ファーストキスの相手 = 16
+	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ぃ
+		CFLAG:ファーストキスの相手 = 16
+	ELSE
+		CSTR:ファーストキスの相手 = %NAME:PLAYER%
+	ENDIF
+	CFLAG:ファーストキス喪失シチュ = 3
+ELSE
+	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ちゃん
+		CFLAG:ファーストキスの相手 = 16
+	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1 && ASSIPLAY == 0
+		CSTR:ファーストキスの相手 = お兄ぃ
+		CFLAG:ファーストキスの相手 = 16
+	ELSE
+		CSTR:ファーストキスの相手 = %NAME:PLAYER%
+		SIF NO:PLAYER == MASTER
+			CFLAG:ファーストキスの相手 = 16
+	ENDIF
+ENDIF
+
+
+;-------------------------------------------------
+;Ａ処女喪失のチェック
+;-------------------------------------------------
+@LOST_ANALVIRGIN_CHECK
+;アナル処女でない
+IF TALENT:アナル処女 == 0 || TFLAG:Ａ挿入判定 == 0
+	RETURN 0
+ENDIF
+
+SETCOLOR 0xF58F98
+PRINTL 【アナル処女喪失】
+RESETCOLOR
+TFLAG:アナル処女喪失 = 1
+
+TALENT:アナル処女 = 0
+
+;Ａ処女喪失フラグ(ビデオ撮影)
+SIF TEQUIP:撮影中
+	TFLAG:ビデオ撮影内容2 |= 1
+
+R = NO:PLAYER
+
+;親族関係の判定
+TFLAG:近親相姦 = 0
+CALL INCEST
+
+CFLAG:アナル処女喪失年齢 = BASE:実年齢
+CFLAG:アナル処女喪失月 = DAY:1
+CFLAG:アナル処女喪失日 = DAY:2
+IF TEQUIP:撮影中
+	CFLAG:アナル処女喪失シチュ = 2
+ELSE
+	CFLAG:アナル処女喪失シチュ = 1
+ENDIF	
+
+IF TEQUIP:野外プレイ == 1
+	CFLAG:処女喪失場所 = 10
+ELSEIF TEQUIP:野外プレイ == 2
+	CFLAG:処女喪失場所 = 5
+ELSEIF TEQUIP:野外プレイ == 3
+	CFLAG:処女喪失場所 = 11
+ELSEIF TEQUIP:野外プレイ == 4
+	CFLAG:処女喪失場所 = 12
+ELSE
+	CFLAG:処女喪失場所 = 14
+ENDIF
+
+IF CFLAG:アナル処女喪失の相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]]
+	;初体験の相手を記録（初期値が0のため、+1して記録）
+	IF SELECTCOM == 13
+		IF TALENT:淫乱 == 0
+			CSTR:アナル処女喪失の相手 = アナルバイブ
+			CFLAG:アナル処女喪失の相手 = 4
+		ELSEIF TALENT:淫乱 == 1
+			CSTR:アナル処女喪失の相手 = 極太アナルバイブ
+			CFLAG:アナル処女喪失の相手 = 5
+		ENDIF
+	ELSEIF SELECTCOM == 68
+		CSTR:アナル処女喪失の相手 = アナルフィスト
+		CFLAG:アナル処女喪失の相手 = 1
+	ELSEIF SELECTCOM == 76
+		CSTR:アナル処女喪失の相手 = 触手生物
+		CFLAG:アナル処女喪失の相手 = 14
+	ELSE
+		CSTR:アナル処女喪失の相手 = お兄ちゃん
+		CFLAG:アナル処女喪失の相手 = 16
+	ENDIF
+ELSEIF CFLAG:アナル処女喪失の相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]]
+	;初体験の相手を記録（初期値が0のため、+1して記録）
+	IF SELECTCOM == 13
+		IF TALENT:淫乱 == 0
+			CSTR:アナル処女喪失の相手 = アナルバイブ
+			CFLAG:アナル処女喪失の相手 = 4
+		ELSEIF TALENT:淫乱 == 1
+			CSTR:アナル処女喪失の相手 = 極太アナルバイブ
+			CFLAG:アナル処女喪失の相手 = 5
+		ENDIF
+	ELSEIF SELECTCOM == 68
+		CSTR:アナル処女喪失の相手 = アナルフィスト
+		CFLAG:アナル処女喪失の相手 = 1
+	ELSEIF SELECTCOM == 76
+		CSTR:アナル処女喪失の相手 = 触手生物
+		CFLAG:アナル処女喪失の相手 = 14
+	ELSE
+		CSTR:アナル処女喪失の相手 = アニキ
+		CFLAG:アナル処女喪失の相手 = 16
+	ENDIF
+ELSEIF CFLAG:アナル処女喪失の相手 == 0
+	;初体験の相手を記録（初期値が0のため、+1して記録）
+	IF SELECTCOM == 13
+		IF TALENT:淫乱 == 0
+			CSTR:アナル処女喪失の相手 = アナルバイブ
+			CFLAG:アナル処女喪失の相手 = 4
+		ELSEIF TALENT:淫乱 == 1
+			CSTR:アナル処女喪失の相手 = 極太アナルバイブ
+			CFLAG:アナル処女喪失の相手 = 5
+		ENDIF
+	ELSEIF SELECTCOM == 68
+		CSTR:アナル処女喪失の相手 = アナルフィスト
+		CFLAG:アナル処女喪失の相手 = 1
+	ELSEIF SELECTCOM == 76
+		CSTR:アナル処女喪失の相手 = 触手生物
+		CFLAG:アナル処女喪失の相手 = 14
+	ELSE
+		CSTR:アナル処女喪失の相手 = %NAME:PLAYER%
+		CFLAG:アナル処女喪失の相手 = 1
+	ENDIF
+ENDIF
+
+SIF NO:PLAYER == MASTER && CFLAG:アナル処女喪失の相手 == 1
+	CFLAG:アナル処女喪失の相手 = 16
+
+;初体験の相手が主人で【恋心】
+IF PLAYER == MASTER && TALENT:恋心
+	;反発刻印回避
+	TFLAG:反発刻印の回避 = 1
+	TIMES SOURCE:3 , 2.00
+	TIMES SOURCE:15 , 0.30
+;初体験の時点で既に【淫乱】
+ELSEIF TALENT:淫乱
+	;反発刻印回避
+	TFLAG:反発刻印の回避 = 1
+	TIMES SOURCE:3 , 2.00
+	TIMES SOURCE:6 , 0.50
+	TIMES SOURCE:15 , 0.30
+;初体験の相手が助手で相性最高で親族でない
+ELSEIF ASSIPLAY && RELATION:R >= 200 && TFLAG:近親相姦 == 0
+	;反発刻印回避
+	TFLAG:反発刻印の回避 = 1
+ENDIF
+;-------------------------------------------------
+;調教対象の射精チェック
+;-------------------------------------------------
+@TARGET_EJAC_CHECK
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+SIF TALENT:未熟
+	RETURN 0
+
+A = UP:0 + UP:1 + UP:2 + UP:14
+
+;自制心
+SIF TALENT:自制心
+	A /= 2
+
+;快感に素直
+SIF TALENT:快感に素直
+	TIMES A , 1.20
+
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 1.10
+
+;快感の否定
+SIF TALENT:快感の否定
+	TIMES A , 0.80
+
+;媚薬
+SIF TEQUIP:媚薬効果
+	A *= 2
+
+;利尿剤
+SIF TEQUIP:利尿剤効果
+	A /= 2
+
+;調教対象がコンドーム装着
+SIF TEQUIP:調教対象コンドーム
+	A /= 2
+
+A = 1000+(A-1000)/2
+BASE:射精ゲージ += A
+
+S = BASE:射精ゲージ
+EJAC = MAXBASE:射精ゲージ
+
+IF  S > EJAC * 2
+	E = 2
+ELSEIF S > EJAC
+	E = 1
+ELSE
+	E = 0
+ENDIF
+
+;大量射精
+IF E == 2
+	LOSEBASE:体力 += 20
+	LOSEBASE:気力 += 100
+
+	IF EXP:射精経験 < EXPLV:1
+		SOURCE:12 += 20000
+		SOURCE:13 += 10000
+	ELSEIF EXP:射精経験 < EXPLV:2
+		SOURCE:12 += 10000
+		SOURCE:13 += 8000
+	ELSEIF EXP:射精経験 < EXPLV:3
+		SOURCE:12 += 7000
+		SOURCE:13 += 6000
+	ELSEIF EXP:射精経験 < EXPLV:4
+		SOURCE:12 += 5000
+		SOURCE:13 += 4000
+	ELSEIF EXP:射精経験 < EXPLV:5
+		SOURCE:12 += 3000
+		SOURCE:13 += 2000
+	ELSE
+		SOURCE:12 += 1800
+		SOURCE:13 += 1200
+	ENDIF
+
+	PRINTS NAME:TARGET
+	PRINTL 大量射精
+	PRINTL 精液経験＋１
+	PRINTL 射精経験＋２
+	IF EXP:射精経験 == 0 && TALENT:オトコ == 0
+		EXP:異常経験 += 1
+		PRINTL 異常経験＋1
+	ENDIF
+	EXP:精液経験 += 1
+	EXP:射精経験 += 2
+
+	;Ｐに精液汚れ
+	STAIN:2 |= 4
+
+	BASE:射精ゲージ -= EJAC*2
+	SIF BASE:射精ゲージ >= EJAC
+		BASE:射精ゲージ = EJAC-1
+
+	;調教対象が射精フラグ
+	TFLAG:調教対象が射精 = 2
+	NOWEX:5 += 1
+	EX:5 += 1
+;通常の射精
+ELSEIF E == 1
+	LOSEBASE:気力 += 40
+
+	IF EXP:射精経験 < EXPLV:1
+		SOURCE:12 += 10000
+		SOURCE:13 += 5000
+	ELSEIF EXP:射精経験 < EXPLV:2
+		SOURCE:12 += 5000
+		SOURCE:13 += 4000
+	ELSEIF EXP:射精経験 < EXPLV:3
+		SOURCE:12 += 2500
+		SOURCE:13 += 2000
+	ELSEIF EXP:射精経験 < EXPLV:4
+		SOURCE:12 += 1600
+		SOURCE:13 += 1400
+	ELSEIF EXP:射精経験 < EXPLV:5
+		SOURCE:12 += 800
+		SOURCE:13 += 500
+	ELSE
+		SOURCE:12 += 200
+		SOURCE:13 += 250
+	ENDIF
+
+	PRINTS NAME:TARGET
+	PRINTL 射精
+	PRINTL 射精経験＋１
+	IF EXP:射精経験 == 0 && TALENT:オトコ == 0
+		EXP:異常経験 += 1
+		PRINTL 異常経験＋1
+	ENDIF
+	EXP:射精経験 += 1
+
+	;Ｐに精液汚れ
+	STAIN:2 |= 4
+
+	BASE:射精ゲージ -= EJAC
+	SIF BASE:射精ゲージ >= EJAC
+		BASE:射精ゲージ = EJAC-1
+
+	;調教対象が射精フラグ
+	TFLAG:調教対象が射精 = 1
+	NOWEX:5 += 1
+	EX:5 += 1
+ENDIF
+
+;-------------------------------------------------
+;調教対象の噴乳チェック
+;-------------------------------------------------
+@TARGET_MILK_CHECK
+SIF TALENT:母乳体質 == 0
+	RETURN 0
+
+A = UP:0 / 5 + UP:1 / 5 + UP:2 / 5 + UP:14 * 3
+
+;自制心
+SIF TALENT:自制心
+	A /= 2
+
+;快感に素直
+SIF TALENT:快感に素直
+	TIMES A , 1.20
+
+;淫乱化
+SIF TALENT:淫乱
+	TIMES A , 1.10
+
+;快感の否定
+SIF TALENT:快感の否定
+	TIMES A , 0.80
+
+;B敏感
+SIF TALENT:Ｂ敏感
+	TIMES A , 1.50
+
+;媚薬
+SIF TEQUIP:媚薬効果
+	A *= 2
+
+;利尿剤
+SIF TEQUIP:利尿剤効果
+	A /= 2
+
+;調教者が幼児退行
+SIF TALENT:PLAYER:幼児退行
+	A *= 2
+
+;調教者が幼稚
+SIF TALENT:PLAYER:幼稚
+	A *= 2
+
+;貧乳
+SIF TALENT:貧乳
+	TIMES A , 0.50
+
+;絶壁
+SIF TALENT:絶壁
+	TIMES A , 0.20
+
+A = 1000+(A-1000)/2
+BASE:噴乳ゲージ += A
+
+S = BASE:噴乳ゲージ
+EJAC = MAXBASE:噴乳ゲージ
+
+IF  S > EJAC * 2
+	E = 2
+ELSEIF S > EJAC
+	E = 1
+ELSE
+	E = 0
+ENDIF
+
+;大量噴乳
+IF E == 2
+	LOSEBASE:体力 += 20
+	LOSEBASE:気力 += 100
+
+	IF EXP:噴乳経験 < EXPLV:1
+		SOURCE:12 += 20000
+		SOURCE:13 += 10000
+	ELSEIF EXP:噴乳経験 < EXPLV:2
+		SOURCE:12 += 10000
+		SOURCE:13 += 8000
+	ELSEIF EXP:噴乳経験 < EXPLV:3
+		SOURCE:12 += 7000
+		SOURCE:13 += 6000
+	ELSEIF EXP:噴乳経験 < EXPLV:4
+		SOURCE:12 += 5000
+		SOURCE:13 += 4000
+	ELSEIF EXP:噴乳経験 < EXPLV:5
+		SOURCE:12 += 3000
+		SOURCE:13 += 2000
+	ELSE
+		SOURCE:12 += 1800
+		SOURCE:13 += 1200
+	ENDIF
+
+	PRINTFORML %NAME:TARGET%は乳首から大量の母乳を噴出した。
+	PRINTL 噴乳経験＋２
+	IF EXP:噴乳経験 == 0
+		EXP:異常経験 += 1
+		PRINTL 異常経験＋1
+	ENDIF
+	EXP:噴乳経験 += 2
+	;Ｂに母乳汚れ
+	STAIN:5 |= 16
+
+	BASE:噴乳ゲージ -= EJAC*2
+	SIF BASE:噴乳ゲージ >= EJAC
+		BASE:噴乳ゲージ = EJAC-1
+
+	;調教対象が噴乳フラグ
+	TFLAG:調教対象が噴乳 += 2
+	;搾乳器で母乳が集められているかチェック
+	SIF TEQUIP:搾乳機 && TEQUIP:触手召喚 == 0
+		TFLAG:搾乳中 += 2
+
+	NOWEX:4 += 1
+	EX:4 += 1
+;通常の噴乳
+ELSEIF E == 1
+	LOSEBASE:気力 += 40
+
+	IF EXP:噴乳経験 < EXPLV:1
+		SOURCE:12 += 10000
+		SOURCE:13 += 5000
+	ELSEIF EXP:噴乳経験 < EXPLV:2
+		SOURCE:12 += 5000
+		SOURCE:13 += 4000
+	ELSEIF EXP:噴乳経験 < EXPLV:3
+		SOURCE:12 += 2500
+		SOURCE:13 += 2000
+	ELSEIF EXP:噴乳経験 < EXPLV:4
+		SOURCE:12 += 1600
+		SOURCE:13 += 1400
+	ELSEIF EXP:噴乳経験 < EXPLV:5
+		SOURCE:12 += 800
+		SOURCE:13 += 500
+	ELSE
+		SOURCE:12 += 200
+		SOURCE:13 += 250
+	ENDIF
+
+	PRINTFORML %NAME:TARGET%は乳首から母乳を垂れ流した。
+	PRINTL 噴乳経験＋１
+	IF EXP:噴乳経験 == 0
+		EXP:異常経験 += 1
+		PRINTL 異常経験＋1
+	ENDIF
+	EXP:噴乳経験 += 1
+	;Ｂに母乳汚れ
+	STAIN:5 |= 16
+
+	BASE:噴乳ゲージ -= EJAC
+	SIF BASE:噴乳ゲージ >= EJAC
+		BASE:噴乳ゲージ = EJAC-1
+
+	;調教対象が噴乳フラグ
+	TFLAG:調教対象が噴乳 += 1
+	;搾乳器で母乳が集められているかチェック
+	SIF TEQUIP:搾乳機 && TEQUIP:触手召喚 == 0
+		TFLAG:搾乳中 += 1
+
+	NOWEX:4 += 1
+	EX:4 += 1
+ENDIF
+
+;-------------------------------------------------
+;素質などによる上下の処理（快楽系）
+;-------------------------------------------------
+@UP_TALENT_CVA_CHECK
+;媚薬
+IF TEQUIP:媚薬効果
+	TIMES UP:0 , 2.00
+	TIMES UP:1 , 2.00
+	TIMES UP:2 , 2.00
+	TIMES UP:14 , 2.00
+ENDIF
+
+;利尿剤
+IF TEQUIP:利尿剤効果
+	TIMES UP:0 , 0.70
+	TIMES UP:1 , 0.70
+	TIMES UP:2 , 0.70
+	TIMES UP:14 , 0.70
+ENDIF
+
+;失神中
+IF TFLAG:失神中終了 > 0
+	TIMES UP:0 , 0.20
+	TIMES UP:1 , 0.20
+	TIMES UP:2 , 0.20
+	TIMES UP:14 , 0.20
+ENDIF
+
+;自制心
+IF TALENT:自制心
+	TIMES UP:0 , 0.30
+	TIMES UP:1 , 0.50
+	TIMES UP:2 , 0.70
+	TIMES UP:14 , 0.30
+ENDIF
+
+;オトコ
+IF TALENT:オトコ
+	TIMES UP:2 , 1.30
+ENDIF
+
+;肥満
+IF TALENT:肥満
+	TIMES UP:0 , 0.50
+	TIMES UP:1 , 0.50
+	TIMES UP:2 , 0.50
+	TIMES UP:14 , 0.50
+ENDIF
+
+;性豪
+IF TALENT:性豪
+	TIMES UP:0 , 1.20
+	TIMES UP:1 , 1.20
+	TIMES UP:2 , 1.20
+	TIMES UP:14 , 1.20
+ENDIF
+
+;-------------------------------------------------
+;素質などによる上下の処理
+;-------------------------------------------------
+@UP_TALENT_CHECK
+
+;媚薬
+IF TEQUIP:媚薬効果
+	TIMES UP:4 , 1.20
+	TIMES UP:5 , 2.00
+	TIMES UP:6 , 1.20
+	TIMES UP:11 , 0.75
+	TIMES UP:12 , 0.50
+ENDIF
+
+;利尿剤
+IF TEQUIP:利尿剤効果
+	TIMES UP:4 , 0.80
+	TIMES UP:5 , 1.50
+	TIMES UP:6 , 0.80
+	TIMES UP:11 , 0.50
+	TIMES UP:12 , 1.20
+	TIMES UP:13 , 1.50
+;	TIMES UP:14 , 2.00
+	TIMES UP:15 , 1.20
+ENDIF
+
+;失神中
+IF TFLAG:失神中終了 > 0
+	TIMES UP:4 , 0.50
+	TIMES UP:5 , 0.75
+	TIMES UP:6 , 0.10
+	TIMES UP:8 , 0.10
+	TIMES UP:10 , 0.00
+	TIMES UP:11 , 0.00
+	TIMES UP:12 , 0.10
+	TIMES UP:13 , 0.00
+ENDIF
+
+;臆病
+IF TALENT:臆病
+	TIMES UP:10 , 2.00
+	TIMES UP:11 , 0.50
+	TIMES UP:13 , 0.25
+ENDIF
+;反抗的
+IF TALENT:ナマイキ
+	TIMES UP:4 , 0.25
+	TIMES UP:5 , 0.50
+	TIMES UP:11 , 1.50
+ENDIF
+;気丈
+IF TALENT:気丈
+	TIMES UP:4 , 0.30
+	TIMES UP:5 , 0.75
+	TIMES UP:10 , 0.80
+	TIMES UP:11 , 2.00
+	TIMES UP:13 , 2.00
+ENDIF
+;素直
+IF TALENT:素直
+	TIMES UP:4 , 2.00
+	TIMES UP:11 , 0.60
+ENDIF
+;大人しい
+IF TALENT:大人しい
+	TIMES UP:11 , 0.30
+ENDIF
+;プライド高い
+IF TALENT:プライド高い
+	TIMES UP:6 , 0.50
+	TIMES UP:10 , 0.60
+	TIMES UP:11 , 1.20
+ENDIF
+;プライド低い
+IF TALENT:プライド低い
+	TIMES UP:6 , 2.00
+	TIMES UP:10 , 1.50
+	TIMES UP:11 , 0.80
+ENDIF
+
+;無関心
+IF TALENT:クール
+	TIMES UP:4 , 0.50
+	TIMES UP:5 , 0.50
+	TIMES UP:6 , 0.50
+	TIMES UP:10 , 0.80
+	TIMES UP:11 , 0.80
+ENDIF
+;感情乏しい
+IF TALENT:感情乏しい
+	TIMES UP:4 , 0.60
+	TIMES UP:5 , 0.60
+	TIMES UP:6 , 0.60
+	TIMES UP:8 , 0.60
+	TIMES UP:10 , 0.60
+	TIMES UP:11 , 0.60
+	TIMES UP:12 , 0.60
+	TIMES UP:13 , 0.60
+ENDIF
+;好奇心
+SIF TALENT:好奇心
+	TIMES UP:7 , 1.20
+
+;保守的
+SIF TALENT:保守的
+	TIMES UP:7 , 0.80
+
+;楽観的
+SIF TALENT:ポジティブ
+	TIMES UP:13 , 0.30
+
+;悲観的
+SIF TALENT:ネガティブ
+	TIMES UP:13 , 2.50
+
+;抑圧
+IF TALENT:抑圧
+	TIMES UP:5 , 0.50
+	TIMES UP:11 , 2.00
+	TIMES UP:13 , 1.50
+ENDIF
+;解放
+IF TALENT:解放
+	TIMES UP:5 , 2.00
+	TIMES UP:6 , 2.00
+ENDIF
+;抵抗
+IF TALENT:抵抗
+	TIMES UP:5 , 0.50
+	TIMES UP:11 , 2.00
+ENDIF
+
+;痛みに弱い
+IF TALENT:痛みに弱い
+	TIMES UP:10 , 2.00
+	TIMES UP:11 , 1.50
+ENDIF
+;痛みに強い
+IF TALENT:痛みに強い
+	TIMES UP:10 , 0.50
+	TIMES UP:11 , 0.75
+ENDIF
+
+;習得早い
+SIF TALENT:素質
+	TIMES UP:7 , 2.00
+;習得遅い
+SIF TALENT:習得遅い
+	TIMES UP:7 , 0.50
+
+;献身的
+SIF TALENT:献身的
+	TIMES UP:6 , 2.00
+
+;快感に素直
+SIF TALENT:快感に素直
+	TIMES UP:5 , 2.00
+;快感の否定
+SIF TALENT:快感の否定
+	TIMES UP:5 , 0.50
+
+;恋心
+IF TALENT:恋心 && ASSIPLAY == 0
+	TIMES UP:4 , 1.20
+	TIMES UP:6 , 2.00
+	TIMES UP:11 , 0.50
+	TIMES UP:12 , 0.50
+ENDIF
+
+;妄信
+IF TALENT:妄信
+	TIMES UP:6 , 4.00
+	TIMES UP:11 , 0.50
+ENDIF
+
+;肥満
+IF TALENT:肥満
+	TIMES UP:13 , 0.20
+ENDIF
+
+;調教者がTALENT:威圧感
+IF TALENT:PLAYER:カリスマ
+	TIMES UP:10 , 2.00
+	TIMES UP:11 , 0.50
+ENDIF
+
+;性豪
+IF TALENT:性豪
+	TIMES UP:5 , 1.20
+ENDIF
+
+;常時発情
+IF TALENT:常時発情
+	TIMES UP:5 , 1.20
+	TIMES UP:3 , 1.20
+ENDIF
+
+;膣内射精による妊娠への恐怖（コンドーム使用中か【愛】持ちもしくは相性最高なら平気）
+IF TFLAG:セックスで射精 && (SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34)
+	IF ASSIPLAY == 0 && TEQUIP:主人コンドーム == 0 && TFLAG:セックスで射精 && TALENT:恋心 == 0
+		TIMES UP:10 , 2.00
+	ELSEIF ASSI > 0 && ASSIPLAY && TEQUIP:助手コンドーム == 0 
+		R = NO:ASSI
+		SIF RELATION:TARGET:R < 200
+			TIMES UP:10 , 2.00
+	ENDIF
+ENDIF
+
+;反発刻印
+IF MARK:反発刻印 == 3
+	TIMES UP:4 , 0.10
+ELSEIF MARK:反発刻印 == 2
+	TIMES UP:4 , 0.40
+ELSEIF MARK:反発刻印 == 1
+	TIMES UP:4 , 0.70
+ENDIF
+
+;-------------------------------------------------
+;刻印取得のチェック
+;-------------------------------------------------
+@MARK_GOT_CHECK
+;-------------------------------------------------
+;反発刻印
+;------------------------------------------------- 
+
+;PALAM:反感+PALAM:不快の上昇量に応じて反発刻印を取得
+A = UP:11 + UP:12
+IF A >= 500 && A < 1200 && MARK:4 <= 0 && TFLAG:反発刻印の回避 == 0
+	MARK:反発刻印 = 1
+	MARK:4 = 1
+	TFLAG:反発刻印 = 1
+	PRINTL 反発刻印LV1を取得
+ELSEIF A >= 1200 && A < 3000 && MARK:4 <= 1 && TFLAG:反発刻印の回避 == 0
+	MARK:反発刻印 = 2
+	MARK:4 = 2
+	TFLAG:反発刻印 = 2
+	PRINTL 反発刻印LV2を取得
+	;感情乏しいの場合は反発刻印による信頼ダウンはなし
+	IF ABL:信頼 == 1 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV0に下がった
+		ABL:信頼 = 0
+	ELSEIF ABL:信頼 == 2 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV1に下がった
+		ABL:信頼 = 1
+	ENDIF
+ELSEIF A >= 3000 && MARK:4 <= 2 && TFLAG:反発刻印の回避 == 0
+	MARK:反発刻印 = 3
+	MARK:4 = 3
+	TFLAG:反発刻印 = 3
+	PRINTL 反発刻印LV3を取得
+	;感情乏しいの場合は反発刻印による信頼ダウンはなし
+	IF ABL:信頼 > 0 && ABL:信頼 <= 2 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV0に下がった
+		ABL:信頼 = 0
+	ELSEIF ABL:信頼 == 3 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV2に下がった
+		ABL:信頼 = 2
+	ENDIF
+ENDIF
+TFLAG:反発刻印の回避 = 0
+;-------------------------------------------------
+;苦痛刻印
+;-------------------------------------------------
+;PALAM:苦痛の上昇量に応じて反発刻印を取得
+IF UP:9 >= 500 && UP:9 < 1500 && MARK:苦痛刻印 <= 0
+	MARK:苦痛刻印 = 1
+	TFLAG:苦痛刻印 = 1
+	PRINTL 苦痛刻印LV1を取得
+ELSEIF UP:9 >= 1500 && UP:9 < 3000 && MARK:苦痛刻印 <= 1
+	MARK:苦痛刻印 = 2
+	TFLAG:苦痛刻印 = 2
+	PRINTL 苦痛刻印LV2を取得
+	;気丈・感情乏しいの場合は苦痛刻印による信頼アップはなし
+	IF ABL:信頼 == 0 && TALENT:気丈 == 0 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV1になった
+		ABL:信頼 = 1
+		CALL JUJUN_UP_CHECK
+	ENDIF
+ELSEIF UP:9 >= 3000 && MARK:苦痛刻印 <= 2
+	MARK:苦痛刻印 = 3
+	TFLAG:苦痛刻印 = 3
+	PRINTL 苦痛刻印LV3を取得
+	;気丈・感情乏しいの場合は苦痛刻印による信頼アップはなし
+	IF ABL:信頼 == 0 && TALENT:気丈 == 0 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV1になった
+		ABL:信頼 = 1
+		CALL JUJUN_UP_CHECK
+	ENDIF
+	IF TALENT:PLAYER:サド
+		;PRINTL （【サド】の助手）
+		PRINTFORML %EXPNAME:[[EXP:異常経験]]%＋１
+		EXP:異常経験 += 1
+	ENDIF
+ENDIF
+
+
+;-------------------------------------------------
+;快楽刻印
+;-------------------------------------------------
+;PALAM:快ＣＶＡＢの上昇量に応じて快楽刻印を取得
+A = UP:0 + UP:1 + UP:2 + UP:14
+
+IF A >= 500 && A < 1500 && MARK:快楽刻印 <= 0
+	MARK:快楽刻印 = 1
+	TFLAG:快楽刻印 = 1
+	PRINTL 快楽刻印LV1を取得
+ELSEIF A >= 1500 && A < 3000 && MARK:快楽刻印 <= 1
+	MARK:快楽刻印 = 2
+	TFLAG:快楽刻印 = 2
+	PRINTL 快楽刻印LV2を取得
+ELSEIF A >= 3000 && MARK:快楽刻印 <= 2
+	MARK:快楽刻印 = 3
+	TFLAG:快楽刻印 = 3
+	PRINTL 快楽刻印LV3を取得
+	;自制心・感情乏しいの場合は快楽刻印による信頼アップはなし
+	IF ABL:信頼 == 0 && TALENT:自制心 == 0 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV1になった
+		ABL:信頼 = 1
+		CALL JUJUN_UP_CHECK
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;屈服刻印
+;-------------------------------------------------
+;プレイ中の行為に応じて屈服刻印を取得
+IF TFLAG:屈服刻印2 == 1 && MARK:屈服刻印 <= 0
+	MARK:屈服刻印 = 1
+	TFLAG:屈服刻印 = 1
+	PRINTL 屈服刻印LV1を取得
+ELSEIF TFLAG:屈服刻印2 == 2 && MARK:屈服刻印 <= 1
+	MARK:屈服刻印 = 2
+	TFLAG:屈服刻印 = 2
+	PRINTL 屈服刻印LV2を取得
+	;感情乏しいの場合は屈服刻印による信頼アップはなし
+	IF ABL:信頼 == 0 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV1になった
+		ABL:信頼 = 1
+		CALL JUJUN_UP_CHECK
+	ENDIF
+ELSEIF TFLAG:屈服刻印2 == 3 && MARK:屈服刻印 <= 2
+	MARK:屈服刻印 = 3
+	TFLAG:屈服刻印 = 3
+	PRINTL 屈服刻印LV3を取得
+	;感情乏しいの場合は屈服刻印による信頼アップはなし
+	IF ABL:信頼 <= 1 && TALENT:感情乏しい == 0
+		PRINTL そして信頼がLV2になった
+		ABL:信頼 = 2
+		CALL JUJUN_UP_CHECK
+	ENDIF
+ENDIF
+
+
+;-------------------------------------------------
+;欲望の上昇による[抑圧][抵抗]の消滅をチェック
+;-------------------------------------------------
+@YOKUBO_UP_CHECK
+IF ABL:欲望 >= 3 && (TALENT:抑圧 || TALENT:抵抗)
+	PRINTFORM %NAME:TARGET%は
+	IF TALENT:抑圧
+		PRINTFORM 【%TALENTNAME:[[TALENT:抑圧]]%】
+		TALENT:抑圧 = 0
+	ENDIF
+	IF TALENT:抵抗
+		PRINTFORM 【%TALENTNAME:[[TALENT:抵抗]]%】
+		TALENT:抵抗 = 0
+	ENDIF
+	PRINTL を失った
+	PRINTL 否定の珠が半分になった
+	JUEL:否定 /= 2
+
+	TFLAG:抑圧抵抗の消滅 = 1
+ENDIF
+
+;-------------------------------------------------
+;信頼の上昇による[反抗的]の反転をチェック
+;-------------------------------------------------
+@JUJUN_UP_CHECK
+IF ABL:信頼 >= 4 && TALENT:ナマイキ && TALENT:ツンデレ
+	PRINTFORM %NAME:TARGET%は【%TALENTNAME:[[TALENT:ナマイキ]]%】を失い、
+	PRINTFORML 【%TALENTNAME:[[TALENT:素直]]%】を得た
+	TALENT:ナマイキ = 0
+	TALENT:素直 = 1
+ENDIF
+
+;-------------------------------------------------
+;奉仕快楽経験、被虐快楽経験、Ａ快楽経験のチェック
+;-------------------------------------------------
+@EXP_GOT_CHECK
+
+A = UP:0 + UP:1 + UP:2 + UP:14
+
+;奉仕快楽経験のチェック
+E = 0
+
+IF UP:7 < 100
+	A = 0
+ELSEIF UP:7 < 300
+	A *= 1
+ELSEIF UP:7 < 700
+	A *= 2
+ELSEIF UP:7 < 1500
+	A *= 3
+ELSE
+	A *= 4
+ENDIF
+
+IF TFLAG:快楽経験
+	IF A >= 12000
+		E = 16
+		TIMES UP:11 , 0.65
+		TIMES UP:12 , 0.30
+	ELSEIF A >= 8000
+		E = 12
+		TIMES UP:11 , 0.70
+		TIMES UP:12 , 0.40
+	ELSEIF A >= 5000
+		E = 8
+		TIMES UP:11 , 0.75
+		TIMES UP:12 , 0.50
+	ELSEIF A >= 3000
+		E = 4
+		TIMES UP:11 , 0.80
+		TIMES UP:12 , 0.60
+	ELSEIF A >= 2000
+		E = 2
+		TIMES UP:11 , 0.85
+		TIMES UP:12 , 0.70
+	ELSEIF A >= 1000
+		E = 1
+		TIMES UP:11 , 0.90
+		TIMES UP:12 , 0.80
+	ENDIF
+	IF E
+		PRINT 奉仕快楽経験+
+		PRINTVL E
+		EXP:奉仕快楽経験 += E
+		TFLAG:奉仕快楽経験 = E
+	ENDIF
+ENDIF
+
+
+;Ａ快楽経験のチェック
+A = UP:2
+E = 0
+
+IF UP:2 < 300
+	A = 0
+ELSEIF UP:2 < 1000
+	A *= 1
+ELSEIF UP:2 < 5000
+	A *= 2
+ELSEIF UP:2 < 10000
+	A *= 3
+ELSE
+	A *= 4
+ENDIF
+
+IF A >= 12000
+	E = 16
+	TIMES UP:11 , 0.80
+	TIMES UP:12 , 0.90
+	TIMES UP:6 , 1.20
+ELSEIF A >= 8000
+	E = 12
+	TIMES UP:11 , 0.85
+	TIMES UP:12 , 0.90
+	TIMES UP:6 , 1.15
+ELSEIF A >= 5000
+	E = 8
+	TIMES UP:11 , 0.85
+	TIMES UP:12 , 0.95
+	TIMES UP:6 , 1.10
+ELSEIF A >= 3000
+	E = 4
+	TIMES UP:11 , 0.90
+	TIMES UP:12 , 0.95
+	TIMES UP:6 , 1.05
+ELSEIF A >= 2000
+	E = 2
+	TIMES UP:11 , 0.90
+	TIMES UP:12 , 1.00
+	TIMES UP:6 , 1.00
+ELSEIF A >= 1000
+	E = 1
+	TIMES UP:11 , 0.95
+	TIMES UP:12 , 1.00
+	TIMES UP:6 , 1.00
+ENDIF
+
+IF E
+	PRINT Ａ快楽経験+
+	PRINTVL E
+	EXP:Ａ快楽経験 += E
+	TFLAG:128 = E
+ENDIF
+
+;被虐・嗜虐快楽経験のチェック
+A = UP:0 + UP:1 + UP:2 + UP:14
+SIF A == 0
+	A = UP:5
+
+E = 0
+F = 0
+IF A >= 3000 && UP:9 >= 2000
+	E = 16
+	TIMES UP:11 , 0.65
+ELSEIF A >= 2500 && UP:9 >= 1500
+	E = 12
+	TIMES UP:11 , 0.70
+ELSEIF A >= 1500 && UP:9 >= 1000
+	E = 8
+	TIMES UP:11 , 0.75
+ELSEIF A >= 1000 && UP:9 >= 500
+	E = 4
+	TIMES UP:11 , 0.80
+ELSEIF A >= 600 && UP:9 >= 300
+	E = 2
+	TIMES UP:11 , 0.85
+ELSEIF A >= 300 && UP:9 >= 100
+	E = 1
+	TIMES UP:11 , 0.90
+ENDIF
+IF E
+	PRINT 被虐快楽経験+
+	PRINTVL E
+	EXP:被虐快楽経験 += E
+	TFLAG:苦痛快楽経験 = E
+	;助手の嗜虐快楽経験上昇
+	IF ASSIPLAY && ASSI > 0
+		IF ABL:ASSI:サドっ気 + TEQUIP:助手ボンデージ == 0
+			TIMES E , 0.00
+			F = 0
+		ELSEIF  ABL:ASSI:サドっ気 + TEQUIP:助手ボンデージ == 1
+			TIMES E , 0.50
+			F = 0
+		ELSEIF  ABL:ASSI:サドっ気 + TEQUIP:助手ボンデージ == 2
+			TIMES E , 1.00
+			F = E / 2
+		ELSEIF  ABL:ASSI:サドっ気 + TEQUIP:助手ボンデージ == 3
+			F = E * 2
+		ELSEIF  ABL:ASSI:サドっ気 + TEQUIP:助手ボンデージ == 4
+			F = E * 10
+		ELSEIF  ABL:ASSI:サドっ気 + TEQUIP:助手ボンデージ >= 5
+			F = E * 50
+		ENDIF
+		IF E
+			PRINTFORML 嗜虐快楽経験+{E}(%CALLNAME:ASSI%)
+			EXP:ASSI:嗜虐快楽経験 += E
+		ENDIF
+		IF F
+			PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{F}(%CALLNAME:ASSI%)
+			JUEL:ASSI:欲情 += F
+		ENDIF
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;[即落ち]のチェック
+;-------------------------------------------------
+@SOKUOCHI_CHECK
+
+SIF TALENT:即落ち == 0
+	RETURN 0
+
+IF UP:0 > 1 && ABL:Ｃ感覚 < 1
+	ABL:Ｃ感覚 = 1
+	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV1になった
+ELSEIF UP:0 > 30 && ABL:Ｃ感覚 < 2
+	ABL:Ｃ感覚 = 2
+	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV2になった
+ELSEIF UP:0 > 60 && ABL:Ｃ感覚 < 3
+	ABL:Ｃ感覚 = 3
+	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV3になった
+ELSEIF UP:0 > 200 && ABL:Ｃ感覚 < 4
+	ABL:Ｃ感覚 = 4
+	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV4になった
+ELSEIF UP:0 > 1000 && ABL:Ｃ感覚 < 5
+	ABL:Ｃ感覚 = 5
+	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV5になった
+ENDIF
+
+IF UP:1 > 1 && ABL:Ｖ感覚 < 1
+	ABL:Ｖ感覚 = 1
+	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV1になった
+ELSEIF UP:1 > 30 && ABL:Ｖ感覚 < 2
+	ABL:Ｖ感覚 = 2
+	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV2になった
+ELSEIF UP:1 > 60 && ABL:Ｖ感覚 < 3
+	ABL:Ｖ感覚 = 3
+	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV3になった
+ELSEIF UP:1 > 200 && ABL:Ｖ感覚 < 4
+	ABL:Ｖ感覚 = 4
+	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV4になった
+ELSEIF UP:1 > 1000 && ABL:Ｖ感覚 < 5
+	ABL:Ｖ感覚 = 5
+	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV5になった
+ENDIF
+
+IF UP:2 > 1 && ABL:Ａ感覚 < 1
+	ABL:Ａ感覚 = 1
+	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV1になった
+ELSEIF UP:2 > 30 && ABL:Ａ感覚 < 2
+	ABL:Ａ感覚 = 2
+	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV2になった
+ELSEIF UP:2 > 60 && ABL:Ａ感覚 < 3
+	ABL:Ａ感覚 = 3
+	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV3になった
+ELSEIF UP:2 > 200 && ABL:Ａ感覚 < 4
+	ABL:Ａ感覚 = 4
+	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV4になった
+ELSEIF UP:2 > 1000 && ABL:Ａ感覚 < 5
+	ABL:Ａ感覚 = 5
+	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV5になった
+ENDIF
+
+IF UP:14 > 1 && ABL:Ｂ感覚 < 1
+	ABL:Ｂ感覚 = 1
+	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV1になった
+ELSEIF UP:14 > 30 && ABL:Ｂ感覚 < 2
+	ABL:Ｂ感覚 = 2
+	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV2になった
+ELSEIF UP:14 > 60 && ABL:Ｂ感覚 < 3
+	ABL:Ｂ感覚 = 3
+	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV3になった
+ELSEIF UP:14 > 200 && ABL:Ｂ感覚 < 4
+	ABL:Ｂ感覚 = 4
+	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV4になった
+ELSEIF UP:14 > 1000 && ABL:Ｂ感覚 < 5
+	ABL:Ｂ感覚 = 5
+	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV5になった
+ENDIF
+
+IF UP:4 > 1 && ABL:信頼 < 1
+	ABL:信頼 = 1
+	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV1になった
+ELSEIF UP:4 > 30 && ABL:信頼 < 2
+	ABL:信頼 = 2
+	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV2になった
+ELSEIF UP:4 > 60 && ABL:信頼 < 3
+	ABL:信頼 = 3
+	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV3になった
+ELSEIF UP:4 > 200 && ABL:信頼 < 4
+	ABL:信頼 = 4
+	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV4になった
+ELSEIF UP:4 > 1000 && ABL:信頼 < 5
+	ABL:信頼 = 5
+	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV5になった
+ENDIF
+
+IF UP:5 > 1 && ABL:欲望 < 1
+	ABL:欲望 = 1
+	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV1になった
+ELSEIF UP:5 > 30 && ABL:欲望 < 2
+	ABL:欲望 = 2
+	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV2になった
+ELSEIF UP:5 > 60 && ABL:欲望 < 3
+	ABL:欲望 = 3
+	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV3になった
+ELSEIF UP:5 > 200 && ABL:欲望 < 4
+	ABL:欲望 = 4
+	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV4になった
+ELSEIF UP:5 > 1000 && ABL:欲望 < 5
+	ABL:欲望 = 5
+	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV5になった
+ENDIF
+
+IF UP:7 > 1 && ABL:技巧 < 1
+	ABL:技巧 = 1
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV1になった
+ELSEIF UP:7 > 30 && ABL:技巧 < 2
+	ABL:技巧 = 2
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV2になった
+ELSEIF UP:7 > 60 && ABL:技巧 < 3
+	ABL:技巧 = 3
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV3になった
+ELSEIF UP:7 > 200 && ABL:技巧 < 4
+	ABL:技巧 = 4
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV4になった
+ELSEIF UP:7 > 1000 && ABL:技巧 < 5
+	ABL:技巧 = 5
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV5になった
+ENDIF
+
+IF UP:6 > 1 && ABL:奉仕精神 < 1 && ABL:Ｃ感覚 >= 1
+	ABL:奉仕精神 = 1
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV1になった
+ELSEIF UP:6 > 30 && ABL:奉仕精神 < 2 && ABL:Ｃ感覚 >= 2
+	ABL:奉仕精神 = 2
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV2になった
+ELSEIF UP:6 > 60 && ABL:奉仕精神 < 3 && ABL:Ｃ感覚 >= 3
+	ABL:奉仕精神 = 3
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV3になった
+ELSEIF UP:6 > 200 && ABL:奉仕精神 < 4 && ABL:Ｃ感覚 >= 4
+	ABL:奉仕精神 = 4
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV4になった
+ELSEIF UP:6 > 1000 && ABL:奉仕精神 < 5 && ABL:Ｃ感覚 >= 5
+	ABL:奉仕精神 = 5
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV5になった
+ENDIF
+
+IF UP:8 > 1 && ABL:露出癖 < 1 && ABL:Ｂ感覚 >= 1
+	ABL:露出癖 = 1
+	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV1になった
+ELSEIF UP:8 > 30 && ABL:露出癖 < 2 && ABL:Ｂ感覚 >= 2
+	ABL:露出癖 = 2
+	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV2になった
+ELSEIF UP:8 > 60 && ABL:露出癖 < 3 && ABL:Ｂ感覚 >= 3
+	ABL:露出癖 = 3
+	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV3になった
+ELSEIF UP:8 > 200 && ABL:露出癖 < 4 && ABL:Ｂ感覚 >= 4
+	ABL:露出癖 = 4
+	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV4になった
+ELSEIF UP:8 > 1000 && ABL:露出癖 < 5 && ABL:Ｂ感覚 >= 5
+	ABL:露出癖 = 5
+	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV5になった
+ENDIF
+
+IF UP:9 > 1 && ABL:マゾっ気 < 1 && ABL:欲望 >= 1
+	ABL:マゾっ気 = 1
+	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV1になった
+ELSEIF UP:9 > 30 && ABL:マゾっ気 < 2 && ABL:欲望 >= 2
+	ABL:マゾっ気 = 2
+	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV2になった
+ELSEIF UP:9 > 60 && ABL:マゾっ気 < 3 && ABL:欲望 >= 3
+	ABL:マゾっ気 = 3
+	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV3になった
+ELSEIF UP:9 > 200 && ABL:マゾっ気 < 4 && ABL:欲望 >= 4
+	ABL:マゾっ気 = 4
+	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV4になった
+ELSEIF UP:9 > 1000 && ABL:マゾっ気 < 5 && ABL:欲望 >= 5
+	ABL:マゾっ気 = 5
+	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV5になった
+ENDIF
+
+IF EXP:レズ経験 > 1 && ABL:レズっ気 < 1 && ABL:欲望 >= 1
+	ABL:レズっ気 = 1
+	PRINTFORML %ABLNAME:[[ABL:レズっ気]]%LV1になった
+ELSEIF EXP:レズ経験 > 5 && ABL:レズっ気 < 2 && ABL:欲望 >= 2
+	ABL:レズっ気 = 2
+	PRINTFORML %ABLNAME:[[ABL:レズっ気]]%LV2になった
+ELSEIF EXP:レズ経験 > 20 && ABL:レズっ気 < 3 && ABL:欲望 >= 3
+	ABL:レズっ気 = 3
+	PRINTFORML %ABLNAME:[[ABL:レズっ気]]%LV3になった
+ELSEIF EXP:レズ経験 > 40 && ABL:レズっ気 < 4 && ABL:欲望 >= 4
+	ABL:レズっ気 = 4
+	PRINTFORML %ABLNAME:[[ABL:レズっ気]]%LV4になった
+ELSEIF EXP:レズ経験 > 100 && ABL:レズっ気 < 5 && ABL:欲望 >= 5
+	ABL:レズっ気 = 5
+	PRINTFORML %ABLNAME:[[ABL:レズっ気]]%LV5になった
+ENDIF
+
+IF EXP:ＢＬ経験 > 1 && ABL:ＢＬっ気 < 1 && ABL:欲望 >= 1
+	ABL:ＢＬっ気 = 1
+	PRINTFORML %ABLNAME:[[ABL:ＢＬっ気]]%LV1になった
+ELSEIF EXP:ＢＬ経験 > 5 && ABL:ＢＬっ気 < 2 && ABL:欲望 >= 2
+	ABL:ＢＬっ気 = 2
+	PRINTFORML %ABLNAME:[[ABL:ＢＬっ気]]%LV2になった
+ELSEIF EXP:ＢＬ経験 > 20 && ABL:ＢＬっ気 < 3 && ABL:欲望 >= 3
+	ABL:ＢＬっ気 = 3
+	PRINTFORML %ABLNAME:[[ABL:ＢＬっ気]]%LV3になった
+ELSEIF EXP:ＢＬ経験 > 40 && ABL:ＢＬっ気 < 4 && ABL:欲望 >= 4
+	ABL:ＢＬっ気 = 4
+	PRINTFORML %ABLNAME:[[ABL:ＢＬっ気]]%LV4になった
+ELSEIF EXP:ＢＬ経験 > 100 && ABL:ＢＬっ気 < 5 && ABL:欲望 >= 5
+	ABL:ＢＬっ気 = 5
+	PRINTFORML %ABLNAME:[[ABL:ＢＬっ気]]%LV5になった
+ENDIF
+
+;-------------------------------------------------
+;絶頂時の追加処理
+;-------------------------------------------------
+@ECST_CHECK
+TFLAG:絶頂の強度 = C + V + A + B
+
+;-------------------------------------------------
+;絶頂時のおもらし処理
+;-------------------------------------------------
+@PISSING_ECST_CHECK
+;超大量放尿
+IF TFLAG:絶頂の強度 >= 7 && TEQUIP:利尿剤効果 && TALENT:おもらし癖
+	PRINTFORML %EXPNAME:[[EXP:放尿経験]]%＋５
+	EXP:放尿経験 += 5
+	TEQUIP:利尿剤効果 = 0
+	;奴隷のＶとＰに＜尿＞の汚れが発生
+	STAIN:2 |= 32
+	STAIN:3 |= 32
+	;着衣おもらし処理
+	CALL SOILING_CLOTH_NO1
+;大量放尿
+ELSEIF (TFLAG:絶頂の強度 >= 7 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果 && TALENT:おもらし癖)
+	PRINTFORML %EXPNAME:[[EXP:放尿経験]]%＋４
+	EXP:放尿経験 += 4
+	TEQUIP:利尿剤効果 = 0
+	;奴隷のＶとＰに＜尿＞の汚れが発生
+	STAIN:2 |= 32
+	STAIN:3 |= 32
+	;着衣おもらし処理
+	CALL SOILING_CLOTH_NO1
+;放尿
+ELSEIF (TFLAG:絶頂の強度 >= 7 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖)
+	PRINTFORML %EXPNAME:[[EXP:放尿経験]]%＋３
+	EXP:放尿経験 += 3
+	TEQUIP:利尿剤効果 = 0
+	;奴隷のＶとＰに＜尿＞の汚れが発生
+	STAIN:2 |= 32
+	STAIN:3 |= 32
+	;着衣おもらし処理
+	CALL SOILING_CLOTH_NO1
+;失禁
+ELSEIF (TFLAG:絶頂の強度 >= 5 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果 && TALENT:おもらし癖)
+	PRINTFORML %EXPNAME:[[EXP:放尿経験]]%＋２
+	EXP:放尿経験 += 2
+	SIF TALENT:おもらし癖 == 0
+		TEQUIP:利尿剤効果 = 0
+	;奴隷のＶとＰに＜尿＞の汚れが発生
+	STAIN:2 |= 32
+	STAIN:3 |= 32
+	;着衣おもらし処理
+	CALL SOILING_CLOTH_NO1
+;微量失禁
+ELSEIF (TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果)
+	PRINTFORML %EXPNAME:[[EXP:放尿経験]]%＋１
+	EXP:放尿経験 += 1
+	;奴隷のＶとＰに＜尿＞の汚れが発生
+	STAIN:2 |= 32
+	STAIN:3 |= 32
+ENDIF
+
+;-------------------------------------------------
+;主人による調教の経験値
+;-------------------------------------------------
+@MASTER_FLAG_CHECK
+;絶頂
+TFLAG:絶頂の強度 += TFLAG:調教対象が射精 + TFLAG:調教対象が噴乳
+Q = 0
+SIF NOWEX:0 > 0
+	Q += 1
+SIF NOWEX:1 > 0
+	Q += 1
+SIF NOWEX:2 > 0
+	Q += 1
+SIF NOWEX:3 > 0
+	Q += 1
+SIF TFLAG:調教対象が射精 > 0
+	Q += 1
+SIF TFLAG:調教対象が噴乳 > 0
+	Q += 1
+TFLAG:主人経験 += TFLAG:絶頂の強度 * Q
+
+;射精
+REPEAT 5
+	SIF TFLAG:COUNT > 0 && EXP:精液経験 >= EXPLV:3
+		TFLAG:主人経験 += TFLAG:COUNT
+REND
+SIF TFLAG:素股で射精 > 0 && EXP:精液経験 >= EXPLV:3
+	TFLAG:主人経験 += TFLAG:素股で射精
+
+;主人と対象の能力を計算
+IF ASSIPLAY == 0 && TEQUIP:触手召喚 == 0
+	;ABL:信頼をみる
+	R = ABL:信頼
+
+	;素質による増減
+	;反抗的
+	SIF TALENT:ナマイキ
+ 		R -= 1
+	;素直
+	SIF TALENT:素直
+		R += 1
+	;自制心
+	SIF TALENT:自制心
+		R -= 1
+	;無関心
+	SIF TALENT:クール
+		R -= 1
+	;感情乏しい
+	SIF TALENT:感情乏しい
+ 		R -= 1
+	;抵抗
+	SIF TALENT:抵抗
+		R -= 1
+	;献身的
+	SIF TALENT:献身的
+		R += 1
+	;快感に素直
+	SIF TALENT:快感に素直
+		R += 1
+	;快感の否定
+	SIF TALENT:快感の否定
+		R -= 1
+	;女嫌い
+	SIF TALENT:ボーイッシュ && TALENT:MASTER:オトコ == 0
+		R -= 1
+	;男嫌い
+	SIF TALENT:男性不信 && TALENT:MASTER:オトコ
+		R -= 1
+	;恋心
+	SIF TALENT:恋心
+ 		R += 2
+	;妄信
+	SIF TALENT:妄信
+		R += 2
+	;主人の魅惑
+	SIF TALENT:MASTER:魅惑
+		R += 1
+	;主人の謎の魅力
+	SIF TALENT:MASTER:謎の魅力
+		R += 1
+	;主人の魅力
+ 	SIF TALENT:MASTER:魅力
+		R += 1
+	;主人の人気
+ 	SIF TALENT:MASTER:人気者
+		R += 1
+
+	;結果が0以下の場合
+	SIF R <= 0
+		R = 1
+
+	R += TFLAG:主人経験
+
+	;相性による修正
+	IF RELATION:MASTER != 0
+		R *= RELATION:MASTER
+		R /= 100
+	ENDIF
+
+	CFLAG:好感度 += R
+
+	;ラブスコープがあれば好感度表示
+	IF ITEM:ラブスコープ
+		PRINTFORML 好感度上昇:{R/10}.{R%10}％
+		PRINTFORML 好感度合計:{(CFLAG:好感度)/10}％
+	ENDIF
+
+ENDIF
+R = 0
+TFLAG:主人経験 = 0
+;
+;
+;
+;

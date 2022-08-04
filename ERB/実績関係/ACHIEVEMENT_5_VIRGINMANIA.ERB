@@ -1,0 +1,151 @@
+﻿;===========================================================
+;実績・至高の処女厨
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_5
+RESULTS = 偉大なる処女厨
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_5
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:処女 == 1 && CFLAG:COUNT:初体験の相手 == 0 && TALENT:COUNT:アナル処女 == 1 && TALENT:COUNT:永遠の愛 == 1 && TALENT:COUNT:淫魔 == 0 && TALENT:COUNT:アンドロイド == 0
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:5 == 0 && DIFFICULTY_CHECK() && MONEY >= 5000000 && EXP:MASTER:[[EXP:キャラ売却経験（MASTER）]] == 0 && FLAG:報奨金受け取り == 0 && LOCAL >= 5
+	GLOBAL:5 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:5
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_5
+; 解説文
+PRINTFORM 大勢の女の子たちとキャッキャウフフしながらも、女の子たちを決して汚すことはなかった
+PRINTFORML %CALLNAME:MASTER%にぴったりの実績ですね
+PRINTFORML そんな%CALLNAME:MASTER%のことを『処女厨』と呼ぶ人がいるかもしれません
+PRINTFORMW ですが、これからもその姿勢を貫けばきっと尊敬の念を抱いてくれる人がいるはずでしょう
+; ボーナスなどの処理はここ以降に記述する
+;空いてたので仮にFLAG:553を使用
+IF FLAG:処女厨ボーナス受け取り == 0 || (GLOBAL:30 == 1)
+	DRAWLINE
+	PRINTFORML %CALLNAME:MASTER%はかなり過酷な実績を解除しました
+	PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
+	PRINTFORML 以下のボーナスの中からお好みのものをひとつ選んで下さい
+	$INPUT_LOOP_2
+	DRAWLINE
+	PRINTFORML  [0] - 素質【天使】を付与する（信頼と奉仕精神の上昇時に必要な珠を1％にする）
+	PRINTFORML  [1] - 素質【淫魔】を付与する（信頼と奉仕精神以外の上昇時に必要な珠を10％にする）
+	PRINTFORML  [2] - 特殊キャラ『雛見まゆ』と契約する
+	PRINTFORML  [3] - 特殊キャラ『ユーニス・パラディスス』と契約する
+	DRAWLINE
+	PRINTL [999] - 戻る
+	INPUT
+	IF RESULT == 0
+		$INPUT_LOOP_5
+		DRAWLINE
+		PRINTFORML 【天使】を付与するキャラを選択してください
+		CALL LIFE_LIST_NEW,LL_MODE_全部
+		IF RESULT == COMMAND_GO_BACK
+			GOTO INPUT_LOOP_2	
+		ELSEIF RESULT < 0 || RESULT >= CHARANUM
+			GOTO INPUT_LOOP_2
+		ENDIF
+		IF TALENT:RESULT:天使 == 1
+			PRINTFORML 既に%NAME:RESULT%は【天使】になっています
+			WAIT
+			GOTO INPUT_LOOP_5
+		ENDIF
+		IF CFLAG:RESULT:900 == 1
+			PRINTFORMW %CALLNAME:RESULT%を天使にすることはもう二度とできません
+			GOTO INPUT_LOOP_5
+		ENDIF
+
+		TARGET = RESULT
+		PRINTFORMW %NAME:TARGET%に【天使】を付与しました
+		CALL ADD_ANGEL(TARGET)
+		FLAG:処女厨ボーナス受け取り = 1
+		SAVEGLOBAL
+	ELSEIF RESULT == 1
+		$INPUT_LOOP_6
+		DRAWLINE
+		PRINTFORML 【淫魔】を付与するキャラを選択してください
+		CALL LIFE_LIST_NEW,LL_MODE_全部
+		IF RESULT == COMMAND_GO_BACK
+			GOTO INPUT_LOOP_2
+		ELSEIF RESULT < 0 || RESULT >= CHARANUM
+			GOTO INPUT_LOOP_6
+		ENDIF
+		IF TALENT:RESULT:淫魔 == 1
+			PRINTFORML 既に%NAME:RESULT%は【淫魔】になっています
+			WAIT
+			GOTO INPUT_LOOP_6
+		ENDIF
+		IF CFLAG:RESULT:900 == 1
+			PRINTFORMW %CALLNAME:TARGET%を【淫魔】にすることはもう二度とできません
+			GOTO INPUT_LOOP_6
+		ENDIF
+		TARGET = RESULT
+		PRINTFORMW %NAME:TARGET%に【淫魔】を付与しました
+		TALENT:淫魔 = 1
+		CFLAG:寝取られ完了値 = 999999
+		CALL SUCCUBUS_STATUS_ACH(TARGET)
+		MAXBASE:体力 += 1000
+		MAXBASE:気力 += 1000
+		BASE:体力 = MAXBASE:体力
+		BASE:気力 = MAXBASE:気力
+		FLAG:処女厨ボーナス受け取り = 1
+		SAVEGLOBAL
+	ELSEIF RESULT == 2 && GETCHARA([[キャラ:雛見まゆ]], 0) < 0
+		CALL EXCHARA_MANUAL_1
+		DRAWLINE
+		PRINTL 雛見まゆと契約しますか？
+		$INPUT_LOOP_MAYU
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		INPUT
+		IF RESULT == 0
+			PRINTW 【雛見まゆ】と契約しました
+			CALL キャラ追加([[キャラ:雛見まゆ]])
+			FLAG:処女厨ボーナス受け取り = 1
+		ELSEIF RESULT == 1
+			GOTO INPUT_LOOP_2
+		ELSE
+			GOTO INPUT_LOOP_MAYU
+		ENDIF
+		IF GLOBAL:200 >= 0
+			TARGET = GETCHARA([[キャラ:雛見まゆ]])
+			CALL CLEARBONUS_CALL
+		ENDIF
+	ELSEIF RESULT == 3 && GETCHARA([[キャラ:ユーニス・パラディスス]], 0) < 0
+		CALL EXCHARA_MANUAL_2
+		DRAWLINE
+		PRINTL ユーニス・パラディススと契約しますか？
+		$INPUT_LOOP_YOUNIS
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		INPUT
+		IF RESULT == 0
+			PRINTW 【ユーニス・パラディスス】と契約しました
+			CALL キャラ追加([[キャラ:ユーニス・パラディスス]])
+			FLAG:処女厨ボーナス受け取り = 1
+		ELSEIF RESULT == 1
+			GOTO INPUT_LOOP_2
+		ELSE
+			GOTO INPUT_LOOP_YOUNIS
+		ENDIF
+		IF GLOBAL:200 >= 0
+			TARGET = GETCHARA([[キャラ:ユーニス・パラディスス]])
+			CALL CLEARBONUS_CALL
+		ENDIF
+	ELSEIF RESULT == 999
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP_2
+	ENDIF
+ENDIF

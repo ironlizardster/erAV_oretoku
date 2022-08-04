@@ -1,0 +1,1071 @@
+﻿;-------------------------------------------------
+;貞操改革：貞操観念
+;-------------------------------------------------
+@CHASTITY_UP
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは貞操観念の強い女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;貞操観念は排除
+ELSEIF TALENT:RESULT:貞操観念
+	PRINTFORMW %CALLNAME:RESULT%は既に強い貞操観念を抱いています
+	GOTO INPUT_LOOP
+;貞操無頓着は排除
+ELSEIF TALENT:RESULT:貞操無頓着
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には貞淑な乙女が好きな男性が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の貞操観念は【%TALENTNAME:[[TALENT:貞操観念]]%】になった
+	TALENT:T:貞操観念 = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;貞操改革：貞操無頓着
+;-------------------------------------------------
+@CHASTITY_DOWN
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それはバリバリの肉食系なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;妊娠中は排除
+ELSEIF TALENT:RESULT:貞操観念
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+;貞操無頓着は排除
+ELSEIF TALENT:RESULT:貞操無頓着
+	PRINTFORMW %CALLNAME:RESULT%はバリバリの肉食系です
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には女からの攻めに弱い男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の貞操観念は【%TALENTNAME:[[TALENT:貞操無頓着]]%】になった
+	TALENT:T:貞操無頓着 = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;貞操改革：ニュートラル
+;-------------------------------------------------
+@CHASTITY_NEUTRAL
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは自然体の女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;自然体は排除
+ELSEIF TALENT:RESULT:貞操観念 == 0 && TALENT:RESULT:貞操無頓着 == 0
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の貞操観念は自然体になった
+	TALENT:T:貞操観念 = 0
+	TALENT:T:貞操無頓着 = 0
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;恥情改革：恥じらい
+;-------------------------------------------------
+@SHAME_UP
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは恥ずかしがり屋な女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;恥じらいは排除
+ELSEIF TALENT:RESULT:恥じらい == 1
+	PRINTFORMW %CALLNAME:RESULT%はかなりの恥ずかしがり屋です
+	GOTO INPUT_LOOP
+;恥薄いは排除
+ELSEIF TALENT:RESULT:恥薄い == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の恥情意識は【%TALENTNAME:[[TALENT:恥じらい]]%】になった
+	TALENT:T:恥じらい = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;恥情改革：恥薄い
+;-------------------------------------------------
+@SHAME_DOWN
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは人前で恥ずかしがらないでイチャイチャしてくれるような女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;恥じらいは排除
+ELSEIF TALENT:RESULT:恥じらい == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+;恥薄いは排除
+ELSEIF TALENT:RESULT:恥薄い == 1
+	PRINTFORMW %CALLNAME:RESULT%は人前でイチャイチャすることに抵抗がないようです
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORM 世の中には人前であまり恥ずかしがらないでイチャイチャしてくれる女が好きな
+	PRINTFORML 男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の恥情意識は【%TALENTNAME:[[TALENT:恥薄い]]%】になった
+	TALENT:T:恥薄い = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+PRINTW
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;恥情改革：ニュートラル
+;-------------------------------------------------
+@SHAME_NEUTRAL
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは自然体な女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+
+$INPUT_LOOP
+DRAWLINE
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;自然体は排除
+ELSEIF TALENT:RESULT:恥じらい == 0 && TALENT:RESULT:恥薄い == 0
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の恥情意識は自然体になった
+	TALENT:T:恥じらい = 0
+	TALENT:T:恥薄い = 0
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;性格改革：素直
+;-------------------------------------------------
+@PERSONALITY_GENTLE
+C = 500000
+
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは素直な女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;素直は排除
+ELSEIF TALENT:RESULT:素直 == 1
+	PRINTFORMW %CALLNAME:RESULT%は素直に他人の言うことを聞いてくれます
+	GOTO INPUT_LOOP
+;ナマイキは排除
+ELSEIF TALENT:RESULT:ナマイキ == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には素直な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の性格は【%TALENTNAME:[[TALENT:素直]]%】になった
+	TALENT:T:素直 = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;性格改革：ナマイキ
+;-------------------------------------------------
+@PERSONALITY_BRAZEN
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それはナマイキな女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;素直は排除
+ELSEIF TALENT:RESULT:素直 == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+;ナマイキは排除
+ELSEIF TALENT:RESULT:ナマイキ == 1
+	PRINTFORMW %CALLNAME:RESULT%は結構ナマイキなところがあります
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中にはナマイキな女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の性格は【%TALENTNAME:[[TALENT:ナマイキ]]%】になった
+	TALENT:T:ナマイキ = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;性格改革：大人しい
+;-------------------------------------------------
+@PERSONALITY_QUIET
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは大人しい女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;大人しいは排除
+ELSEIF TALENT:RESULT:大人しい == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりアクティブな性格ではありません
+	GOTO INPUT_LOOP
+;活発は排除
+ELSEIF TALENT:RESULT:活発 == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には大人しい女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の性格は【%TALENTNAME:[[TALENT:大人しい]]%】になった
+	TALENT:T:大人しい = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;性格改革：活発
+;-------------------------------------------------
+@PERSONALITY_LIVELY
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それはアクティブな女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;大人しいは排除
+ELSEIF TALENT:RESULT:大人しい == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+;活発は排除
+ELSEIF TALENT:RESULT:活発 == 1
+	PRINTFORMW %CALLNAME:RESULT%はアクティブな性格です
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中にはアクティブな女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の性格は【%TALENTNAME:[[TALENT:活発]]%】になった
+	TALENT:T:活発 = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;性格改革：ニュートラル
+;-------------------------------------------------
+@PERSONALITY_NEUTRAL
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは自然体な女なのだ！　……たぶん」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;大人しいは排除
+ELSEIF TALENT:RESULT:ナマイキ == 0 && TALENT:RESULT:素直 == 0 && TALENT:RESULT:大人しい == 0 && TALENT:RESULT:活発 == 0
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の性格は自然体になった
+	TALENT:T:活発 = 0
+	TALENT:T:大人しい = 0
+	TALENT:T:ナマイキ = 0
+	TALENT:T:素直 = 0
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;性格改革：ギャル系
+;-------------------------------------------------
+@PERSONALITY_GAL
+C = 3000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それはギャル系な女なのだ！」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ギャル系
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ギャル系]]%】はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+ELSEIF ABL:RESULT:信頼 <= 2 || TALENT:RESULT:大和撫子 == 1
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中にはギャル系な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の個性はギャル系になった
+	TALENT:T:ギャル系 = 1
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;性格改革：ニュートラル
+;-------------------------------------------------
+@GAL_NEUTRAL
+C = 3000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「モテる女、それは自然体な女なのだ！」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は別の専門家に依頼してください
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象はセミナーを受けさせられません
+	GOTO INPUT_LOOP
+;桜子は排除
+ELSEIF NO:RESULT == [[キャラ:清水桜子]]
+	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
+	GOTO INPUT_LOOP
+;大人しいは排除
+ELSEIF ABL:RESULT:信頼 <= 2
+	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:ギャル系 == 0 && TALENT:RESULT:大和撫子 == 0
+	PRINTFORMW %CALLNAME:RESULT%の個性は自然体です
+	GOTO INPUT_LOOP
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:T%にセミナーを受けさせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
+	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
+	PRINTFORMW %CALLNAME:T%の個性は自然体になった
+	TALENT:T:ギャル系 = 0
+	TALENT:T:大和撫子 = 0
+	EXP:T:ＲＢ団性格改善経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+
+;-------------------------------------------------
+;工作活動：キッキングホース
+;-------------------------------------------------
+@KICKINGHORSE
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「そうかリア充たちへの工作活動か！　成功するかは……うーむ、半々ぐらい？」
+RESETCOLOR
+SETFONT ""
+
+$INPUT_LOOP_3
+PRINTFORML  カップルたちの恋路を妨害しますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	REPEAT CHARANUM
+		SIF COUNT == 0
+			CONTINUE
+			CFLAG:COUNT:629 += RAND:3
+				IF CFLAG:COUNT:629 == 2 && TALENT:COUNT:彼氏あり == 1 && CFLAG:COUNT:彼氏の有無 == 1
+					PRINTFORMW 《ＲＢ団の妨害工作により%NAME:COUNT%は%CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%と別れました》
+					TALENT:COUNT:彼氏あり = 0
+					TALENT:COUNT:清い付き合い = 0
+					CFLAG:COUNT:寝取られ進行ポイント = 0
+					CFLAG:COUNT:彼氏の有無 = 2
+					CFLAG:COUNT:629 = 0
+					IF CFLAG:初体験の相手 == 8 && CFLAG:彼氏とのセックスの有無 == 0
+						CSTR:処女喪失の相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
+						CFLAG:彼氏とのセックスの有無 += 1
+					ENDIF
+
+					IF CFLAG:ファーストキスの相手 == 3 && CFLAG:628 == 0
+						CSTR:ファーストキスの相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
+						CFLAG:628 += 1
+					ENDIF
+					EXP:COUNT:交際人数 += 1
+				ELSEIF CFLAG:COUNT:629 == 1
+					PRINTFORMW 《ＲＢ団の妨害工作により%NAME:COUNT%へちょっかいをかけている男を追い払いました》
+					CFLAG:COUNT:寝取られ進行ポイント -= 30
+					SIF CFLAG:COUNT:寝取られ進行ポイント <= 0
+						CFLAG:COUNT:寝取られ進行ポイント = 0
+					CFLAG:COUNT:629 = 0
+				ELSE
+					PRINTFORMW 《ＲＢ団の%NAME:COUNT%への妨害工作は失敗に終わりました》
+					CFLAG:COUNT:629 = 0
+				ENDIF
+	REND
+ELSE
+	GOTO INPUT_LOOP_3
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;

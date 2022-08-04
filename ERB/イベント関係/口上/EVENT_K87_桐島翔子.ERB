@@ -1,0 +1,2720 @@
+﻿;=================================================
+;erapoke専用口上テンプレート（簡略版）
+;=================================================
+;まず87と87をキャラ番号に置換し、Y1を助手のキャラ番号に置換してください
+;ただし、キャラ番号が一桁のキャラの場合、87,Y1は1、87は01のように変える必要があります
+;コマンド内の各条件の下にあるPRINTFORMWの後ろに、半角スペースを置いてセリフを追加してください。
+;口上を追加しないコマンドには行頭に『;』をつけたほうが、
+;予期せぬ不具合などが起こるのをある程度防げるかもしれません
+;最後になりますが、read meもできるかぎり読んで下さい
+;eratohoU専用口上テンプレートを改造して流用
+;加筆改変はご自由に
+; 2012/09/12 ver00
+; 2012/10/8 ver01
+;	調教後、恋心,初めてC絶頂,V絶頂、A絶頂、B絶頂,職業イベント枠追加
+;2012/10/24 ver02
+;永遠の愛、淫魔以外,淫魔枠追加、苦痛、快楽、屈服刻印LV3
+;-------------------------------------------------
+
+;-------------------------------------------------
+;○○口上（キャラクターの名前を入れる）
+;（コンセプトなどがあればここに書いておくと、加筆する際の目安になるでしょう）
+;元イメージは「Fate/hollow ataraxia」のダメットさんことバゼット・フラガ・マクレミッツ。
+;ヤクザ殴って事態を悪化させるあたりの脳筋イメージはそっちからの物。
+;動物好き設定　特に関心が無い
+;-------------------------------------------------
+
+;--------------------------------------------------
+;口上ファイルの存在判定（87をキャラ番号に置換）
+;--------------------------------------------------
+@EVENTTRAIN
+#PRI
+FLAG:2087 = 1
+SIF FLAG:口上使用 == 0
+	FLAG:口上使用 = 2
+
+@EVENTEND
+#LATER
+FLAG:2087 = 0
+
+;--------------------------------------------------
+;EVENTTRAIN関係（87をキャラ番号に置換）
+;調教開始時のセリフ CFLAG 201～219を使用
+;-------------------------------------------------
+@EVENTTRAIN
+SIF FLAG:口上使用 <= 0
+	RETURN 0
+SIF NO:TARGET != [[キャラ:桐島翔子]]
+	RETURN 0
+
+;-------------------------------------------------
+;初調教時 CFLAG:201
+;-------------------------------------------------
+IF CFLAG:201 == 0
+	DRAWLINE
+	PRINTFORML 桐島 翔子は%CALLNAME:MASTER%の目をしっかりと見据えて、目をそらさない。
+	PRINTFORML 青みがかった髪を短く揃えた、その容姿は端麗ながら中性的で、
+	PRINTFORML しなやかな肢体を包む男性物のスーツがその印象を強めている。
+	PRINTFORML 「……私が黙って従えば、施設にも施設の人間にも、手は出さない
+	PRINTFORML ……AV女優としての、私の稼ぎの一部は施設に回される。　間違いありませんね？」
+	PRINTFORML その辺の条件は、歌音と話すべき事で、%CALLNAME:MASTER%には関わりが無いのだが。
+	PRINTFORML 表情は冷静さを保って見えるが、内面は激情を抑えるので手いっぱいと言ったところか。
+	PRINTFORML ……取り扱いには注意した方がいいかもしれない。
+	PRINTFORMW 彼女の拳は、%CALLNAME:MASTER%の五体の何処であれ、容易く砕く事が出来るのだろうから。
+	CFLAG:201 = 1
+	RETURN 1
+;-------------------------------------------------
+;屈服刻印（各Lv一回のみ） CFLAG:201
+;-------------------------------------------------
+;屈服刻印Lv1
+ELSEIF CFLAG:201 < 2 && MARK:屈服刻印 == 1
+	DRAWLINE
+	PRINTFORML 「……」
+	PRINTFORML 翔子はチラッと%CALLNAME:MASTER%の方に目を向けて、すぐに目をそらせた。
+	PRINTFORML その目はまるで路傍の石でも見るかのようだ。
+	PRINTFORMW 「……それで？　始めるのですか？　止めにするなら私は帰りますが」
+	CFLAG:201 = 2
+	RETURN 1
+
+;屈服刻印Lv2
+ELSEIF CFLAG:201 < 3 && MARK:屈服刻印 == 2
+	DRAWLINE
+	PRINTFORML 翔子が呼び出した%CALLNAME:MASTER%よりも先に部屋に訪れている事は珍しいことではない。
+	PRINTFORML 望まない用件であっても、それが彼女の礼なのだろう。
+	PRINTFORML ……しかし、部屋に入っても気がつかないのは珍しい。
+	PRINTFORML そっと、背後に近づいて肩に手をかけると、すごい勢いで振り払われ……目前に拳が静止していた。
+	PRINTFORMW 「……まともに声をかけられないのですか、あなたは」
+	CFLAG:201 = 3
+	RETURN 1
+
+;屈服刻印Lv3
+ELSEIF CFLAG:201 < 4 && MARK:屈服刻印 == 3 && TALENT:TARGET:恋心 == 0
+	DRAWLINE
+	PRINTFORML ベッドに腰掛けていた翔子は、部屋を訪れた%CALLNAME:MASTER%を見上げ、彼女らしくも無い中途半端な声を出す。
+	PRINTFORML 「……ぁ、そう、か。　今日も、調教ですね」
+	PRINTFORML 流石に心が折れたのか、翔子の態度に反抗の色を見てとる事は出来なかった。
+	PRINTFORML 肩に手を回して引き寄せ、耳に息が掛かる程に顔を近づけても、翔子は顔を赤らめるだけだ。
+	PRINTFORMW 「……するのなら、早くして下さい」
+	CFLAG:201 = 4
+	RETURN 1
+
+;愛
+ELSEIF CFLAG:201 < 5 && TALENT:TARGET:恋心 == 1
+	DRAWLINE
+	PRINTFORML 翔子の部屋を訪れると、何処か様子が普段と違う。
+	PRINTFORML ベッドに腰掛けた翔子の視線は落ち着かずに動きまわり、%CALLNAME:MASTER%を見上げたり、伏せたりを繰り返している。
+	PRINTFORML 「あ、あの、ですね……。　始める前に少しだけ時間を頂けませんか？　……聞いてほしい事が……あります」
+	PRINTFORML 翔子は俯いて、太股の上で組み合わせた手を見下ろしながら言葉を続ける。
+	PRINTFORML 「……え、っとあの、だから……私、今まで、こんな……」
+	PRINTFORML 蚊の鳴く様な声で、要領を得ない物言いを続ける翔子に、何が言いたいのか問い直す。
+	PRINTFORML 「……あぁ、もうですからっ！　つまり、私はあなたがっ……す、好きに、なってしまったと……」
+	PRINTFORML ……徐々に語尾が弱くなっていき、後には沈黙が残る。
+	PRINTFORML 「……その、告白されて断る事はありましたけど、自分から告白するのは初めてで……」
+	PRINTFORML 「案外に上手くはいかない物なのですね。　もっとスマートに出来ると思っていたのですが」
+	PRINTFORML 翔子は誤魔化す様な笑みを浮かべた。
+	PRINTFORML 「……今すぐ返事を、とは言いません。　いずれにせよ、私も施設の借金の為にもうしばらく働く必要があります」
+	PRINTFORMW 「ただ、いつか答えを頂ければ……私はそれで」
+	CFLAG:201 = 5
+	RETURN 1
+;淫乱
+ELSEIF CFLAG:201 < 6 && TALENT:TARGET:淫乱 == 1
+	PRINTFORML 「あ、来ましたか。　すこし遅刻ですよ」
+	PRINTFORML %CALLNAME:MASTER%を迎えた翔子は、そう言いながらも怒った様子もなく、ベッドに腰掛けて隣に座る様に誘ってきた。
+	PRINTFORML 言われた通りに腰掛けると、黙って肩に寄り添う様に身体を預けてくる。
+	PRINTFORML そのまま%CALLNAME:MASTER%を見上げる翔子の目は、既に淫欲に濡れている。
+	PRINTFORML 翔子は耳元で、熱く息を吐きながら囁く。
+	PRINTFORML 「何だかもう、振っ切れてきたようです」
+	PRINTFORML 「……否定のしようが無い程、『女』と言う事を教えられましたから……もっと、色々な事を、教えて欲しい」
+	PRINTFORMW 「これからも、ずっと――」
+	CFLAG:201 = 6
+	RETURN 1
+;永遠の愛、淫魔以外
+
+ELSEIF CFLAG:201 < 6 && TALENT:TARGET:永遠の愛 == 1 && TALENT:TARGET:淫魔 == 0
+	DRAWLINE
+	PRINTFORML 
+	PRINTFORMW 
+	CFLAG:201 = 7
+	RETURN 1
+
+
+;淫魔エンド（永遠の愛＋淫乱＋淫魔）
+
+ELSEIF CFLAG:201 < 7 && TALENT:TARGET:永遠の愛 == 1 && TALENT:TARGET:淫乱 == 1 && TALENT:TARGET:淫魔 == 1 
+	DRAWLINE
+	PRINTFORML 
+	CFLAG:201 = 7
+	RETURN 1
+
+
+;助手の有無をチェック（いない場合は二回目以降へ飛ぶ）
+ELSEIF ASSI < 0 
+	CALL K87_KOJO2
+
+;-------------------------------------------------
+;簡易助手口上 CFLAG:202～210
+;Ynを調教対象87との会話が発生する助手のキャラ番号に変更する
+;会話が発生する助手を2人以上に増やす場合は、
+;コピー＆ペーストをしてCFLAGの数を203、204と増やす（210が上限）
+;-------------------------------------------------
+;助手○○（○○にY1のキャラ名を入れる）
+;ELSEIF NO:ASSI == Y1
+;	DRAWLINE
+;	;初めて
+;	IF CFLAG:202 == 0
+;		;既に愛持ちで愛取得時初口上（陥落イベント）が発生済み
+;		IF TALENT:TARGET:恋心 == 1 && CFLAG:201 >= 5
+;			PRINTFORMW 
+;		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		CFLAG:202 = 1
+;		RETURN 1
+;	;二回目以降
+;	ELSE CFLAG:202 == 1 && FLAG:口上使用 ==2
+;		;愛
+;		IF TALENT:TARGET:恋心 == 1
+;			PRINTFORMW 
+;		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		RETURN 1
+;	ENDIF
+;助手○○（○○にY2のキャラ名を入れる）
+;ELSEIF NO:ASSI == Y2
+;	DRAWLINE
+;	;初めて
+;	IF CFLAG:203 == 0
+;		;既に愛持ちで愛取得時初口上（陥落イベント）が発生済み
+;		IF TALENT:TARGET:恋心 == 1 && CFLAG:201 >= 5
+;			PRINTFORMW 
+;		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		CFLAG:203 = 1
+;		RETURN 1
+;	;二回目以降
+;	ELSE CFLAG:203 == 1 && FLAG:口上使用 ==2
+;		;愛
+;		IF TALENT:TARGET:恋心 == 1
+;			PRINTFORMW 
+;		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		RETURN 1
+;	ENDIF
+;口上のある助手が居ない場合は、通常の二回目以降の口上へ飛ぶ
+ELSE
+	CALL K87_KOJO2
+ENDIF
+
+
+;-------------------------------------------------
+;調教開始時（2回目以降、87をキャラ番号に変更する） CFLAGなし 
+;-------------------------------------------------
+@K87_KOJO2
+;反発刻印Lv3
+IF MARK:反発刻印 == 3 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 翔子と目があった瞬間、背筋にゾッとする物が走った。
+	PRINTFORML これは、殺意だ……
+	PRINTFORML 「……確かに、施設の為に貴方の下で働くとは言いました、しかし……」
+	PRINTFORMW 「物には限度と言う物があります、どうでも良くなる事もあるのだと覚えておいて下さい」
+	RETURN 1
+
+;屈服刻印Lv0
+ELSEIF MARK:屈服刻印 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML %CALLNAME:MASTER%の顔を見ると、翔子は表情を殺して腰掛けていたベッドから立ち上がった。
+	PRINTFORML 「約束の時間ちょうどですね、終わる方も予定通りにして欲しい物です。
+	PRINTFORMW 　……延長なんて話は聞く気はありませんので」
+	RETURN 1
+
+;屈服刻印Lv1
+ELSEIF MARK:屈服刻印 == 1 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「……私を使って取ったアダルトビデオなど売れるとは思いませんが」
+	PRINTFORMW %CALLNAME:MASTER%の顔を見ると、翔子は軽く首を振った。
+	RETURN 1
+
+;屈服刻印Lv2
+ELSEIF MARK:屈服刻印 == 2 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML %CALLNAME:MASTER%の顔を見ると、翔子は溜息をついた。
+	PRINTFORML 「はぁ……何故、私なのですか？」
+	PRINTFORMW 「仕事ですからあえて文句は言いませんが、もっとマシな女優が確保出来るのではないのですか？」
+	RETURN 1
+
+;屈服刻印Lv3＋愛無し
+ELSEIF MARK:屈服刻印 == 3 && TALENT:TARGET:恋心 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「……飽きない方ですね、%CALLNAME:MASTER%も」
+	PRINTFORMW そう呟く翔子の口元は、呆れたような苦笑いを浮かべている。
+	PRINTFORMW 肩に触れると、白い頬が淡く色付くのが見える……
+	RETURN 1
+
+;愛
+ELSEIF TALENT:TARGET:恋心 == 1 && FLAG:口上使用 == 2
+	DRAWLINE
+	;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+	IF RAND:3 == 0
+		PRINTFORMW %CALLNAME:MASTER%がベッドに腰を掛けると、翔子は無言で横に座って、甘えるように頭を預けてきた。
+	ELSEIF RAND:2 == 0
+		PRINTFORMW 「今日は撮影ですか？　……偶には仕事抜きと言うのも、その……悪くはないと思うのですが？　ええ、偶には、です」
+	ELSE
+		PRINTFORMW 「あの……撮影が終わってからで良いのですが、時間はありますか？　宜しければ少しだけ付き合って欲しい所が……」
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 0
+
+;-------------------------------------------------
+;EVENTEND関係（87をキャラ番号に置換） CFLAG 211～220を使用
+;調教終了時のセリフ
+;-------------------------------------------------
+@EVENTEND
+SIF FLAG:口上使用 <= 0
+	RETURN 0
+SIF NO:TARGET != [[キャラ:桐島翔子]]
+	RETURN 0
+
+;キャラ死亡時は口上をスキップ
+SIF BASE:体力 <= 0
+	RETURN 0
+
+;--------------------------------------------------
+;調教終了時のセリフ
+;--------------------------------------------------
+;反発刻印Lv3+愛なし
+IF MARK:反発刻印 == 3 && TALENT:TARGET:恋心 == 0
+	DRAWLINE
+	PRINTFORML 翔子に、今日の予定の終了を告げたが、翔子はベッドに突っ伏したまま起き上がろうとしない。
+	PRINTFORML ……やりすぎたかと近寄ろうとして、ぞっとする感覚を覚えて足を止める。
+	PRINTFORMW (……もう少し近づいてくれれば……)
+	RETURN 1
+
+;屈服刻印Lv1以下+愛なし
+ELSEIF MARK:屈服刻印 <= 1 && TALENT:TARGET:恋心 == 0
+	DRAWLINE
+	PRINTFORML 「……」
+	PRINTFORMW 事が終われば用はないというのか、翔子は一瞥さえくれることなく、調教の場を後にした。
+	RETURN 1
+
+;屈服刻印Lv2+愛なし
+ELSEIF MARK:屈服刻印 == 2 && TALENT:TARGET:恋心 == 0
+	DRAWLINE
+	PRINTFORML 翔子は調教の興奮で荒くなった息を整えながら、小さな声で呟いた。
+	PRINTFORMW 「……あなたは、最低です……それに抗えない、私も」
+	RETURN 1
+
+;屈服刻印Lv3+愛なし
+ELSEIF MARK:屈服刻印 == 3 && TALENT:TARGET:恋心 == 0
+	DRAWLINE
+	PRINTFORML 「ようやく終わりですか？　まったく、付き合わされる身にもなって欲しい」
+	PRINTFORMW 翔子は抗議しつつも、呆れた様に微かに微笑んでいる。
+	RETURN 1
+
+;愛(体力500以上)
+ELSEIF TALENT:TARGET:恋心 == 1 && BASE:体力 >= 500
+	DRAWLINE
+	IF RAND:3 == 0
+		PRINTFORML 「ふぅ、ようやく終わりですか」
+		PRINTFORML 翔子はため息をついて軽やかに立ち上がる。
+		PRINTFORMW 「……この後、時間はありますか。　お茶の一杯くらいは出せますけど？」
+	ELSEIF RAND:2 == 0
+		PRINTFORML 「え、もうおわ……」
+		PRINTFORML 翔子は言いかけて、顔を真っ赤にした。
+		PRINTFORMW 「……誤解しないでください、違いますから。　終わったのならそれで良いのです」
+	ELSE
+		PRINTFORMW 「あ、終わりですか……あの、満足されましたか？」
+	ENDIF
+	RETURN 1
+;愛(体力500未満)
+ELSEIF TALENT:TARGET:恋心 == 1 && BASE:体力 <= 500
+	DRAWLINE
+	IF RAND:3 == 0
+		PRINTFORML 「はぁ……はぁ……今日は、ここまでにして頂けませんか……？」
+		PRINTFORMW そう言いながら、翔子は名残惜しそうに、%CALLNAME:MASTER%から離れた。
+	ELSEIF RAND:2 == 0
+		PRINTFORML 「はぁ……鍛え方が足りなかったのでしょうか、もう息が上がるなんて……」
+		PRINTFORMW %CALLNAME:TARGET%は申し訳なさそうに、ベッドで荒い息を吐いている。
+	ELSE
+		PRINTFORMW 「申し訳ありませんが、少し休ませて貰います。　……宜しければ、%CALLNAME:MASTER%も休んで行かれませんか？」
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 0
+
+;--------------------------------------------------
+;@KOJO_MESSAGE_COM関係（87をキャラ番号に置換）
+;コマンド実行時に出力されます
+;--------------------------------------------------
+@KOJO_MESSAGE_COM_87
+;助手が調教した時に口上をスキップする（好みに応じて使う、行頭の;を消すとスキップするようになる）
+;SIF ASSI > 0 && ASSIPLAY
+;	RETURN 0 
+;ボールギャグ着用時には口上をスキップする
+SIF TEQUIP:ボールギャグ && SELECTCOM != 45
+	RETURN 0
+
+;-------------------------------------------------
+;コマンド実行時のセリフ CFLAG 301～400を使用
+;-------------------------------------------------
+;-------------------------------------------------
+;愛撫 CFLAG:301
+;-------------------------------------------------
+IF SELECTCOM == 0
+	;初めて
+	IF CFLAG:301 == 0
+		;屈服刻印Lv2以上
+		IF MARK:屈服刻印 >= 2
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:301 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:301 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:301 = 5
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:301 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:301 = 4
+		;屈服刻印Lv2
+		ELSEIF MARK:屈服刻印 == 2 && (CFLAG:301 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:301 = 3
+		;それ以外
+		ELSEIF MARK:屈服刻印 <= 1 && (CFLAG:301 <= 1 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:301 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;クンニ CFLAG:302
+;-------------------------------------------------
+IF SELECTCOM == 1
+	;初めて
+	IF CFLAG:302 == 0
+		;処女
+		IF TALENT:TARGET:処女 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:302 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:302 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:302 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:302 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:302 = 3
+		;それ以外（屈服刻印Lv3未満）
+		ELSEIF CFLAG:302 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:302 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;アナル愛撫 CFLAG:303
+;-------------------------------------------------
+IF SELECTCOM == 2
+	;初めて
+	IF CFLAG:303 == 0
+		PRINTFORMW 
+		CFLAG:TARGET:303 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		P = PALAM:潤滑 + UP:3
+		;愛+潤滑Lv2以上
+		IF TALENT:TARGET:恋心 == 1 && P >= PALAMLV:2 && (CFLAG:303 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:303 = 5
+		;愛+潤滑Lv2未満
+		ELSEIF TALENT:TARGET:恋心 == 1 && P < PALAMLV:2 && (CFLAG:303 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:303 = 4
+		;潤滑Lv2以上＋A感覚Lv3以上
+		ELSEIF P >= PALAMLV:2 && ABL:Ａ感覚 >= 3 && (CFLAG:303 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:303 = 3
+		;それ以外（愛無し、潤滑Lv2未満、A感覚Lv3未満）
+		ELSEIF CFLAG:223 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:303 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;自慰 CFLAG304
+;-------------------------------------------------
+IF SELECTCOM == 3
+	;初めて
+	IF CFLAG:304 == 0
+			PRINTFORMW 
+		CFLAG:TARGET:304 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋処女
+		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:304 = 6
+		;愛＋自慰中毒Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:自慰中毒 >= 3 && (CFLAG:304 <= 4 || FLAG:口上使用 == 2)
+			;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+			IF RAND:3 == 0
+				PRINTFORMW 
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:304 = 5
+		;愛＋自慰中毒Lv3未満
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:自慰中毒 < 3 && (CFLAG:304 <= 3 || FLAG:口上使用 == 2)
+			;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:304 = 4
+		;屈服刻印Lv3+自慰中毒Lv1以上
+		ELSEIF MARK:屈服刻印 == 3 &&ABL:自慰中毒 >= 1 && (CFLAG:304 <= 2 || FLAG:口上使用 == 2)
+			;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:304 = 3
+		;それ以外（愛無し、自慰中毒Lv1未満）
+		ELSEIF CFLAG:304 <= 1 || FLAG:口上使用 == 2
+			;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:304 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;胸愛撫 CFLAG:306
+;-------------------------------------------------
+IF SELECTCOM == 5
+	;初めて
+	IF CFLAG:306 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:306 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:306 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:306 = 4
+		;B感覚Lv3以上
+		ELSEIF ABL:Ｂ感覚 >= 3 && (CFLAG:306 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:306 = 3
+		;それ以外（愛無し、B感覚Lv3未満）
+		ELSEIF CFLAG:306 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:306 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;キスする CFLAG:307
+;-------------------------------------------------
+IF SELECTCOM == 6
+	;ファーストキス
+	IF CFLAG:307 == 0 && TFLAG:ファーストキス
+		;愛かつ主人
+		IF TALENT:TARGET:恋心 == 1 && ASSIPLAY == 0 && TEQUIP:獣姦プレイ == 0 && TEQUIP:触手召喚 == 0
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:307 = 1
+		RETURN 0
+	;（調教では）初めて
+	ELSEIF CFLAG:307 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:307 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:307 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:307 = 4
+		;従順Lv2以上
+		ELSEIF ABL:信頼 >=2 && (CFLAG:307 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:307 = 3
+		;それ以外
+		ELSEIF CFLAG:307 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:307 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;秘貝開帳 CFLAG:308
+;-------------------------------------------------
+IF SELECTCOM == 7
+	;初めて
+	IF CFLAG:308 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+			CFLAG:TARGET:308 = 1
+			RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:308 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:306 = 4
+		;露出癖Lv3以上
+		ELSEIF ABL:露出癖 >= 3 && (CFLAG:308 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:306 = 3
+		;それ以外（愛無し、露出癖Lv3未満）
+		ELSEIF CFLAG:306 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:306 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;指挿入れ CFLAG:309
+;-------------------------------------------------
+IF SELECTCOM == 8
+	;初めて
+	IF CFLAG:TARGET:309 == 0
+		;屈服刻印Lv3+愛
+		IF MARK:屈服刻印 == 3 && TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:309 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋屈服刻印Lv3
+		IF TALENT:TARGET:恋心 == 1 && MARK:屈服刻印 == 3 && (CFLAG:309 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:309 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:309 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:309 = 3
+		;それ以外
+		ELSEIF CFLAG:309 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:309 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;アナル舐め CFLAG:310
+;-------------------------------------------------
+IF SELECTCOM == 9
+	;初めて
+	IF CFLAG:310 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:310 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:310 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:310 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:310 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:310 = 3
+		;それ以外（屈服刻印Lv3未満）
+		ELSEIF CFLAG:310 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:310 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;ローター CFLAG:311
+;-------------------------------------------------
+IF SELECTCOM == 10
+	;初めて
+	IF CFLAG:TARGET:311 == 0
+		;屈服刻印Lv3+愛
+		IF MARK:屈服刻印 == 3 && TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:311 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋屈服刻印Lv3
+		IF TALENT:TARGET:恋心 == 1 && MARK:屈服刻印 == 3 && (CFLAG:311 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:311 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:311 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:311 = 3
+		;それ以外
+		ELSEIF CFLAG:311 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:311 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;バイブ CFLAG:312　CFLAG:412
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 11 && TEQUIP:バイブ
+	;初めて
+	IF CFLAG:TARGET:312 == 0
+		;処女
+		IF TALENT:処女 == 1
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		;非処女
+		ELSE
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		ENDIF
+		CFLAG:312 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:312 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:312 = 4
+		;V感覚Lv3以上
+		ELSEIF ABL:Ｖ感覚 >= 3 && (CFLAG:312 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:312 = 3
+		;それ以外
+		ELSEIF CFLAG:312 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:312 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;脱着時
+ELSEIF SELECTCOM == 11 && TEQUIP:バイブ == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1 && (CFLAG:412 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:412 = 2
+	;それ以外
+	ELSEIF CFLAG:412 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:412 = 1
+	ENDIF
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;Ｅマッサージャ CFLAG:313
+;-------------------------------------------------
+IF SELECTCOM == 12
+	;初めて
+	IF CFLAG:314 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:314 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:恋心 == 1 && (CFLAG:313 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:313 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:313 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:313 = 3
+		;それ以外
+		ELSEIF CFLAG:313 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:313 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;アナルバイブ CFLAG:314　CFLAG:414
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 13 && TEQUIP:アナルバイブ
+	;初めて
+	IF CFLAG:TARGET:314 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:314 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:314 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:314 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:314 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:314 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:314 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:314 = 3
+		;それ以外
+		ELSEIF  CFLAG:314 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:314 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;脱着時
+ELSEIF SELECTCOM == 13 && TEQUIP:アナルバイブ == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1 && (CFLAG:414 < 3 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:414 = 3
+	;A感覚Lv3以上
+	ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:414 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:414 = 2
+	;それ以外
+	ELSEIF CFLAG:414 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:414 = 1
+	ENDIF
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;クリキャップ CFLAG:315　CFLAG:415
+;-------------------------------------------------
+;開始時
+;IF SELECTCOM == 14 && TEQUIP:クリキャップ
+	;初めて
+;	IF CFLAG:315 == 0
+		;愛
+;		IF TALENT:恋心 == 1
+;			PRINTFORMW 
+		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		CFLAG:315 = 1
+;		RETURN 0
+	;二回目以降
+;	ELSE
+		;愛
+;		IF TALENT:恋心 == 1 && (CFLAG:315 <= 2 || FLAG:口上使用 == 2)
+;			PRINTFORMW 
+;			CFLAG:315 = 3
+		;それ以外
+;		ELSEIF CFLAG:315 <= 1 || FLAG:口上使用 == 2
+;			PRINTFORMW 
+;			CFLAG:315 = 2
+;		ENDIF
+;		RETURN 0
+;	ENDIF
+;脱着時
+;ELSEIF SELECTCOM == 14 && TEQUIP:クリキャップ == 0
+	;愛
+;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:415 < 2 || FLAG:口上使用 == 2)
+;		PRINTFORMW 
+;		CFLAG:415 = 2
+	;それ以外
+;	ELSEIF CFLAG:415 < 1 || FLAG:口上使用 == 2
+;		PRINTFORMW 
+;		CFLAG:415 = 1
+;	ENDIF
+;	RETURN 0
+;ENDIF
+
+;-------------------------------------------------
+;ニプルキャップ CFLAG:316　CFLAG:416
+;-------------------------------------------------
+;開始時
+;IF SELECTCOM == 15 && TEQUIP:ニプルキャップ
+	;初めて
+;	IF CFLAG:316 == 0
+		;愛
+;		IF TALENT:恋心 == 1
+;			PRINTFORMW 
+		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		CFLAG:316 = 1
+;		RETURN 0
+	;二回目以降
+;	ELSE
+		;愛
+;		IF TALENT:恋心 == 1 && (CFLAG:316 <= 2 || FLAG:口上使用 == 2)
+;			PRINTFORMW 
+;			CFLAG:316 = 3
+		;それ以外
+;		ELSEIF CFLAG:316 <= 1 || FLAG:口上使用 == 2
+;			PRINTFORMW 
+;			CFLAG:316 = 2
+;		ENDIF
+;		RETURN 0
+;	ENDIF
+;脱着時
+;ELSEIF SELECTCOM == 15 && TEQUIP:ニプルキャップ == 0
+	;愛
+;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:416 < 2 || FLAG:口上使用 == 2)
+;		PRINTFORMW 
+;		CFLAG:416 = 2
+	;それ以外
+;	ELSEIF CFLAG:320 < 1 || FLAG:口上使用 == 2
+;		PRINTFORMW 
+;		CFLAG:416 = 1
+;	ENDIF
+;	RETURN 0
+;ENDIF
+
+;-------------------------------------------------
+;搾乳機(母乳体質のみ) CFLAG:317　CFLAG:417
+;-------------------------------------------------
+;開始時
+;IF SELECTCOM == 16 && TEQUIP:搾乳機
+	;初めて
+;	IF CFLAG:317 == 0
+		;愛
+;		IF TALENT:恋心 == 1
+;			PRINTFORMW 
+		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		CFLAG:317 = 1
+;		RETURN 0
+	;二回目以降
+;	ELSE
+		;愛
+;		IF TALENT:恋心 == 1 && (CFLAG:317 <= 2 || FLAG:口上使用 == 2)
+;			PRINTFORMW 
+;			CFLAG:317 = 3
+		;それ以外
+;		ELSEIF CFLAG:317 <= 1 || FLAG:口上使用 == 2
+;			PRINTFORMW 
+;			CFLAG:317 = 2
+;		ENDIF
+;		RETURN 0
+;	ENDIF
+;脱着時
+;ELSEIF SELECTCOM == 16 && TEQUIP:搾乳機 == 0
+	;愛
+;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:417 < 2 || FLAG:口上使用 == 2)
+;		PRINTFORMW 
+;		CFLAG:417 = 2
+	;それ以外
+;	ELSEIF CFLAG:417 < 1 || FLAG:口上使用 == 2
+;		PRINTFORMW 
+;		CFLAG:417 = 1
+;	ENDIF
+;	RETURN 0
+;ENDIF
+
+;-------------------------------------------------
+;オナホール(ふたなり/オトコのみ) CFLAG:318　CFLAG:418
+;-------------------------------------------------
+;開始時
+;IF SELECTCOM == 17 && TEQUIP:オナホール
+	;初めて
+;	IF CFLAG:318 == 0
+		;愛
+;		IF TALENT:恋心 == 1
+;			PRINTFORMW 
+		;それ以外
+;		ELSE
+;			PRINTFORMW 
+;		ENDIF
+;		CFLAG:318 = 1
+;		RETURN 0
+	;二回目以降
+;	ELSE
+		;愛
+;		IF TALENT:恋心 == 1 && (CFLAG:318 <= 2 || FLAG:口上使用 == 2)
+;			PRINTFORMW 
+;			CFLAG:318 = 3
+		;それ以外
+;		ELSEIF CFLAG:318 <= 1 || FLAG:口上使用 == 2
+;			PRINTFORMW 
+;			CFLAG:318 = 2
+;		ENDIF
+;		RETURN 0
+;	ENDIF
+;終了時
+;ELSEIF SELECTCOM == 17 && TEQUIP:オナホール == 0
+	;愛
+;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:418 < 2 || FLAG:口上使用 == 2)
+;		PRINTFORMW 
+;		CFLAG:418 = 2
+	;それ以外
+;	ELSEIF CFLAG:418 < 1 || FLAG:口上使用 == 2
+;		PRINTFORMW 
+;		CFLAG:418 = 1
+;	ENDIF
+;	RETURN 0
+;ENDIF
+
+;-------------------------------------------------
+;アナルビーズ CFLAG:320　CFLAG:420
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 19 && TEQUIP:アナルビーズ
+	;初めて
+	IF CFLAG:TARGET:320 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:320 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:320 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:320 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:320 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:320 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:320 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:320 = 3
+		;それ以外
+		ELSEIF  CFLAG:320 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:320 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;脱着時
+ELSEIF SELECTCOM == 19 && TEQUIP:アナルビーズ == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1 && (CFLAG:420 < 3 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:420 = 3
+	;A感覚Lv3以上
+	ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:420 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:420 = 2
+	;それ以外
+	ELSEIF CFLAG:420 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:420 = 1
+	ENDIF
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;正常位 CFLAG:321
+;-------------------------------------------------
+IF SELECTCOM == 20
+	;初めて
+	IF CFLAG:TARGET:321 == 0
+		;処女
+		IF TALENT:処女 == 1
+			;愛＋従順Lv5
+			IF TALENT:恋心 == 1 && ABL:信頼 >= 5
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		;非処女
+		ELSE
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		ENDIF
+		CFLAG:321 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:321 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:321 = 5
+		;屈服刻印Lv3＋V感覚Lv3以上
+		ELSEIF MARK:屈服刻印 == 3 && ABL:Ｖ感覚 >= 3 && (CFLAG:321 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:321 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:321 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:321 = 3
+		;それ以外
+		ELSEIF CFLAG:321 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:321 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;後背位 CFLAG:322
+;-------------------------------------------------
+IF SELECTCOM == 21
+	;初めて
+	IF CFLAG:TARGET:322 == 0
+		;処女
+		IF TALENT:処女 == 1
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		;非処女
+		ELSE
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		ENDIF
+		CFLAG:322 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:322 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:3 == 0
+				PRINTFORMW 
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:322 = 5
+		;屈服刻印Lv3＋V感覚Lv3以上
+		ELSEIF MARK:屈服刻印 == 3 && ABL:Ｖ感覚 >= 3 && (CFLAG:322 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:322 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:322 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:322 = 3
+		;それ以外
+		ELSEIF CFLAG:322 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+
+			CFLAG:322 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;対面座位 CFLAG:323
+;-------------------------------------------------
+IF SELECTCOM == 22
+	IF CFLAG:TARGET:323 == 0
+		;処女
+		IF TALENT:処女 == 1
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		;非処女
+		ELSE
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		ENDIF
+		CFLAG:323 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:323 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:3 == 0
+				PRINTFORMW 
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:323 = 5
+		;屈服刻印Lv3＋V感覚Lv3以上
+		ELSEIF MARK:屈服刻印 == 3 && ABL:Ｖ感覚 >= 3 && (CFLAG:323 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:323 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:323 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:323 = 3
+		;それ以外
+		ELSEIF CFLAG:323 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:323 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;背面座位 CFLAG:324
+;-------------------------------------------------
+IF SELECTCOM == 23
+	IF CFLAG:TARGET:324 == 0
+		;処女
+		IF TALENT:処女 == 1
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		;非処女
+		ELSE
+			;愛
+			IF TALENT:恋心 == 1
+				PRINTFORMW 
+			;それ以外
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		ENDIF
+		CFLAG:324 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:324 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:3 == 0
+				PRINTFORMW 
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:324 = 5
+		;屈服刻印Lv3＋V感覚Lv3以上
+		ELSEIF MARK:屈服刻印 == 3 && ABL:Ｖ感覚 >= 3 && (CFLAG:324 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:324 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:324 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:324 = 3
+		;それ以外
+		ELSEIF CFLAG:324 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:324 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;正常位アナル CFLAG:327
+;-------------------------------------------------
+IF SELECTCOM == 26
+	;初めて
+	IF CFLAG:TARGET:327 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:327 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:327 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:327 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:327 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:327 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:327 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:327 = 3
+		;それ以外（愛無し、A感覚Lv3未満）
+		ELSEIF  CFLAG:327 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:327 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;後背位アナル CFLAG:328
+;-------------------------------------------------
+IF SELECTCOM == 27
+	;初めて
+	IF CFLAG:TARGET:328 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:328 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:328 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:328 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:328 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:328 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:328 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:328 = 3
+		;それ以外（愛無し、A感覚Lv3未満）
+		ELSEIF  CFLAG:328 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:328 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;対面座位アナル CFLAG:329
+;-------------------------------------------------
+IF SELECTCOM == 28
+	;初めて
+	IF CFLAG:TARGET:329 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:329 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:329 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:329 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:329 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:329 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:329 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:329 = 3
+		;それ以外（愛無し、A感覚Lv3未満）
+		ELSEIF  CFLAG:329 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:329 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;背面座位アナル CFLAG:330
+;-------------------------------------------------
+IF SELECTCOM == 29
+	;初めて
+	IF CFLAG:TARGET:330 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:330 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:330 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:330 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:330 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:330 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:330 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:330 = 3
+		;それ以外（愛無し、A感覚Lv3未満）
+		ELSEIF  CFLAG:330 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:330 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;手淫 CFLAG:331
+;-------------------------------------------------
+IF SELECTCOM == 30
+	;初めて
+	IF CFLAG:TARGET:331 == 0
+		;奉仕精神Lv3以上
+		IF ABL:TARGET:奉仕精神 >= 3
+			PRINTFORMW 
+		;それ以外（奉仕精神Lv3未満）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:331 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋奉仕精神Lv5
+		IF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 == 5 && (CFLAG:331 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:331 = 5
+		;愛＋奉仕精神Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 >= 3 && (CFLAG:331 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:331 = 4
+		;奉仕精神Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 >= 3 && (CFLAG:331 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:331 = 3
+		;それ以外（奉仕精神Lv3未満）
+		ELSEIF CFLAG:331 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:331 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;フェラチオ CFLAG:332
+;-------------------------------------------------
+IF SELECTCOM == 31
+	;初めて
+	IF CFLAG:TARGET:332 == 0
+		;奉仕精神Lv3以上
+		IF ABL:TARGET:奉仕精神 >= 3
+			PRINTFORMW 
+		;それ以外（奉仕精神Lv3未満）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:332 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋奉仕精神Lv5
+		IF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 == 5 && (CFLAG:332 <= 3 || FLAG:口上使用 == 2)
+				PRINTFORML 
+				PRINTFORMW 
+			CFLAG:332 = 4
+		;奉仕精神Lv3以上
+		ELSEIF ABL:TARGET:奉仕精神 >= 3 && (CFLAG:332 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORML 
+			PRINTFORMW 
+			CFLAG:332 = 3
+		;それ以外（奉仕精神Lv3未満）
+		ELSEIF CFLAG:332 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:332 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;パイズリ CFLAG:333
+;-------------------------------------------------
+IF SELECTCOM == 32
+	;初めて
+	IF CFLAG:TARGET:333 == 0
+		;奉仕精神Lv3以上
+		IF ABL:TARGET:奉仕精神 >= 3
+			PRINTFORMW 
+		;それ以外（奉仕精神Lv3未満）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:333 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋奉仕精神Lv5
+		IF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 == 5 && (CFLAG:333 <= 3 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:333 = 4
+		;奉仕精神Lv3以上
+		ELSEIF ABL:TARGET:奉仕精神 >= 3 && (CFLAG:333 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:243 = 3
+		;それ以外（奉仕精神Lv3未満）
+		ELSEIF  CFLAG:333 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:243 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;素股 CFLAG:334
+;-------------------------------------------------
+IF SELECTCOM == 33
+	;初めて
+	IF CFLAG:TARGET:334 == 0
+		;愛有り
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:334 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛有り+処女
+		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			PRINTFORMW 
+			CFLAG:334 = 4
+		;愛有り
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:334 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			PRINTFORMW 
+			CFLAG:334 = 3
+		;それ以外（愛無し）
+		ELSEIF CFLAG:334 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:334 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;騎乗位 CFLAG:335
+;-------------------------------------------------
+IF SELECTCOM == 34
+	;初めて
+	IF CFLAG:TARGET:335 == 0
+		;愛＋処女
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:335 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:335 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:4 == 0
+				PRINTFORML 
+			ELSEIF RAND:3 == 0
+				PRINTFORMW 
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:335 = 5
+		;屈服刻印Lv3＋V感覚Lv3以上
+		ELSEIF MARK:屈服刻印 == 3 && ABL:Ｖ感覚 >= 3 && (CFLAG:335 <= 3 || FLAG:口上使用 == 2)
+			IF RAND:4 == 0
+				PRINTFORMW
+			ELSEIF RAND:3 == 0
+				PRINTFORMW 
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+			CFLAG:335 = 4
+		;屈服刻印Lv3
+		ELSEIF MARK:屈服刻印 == 3 && (CFLAG:335 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORML 
+			PRINTFORMW 
+			CFLAG:335 = 3
+		;それ以外（愛無し、従順Lv5未満）
+		ELSEIF CFLAG:335 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:335 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;泡踊り CFLAG:336
+;-------------------------------------------------
+IF SELECTCOM == 35
+	;初めて
+	IF CFLAG:TARGET:336 == 0
+		;奉仕精神Lv3以上
+		IF ABL:TARGET:奉仕精神 >= 3
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:336 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋奉仕精神Lv5
+		IF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 == 5 && (CFLAG:336 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:336 = 4
+		;奉仕精神Lv3以上
+		ELSEIF ABL:TARGET:奉仕精神 >= 3 && (CFLAG:336 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:336 = 3
+		;それ以外
+		ELSEIF  CFLAG:336 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:336 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;騎乗位アナル CFLAG:337
+;-------------------------------------------------
+IF SELECTCOM == 36
+	;初めて
+	IF CFLAG:TARGET:337 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外（愛無し）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:337 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && (CFLAG:337 <= 4 || FLAG:口上使用 == 2)
+			IF RAND:2 == 0
+				PRINTFORMW 
+			ELSE
+				PRINTFORMW 
+			ENDIF
+		CFLAG:337 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:337 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:337 = 4
+		;A感覚Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && (CFLAG:337 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:337 = 3
+		;それ以外（愛無し、A感覚Lv3未満）
+		ELSEIF  CFLAG:337 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:337 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;アナル奉仕 CFLAG:338
+;-------------------------------------------------
+IF SELECTCOM == 37
+	;初めて
+	IF CFLAG:TARGET:338 == 0
+		;奉仕精神Lv3以上
+		IF ABL:TARGET:奉仕精神 >= 3
+			PRINTFORMW 
+		;それ以外（奉仕精神Lv3未満）
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:338 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋奉仕精神Lv5
+		IF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 == 5 && (CFLAG:338 <= 3 || FLAG:口上使用 == 2)
+				PRINTFORML 
+			CFLAG:338 = 4
+		;奉仕精神Lv3以上
+		ELSEIF ABL:TARGET:奉仕精神 >= 3 && (CFLAG:338 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:338 = 3
+		;それ以外（奉仕精神Lv3未満）
+		ELSEIF CFLAG:338 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:338 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;スパンキング CFLAG:341
+;-------------------------------------------------
+IF SELECTCOM == 40
+	;初めて
+	IF CFLAG:TARGET:341 == 0
+		PRINTFORMW 
+		CFLAG:TARGET:341 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋マゾっ気Lv3
+		IF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 3 && (CFLAG:341 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:341 = 4
+			RETURN 0
+		;苦痛刻印Lv3+屈服刻印Lv3
+		ELSEIF MARK:苦痛刻印 == 3 && MARK:屈服刻印 == 3 && (CFLAG:341 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:341 = 3
+			RETURN 0
+		;それ以外
+		ELSEIF CFLAG:341 <= 1 && FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:TARGET:341 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;鞭 CFLAG:342
+;-------------------------------------------------
+IF SELECTCOM == 41
+	;初めて
+	IF CFLAG:TARGET:342 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:342 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋マゾっ気Lv5以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 5 && (CFLAG:342 <= 5 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:342 = 6
+		;愛＋マゾっ気Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 3 && (CFLAG:342 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:342 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:342 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:342 = 4
+		;マゾっ気Lv3以上
+		ELSEIF ABL:マゾっ気 >= 3 && (CFLAG:342 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:342 = 3
+		;それ以外
+		ELSEIF CFLAG:335 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:TARGET:342 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;針 CFLAG:343
+;-------------------------------------------------
+IF SELECTCOM == 42
+	;初めて
+	IF CFLAG:TARGET:343 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:343 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋マゾっ気Lv5以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 5 && (CFLAG:343 <= 5 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:343 = 6
+		;愛＋マゾっ気Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 3 && (CFLAG:343 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:343 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:343 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:343 = 4
+		;マゾっ気Lv3以上
+		ELSEIF ABL:マゾっ気 >= 3 && (CFLAG:343 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:343 = 3
+		;それ以外
+		ELSEIF CFLAG:343 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:TARGET:343 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;アイマスク CFLAG:344　CFLAG:444
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 43 && TEQUIP:アイマスク
+	;初めて
+	IF CFLAG:TARGET:344 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:344 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋マゾっ気Lv5以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 5 && (CFLAG:344 <= 5 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:344 = 6
+		;愛＋マゾっ気Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 3 && (CFLAG:344 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:344 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:344 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:344 = 4
+		;マゾっ気Lv3以上
+		ELSEIF ABL:マゾっ気 >= 3 && (CFLAG:344 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:344 = 3
+		;それ以外
+		ELSEIF CFLAG:344 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:TARGET:344 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;終了時
+ELSEIF SELECTCOM == 43 && TEQUIP:アイマスク == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1 && (CFLAG:338 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:444 = 2
+	;それ以外 
+	ELSEIF CFLAG:444 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:444 = 1
+	ENDIF
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;縄 CFLAG345　CFLAG:445
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 44 && TEQUIP:縄
+	;初めて
+	IF CFLAG:TARGET:345 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:345 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋マゾっ気Lv5以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 5 && (CFLAG:345 <= 5 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:345 = 6
+		;愛＋マゾっ気Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 3 && (CFLAG:345 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:345 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:345 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:345 = 4
+		;マゾっ気Lv3以上
+		ELSEIF ABL:マゾっ気 >= 3 && (CFLAG:345 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:345 = 3
+		;それ以外
+		ELSEIF CFLAG:345 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:TARGET:345 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;終了時
+ELSEIF SELECTCOM == 44 && TEQUIP:縄 == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1 && (CFLAG:445 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:445 = 2
+	;それ以外
+	ELSEIF CFLAG:445 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:445 = 1
+	ENDIF
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;ボールギャグ CFLAG346　CFLAG:446
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 45 && TEQUIP:ボールギャグ
+	;初めて
+	IF CFLAG:TARGET:346 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:346 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋マゾっ気Lv5以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 5 && (CFLAG:346 <= 5 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:346 = 6
+		;愛＋マゾっ気Lv3以上
+		ELSEIF TALENT:TARGET:恋心 == 1 && ABL:マゾっ気 >= 3 && (CFLAG:346 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:346 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:346 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:346 = 4
+		;マゾっ気Lv3以上
+		ELSEIF ABL:マゾっ気 >= 3 && (CFLAG:346 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:TARGET:346 = 3
+		;それ以外
+		ELSEIF CFLAG:346 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:TARGET:346 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;終了時
+ELSEIF SELECTCOM == 45 && TEQUIP:ボールギャグ == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1 && (CFLAG:446 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:446 = 2
+	;それ以外
+	ELSEIF CFLAG:446 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:446 = 1
+	ENDIF
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;浣腸器＋プラグ CFLAG:347
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 46 && TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	;初めて
+	IF CFLAG:TARGET:347 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:347 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋A感覚Lv3以上＋マゾっ気Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:Ａ感覚 >= 3 && ABL:マゾっ気 >= 3 && (CFLAG:347 <= 4 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:347 = 5
+		;愛
+		ELSEIF TALENT:TARGET:恋心 == 1 && (CFLAG:347 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:347 = 4
+		;A感覚Lv3以上＋マゾっ気Lv3以上
+		ELSEIF ABL:Ａ感覚 >= 3 && ABL:マゾっ気 >= 3 && (CFLAG:347 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:347 = 3
+		;それ以外
+		ELSEIF  CFLAG:347 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:347 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;何もしない CFLAG:356
+;-------------------------------------------------
+IF SELECTCOM == 55
+	;初めて
+	IF CFLAG:356 == 0
+		;愛
+		IF TALENT:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:356 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋欲情Lv3以上
+		IF TALENT:恋心 == 1 && PALAM:欲情 >= PALAMLV:3 && (CFLAG:356 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:356 = 4
+		;愛
+		ELSEIF TALENT:恋心 == 1 && (CFLAG:356 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:356 = 3
+		;それ以外
+		ELSEIF CFLAG:356 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:356 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;会話する CFLAG:357
+;「会話」はある意味最も口上が生きるコマンドかも
+;-------------------------------------------------
+IF SELECTCOM == 56
+	;初めて
+	IF CFLAG:357 == 0
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:357 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1 && (CFLAG:357 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:357 = 3
+		;それ以外
+		ELSEIF CFLAG:357 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:357 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;イラマチオ CFLAG:381
+;-------------------------------------------------
+IF SELECTCOM == 80
+	;初めて
+	IF CFLAG:TARGET:381 == 0
+		;奉仕精神Lv3以上
+		IF ABL:TARGET:奉仕精神 >= 3
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		CFLAG:TARGET:381 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋奉仕精神Lv5
+		IF TALENT:TARGET:恋心 == 1 && ABL:TARGET:奉仕精神 >= 5 && (CFLAG:381 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:381 = 4
+		;奉仕精神Lv3以上
+		ELSEIF ABL:TARGET:奉仕精神 >= 3 && (CFLAG:381 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORMW 
+			CFLAG:381 = 3
+		;それ以外
+		ELSEIF CFLAG:381 <= 1 || FLAG:口上使用 == 2
+			PRINTFORMW 
+			CFLAG:381 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;@KOJO_MESSAGE_PALAMCNG関係（87をキャラ番号に置換）
+;パラメータ変動をトリガーにした口上
+;パラメータ変動後に口上を発動します
+;-------------------------------------------------
+@KOJO_MESSAGE_PALAMCNG_87
+;助手が調教した時に口上をスキップする（好みに応じて使う、行頭の;を消すとスキップするようになる）
+;SIF ASSI > 0 && ASSIPLAY
+;	RETURN 0 
+;ボールギャグ着用時には口上をスキップする
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+
+;-------------------------------------------------
+;パラメータ変動時のセリフ CFLAG 221～260を使用
+;-------------------------------------------------
+;-------------------------------------------------
+;初めて潤滑がLV2超えた CFLAG:221
+;-------------------------------------------------
+P = PALAM:潤滑 + UP:3
+IF P > PALAMLV:2 && CFLAG:TARGET:221 == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1
+		;ローションを使った場合
+		IF SELECTCOM == 50
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	;それ以外
+	ELSE
+		;ローションを使った場合
+		IF SELECTCOM == 50
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	CFLAG:TARGET:221 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めて欲情がLV2超えた CFLAG:222
+;-------------------------------------------------
+P = PALAM:欲情 + UP:5
+IF P > PALAMLV:2 && CFLAG:222 == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1
+		;しあわせ草を使った場合
+		IF SELECTCOM == 51
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	;それ以外
+	ELSE
+		;しあわせ草を使った場合
+		IF SELECTCOM == 51
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	CFLAG:222 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めて恥情がLV2超えた CFLAG:223
+;-------------------------------------------------
+P = PALAM:恥情 + UP:8
+IF P > PALAMLV:2 && CFLAG:223 == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+	CFLAG:223 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めて恐怖がLV2超えた CFLAG:224
+;-------------------------------------------------
+P = PALAM:恐怖 + UP:10
+IF P > PALAMLV:2 && CFLAG:224 == 0
+	;愛
+	IF TALENT:TARGET:恋心 == 1
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+	CFLAG:224 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めてC絶頂 CFLAG:225
+;-------------------------------------------------
+IF NOWEX:0 > 0 && CFLAG:225 == 0
+	PRINTFORMW 「あ、あァッ！　な、にか、来る！？　な、なにが……んんッ！　はあああッ！！」
+	PRINTFORMW 翔子は目まぐるしい快楽に翻弄され、目に涙を貯めて大きく身体をのけ反らせた。
+	CFLAG:225 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めてV絶頂 CFLAG:226
+;-------------------------------------------------
+IF NOWEX:1 > 0 && CFLAG:226 == 0
+	PRINTFORML 「あ、あ、はッ、んぁッ！」
+	PRINTFORML 秘裂が痛い程に肉棒を締め上げる。
+	PRINTFORML 「あ、ァ、なにこれ、こんなの……しらな……」
+	PRINTFORML 「イ、っちゃう、も、ぅ、イッ―――ああぁぁっ！！」
+	PRINTFORMW 全身を大きく痙攣させ、翔子は初めて女としての果てを見た。
+	CFLAG:TARGET:226 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めてA絶頂 CFLAG:227
+;-------------------------------------------------
+IF NOWEX:2 > 0 && CFLAG:227 == 0
+	PRINTFORML 「はぁ、んんぅ、こんなの、嘘ぉ……」
+	PRINTFORML ただの排泄器官でしかなかったはずの穴で、こんなにも気持ち良くなれる等と考えた事もなかった。
+	PRINTFORMW 「う、嘘……だ、うッ、そ、こん、なぁッ！　ん！　ぁ――」
+	PRINTFORMW 「あぁあアアア――――！！！」
+	PRINTFORMW 後ろの穴での快楽と屈辱感に、翔子は全身を戦慄かせて咽び泣いた。
+	CFLAG:227 = 1
+ENDIF
+
+;-------------------------------------------------
+;初めてB絶頂 CFLAG:228
+;-------------------------------------------------
+IF NOWEX:3 > 0 && CFLAG:228 == 0
+	PRINTFORML 「い、やッ、こん、な……ッ！」
+	PRINTFORML 絶頂の波をやり過ごそうと、翔子は歯を食いしばって耐える。
+	PRINTFORML だが、いつ終わるともなく繰り返される刺激に抗しきれる筈もなく……。
+	PRINTFORMW 「うぅん‥‥ッ、あ、ああッ！　やァ、あああ――――ッ！！」
+	CFLAG:TARGET:228 = 1
+ENDIF
+
+;-------------------------------------------------
+;処女喪失(処女のみ) CFLAG:229
+;-------------------------------------------------
+A = UP:11 + UP:12
+IF TFLAG:処女喪失 == 1 && CFLAG:229 == 0
+	;主人による処女喪失
+	IF TFLAG:主人による処女喪失 == 1
+		;愛かつ反発刻印取得せず
+		IF TALENT:TARGET:恋心 == 1 && (A < 500 || TFLAG:反発刻印の回避 == 1)
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	;主人以外による処女喪失
+	ELSE
+		;愛
+		IF TALENT:TARGET:恋心 == 1
+			PRINTFORMW 
+		;それ以外
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	CFLAG:TARGET:229 = 1
+ENDIF
+
+;-------------------------------------------------
+;@KOJO_MESSAGE_MARKCNG関係（87をキャラ番号に置換）
+;刻印変動をトリガーにした口上
+;刻印変動後に口上を発動します
+;-------------------------------------------------
+@KOJO_MESSAGE_MARKCNG_87
+;助手が調教した時に口上をスキップする（好みに応じて使う、行頭の;を消すとスキップするようになる）
+;SIF ASSI > 0 && ASSIPLAY
+;	RETURN 0 
+;ボールギャグ着用時には口上をスキップする（OFFだと口を塞いでるのに喋りまくる）
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;-------------------------------------------------
+;苦痛刻印Lv3取得 CFLAG:297
+;-------------------------------------------------
+IF TFLAG:苦痛刻印 == 3 && CFLAG:297 == 0
+	;愛
+	IF TALENT:恋心 == 1
+		PRINTFORML 「くっ……い、痛めつけるのが、好きなのですか！？」
+		PRINTFORMW 翔子は怯えを隠しながらもそう口にした。
+	ELSE
+		PRINTFORML 「くっ……い、痛みには……慣れて……」
+		PRINTFORMW そうは言いつつも、翔子の眼には抑えきれない怯えが浮かんでいた。
+	ENDIF
+	CFLAG:297 = 1
+ENDIF
+
+;-------------------------------------------------
+;快楽刻印Lv3取得 CFLAG:298
+;-------------------------------------------------
+IF TFLAG:快楽刻印 == 3 && CFLAG:298 == 0
+	;愛
+	IF TALENT:恋心 == 1
+		PRINTFORMW 「これが、感じ、てるという、事？　私……もっと気持ち良くなりたいって思ってる……？」
+	ELSE
+		PRINTFORMW 「こ、こんなの……私、こんな事思ってない！」
+	ENDIF
+	CFLAG:298 = 1
+ENDIF
+
+;-------------------------------------------------
+;屈服刻印Lv3取得 CFLAG:299
+;-------------------------------------------------
+IF TFLAG:屈服刻印 == 3 && CFLAG:299 == 0
+	;愛
+	IF TALENT:恋心 == 1
+		PRINTFORMW 
+	ELSE
+		PRINTFORMW ｢次は、何をすればいいですか？　……何でも、しますから……｣
+	ENDIF
+	CFLAG:299 = 1
+ENDIF
+
+;-------------------------------------------------
+;反発刻印Lv3取得 CFLAG:300
+;-------------------------------------------------
+IF TFLAG:反発刻印 == 3 && CFLAG:300 == 0
+	;愛
+	IF TALENT:恋心 == 1
+		PRINTFORMW 
+	ELSE
+		PRINTFORMW 
+	ENDIF
+	CFLAG:300 = 1
+ENDIF
+
+
+;-------------------------------------------------
+;イベント口上集（87、87をキャラ番号に置換する） CFLAG 261～296
+;-------------------------------------------------
+@SELF_KOJO_K87
+;-------------------------------------------------
+;調教後自慰 CFLAG:261
+;-------------------------------------------------
+IF TFLAG:口上番号 == 1
+	;愛
+	IF TALENT:恋心 && (CFLAG:261 < 3 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:261 = 3
+	;自慰中毒Lv3以上
+	ELSEIF ABL:自慰中毒 >= 3 && (CFLAG:261 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:261 = 2
+	;それ以外
+	ELSEIF CFLAG:261 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:261 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;レズプレイ CFLAG:262
+;-------------------------------------------------
+IF TFLAG:口上番号 == 2
+	;愛
+	IF TALENT:恋心 && (CFLAG:262 < 4 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:262 = 4
+	;レズ中毒Lv3以上
+	ELSEIF ABL:レズ中毒 >= 3 && (CFLAG:262 < 3 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:262 = 3
+	;レズっ気Lv3以上
+	ELSEIF ABL:レズっ気 >= 3 && (CFLAG:262 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:262 = 2
+	;それ以外
+	ELSEIF CFLAG:262 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:262 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;朝フェラ CFLAG:263
+;-------------------------------------------------
+IF TFLAG:口上番号 == 3
+	;愛
+	IF TALENT:恋心 && (CFLAG:263 < 3 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:263 = 3
+	;奉仕精神Lv5以上
+	ELSEIF ABL:奉仕精神 >= 5 && (CFLAG:263 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:263 = 2
+	;それ以外
+	ELSEIF CFLAG:263 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:263 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;調教後セックス CFLAG:264
+;-------------------------------------------------
+IF TFLAG:口上番号 == 4
+	;V感覚Lv4以上
+	IF ABL:Ｖ感覚 >= 4 && (CFLAG:264 < 2 || FLAG:口上使用 == 2)
+		PRINTFORMW 
+		CFLAG:264 = 2
+	;それ以外
+	ELSEIF CFLAG:264 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:264 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;夜這い CFLAG:265
+;-------------------------------------------------
+IF TFLAG:口上番号 == 5
+	IF CFLAG:265 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:265 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;売却
+;-------------------------------------------------
+IF TFLAG:口上番号 == 6
+	;愛+反発刻印Lv3未満
+	IF TALENT:恋心 && MARK:反発刻印 < 3
+		PRINTFORMW 
+	;反発刻印Lv3
+	ELSEIF MARK:反発刻印 == 3
+		PRINTFORMW 
+	;淫乱
+	ELSEIF TALENT:淫乱
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;職業イベント;アイドル;グラビア撮影
+;-------------------------------------------------
+IF TFLAG:口上番号 == 7
+	;愛+露出壁Lv5以上
+	IF TALENT:恋心 && ABL:露出癖 >= 5
+		PRINTFORML 
+	;それ以外
+	ELSE
+		PRINTFORML 
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;職業イベント;アイドル;歌唱練習
+;-------------------------------------------------
+IF TFLAG:口上番号 == 8
+	;愛+奉仕精神Lv5以上
+	IF TALENT:恋心 && ABL:奉仕精神 >= 5
+		PRINTFORML 
+	;それ以外
+	ELSE
+		PRINTFORML 
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;ガンダーロボ戦に参加
+;-------------------------------------------------
+IF TFLAG:口上番号 == 9
+	DRAWLINE
+	PRINTFORMW 
+	DRAWLINE
+ENDIF
+
+;-------------------------------------------------
+;ガンダーロボ戦に参加して勝利
+;-------------------------------------------------
+IF TFLAG:口上番号 == 10
+	DRAWLINE
+	PRINTFORMW 
+	DRAWLINE
+ENDIF
+
+;-------------------------------------------------
+;妊娠発覚 CFLAG:271
+;-------------------------------------------------
+IF TFLAG:口上番号 == 11
+	SIF CFLAG:271 >= 1
+		RETURN 0
+	;崩壊してしまった場合
+	IF TALENT:崩壊 == 1
+		PRINTFORMW 
+	;父親が主人で母親が愛持ち
+	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+		PRINTFORMW 
+	;その他
+	ELSE
+		PRINTFORMW 
+	ENDIF
+	CFLAG:271 = 1
+ENDIF
+
+;-------------------------------------------------
+;出産 CFLAG:272
+;-------------------------------------------------
+IF TFLAG:口上番号 == 12
+	SIF CFLAG:272 >= 1
+		RETURN 0
+	;崩壊している場合
+	IF TALENT:崩壊 == 1
+		PRINTFORMW 
+	;父親が主人で母親が愛持ち
+	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+		PRINTFORMW 
+	;その他
+	ELSE
+		PRINTFORMW 
+	ENDIF
+	CFLAG:272 = 1
+ENDIF
+
+;-------------------------------------------------
+;死亡
+;-------------------------------------------------
+IF TFLAG:口上番号 == 999
+	;愛
+	IF TALENT:恋心
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;寿命による消滅
+;-------------------------------------------------
+IF TFLAG:口上番号 == 998
+	;愛
+	IF TALENT:恋心
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+
+;--------------------------------------------------
+;フラグ初期化
+;--------------------------------------------------
+TFLAG:口上番号 = 0
+
+RETURN 0
+
+;-------------------------------------------------
+;@単体エンディング関係(87、87をキャラ番号に置換する)
+;まだ未実装です
+;-------------------------------------------------
+;@SINGLE_ENDING_K87
+;DRAWLINE
+;PRINTFORMW ―――単体エンド条件達成―――
+;PRINTFORMW …………
+;PRINTFORMW ………
+;PRINTFORMW ……
+;PRINTFORMW 
+
+
+;PRINTFORMW 
+;PRINTFORMW 　　　　　　　　―― Ending No.2087 (○○エンド)
+
+;CALL GAME_CONTINUE
+;RETURN 0
+

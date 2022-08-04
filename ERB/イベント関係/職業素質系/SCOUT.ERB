@@ -1,0 +1,202 @@
+﻿;===========================================================
+;スカウトの発生
+;===========================================================
+
+@EVENT_SCOUT
+IF EXP:MASTER:監督経験 > 0
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF TALENT:COUNT:アイドル || TALENT:COUNT:キャバ嬢 || TALENT:COUNT:ファッションモデル 
+			CONTINUE
+		ELSEIF EXP:COUNT:ＡＶ出演経験 == 0
+			CONTINUE
+		ELSEIF NO:COUNT == [[キャラ:桐生歌音]]
+			CONTINUE
+		ELSE
+[IF_NDEBUG]
+			IF RAND:100 >= 80
+				SELECTCASE RAND:3
+				CASE 0
+[ENDIF]
+					IF !TALENT:COUNT:アイドル
+						CALL SCOUT_IDOL
+						DRAWLINE
+					ENDIF
+[IF_NDEBUG]
+				CASE 1
+[ENDIF]
+					IF !TALENT:COUNT:キャバ嬢
+						CALL SCOUT_C_CLUB
+						DRAWLINE
+					ENDIF
+[IF_NDEBUG]
+				CASE 2
+[ENDIF]
+					IF !TALENT:COUNT:ファッションモデル
+						CALL SCOUT_MODEL
+						DRAWLINE
+					ENDIF
+[IF_NDEBUG]
+				ENDSELECT
+			ENDIF
+[ENDIF]
+		ENDIF
+	REND
+ENDIF
+;===========================================================
+;スカウトの処理・アイドル
+;===========================================================
+@SCOUT_IDOL
+PRINTFORMW ある日、桐生組が経営する『真っ当な』芸能プロダクションのスカウトマンが、歌音を伴って事務所を訪れた……
+PRINTFORML 用件を聞くと%NAME:COUNT%を一般メディアにグラビアアイドルとしてデビューさせたい、とのことだ
+	IF BASE:COUNT:バスト < 80
+		PRINTFORM %CALLNAME:COUNT%は巨乳というわけではなく、むしろ微乳・貧乳と言った方がいいスタイルだが、
+		PRINTFORML 逆にそれがマニア受けする、とスカウトマンは力説している
+	ELSEIF BASE:COUNT:バスト >= 80 && BASE:COUNT:バスト < 85
+		PRINTFORM %CALLNAME:COUNT%は巨乳ではないが、均整の取れたスタイルはムラムラ来るものがある、と
+		PRINTFORML スカウトマンは力説している
+	ELSE
+		PRINTFORM %CALLNAME:COUNT%のド迫力の巨乳は男の心を掴んで離さない、とスカウトマンは力説している
+	ENDIF
+PRINTFORM 一般メディアに露出させると%CALLNAME:COUNT%の作品に『現役グラビアアイドル』という付加価値が付けられるが、
+PRINTFORML それで『こちら』の活動が著しく制限されるなら本末転倒だ
+PRINTFORM しかしスカウトマンはにやりと笑うと、その辺り問題をクリアするような売り出し方や裏工作は万全だと胸を張り、
+PRINTFORML 更にこの%CALLNAME:COUNT%のグラビアデビューは歌音の指揮下で動いている話だと言う
+PRINTFORML 確かに歌音が指揮しての工作なら、何の綻びもなしに上手くことが進むことだろう
+PRINTFORML しかしこちらにばかりメリットがあってつい裏を勘繰りたくはなってしまうが……
+PRINTW
+PRINTFORML 「裏？　あるといえばあるし、無いといえばない
+PRINTFORML 　アンタは芸能人モノとして売り出すことができるし、ウチは労せず一級品の商材を確保できる
+PRINTFORML 　単純にWIN－WINの関係と言えばそれまでだけどね
+PRINTFORML 　ああ、強いて裏と言うならウチの客人にアイドル好きとかいるからその時は利用させてもらうことぐらいさね
+PRINTFORML 　ちなみにこの件に関してはWIN－WINであるうえ、相手がアンタだからこそ包み隠さず話したってわけさ
+PRINTFORML 　必要以上に疑われてやり辛くなるのはこっちも御免だしね」
+PRINTW
+PRINTFORML ようやく口を開いた歌音の態度は真摯なもので、何かを含んでいるようには思えない
+$INPUT_LOOP_SCOUT_01
+PRINTFORML さて、どうするべきか
+PRINTFORML [0] - %CALLNAME:COUNT%にグラビアアイドルとしてデビューしてもらう
+PRINTFORML [1] - %CALLNAME:COUNT%をグラビアアイドルにしない
+INPUT
+IF RESULT == 0
+	PRINTFORM %CALLNAME:COUNT%本人に意思を確認してみなければならないが、%CALLNAME:MASTER%はひとまず話を
+	PRINTFORML 進めてもらうように歌音に伝えた……
+	PRINTW
+	PRINTFORM その後、事務所に来た%CALLNAME:COUNT%にその旨を知らせると、%CALLNAME:COUNT%は突然の話に目を丸くしながらも
+	PRINTFORML グラビアアイドルとしてデビューすることを承諾した
+		TALENT:COUNT:アイドル = 1
+		MAXBASE:COUNT:魅力値 += 30
+		BASE:COUNT:魅力値 += 30
+		TALENT:COUNT:ニート = 0
+		CFLAG:COUNT:バイト就職 = 0
+ELSEIF RESULT == 1
+	PRINTFORML 今回は話を見送ってもらうよう歌音に伝えた……
+ELSE
+	GOTO INPUT_LOOP_SCOUT_01
+ENDIF
+;===========================================================
+;スカウトの処理・キャバクラ
+;===========================================================
+@SCOUT_C_CLUB
+PRINTFORMW ある日、桐生組が経営する『真っ当な』キャバクラのスカウトマンが、歌音を伴って事務所を訪れた……
+PRINTFORML 用件を聞くと%NAME:COUNT%をキャバ嬢として雇いたい、とのことだ
+	IF TALENT:COUNT:献身的 == 1
+		PRINTFORM 気立てのいいタイプに癒されたい、というリクエストが
+	ELSEIF TALENT:COUNT:ツンデレ == 1
+		PRINTFORM ツンツンしているが、仲良くなったら甘えてくれそうなタイプと酒を呑みたい、というリクエストが
+	ELSEIF TALENT:COUNT:プライド高い
+		PRINTFORM プライドの高い、高嶺の花のようなタイプに罵られたい、というリクエストが
+	ELSE
+		PRINTFORM 超Ａ級の美少女・美女と酒を呑みたい、というリクエストが
+	ENDIF
+PRINTFORML 常連客からの要望にあったらしく、%CALLNAME:COUNT%に白羽の矢が立てられたそうだ
+PRINTFORM キャバ嬢としてデビューさせると%CALLNAME:COUNT%の作品に『現役キャバ嬢』という付加価値が付けられるが、
+PRINTFORML それで『こちら』の活動が著しく制限されるなら本末転倒だ
+PRINTFORM しかしスカウトマンはにやりと笑うと、その辺りの問題をクリアするような売り出し方や裏工作は万全だと胸を張り
+PRINTFORML 、更にこの%CALLNAME:COUNT%のキャバ嬢デビューは歌音の指揮下で動いている話だと言う
+PRINTFORML 確かに歌音が指揮しての工作なら、何の綻びもなしに上手くことが進むことだろう
+PRINTFORML しかしこちらにばかりメリットがあってつい裏を勘繰りたくはなってしまうが……
+PRINTW
+PRINTFORML 「裏？　あるといえばあるし、無いといえばない
+PRINTFORML 　アンタはキャバ嬢モノとして売り出すことができるし、ウチは労せず一級品の商材を確保できる
+PRINTFORML 　単純にWIN－WINの関係と言えばそれまでだけどね
+PRINTFORML 　ああ、強いて裏と言うならウチの客人にキャバ嬢好きとかいるからその時は利用させてもらうことぐらいさね
+PRINTFORML 　ちなみにこの件に関してはWIN－WINであるうえ、相手がアンタだからこそ包み隠さず話したってわけさ
+PRINTFORML 　必要以上に疑われてやり辛くなるのはこっちも御免だしね」
+PRINTW
+PRINTFORML ようやく口を開いた歌音の態度は真摯なもので、何かを含んでいるようには思えない
+$INPUT_LOOP_SCOUT_02
+PRINTFORML さて、どうするべきか
+PRINTFORML [0] - %CALLNAME:COUNT%にキャバ嬢としてデビューしてもらう
+PRINTFORML [1] - %CALLNAME:COUNT%をキャバ嬢にしない
+INPUT
+IF RESULT == 0
+	PRINTFORM %CALLNAME:COUNT%本人に意思を確認してみなければならないが、%CALLNAME:MASTER%はひとまず話を
+	PRINTFORML 進めてもらうように歌音に伝えた……
+	PRINTW
+	PRINTFORM その後、事務所に来た%CALLNAME:COUNT%にその旨を知らせると、%CALLNAME:COUNT%は突然の話に目を丸くしながらも
+	PRINTFORML キャバ嬢としてデビューすることを承諾した
+		TALENT:COUNT:キャバ嬢 = 1
+		MAXBASE:COUNT:魅力値 += 10
+		BASE:COUNT:魅力値 += 10
+		TALENT:COUNT:ニート = 0
+		CFLAG:COUNT:バイト就職 = 0
+ELSEIF RESULT == 1
+	PRINTFORML 今回は話を見送ってもらうよう歌音に伝えた……
+ELSE
+	GOTO INPUT_LOOP_SCOUT_02
+ENDIF
+
+;===========================================================
+;スカウトの処理・モデル
+;===========================================================
+@SCOUT_MODEL
+PRINTFORMW ある日、桐生組の息がかかった『真っ当な』出版社のスカウトマンが、歌音を伴って事務所を訪れた……
+PRINTFORML 用件を聞くと%NAME:COUNT%を一般メディアにファッションモデルとしてデビューさせたい、とのことだ
+	IF TALENT:COUNT:大柄 == 1
+		PRINTFORM %CALLNAME:COUNT%のような長身はモデルとして映え、年齢層が高めのファッション誌向きだ
+		PRINTFORML 、とスカウトマンは力説している
+	ELSEIF TALENT:COUNT:小柄体型 == 1
+		PRINTFORM %CALLNAME:COUNT%はモデルのような長身ではないものの、逆にそれがローティーン向けのファッション誌向きだ
+		PRINTFORML 、とスカウトマンは力説している
+	ELSE
+		PRINTFORM %CALLNAME:COUNT%のような平均的なスタイルは等身大のモデルとして、ハイティーン向けのファッション雑誌向きだ
+		PRINTFORML 、とスカウトマンは力説している
+	ENDIF
+PRINTFORM 一般メディアに露出させると%CALLNAME:COUNT%の作品に『現役モデル』という付加価値が付けられるが、
+PRINTFORML それで『こちら』の活動が著しく制限されるなら本末転倒だ
+PRINTFORM しかしスカウトマンはにやりと笑うと、その辺り問題をクリアするような売り出し方や裏工作は万全だと胸を張り
+PRINTFORML 、更にこの%CALLNAME:COUNT%のモデルデビューは歌音の指揮下で動いている話だと言う
+PRINTFORML 確かに歌音が指揮しての工作なら、何の綻びもなしに上手くことが進むことだろう
+PRINTFORML しかしこちらにばかりメリットがあってつい裏を勘繰りたくはなってしまうが……
+PRINTW
+PRINTFORML 「裏？　あるといえばあるし、無いといえばない
+PRINTFORML 　アンタはモデルモノとして売り出すことができるし、ウチは労せず一級品の商材を確保できる
+PRINTFORML 　単純にWIN－WINの関係と言えばそれまでだけどね
+PRINTFORML 　ああ、強いて裏と言うならウチの客人にモデル好きとかいるからその時は利用させてもらうことぐらいさね
+PRINTFORML 　ちなみにこの件に関してはWIN－WINであるうえ、相手がアンタだからこそ包み隠さず話したってわけさ
+PRINTFORML 　必要以上に疑われてやり辛くなるのはこっちも御免だしね」
+PRINTW
+PRINTFORML ようやく口を開いた歌音の態度は真摯なもので、何かを含んでいるようには思えない
+$INPUT_LOOP_SCOUT_03
+PRINTFORML さて、どうするべきか
+PRINTFORML [0] - %CALLNAME:COUNT%にモデルとしてデビューしてもらう
+PRINTFORML [1] - %CALLNAME:COUNT%をモデルにしない
+INPUT
+IF RESULT == 0
+	PRINTFORM %CALLNAME:COUNT%本人に意思を確認してみなければならないが、%CALLNAME:MASTER%はひとまず話を
+	PRINTFORML 進めてもらうように歌音に伝えた……
+	PRINTW
+	PRINTFORM その後、事務所に来た%CALLNAME:COUNT%にその旨を知らせると、%CALLNAME:COUNT%は突然の話に目を丸くしながらも
+	PRINTFORML モデルとしてデビューすることを承諾した
+		TALENT:COUNT:ファッションモデル = 1
+		MAXBASE:COUNT:魅力値 += 20
+		BASE:COUNT:魅力値 += 20
+		TALENT:COUNT:ニート = 0
+		CFLAG:COUNT:バイト就職 = 0
+ELSEIF RESULT == 1
+	PRINTFORML 今回は話を見送ってもらうよう歌音に伝えた……
+ELSE
+	GOTO INPUT_LOOP_SCOUT_03
+ENDIF

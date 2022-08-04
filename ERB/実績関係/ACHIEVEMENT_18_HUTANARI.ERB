@@ -1,0 +1,39 @@
+﻿;===========================================================
+;実績・ふたなりっ娘らばーず
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_18
+RESULTS = ふたなりっ娘らばーず
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_18
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:ふたなり == 1 && ABL:COUNT:射精中毒 >= 3 && TALENT:COUNT:童貞 == 0
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:18 == 0 && DIFFICULTY_CHECK() && LOCAL >= 5
+	GLOBAL:18 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:18
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_18
+; 解説文
+PRINTFORM 秘密の研究室にはありとあらゆる肉体改造のメニューがあり、その中でも%CALLNAME:MASTER%が特に好んだのは
+PRINTFORML 『女性のクリトリスをふたなりペニスに改造する』ということでした 
+PRINTFORM 男性器を生やされた彼女たちは皆、これまでに経験したことのない射精に戸惑い、
+PRINTFORML そしてやがて欲望が汚臭を放つ白濁の塊として解き放たれる快楽に身を焦がしていきました
+PRINTFORML 次第にそれは彼女たちを蝕んでいき、いつしか彼女たちはペニスで悦楽を得るのが当然となり……
+PRINTFORMW そんな彼女たちがより強い快楽を求めた結果、オンナとしてだけではなくオトコとしてのセックスを経験するのは時間の問題でした
+
+IF FLAG:ふたなりっ娘ボーナス受け取り == 0
+	PRINTFORMW 《実績解除のボーナスとして研究室の「ふたなりにする」でペニスサイズを任意に選べるようになりました》
+	FLAG:ふたなりっ娘ボーナス受け取り = 1
+ENDIF

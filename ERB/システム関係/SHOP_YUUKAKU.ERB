@@ -1,0 +1,856 @@
+﻿;===========================================================
+;娼館営業のメイン画面の関数等を管理しています
+;===========================================================
+@YUUKAKU_TOP
+
+$INPUT_LOOP
+
+DRAWLINE
+PRINTL 娼館営業
+PRINTL 《指導中の女優候補を働かせてポイントを稼ぎます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+;売却可能な奴隷数の確認
+T = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:売却助手可能 >= 1 && TALENT:COUNT:売却不可 == 0
+		T += 1
+REND
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+IF T >= 1
+	PRINTL  [0] - 引退させる
+ELSE
+	PRINTL  [-] - －－－－
+ENDIF
+PRINTL  [1] - 売春接待
+IF TIME == 0 && T >= 1
+	PRINTL  [2] - 通常営業の変更
+ELSEIF T >= 1
+	PRINTL  [-] -（午後のため通常営業は変更不可）
+ELSE
+	PRINTL  [-] - －－－－
+ENDIF
+IF T >= 1
+	IF FLAG:特殊営業解禁 == 0 && TIME == 1
+		PRINTL  [3] - 特殊営業
+	ELSEIF FLAG:特殊営業解禁 == 1
+		PRINTL  [3] - 特殊営業
+	ENDIF
+ELSE
+	PRINTL  [-] - －－－－
+ENDIF
+PRINTL  [4] - 施設拡張
+DRAWLINE
+PRINTFORML  [999] - 戻る
+
+INPUT
+
+IF RESULT == 999
+	RETURN 0
+ELSEIF RESULT == 0 && T >= 1
+	CALL CHARA_SALE
+ELSEIF RESULT == 1
+	CALL WORK_RECEPTION
+ELSEIF RESULT == 2 && TIME == 0
+	CALL WORK_NORMAL
+ELSEIF RESULT == 3 && T >= 1
+	CALL WORK_SPECIAL
+ELSEIF RESULT == 4
+	CALL YUUKAKU_LABO
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;SIF RESULT == 999
+;	GOTO INPUT_LOOP
+
+RETURN 0
+
+;-----------------------------------------------------------
+;接待について
+;-----------------------------------------------------------
+@WORK_RECEPTION
+
+PRINTFORML (現在の貢献度：{EXP:MASTER:貢献度})
+
+;接待可能なキャラの判定
+A = 0
+REPEAT CHARANUM
+	;主人は除外
+	SIF COUNT == 0
+		CONTINUE
+	;労役中だと不可
+	SIF TIME == 1 && CFLAG:COUNT:労役中のフラグ != 0
+		CONTINUE
+	;売却可でないと不可
+	SIF CFLAG:COUNT:売却助手可能 == 0
+		CONTINUE
+	;体力が500未満だと不可
+	SIF BASE:COUNT:体力 < 500
+		CONTINUE
+	;反発刻印が付いていると不可
+	SIF MARK:COUNT:反発刻印 >= 1
+		CONTINUE
+	;従順と欲望の合計値が8以下だと不可
+	SIF ABL:COUNT:信頼 + ABL:COUNT:欲望 < 8
+		CONTINUE
+	;臨月・育児中だと不可
+	SIF CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠	
+		CONTINUE
+	SIF TALENT:COUNT:育児中
+		CONTINUE
+	;素質【オトコ】が付いていると不可
+	SIF TALENT:COUNT:オトコ
+		CONTINUE
+
+	A += 1
+REND
+
+IF A == 0
+	PRINTFORML 接待を行える奴隷がいません
+	WAIT
+	RETURN 999
+ENDIF
+
+$INPUT_LOOP_1
+;以下接待させるかの最終選択
+PRINTFORML 奴隷接待を引き受けると、このターンの調教は一切できません
+PRINTFORML また、不利な条件の接待であっても必ず引き受けなければなりません
+PRINTFORML 接待の準備を行いますか？
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+INPUT
+
+IF RESULT == 0
+	CALL RECEPTION_MAIN
+ELSEIF RESULT == 1
+	RETURN 999
+ELSE
+	GOTO INPUT_LOOP_1
+ENDIF
+
+RETURN 1
+
+;-----------------------------------------------------------
+;通常営業の営業内容を決定します
+;-----------------------------------------------------------
+@WORK_NORMAL
+
+$INPUT_LOOP_0
+
+DRAWLINE
+PRINTL 誰の営業状況を変更しますか？
+CALL LIFE_LIST_NEW,LL_MODE_娼館
+IF RESULT == COMMAND_GO_BACK
+	RETURN COMMAND_GO_BACK
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_0
+ENDIF
+
+;以下営業させられる条件
+;主人だと不可
+IF RESULT == MASTER
+	PRINTL 主人は営業を行えません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;売却可でないと不可
+IF CFLAG:RESULT:売却助手可能 == 0
+	PRINTL 調教不足です。営業させるにはもっと育ててください
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;体力が500未満だと不可
+IF BASE:RESULT:体力 < 500
+	PRINTL 衰弱して、とても営業を行えるような状態ではありません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;反発刻印2以上が付いていると不可
+IF MARK:RESULT:反発刻印 >= 2
+	PRINTL 反発感情が強く、営業を行なえません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;従順と欲望の合計値が6以下だと不可
+B = ABL:RESULT:信頼
+B += ABL:RESULT:欲望
+IF B < 6
+	PRINTL 能力不足です。営業をさせるにはもっと育ててください
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;臨月・育児中だと不可
+IF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+	PRINTL 身重で、とても営業を行えるような状態ではありません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+IF TALENT:RESULT:育児中
+	PRINTL 育児中のため、営業を行えません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;素質【オトコ】が付いていると不可
+;IF TALENT:RESULT:オトコ
+;	PRINTL 残念ながら、男娼には未対応です
+;	WAIT
+;	GOTO INPUT_LOOP_0
+;ENDIF
+
+TARGET = RESULT
+
+;V使用不可フラグのチェック
+;オトコである
+IF TALENT:オトコ
+	CFLAG:営業でＶ使用不能フラグ = 1
+;貞操帯着用
+ELSEIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	CFLAG:営業でＶ使用不能フラグ = 1
+ELSE
+	CFLAG:営業でＶ使用不能フラグ = 0
+ENDIF
+
+;以下営業内容の選択
+
+$INPUT_LOOP_1
+
+DRAWLINE
+PRINTFORML %CALLNAME:TARGET%にどんな通常営業をさせますか？
+DRAWLINE
+;会話営業・奉仕営業は条件なしで実行可能
+SIF CFLAG:労役中のフラグ != 0
+	PRINTL  [0] - 通常営業させない
+PRINTL  [1] - 会話営業
+PRINTL  [2] - 奉仕営業
+;Ａ営業の条件：Ａ感覚が3以上かつ、屈服刻印が2以上で個室拡張済み
+IF MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
+	IF TALENT:アナル処女
+		PRINTL  [3] - Ａ営業 (アナル処女)
+	ELSE
+		PRINTL  [3] - Ａ営業
+	ENDIF
+ENDIF
+;Ｖ営業の条件：オトコでなく処女でなくかつ、Ｖ感覚が3以上または娼婦持ちかつ、屈服刻印2以上で個室拡張済み
+IF TALENT:オトコ == 0 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
+	;貞操帯を付けているとダメ
+	IF CFLAG:特別コスチュームのタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
+		IF TALENT:処女
+			PRINTL  [4] - Ｖ営業 (処女)
+		ELSE
+			PRINTL  [4] - Ｖ営業
+		ENDIF
+	ENDIF
+ENDIF
+;ＳＭ営業の条件：オトコでなく、技巧が3以上かつ、屈服刻印が3以上で、個室とＳＭグッズ拡張済み
+IF TALENT:オトコ == 0 && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:娼館拡張 & 1) && (FLAG:娼館拡張 & 2)
+	;貞操帯を付けているとダメ
+	SIF CFLAG:特別コスチュームのタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
+		PRINTL  [5] - ＳＭ営業	
+ENDIF
+;出張営業の条件：オトコでなく、常連客が付いており、護衛を拡張済み
+IF TALENT:オトコ == 0 && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
+	;貞操帯を付けているとダメ
+	SIF CFLAG:特別コスチュームのタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
+		PRINTL  [6] - 出張営業
+ENDIF
+IF CFLAG:労役中のフラグ >= 3
+	IF CFLAG:労役でコンドーム使用
+		PRINTL  [9] - コンドームを使用させない
+	ELSE
+		PRINTL  [9] - コンドームを使用させる
+	ENDIF
+ENDIF
+PRINTFORML  [10] - 労役妊娠回避 (\@ CFLAG:労役妊娠回避 ? ON # OFF \@)
+DRAWLINE
+PRINTL  [999] - 戻る
+INPUT
+
+IF RESULT == 999
+	GOTO INPUT_LOOP_0
+ELSEIF RESULT == 0
+	PRINTFORML 《%NAME:TARGET%に通常営業をやめさせます》
+	WAIT
+	CFLAG:労役中のフラグ = 0
+	CFLAG:労役でコンドーム使用 = 0
+ELSEIF RESULT == 1
+	PRINTFORML 《%NAME:TARGET%を地元の酒場で会話営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 1
+	CFLAG:労役でコンドーム使用 = 0
+ELSEIF RESULT == 2
+	IF (FLAG:娼館拡張 & 32) == 0
+		PRINTFORML 《%NAME:TARGET%に奉仕営業で稼がせます》
+		WAIT
+		CFLAG:労役中のフラグ = 2
+		CFLAG:労役でコンドーム使用 = 0
+	ELSE
+		CALL SOUP_WORK
+	ENDIF
+ELSEIF RESULT == 3 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1)
+	PRINTFORML 《%NAME:TARGET%にＡ営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 3
+ELSEIF RESULT == 4 && TALENT:オトコ == 0 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) != 0
+	SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+		GOTO INPUT_LOOP_1
+	PRINTFORML 《%NAME:TARGET%にＶ営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 4
+ELSEIF RESULT == 5 && TALENT:オトコ == 0 && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:娼館拡張 & 1) != 0 && (FLAG:娼館拡張 & 2) != 0
+	SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+		GOTO INPUT_LOOP_1
+	PRINTFORML 《%NAME:TARGET%にＳＭ営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 5
+ELSEIF RESULT == 6 && TALENT:オトコ == 0 && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
+	SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+		GOTO INPUT_LOOP_1
+	PRINTFORML 《%NAME:TARGET%に常連客への出張営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 6
+ELSEIF RESULT == 10
+	CFLAG:労役妊娠回避 = !CFLAG:労役妊娠回避
+	IF CFLAG:TARGET:労役妊娠回避
+		PRINTFORML 《%NAME:TARGET%に自動的に営業内容を調節して労役妊娠回避させます》
+	ELSE
+		PRINTFORML 《自動調節させないことにしました》
+	ENDIF
+	WAIT
+ELSEIF RESULT == 9 && CFLAG:労役中のフラグ >= 3
+	CFLAG:TARGET:労役でコンドーム使用 = 1 - CFLAG:TARGET:労役でコンドーム使用
+	IF CFLAG:TARGET:労役でコンドーム使用
+		PRINTFORML 《コンドームを使用させることにしました》
+	ELSE
+		PRINTFORML 《コンドームを使用させないことにしました》
+	ENDIF
+	WAIT
+ENDIF
+GOTO INPUT_LOOP_1
+
+@SOUP_WORK
+PRINTL [0]  - 通常奉仕営業
+PRINTL [1]  - ソーププレイ
+PRINTL [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 999
+	RETURN 999
+ELSEIF RESULT == 0
+	PRINTFORML 《%NAME:TARGET%に奉仕営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 2
+	CFLAG:労役でコンドーム使用 = 0
+ELSEIF RESULT == 1
+	PRINTFORML 《%NAME:TARGET%にソープ営業で稼がせます》
+	WAIT
+	CFLAG:労役中のフラグ = 7
+	CFLAG:労役でコンドーム使用 = 0
+ELSE 
+	GOTO INPUT_LOOP
+ENDIF
+
+
+;-----------------------------------------------------------
+;特殊営業の営業内容を決定します
+;-----------------------------------------------------------
+@WORK_SPECIAL
+
+;特殊営業フラグ初期化
+FLAG:特殊営業フラグ = 0
+;参加可能人数
+M = 0
+
+;特殊営業内容の選択
+
+$INPUT_LOOP_01
+
+DRAWLINE
+PRINTFORML どんな特殊営業を行いますか？
+
+SIF (FLAG:娼館拡張 & 128) != 0
+	PRINTL  [1] - 屋台営業
+SIF (FLAG:娼館拡張 & 16) != 0 && (FLAG:娼館拡張 & 8) != 0
+	PRINTL  [2] - コンサート
+SIF (FLAG:娼館拡張 & 8) != 0
+	PRINTL  [3] - ストリップショー
+SIF (FLAG:娼館拡張 & 8) != 0 && FLAG:特殊営業解禁 == 1
+	PRINTL  [4] - 乱交パーティー
+PRINTL  [9] - 公衆便所プレイ
+PRINTL  [10]- 処女オークション
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 999
+	RETURN 999
+ELSEIF RESULT == 1 && (FLAG:娼館拡張 & 128) != 0
+	PRINTFORMW 屋台で奴隷に食事を作らせて売りさばきます
+	PRINTFORM 誰を屋台営業に参加させますか？
+	FLAG:特殊営業フラグ = 1
+	M = 4
+ELSEIF RESULT == 2 && (FLAG:娼館拡張 & 8) != 0 && (FLAG:娼館拡張 & 16) != 0
+	PRINTFORMW 人気のある奴隷にステージで歌を歌わせて入場料を稼ぎます
+	PRINTFORM 誰をコンサートに参加させますか？
+	FLAG:特殊営業フラグ = 2
+	M = 3
+ELSEIF RESULT == 3 && (FLAG:娼館拡張 & 8) != 0
+	PRINTFORMW 奴隷の裸や自慰行為の様子を見せ物にして金を取ります
+	PRINTFORM 誰をストリップショーに参加させますか？
+	FLAG:特殊営業フラグ = 3
+	M = 3
+ELSEIF RESULT == 4 && (FLAG:娼館拡張 & 8) != 0 && FLAG:特殊営業解禁 == 1
+	PRINTFORMW 奴隷を複数の相手と交わらせる秘密パーティーを開きます
+	PRINTFORM 誰を乱交パーティーに参加させますか？
+	FLAG:特殊営業フラグ = 4
+	M = 6
+ELSEIF RESULT == 9
+	PRINTFORMW 奴隷を公共の便所として行きずりの相手に犯させます
+	PRINTFORM 誰を公衆便所プレイに参加させますか？
+	FLAG:特殊営業フラグ = 9
+	M = 10
+ELSEIF RESULT == 10
+	PRINTFORMW 処女の奴隷の初夜権を競売に掛けます
+	PRINTFORM 誰の処女をオークションにかけますか？
+	FLAG:特殊営業フラグ = 10
+	M = 1
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+CALL WORK_SPECIAL_SELECT
+
+SIF FLAG:特殊営業参加人数 == 0
+	RESTART
+
+$INPUT_LOOP_02
+DRAWLINE
+REPEAT CHARANUM
+	SIF COUNT == 0
+		CONTINUE
+	SIF CFLAG:COUNT:130 != 1
+		CONTINUE
+	TARGET = COUNT
+	PRINTFORM  %NAME:TARGET% / 
+	CALL LIFE_BAR
+REND
+DRAWLINE
+IF FLAG:特殊営業フラグ == 1
+	S = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF ABL:COUNT:料理技能 >= 1
+			S = 1
+	REND
+	IF S
+		PRINTL 以上のメンバーで屋台営業を行いますか？
+	ELSE
+		PRINTW 屋台営業には厨房担当として料理技能１以上の奴隷が最低一人必要です
+		RESTART
+	ENDIF
+ELSEIF FLAG:特殊営業フラグ == 2
+	S = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF ABL:COUNT:歌唱技能 >= 1
+			S = 1
+	REND
+	IF S
+		PRINTL 以上のメンバーでコンサートを行いますか？
+	ELSE
+		PRINTW コンサートにはリードボーカルとして歌唱技能１以上の奴隷が最低一人必要です
+		RESTART
+	ENDIF
+ELSEIF FLAG:特殊営業フラグ == 3
+	PRINTL 以上のメンバーでストリップショーを行いますか？
+ELSEIF FLAG:特殊営業フラグ == 8
+	PRINTL 以上のメンバーで乱交パーティーを行いますか？
+ELSEIF FLAG:特殊営業フラグ == 9
+	PRINTL 以上のメンバーで公衆便所プレイを行いますか？
+ELSEIF FLAG:特殊営業フラグ == 10
+	PRINTL 上の奴隷の処女をオークションにかけますか？
+ELSE
+	PRINTL 以上のメンバーで特殊営業を行いますか？
+ENDIF
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+INPUT
+IF RESULT == 1
+	RESTART
+ELSEIF RESULT != 0
+	GOTO INPUT_LOOP_02
+ENDIF
+
+;参加キャラから営業フラグ外す。ついでに参加不能フラグの解除とＶ使用不可フラグのチェック
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == -1
+		CFLAG:COUNT:130 = 0
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	CFLAG:COUNT:労役中のフラグ = 0
+
+	;V使用不可フラグのチェック
+	;オトコである
+	IF TALENT:COUNT:オトコ
+		CFLAG:COUNT:営業でＶ使用不能フラグ = 1
+	;貞操帯着用
+	ELSEIF CFLAG:COUNT:特別コスチュームのタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)
+		CFLAG:COUNT:営業でＶ使用不能フラグ = 1
+	ELSE
+		CFLAG:COUNT:営業でＶ使用不能フラグ = 0
+	ENDIF
+
+REND
+
+;屋台営業
+IF FLAG:特殊営業フラグ == 1
+	CALL LUNCH_STALL
+;コンサート
+ELSEIF FLAG:特殊営業フラグ == 2
+	CALL CONCERT
+;ストリップショー
+ELSEIF FLAG:特殊営業フラグ == 3
+	CALL STRIPTEASE
+;乱交パーティー
+ELSEIF FLAG:特殊営業フラグ == 4
+	CALL SEX_ORGY
+;公衆便所プレイ
+ELSEIF FLAG:特殊営業フラグ == 9
+	CALL KB_PLAY
+;処女オークション
+ELSEIF FLAG:特殊営業フラグ == 10
+	CALL V_AUCTION
+ENDIF
+
+;-------------------------------------------------
+;特殊営業参加キャラ選択
+;-------------------------------------------------
+@WORK_SPECIAL_SELECT
+;参加人数クリア
+FLAG:特殊営業参加人数 = 0
+;参加キャラのフラグクリア
+REPEAT CHARANUM
+	CFLAG:COUNT:130 = -1
+REND
+
+$INPUT_LOOP_01
+
+S = 0
+
+SIF M > 1
+	PRINTFORM ({FLAG:特殊営業参加人数}/{M}人)
+PRINTL 
+DRAWLINE
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;売却可でないと不可
+	SIF CFLAG:COUNT:売却助手可能 == 0
+		CONTINUE
+	;体力が800未満だと不可
+	SIF BASE:COUNT:体力 < 800
+		CONTINUE
+	;反発刻印2以上が付いていると不可
+	SIF MARK:COUNT:反発刻印 >= 2
+		CONTINUE
+	;従順と欲望の合計値が8以下だと不可
+	SIF ABL:COUNT:信頼 + ABL:COUNT:欲望 < 8
+		CONTINUE
+	;臨月のキャラは排除
+	SIF CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠
+		CONTINUE
+	;育児中だと不可
+	SIF TALENT:COUNT:育児中
+		CONTINUE
+	;午後の場合営業中のキャラは不可
+	SIF TIME == 1 && CFLAG:COUNT:労役中のフラグ
+		CONTINUE
+	;ストリップショーなら露出癖2以上必要
+	SIF FLAG:特殊営業フラグ == 3 && ABL:COUNT:露出癖 < 2
+		CONTINUE
+	;乱交パーティーなら従順4以上欲望4以上必要
+	SIF FLAG:特殊営業フラグ == 4 && (ABL:COUNT:信頼 < 4 || ABL:COUNT:欲望 < 4)
+		CONTINUE
+	;公衆便所プレイなら従順4以上欲望4以上露出癖3以上必要
+	SIF FLAG:特殊営業フラグ == 9 && (ABL:COUNT:信頼 < 4 || ABL:COUNT:欲望 < 4 || ABL:COUNT:露出癖 < 3)
+		CONTINUE
+	;処女オークションは素質:処女かつ従順3以上必要で貞操帯不可
+	SIF FLAG:特殊営業フラグ == 10 && ((TALENT:COUNT:処女 == 0 || ABL:COUNT:信頼 < 4) || (CFLAG:COUNT:特別コスチュームのタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)))
+		CONTINUE
+	PRINTFORM  [{COUNT}] %NAME:COUNT% 
+	IF CFLAG:COUNT:130 == 1
+		PRINT  (選択済)
+	ELSEIF CFLAG:COUNT:労役中のフラグ
+		IF CFLAG:COUNT:労役中のフラグ == 1
+			PRINT <会話営業中>
+		ELSEIF CFLAG:COUNT:労役中のフラグ == 2 || CFLAG:COUNT:労役中のフラグ == 7
+			PRINT <奉仕営業中>
+		ELSEIF CFLAG:COUNT:労役中のフラグ == 3
+			PRINT <Ａ営業中>
+		ELSEIF CFLAG:COUNT:労役中のフラグ == 4
+			PRINT <Ｖ営業中>
+		ELSEIF CFLAG:COUNT:労役中のフラグ == 5
+			PRINT <ＳＭ営業中>
+		ELSEIF CFLAG:COUNT:労役中のフラグ == 6
+			PRINT <出張営業中>
+		ELSEIF CFLAG:COUNT:労役中のフラグ == 7
+			PRINT 《ソープ営業中》
+		ELSE
+			PRINT <営業中>
+		ENDIF
+	ENDIF
+	PRINTL 
+	SIF  CFLAG:COUNT:130 == -1
+		CFLAG:COUNT:130 = 0
+	S += 1
+REND
+SIF S == 0
+	PRINTL  ※この特殊営業に参加可能な奴隷はいません
+DRAWLINE
+PRINTFORML  [999] - 選択終了
+
+INPUT
+
+IF RESULT == 999
+	RETURN 1
+ELSEIF RESULT == 0
+	GOTO INPUT_LOOP_01
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_01
+ELSEIF CFLAG:RESULT:130 == -1
+	GOTO INPUT_LOOP_01
+ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ
+	PRINTFORML %CALLNAME:RESULT%の営業状況は翌日まで変更できません
+	WAIT
+	GOTO INPUT_LOOP_01
+;選べるのはM人まで
+ELSEIF FLAG:特殊営業参加人数 >= M && CFLAG:RESULT:130 == 0
+	PRINTFORMW 参加できるのは{M}人までです
+	GOTO INPUT_LOOP_01
+ENDIF
+
+IF CFLAG:RESULT:130 == 0
+	CFLAG:RESULT:130 = 1
+	FLAG:特殊営業参加人数 += 1
+	SIF M == 1
+		RETURN 1
+ELSEIF CFLAG:RESULT:130 == 1
+	CFLAG:RESULT:130 = 0
+	FLAG:特殊営業参加人数 -= 1
+ENDIF
+
+GOTO INPUT_LOOP_01
+
+;-----------------------------------------------------------
+;施設拡張についてあれこれ
+;-----------------------------------------------------------
+@YUUKAKU_LABO
+
+$INPUT_LOOP
+
+A = 0
+B = 0
+
+DRAWLINE
+PRINTL どの施設を拡張しますか？
+PRINTFORML 《運営資金 {MONEY}ポイント》(現在の貢献度：{EXP:MASTER:貢献度})
+DRAWLINE
+SIF (FLAG:娼館拡張 & 1) == 0
+	PRINTL  [0] - 個室　　　　　　(3000ポイント)
+SIF (FLAG:娼館拡張 & 2) == 0 && EXP:MASTER:貢献度 >= 10
+	PRINTL  [1] - ＳＭグッズ　　　(1500ポイント)
+SIF (FLAG:娼館拡張 & 4) == 0 && EXP:MASTER:貢献度 >= 30
+	PRINTL  [2] - 護衛　　　　　　(10000ポイント)
+SIF (FLAG:娼館拡張 & 1) != 0 && (FLAG:娼館拡張 & 32) == 0 && EXP:MASTER:貢献度 >= 50
+	PRINTL  [3] - 浴室　　　　　　(30000ポイント)
+SIF (FLAG:娼館拡張 & 128) == 0 && EXP:MASTER:貢献度 >= 60
+	PRINTL  [4] - 屋台　　　　　　(80000ポイント)
+SIF (FLAG:娼館拡張 & 8) == 0 && EXP:MASTER:貢献度 >= 80
+	PRINTL  [5] - 多目的ホール　　(100000ポイント)
+SIF (FLAG:娼館拡張 & 8) != 0 && (FLAG:娼館拡張 & 16) == 0 && EXP:MASTER:貢献度 >= 100
+	PRINTL  [6] - 音響設備　　　　(50000ポイント)
+SIF (FLAG:娼館拡張 & 8) != 0 && FLAG:警備員人数 < 10 && EXP:MASTER:貢献度 >= 120
+	PRINTL  [7] - 警備員　　　　　(50000ポイント)
+DRAWLINE
+PRINTL  [99] - 拡張状況確認
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+IF RESULT == 999
+	RETURN 999
+ELSEIF RESULT == 99
+	CALL FACILITIES_CHECK
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 0 && (FLAG:娼館拡張 & 1) == 0
+	A = 3000
+	B = 1
+ELSEIF RESULT == 1 && (FLAG:娼館拡張 & 2) == 0
+	A = 1500
+	B = 2
+ELSEIF RESULT == 2 && (FLAG:娼館拡張 & 4) == 0 && EXP:MASTER:貢献度 >= 30
+	A = 10000
+	B = 4
+ELSEIF RESULT == 3 && (FLAG:娼館拡張 & 1) != 0 && (FLAG:娼館拡張 & 32) == 0 && EXP:MASTER:貢献度 >= 50
+	A = 30000
+	B = 32
+ELSEIF RESULT == 4 && (FLAG:娼館拡張 & 128) == 0 && EXP:MASTER:貢献度 >= 60
+	A = 80000
+	B = 128
+ELSEIF RESULT == 5 && (FLAG:娼館拡張 & 8) == 0 && EXP:MASTER:貢献度 >= 80
+	A = 100000
+	B = 8
+ELSEIF RESULT == 6 && (FLAG:娼館拡張 & 8) != 0 && (FLAG:娼館拡張 & 16) == 0 && EXP:MASTER:貢献度 >= 100
+	A = 50000
+	B = 16
+ELSEIF RESULT == 7 && (FLAG:娼館拡張 & 8) != 0 && FLAG:警備員人数 < 10 && EXP:MASTER:貢献度 >= 120
+	A = 50000
+	;ビットでまとめてチェックすることを想定し、一応これにもビットを割りあてておく
+	B = 64
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+R = RESULT
+
+;助手の中の商売人をチェック
+M = 0
+REPEAT CHARANUM
+	IF TALENT:COUNT:交渉上手 && ISASSI:COUNT && ABL:COUNT:話術
+		SIF ABL:COUNT:話術 > ABL:M:話術
+			M = COUNT
+	ENDIF
+REND
+
+IF M
+	A *= 100 - (ABL:M:話術 * 5)
+	A /= 100
+	PRINTFORML %NAME:M%の交渉により、値段を{A}ポイントに値切りました
+	WAIT
+ENDIF
+
+IF MONEY < A
+	PRINTL 必要なポイントが不足しています
+	WAIT
+	GOTO INPUT_LOOP
+ENDIF
+
+MONEY -= A
+FLAG:娼館拡張 |= B
+
+IF R == 0
+	PRINTL 防音設備の整った個室を増設しました
+	PRINTL Ａ営業とＶ営業が可能になります
+	WAIT
+ELSEIF R == 1
+	PRINTL 各種ＳＭグッズを入荷しました
+	PRINTL ＳＭ営業が可能になります
+	WAIT
+ELSEIF R == 2
+	PRINTL 運転手兼護衛を雇用しました
+	PRINTL 出張営業が可能になります
+	WAIT
+ELSEIF R == 3
+	PRINTL 各個室に浴室を設置しました
+	PRINTL 奉仕営業でソーププレイを行うことが出来ます
+	WAIT
+ELSEIF R == 4
+	PRINTFORML 客に食事を出すための屋台を購入しました
+	PRINTL 奴隷に料理を売らせることが出来ます
+	WAIT
+ELSEIF R == 5
+	PRINTL 多目的ホールを建てました
+	PRINTL 特別な営業を行うことが出来ます
+	WAIT
+ELSEIF R == 6
+	PRINTL 音響設備を整えました
+	PRINTL 様々なショーなどを行うことが出来ます
+	WAIT
+ELSEIF R == 7
+	FLAG:警備員人数 += 1
+	PRINTFORML 専属の警備員を雇用しました({FLAG:警備員人数}人目)
+	PRINTL ショーなどの際の従業員の安全性が高まります
+	WAIT
+ENDIF
+
+GOTO INPUT_LOOP
+
+@FACILITIES_CHECK
+DRAWLINE
+PRINTL どれを見ますか？
+DRAWLINE
+SIF FLAG:娼館拡張 & 1
+	PRINTL [0] 個室
+SIF FLAG:娼館拡張 & 2
+	PRINTL [1] ＳＭグッズ
+SIF FLAG:娼館拡張 & 4
+	PRINTL [2] 護衛
+SIF FLAG:娼館拡張 & 32
+	PRINTL [3] 浴室
+SIF FLAG:娼館拡張 & 128
+	PRINTL [4] 屋台
+SIF FLAG:娼館拡張 & 8
+	PRINTL [5] 多目的ホール
+SIF FLAG:娼館拡張 & 16
+	PRINTL [6] 音響設備
+SIF FLAG:娼館拡張 & 64
+	PRINTFORML [7] 警備員(現在{FLAG:警備員人数}/10人)
+DRAWLINE
+PRINTL [999] - 戻る
+
+$INPUT_LOOP
+INPUT
+IF RESULT == 999
+	RETURN 999
+ELSEIF RESULT == 0 && FLAG:娼館拡張 & 1
+	PRINTL ＜個室＞
+	PRINTL より性的なサービスを行うために必要になる防音設備の整った個室
+	PRINTL 通常営業メニューでＡ営業とＶ営業が可能になる
+ELSEIF RESULT == 1 && FLAG:娼館拡張 & 2
+	PRINTL ＜ＳＭグッズ＞
+	PRINTL マニアも納得の各種取り揃えられたＳＭグッズ
+	PRINTL 通常営業メニューでＳＭ営業が可能になる
+ELSEIF RESULT == 2 && FLAG:娼館拡張 & 4
+	PRINTL ＜護衛＞
+	PRINTL 従業員の送迎を担当する護衛兼運転手
+	PRINTL 通常営業メニューで出張営業が可能になる
+ELSEIF RESULT == 3 && FLAG:娼館拡張 & 32
+	PRINTL ＜浴室＞
+	PRINTL 個室ごとに作られた広々とした浴室
+	PRINTL 通常営業メニューの奉仕営業でソーププレイが可能になる
+ELSEIF RESULT == 4 && FLAG:娼館拡張 & 128
+	PRINTL ＜屋台＞
+	PRINTL 奴隷に食事を作らせて客に提供するための屋台
+	PRINTL 特殊営業メニューで屋台営業が可能になる
+ELSEIF RESULT == 5 && FLAG:娼館拡張 & 8
+	PRINTL ＜多目的ホール＞
+	PRINTL 様々なショーを行うことができる設備と広さがあるホール
+	PRINTL 特殊営業メニューで行える営業の種類が増える
+ELSEIF RESULT == 6 && FLAG:娼館拡張 & 16
+	PRINTL ＜音響設備＞
+	PRINTL ホール中に声を届かせることができるようになる設備
+	PRINTL 特殊営業メニューでコンサートが可能になる
+ELSEIF RESULT == 7 && FLAG:娼館拡張 & 64
+	PRINTL ＜警備員＞
+	PRINTL 主に多目的ホールでのショー開催時に配置される警備員
+	PRINTL 雇用人数に応じて従業員の安全性が高まる(最大10人)
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+WAIT
+
+RESTART
+

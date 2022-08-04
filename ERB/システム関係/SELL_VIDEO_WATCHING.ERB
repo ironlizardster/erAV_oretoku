@@ -1,0 +1,700 @@
+﻿;-------------------------------------------------
+;ビデオ鑑賞
+;-------------------------------------------------
+@WATCHING_VIDEO
+$INPUT_LOOP_01
+PRINTFORML 調教中に撮影したビデオを鑑賞しますか？
+PRINTFORML  [0] - はい
+PRINTFORML  [1] - いいえ
+
+INPUT
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT != 0
+	GOTO INPUT_LOOP_01
+ENDIF
+
+$INPUT_LOOP_02
+PRINTFORML 誰と一緒に鑑賞しますか？
+DRAWLINE
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	PRINTFORM  [{COUNT}] %NAME:COUNT% 
+	SIF COUNT == TARGET
+		PRINT （今回の調教対象）
+	PRINTL 
+REND
+DRAWLINE
+PRINTL  [999] - やめる
+
+INPUT
+IF RESULT == 999
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_02
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP_02
+ENDIF
+
+H = RESULT
+
+IF H == TARGET
+	PRINTFORML %CALLNAME:TARGET%と一緒に、調教中に撮影したビデオを鑑賞した
+ELSE
+	PRINTFORML %CALLNAME:H%と一緒に、%CALLNAME:TARGET%の調教ビデオを鑑賞した 
+ENDIF
+WAIT
+
+;親族関係の判定
+PLAYER = H
+TFLAG:近親相姦 = 0
+CALL INCEST
+PLAYER = MASTER
+
+;相性判定
+R = NO:TARGET
+
+PRINT 画面に映し出された
+
+IF H == TARGET
+	PRINT 自分の
+ELSEIF TFLAG:近親相姦 == 1 && TALENT:オトコ
+	PRINT 息子の
+ELSEIF TFLAG:近親相姦 == 1 && TALENT:オトコ == 0
+	PRINT 娘の
+ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ
+	PRINT 父親の
+ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0
+	PRINT 母親の
+ELSEIF TFLAG:近親相姦 == 3 && TALENT:オトコ
+	PRINT 弟の
+ELSEIF TFLAG:近親相姦 == 3 && TALENT:オトコ == 0
+	PRINT 妹の
+ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ
+	PRINT 兄の
+ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0
+	PRINT 姉の
+ELSE
+	PRINTFORM %CALLNAME:TARGET%の
+ENDIF
+
+PRINT 痴態
+
+IF (TALENT:H:露出狂 || TALENT:H:マゾ || ABL:H:露出癖 >= 5) && TARGET == H
+	PRINTFORMW を、%CALLNAME:H%は蕩けそうな表情で凝視している……
+ELSEIF ABL:H:露出癖 >= 3 && TARGET == H
+	PRINTFORMW を、%CALLNAME:H%は羞恥に頬を染めつつもちょっと自慢そうに見ている……
+ELSEIF ABL:H:信頼 >= 3
+	PRINTFORMW を、%CALLNAME:H%は食い入るように見つめている
+ELSEIF TALENT:H:嫉妬 && ABL:H:信頼 >= 1 && TARGET != H
+	PRINTFORML を、%CALLNAME:H%はふくれっ面をしながら見ている
+	PRINTFORMW %CALLNAME:MASTER%が他の相手と絡んでいるのが気に入らないようだ
+ELSEIF TFLAG:近親相姦 != 0 || RELATION:H:R >= 150
+	PRINTFORMW を目に入れまいと、%CALLNAME:H%はじっと俯き続けている……
+ELSEIF TALENT:H:感情乏しい
+	PRINTFORMW を、%CALLNAME:H%は無表情のまま見ている……
+ELSEIF TALENT:H:クール
+	PRINTFORMW を、%CALLNAME:H%は気乗りのしない様子で見ている……
+ELSEIF TALENT:H:小悪魔
+	PRINTFORMW を、%CALLNAME:H%は興味深げに頷きながら見ている……
+ELSEIF TALENT:H:好奇心
+	PRINTFORMW を、%CALLNAME:H%は顔を真っ赤にしながらもちらちらと横目で見ている……
+ELSE
+	PRINTFORMW から、%CALLNAME:H%は顔を真っ赤にして目を背けている……
+ENDIF
+
+IF TALENT:恋心 || ABL:信頼 >= 4
+	PRINTFORMW %CALLNAME:H%は%CALLNAME:MASTER%に腕を絡めて、そっと肩を寄せてきた……
+ENDIF
+
+IF ABL:自慰中毒 >= 3
+	PRINTFORMW やがて%CALLNAME:H%は画面を見つめながら、指を伸ばして自慰を始めた……
+ENDIF
+
+TFLAG:近親相姦 = 0
+R = 0
+
+PRINTL 
+
+@WATCHING_VIDEO2
+F = FLAG:撮影開始時状況
+
+PRINT ビデオは
+
+;撮影開始時の環境
+IF FLAG:撮影開始時状況 & 1
+	PRINT 屋外の風景
+ELSEIF FLAG:撮影開始時状況 & 2
+	PRINT シャワールーム
+ELSE
+	PRINT いつもの調教室
+ENDIF
+PRINTW から始まった。
+
+PRINTFORM モニターに映し出された%CALLNAME:TARGET%は、
+;撮影開始時の格好
+IF FLAG:撮影開始時状況 & 4
+	PRINTFORM 素肌にエプロンという姿で
+ELSEIF FLAG:撮影開始時状況 & 8
+	PRINTFORM 縄で縛り上げられた姿で
+ELSE
+	PRINTFORM いつもの姿で
+ENDIF
+SIF TFLAG:苦痛刻印 & 512
+	PRINTFORM シャワーを浴びながら
+IF (FLAG:撮影開始時状況 & 16) && (FLAG:撮影開始時状況 & 32)
+	PRINTFORM 、膣とアナルにバイブを
+ELSEIF FLAG:撮影開始時状況 & 16
+	PRINTFORM 、膣にバイブを
+ELSEIF FLAG:撮影開始時状況 & 32
+	PRINTFORM 、肛門にバイブを
+ENDIF
+IF FLAG:撮影開始時状況 & 64
+	PRINTFORML 、肛門にプラグを差し込まれ脂汗を流している
+ELSEIF (FLAG:撮影開始時状況 & 64) == 0 && ((FLAG:撮影開始時状況 & 16) || (FLAG:撮影開始時状況 & 32))
+	PRINTFORML 差し込まれている
+ELSE
+	PRINTFORML 画面に現れた
+ENDIF
+IF FLAG:撮影開始時状況 & 128
+	PRINTFORML 薄汚いノラ犬が%CALLNAME:TARGET%の体を舐めまわしている……
+ELSEIF FLAG:撮影開始時状況 & 256
+	PRINTFORML %CALLNAME:TARGET%の体は異形の触手に巻き上げられている……
+ENDIF
+
+WAIT
+
+U = 0
+SIF FLAG:撮影内容1 >= 1000
+	U = 1
+
+REPEAT TFLAG:ビデオ撮影回数
+	A = COUNT + 11
+
+	;調教者の変更
+	IF FLAG:A >= 1000
+		SIF U == 0 && ASSI > 0 && T != 64 && T != 66 && T != 68 && T != 70 && T != 71
+			PRINTFORML %CALLNAME:MASTER%に呼ばれて、%CALLNAME:ASSI%が現れた。
+		U = 1
+	ELSE
+		SIF U == 1 && ASSI > 0 && T != 64 && T != 66 && T != 68 && T != 70 && T != 71
+			PRINTFORML %CALLNAME:MASTER%が現れた。
+		U = 0
+	ENDIF
+
+	T = FLAG:A % 1000
+
+	;着脱系の処理
+	;野外プレイ
+	IF T == 54
+		IF F & 1
+			PRINTFORML 画面は調教室に移動した。
+			F -= 1
+		ELSE
+			PRINTFORML 画面は屋外に移動した。
+			F |= 1
+		ENDIF
+	;お風呂場プレイ
+	ELSEIF T == 58
+		IF F & 2
+			PRINTFORML 画面は調教室に移動した。
+			F -= 2
+		ELSE
+			PRINTFORML 画面はシャワールームに移動した。
+			F |= 2
+		ENDIF
+	;新妻プレイ
+	ELSEIF T == 59
+		IF F & 4
+			PRINTFORML %CALLNAME:TARGET%はエプロンを脱ぎ捨てて丸裸になった。
+			F -= 4
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%は素肌の上にエプロンをまとった。
+			F |= 4
+		ENDIF
+	;縄
+	ELSEIF T == 44
+		IF F & 8
+			PRINTFORML %CALLNAME:TARGET%の体は縛めから解放された。
+			F -= 8
+		ELSE
+			IF U
+				PRINTFORM %CALLNAME:ASSI%の手で
+			ELSE
+				PRINTFORM %CALLNAME:MASTER%の手で
+			ENDIF
+			PRINTFORML %CALLNAME:TARGET%の体は荒縄で縛り上げられた。
+			F |= 8
+		ENDIF
+	;バイブ
+	ELSEIF T == 11
+		IF U
+			PRINTFORM %CALLNAME:ASSI%の手で
+		ELSE
+			PRINTFORM %CALLNAME:MASTER%の手で
+		ENDIF
+		IF F & 16
+			PRINTFORML %CALLNAME:TARGET%の膣からバイブが抜き取られた。
+			F -= 16
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%の膣にバイブが差し込まれた。
+			F |= 16
+		ENDIF
+	;アナルバイブ
+	ELSEIF T == 13
+		IF U
+			PRINTFORM %CALLNAME:ASSI%の手で
+		ELSE
+			PRINTFORM %CALLNAME:MASTER%の手で
+		ENDIF
+		IF F & 32
+			PRINTFORML %CALLNAME:TARGET%の肛門からバイブが抜き取られた
+			F -= 32
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%の肛門にバイブが差し込まれた
+			F |= 32
+		ENDIF
+	;浣腸
+	ELSEIF T == 46
+		IF F & 64
+			PRINTFORML 肛門からプラグを抜き取られた%CALLNAME:TARGET%は、大量の汚物をひり出した
+			F -= 64
+		ELSE
+			IF U
+				PRINTFORM %CALLNAME:ASSI%は
+			ELSE
+				PRINTFORM %CALLNAME:MASTER%は
+			ENDIF
+			PRINTFORML %CALLNAME:TARGET%の直腸に大量の浣腸液を注ぎ込み、プラグで栓をした
+			F |= 64
+		ENDIF
+	;獣姦
+	ELSEIF T == 89
+		IF F & 128
+			PRINTFORML ノラ犬は画面外に引き戻されていった
+			F -= 128
+		ELSE
+			PRINTFORML 画面内には薄汚いノラ犬が連れ込まれてきた……
+			F |= 128
+		ENDIF
+	;触手生物
+	ELSEIF T == 100
+		IF F & 256
+			PRINTFORML 触手は吸い込まれるようにのたうち、金属製のケージの中に消えていった
+			F -= 256
+		ELSE
+			PRINTFORML 金属製のケージから不気味な触手が放たれ、たちまち画面一杯に広がった……
+			F |= 256
+		ENDIF
+	;シャワー
+	ELSEIF T == 18
+		IF F & 512
+			PRINTFORML シャワーが止まり、湯気の立つ体からぽたぽたと雫を落とす%CALLNAME:TARGET%が映っている
+			F -= 512
+		ELSE
+			PRINTFORML シャワーの栓がひねられ、%CALLNAME:TARGET%の体に熱い湯が注がれる
+			F |= 512
+		ENDIF
+	;ビデオカメラに向かって行われる行為
+	;両穴オナニーを見る
+	ELSEIF T == 3 && (F & 16) && (F & 32)
+		IF A > 11 && FLAG:(A-1) % 1000 == 3
+			PRINTFORML %CALLNAME:TARGET%はカメラの前で両穴オナニーに耽り続けている……
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%は自分の性器とアナルに差し込まれたバイブを両手で動かし、
+			SIF F & 1
+				PRINT 屋外で人目も憚らず、
+			PRINTFORML ビデオカメラの前で両穴オナニーを始めた
+		ENDIF
+	;バイブオナニーを見る
+	ELSEIF T == 3 && (F & 16)
+		IF A > 11 && FLAG:(A-1) % 1000 == 3
+			PRINTFORML %CALLNAME:TARGET%はカメラの前でバイブオナニーに耽り続けている……
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%は自分の性器に突っ込まれたバイブを使って、
+			SIF F & 1
+				PRINT 屋外で人目も憚らず、
+			PRINTFORML ビデオカメラの前でバイブオナニーを始めた
+		ENDIF
+	;アナルバイブオナニーを見る
+	ELSEIF T == 3 && (F & 32)
+		IF A > 11 && FLAG:(A-1) % 1000 == 3
+			PRINTFORML %CALLNAME:TARGET%はカメラの前でアナルオナニーに耽り続けている……
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%は自分の肛門に突っ込まれたバイブを使って、
+			SIF F & 1
+				PRINT 屋外で人目も憚らず、
+			PRINTFORML ビデオカメラの前でアナルオナニーを始めた
+		ENDIF
+	;シャワーオナニーを見る
+	ELSEIF T == 3 && (F & 512)
+		IF A > 11 && FLAG:(A-1) % 1000 == 3
+			PRINTFORML %CALLNAME:TARGET%はカメラの前でシャワーオナニーに耽り続けている……
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%はシャワーの水流を自分の股間に押し当てて、
+			PRINTFORML ビデオカメラの前でシャワーオナニーを始めた
+		ENDIF
+	;自慰を見る
+	ELSEIF T == 3
+		IF A > 11 && FLAG:(A-1) % 1000 == 3
+			PRINTFORML %CALLNAME:TARGET%はカメラの前でオナニーに耽り続けている……
+		ELSEIF F & 1
+			PRINTFORML %CALLNAME:TARGET%は屋外で人目も憚らず、オナニーを始めた
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%はビデオカメラに向かってオナニーを始めた
+		ENDIF
+	;秘貝開帳を見る
+	ELSEIF T == 7
+		IF A > 11 && FLAG:(A-1) % 1000 == 7
+			PRINTFORML %CALLNAME:TARGET%はカメラの前で性器を晒し続けている……
+		ELSEIF F & 1
+			PRINTFORML %CALLNAME:TARGET%は屋外で人目も憚らず、自分の性器を露出してみせた
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%はビデオカメラに向かって自分の性器を広げてみせた
+		ENDIF
+	;会話する（自己紹介）を見る
+	ELSEIF T == 56
+		IF U
+			PRINTFORM %CALLNAME:ASSI%
+		ELSE
+			PRINTFORM %CALLNAME:MASTER%
+		ENDIF
+		IF TFLAG:ビデオ撮影内容 & 2
+			PRINTFORML によるフレーム外からの質問に応じて、%CALLNAME:TARGET%は自己紹介をした
+		ELSE
+			PRINTFORML から声が掛けられたが、%CALLNAME:TARGET%はカメラから目を背けている
+		ENDIF
+	;COM:放尿を見る
+	ELSEIF T == 85
+		IF A > 11 && FLAG:(A-1) % 1000 == 85
+			PRINTFORML %CALLNAME:TARGET%はカメラの前で放尿を続けている……
+		ELSEIF F & 1
+			PRINTFORML %CALLNAME:TARGET%は屋外で人目も憚らず放尿を始めた
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%はビデオカメラの前で放尿した
+		ENDIF
+	;３Ｐ系行為
+	;COM:３Ｐを見る
+	ELSEIF T == 64
+		IF A > 11 && FLAG:(A-1) % 1000 == 64
+			PRINTW カメラの前で三人の体が絡み続けている……
+		ELSE
+			PRINTFORML 固定されたカメラの前で、%CALLNAME:MASTER%と%CALLNAME:ASSI%と%CALLNAME:TARGET%の三人は三つ巴になって愛しあい始めた……
+		ENDIF
+	;COM:二本フェラを見る
+	ELSEIF T == 66
+		IF A > 11 && FLAG:(A-1) % 1000 == 66
+			PRINTFORML %CALLNAME:TARGET%は二本のペニスをしゃぶり続けている……
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%は、並んで立った%CALLNAME:MASTER%と%CALLNAME:ASSI%のペニスを同時にほお張った
+		ENDIF
+	;COM:ダブルフェラを見る
+	ELSEIF T == 68
+		IF A > 11 && FLAG:(A-1) % 1000 == 68
+			PRINTFORML %CALLNAME:MASTER%のペニスの両側から、二人は舌を這わせ続けている……
+		ELSE
+			PRINTFORML %CALLNAME:MASTER%のペニスを、%CALLNAME:ASSI%と%CALLNAME:TARGET%は二人並んでしゃぶり始めた
+		ENDIF
+	;COM:ダブル素股を見る
+	ELSEIF T == 70
+		IF A > 11 && FLAG:(A-1) % 1000 == 70
+			PRINTFORML %CALLNAME:MASTER%のペニスをはさんだまま、二人はゆっくりと股間を蠢かしている……
+		ELSE
+			PRINTFORML %CALLNAME:ASSI%と%CALLNAME:TARGET%がくっつけ合わせた陰唇に、%CALLNAME:MASTER%の陰茎が差し込まれた
+		ENDIF
+	;COM:ダブルパイズリを見る
+	ELSEIF T == 71
+		IF A > 11 && FLAG:(A-1) % 1000 == 71
+			PRINTFORML 二人は%CALLNAME:MASTER%のペニスを乳房でしごき続けている……
+		ELSE
+			PRINTFORML %CALLNAME:ASSI%と%CALLNAME:TARGET%はお互いの乳房を重ねて、%CALLNAME:MASTER%のペニスをこすり始めた
+		ENDIF
+	;その他の調教
+	ELSE
+		SIF F & 1
+			PRINT 屋外で
+		SIF F & 2
+			PRINT 湯気に包まれながら
+		SIF F & 4
+			PRINT 裸エプロンで
+		SIF F & 8
+			PRINT 縄で縛り上げられたまま
+		SIF F & 256 && (T <= 100 || T >= 110)
+			PRINT 触手に絡め取られながら
+		IF F & 128
+			PRINT 犬
+		ELSEIF F & 256 && (T >= 101 && T <= 109)
+			;何も表示しない
+		ELSEIF U == 1
+			PRINTFORM %CALLNAME:ASSI%
+		ELSE
+			PRINTFORM %CALLNAME:MASTER%
+		ENDIF
+		;COM:愛撫を見る
+		IF T == 0
+			IF F & 128
+				PRINT に体中を舐めまわされている
+			ELSE
+				PRINT に愛撫される
+			ENDIF
+		;COM:クンニを見る
+		ELSEIF T == 1
+			PRINT にクンニされる
+		;COM:アナル愛撫を見る
+		ELSEIF T == 2
+			IF F & 32
+				PRINT にバイブでアナルを責められる
+			ELSE
+				PRINT に指でアナルをほじられる
+			ENDIF
+		;COM:フェラするを見る
+		ELSEIF T == 4
+			PRINT にペニスをしゃぶられる
+		;COM:胸愛撫を見る
+		ELSEIF T == 5
+			IF F & 128
+				PRINT に胸を舐めまわされてる
+			ELSEIF TALENT:絶壁
+				PRINT に胸を撫で回される
+			ELSEIF TALENT:貧乳
+				PRINT に乳房を撫でられる
+			ELSE
+				PRINT に乳房をもみしだかれる
+			ENDIF
+		;COM:キスするを見る
+		ELSEIF T == 6
+			IF F & 128
+				PRINT に口元をねぶりまわされる
+			ELSE
+				PRINT とキスをする
+			ENDIF
+		;COM:指挿入れを見る
+		ELSEIF T == 8
+			IF F & 16
+				PRINT にバイブで性器を責められる
+			ELSE
+				PRINT に指をヴァギナに差し入れされている
+			ENDIF
+		;COM:アナル舐めを見る
+		ELSEIF T == 9
+			PRINT に肛門を舐められる
+		;COM:ローターを見る
+		ELSEIF T == 10
+			PRINT にクリトリスにローターを押し当てられる
+		;COM:Eマッサージャを見る
+		ELSEIF T == 12
+			PRINT に電気マッサージ器で股間を刺激される
+		;COM:クリキャップを見る
+		ELSEIF T == 14
+			PRINT にクリキャップで陰核を刺激される
+		;COM:二プルキャップを見る
+		ELSEIF T == 15
+			PRINT にニプルキャップで乳首を刺激される
+		;COM:搾乳器を見る
+		ELSEIF T == 16
+			PRINT に絞乳器で母乳を搾り取られる
+		;COM:オナホールを見る
+		ELSEIF T == 17
+			PRINT にオナホールでペニスを扱かれる
+		;COM:アナルビーズを見る
+		ELSEIF T == 19
+			PRINT にアナルビーズを肛門に抜き差しされる
+		;COM:正常位を見る
+		ELSEIF T == 20
+			PRINT と互いに愛し合う
+		;COM:背後位を見る
+		ELSEIF T == 21
+			PRINT に背後から四つん這いで犯される
+		;COM:対面座位を見る
+		ELSEIF T == 22
+			PRINT と正面から抱き合って愛しあう
+		;COM:背面座位を見る
+		ELSEIF T == 23
+			PRINT に背後から抱きすくめられる
+		;COM:正常位アナルを見る
+		ELSEIF T == 26
+			PRINT とアナルで愛し合う
+		;COM:背後位アナルを見る
+		ELSEIF T == 27
+			PRINT に背後から四つん這いでアナルを犯される
+		;COM:対面座位アナルを見る
+		ELSEIF T == 28
+			PRINT 正面から抱き合ってアナルを突き上げられる
+		;COM:背面座位アナルを見る
+		ELSEIF T == 29
+			PRINT 背後から抱きすくめられアナルを突かれる
+		;COM:手淫を見る
+		ELSEIF T == 30
+			PRINT のペニスを手でしごく
+		;COM:フェラチオを見る
+		ELSEIF T == 31
+			PRINT のペニスをしゃぶる
+		;COM:パイズリを見る
+		ELSEIF T == 32
+			PRINT のペニスを乳房で擦りあげる
+		;COM:素股を見る
+		ELSEIF T == 33
+			PRINT のペニスを股に挟んで擦る
+		;COM:騎乗位を見る
+		ELSEIF T == 34
+		 	PRINT の上にまたがり腰を使う
+		;COM:騎乗位アナルを見る
+		ELSEIF T == 36
+		 	PRINT の上にまたがりアナルで奉仕する
+		;COM:足コキを見る
+		ELSEIF T == 38
+			PRINT のペニスを足でしごく
+		;COM:スパンキングを見る
+		ELSEIF T == 40
+			PRINT に尻を真っ赤になるまで平手打ちされる
+		;COM:鞭を見る
+		ELSEIF T == 41
+			PRINT 力まかせに鞭打たれる
+		;COM:針を見る
+		ELSEIF T == 42
+			PRINT に針を付き立てられる
+		;COM:アイマスクを見る
+		ELSEIF T == 43
+			PRINT によりアイスマスクを施されている
+		;COM:ボールギャグを見る
+		ELSEIF T == 45
+			PRINT によりボールギャグを含まされている
+		;COM:ローションを見る
+		ELSEIF T == 50 && (F & 128) == 0
+			PRINT の手で体中にローションを塗りたくられた
+		;COM:助手にキスを見る
+		ELSEIF T == 60
+			PRINT にキスをする
+		;COM:クンニ強制を見る
+		ELSEIF T == 61
+			PRINT の陰唇を舐めさせられる
+		;COM:助手を犯すを見る
+		ELSEIF T == 62
+			PRINTFORML が%CALLNAME:MASTER%と愛し合う様子を眺めている
+		;COM:貝あわせを見る
+		ELSEIF T == 63
+			PRINT と陰唇を擦りあわせる
+		;COM:助手を犯させるを見る
+		ELSEIF T == 65
+			PRINT と体を絡めあう
+		;COM:シックスナインを見る
+		ELSEIF T == 69
+			PRINT と互いの性器を舐めあう
+		;COM:イマラチオを見る
+		ELSEIF T == 80
+			PRINT に頭を掴まれ口腔を犯される
+		;COM:フィストファックを見る
+		ELSEIF T == 81
+			PRINT の拳を膣に突っ込まれる
+		;COM:アナルフィストを見る
+		ELSEIF T == 82
+			PRINT の拳をアナルに突っ込まれる
+		;COM:両穴フィストを見る
+		ELSEIF T == 83
+			PRINT の両手の拳を膣とアナルに突っ込まれる
+		;COM:触手挿入を見る
+		ELSEIF T == 101
+			PRINT 粘液でぬらぬら光る触手を股間に抜き差しされている
+		;COM:アナル触手を見る
+		ELSEIF T == 102
+			PRINT ぬめぬめとうねる触手をアナルに抜き差しされている
+		;COM:触手クリ責めを見る
+		ELSEIF T == 103
+			PRINT 股間に群がった触手にクリトリスを嬲られ続けている
+		;COM:触手乳首責めを見る
+		ELSEIF T == 104
+			PRINT のたうつ触手の群れに乳首をいじられ続けている
+		;COM:触手搾乳を見る
+		ELSEIF T == 105
+			IF TALENT:母乳体質
+				PRINT 触手の先端から母乳を吸い上げられる
+			ELSE
+				PRINT 触手の先端で乳首を吸い上げられる
+			ENDIF
+		;COM:触手緊縛を見る
+		ELSEIF T == 106
+			PRINT 更に無数の触手を体にまとわりつかせていく
+		;COM:触手浣腸を見る
+		ELSEIF T == 107
+			PRINT 直腸に差し込まれた触手から液体を送り込まれていく
+		;COM:触手口辱を見る
+		ELSEIF T == 108
+			PRINT 口の中を無数の触手でねぶりまわされる
+		;COM:触手ペニス責めを見る
+		ELSEIF T == 109
+			PRINT 股間に群がった触手にペニスを嬲られ続けている
+		;その他
+		ELSE
+			PRINT に調教を受ける
+		ENDIF
+
+		PRINTFORML 、%CALLNAME:TARGET%の姿が映し出された
+
+	ENDIF
+
+	WAIT
+
+REND
+
+PRINTFORML 《ビデオ再生終了》
+WAIT
+
+PRINTFORML 今回のビデオの内容評価
+DRAWLINE
+PRINTL 「部位」
+SIF A:0
+	PRINTFORML   Ｃ系：{A:0}
+SIF A:1
+	PRINTFORML   Ｂ系：{A:1}
+SIF A:2
+	PRINTFORML   Ｖ系：{A:2}
+SIF A:3
+	PRINTFORML   Ａ系：{A:3}
+PRINTL 「内容」
+SIF B:1
+	PRINTFORML   愛撫：{B:1}
+SIF B:2
+	PRINTFORML   器具：{B:2}
+SIF B:3
+	PRINTFORML   セックス：{B:3}
+SIF B:4
+	PRINTFORML   フィスト：{B:4}
+PRINTL 「傾向」
+SIF C:1
+	PRINTFORML   奉仕：{C:1}
+SIF C:2
+	PRINTFORML   嗜虐：{C:2}
+SIF C:3
+	PRINTFORML   ＳＭ：{C:3}
+SIF C:4
+	PRINTFORML   自慰：{C:4}
+PRINTL 「特殊」
+SIF D:1
+	PRINTFORML   ローション：{D:1}
+SIF D:2
+	PRINTFORML   薬物：{D:2}
+SIF D:3
+	PRINTFORML   緊縛：{D:3}
+SIF D:4
+	PRINTFORML   搾乳：{D:4}
+SIF D:5
+	PRINTFORML   スカトロ：{D:5}
+SIF D:6
+	PRINTFORML   乱交：{D:6}
+SIF D:7
+	PRINTFORML   野外露出：{D:7}
+SIF D:8
+	PRINTFORML   触手：{D:8}
+SIF D:9
+	PRINTFORML   レズ：{D:9}
+SIF D:10
+	PRINTFORML   ふたなり：{D:10}
+DRAWLINE
+WAIT
+
+DRAWLINE

@@ -1,0 +1,108 @@
+﻿;===========================================================
+;クリアボーナス：ふたなり
+;===========================================================
+@CLEARBONUS_FUTANARI
+IF  TALENT:オトコ == 0
+	PRINTFORML %NAME:TARGET%がふたなりのＩＦの世界に突入しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	$INPUT_LOOP
+	INPUT
+		IF RESULT == 0
+			CALL CLEARBONUS_FUTANARI_ADDEXP
+		ELSEIF RESULT == 1
+			RETURN 0
+		ELSE
+			GOTO INPUT_LOOP
+		ENDIF
+ENDIF
+
+;===========================================================
+;クリアボーナス：ふたなり
+;===========================================================
+@CLEARBONUS_FUTANARI_ADDEXP
+
+
+LOCAL = TARGET
+$INPUTLOOP_START
+PRINTL 《ペニスサイズを選んで下さい》
+
+PRINTL [0] - 短小
+PRINTL [1] - 平均
+PRINTL [2] - 巨根
+
+$INPUTLOOP_1
+INPUT
+
+IF RESULT == 0
+	CFLAG:LOCAL:ペニスのサイズ = 0
+	BASE:LOCAL:ペニスサイズ = 9 + RAND:4
+ELSEIF RESULT == 1
+	CFLAG:LOCAL:ペニスのサイズ = 1
+	BASE:LOCAL:ペニスサイズ = 13 + RAND:4
+ELSEIF RESULT == 2
+	CFLAG:LOCAL:ペニスのサイズ = 2
+	BASE:LOCAL:ペニスサイズ = 17 + RAND:4
+ELSE
+	GOTO INPUTLOOP_1
+ENDIF
+
+PRINTL 《包皮の状態を選んで下さい》
+
+PRINTL [0] - 真性包茎
+PRINTL [1] - 仮性包茎（永続的）
+PRINTL [2] - 仮性包茎（童貞喪失後「ズル剥け」になる）
+PRINTL [3] - ズル剥け
+
+$INPUTLOOP_2
+INPUT
+
+IF RESULT == 0
+	CFLAG:LOCAL:包皮の状態 = 0
+ELSEIF RESULT == 1
+	CFLAG:LOCAL:包皮の状態 = 1
+ELSEIF RESULT == 2
+	CFLAG:LOCAL:包皮の状態 = 2
+ELSEIF RESULT == 3
+	CFLAG:LOCAL:包皮の状態 = 3
+ELSE
+	GOTO INPUTLOOP_2
+ENDIF
+
+PRINTFORM %NAME:LOCAL%に生やすふたなりペニスは{BASE:LOCAL:ペニスサイズ}cmの
+
+IF CFLAG:LOCAL:ペニスのサイズ == 0
+	PRINTFORM 短小
+ELSEIF CFLAG:LOCAL:ペニスのサイズ == 1
+	PRINTFORM 
+ELSEIF CFLAG:LOCAL:ペニスのサイズ == 2
+	PRINTFORM 極太
+ENDIF
+
+IF CFLAG:LOCAL:包皮の状態 == 0
+	PRINTFORM 真性包茎
+ELSEIF CFLAG:LOCAL:包皮の状態 == 1
+	PRINTFORM 仮性包茎
+ELSEIF CFLAG:LOCAL:包皮の状態 == 2
+	PRINTFORM 仮性包茎
+ELSEIF CFLAG:LOCAL:包皮の状態 == 3
+	PRINTFORM ズル剥け
+ENDIF
+
+PRINTFORML ペニスでよろしいですか？
+
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUTLOOP_3
+INPUT
+
+IF RESULT == 0
+	PRINTFORMW 《%CALLNAME:LOCAL%は【%TALENTNAME:[[TALENT:ふたなり]]%】になった》
+	TALENT:LOCAL:ふたなり = 1
+	TALENT:LOCAL:童貞 = 1
+ELSEIF RESULT == 1
+	PRINTFORML 再選択してください
+	GOTO INPUTLOOP_START
+ELSE
+	GOTO INPUTLOOP_3
+ENDIF

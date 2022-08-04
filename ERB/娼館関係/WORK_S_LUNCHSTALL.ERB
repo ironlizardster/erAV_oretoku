@@ -1,0 +1,1170 @@
+﻿;===========================================================
+;屋台で定食を売って回る労役コマンド
+;奴隷の料理の腕だけでなく、奴隷の能力が高いとフェロモンで売り上げが上がる
+;ただし、基本的には厳しい
+;===========================================================
+;eratohoA ver1.204より流用して改造(pawapokya-)するつもりが、結局ほとんど別物に
+;===========================================================
+@LUNCH_STALL
+DRAWLINE
+
+;特殊チケットフラグ初期化
+FLAG:特殊営業で夜の部を開催フラグ = 0
+;相性フラグ初期化
+FLAG:特殊営業時のキャラの相性 = 0
+;お揃いフラグ初期化
+FLAG:特殊営業時お揃い衣装 = 0
+
+;参加者が複数の場合、最初に厨房担当を選択
+$INPUT_LOOP_01
+IF FLAG:特殊営業参加人数 >= 2
+	PRINTL 誰が料理を作りますか？
+	DRAWLINE
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		PRINTFORML  [{COUNT}] - %NAME:COUNT%
+	REND
+	DRAWLINE
+	PRINTL  [100] - やめる
+	
+	INPUT
+
+	IF RESULT < 0 || RESULT >= CHARANUM
+		GOTO INPUT_LOOP_01
+	ELSEIF CFLAG:RESULT:130 == 0
+		GOTO INPUT_LOOP_01
+	;厨房担当には最低でも料理技能１必要
+	ELSEIF ABL:RESULT:料理技能 < 1
+		PRINTFORMW %CALLNAME:RESULT%には客に出せる料理は作れそうにありません
+		GOTO INPUT_LOOP_01
+	ELSEIF RESULT == 100
+		RETURN 100
+	ENDIF
+
+	TARGET = RESULT
+
+	DRAWLINE
+;一人だけならその一人が自動的に厨房担当に
+ELSE
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+	TARGET = COUNT
+	REND
+ENDIF
+
+;接客係の中に男性・絶壁が一人もいない
+F = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF TARGET == COUNT
+		CONTINUE
+	SIF TALENT:COUNT:オトコ || TALENT:COUNT:絶壁
+		F = 0
+REND
+
+;参加者複数かつおっぱい持ちなら特殊屋台が選択可能
+IF FLAG:特殊営業参加人数 >= 2 && F
+	$INPUT_LOOP_02
+	;通常屋台か特殊屋台かを選択
+	PRINTL どんな屋台を開きますか？
+	PRINTL  [0] - 通常屋台
+	PRINTL  [1] - おっぱい屋台
+	PRINTL  [100] - やめる
+		
+	INPUT
+	
+	IF RESULT == 0
+		PRINTFORMW 通常屋台を開きます
+	ELSEIF RESULT == 1
+		PRINTFORMW おっぱい屋台を開きます
+		FLAG:特殊営業で夜の部を開催フラグ = 1
+	ELSEIF RESULT == 100
+		RETURN 100
+	ELSE
+		GOTO INPUT_LOOP_02
+	ENDIF
+	
+	DRAWLINE
+ENDIF
+
+;ローカル変数初期化
+A = 0
+B = 0
+F = 0
+S = 0
+V = 0
+C = 0
+D = 0
+;L = 呼び出し元で代入される参加人数
+
+;COUNT用待避変数
+X = 0
+Y = 0
+
+REPEAT 101
+	TCVAR:COUNT = 0
+	U:COUNT = 0
+REND
+
+;特殊営業参加キャラの相性をチェック
+CALL WORK_SUB_RELATION
+
+;厨房担当を除くキャラの衣装がお揃いかをチェック
+IF FLAG:特殊営業参加人数 >= 3 && FLAG:着衣使用
+	FLAG:特殊営業時お揃い衣装 = 1
+	E = -1
+	F = 0
+	S = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF COUNT == TARGET
+			CONTINUE
+		IF E == -1
+			S = CFLAG:COUNT:着衣状態
+			E = CFLAG:COUNT:上着のタイプ
+			F = CFLAG:COUNT:特別コスチュームのタイプ
+		;すっぱだか
+		ELSEIF S == 0 && CFLAG:COUNT:着衣状態 == 0
+			CONTINUE
+		;裸＋特別コス
+		ELSEIF F == CFLAG:COUNT:特別コスチュームのタイプ && S == 64 && CFLAG:COUNT:着衣状態 == 64
+			CONTINUE
+		;下着姿。ランナウェイズ……
+		ELSEIF S > 0 && S < 4 && CFLAG:COUNT:着衣状態 > 0 && CFLAG:COUNT:着衣状態 < 4
+			CONTINUE
+		;下着＋特別コス
+		ELSEIF F == CFLAG:COUNT:特別コスチュームのタイプ && S > 64 && S < 68 && CFLAG:COUNT:着衣状態 > 64 && CFLAG:COUNT:着衣状態 < 68
+			CONTINUE
+		ELSEIF (CFLAG:COUNT:上着上の状態 || CFLAG:COUNT:上着下の状態 || CFLAG:COUNT:特別コスチュームの状態)
+			FLAG:特殊営業時お揃い衣装 = 0
+		ELSEIF (CFLAG:COUNT:着衣状態 & 92) == 0
+			FLAG:特殊営業時お揃い衣装 = 0
+		ELSEIF E != CFLAG:COUNT:上着のタイプ || F != CFLAG:COUNT:特別コスチュームのタイプ
+			FLAG:特殊営業時お揃い衣装 = 0
+		ELSEIF ((S & 92) != (CFLAG:COUNT:着衣状態 & 92))
+			FLAG:特殊営業時お揃い衣装 = 0
+		ENDIF
+	REND
+	E = 0
+	F = 0
+	S = 0
+ELSEIF FLAG:着衣使用
+	FLAG:特殊営業時お揃い衣装 = 1
+ENDIF
+
+;客の数を計算
+;参加するキャラの人気の最大値に応じて客が来ます
+E = 0
+REPEAT CHARANUM
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+		E = EXP:COUNT:人気
+REND
+C = E / 4
+G = C / 2
+IF C
+	IF C < 13
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 16
+		TIMES G , 1.50
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 20
+		TIMES G , 2.00
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 24
+		TIMES G , 2.50
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSE
+		TIMES G , 3.00
+		REPEAT C
+			G += RAND:3
+		REND
+	ENDIF
+ENDIF
+
+;娼館の人気に応じてさらにプラス
+C = (EXP:MASTER:人気 / 5)
+IF C
+	REPEAT C
+		G += RAND:2
+	REND
+ENDIF
+
+;接客係（最大3人）が少ないと目減り
+IF FLAG:特殊営業参加人数  - 1 == 0
+	TIMES G , 0.25
+ELSEIF  FLAG:特殊営業参加人数 - 1 == 1
+	TIMES G , 0.50
+ELSEIF  FLAG:特殊営業参加人数 - 1 == 2
+	TIMES G , 0.75
+ENDIF
+
+;接客係が特定の素質を持っていた場合ボーナス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+
+	;社会的ステータスが影響
+	;人気者
+	SIF TALENT:COUNT:人気者
+		G += 3
+	;アイドル
+	SIF TALENT:COUNT:アイドル
+		G += 5
+	;娼婦
+	SIF TALENT:COUNT:風俗嬢
+		G += 1
+	;傾城
+	SIF TALENT:COUNT:高級娼婦
+		G += 2
+	;饒舌
+	SIF TALENT:COUNT:饒舌
+		G += 5
+	;常連客
+	SIF TALENT:COUNT:常連客
+		G += 2
+	;求愛
+	SIF TALENT:COUNT:彼氏あり
+		G += 1
+	;歌姫
+	SIF TALENT:COUNT:歌姫
+		G += 5
+	;舞姫
+	SIF TALENT:COUNT:舞姫
+		G += 5
+	;美姫
+	SIF TALENT:COUNT:美姫
+		G += 10
+	;優等生
+	SIF TALENT:COUNT:優等生
+		G += 2
+	;ファッションモデル
+	SIF TALENT:COUNT:ファッションモデル
+		G += 1
+		
+	;専用素質(まあ(差別化する必要もあるし)多少はね？)
+	;極道の娘
+	SIF TALENT:COUNT:極道の娘
+		G += 20
+	;淫魔
+	SIF TALENT:COUNT:淫魔
+		G += 5
+	;声優
+	SIF TALENT:COUNT:声優
+		G += 10
+	;はるうられ
+	SIF TALENT:COUNT:はるうられ
+		G += 15
+	;ColorfulPureGirls
+	SIF TALENT:COUNT:ColorfulPureGirls
+		G += 25
+	;神巫
+	SIF TALENT:COUNT:神巫
+		G += 15
+	;天使
+	SIF TALENT:COUNT:天使
+		G += 30
+	;グランドマスター
+	SIF TALENT:COUNT:グランドマスター
+		G += 15
+	;極道の妻
+	SIF TALENT:COUNT:極道の妻
+		G += 25
+	;Mermaid girl
+	SIF TALENT:COUNT:[[TALENT:Mermaid girl]]
+		G += 20
+	;Triptych
+	SIF TALENT:COUNT:Triptych
+		G += 30
+	;Emerald Queen
+	SIF TALENT:COUNT:[[TALENT:Emerald Queen]]
+		G += 25
+	;堕ちた歌姫
+	SIF TALENT:COUNT:[[TALENT:平和の歌姫？]] || TALENT:COUNT:堕ちた歌姫
+		G += 20
+	;ルーンマスター 
+	SIF TALENT:COUNT:ルーンマスター || TALENT:COUNT:奇蹟
+		G += 20
+	;ONLY ONE IDOL
+	SIF TALENT:COUNT:[[TALENT:ONLY ONE IDOL]] || TALENT:COUNT:ILMATAR || TALENT:COUNT:AVALOKITESVARA || TALENT:COUNT:QueenB
+		G += 40
+	;SUPER HEROINE
+	SIF TALENT:COUNT:[[TALENT:SUPER HEROINE]]
+		G += 25
+REND
+
+;接客係全員の接客技能をプラス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+	G += ABL:COUNT:74
+REND
+
+;5人以下だった場合、5人にします
+SIF G < 5
+	G = 5
+
+PRINTFORM %NAME:TARGET%
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT たち
+PRINTW に定食屋台を開かせた……
+
+;次に成功か失敗かの判定を計算
+;厨房担当の料理経験によって基礎値が決定
+IF EXP:料理経験 < 10
+	D = 0 + RAND:5
+ELSEIF EXP:料理経験 < 50
+	D = 1 + RAND:5
+ELSEIF EXP:料理経験 < 100
+	D = 2 + RAND:6
+ELSEIF EXP:料理経験 < 200
+	D = 4 + RAND:6
+ELSEIF EXP:料理経験 < 300
+	D = 7 + RAND:7
+ELSEIF EXP:料理経験 < 500
+	D = 10 + RAND:7
+ELSEIF EXP:料理経験 < 800
+	D = 13 + RAND:8
+ELSEIF EXP:料理経験 < 1200
+	D = 16 + RAND:10
+ELSEIF EXP:料理経験 < 1600
+	D = 20 + RAND:12
+ELSEIF EXP:料理経験 < 2000
+	D = 25 + RAND:14
+ELSEIF EXP:料理経験 < 2500
+	D = 30 + RAND:16
+ELSEIF EXP:料理経験 < 3000
+	D = 40 + RAND:18
+ELSE
+	D = 50 + RAND:20
+ENDIF
+
+;厨房担当の料理技能の３倍をプラス
+D += ABL:料理技能 * 3
+
+;接客係全員の話術と奉仕精神の1/2をプラス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+	D += ABL:COUNT:話術 / 2
+	D += ABL:COUNT:奉仕精神 / 2
+REND
+
+;接客係全員の美容感覚をプラス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+	D += ABL:COUNT:美容感覚
+REND
+
+;おっぱい屋台なら接客係全員のＢ感覚の1/2をプラス
+IF FLAG:特殊営業で夜の部を開催フラグ
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+			CONTINUE
+		D += ABL:COUNT:Ｂ感覚 / 2
+	REND
+ENDIF
+
+;厨房担当の素質に応じて加減
+;反抗的
+SIF TALENT:ナマイキ
+	D -= 1
+;気丈
+SIF TALENT:気丈
+	D += 1
+;感情乏しい
+SIF TALENT:感情乏しい
+	D -= 1
+;好奇心
+SIF TALENT:好奇心
+	D += 1
+;素質
+SIF TALENT:素質
+	D += 2
+;習得遅い
+SIF TALENT:習得遅い
+	D -= 2
+;汚臭鈍感
+SIF TALENT:汚臭鈍感
+	D -= 3
+;汚臭敏感
+SIF TALENT:汚臭敏感
+	D += 3
+;献身的
+SIF TALENT:献身的
+	D += 3
+;母性
+SIF TALENT:母性
+	D += 10
+;料理上手
+SIF TALENT:料理上手
+	D *= 2
+
+;狂気・崩壊があると満足度激減
+SIF TALENT:狂気 || TALENT:崩壊
+	D /= 5
+
+;接客係全員の素質に応じて加減
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+	;献身的
+	SIF TALENT:COUNT:献身的
+		D += 3
+	;汚れ無視
+	SIF TALENT:COUNT:汚れ無視
+		D -= 6
+	;魅惑
+	SIF TALENT:COUNT:魅惑
+		D += 3
+	;謎の魅力
+	SIF TALENT:COUNT:謎の魅力
+		D += 5
+
+	;おっぱい屋台
+	IF FLAG:特殊営業で夜の部を開催フラグ
+		;巨乳
+		SIF TALENT:COUNT:巨乳
+			D += 3
+		;爆乳
+		SIF TALENT:COUNT:爆乳
+			D += 5
+		;貧乳
+		SIF TALENT:COUNT:貧乳
+			D -= 2
+		;絶壁
+		SIF TALENT:COUNT:絶壁
+			D -= 5
+		;母乳体質
+		SIF TALENT:COUNT:母乳体質
+			D += 5
+		;乳狂い
+		SIF TALENT:COUNT:乳狂い
+			D += 10
+	ENDIF
+
+	;狂気・崩壊があると満足度激減
+	SIF TALENT:COUNT:狂気 || TALENT:COUNT:崩壊
+		D /= 5
+REND
+
+;満足度Dが目標値Pを上回れば成功、下回れば失敗
+;２週目以降は料理上手の女優がいなければまず超成功は狙えないでしょう。
+IF FLAG:周回数 > 1
+	P = 41 + RAND:10
+ELSE
+	P = 21 + RAND:5
+ENDIF
+
+;満足度DがPの50%未満だったら大失敗
+IF D < (P / 2)
+	A = 0
+;P未満だったら小失敗
+ELSEIF D < P
+	A = 1
+;Pの150%未満だったら普通
+ELSEIF D < (P * 3) / 2
+	A = 2
+;Pの200%未満だったら小成功
+ELSEIF D < P * 2
+	A = 3
+;Pの400%未満だったら大成功
+ELSEIF D < P * 4
+	A = 4
+;それ以上だったら超成功
+ELSE
+	A = 5
+ENDIF
+Z = 0
+Z = A
+
+IF FLAG:特殊営業参加人数 >= 2
+	PRINTFORM %CALLNAME:TARGET%が厨房で
+	CALL LUNCH_NAME
+	PRINTFORM を調理し、
+	X = TARGET
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF COUNT != X
+			TARGET = COUNT
+	REND
+	IF FLAG:特殊営業参加人数 >= 2 && FLAG:特殊営業時お揃い衣装
+		IF CFLAG:着衣状態 == 0
+			PRINT 一糸まとわぬ姿の
+		ELSEIF CFLAG:着衣状態 < 4
+			PRINT 下着姿の
+		ELSE
+			SIF FLAG:特殊営業で夜の部を開催フラグ && (CFLAG:着衣状態 & 4)
+				PRINT 胸をはだけた
+			CALL PRINT_CLOTHTYPE_MAIN2
+			IF CFLAG:特別コスチュームのタイプ
+				PRINT に
+				CALL PRINT_CLOTHTYPE_SPECIAL
+			ENDIF
+			PRINT 姿の
+		ENDIF
+	ENDIF
+	TARGET = X
+	S = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF COUNT == X && FLAG:特殊営業参加人数 >= 2
+			CONTINUE
+		SIF S
+			PRINT と
+		PRINTFORM %CALLNAME:COUNT%
+		S = 1
+	REND
+	S = 0
+	PRINT が
+	SIF FLAG:特殊営業で夜の部を開催フラグ
+		PRINT あらわな乳房を弄ばれながら、
+	PRINTFORML 訪れた{G}人の客に料理を振舞った……
+ELSE
+	PRINTFORM %CALLNAME:TARGET%は定食屋台で訪れた{G}人の客に
+	CALL LUNCH_NAME
+	PRINTFORML を振舞った……
+ENDIF
+
+WAIT
+
+PRINTL      
+;結果を一応視覚化しておく。デバッグ用なので、消してもいい。
+PRINTFORML 満足度:{D}％
+P *= 4
+PRINTFORMW 目標満足度:{P}％
+PRINTL      
+
+
+;失敗時メッセージ
+IF A <= 1
+	PRINTFORM 残念ながら、%CALLNAME:TARGET%の料理
+	IF FLAG:特殊営業で夜の部を開催フラグ
+		PRINT と
+		SIF FLAG:特殊営業参加人数 >= 2
+			PRINT 接客係
+		SIF FLAG:特殊営業参加人数 >= 3
+			PRINT たちの
+		PRINT おっぱい
+	ENDIF
+	PRINTW の評判はさんざんだった……
+	TFLAG:口上番号 = 122
+;成功時メッセージ
+ELSE
+	PRINTFORM 来客たちは%CALLNAME:TARGET%の料理
+	IF FLAG:特殊営業で夜の部を開催フラグ
+		PRINT と
+		SIF FLAG:特殊営業参加人数 >= 2
+			PRINT 接客係
+		SIF FLAG:特殊営業参加人数 >= 3
+			PRINT たちの
+		PRINT おっぱい
+	ENDIF
+	PRINTW に満足したようだ……
+	TFLAG:口上番号 = 123
+ENDIF
+
+;口上
+CALL SELF_KOJO
+
+DRAWLINE
+
+;パラメータ変化
+X = TARGET
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	
+	TARGET = COUNT
+
+	PRINTFORML %NAME:TARGET%のパラメータが以下の通り変化しました
+
+	;失敗時経験値
+	IF Z <= 1
+		;厨房担当
+		IF TARGET == X
+			TCVAR:料理経験 = G / 10 + 1
+			U:7 = G * 30
+			U:4 = G * 10
+			U:8 = G * 30
+		ENDIF
+		;接客係
+		IF TARGET != X
+			U:7 = G * 15
+			U:4 = G * 5
+			U:8 = G * 30
+			;おっぱい屋台
+			IF FLAG:特殊営業で夜の部を開催フラグ
+				U:14 = (G * 50) / FLAG:特殊営業参加人数
+				TCVAR:精液経験 = G / (10 * FLAG:特殊営業参加人数) + 1
+				TCVAR:フェラ経験 = G / (10 * FLAG:特殊営業参加人数) + 1
+				TCVAR:売春経験 = G / (10 * FLAG:特殊営業参加人数) + 1
+			ENDIF
+		ENDIF
+	;成功時経験値
+	ELSE
+		;厨房担当
+		IF TARGET == X
+			TCVAR:愛情経験 = (G / (6 - Z)) + 1
+			TCVAR:料理経験 = ((G / (7 - Z)) * ABL:料理技能)
+			U:7 = G * 30 * Z
+			U:4 = G * 30 * Z
+			U:8 = G * 5 * Z
+		ENDIF
+		;接客係
+		IF TARGET != X
+			TCVAR:料理経験 = (G / (10 - Z)) + (ABL:X:料理技能 / (6 - Z))
+			TCVAR:会話経験 = (G / (6 - Z)) + 1
+			TCVAR:接客経験 = (G / (6 - Z)) + 1
+			U:7 = G * 15 * Z
+			U:4 = G * 15 * Z
+			U:8 = G * 10 * Z
+			;おっぱい屋台
+			IF FLAG:特殊営業で夜の部を開催フラグ
+				U:14 = (G * 100) / FLAG:特殊営業参加人数
+				TCVAR:精液経験 = G / ((5 * FLAG:特殊営業参加人数) - Z + 1) + 1
+				TCVAR:フェラ経験 = G / ((5 * FLAG:特殊営業参加人数) - Z + 1) + 1
+				TCVAR:売春経験 = G / ((5 * FLAG:特殊営業参加人数) - Z + 1) + 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+	;否定の珠の計算（基礎値は人数ベースで、従順に応じて減少）
+	;おっぱい屋台だと一気に溜まる
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		M = 15 - ABL:信頼
+	ELSE
+		M = 7 - ABL:信頼
+	ENDIF
+	
+	;否定の珠が増加しないという事はない
+	SIF M <= 0
+		M = 1
+	
+	U:100 = G * M
+	
+	;素質補正
+	;素直だと少なくなる
+	SIF TALENT:感情乏しい
+		TIMES U:100 , 0.80
+	;感情乏しいと少なくなる
+	SIF TALENT:感情乏しい
+		TIMES U:100 , 0.90
+	;プライドが高いとかなり増える
+	SIF TALENT:プライド高い
+		TIMES U:100 , 1.80
+	;目立ちたがりだと少なくなる
+	SIF TALENT:目立ちたがり
+		TIMES U:100 , 0.80
+	;生意気だと増える
+	SIF TALENT:活発
+		TIMES U:100 , 1.20
+	;献身的だと少なくなる
+	SIF TALENT:献身的
+		TIMES U:100 , 0.80
+	;マネージャーだと少なくなる
+	SIF TALENT:マネージャー
+		TIMES U:100 , 0.80
+	;母性だとぐっと少なくなる
+	SIF TALENT:母性
+		TIMES U:100 , 0.50
+	;屋台営業失敗かつ恥じらいだと結構増える
+	SIF TALENT:恥じらい && A <= 1
+		TIMES U:100 , 1.50
+	;おっぱい屋台だと接客係はすごく増える（乳狂いなら平気）
+	SIF FLAG:特殊営業で夜の部を開催フラグ && TARGET != X && TALENT:乳狂い == 0
+		TIMES U:100 , 3.00
+	
+	DRAWLINE
+	
+	Y = COUNT
+	CALL WORK_EXP
+	COUNT = Y
+
+	;反発刻印取得の判定
+	;従順の200倍+1000まで許容
+	O = ABL:信頼 * 200 + 1000
+	
+	;反発刻印LV2はLV1の√3倍、LV3は√5倍で獲得
+	I = O
+	TIMES I , 2.23
+	J = O
+	TIMES J , 1.73
+	
+	IF MARK:反発刻印 != 3 && JUEL:否定 > I
+		PRINTL  反発刻印LV3を取得
+		MARK:反発刻印 = 3
+	ELSEIF MARK:反発刻印 != 2 && JUEL:否定 > J
+		PRINTL  反発刻印LV2を取得
+		MARK:反発刻印 = 2
+	ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > O
+		PRINTL  反発刻印LV1を取得
+		MARK:反発刻印 = 1
+	ENDIF
+	
+	DRAWLINE
+	
+	;体力減少の計算
+	LOSEBASE:体力 = G * 20
+	
+	;小柄だと疲労増加
+	SIF TALENT:小柄体型
+		TIMES LOSEBASE:体力 , 1.20
+
+	;おっぱい屋台なら接客係はかなり疲れる
+	SIF FLAG:特殊営業で夜の部を開催フラグ && TARGET != X 
+		TIMES LOSEBASE:体力 , 4.00
+
+	;接客係なら人数に応じて疲労軽減
+	SIF TARGET != X && FLAG:特殊営業参加人数 >= 2
+		LOSEBASE:体力 /= (FLAG:特殊営業参加人数 - 1)
+
+	;厨房担当は料理技能に応じて疲労減
+	IF TARGET == X
+		IF ABL:料理技能 == 0
+			TIMES LOSEBASE:体力 , 1.00
+		ELSEIF ABL:料理技能 == 1
+			TIMES LOSEBASE:体力 , 0.90
+		ELSEIF ABL:料理技能 == 2
+			TIMES LOSEBASE:体力 , 0.80
+		ELSEIF ABL:料理技能 == 3
+			TIMES LOSEBASE:体力 , 0.70
+		ELSEIF ABL:料理技能 == 4
+			TIMES LOSEBASE:体力 , 0.60
+		ELSEIF ABL:料理技能 >= 5
+			TIMES LOSEBASE:体力 , 0.50
+		ENDIF
+	ENDIF
+
+	;運動能力に応じて疲労軽減
+	IF ABL:運動能力 == 1
+		TIMES LOSEBASE:体力 , 0.95
+	ELSEIF ABL:運動能力 == 2
+		TIMES LOSEBASE:体力 , 0.90
+	ELSEIF ABL:運動能力 == 3
+		TIMES LOSEBASE:体力 , 0.85
+	ELSEIF ABL:運動能力 == 4
+		TIMES LOSEBASE:体力 , 0.80
+	ELSEIF ABL:運動能力 == 5
+		TIMES LOSEBASE:体力 , 0.75
+	ELSEIF ABL:運動能力 == 6
+		TIMES LOSEBASE:体力 , 0.70
+	ELSEIF ABL:運動能力 == 7
+		TIMES LOSEBASE:体力 , 0.65
+	ELSEIF ABL:運動能力 == 8
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF ABL:運動能力 == 9
+		TIMES LOSEBASE:体力 , 0.55
+	ELSEIF ABL:運動能力 >= 10
+		TIMES LOSEBASE:体力 , 0.50
+	ENDIF
+	
+	SIF LOSEBASE:体力 >= BASE:体力
+		LOSEBASE:体力 = BASE:体力
+	
+	PRINT  体力消費　　:
+	N = BASE:体力
+	CALL FIGURE_INDENT
+	PRINTV BASE:体力
+	PRINT  - 
+	N = LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTV LOSEBASE:体力
+	PRINT  = 
+	N = BASE:体力 - LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTVL BASE:体力 - LOSEBASE:体力
+	
+	BASE:体力 -= LOSEBASE:体力
+	
+	PRINT  体力　　　　:
+	BAR BASE:体力, MAXBASE:体力, 32
+	PRINTFORML ({BASE:体力}/{MAXBASE:体力})
+	
+	;体力が0以下、または500以下だった場合の処理
+	IF BASE:体力 <= 0
+		PRINTFORML %CALLNAME:TARGET%は、屋台を閉めた直後に突っ伏すように倒れた
+		PRINTFORML 何をやっても反応がない……
+		WAIT
+		;キャラの死亡確認
+		CALL CHARADEAD_CHECK
+	ELSEIF BASE:体力 <= 500
+		PRINTFORML 体力が限界に来ています。休ませてあげてください
+	ENDIF
+	
+	DRAWLINE
+	WAIT
+REND
+TARGET = X
+
+;売上金を計算します
+Q = 0
+
+;基準額は厨房担当の料理技能に左右されます
+IF ABL:料理技能 == 0
+	V = 15
+ELSEIF ABL:料理技能 == 1
+	V = 30
+ELSEIF ABL:料理技能 == 2
+	V = 100
+ELSEIF ABL:料理技能 == 3
+	V = 200
+ELSEIF ABL:料理技能 == 4
+	V = 350
+ELSEIF ABL:料理技能 == 5
+	V = 500
+ELSEIF ABL:料理技能 == 6
+	V = 700
+ELSEIF ABL:料理技能 == 7
+	V = 900
+ELSEIF ABL:料理技能 == 8
+	V = 1100
+ELSEIF ABL:料理技能 == 9
+	V = 1300
+ELSEIF ABL:料理技能 >= 10
+	V = 1500
+ENDIF
+PRINTFORM 料理(%CALLNAME:TARGET%)
+PRINTFORML {ABL:料理技能}LV +{V}
+Q += V
+V = 0
+
+;参加キャラの素質補正
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	;カリスマ
+	SIF TALENT:COUNT:カリスマ
+		V += 100
+	;治療
+	SIF TALENT:COUNT:治療
+		V += 500
+	IF V
+		PRINTFORML %NAME:COUNT% +{V}
+		Q += V
+		V = 0
+	ENDIF
+REND
+
+
+;能力補正
+;厨房担当の技巧を見る
+IF ABL:技巧 == 0
+	V = 50
+ELSEIF ABL:技巧 == 1
+	V = 70
+ELSEIF ABL:技巧 == 2
+	V = 100
+ELSEIF ABL:技巧 == 3
+	V = 110
+ELSEIF ABL:技巧 == 4
+	V = 120
+ELSEIF ABL:技巧 == 5
+	V = 130
+ELSEIF ABL:技巧 == 6
+	V = 140
+ELSEIF ABL:技巧 == 7
+	V = 150
+ELSEIF ABL:技巧 == 8
+	V = 160
+ELSEIF ABL:技巧 == 9
+	V = 180
+ELSEIF ABL:技巧 >= 10
+	V = 200
+ENDIF
+PRINTFORM 技巧(%CALLNAME:TARGET%)
+PRINTFORML {ABL:技巧}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;全員の奉仕精神の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:奉仕精神
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 100
+ELSEIF E == 1
+	V = 110
+ELSEIF E == 2
+	V = 120
+ELSEIF E == 3
+	V = 130
+ELSEIF E == 4
+	V = 140
+ELSEIF E == 5
+	V = 150
+ELSEIF E == 6
+	V = 160
+ELSEIF E == 7
+	V = 170
+ELSEIF E == 8
+	V = 180
+ELSEIF E == 9
+	V = 190
+ELSEIF E >= 10
+	V = 200
+
+ENDIF
+PRINT 奉仕精神
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;能力補正
+;接客係の話術の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+	E += ABL:COUNT:話術
+REND
+SIF FLAG:特殊営業参加人数 >= 2
+	E /= (FLAG:特殊営業参加人数 - 1)
+IF E == 0
+	V = 100
+ELSEIF E == 1
+	V = 110
+ELSEIF E == 2
+	V = 120
+ELSEIF E == 3
+	V = 130
+ELSEIF E == 4
+	V = 140
+ELSEIF E == 5
+	V = 150
+ELSEIF E == 6
+	V = 160
+ELSEIF E == 7
+	V = 170
+ELSEIF E == 8
+	V = 180
+ELSEIF E == 9
+	V = 190
+ELSEIF E >= 10
+	V = 200
+
+ENDIF
+PRINT 話術
+IF FLAG:特殊営業参加人数 == 1
+	PRINTFORM (%CALLNAME:TARGET%)
+ELSE
+	PRINT (接客係)
+ENDIF
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;接客係の魅力値の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+		CONTINUE
+	E += BASE:COUNT:魅力値
+REND
+SIF FLAG:特殊営業参加人数 >= 2
+	E /= (FLAG:特殊営業参加人数 - 1)
+V = E
+PRINT 魅力値
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+E = 0
+
+;おっぱい屋台の場合
+IF FLAG:特殊営業で夜の部を開催フラグ == 1
+	;参加キャラのおっぱい補正
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
+			CONTINUE
+		V = 100
+		;爆乳
+		IF TALENT:COUNT:爆乳
+			V = 120
+			PRINTFORML %TALENTNAME:[[TALENT:爆乳]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			Q *= V
+			Q /= 100
+		;巨乳
+		ELSEIF TALENT:COUNT:巨乳
+			V = 110
+			PRINTFORML %TALENTNAME:[[TALENT:巨乳]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			Q *= V
+			Q /= 100
+		;貧乳
+		ELSEIF TALENT:COUNT:貧乳
+			V = 80
+			PRINTFORML %TALENTNAME:[[TALENT:貧乳]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			Q *= V
+			Q /= 100
+		;貧乳
+		ELSEIF TALENT:COUNT:絶壁
+			V = 50
+			PRINTFORML %TALENTNAME:[[TALENT:絶壁]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			Q *= V
+			Q /= 100
+		ENDIF
+		;母乳体質
+		IF TALENT:COUNT:母乳体質
+			V = 130
+			PRINTFORML %TALENTNAME:[[TALENT:母乳体質]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			Q *= V
+			Q /= 100
+		ENDIF
+	REND
+V = 0
+ENDIF
+
+;共通する獲得資金処理
+CALL WORK_SP_MONEY_CM
+
+PRINTFORML 今回の屋台営業では一食{Q}ポイントで料理を{G}人に振る舞い、
+
+;チケット一枚あたりの金額×客の人数が収入となる
+Q *= G
+
+PRINTFORML 合計{Q}ポイント稼ぎました
+MONEY += Q
+
+;特殊営業終了処理
+CALL WORK_SP_AFTER
+
+WAIT
+
+BEGIN TURNEND
+
+RETURN 1
+
+;-----------------------------------------------------------
+;料理技巧に応じたデフォルト料理名関数
+;-----------------------------------------------------------
+@LUNCH_NAME
+;CALL LUNCH_NAME_PAWAPOKE
+SIF RESULT == 1
+	RETURN 0
+
+IF ABL:料理技能 == 0
+	PRINT スイカカレー
+ELSEIF ABL:料理技能 == 1
+	PRINT 三色パン
+ELSEIF ABL:料理技能 == 2
+	PRINT ラメーン
+ELSEIF ABL:料理技能 == 3
+	PRINT 手作りカレー
+ELSEIF ABL:料理技能 == 4
+	PRINT ハンバーグ定食
+ELSEIF ABL:料理技能 <= 9 && ABL:料理技能 >= 5
+	PRINT ステーキ定食
+ELSEIF ABL:料理技能 >= 10
+	PRINT シェフ直伝の料理
+ENDIF
+
+;パワポケ固有料理名関数
+;im@sにするときにコピペして別関数に直せよ！とはAV_Hoの人の慟哭
+@LUNCH_NAME_PAWAPOKE
+
+IF NO:TARGET == [[キャラ:宮間かなで]]
+	;春香
+	IF RAND:2 == 0
+		PRINT ケーキ
+	ELSE
+		PRINT クッキー
+	ENDIF
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:久留米紗英]]
+	;雪歩
+	IF RAND:2 == 0
+		PRINT 特選緑茶
+	ELSE
+		PRINT 手作り餃子
+	ENDIF
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:神田ひより]]
+	;伊織
+	PRINT 黒焦げのムニエル
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:レイチェル・パラディスス]]
+	;亜美
+	IF RAND:2 == 0
+		PRINT おだんご
+	ELSE
+		PRINT カオスな物体
+	ENDIF
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:桐生歌音]]
+	;真美
+	IF RAND:2 == 0
+		PRINT ふかし芋
+	ELSE
+		PRINT カオスな物体
+	ENDIF
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:須野郁美]]
+	;美希
+	PRINT おにぎり
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:榊あゆむ]]
+	;響
+	PRINT 沖縄料理
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:雛見春乃]]
+	;貴音
+	PRINT カップ麺
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:雛見春乃]]
+	;愛
+	PRINT 南国カレーもどき
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:恋歌・ロックウェル]]
+	;舞
+	PRINT 日高家特製カレー
+	RETURN 1
+ELSEIF NO:TARGET == [[キャラ:ヒトミちゃん]]
+	;夢子
+	PRINT 特製飴玉
+	RETURN 1
+ENDIF
+
+RETURN 0
+

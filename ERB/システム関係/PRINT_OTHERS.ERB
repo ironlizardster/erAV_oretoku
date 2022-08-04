@@ -1,0 +1,79 @@
+﻿;===========================================================
+;ミニ情報の表示
+;===========================================================
+@PRINT_OTHERS
+
+
+;===========================================================
+;治安情報の表示
+;===========================================================
+
+PRINTFORM 街の治安状況：
+IF FLAG:治安悪化レベル == 0
+	SETCOLOR 0x00FF00
+	PRINTFORM 良好
+ELSEIF FLAG:治安悪化レベル == 1
+	PRINTFORM 普通
+ELSEIF FLAG:治安悪化レベル == 2
+	SETCOLOR 0xFFA500
+	PRINTFORM 悪化
+ELSEIF FLAG:治安悪化レベル == 3
+	SETCOLOR 0xFF0000
+	PRINTFORM 最悪
+ENDIF
+RESETCOLOR
+PRINTL
+
+;===========================================================
+;ミッション対象人数の表示
+;===========================================================
+
+VARSET LOCAL, 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		TRYCALLFORM MISSION_VISIBLE_{(50 + COUNT)}
+		IF RESULT == 1
+			SIF PBAND:(50 + COUNT) == 0
+				LOCAL:1 ++
+		ENDIF
+	ENDIF
+REND
+
+IF FLAG:ミッションモード解禁 && EXP:MASTER:貢献度 >= 50
+	PRINTFORM ミッション対象キャラクター：
+	SETCOLOR 0x00FF00
+	PRINTFORM {LOCAL:1}人
+	RESETCOLOR
+	PRINTFORML 
+ENDIF
+
+;===========================================================
+;合コン参加キャラの表示
+;===========================================================
+
+VARSET LOCAL, 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:合コン参加判定 == 1
+		LOCAL:1++
+	ENDIF
+REND
+
+IF FLAG:寝取られなし == 0 && LOCAL:1 >= 1
+	PRINTFORM 合コン参加予定：
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF CFLAG:COUNT:合コン参加判定 == 1
+			PRINTFORM %CALLNAME:COUNT%
+		ENDIF
+		SIF COUNT < LOCAL:1
+			PRINTFORM  / 
+	REND
+	PRINTL
+ENDIF

@@ -1,0 +1,68 @@
+﻿;-------------------------------------------------
+;針
+;SM系コマンド
+;-------------------------------------------------
+@COM42
+
+PRINTL 針
+SAVESTR:0 = 針
+CALL TRAIN_MESSAGE_B
+
+;実際には苦痛があるためもっと体力気力をもっていかれる
+LOSEBASE:体力 += 0
+LOSEBASE:気力 += 20
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:14 = 1000
+
+;PALAM:苦痛をみる
+IF PALAM:苦痛 < PALAMLV:1
+	SOURCE:6 = 3000
+ELSEIF PALAM:苦痛 < PALAMLV:2
+	SOURCE:6 = 3300
+ELSEIF PALAM:苦痛 < PALAMLV:3
+	SOURCE:6 = 3600
+ELSEIF PALAM:苦痛 < PALAMLV:4
+	SOURCE:6 = 4000
+ELSEIF PALAM:苦痛 >= PALAMLV:4
+	SOURCE:6 = 4500
+ENDIF
+
+						;****スライムパッチ追加ここから****
+IF ITEM:高性能針 >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:14 , 0.80
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +2
+	EXP:レズ経験 += 2
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +2
+	EXP:ＢＬ経験 += 2
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:マゾっ気 >= 3
+	TFLAG:主人経験 += 1
+
+;愛情経験
+E = 1
+IF CFLAG:好感度 >= 1000 && (ABL:マゾっ気 >= 3 || TALENT:マゾ) && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+RETURN 1
+;
+;
+;

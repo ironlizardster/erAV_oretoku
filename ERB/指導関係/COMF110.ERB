@@ -1,0 +1,596 @@
+﻿;-------------------------------------------------
+;服の着脱
+;着衣・脱衣関連コマンド：調教対象の服の着脱を行う
+;このコマンドは実行してもパラメーターは変更せず通常コマンド扱いにならない
+;-------------------------------------------------
+@COM110
+
+$INPUT_LOOP
+
+PRINTL 服の着脱
+
+A = CFLAG:着衣状態
+CALL WEARING_CLOTH_ALL
+B = CFLAG:着衣状態
+CFLAG:着衣状態 = A
+
+;-------------------------------------------------
+;着脱の確認
+;-------------------------------------------------
+PRINTFORM 現在の%CALLNAME:TARGET%の格好は、
+CALL PRINT_CLOTHTYPE
+PRINTFORML です……
+
+;着脱判定変数をTとWに保存
+CALL COM110_ABLE0T
+T:0 = RESULT
+CALL COM110_ABLE0W
+W:0 = RESULT
+CALL COM110_ABLE1T
+T:1 = RESULT
+CALL COM110_ABLE1W
+W:1 = RESULT
+CALL COM110_ABLE2T
+T:2 = RESULT
+CALL COM110_ABLE2W
+W:2 = RESULT
+CALL COM110_ABLE3T
+T:3 = RESULT
+CALL COM110_ABLE3W
+W:3 = RESULT
+CALL COM110_ABLE4T
+T:4 = RESULT
+CALL COM110_ABLE4W
+W:4 = RESULT
+CALL COM110_ABLE5T
+T:5 = RESULT
+CALL COM110_ABLE5W
+W:5 = RESULT
+CALL COM110_ABLE6T
+T:6 = RESULT
+CALL COM110_ABLE6W
+W:6 = RESULT
+
+;特別コス脱衣
+IF T:0
+	PRINT  [0] - 
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	IF CFLAG:特別コスチュームのタイプ >= 51
+		PRINTL を外す
+	ELSE
+		PRINTL を脱がせる
+	ENDIF
+ENDIF
+;特別コス装着
+IF W:0
+	PRINT    [0] - 
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	IF CFLAG:特別コスチュームのタイプ >= 51
+		PRINTL を付ける
+	ELSE
+		PRINTL を着せる
+	ENDIF
+ENDIF
+;ワンピース脱衣
+IF T:1
+	PRINT  [1] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL を脱がせる
+ENDIF
+;ワンピース装着
+IF W:1
+	PRINT    [1] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL を着せる
+ENDIF
+;ツーピース上脱衣
+IF T:2
+	PRINT  [1] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL 上を脱がせる
+ENDIF
+;ツーピース上装着
+IF W:2
+	PRINT    [1] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL 上を着せる
+ENDIF
+;ツーピース下脱衣
+IF T:3
+	PRINT  [2] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+		PRINTL のスカートを脱がせる
+	ELSE
+		PRINTL 下を脱がせる
+	ENDIF
+ENDIF
+;ツーピース下装着
+IF W:3
+	PRINT    [2] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+		PRINTL のスカートを穿かせる
+	ELSE
+		PRINTL 下を穿かせる
+	ENDIF
+ENDIF
+IF T:4
+	PRINT  [3] - 
+	CALL PRINT_UNDERWEAR_TOPS
+	PRINTFORML を外す
+ENDIF
+
+;ブラジャー装着
+IF W:4
+	PRINT    [3] - 
+	CALL PRINT_UNDERWEAR_TOPS
+	PRINTFORML を付けさせる
+ENDIF
+;パンツ脱衣
+IF T:5
+	PRINT  [4] - 
+	CALL PRINT_UNDERWEAR_UNDER
+	PRINTFORML を脱がせる
+ENDIF
+;パンツ装着
+IF W:5
+	PRINT    [4] - 
+	CALL PRINT_UNDERWEAR_UNDER
+	PRINTFORML を穿かせる
+ENDIF
+;靴下脱衣
+IF T:6
+	PRINT  [5] - 
+	CALL PRINT_SHOESTYPE_MAIN
+	PRINTL を脱がせる
+ENDIF
+;靴下装着
+IF W:6
+	PRINT    [5] - 
+	CALL PRINT_SHOESTYPE_MAIN
+	PRINTL を穿かせる
+ENDIF
+;全裸にして終了
+SIF CFLAG:着衣状態 != 0 || CFLAG:靴下の着用状態 == 0
+	PRINTL  [7] - 全裸にして終了
+PRINTL  [100] - やめる
+INPUT
+
+;-------------------------------------------------
+;着脱処理
+;-------------------------------------------------
+;外せない特別コス
+IF RESULT == 0 && CFLAG:貞操帯のカギを捨てた
+	PRINTFORML %CALLNAME:TARGET%の貞操帯のカギは捨ててしまいました
+	WAIT
+;特別コス脱衣
+ELSEIF RESULT == 0 && T:0
+	PRINTFORM %CALLNAME:TARGET%から
+	IF  TFLAG:下着着衣下が穿けない状態になっている & 32
+		PRINT 、汚物まみれの
+	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 16
+		PRINT 、おしっこでびしょ濡れの
+	ENDIF
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	IF CFLAG:特別コスチュームのタイプ >= 51
+		PRINTL を外した
+	ELSE
+		PRINTL を脱がせた
+	ENDIF
+	CFLAG:着衣状態 -= 64
+;特別コス装着
+ELSEIF RESULT == 0 && W:0
+	;汚物まみれの場合
+	IF TFLAG:下着着衣下が穿けない状態になっている & 32
+		PRINTFORML 汚物まみれで、とても使える状態ではありません
+		;おしっこまみれの場合
+	ELSEIF  TFLAG:下着着衣下が穿けない状態になっている & 16
+		PRINTFORML おしっこでびしょ濡れで、使える状態ではありません
+	ELSE
+		PRINTFORM %CALLNAME:TARGET%に
+		CALL PRINT_CLOTHTYPE_SPECIAL
+		IF CFLAG:特別コスチュームのタイプ >= 51
+			PRINTL を付けた
+		ELSE
+			PRINTL を着せた
+		ENDIF
+		CFLAG:着衣状態 |= 64
+	ENDIF
+;ワンピース脱衣
+ELSEIF RESULT == 1 && T:1
+	PRINTFORM %CALLNAME:TARGET%から
+	IF  TFLAG:下着着衣下が穿けない状態になっている & 8
+		PRINT 汚物まみれの
+	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 4
+		PRINT おしっこでびしょ濡れの
+	ENDIF
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL を脱がせた
+	SIF CFLAG:着衣状態 & 4
+		CFLAG:着衣状態 -= 4
+	SIF CFLAG:着衣状態 & 8
+		CFLAG:着衣状態 -= 8
+	SIF CFLAG:着衣状態 & 16
+		CFLAG:着衣状態 -= 16
+;ワンピース装着
+ELSEIF RESULT == 1 && W:1
+	;汚物まみれの場合
+	IF (TFLAG:下着着衣下が穿けない状態になっている & 8)
+		PRINTFORML 汚物まみれで、とても着られる状態ではありません
+	;おしっこまみれの場合
+	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 4
+		PRINTFORML おしっこでびしょ濡れで、着られる状態ではありません
+	ELSE
+		PRINTFORM %CALLNAME:TARGET%に
+		CALL PRINT_CLOTHTYPE_MAIN2
+		PRINTL を着せた
+		SIF CFLAG:上着上の状態 == 0
+			CFLAG:着衣状態 |= 4
+		IF CFLAG:上着下の状態 == 0
+			IF CFLAG:上着のタイプ <= 250
+				CFLAG:着衣状態 |= 8
+			ELSE
+				CFLAG:着衣状態 |= 16
+			ENDIF
+		ENDIF
+	ENDIF
+;ツーピース上脱衣
+ELSEIF RESULT == 1 && T:2
+	PRINTFORM %CALLNAME:TARGET%から
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL 上を脱がせた
+	CFLAG:着衣状態 -= 4
+;ツーピース上装着
+ELSEIF RESULT == 1 && W:2
+	PRINTFORM %CALLNAME:TARGET%に
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL 上を着せた
+	CFLAG:着衣状態 |= 4
+;ツーピース下脱衣
+ELSEIF RESULT == 2 && T:3
+	;脱衣処理
+	PRINTFORM %CALLNAME:TARGET%から
+	IF  TFLAG:下着着衣下が穿けない状態になっている & 8
+		PRINT 、汚物まみれの
+	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 4
+		PRINT 、おしっこでびしょ濡れの
+	ENDIF
+	CALL PRINT_CLOTHTYPE_MAIN2
+	IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+		PRINTL のスカートを脱がせた
+	ELSE
+		PRINTL 下を脱がせた
+	ENDIF
+	SIF CFLAG:着衣状態 & 8
+		CFLAG:着衣状態 -= 8
+	SIF CFLAG:着衣状態 & 16
+		CFLAG:着衣状態 -= 16
+;ツーピース下装着
+ELSEIF RESULT == 2 && W:3
+	;汚物まみれの場合
+	IF (TFLAG:下着着衣下が穿けない状態になっている & 8)
+		PRINTFORML 汚物まみれで、とてもはける状態ではありません
+	;おしっこまみれの場合
+	ELSEIF (TFLAG:下着着衣下が穿けない状態になっている & 4)
+		PRINTFORML おしっこでびしょ濡れで、はける状態ではありません
+	ELSE
+		PRINTFORM %CALLNAME:TARGET%に
+		CALL PRINT_CLOTHTYPE_MAIN2
+		IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+			PRINTL のスカートをはかせた
+		ELSE
+			PRINTL 下をはかせた
+		ENDIF
+		IF CFLAG:上着のタイプ <= 100
+			CFLAG:着衣状態 |= 8
+		ELSE
+			CFLAG:着衣状態 |= 16
+		ENDIF
+	ENDIF
+;ブラジャー脱衣
+ELSEIF RESULT == 3 && T:4
+	PRINTFORML %CALLNAME:TARGET%のブラジャーを外した
+	CFLAG:着衣状態 -= 2
+;ブラジャー装着
+ELSEIF RESULT == 3 && W:4
+	PRINTFORML %CALLNAME:TARGET%にブラジャーを付けさせた
+	CFLAG:着衣状態 |= 2
+;パンツ脱衣
+ELSEIF RESULT == 4 && T:5
+	PRINTFORM %CALLNAME:TARGET%の
+	IF (TFLAG:下着着衣下が穿けない状態になっている & 8)
+		PRINT 汚物まみれの
+	ELSEIF (TFLAG:下着着衣下が穿けない状態になっている & 4)
+		PRINT おしっこでびしょ濡れの
+	ENDIF
+	PRINTL パンツを脱がせた
+	CFLAG:着衣状態 -= 1
+;パンツ装着
+ELSEIF RESULT == 4 && W:5
+	;汚物まみれの場合
+	IF TFLAG:下着着衣下が穿けない状態になっている & 2
+		PRINTFORML 汚物塗れで、とてもはける状態ではありません
+	;おしっこまみれの場合
+	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 1
+		PRINTFORML おしっこでびしょ濡れで、はける状態ではありません
+	ELSE
+		PRINTFORML %CALLNAME:TARGET%のパンツをはかせた
+		CFLAG:着衣状態 |= 1
+	ENDIF
+ELSEIF RESULT == 5 && T:6
+	PRINTFORM %CALLNAME:TARGET%に
+	CALL PRINT_SHOESTYPE_MAIN
+	PRINTFORM を脱がせた
+	CFLAG:靴下の着用状態 -= 1
+;靴下装着
+ELSEIF RESULT == 5 && W:6
+	PRINTFORM %CALLNAME:TARGET%に
+	CALL PRINT_SHOESTYPE_MAIN
+	PRINTFORM をはかせた
+	CFLAG:靴下の着用状態 += 1
+;全裸にして終了
+ELSEIF RESULT == 7 && (CFLAG:着衣状態 != 0 || CFLAG:靴下の着用状態 == 0)
+	;貞操帯は直接選ばないと外せない
+	IF CFLAG:特別コスチュームのタイプ == 79 && CFLAG:貞操帯のカギを捨てた == 1 && (CFLAG:着衣状態 & 64)
+		PRINTFORMW %CALLNAME:TARGET%を貞操帯を残して全裸にした
+		CFLAG:着衣状態 = 64
+		CFLAG:靴下の着用状態 = -1
+	ELSE
+		PRINTFORML %CALLNAME:TARGET%を全裸にした
+		CFLAG:着衣状態 = 0
+		CFLAG:靴下の着用状態 = -1
+		WAIT
+		RETURN 0
+	ENDIF
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+PRINTL 
+
+GOTO INPUT_LOOP
+
+;=================================================
+;判定用関数群
+;=================================================
+;特別コス脱衣判定
+@COM110_ABLE0T
+;特別コスが設定されていないとダメ
+SIF CFLAG:特別コスチュームのタイプ == 0
+	RETURN 0
+;特別コスを付けていないとダメ
+SIF (CFLAG:着衣状態 & 64) == 0
+	RETURN 0
+;オムツの場合
+IF CFLAG:特別コスチュームのタイプ == 69
+	;上着下・ズボンタイプを穿いてるとダメ
+	SIF (CFLAG:着衣状態 & 16) 
+		RETURN 0
+	;邪魔になる特別コスを付けているとダメ
+	SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+		RETURN 0
+	;和服の場合は上着下・スカートタイプを着ているとダメ
+	SIF CFLAG:上着のタイプ == 202 && (CFLAG:着衣状態 & 8)
+		RETURN 0
+ENDIF
+RETURN 1
+
+;特別コス装着判定
+@COM110_ABLE0W
+;特別コスが設定されていないとダメ
+SIF CFLAG:特別コスチュームのタイプ == 0
+	RETURN 0
+;特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64)
+	RETURN 0
+;特別コスが標準装備に含まれてないとダメ
+SIF (B & 64) == 0
+	RETURN 0
+;洗濯中だとダメ
+SIF CFLAG:特別コスチュームの状態 != 0
+	RETURN 0
+;オムツの場合
+IF CFLAG:特別コスチュームのタイプ == 69
+	;上着下・ズボンタイプを穿いてるとダメ
+	SIF (CFLAG:着衣状態 & 16) 
+		RETURN 0
+	;邪魔になる特別コスを付けているとダメ
+	SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+		RETURN 0
+	;和服の場合は上着下・スカートタイプを着ているとダメ
+	SIF CFLAG:上着のタイプ == 202 && (CFLAG:着衣状態 & 8)
+		RETURN 0
+ENDIF
+RETURN 1
+
+;ワンピース脱衣判定
+@COM110_ABLE1T
+;設定衣装がワンピースでないとダメ
+SIF CFLAG:上着のタイプ <= 200
+	RETURN 0
+;上着上や上着下のいずれかを着てないとダメ
+SIF (CFLAG:着衣状態 & 28) == 0
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ワンピース装着判定
+@COM110_ABLE1W
+;設定衣装がワンピースでないとダメ
+SIF CFLAG:上着のタイプ <= 200
+	RETURN 0
+;「上着上を付けているか、上着上が洗濯中である」かつ
+;「上着下を付けているか、上着下が洗濯中である」だとダメ
+;（↑衣装が破れた場合を想定して、こんなわかり辛い記述になっています。
+;　　要するに、今装着してなくて洗濯中でもない上半分か下半分がないとダメってことです）
+IF (CFLAG:着衣状態 & 4) || CFLAG:上着上の状態 != 0
+	SIF (CFLAG:着衣状態 & 24) || CFLAG:上着下の状態 != 0
+		RETURN 0
+ENDIF
+;上着上と上着下が標準装備に含まれてないとダメ
+SIF (B & 4) == 0 || ((B & 8) == 0 && (B & 16) == 0)
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ツーピース上脱衣判定
+@COM110_ABLE2T
+;設定衣装がツーピースでないとダメ
+SIF CFLAG:上着のタイプ >= 201
+	RETURN 0
+;上着上を付けてないとダメ
+SIF (CFLAG:着衣状態 & 4) == 0
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ツーピース上装着判定
+@COM110_ABLE2W
+;設定衣装がツーピースでないとダメ
+SIF CFLAG:上着のタイプ >= 201
+	RETURN 0
+;上着上を付けているとダメ
+SIF (CFLAG:着衣状態 & 4)
+	RETURN 0
+;上着上が標準装備に含まれてないとダメ
+SIF (B & 4) == 0
+	RETURN 0
+;上着上が洗濯中だとダメ
+SIF CFLAG:上着上の状態 != 0
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ツーピース下脱衣判定
+@COM110_ABLE3T
+;設定衣装がツーピースでないとダメ
+SIF CFLAG:上着のタイプ >= 201
+	RETURN 0
+;なにか上着下を付けてないとダメ
+SIF (CFLAG:着衣状態 & 24) == 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+RETURN 1
+
+;ツーピース下装着判定
+@COM110_ABLE3W
+;設定衣装がツーピースでないとダメ
+SIF CFLAG:上着のタイプ >= 201
+	RETURN 0
+;なにか上着下を付けているとダメ
+SIF (CFLAG:着衣状態 & 24)
+	RETURN 0
+;上着下が標準装備に含まれてないとダメ
+SIF (B & 24) == 0
+	RETURN 0
+;上着下が洗濯中だとダメ
+SIF CFLAG:上着下の状態 != 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+RETURN 1
+
+;ブラジャー脱衣判定
+@COM110_ABLE4T
+;ブラジャーを付けてないとダメ
+SIF (CFLAG:着衣状態 & 2) == 0
+	RETURN 0
+;上着上を着ているとダメ
+SIF (CFLAG:着衣状態 & 4)
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ブラジャー装着判定
+@COM110_ABLE4W
+;上半身裸じゃないとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ブラジャーが標準装備に含まれてないとダメ
+SIF (B & 2) == 0
+	RETURN 0
+;ブラジャーが洗濯中だとダメ
+SIF CFLAG:ブラジャーの状態 != 0
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;パンツ脱衣判定
+@COM110_ABLE5T
+;パンツを穿いてないとダメ
+SIF (CFLAG:着衣状態 & 1) == 0
+	RETURN 0
+;上着下・ズボンタイプを穿いてるとダメ
+SIF (CFLAG:着衣状態 & 16) 
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+;和服の場合は上着下・スカートタイプを着ているとダメ
+SIF CFLAG:上着のタイプ == 202 && (CFLAG:着衣状態 & 8)
+	RETURN 0
+RETURN 1
+
+;パンツ装着判定
+@COM110_ABLE5W
+;パンツをはいてるとダメ
+SIF (CFLAG:着衣状態 & 1)
+	RETURN 0
+;上着下・ズボンタイプを穿いてるとダメ
+SIF (CFLAG:着衣状態 & 16)
+	RETURN 0
+;パンツが標準装備に含まれてないとダメ
+SIF (B & 1) == 0
+	RETURN 0
+;パンツが洗濯中だとダメ
+SIF CFLAG:パンツの状態 != 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+;和服の場合は上着下・スカートタイプを着ているとダメ
+SIF CFLAG:上着のタイプ == 202 && (CFLAG:着衣状態 & 8)
+	RETURN 0
+RETURN 1
+
+
+;靴下装着判定
+@COM110_ABLE6W
+;靴下をはいてるとダメ
+SIF CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;裸足だとダメ
+SIF CFLAG:靴下の種類 == 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+RETURN 1
+
+;靴下脱衣判定
+@COM110_ABLE6T
+;靴下を穿いてないとダメ
+SIF CFLAG:靴下の着用状態 == -1
+	RETURN 0
+;裸足だとダメ
+SIF CFLAG:靴下の種類 == 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+RETURN 1

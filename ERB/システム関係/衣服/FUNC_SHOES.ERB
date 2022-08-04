@@ -1,0 +1,155 @@
+﻿;===========================================================
+;足回りの処理
+;===========================================================
+@PRINT_SHOESTYPE
+IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0
+	PRINTFORM 素足
+ELSEIF CFLAG:靴下の種類 == 1
+	PRINTFORM ショートソックス
+ELSEIF CFLAG:靴下の種類 == 2
+	PRINTFORM 学校指定ソックス
+ELSEIF CFLAG:靴下の種類 == 3
+	PRINTFORM ハイソックス
+ELSEIF CFLAG:靴下の種類 == 4
+	PRINTFORM ルーズソックス
+ELSEIF CFLAG:靴下の種類 == 5
+	PRINTFORM ニーソックス
+ELSEIF CFLAG:靴下の種類 == 6
+	PRINTFORM 黒ストッキング
+ELSEIF CFLAG:靴下の種類 == 7
+	PRINTFORM ガーターストッキング
+ELSEIF CFLAG:靴下の種類 == 8
+	PRINTFORM ニーハイネットストッキング
+ELSEIF CFLAG:靴下の種類 == 9
+	PRINTFORM 白ストッキング
+ELSEIF CFLAG:靴下の種類 == 99
+	PRINTFORM ガラスのニーソックス
+ELSE
+	PRINTFORM
+ENDIF
+
+IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	PRINTFORM
+ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	PRINTFORM
+ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	PRINTFORM
+ELSEIF CFLAG:靴下の種類 == 99 && CFLAG:着衣状態 != 0
+	PRINTFORM
+ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	PRINTFORM
+ELSE
+	PRINTFORM に
+ENDIF
+
+IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	PRINTFORM 
+ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	PRINTFORM 裸足
+ELSEIF CFLAG:靴の種類 == 1 && CFLAG:靴下の種類 != 99
+	PRINTFORM スニーカー
+ELSEIF CFLAG:靴の種類 == 2 && CFLAG:靴下の種類 != 99
+	PRINTFORM 学校指定ローファー
+ELSEIF CFLAG:靴の種類 == 3 && CFLAG:靴下の種類 != 99
+	PRINTFORM パンプス
+ELSEIF CFLAG:靴の種類 == 4 && CFLAG:靴下の種類 != 99
+	PRINTFORM ハイヒール
+ELSEIF CFLAG:靴の種類 == 5 && CFLAG:靴下の種類 != 99
+	PRINTFORM サンダル
+ELSEIF CFLAG:靴の種類 == 6 && CFLAG:靴下の種類 != 99
+	PRINTFORM ビーチサンダル
+ELSEIF CFLAG:靴の種類 == 7 && CFLAG:靴下の種類 != 99
+	PRINTFORM ナースサンダル
+ELSEIF CFLAG:靴の種類 == 8 && CFLAG:靴下の種類 != 99
+	PRINTFORM パールピンクミュール
+ELSEIF CFLAG:靴の種類 == 9 && CFLAG:靴下の種類 != 99
+	PRINTFORM 下駄
+ELSEIF CFLAG:靴の種類 == 10 && CFLAG:靴下の種類 != 99
+	PRINTFORM もこもこスリッパ
+ELSEIF CFLAG:靴の種類 == 11 && CFLAG:靴下の種類 != 99
+	PRINTFORM なぜか便所スリッパ
+ELSEIF CFLAG:靴の種類 == 12 && CFLAG:靴下の種類 != 99
+	PRINTFORM 編み上げブーツ
+ELSEIF CFLAG:靴の種類 == 13 && CFLAG:靴下の種類 != 99
+	PRINTFORM カウボーイブーツ
+ELSEIF CFLAG:靴の種類 == 14 && CFLAG:靴下の種類 != 99
+	PRINTFORM ピンヒールニーハイブーツ
+ELSEIF CFLAG:靴の種類 == 15 && CFLAG:靴下の種類 != 99
+	PRINTFORM クロックス
+ENDIF
+
+IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	PRINTFORM 
+ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	PRINTFORM 
+ELSE
+	PRINTFORM を履いた
+ENDIF
+;===========================================================
+;足回りの処理
+;===========================================================
+@PRINT_SHOESTYPE_MAIN
+IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0
+	PRINTFORM 裸足
+ELSEIF CFLAG:靴下の種類 == 1
+	PRINTFORM ショートソックス
+ELSEIF CFLAG:靴下の種類 == 2
+	PRINTFORM 学校指定ソックス
+ELSEIF CFLAG:靴下の種類 == 3
+	PRINTFORM ハイソックス
+ELSEIF CFLAG:靴下の種類 == 4
+	PRINTFORM ルーズソックス
+ELSEIF CFLAG:靴下の種類 == 5
+	PRINTFORM ニーソックス
+ELSEIF CFLAG:靴下の種類 == 6
+	PRINTFORM 黒ストッキング
+ELSEIF CFLAG:靴下の種類 == 7
+	PRINTFORM ガーターストッキング
+ELSEIF CFLAG:靴下の種類 == 8
+	PRINTFORM ニーハイネットストッキング
+ELSEIF CFLAG:靴下の種類 == 9
+	PRINTFORM 白ストッキング
+ELSEIF CFLAG:靴下の種類 == 99
+	PRINTFORM ガラスのニーソックス
+ELSE
+	PRINTFORM
+ENDIF
+;===========================================================
+;足回りの処理
+;===========================================================
+@PRINT_SHOESTYPE_MAIN2
+IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	PRINTFORM 
+ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	PRINTFORM 裸足
+ELSEIF CFLAG:靴の種類 == 1 && CFLAG:靴下の種類 != 99
+	PRINTFORM スニーカー
+ELSEIF CFLAG:靴の種類 == 2 && CFLAG:靴下の種類 != 99
+	PRINTFORM 学校指定ローファー
+ELSEIF CFLAG:靴の種類 == 3 && CFLAG:靴下の種類 != 99
+	PRINTFORM パンプス
+ELSEIF CFLAG:靴の種類 == 4 && CFLAG:靴下の種類 != 99
+	PRINTFORM ハイヒール
+ELSEIF CFLAG:靴の種類 == 5 && CFLAG:靴下の種類 != 99
+	PRINTFORM サンダル
+ELSEIF CFLAG:靴の種類 == 6 && CFLAG:靴下の種類 != 99
+	PRINTFORM ビーチサンダル
+ELSEIF CFLAG:靴の種類 == 7 && CFLAG:靴下の種類 != 99
+	PRINTFORM ナースサンダル
+ELSEIF CFLAG:靴の種類 == 8 && CFLAG:靴下の種類 != 99
+	PRINTFORM パールピンクミュール
+ELSEIF CFLAG:靴の種類 == 9 && CFLAG:靴下の種類 != 99
+	PRINTFORM 下駄
+ELSEIF CFLAG:靴の種類 == 10 && CFLAG:靴下の種類 != 99
+	PRINTFORM もこもこスリッパ
+ELSEIF CFLAG:靴の種類 == 11 && CFLAG:靴下の種類 != 99
+	PRINTFORM なぜか便所スリッパ
+ELSEIF CFLAG:靴の種類 == 12 && CFLAG:靴下の種類 != 99
+	PRINTFORM 編み上げブーツ
+ELSEIF CFLAG:靴の種類 == 13 && CFLAG:靴下の種類 != 99
+	PRINTFORM カウボーイブーツ
+ELSEIF CFLAG:靴の種類 == 14 && CFLAG:靴下の種類 != 99
+	PRINTFORM ピンヒールニーハイブーツ
+ELSEIF CFLAG:靴の種類 == 15 && CFLAG:靴下の種類 != 99
+	PRINTFORM クロックス
+ENDIF

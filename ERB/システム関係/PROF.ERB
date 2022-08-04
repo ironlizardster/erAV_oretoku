@@ -1,0 +1,116 @@
+﻿;===========================================================
+;INFOの3ページ目
+;===========================================================
+@SHOW_PROF
+
+IF EXP:ＡＶ出演経験 == 0 && TALENT:ＡＶ女優 == 0
+	PRINTFORML  まだデビューしていません。
+ELSEIF EXP:ＡＶ出演経験 <= 10 && TALENT:ＡＶ女優 == 1
+	PRINTFORML  %NICKNAME:TARGET%はＡＶ女優としてデビューしました。
+	PRINTFORML  これまでに{EXP:ＡＶ出演経験}本リリースしています。	
+ELSEIF EXP:ＡＶ出演経験 >= 10 && EXP:ＡＶ出演経験 <= 30 && TALENT:ＡＶ女優 == 1
+	PRINTFORML  %NICKNAME:TARGET%は人気ＡＶ女優のひとりです。
+	PRINTFORML  これまでに{EXP:ＡＶ出演経験}本リリースしています。
+ELSEIF EXP:ＡＶ出演経験 >= 30 && TALENT:ＡＶ女優 == 1
+	PRINTFORML  %NICKNAME:TARGET%はＡＶ史に名前を残すほどの超大物ＡＶ女優です。
+	PRINTFORML  これまでに{EXP:ＡＶ出演経験}本リリースしています。
+ENDIF
+IF TALENT:彼氏あり
+	PRINT  現在
+	CALL PRINT_BOYFRIEND
+	PRINTL と付き合っています。  
+ENDIF
+IF EXP:彼氏とのＳＥＸ回数 >= 1
+	PRINT  
+	IF CFLAG:彼氏の有無 == 1
+		PRINTFORM 彼氏と
+			SIF EXP:交際人数 >= 1
+				PRINTFORM 元カレで合計
+	ELSE
+		PRINTFORM 元カレと
+	ENDIF
+	PRINTFORM {EXP:彼氏とのＳＥＸ回数}回セックスしたことがあり
+			IF CFLAG:初体験の相手 == 8 && CFLAG:167 == 1
+				PRINTFORM 、元カレが処女喪失の相手です
+			ELSEIF CFLAG:初体験の相手 == 8 && CFLAG:彼氏の有無 == 1
+				PRINT 、彼氏の
+				IF CFLAG:初体験の相手 == 8 && CFLAG:彼氏の種類 == 0
+					PRINT 黒
+				ELSEIF CFLAG:初体験の相手 == 8 && CFLAG:彼氏の種類 == 3
+					PRINT 包茎
+				ELSEIF CFLAG:初体験の相手 == 8 && CFLAG:彼氏の種類 == 6
+					PRINT 極太
+				ENDIF
+				IF TALENT:淫乱 == 1
+					PRINT チ○ポ
+				ELSE
+					PRINT ペニス
+				ENDIF
+		PRINT で処女喪失しました
+	ELSE
+		PRINT ます
+	ENDIF
+	PRINTL 。
+ENDIF
+IF EXP:セフレとのSEX回数 >= 1
+	PRINTFORM  セフレと{EXP:セフレとのSEX回数}回ゴム無しでセックスしたことがあり
+	IF CFLAG:初体験の相手 == 9
+		PRINT 、
+		PRINT セフレの
+		PRINT 極太黒チ○ポで処女喪失しました
+	ELSE
+		PRINT ます
+	ENDIF
+	PRINTL 。
+ENDIF
+
+IF EXP:交際人数 >= 1
+	PRINTFORM  以前に{EXP:交際人数}人の男性と交際したことがあり
+	IF CFLAG:彼氏の有無 == 1
+		PRINTFORM 、現在の
+		CALL PRINT_BOYFRIEND
+		PRINTFORM の彼氏は{EXP:交際人数 + 1}人目の彼氏で
+	ELSE
+		PRINTFORM ま
+	ENDIF
+	PRINTFORML す。
+ENDIF
+
+;ギャルたちの間でカリスマ、なのに何で褐色肌見てたんだ……
+IF TALENT:ギャル系 == 1 && TALENT:アイドル == 1 && TALENT:ColorfulPureGirls == 1 && TALENT:Triptych == 1
+	PRINTFORML  現役アイドルなだけにギャルたちの間でカリスマ的な存在です。
+ELSEIF TALENT:褐色肌 == 1 && TALENT:アイドル == 0 && TALENT:ColorfulPureGirls == 0 && TALENT:Triptych == 0 && TALENT:ギャル系 == 1 && ABL:舞踊技能 >= 4
+	PRINTFORML  とあるＤＪバーのレゲエパーティーではちょっとした有名ダンサーのようです。
+ENDIF
+IF EXP:痴漢経験 >= 1
+	PRINTFORM  痴漢に{EXP:痴漢経験}回遭ったことがあり
+	IF CFLAG:初体験の相手 == 7
+		PRINT 、
+		PRINT 痴漢の
+		PRINT ペニスでロストヴァージンしました
+	ELSE
+		PRINT ます
+	ENDIF
+	PRINTL 。
+ENDIF
+IF EXP:出産経験 >= 1
+	PRINTFORML  %CALLNAME:TARGET%は{EXP:出産経験}児のママです。
+ENDIF
+IF TALENT:喫煙者 == 1
+	PRINTFORML  %CALLNAME:TARGET%が愛煙しているタバコの銘柄は%CSTR:タバコの銘柄%です。
+ENDIF
+
+;SIF CFLAG:スタッフ寝取られイベントの進行度 != 1 && (CFLAG:初体験の相手 != 0 || CFLAG:ファーストキスの相手 != -1 || CFLAG:アナル処女喪失の相手 != 0) 
+;	DRAWLINE 
+;;;;下段側の表示を消してみる
+;;;;SIF CFLAG:スタッフ寝取られイベントの進行度 != 1 && CFLAG:初体験の相手 != 0
+;;;;	CALL LOSTVIRGIN_DETAIL
+;;;;SIF CFLAG:スタッフ寝取られイベントの進行度 != 1 && CFLAG:ファーストキスの相手 != -1
+;;;;	CALL FIRSTKISS_DETAIL
+;;;;SIF CFLAG:スタッフ寝取られイベントの進行度 != 1 && CFLAG:アナル処女喪失の相手 != 0
+;;;;	CALL LOSTANALVIRGIN_DETAIL
+
+
+;===========================================================
+;出演タイトル
+;===========================================================

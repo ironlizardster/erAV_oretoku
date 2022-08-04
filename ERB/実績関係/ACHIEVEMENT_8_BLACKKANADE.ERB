@@ -1,0 +1,47 @@
+﻿;===========================================================
+;実績・俺の妹がこんなにビッチなわけがない
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_8
+RESULTS = 俺の妹がこんなにビッチなわけがない
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_8
+; 条件を満たす人数の計算 (※ これは例文です)
+LOCAL = GETCHARA([[キャラ:宮間かなで]] ,0)
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:8 == 0 && DIFFICULTY_CHECK() && LOCAL > 0 && TALENT:LOCAL:セフレあり && TALENT:LOCAL:絶倫 && TALENT:LOCAL:彼氏あり && !TALENT:LOCAL:処女 && !TALENT:LOCAL:恋心
+	GLOBAL:8 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:8
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_8
+; 解説文
+PRINTFORML 最愛の妹である『宮間かなで』が頭も股もゆるい【黒ギャル】になってしまいました
+PRINTFORML そんな%CALLNAME:MASTER%の心の叫びはきっと、この実績の名前と一緒でしょう
+PRINTFORMW 純情だった『宮間かなで』にもう一度逢いたい、と願ってもまた一からやり直すしかありません……
+; ボーナスなどの処理はここ以降に記述する
+IF GETCHARA([[キャラ:宮間カナ]],0 ) < 0 && GLOBAL:51
+		DRAWLINE
+		PRINTFORML 須野郁美が助手になったことがあるため、ボーナスが解禁されました！
+		PRINTFORM 須野郁美の持つ最先端科学の知識により黒ギャルとなった『宮間かなで』の
+		PRINTFORML クローンを生み出すことができます
+		PRINTFORM ※クローンのため、全ての経験はリセットされます。
+		$INPUT_LOOP_4
+		PRINTFORML 《宮間かなでのクローンを作りますか？》
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		INPUT
+		IF RESULT == 0
+			PRINTFORMW 『宮間かなで』のクローンを生み出しました
+			CALL キャラ追加([[キャラ:宮間カナ]])
+			FLAG:[[FLAG:俺妹ビッチボーナス受け取り]] = 1
+		ELSEIF RESULT == 1
+			RETURN 0
+		ELSE
+			GOTO INPUT_LOOP_4
+	ENDIF
+ENDIF

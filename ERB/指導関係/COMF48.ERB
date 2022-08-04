@@ -1,0 +1,123 @@
+﻿;-------------------------------------------------
+;足コキする
+;SM系コマンド：調教者が調教対象の%CSTR:男性器呼び方%を足で刺激
+;-------------------------------------------------
+@COM48
+
+PRINTL 足コキする
+SAVESTR:0 = 足コキする
+CALL TRAIN_MESSAGE_B
+
+LOSEBASE:体力 += 10
+LOSEBASE:気力 += 60
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:12 = 150
+SOURCE:14 = 400
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 30
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 100
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 200
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 500
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 1000
+ELSE
+	SOURCE:0 = 1500
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 1
+	TIMES SOURCE:0 , 1.00
+	TIMES SOURCE:14 , 1.00
+ELSEIF ABL:マゾっ気 == 1
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:14 , 0.80
+ELSEIF ABL:マゾっ気 == 2
+	TIMES SOURCE:0 , 1.50
+	TIMES SOURCE:14 , 0.60
+ELSEIF ABL:マゾっ気 == 3
+	TIMES SOURCE:0 , 1.80
+	TIMES SOURCE:14 , 0.40
+ELSEIF ABL:マゾっ気 == 4
+	TIMES SOURCE:0 , 2.20
+	TIMES SOURCE:14 , 0.20
+ELSE
+	TIMES SOURCE:0 , 3.00
+	TIMES SOURCE:14 , 0.00
+ENDIF
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;被虐快楽経験
+IF TALENT:マゾ == 1 || (ABL:欲望 >= 3 && ABL:マゾっ気 >= 3)
+	PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%+3
+	EXP:被虐快楽経験 += 3
+ELSEIF ABL:欲望 >= 3 && ABL:マゾっ気 >= 1
+	PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%+2
+	EXP:被虐快楽経験 += 2
+ELSEIF ABL:欲望 >= 3 || ABL:マゾっ気 >= 1
+	PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%+1
+	EXP:被虐快楽経験 += 1
+ENDIF
+
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +3
+	EXP:レズ経験 += 3
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +3
+	EXP:ＢＬ経験 += 3
+ENDIF
+
+CALL EVENT_SEITSU_ASIKOKI
+
+;愛情経験
+IF TALENT:オトコ
+	E = 2
+ELSE
+	E = 1
+ENDIF
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+RETURN 1
+;
+;-------------------------------------------------
+;-------------------------------------------------
+;精通（足コキ）
+;-------------------------------------------------
+@EVENT_SEITSU_ASIKOKI
+A = NO:PLAYER
+;【オトコ】か【ふたなり】であり【未熟】
+SIF (TALENT:ふたなり == 0 && TALENT:オトコ == 0) || TALENT:未熟 == 0
+	RETURN 0
+;更に［Ｃ感度］５以上で触手調教や獣姦でなく
+SIF ABL:Ｃ感覚 <= 4 || TEQUIP:触手召喚 || TEQUIP:獣姦プレイ
+	RETURN 0
+;「調教対象」から「調教者」への関係が150以上
+SIF RELATION:TARGET:A < 150
+	RETURN 0
+PRINTFORML %NAME:PLAYER%に足で%CSTR:男性器呼び方%を踏まれる内に、%NAME:TARGET%は精通を迎えた…
+TALENT:未熟 = 0
+
+RETURN 1
+;
+;
+;

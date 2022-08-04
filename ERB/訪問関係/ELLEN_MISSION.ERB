@@ -1,0 +1,56 @@
+﻿;=================================================
+;ミッションなど
+;=================================================
+@ELLEN_MISSION
+
+DRAWLINE
+PRINTL エレンさんのおねがい
+PRINTL 《エレンからのお願いを受けることができます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [0] - 女優候補の紹介
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:桐生歌音]]
+		IF TALENT:COUNT:永遠の愛 == 1
+			IF FLAG:ミッションモード解禁 == 0
+				PRINTL  [1] - ミッションスタート！
+			ENDIF
+		ENDIF
+	ENDIF
+REND
+
+SIF PBAND:14 >= 3
+	PRINTL  [2] - 神那悠喜のかつての仲間を救出する
+
+DRAWLINE
+PRINTL  [999] - 戻る
+
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL ELLEN_EXTRAACTRESS
+	RETURN 0
+ELSEIF RESULT == 1 && FLAG:ミッションモード解禁 == 0
+	CALL MISSION_START
+ELSEIF RESULT == 2 && PBAND:14 >= 3
+	CALL KOISORA_ADD
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+

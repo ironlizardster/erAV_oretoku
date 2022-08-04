@@ -1,0 +1,811 @@
+﻿;eraim@sPOFA0.06Gのものを移入
+;上限を他と共有するものは上限を下げるか、一括上昇の対象にしない処理
+;=================================================
+;一括レベル上げ機能
+;=================================================
+@AUT_LVUPPER, ARG
+;Ｃ感覚
+CALL AUT_C_0
+;Ｂ感覚
+CALL AUT_B_0
+;Ｖ感覚
+CALL AUT_V_0
+;Ａ感覚
+CALL AUT_A_0
+;Ｍ感覚
+;CALL AUT_M_0
+
+;従順;恐怖
+CALL AUT_ZYUUZYUN_0
+;従順;恭順
+CALL AUT_ZYUUZYUN_1
+;従順;欲情
+CALL AUT_ZYUUZYUN_2
+;従順;屈服
+CALL AUT_ZYUUZYUN_3
+;欲望;欲情
+CALL AUT_YOKUBOU_0
+;技巧;習得
+CALL AUT_GIKOU_0
+;奉仕技術;習得
+CALL AUT_HOUSHIGI_0
+
+;性交技術;習得
+CALL AUT_SEIKOUGI_0
+;話術;習得
+CALL AUT_WAZYUTU_0
+;奉仕精神;屈服
+CALL AUT_HOUSHISE_0
+;奉仕精神;恭順
+CALL AUT_HOUSHISE_1
+;奉仕精神;習得
+CALL AUT_HOUSHISE_2
+;露出癖;恥情
+CALL AUT_ROSHITU_0
+
+;;サドっ気;欲情＋習得
+;CALL AUT_SADO_0
+;;マゾっ気;苦痛＋欲情
+;CALL AUT_MAZO_0
+;;マゾっ気;苦痛＋屈服
+;CALL AUT_MAZO_1
+;;マゾっ気;恐怖＋欲情
+;;CALL AUT_MAZO_2
+;;マゾっ気;恥情＋恭順
+;;CALL AUT_MAZO_3
+
+;レズっ気;いろいろ
+CALL AUT_REZUKKE_0
+;レズっ気;Ｃ感覚
+CALL AUT_REZUKKE_1
+;ＢＬっ気;いろいろ
+CALL AUT_BLKKE_0
+;ＢＬっ気;Ａ感覚
+CALL AUT_BLKKE_1
+
+;;性交中毒;欲情＋屈服
+;CALL AUT_SEIKOU_0
+;;性交中毒;性交経験半分
+;CALL AUT_SEIKOU_1
+;;自慰中毒;欲情＋快Ｃ＋恥情＋自慰経験
+;CALL AUT_JII_0
+;;自慰中毒;欲情＋快Ｃ＋恥情＋調教自慰経験
+;CALL AUT_JII_1
+;;自慰中毒;Ｂ感覚
+;;CALL AUT_JII_2
+;;自慰中毒;Ｖ感覚
+;;CALL AUT_JII_3
+;;自慰中毒;Ａ感覚
+;;CALL AUT_JII_4
+;;精液中毒;欲情＋屈服;精液経験多いバージョン
+;CALL AUT_SEIEKI_0
+;;精液中毒;欲情＋屈服;精液経験少ないバージョン
+;CALL AUT_SEIEKI_1
+;;レズ中毒;快Ｃ＋欲情＋屈服
+;CALL AUT_REZUTYUUDOKU_0
+;;売春中毒;恭順＋欲情＋屈服
+;;CALL AUT_BAISYUN_0
+
+;;獣姦中毒;欲情＋屈服
+;CALL AUT_ZYUUKAN_0
+
+
+;ビジュアル技能;習得
+CALL AUT_Vi_0
+;;ボーカル技能;習得
+;CALL AUT_Vo_0
+;;ダンス技能;習得
+;CALL AUT_Da_0
+
+;;料理技能;習得
+;CALL AUT_RYOURI_0
+
+;////////////////////////
+IF ARG == 200
+	;従順;恭順
+	CALL AUT_ZYUUZYUN_1
+	;奉仕精神;恭順
+	CALL AUT_HOUSHISE_1
+	;売春中毒;恭順＋欲情＋屈服
+	CALL AUT_BAISYUN_0
+ENDIF
+;////////////////////////
+
+PRINTW 一括レベルアップしました。
+CALL YOKUBO_UP_CHECK
+CALL JUJUN_UP_CHECK
+
+;-------------------------------------------------
+;Ｃ感覚
+;-------------------------------------------------
+@AUT_C_0
+LOCAL = 0
+REPEAT 10 - ABL:Ｃ感覚
+CALL CAN_ABLUP0
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:Ｃ感覚 += 1
+	JUEL:快Ｃ -= A
+REND
+CALL PRINT_AUT_ABLUP(0, 0, -1, -1, LOCAL)
+;-------------------------------------------------
+;Ｂ感覚
+;-------------------------------------------------
+@AUT_B_0
+LOCAL = 0
+REPEAT 10 - ABL:Ｂ感覚
+CALL CAN_ABLUP1
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:Ｂ感覚 += 1
+	JUEL:快Ｂ -= A
+REND
+CALL PRINT_AUT_ABLUP(1, 14, -1, -1, LOCAL)
+;-------------------------------------------------
+;Ｖ感覚
+;-------------------------------------------------
+@AUT_V_0
+LOCAL = 0
+REPEAT 10 - ABL:Ｖ感覚
+CALL CAN_ABLUP2
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:Ｖ感覚 += 1
+	JUEL:快Ｖ -= A
+REND
+CALL PRINT_AUT_ABLUP(2, 1, -1, -1, LOCAL)
+;-------------------------------------------------
+;Ａ感覚
+;-------------------------------------------------
+@AUT_A_0
+LOCAL = 0
+REPEAT 10 - ABL:Ａ感覚
+CALL CAN_ABLUP3
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:Ａ感覚 += 1
+	JUEL:快Ａ -= A
+REND
+CALL PRINT_AUT_ABLUP(3, 2, -1, -1, LOCAL)
+;-------------------------------------------------
+;Ｍ感覚
+;-------------------------------------------------
+;@AUT_M_0
+;LOCAL = 0
+;REPEAT 10 - ABL:4
+;CALL CAN_ABLUP4
+;	IF I != 0
+;		BREAK
+;	ENDIF
+;	LOCAL += 1
+;	ABL:4 += 1
+;	JUEL:恭順 -= A
+;REND
+;CALL PRINT_AUT_ABLUP(4, 4, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;従順
+;-------------------------------------------------
+;恐怖
+@AUT_ZYUUZYUN_0
+LOCAL = 0
+REPEAT 10 - ABL:信頼
+	CALL CAN_ABLUP10
+	IF RESULT == 0 || I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:信頼 += 1
+	JUEL:恐怖 -= A
+REND
+CALL PRINT_AUT_ABLUP(10, 10, -1, -1, LOCAL)
+;恭順
+@AUT_ZYUUZYUN_1
+LOCAL = 0
+REPEAT 10 - ABL:信頼
+	CALL CAN_ABLUP10
+	IF RESULT == 0 || J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:信頼 += 1
+	JUEL:恭順 -= B
+REND
+CALL PRINT_AUT_ABLUP(10, 4, -1, -1, LOCAL)
+;欲情
+@AUT_ZYUUZYUN_2
+LOCAL = 0
+REPEAT 10 - ABL:信頼
+	CALL CAN_ABLUP10
+	IF C < 0
+		BREAK
+	ELSEIF  RESULT == 0 || K != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:信頼 += 1
+	JUEL:欲情 -= C
+REND
+CALL PRINT_AUT_ABLUP(10, 5, -1, -1, LOCAL)
+;屈服
+@AUT_ZYUUZYUN_3
+LOCAL = 0
+REPEAT 10 - ABL:信頼
+	CALL CAN_ABLUP10
+	IF D < 0
+		BREAK
+	ELSEIF RESULT == 0 || L != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:信頼 += 1
+	JUEL:屈服 -= D
+REND
+CALL PRINT_AUT_ABLUP(10, 6, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;欲望
+;-------------------------------------------------
+;欲情
+@AUT_YOKUBOU_0
+LOCAL = 0
+REPEAT 10 - ABL:欲望
+CALL CAN_ABLUP11
+	IF RESULT == 0 || (NO:TARGET == [[キャラ:ユーニス・パラディスス]] && ABL:欲望 == 4 && !TALENT:奇蹟) || (NO:TARGET == [[キャラ:雛見まゆ]] && ABL:欲望 == 3 && !TALENT:淫魔) || (NO:TARGET == [[キャラ:羽瀬川みこと]] && ABL:欲望 == 3 && !TALENT:天使)
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:欲望 += 1
+	JUEL:欲情 -= A
+REND
+CALL PRINT_AUT_ABLUP(11, 5, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;技巧
+;話術との兼ね合いで5まで
+;-------------------------------------------------
+;習得
+@AUT_GIKOU_0
+LOCAL = 0
+REPEAT 10 - ABL:技巧
+CALL CAN_ABLUP12
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:技巧 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(12, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;奉仕技術
+;-------------------------------------------------
+;習得
+@AUT_HOUSHIGI_0
+LOCAL = 0
+REPEAT 10 - ABL:奉仕技術
+CALL CAN_ABLUP13
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:奉仕技術 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(13, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;性交技術
+;-------------------------------------------------
+;習得
+@AUT_SEIKOUGI_0
+LOCAL = 0
+REPEAT 10 - ABL:性交技術
+CALL CAN_ABLUP14
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:性交技術 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(14, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;話術
+;技巧との略
+;-------------------------------------------------
+;習得
+@AUT_WAZYUTU_0
+LOCAL = 0
+REPEAT 10 - ABL:話術
+CALL CAN_ABLUP15
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:話術 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(15, 7, -1, -1, LOCAL)
+
+
+;-------------------------------------------------
+;奉仕精神
+;-------------------------------------------------
+;屈服
+@AUT_HOUSHISE_0
+LOCAL = 0
+REPEAT 10 - ABL:奉仕精神
+CALL CAN_ABLUP16
+	IF MARK:反発刻印 || RESULT == 0 || I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:奉仕精神 += 1
+	JUEL:屈服 -= A
+REND
+CALL PRINT_AUT_ABLUP(16, 6, -1, -1, LOCAL)
+;恭順
+@AUT_HOUSHISE_1
+LOCAL = 0
+REPEAT 10 - ABL:奉仕精神
+CALL CAN_ABLUP16
+	IF RESULT == 0 || B <= 0 || J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:奉仕精神 += 1
+	JUEL:恭順 -= B
+REND
+CALL PRINT_AUT_ABLUP(16, 4, -1, -1, LOCAL)
+;習得
+@AUT_HOUSHISE_2
+LOCAL = 0
+REPEAT 10 - ABL:奉仕精神
+CALL CAN_ABLUP16
+	IF RESULT == 0 || C <= 0 || K != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:奉仕精神 += 1
+	JUEL:習得 -= C
+REND
+CALL PRINT_AUT_ABLUP(16, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;露出癖
+;-------------------------------------------------
+@AUT_ROSHITU_0
+LOCAL = 0
+REPEAT 10 - ABL:露出癖
+CALL CAN_ABLUP17
+	IF RESULT == 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:露出癖 += 1
+	JUEL:恥情 -= A
+REND
+CALL PRINT_AUT_ABLUP(17, 8, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;サドっ気
+;-------------------------------------------------
+;欲情
+@AUT_SADO_0
+LOCAL = 0
+REPEAT 10 - ABL:サドっ気
+CALL CAN_ABLUP20
+	IF B <= 0 || I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:サドっ気 += 1
+	JUEL:欲情 -= A
+REND
+CALL PRINT_AUT_ABLUP(20, 5, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;マゾっ気
+;-------------------------------------------------
+;苦痛＋欲情
+@AUT_MAZO_0
+LOCAL = 0
+REPEAT 10 - ABL:マゾっ気
+CALL CAN_ABLUP21
+	IF B <= 0 || I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:マゾっ気 += 1
+	JUEL:苦痛 -= A
+	JUEL:欲情 -= B
+REND
+CALL PRINT_AUT_ABLUP(21, 9, 5, -1, LOCAL)
+;苦痛＋屈服
+@AUT_MAZO_1
+LOCAL = 0
+REPEAT 10 - ABL:マゾっ気
+CALL CAN_ABLUP21
+	IF D <= 0 || J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:マゾっ気 += 1
+	JUEL:苦痛 -= D
+	JUEL:屈服 -= E
+REND
+CALL PRINT_AUT_ABLUP(21, 9, 6, -1, LOCAL)
+;恐怖＋欲情
+;@AUT_MAZO_2
+;LOCAL = 0
+;REPEAT 10 - ABL:マゾっ気
+;CALL CAN_ABLUP21
+;	IF B <= 0 || K != 0
+;		BREAK
+;	ENDIF
+;	LOCAL += 1
+;	ABL:マゾっ気 += 1
+;	JUEL:反感 -= A
+;	JUEL:屈服 -= B
+;REND
+;CALL PRINT_AUT_ABLUP(21, 11, 6, -1, LOCAL)
+;恥情＋恭順
+;@AUT_MAZO_3
+;LOCAL = 0
+;REPEAT 10 - ABL:マゾっ気
+;CALL CAN_ABLUP21
+;	IF D <= 0 || L != 0
+;		BREAK
+;	ENDIF
+;	LOCAL += 1
+;	ABL:マゾっ気 += 1
+;	JUEL:苦痛 -= D
+;	JUEL:欲情 -= E
+;REND
+;CALL PRINT_AUT_ABLUP(21, 9, 5, -1, LOCAL)
+
+;-------------------------------------------------
+;レズっ気
+;-------------------------------------------------
+;欲情＋屈服
+@AUT_REZUKKE_0
+LOCAL = 0
+REPEAT 10 - ABL:レズっ気
+CALL CAN_ABLUP22
+	IF RESULT == 0 || I != 0 || (NO:TARGET == [[キャラ:新島みひろ]] && ABL:レズっ気 == 2 && !TALENT:淫乱) || (NO:TARGET == [[キャラ:雛見まゆ]] && ABL:レズっ気 == 0 && !TALENT:淫魔) || (NO:TARGET == [[キャラ:羽瀬川みこと]] && ABL:レズっ気 == 0 && !TALENT:天使)
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:レズっ気 += 1
+	JUEL:欲情 -= A
+	JUEL:屈服 -= C
+REND
+CALL PRINT_AUT_ABLUP(22, 5, 6, -1, LOCAL)
+;Ｃ感覚
+@AUT_REZUKKE_1
+LOCAL = 0
+REPEAT 10 - ABL:レズっ気
+CALL CAN_ABLUP22
+	IF RESULT == 0 || D <= 0 || J != 0 || (NO:TARGET == [[キャラ:新島みひろ]] && ABL:レズっ気 == 2 && !TALENT:淫乱) || (NO:TARGET == [[キャラ:雛見まゆ]] && ABL:レズっ気 == 0 && !TALENT:淫魔) || (NO:TARGET == [[キャラ:羽瀬川みこと]] && ABL:レズっ気 == 0 && !TALENT:天使)
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:レズっ気 += 1
+	JUEL:快Ｃ -= D
+REND
+CALL PRINT_AUT_ABLUP(22, 0, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;ＢＬっ気
+;-------------------------------------------------
+;欲情＋屈服
+@AUT_BLKKE_0
+LOCAL = 0
+REPEAT 10 - ABL:ＢＬっ気
+CALL CAN_ABLUP23
+	IF RESULT == 0 || I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:ＢＬっ気 += 1
+	JUEL:欲情 -= A
+	JUEL:屈服 -= C
+REND
+CALL PRINT_AUT_ABLUP(23, 5, 6, -1, LOCAL)
+;Ａ感覚
+@AUT_BLKKE_1
+LOCAL = 0
+REPEAT 10 - ABL:ＢＬっ気
+CALL CAN_ABLUP23
+	IF RESULT == 0 || D <= 0 || J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:ＢＬっ気 += 1
+	JUEL:快Ａ -= D
+REND
+CALL PRINT_AUT_ABLUP(23, 2, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;性交中毒
+;-------------------------------------------------
+;欲情＋屈服
+@AUT_SEIKOU_0
+LOCAL = 0
+REPEAT 10 - ABL:性交中毒
+CALL CAN_ABLUP30
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:性交中毒 += 1
+	JUEL:欲情 -= A
+	JUEL:屈服 -= B
+REND
+CALL PRINT_AUT_ABLUP(30, 5, 6, -1, LOCAL)
+;半分の性交経験で上げる場合
+@AUT_SEIKOU_1
+LOCAL = 0
+REPEAT 10 - ABL:性交中毒
+CALL CAN_ABLUP30
+	IF J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:性交中毒 += 1
+	JUEL:欲情 -= A*3
+	JUEL:屈服 -= B*3
+REND
+CALL PRINT_AUT_ABLUP(30, 5, 6, -1, LOCAL)
+
+;-------------------------------------------------
+;自慰中毒
+;-------------------------------------------------
+;快Ｃ＋自慰経験
+@AUT_JII_0
+LOCAL = 0
+REPEAT 10 - ABL:自慰中毒
+CALL CAN_ABLUP31
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:自慰中毒 += 1
+	JUEL:欲情 -= A
+	JUEL:快Ｃ -= B
+	JUEL:恥情 -= C
+REND
+CALL PRINT_AUT_ABLUP(31, 5, 0, 8, LOCAL)
+;快Ｃ＋調教自慰経験
+@AUT_JII_1
+LOCAL = 0
+REPEAT 10 - ABL:自慰中毒
+CALL CAN_ABLUP31
+	IF J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:自慰中毒 += 1
+	JUEL:欲情 -= A
+	JUEL:快Ｃ -= B
+	JUEL:恥情 -= C
+REND
+CALL PRINT_AUT_ABLUP(31, 5, 0, 8, LOCAL)
+;Ｂ自慰
+;@AUT_JII_2
+;LOCAL = 0
+;REPEAT 10 - ABL:自慰中毒
+;CALL CAN_ABLUP31
+;	IF P != 0
+;		BREAK
+;	ENDIF
+;	LOCAL++
+;	ABL:自慰中毒 += 1
+;	JUEL:屈服 -= A
+;	JUEL:快Ｖ -= S
+;	JUEL:苦痛 -= C
+;REND
+;CALL PRINT_AUT_ABLUP(31, 6, 1, 9, LOCAL)
+;Ｖ自慰
+;@AUT_JII_3
+;LOCAL = 0
+;REPEAT 10 - ABL:自慰中毒
+;CALL CAN_ABLUP31
+;	IF M != 0
+;		BREAK
+;	ENDIF
+;	LOCAL++
+;	ABL:自慰中毒 += 1
+;	JUEL:屈服 -= A
+;	JUEL:快Ａ -= R
+;	JUEL:苦痛 -= C
+;REND
+;CALL PRINT_AUT_ABLUP(31, 6, 2, 9, LOCAL)
+;Ａ自慰
+;@AUT_JII_4
+;LOCAL = 0
+;REPEAT 10 - ABL:自慰中毒
+;CALL CAN_ABLUP31
+;	IF J != 0
+;		BREAK
+;	ENDIF
+;	LOCAL += 1
+;	ABL:自慰中毒 += 1
+;	JUEL:屈服 -= A
+;	JUEL:潤滑 -= F
+;	JUEL:苦痛 -= C
+;REND
+;CALL PRINT_AUT_ABLUP(31, 6, 3, 9, LOCAL)
+
+;-------------------------------------------------
+;精液中毒
+;-------------------------------------------------
+;精液経験多いバージョン
+@AUT_SEIEKI_0
+LOCAL = 0
+REPEAT 10 - ABL:精液中毒
+CALL CAN_ABLUP32
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:精液中毒 += 1
+	JUEL:欲情 -= A
+	JUEL:屈服 -= B
+REND
+CALL PRINT_AUT_ABLUP(32, 5, 6, -1, LOCAL)
+;精液経験少ないバージョン
+@AUT_SEIEKI_1
+LOCAL = 0
+REPEAT 10 - ABL:精液中毒
+CALL CAN_ABLUP32
+	IF J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:精液中毒 += 1
+	JUEL:欲情 -= A*3
+	JUEL:屈服 -= B*3
+REND
+CALL PRINT_AUT_ABLUP(32, 5, 6, -1, LOCAL)
+
+;-------------------------------------------------
+;レズ中毒
+;-------------------------------------------------
+@AUT_REZUTYUUDOKU_0
+LOCAL = 0
+REPEAT 10 - ABL:レズ中毒
+CALL CAN_ABLUP33
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:レズ中毒 += 1
+	JUEL:快Ｃ -= B
+	JUEL:欲情 -= A
+	JUEL:屈服 -= A
+REND
+CALL PRINT_AUT_ABLUP(33, 0, 5, 6, LOCAL)
+
+;-------------------------------------------------
+;売春中毒
+;-------------------------------------------------
+@AUT_BAISYUN_0
+LOCAL = 0
+REPEAT 10 - ABL:売春中毒
+CALL CAN_ABLUP37
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:売春中毒 += 1
+	JUEL:恭順 -= A
+	JUEL:欲情 -= B
+	JUEL:屈服 -= C
+REND
+CALL PRINT_AUT_ABLUP(37, 4, 5, 6, LOCAL)
+
+;-------------------------------------------------
+;獣姦中毒
+;-------------------------------------------------
+@AUT_ZYUUKAN_0
+LOCAL = 0
+REPEAT 10 - ABL:噴乳中毒
+CALL CAN_ABLUP39
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:噴乳中毒 += 1
+	JUEL:欲情 -= A
+	JUEL:屈服 -= B
+REND
+CALL PRINT_AUT_ABLUP(39, 5, 6, -1, LOCAL)
+
+;-------------------------------------------------
+;ビジュアル技能
+;-------------------------------------------------
+@AUT_Vi_0
+LOCAL = 0
+REPEAT 10 - ABL:被写技能
+CALL CAN_ABLUP70
+	IF RESULT == 0 || I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:被写技能 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(70, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;ボーカル技能
+;-------------------------------------------------
+@AUT_Vo_0
+LOCAL = 0
+REPEAT 10 - ABL:歌唱技能
+CALL CAN_ABLUP71
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:歌唱技能 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(71, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;ダンス技能
+;-------------------------------------------------
+@AUT_Da_0
+LOCAL = 0
+REPEAT 10 - ABL:舞踊技能
+CALL CAN_ABLUP72
+	IF I != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:舞踊技能 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(72, 7, -1, -1, LOCAL)
+
+;-------------------------------------------------
+;料理技能
+;-------------------------------------------------
+@AUT_RYOURI_0
+LOCAL = 0
+REPEAT 10 - ABL:料理技能
+CALL CAN_ABLUP73
+	IF J != 0
+		BREAK
+	ENDIF
+	LOCAL += 1
+	ABL:料理技能 += 1
+	JUEL:習得 -= A
+REND
+CALL PRINT_AUT_ABLUP(73, 7, -1, -1, LOCAL)
+
+
+;-------------------------------------------------
+@PRINT_AUT_ABLUP(ARG, ARG:1, ARG:2, ARG:3, ARG:4)
+SIF ARG:4 < 1
+	RETURN 0
+IF ARG:2 < 0 && ARG:3 < 0
+	PRINTFORML %ABLNAME:ARG%を%PALAMNAME:(ARG:1)%の珠を消費して、{ARG:4}LV上げました
+ELSEIF ARG:3 < 0
+	PRINTFORML %ABLNAME:ARG%を%PALAMNAME:(ARG:1)%および%PALAMNAME:(ARG:2)%の珠をそれぞれ消費して、{ARG:4}LV上げました
+ELSE
+	PRINTFORML %ABLNAME:ARG%を%PALAMNAME:(ARG:1)%と%PALAMNAME:(ARG:2)%と%PALAMNAME:(ARG:3)%の珠をそれぞれ消費して、{ARG:4}LV上げました
+ENDIF

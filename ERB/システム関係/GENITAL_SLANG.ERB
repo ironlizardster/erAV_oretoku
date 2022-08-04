@@ -1,0 +1,337 @@
+﻿;===========================================================
+;淫語の処理
+;===========================================================
+@GENITAL_SLANG
+
+;コンフィグで切れます
+;口上で機能殺したい場合には先にCFLAG:8に1を入れておくとよい
+;ってこれもフラグまとめに書いてないし
+SIF FLAG:淫語なし == 1
+	RETURN
+
+PRINTL
+IF EXP:卑語指導回数 == 0
+	PRINTFORM %CALLNAME:TARGET%にもだいぶ信頼されるようになり、
+	PRINTFORML 最近の%CALLNAME:TARGET%は指導の成果か、性行為への羞恥心もそれなりに薄れてきたらしい……
+	PRINTFORM そこで%CALLNAME:MASTER%は次のステップとして%CALLNAME:TARGET%に、
+	PRINTFORML ＡＶでそれを重要視する者もいる要素――卑語や淫語を仕込んでみることを思い立った
+	PRINTL
+ENDIF
+
+PRINTFORML 《%NAME:TARGET%に卑語・淫語を仕込みますか？》
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUT_LOOP1
+
+INPUT
+
+IF RESULT == 1
+	RETURN
+ELSEIF RESULT == 0
+	CALL DECIDE_GENITAL_SLANG
+ELSE
+	GOTO INPUT_LOOP1
+ENDIF
+
+;===========================================================
+;淫語の設定
+;===========================================================
+@DECIDE_GENITAL_SLANG
+
+$INPUT_LOOP00
+PRINTFORML 現在の%CALLNAME:TARGET%は男性器を%CSTR:男性器呼び方%、女性器を%CSTR:女性器呼び方%、肛門を%CSTR:肛門呼び方%と呼んでいます
+
+PRINTFORML 男性器を――
+PRINTL [0] - 呼び方をそのままにする
+PRINTL [1] - ランダムで決定する
+PRINTL [2] - 自分で考える
+
+$INPUT_LOOP01
+INPUT
+
+IF RESULT == 0
+	CSTR:男性器呼び方指導 = %CSTR:男性器呼び方%
+ELSEIF RESULT == 1
+	CALL GENERATE_CALLPENIS
+ELSEIF RESULT == 2
+	PRINTL 《入力してください（未入力の場合、現在の呼称のままになります）》
+	$INPUTLOOP_CALLPENIS
+	INPUTS
+	
+	IF RESULTS == ""
+		RESULTS = %CSTR:男性器呼び方%
+		CSTR:男性器呼び方指導 = %RESULTS%
+	ELSE
+		CSTR:男性器呼び方指導 = %RESULTS%
+		PRINTFORML 男性器を『%CSTR:男性器呼び方指導%』と呼ばせますか？
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		$INPUT_LOOP02
+		INPUT
+		
+		IF RESULT == 0
+			PRINTL
+		ELSEIF RESULT == 1
+			PRINTFORML 《再入力してください（未入力の場合、現在の呼称のままになります）》
+			GOTO INPUTLOOP_CALLPENIS
+		ELSE
+			GOTO INPUT_LOOP02
+		ENDIF
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP01
+ENDIF
+
+PRINTFORML 男性器を《%CSTR:男性器呼び方指導%》、女性器を――
+PRINTL [0] - 呼び方をそのままにする
+PRINTL [1] - ランダムで決定する
+PRINTL [2] - 自分で考える
+
+$INPUT_LOOP03
+INPUT
+
+IF RESULT == 0
+	CSTR:女性器呼び方指導 = %CSTR:女性器呼び方%
+ELSEIF RESULT == 1
+	CALL GENERATE_CALLVAGINA
+ELSEIF RESULT == 2
+	PRINTL 《入力してください（未入力の場合、現在の呼称のままになります）》
+	$INPUTLOOP_CALLVAGINA
+	INPUTS
+	
+	IF RESULTS == ""
+		RESULTS = %CSTR:女性器呼び方%
+		CSTR:女性器呼び方指導 = %RESULTS%
+	ELSE
+		CSTR:女性器呼び方指導 = %RESULTS%
+		PRINTFORML 女性器を『%CSTR:女性器呼び方指導%』と呼ばせますか？
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		$INPUT_LOOP04
+		INPUT
+		
+		IF RESULT == 0
+			PRINTL
+		ELSEIF RESULT == 1
+			PRINTFORML 《再入力してください（未入力の場合、現在の呼称のままになります）》
+			GOTO INPUTLOOP_CALLVAGINA
+		ELSE
+			GOTO INPUT_LOOP04
+		ENDIF
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP03
+ENDIF
+
+PRINTFORML 男性器を《%CSTR:男性器呼び方指導%》、女性器を《%CSTR:女性器呼び方指導%》、肛門を――
+PRINTL [0] - 呼び方をそのままにする
+PRINTL [1] - ランダムで決定する
+PRINTL [2] - 自分で考える
+
+$INPUT_LOOP05
+INPUT
+
+IF RESULT == 0
+	CSTR:肛門呼び方指導= %CSTR:肛門呼び方%
+ELSEIF RESULT == 1
+	CALL GENERATE_CALLANAL
+ELSEIF RESULT == 2
+	PRINTL 《入力してください（未入力の場合、現在の呼称のままになります）》
+	$INPUTLOOP_CALLANAL
+	INPUTS
+	
+	IF RESULTS == ""
+		RESULTS = %CSTR:肛門呼び方%
+		CSTR:肛門呼び方指導 = %RESULTS%
+	ELSE
+		CSTR:肛門呼び方指導 = %RESULTS%
+		PRINTFORML 肛門を『%CSTR:肛門呼び方指導%』と呼ばせますか？
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		$INPUT_LOOP06
+		INPUT
+		
+		IF RESULT == 0
+			PRINTL
+		ELSEIF RESULT == 1
+			PRINTFORML 《再入力してください（未入力の場合、現在の呼称のままになります）》
+			GOTO INPUTLOOP_CALLANAL
+		ELSE
+			GOTO INPUT_LOOP06
+		ENDIF
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP05
+ENDIF
+
+PRINTFORML %CALLNAME:TARGET%に男性器を《%CSTR:男性器呼び方指導%》、女性器を《%CSTR:女性器呼び方指導%》、肛門を《%CSTR:肛門呼び方指導%》と呼ぶようにさせます
+PRINTFORML よろしいですか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUT_LOOP07
+INPUT
+
+IF RESULT == 0
+	PRINTFORM %CALLNAME:TARGET%は男性器を《%CSTR:男性器呼び方指導%》、女性器を《%CSTR:女性器呼び方指導%》、
+	PRINTFORML 肛門を《%CSTR:肛門呼び方指導%》と呼ぶようにしました
+	CSTR:男性器呼び方 = %CSTR:男性器呼び方指導%
+	CSTR:女性器呼び方 = %CSTR:女性器呼び方指導%
+	CSTR:肛門呼び方 = %CSTR:肛門呼び方指導%
+	
+	PRINTFORML 今後「会話する」を選択した時に卑語指導をしないようにしますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP08
+	INPUT
+
+	IF RESULT == 0
+		PRINTFORML 《今後卑語指導を行わないようにしました》
+		CFLAG:8 = 1
+	ELSEIF RESULT == 1
+		PRINTFORML 《今後も卑語指導を行うようにします》
+		PRINTFORML （卑語指導を行わないようにするには再度「会話する」を選択してください）
+	ELSE
+		GOTO INPUT_LOOP08
+	ENDIF
+ELSEIF RESULT == 1
+	PRINTFORML 《再入力してください》
+	GOTO INPUT_LOOP00
+ELSE
+	GOTO INPUT_LOOP07
+ENDIF
+
+EXP:卑語指導回数 += 1
+
+
+;===========================================================
+;淫語ランダム生成・P
+;===========================================================
+@GENERATE_CALLPENIS
+
+LOCAL = 0
+LOCAL = RAND:17
+
+IF LOCAL ==  0
+	CSTR:男性器呼び方指導 = おちん○ん
+ELSEIF LOCAL ==  1
+	CSTR:男性器呼び方指導 = おちんちん
+ELSEIF LOCAL ==  2
+	CSTR:男性器呼び方指導 = オチン○ン
+ELSEIF LOCAL ==  3
+	CSTR:男性器呼び方指導 = オチンチン
+ELSEIF LOCAL ==  4
+	CSTR:男性器呼び方指導 = おち○ぽ
+ELSEIF LOCAL ==  5
+	CSTR:男性器呼び方指導 = おちんぽ
+ELSEIF LOCAL ==  6
+	CSTR:男性器呼び方指導 = オチ○ポ
+ELSEIF LOCAL ==  7
+	CSTR:男性器呼び方指導 = オチンポ
+ELSEIF LOCAL ==  8
+	CSTR:男性器呼び方指導 = ちんぽ
+ELSEIF LOCAL ==  9
+	CSTR:男性器呼び方指導 = おチンポ
+ELSEIF LOCAL ==  10
+	CSTR:男性器呼び方指導 = チ○ポ
+ELSEIF LOCAL ==  11
+	CSTR:男性器呼び方指導 = チンポ
+ELSEIF LOCAL ==  12
+	CSTR:男性器呼び方指導 = ちん○ん
+ELSEIF LOCAL ==  13
+	CSTR:男性器呼び方指導 = ちんちん
+ELSEIF LOCAL ==  14
+	CSTR:男性器呼び方指導 = チン○ン
+ELSEIF LOCAL ==  15
+	CSTR:男性器呼び方指導 = チンチン
+ELSEIF LOCAL ==  16
+	CSTR:男性器呼び方指導 = ペニス
+ENDIF
+
+;===========================================================
+;淫語ランダム生成・V
+;===========================================================
+@GENERATE_CALLVAGINA
+
+LOCAL = 0
+LOCAL = RAND:12
+
+IF LOCAL ==  0
+	CSTR:女性器呼び方指導 = おま○こ
+ELSEIF LOCAL ==  1
+	CSTR:女性器呼び方指導 = おまんこ
+ELSEIF LOCAL ==  2
+	CSTR:女性器呼び方指導 = オマ○コ
+ELSEIF LOCAL ==  3
+	CSTR:女性器呼び方指導 = オマンコ
+ELSEIF LOCAL ==  4
+	CSTR:女性器呼び方指導 = マ○コ
+ELSEIF LOCAL ==  5
+	CSTR:女性器呼び方指導 = マンコ
+ELSEIF LOCAL ==  6
+	CSTR:女性器呼び方指導 = 雌穴
+ELSEIF LOCAL ==  7
+	CSTR:女性器呼び方指導 = 肉壷
+ELSEIF LOCAL ==  8
+	CSTR:女性器呼び方指導 = アソコ
+ELSEIF LOCAL ==  9
+	CSTR:女性器呼び方指導 = ヴァギナ
+ELSEIF LOCAL ==  10
+	CSTR:女性器呼び方指導 = チ○ポ穴
+ELSEIF LOCAL ==  11
+	CSTR:女性器呼び方指導 = チンポ穴
+ENDIF
+
+LOCAL = 0
+
+;===========================================================
+;淫語ランダム生成・A
+;===========================================================
+@GENERATE_CALLANAL
+
+LOCAL = 0
+LOCAL = RAND:6
+
+IF LOCAL ==  0
+	CSTR:肛門呼び方指導 = お尻の穴
+ELSEIF LOCAL ==  1
+	CSTR:肛門呼び方指導 = オシリ
+ELSEIF LOCAL ==  2
+	CSTR:肛門呼び方指導 = ケツ穴
+ELSEIF LOCAL ==  3
+	CSTR:肛門呼び方指導 = ケツマンコ
+ELSEIF LOCAL ==  4
+	CSTR:肛門呼び方指導 = ご不浄
+ELSEIF LOCAL ==  5
+	CSTR:肛門呼び方指導 = アナル
+ENDIF
+
+LOCAL = 0
+
+;===========================================================
+;呼称一括生成（素質から）
+;===========================================================
+@DEFOLT_GENITALCALL
+
+IF TALENT:TARGET:ギャル系 == 1
+	CSTR:男性器呼び方 = チンポ
+	CSTR:女性器呼び方 = マンコ
+	CSTR:肛門呼び方 = アナル
+ELSEIF TALENT:TARGET:淫乱 == 1
+	CSTR:男性器呼び方 = オチンポ
+	CSTR:女性器呼び方 = オマンコ
+	CSTR:肛門呼び方 = オシリ
+;好奇心
+ELSEIF TALENT:TARGET:好奇心 == 1
+	CSTR:男性器呼び方 = おちんぽ
+	CSTR:女性器呼び方 = おまんこ
+	CSTR:肛門呼び方 = オシリ
+;外国人。優先度設定これでいいのか謎
+ELSEIF TALENT:TARGET:外国人
+	CSTR:男性器呼び方 = ディック
+	CSTR:女性器呼び方 = プッシー
+	CSTR:肛門呼び方 = エイナス
+ELSE
+	CSTR:男性器呼び方 = おちんちん
+	CSTR:女性器呼び方 = アソコ
+	CSTR:肛門呼び方 = お尻の穴
+ENDIF

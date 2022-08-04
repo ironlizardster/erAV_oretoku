@@ -1,0 +1,206 @@
+﻿;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CALL_CHARA
+TRYCALLFORM CLEARBONUS_CHARA_{(NO:TARGET)}
+LOADGLOBAL
+SIF GLOBAL:200 >= 500
+	CALL CLEARBONUS_CHARA_EXTEND
+
+;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CHARA_2
+
+	PRINTFORML %CALLNAME:TARGET%が【Mermaid girl】をミッション大成功で取得した状態で開始しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP
+	INPUT
+	
+	IF RESULT == 0
+		PRINTFORMW %CALLNAME:TARGET%が【Mermaid girl】をミッション大成功で取得した状態で開始します
+		TALENT:アイドル = 1
+		TALENT:[[TALENT:Mermaid girl]] = 1
+		TALENT:人気者 = 1
+		TALENT:魅力 = 1
+		MAXBASE:気力 += 1200
+		BASE:気力 += 1200
+		MAXBASE:魅力値 += 80
+		BASE:魅力値 += 80
+		PBAND:52 = 4
+		FLAG:姫乃加入イベント = 10
+	ELSEIF RESULT == 1
+		RETURN
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CHARA_80
+
+	PRINTFORML %CALLNAME:TARGET%が【ONLY ONE IDOL】を取得した状態で開始しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP
+	INPUT
+	
+	IF RESULT == 0
+		PRINTFORMW %CALLNAME:TARGET%が【ONLY ONE IDOL】を取得した状態で開始します
+		TALENT:[[TALENT:ONLY ONE IDOL]] = 1
+		MAXBASE:魅力値 += 80
+		BASE:魅力値 += 80
+		PBAND:130 = 4
+		MAXBASE:気力 += 1000
+		BASE:気力 += 1000
+	ELSEIF RESULT == 1
+		RETURN
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CHARA_230
+TALENT:性魔術 = 0
+LOCAL:10 = 0
+LOCAL:10 = BASE:実年齢
+	PRINTFORML %CALLNAME:TARGET%が健康体な状態で開始しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP
+	INPUT
+	
+	IF RESULT == 0
+		PRINTFORML %CALLNAME:TARGET%が健康体な状態で開始します
+		TALENT:車椅子 = 0
+		TALENT:性魔術 = 0
+		MAXBASE:体力 += 1000
+		BASE:体力 = MAXBASE:体力
+		BASE:魅力値 = MAXBASE:魅力値
+		TALENT:ミッション = 0
+		PRINTFORMW
+		PRINTFORMW ………………
+		PRINTFORMW …………
+		PRINTFORML ……
+		PRINTFORMW 
+		PRINTFORML %CALLNAME:TARGET%が【LUXURIA】として覚醒した状態で開始しますか？
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		$INPUT_LOOP2
+		INPUT
+			
+			IF RESULT == 0
+				PRINTFORMW %CALLNAME:TARGET%が【LUXURIA】として覚醒した状態で開始します
+				CALL SUCCUBUS_STATUS_ACH(TARGET)
+					TALENT:プライド高い = 1
+					TALENT:サド = 1
+					TALENT:自慰狂い = 1
+					TALENT:セックス狂 = 1
+					TALENT:尻穴狂い = 1
+					TALENT:乳狂い = 1
+					TALENT:LUXURIA = 1
+					MAXBASE:魅力値 = 500
+					BASE:魅力値 = 500
+					MAXBASE:体力 += 1500
+					MAXBASE:気力 += 1500
+					BASE:体力 += 1500
+					BASE:気力 += 1500
+					BASE:実年齢 = LOCAL:10
+					TALENT:具現 = 1
+			ELSEIF RESULT == 1
+				RETURN
+			ELSE
+				GOTO INPUT_LOOP2
+			ENDIF
+	ELSEIF RESULT == 1
+		RETURN
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CHARA_85
+
+PRINTFORML %CALLNAME:TARGET%が【堕天使】をミッション成功で取得した状態で開始しますか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUT_LOOP
+INPUT
+	
+IF RESULT == 0
+	CALL SUCCUBUS_STATUS_ACH(TARGET)
+	TALENT:淫乱 = 1
+	TALENT:狂気 = 1
+	TALENT:淫魔 = 1
+	TALENT:褐色肌 = 1
+	TALENT:永遠の愛 = 0
+	TALENT:ギャル系 = 0
+	EXP:異常経験 = 666
+	ABL:欲望 = 10
+	ABL:技巧 = 10
+	ABL:話術 = 10
+	ABL:サドっ気 = 10
+	ABL:マゾっ気 = 10
+	ABL:レズっ気 = 10
+	ABL:精液中毒 = 10
+	ABL:レズ中毒 = 10
+	CFLAG:ペニスのサイズ = 2
+	CFLAG:包皮の状態 = 3
+	BASE:ペニスサイズ = 18 + RAND:6
+ELSEIF RESULT == 1
+	RETURN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CHARA_EXTEND
+
+PRINTFORML クリアボーナスポイントを500消費して%CALLNAME:TARGET%に【永遠の愛】を付け加えることができます
+PRINTFORML ※このボーナスを使用すると【一線超えない】が消去されます
+PRINTFORML %CALLNAME:TARGET%が【永遠の愛】を取得した状態で開始しますか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 1
+	RETURN
+ELSEIF RESULT == 0
+	PRINTFORMW 《%CALLNAME:TARGET%が【永遠の愛】を取得した状態で開始します》
+	CFLAG:売却助手可能 = 2
+	TALENT:一線越えない = 0
+	TALENT:恋心 = 1
+	TALENT:永遠の愛 = 1
+	CFLAG:好感度 = 5000
+	ABL:信頼 = 7
+	ABL:奉仕精神 = 7
+	MARK:屈服刻印 = 3
+	LOADGLOBAL
+	GLOBAL:200 -= 500
+	SAVEGLOBAL
+	X += 500
+	EXP:愛情経験 = 500
+	RETURN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN
+
+;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS_CHARA_EXTEND_DETAIL
+
+REPEAT 600
+	PRINT
+REND

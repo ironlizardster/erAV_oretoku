@@ -1,0 +1,77 @@
+﻿;===========================================================
+;実績・もっと姉！ちゃんとしようよ
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_2
+RESULTS = もっと姉！ちゃんとしようよ
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_2
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF BASE:COUNT:実年齢 >= 20 && TALENT:COUNT:淫魔 == 0 && CFLAG:COUNT:売却助手可能 == 2
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:2 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	GLOBAL:2 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:2
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_2
+; 解説文
+PRINTFORML 大勢のオトナのおねーさんたちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
+PRINTFORM とある名作エロゲーのタイトルのようなシチュエーションがお好みのようなので
+PRINTFORMW これからも『お姉ちゃん』たちとお楽しみください
+; ボーナスなどの処理はここ以降に記述する
+; 適当な素質が思いつかないので今のところ素質追加なし
+IF FLAG:もっと姉ボーナス受け取り == 0
+	PRINTFORML
+	PRINTFORML ある日のこと、%CALLNAME:MASTER%は複雑そうな表情の歌音から桐生組へと呼び出された……
+	PRINTFORM 訪れた桐生組の屋敷には歌音はおらず、代わりに対峙しているだけで『圧力』を覚える、歌音によく似た少女が
+	PRINTFORML 広間の高座に座っていた
+	PRINTFORMW 「キミが、歌音ちゃんのコレね？」
+	PRINTFORML 小指をぴん、と立てながら謎の少女は興味深そうに%CALLNAME:MASTER%を舐めるように見回している
+	PRINTFORML %CALLNAME:MASTER%は得も知れない『圧力』に生唾をごくりと飲みながら、ゆっくりと頷いた
+	PRINTFORML 「パパさんとは話したことがあるけど、あたしとはまだだったよね？
+	PRINTFORMW 　あたしは桐生エレン……桐生組の『組長派』の長で、歌音ちゃんのママをやってます♪」
+	PRINTFORM %CALLNAME:MASTER%の『歌音の姉妹ですか？』という問いかけに、少女は可愛らしい仕草でくすり、と笑いながら
+	PRINTFORML 少女……桐生エレンはそう言った
+	PRINTFORML 「ふんふん、なるほどー……歌音ちゃんが惚れるのも訳ないわよね
+	PRINTFORM 　あの娘、ああ見えて
+	IF NO:MASTER == [[キャラ:あなた]]
+		PRINTFORM 年下好き
+	ELSEIF TALENT:MASTER:オトコ == 0
+		PRINTFORM かわいい女の子が好き
+	ELSE
+		PRINTFORM 面食い
+	ENDIF
+	PRINTFORML だもの
+	PRINTFORMW 　あたしがもう少し若ければキミを囲っちゃってたかもね♪」
+	PRINTFORML そう言うエレンの眼光に%CALLNAME:MASTER%は貞操の危機をなぜか覚えて、身をすくませた
+	PRINTFORML 「さて、キミにここに来てもらったのは単純よ
+	PRINTFORML 　あたしとしては『組長派』とか『歌音派』とか、そういう抗争はどうでもいいの
+	PRINTFORML 　パパさんにもしものことがあった場合は跡継ぎは歌音ちゃん、あるいはキミだから
+	PRINTFORML 　歌音ちゃんの才覚は戦後の動乱の中で桐生組をここまで大きくした先代以上なのは間違いないのよね
+	PRINTFORML 　それにキミも与えられた稼業が、うちで手がけている中ではかなりしょっぱいのに頑張っているし
+	PRINTFORML 　……でもね、歌音ちゃんが仮にキミを選んだとしても組のみんなは納得しないと思うのよね
+	PRINTFORML 　カタギの子が歌音ちゃんの意思で伴侶に選ばれるのは現実問題として難しいのは分かるわよね？
+	PRINTFORML 　相応の組、あるいはズブズブな政治家さんのただの七光りのボンクラご子息とかと結婚しなくちゃならない
+	PRINTFORML 　キミが歌音ちゃんのことをどれだけ好きだとしても、ね
+	PRINTFORML 　じゃあそれを黙らせるにはどうしたらいいかって言うと……答えは簡単よ♪」
+	PRINTFORMW 　するとエレンは%CALLNAME:MASTER%の頬に軽くキスをすると笑顔で言った
+	PRINTFORML 「あたしを落としてみなさい♪
+	PRINTFORML 　パパさんからあたしを寝取って、キミが組長以上の器だということを証明して『組長派』を黙らせるの
+	PRINTFORML 　ただ……あたしは手強いわよ？」
+	PRINTL
+	PRINTFORML 《桐生エレンが女優候補になりました》
+	PRINTW
+	FLAG:もっと姉ボーナス受け取り = 1
+	CALL キャラ追加([[キャラ:桐生エレン]])
+ENDIF

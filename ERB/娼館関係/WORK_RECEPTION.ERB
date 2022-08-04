@@ -1,0 +1,1779 @@
+﻿;==================================================
+;奴隷接待関係の処理
+;==================================================
+;eraImas_stable\eraIm@s_ver.0.17βdより流用して大幅に改造(by pawapokya-)
+;↓は元作者のコメント
+;>実験的な意味も含めて大幅に改造、ですがまだテスト段階です
+;>とりあえず周りに問題を起こすことなく動けばいいという考えなので、かなり力技で作っております
+;>変数を使いまくりなのでどこで何が起きてるかとかがわかりにくいのが一番の問題か……
+;==================================================
+@RECEPTION_MAIN
+
+;使用変数
+;A == 接待相手との相性（bit値）
+;B == 満足度
+;C == 相手の射精（絶頂）ゲージ
+;D == 射精（絶頂）ゲージの上下を判定
+;E == 奴隷の絶頂ゲージ
+;F == 奴隷の絶頂ゲージの上下を判定
+;G == 相手の射精（絶頂）回数(まだ未使用)
+;H == 奴隷の絶頂回数(まだ未使用)
+;L:0～3 == 使用したコマンド回数。同じコマンドを繰り返すと成功率は下がっていく
+;N == 否定の珠
+;Q,U,V == 否定の珠の許容量計算
+;S == 各コマンド実行時の成否判定
+
+
+;使用する変数を初期化
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+F = 0
+G = 0
+H = 0
+L:0 = 0
+L:1 = 0
+L:2 = 0
+L:3 = 0
+N = 0
+Q = 0
+S = 0
+U = 0
+V = 0
+
+;--------------------------------------------------
+;接待相手の傾向を決定（ビット演算を使用）
+;--------------------------------------------------
+FLAG:奴隷接待相手性癖 = 0
+
+;女になる場合
+SIF RAND:3 == 0
+	FLAG:奴隷接待相手性癖 |= 1
+;サディストになる場合
+SIF RAND:3 == 0
+	FLAG:奴隷接待相手性癖 |= 2
+;マニアになる場合
+SIF RAND:3 == 0
+	FLAG:奴隷接待相手性癖 |= 8
+;50%の確率で年齢性癖持ち
+IF RAND:2 == 0
+	;20%の確率でメイド好き
+	IF RAND:5 == 0
+		FLAG:奴隷接待相手性癖 |= 32
+	;40%の確率で女子高生フェチ
+	ELSEIF RAND:2 == 0
+		FLAG:奴隷接待相手性癖 |= 16
+	;40%の確率でペドフィリア
+	ELSE
+		FLAG:奴隷接待相手性癖 |= 4
+	ENDIF
+ENDIF
+;男の場合33%の確率で職業フェチ持ち
+IF (FLAG:奴隷接待相手性癖 & 1) == 0 && RAND:3 == 0
+	;アイドルフェチになる場合
+	IF RAND:3 == 0
+		FLAG:奴隷接待相手性癖 |= 64
+	;黒ギャルフェチになる場合
+	ELSEIF RAND:2 == 0
+		FLAG:奴隷接待相手性癖 |= 128
+	;人妻フェチになる場合
+	ELSE
+		FLAG:奴隷接待相手性癖 |= 256
+	ENDIF
+ENDIF
+
+;--------------------------------------------------
+;接待を実行するキャラの選択
+;--------------------------------------------------
+$INPUT_LOOP
+
+PRINTFORM %CALLNAME:MASTER%が入手した情報によれば、今回の接待相手は
+SIF (FLAG:奴隷接待相手性癖 & 2)
+	PRINT サディストの
+SIF (FLAG:奴隷接待相手性癖 & 8) 
+	PRINT マニア趣味な
+IF (FLAG:奴隷接待相手性癖 & 1)
+	PRINT 女性
+ELSE
+	PRINT 男性
+ENDIF
+IF (FLAG:奴隷接待相手性癖 & 4)
+	PRINT でロリコン
+ELSEIF (FLAG:奴隷接待相手性癖 & 16)
+	PRINT で女子高校生フェチ
+ELSEIF (FLAG:奴隷接待相手性癖 & 32)
+	PRINT でメイド好き
+ENDIF
+PRINTFORM らし
+IF (FLAG:奴隷接待相手性癖 & 64)
+	PRINT く、更にかなり年季の入ったアイドルおたくでもあるらしい
+ELSEIF (FLAG:奴隷接待相手性癖 & 128)
+	PRINT く、更に黒ギャルが好きでたまらないらしい
+ELSEIF (FLAG:奴隷接待相手性癖 & 256)
+	PRINT く、更に人妻が好きでたまらないらしい
+ELSE
+	PRINT い
+ENDIF
+WAIT
+
+DRAWLINE
+PRINTL 誰に接待を任せますか？
+DRAWLINE
+REPEAT CHARANUM
+	;主人は除外
+	SIF COUNT == 0
+		CONTINUE
+	;労役中だと不可
+	SIF TIME == 1 && CFLAG:COUNT:労役中のフラグ != 0
+		CONTINUE
+	;売却可でないと不可
+	SIF CFLAG:COUNT:売却助手可能 == 0
+		CONTINUE
+	;体力が500未満だと不可
+	SIF BASE:COUNT:体力 < 500
+		CONTINUE
+	;反発刻印が付いていると不可
+	SIF MARK:COUNT:反発刻印 >= 1
+		CONTINUE
+	;従順と欲望の合計値が8以下だと不可
+	SIF ABL:COUNT:信頼 + ABL:COUNT:欲望 < 8
+		CONTINUE
+	;臨月・育児中だと不可
+	SIF CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠	
+		CONTINUE
+	SIF TALENT:COUNT:育児中
+		CONTINUE
+	;素質【オトコ】が付いていると不可
+	SIF TALENT:COUNT:オトコ
+		CONTINUE
+
+	PRINTFORM  [{COUNT}] %NAME:COUNT% 
+	PRINT (体力：
+	A = BASE:COUNT:体力
+	SIF BASE:COUNT:体力 < 0
+		A = 0
+	PRINTFORML {A}/{MAXBASE:COUNT:体力})
+
+REND
+DRAWLINE
+PRINTFORML  [999] - 接待を断念する
+
+INPUT
+
+IF RESULT == 999
+	PRINTFORML %CALLNAME:MASTER%はやむなく接待を断念した
+	PRINTFORML 興をそがれた接待相手は、苛立ちを露にして帰ってしまった……
+	WAIT
+	EXP:MASTER:貢献度 -= 10
+	PRINTFORML 貢献度　-10
+
+	;接待終了
+	BEGIN TURNEND
+	RETURN 0
+;接待可能キャラの判定
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+	GOTO INPUT_LOOP
+ELSEIF CFLAG:RESULT:売却助手可能 == 0
+	GOTO INPUT_LOOP
+ELSEIF BASE:RESULT:体力 < 500
+	GOTO INPUT_LOOP
+ELSEIF MARK:RESULT:反発刻印 >= 1
+	GOTO INPUT_LOOP
+ELSEIF  ABL:RESULT:信頼 + ABL:RESULT:欲望 < 8
+	GOTO INPUT_LOOP
+ELSEIF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:育児中
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:オトコ
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+PRINTFORM %CALLNAME:MASTER%につれられて%CALLNAME:TARGET%が部屋に入ると、そこに一人の
+IF (FLAG:奴隷接待相手性癖 & 1) == 1
+	PRINT 女性
+ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0
+	PRINT 男性
+ENDIF
+PRINTFORML が待っていた
+PRINTFORML どうやら、この人物が今回の接待相手のようだ…
+WAIT
+
+A = 0
+;接待相手の性癖と奴隷の素質のマッチ
+;女同士でレズ
+SIF (FLAG:奴隷接待相手性癖 & 1) && ABL:レズっ気 > 0
+	A |= 1
+;サディストとマゾヒスト
+SIF (FLAG:奴隷接待相手性癖 & 2) && (TALENT:マゾ || ABL:マゾっ気 >= 3)
+	A |= 2
+;ペドフィリア＋幼稚
+SIF (FLAG:奴隷接待相手性癖 & 4) && (BASE:実年齢 <= 15 || TALENT:童顔 == 1)
+	A |= 4
+;女子高校生フェチ＋女子高校生
+SIF (FLAG:奴隷接待相手性癖 & 16) && TALENT:高校生
+	A |= 4
+;メイド好き＋メイド
+SIF (FLAG:奴隷接待相手性癖 & 32) && TALENT:メイド
+	A |= 4
+;マニア同士
+SIF (FLAG:奴隷接待相手性癖 & 8) && ABL:オタク知識 > 0
+	A |= 8
+;アイドルフェチ＋アイドル
+SIF (FLAG:奴隷接待相手性癖 & 64) && TALENT:アイドル
+	A |= 16
+;黒ギャルフェチ＋黒ギャル
+SIF (FLAG:奴隷接待相手性癖 & 128) && TALENT:褐色肌 && TALENT:ギャル系
+	A |= 16
+;人妻フェチ＋人妻
+SIF (FLAG:奴隷接待相手性癖 & 256) && TALENT:人妻
+	A |= 16
+
+;満足度の初期値は30ということで
+B += 30
+
+LOSEBASE:体力 = 0
+
+;営業フラグ外れる
+CFLAG:労役中のフラグ = 0
+
+;V使用不可フラグのチェック
+;オトコである
+IF TALENT:オトコ
+	CFLAG:営業でＶ使用不能フラグ = 1
+;貞操帯着用
+ELSEIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	CFLAG:営業でＶ使用不能フラグ = 1
+ELSE
+	CFLAG:営業でＶ使用不能フラグ = 0
+ENDIF
+
+;--------------------------------------------------
+;接待実行中
+;--------------------------------------------------
+CALL RECEPTION_MAIN2
+
+;--------------------------------------------------
+;接待終了
+;--------------------------------------------------
+;10ターンを過ぎたらそこで終了し接待の結果判定に移動する
+PRINTFORMW 接待を終了します
+
+;最後まで接待をやり遂げてかつ満足度が100以上なら成功
+IF RESULT == 0
+	PRINTFORML 今回の接待は大失敗に終わってしまった……
+	B = 10
+	EXP:MASTER:貢献度 -= B
+	PRINTFORML 貢献度　-{B}
+ELSEIF B < 100
+	PRINTFORML どうやら今回の接待は失敗に終わったらしい……
+	B = 5
+	EXP:MASTER:貢献度 -= B
+	PRINTFORML 貢献度　-{B}
+ELSE
+	PRINTFORML どうやら、十分満足してくれたようだ
+	B /= 30
+	EXP:MASTER:貢献度 += B
+	PRINTFORML 貢献度　+{B}
+ENDIF
+
+SIF EXP:MASTER:貢献度 < 0
+	EXP:MASTER:貢献度 = 0
+
+;否定の珠取得量の計算
+N = 200
+
+;反抗的
+SIF TALENT:ナマイキ
+	TIMES N , 1.10
+;プライド高い
+SIF TALENT:プライド高い
+	TIMES N , 1.20
+;保守的
+SIF TALENT:保守的
+	TIMES N , 1.20
+;貞操無頓着
+SIF TALENT:貞操無頓着
+	TIMES N , 0.80
+;恥じらい
+SIF TALENT:恥じらい
+	TIMES N , 1.10
+;恥薄い
+SIF TALENT:恥薄い
+	TIMES N , 0.90
+;淫乱
+SIF TALENT:淫乱
+	TIMES N , 0.60
+;倒錯的
+SIF TALENT:倒錯的
+	TIMES N , 0.80
+;娼婦
+SIF TALENT:風俗嬢
+	TIMES N , 0.50
+;傾城
+SIF TALENT:高級娼婦
+	TIMES N , 0.80
+;愛
+SIF TALENT:恋心 == 1
+	N *= 3
+;愛LV2
+SIF TALENT:恋心 >= 2
+	N *= 5
+;求愛
+SIF TALENT:彼氏あり
+	N *= 2
+;嫉妬
+SIF TALENT:嫉妬
+	N *= 10
+		
+PRINTFORML 否定の珠{JUEL:否定}　+　{N}
+JUEL:否定 += N
+	
+;否定の珠の許容量を計算
+Q = ABL:信頼 * 100
+
+;娼婦なら許容量２倍
+IF TALENT:風俗嬢
+	Q *= 2
+ELSE
+	Q += 100
+ENDIF
+
+U = Q
+TIMES U , 1.73
+V = Q
+TIMES V , 1.41
+	
+IF MARK:反発刻印 != 3 && JUEL:否定 > U
+	PRINTW 反発刻印LV3を取得
+	MARK:反発刻印 = 3
+ELSEIF MARK:反発刻印 != 2 && JUEL:否定 > V
+	PRINTW 反発刻印LV2を取得
+	MARK:反発刻印 = 2
+ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > Q
+	PRINTW 反発刻印LV1を取得
+	MARK:反発刻印 = 1
+ENDIF
+
+;V使用不可フラグリセット
+CFLAG:営業でＶ使用不能フラグ = 0
+
+;接待相手の特徴はここでリセット
+FLAG:奴隷接待相手性癖 = 0
+
+;貢献度が300を超えたら秘密知識がもらえる
+IF EXP:MASTER:貢献度 >= 300 && TALENT:MASTER:秘密知識 == 0
+	WAIT
+	DRAWLINE
+	PRINTL 
+	PRINTFORMW 接待から戻ってきた%CALLNAME:TARGET%が、一枚の地図を差し出してきた
+	PRINTFORMW どうやら今回の接待相手から受け取ってきたらしい
+	PRINTL 
+	PRINTL 【秘密知識】を手に入れました
+	PRINTL 以後、秘密ラボに行くことが出来るようになります
+	TALENT:MASTER:秘密知識 = 1
+;貢献度が500を超えたら勲章がもらえる
+ELSEIF EXP:MASTER:貢献度 >= 500 && TALENT:MASTER:勲章 == 0 && FLAG:娼館勲章 == 0
+	WAIT
+	DRAWLINE
+	PRINTL 
+	PRINTFORMW 接待から戻ってきた%CALLNAME:TARGET%が、小さなメダルを差し出してきた
+	PRINTFORMW どうやら今回の接待相手から受け取ってきたらしい
+	PRINTL 
+	PRINTL 【勲章】を手に入れました
+	TALENT:MASTER:勲章 = 1
+	FLAG:娼館勲章 = 1
+ENDIF
+
+WAIT
+
+BEGIN TURNEND
+RETURN 1
+
+;--------------------------------------------------
+;接待実行中
+;--------------------------------------------------
+@RECEPTION_MAIN2
+REPEAT 10
+	;成否判定で使う変数を0に戻す
+	S = 0
+	;接待相手の射精ゲージの上下に使う変数を0に戻す
+	D = 0
+	;キャラの絶頂ゲージの上下に使う変数を0に戻す
+	F = 0
+	
+	DRAWLINE
+	PRINTFORM %CALLNAME:TARGET%の
+	CALL LIFE_BAR
+	PRINTFORML 満足度:{B}/ 快感度(相手):{C}/ 快感度(%CALLNAME:TARGET%):{E}/ 残り時間:{10-COUNT}
+	DRAWLINE
+	
+	PRINTFORML 何をしますか？
+	PRINTL  [0] - 会話する
+	PRINTL  [1] - 奉仕する
+	SIF ABL:話術 >= 2 && CFLAG:営業でＶ使用不能フラグ == 0
+		PRINTL  [2] - 誘惑する
+	SIF ABL:マゾっ気 >= 2 && CFLAG:営業でＶ使用不能フラグ == 0
+		PRINTL  [3] - 身を任せる
+	PRINTL  [999] - 接待を途中放棄する
+	
+	$INPUT_LOOP
+	INPUT
+	
+	IF RESULT == 0
+		CALL RECEPTION_TALKING
+	ELSEIF RESULT == 1
+		CALL RESEPTION_SERVICE
+	ELSEIF RESULT == 2 && ABL:話術 >= 2
+		CALL RECEPTION_TEMPTATION
+	ELSEIF RESULT == 3 && ABL:マゾっ気 >= 2
+		CALL RECEPTION_ABANDON
+	ELSEIF RESULT == 999
+		PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%に接待を途中放棄させた
+		PRINTFORML 興をそがれた接待相手は、苛立ちを露にして帰ってしまった……
+		WAIT
+		EXP:MASTER:貢献度 -= 10
+		PRINTFORML 貢献度　-10
+
+		;接待終了
+		RETURN 0
+
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+	;接待相手の絶頂判定
+	C += D
+	;絶頂ゲージがマイナスになるということはない
+	SIF C <= 0
+		C = 0
+	;失敗の場合は絶頂しない
+	SIF S < 30 && C >= 100
+		C = 99
+	IF C >= 100
+		;相手が女性の場合
+		IF (FLAG:奴隷接待相手性癖 & 1)
+			PRINTL 【絶頂(接待相手)】
+		;相手が男性の場合
+		ELSE
+			PRINTL 【射精(接待相手)】
+			EXP:精液経験 += 1
+			PRINTL 精液経験　+ 1
+		ENDIF
+		B += 20
+		C -= 100
+	ENDIF
+
+	;奴隷の絶頂判定
+	E += F
+	IF E >= 100
+		PRINTFORML 【絶頂(%CALLNAME:TARGET%)】
+		EXP:絶頂経験 += 1
+		PRINTL 絶頂経験　+1
+		B += 8
+		E -= 100
+	ENDIF
+
+	;体力減少量の計算
+	;臆病
+	SIF TALENT:臆病
+		TIMES LOSEBASE:体力 , 1.10
+	;抑圧
+	SIF TALENT:抑圧
+		TIMES LOSEBASE:体力 , 1.10
+	;淫乱
+	SIF TALENT:淫乱
+		TIMES LOSEBASE:体力 , 0.80
+	;娼婦
+	SIF TALENT:風俗嬢
+		TIMES LOSEBASE:体力 , 0.50
+
+	BASE:体力 -= LOSEBASE:体力
+
+	;体力が0以下になったらそこで終了
+	IF BASE:体力 <= 0
+		PRINTFORML %CALLNAME:TARGET%が接待中にぶっ倒れたきり、ぴくりとも動かなくなった
+		PRINTFORML 何をやっても反応がない……
+		IF TALENT:MASTER:サド || TALENT:MASTER:カリスマ
+			PRINTFORML %CALLNAME:MASTER%はこのスキャンダルを利用して、接待相手を脅迫することにした
+			WAIT
+			B /= 10
+			EXP:MASTER:貢献度 += B
+			PRINTFORMW 貢献度　+{B}
+		ELSE
+			PRINTFORML 接待相手は死体の処分を%CALLNAME:MASTER%に任せて、さっさと帰ってしまった……
+			WAIT
+		ENDIF
+
+		;キャラの死亡確認
+		CALL CHARADEAD_CHECK
+
+		;接待終了
+		RETURN 0
+
+	;体力が500以下になったらそこで終了
+	ELSEIF BASE:体力 <= 500
+		PRINTFORML 過酷なプレイに耐え切れず、%CALLNAME:TARGET%は途中で接待を放棄した
+		PRINTFORML 興をそがれた接待相手は、苛立ちを露にして帰ってしまった……
+		WAIT
+
+		;接待終了
+		RETURN 0
+
+	;満足度が0以下になったらそこで終了
+	ELSEIF B <= 0
+		PRINTFORML %CALLNAME:TARGET%の接待があまりに拙かったのか
+		PRINTFORML 接待相手は苛立ちを露にして席を立ち、帰ってしまった……
+		WAIT
+
+		;接待終了
+		RETURN 0
+
+	ENDIF
+
+REND
+
+RETURN 1
+
+;==================================================
+;==================================================
+;以下は接待時におけるコマンドの内容を収めた関数群
+;--------------------------------------------------
+;『会話する』に関する判定等
+;--------------------------------------------------
+@RECEPTION_TALKING
+PRINTFORML %CALLNAME:TARGET%は接待相手と他愛も無い会話をした……
+
+;技巧か話術の高い方を判定して成否判定にプラス（話術の方がプラス量が大きい）
+IF ABL:技巧 > ABL:話術
+	S += ABL:技巧 * 2
+ELSEIF ABL:話術 >= ABL:技巧
+	S += ABL:話術 * 3
+ENDIF
+
+;奉仕精神のレベルに応じて成否判定にプラス
+IF ABL:奉仕精神 == 1
+	S += 5
+ELSEIF ABL:奉仕精神 == 2
+	S += 10
+ELSEIF ABL:奉仕精神 == 3
+	S += 13
+ELSEIF ABL:奉仕精神 == 4
+	S += 15
+ELSEIF ABL:奉仕精神 >= 5
+	S += 20
+ENDIF
+
+;従順のレベルに応じて成否判定にプラス
+IF ABL:信頼 == 1
+	S += 3
+ELSEIF ABL:信頼 == 2
+	S += 6
+ELSEIF ABL:信頼 == 3
+	S += 8
+ELSEIF ABL:信頼 == 4
+	S += 12
+ELSEIF ABL:信頼 >= 5
+	S += 15
+ENDIF
+
+;[狂気][崩壊]だと成否判定にマイナス
+SIF TALENT:狂気
+	S -= 5
+SIF TALENT:崩壊
+	S -= 10
+
+;[商売人][饒舌]だと成否判定にプラス
+SIF TALENT:交渉上手
+	S += 5
+SIF TALENT:饒舌
+	S += 10
+
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気
+;サディスト
+SIF (A & 2)
+	S += ABL:マゾっ気
+;年齢性癖合致
+SIF (A & 4)
+	S += 5
+;マニア同士
+SIF (A & 8)
+	S += ABL:オタク知識 * 2
+;職業性癖合致
+SIF (A & 16)
+	S += 10
+
+;同一コマンドの繰り返しによるペナルティ
+IF L:0 >= 9
+	S -= 100
+ELSEIF L:0 >= 8
+	S -= 50
+ELSEIF L:0 >= 7 
+	S -= 20
+ELSEIF L:0 >= 6
+	S -= 10
+ELSEIF L:0 >= 5
+	S -= 5
+ELSEIF L:0 >= 4
+	S -= 1
+ENDIF
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	;『会話する』での満足度の基本上昇値は5
+	B += 5
+	PRINTFORML 会話が上手く弾んでいる……
+	IF (FLAG:奴隷接待相手性癖 & 4) && TALENT:幼稚
+		PRINTFORML どうやら%CALLNAME:TARGET%の子供っぽさが気に入っているようだ
+	ELSEIF (FLAG:奴隷接待相手性癖 & 16) && TALENT:高校生
+		PRINTFORML どうやら%CALLNAME:TARGET%の初々しさが気に入っているようだ
+	ELSEIF (FLAG:奴隷接待相手性癖 & 32) && TALENT:メイド
+		PRINTFORML どうやら%CALLNAME:TARGET%のかいがいしさが気に入っているようだ
+	ELSEIF (FLAG:奴隷接待相手性癖 & 8) && ABL:オタク知識 > 0
+		PRINTFORML よくわからないが、アニメやゲームの話題で盛り上がっているようだ
+	ENDIF
+	;年齢性癖修正
+	SIF (A & 4)
+		B += 3
+	;マニア修正
+	SIF (A & 8)
+		B += 2 + ABL:オタク知識 + ABL:話術
+	;職業フェチ修正
+	SIF (A & 16)
+		B += 5
+		IF UNLOCK_美容LV10(TARGET)
+			B += 10
+		ENDIF
+ELSE
+	B -= 5
+	PRINTFORML 会話はあまり弾まなかった……
+	SIF L:0 >= 5
+		PRINTFORML 同じ話ばかり繰り返す%CALLNAME:TARGET%に、相手は退屈し始めている		
+ENDIF
+WAIT
+
+;体力減少
+LOSEBASE:体力 = 10
+
+;実行回数増加
+L:0 += 1
+
+;--------------------------------------------------
+;『奉仕する』に関する判定等
+;--------------------------------------------------
+@RESEPTION_SERVICE
+PRINTFORM %CALLNAME:TARGET%は相手の
+	IF (FLAG:奴隷接待相手性癖 & 1) == 0
+		PRINT ペニスに
+	ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1
+		PRINT 秘部に
+	ENDIF
+PRINTFORML 舌を這わせ、熱心に奉仕をした……
+
+;技巧か奉仕技術の高い方を判定して成否判定にプラス（奉仕技術の方がプラス量が大きい）
+IF ABL:技巧 > ABL:奉仕技術
+	S += ABL:技巧 * 2
+ELSEIF ABL:奉仕技術 >= ABL:技巧
+	S += ABL:奉仕技術 * 3
+ENDIF
+
+;奉仕精神のレベルに応じて成否判定にプラス
+IF ABL:奉仕精神 == 1
+	S += 5
+ELSEIF ABL:奉仕精神 == 2
+	S += 10
+ELSEIF ABL:奉仕精神 == 3
+	S += 13
+ELSEIF ABL:奉仕精神 == 4
+	S += 15
+ELSEIF ABL:奉仕精神 >= 5
+	S += 20
+ENDIF
+
+;従順のレベルに応じて成否判定にプラス
+IF ABL:信頼 == 1
+	S += 3
+ELSEIF ABL:信頼 == 2
+	S += 6
+ELSEIF ABL:信頼 == 3
+	S += 8
+ELSEIF ABL:信頼 == 4
+	S += 12
+ELSEIF ABL:信頼 >= 5
+	S += 15
+ENDIF
+
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気
+;サディスト
+SIF (A & 2)
+	S += ABL:マゾっ気 * 2
+;年齢性癖合致
+SIF (A & 4)
+	S += 5
+;マニア同士
+SIF (A & 8)
+	S += ABL:オタク知識
+;職業性癖合致
+SIF (A & 16)
+	S += 10
+
+;同一コマンドの繰り返しによるペナルティ
+IF L:1 >= 8
+	S -= 100
+ELSEIF L:1 >= 7
+	S -= 50
+ELSEIF L:1 >= 6 
+	S -= 20
+ELSEIF L:1 >= 5
+	S -= 10
+ELSEIF L:1 >= 4
+	S -= 5
+ELSEIF L:1 >= 3
+	S -= 1
+ENDIF
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	;『奉仕する』での満足度の基本上昇値は10
+	B += 10
+	;相手の快感度判定（奉仕技術を見る）
+	D += ABL:奉仕技術
+	SIF D <= 0	
+		D = 1
+	D *= 5
+	IF (FLAG:奴隷接待相手性癖 & 4) && TALENT:幼稚
+		PRINTFORML 幼い%CALLNAME:TARGET%の懸命な奉仕に興奮しているようだ……
+	ELSEIF (FLAG:奴隷接待相手性癖 & 16) && TALENT:高校生
+		PRINTFORML %CALLNAME:TARGET%の懸命な奉仕に興奮しているようだ……
+	ELSEIF (FLAG:奴隷接待相手性癖 & 32) && TALENT:メイド
+		PRINTFORML %CALLNAME:TARGET%の熟練の奉仕に興奮しているようだ……
+	ELSE
+		PRINTFORML %CALLNAME:TARGET%の熱心な奉仕に満足しているようだ……
+	ENDIF
+	;年齢性癖修正
+	IF (A & 4)
+		B += 5
+		D += 5
+	ENDIF
+	;職業フェチ修正
+	IF (A & 16)
+		B += 10
+		IF UNLOCK_美容LV10(TARGET)
+			B += 10
+		ENDIF
+		D += 10
+	ENDIF
+ELSE
+	B -= 7
+	D = 0 - 10
+	PRINTFORML %CALLNAME:TARGET%のあまりに拙い奉仕に、どうやら興が冷めてきているようだ……
+	SIF L:1 >= 5
+		PRINTFORML 黙々と奉仕だけしていれば満足、というわけでもないらしい
+ENDIF
+
+WAIT
+
+;奉仕するのでもちろん経験が増える
+IF (FLAG:奴隷接待相手性癖 & 1) == 0
+	EXP:フェラ経験 += 1
+	PRINTW フェラ経験　+1
+	IF CFLAG:ファーストキスの相手 == -1
+		SETCOLOR 0xF58F98
+		PRINTFORML ファーストキス
+		RESETCOLOR
+		CFLAG:ファーストキスの相手 = 4
+		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないおじさんのおちん○ん
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないおじさんのオチ○ポ
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:ファーストキスの相手 = 知らないオヤジのチンポ
+		ENDIF
+	ENDIF
+ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1
+	EXP:レズ経験 += 1
+	PRINTW レズ経験　+1
+	IF CFLAG:ファーストキスの相手 == -1
+		SETCOLOR 0xF58F98
+		PRINTFORML ファーストキス
+		RESETCOLOR
+		CFLAG:ファーストキスの相手 = 4
+		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないお姉さんのアソコ
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないお姉さんのオマ○コ
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:ファーストキスの相手 = 知らない女のマンコ
+		ENDIF
+	ENDIF
+ENDIF
+
+;体力減少
+LOSEBASE:体力 = 50
+
+;実行回数増加
+L:1 += 1
+;
+;--------------------------------------------------
+;『誘惑する』に関する判定等
+;--------------------------------------------------
+@RECEPTION_TEMPTATION
+PRINTFORML %CALLNAME:TARGET%は挑発的な言葉で相手を誘惑した……
+WAIT
+
+;技巧と話術の２倍を成否判定にプラス
+S += ABL:技巧
+S += ABL:話術 * 2
+
+;奉仕精神のレベルに応じて成否判定にプラス
+IF ABL:奉仕精神 == 1
+	S += 5
+ELSEIF ABL:奉仕精神 == 2
+	S += 10
+ELSEIF ABL:奉仕精神 == 3
+	S += 13
+ELSEIF ABL:奉仕精神 == 4
+	S += 15
+ELSEIF ABL:奉仕精神 >= 5
+	S += 20
+ENDIF
+
+;従順のレベルに応じて成否判定にプラス
+IF ABL:信頼 == 1
+	S += 3
+ELSEIF ABL:信頼 == 2
+	S += 6
+ELSEIF ABL:信頼 == 3
+	S += 8
+ELSEIF ABL:信頼 == 4
+	S += 12
+ELSEIF ABL:信頼 >= 5
+	S += 15
+ENDIF
+
+;[狂気][崩壊]だと成否判定にマイナス
+SIF TALENT:狂気
+	S -= 5
+SIF TALENT:崩壊
+	S -= 10
+
+;[饒舌]だと成否判定にプラス
+SIF TALENT:饒舌
+	S += 5
+
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気
+;接待相手がサドの場合はペナルティ
+SIF (A & 2)
+	S -= ABL:マゾっ気 * 2
+;年齢性癖合致
+SIF (A & 4)
+	S += 5
+;マニア同士
+SIF (A & 8)
+	S += ABL:オタク知識 * 2
+;職業性癖合致
+SIF (A & 16)
+	S += 10
+
+;同一コマンドの繰り返しによるペナルティ
+IF L:2 >= 7
+	S -= 100
+ELSEIF L:2 >= 6
+	S -= 50
+ELSEIF L:2 >= 5 
+	S -= 20
+ELSEIF L:2 >= 4
+	S -= 10
+ELSEIF L:2 >= 3
+	S -= 5
+ELSEIF L:2 >= 2
+	S -= 1
+ENDIF
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	;『誘惑する』での満足度の基本上昇値は12
+	B += 12
+	;相手の快感度判定（奉仕精神を見る）
+	D += ABL:奉仕精神
+	SIF D == 0
+		D += 1
+	D *= 5
+	;処女の場合、または接待相手が女の場合はセックスは無し
+	IF TALENT:処女 || FLAG:奴隷接待相手性癖 & 1
+		IF (FLAG:奴隷接待相手性癖 & 8) && ABL:オタク知識 >= 2
+			PRINTFORML %CALLNAME:TARGET%が二言三言、わけのわからないセリフを口走ったかと思うと、
+			PRINTFORML 接待相手もわけのわからないセリフを返して、%CALLNAME:TARGET%の体を弄び始めた……
+			PRINTFORML よくわからないが、何かの深夜アニメの主人公とヒロインになりきっているらしい
+		ELSEIF (FLAG:奴隷接待相手性癖 & 4) && TALENT:幼稚
+			PRINTFORML 接待相手は誘惑に耐え切れず、%CALLNAME:TARGET%の幼い体をもてあそんだ……
+		ELSEIF (FLAG:奴隷接待相手性癖 & 16) && TALENT:高校生
+			PRINTFORML 接待相手は誘惑に耐え切れず、%CALLNAME:TARGET%の無垢な体をもてあそんだ……
+		ELSEIF (FLAG:奴隷接待相手性癖 & 32) && TALENT:メイド
+			PRINTFORML 接待相手は誘惑に耐え切れず、%CALLNAME:TARGET%の熟した肉体をもてあそんだ……
+		ELSE
+			PRINTFORML 接待相手は誘惑に耐え切れず、%CALLNAME:TARGET%の体を弄んだ……
+		ENDIF
+
+		WAIT
+
+		;年齢性癖修正
+		IF (A & 4)
+			B += 6
+			D += 3
+		ENDIF
+		;マニア修正
+		IF (A & 8)
+			B += 10
+			D += 5
+		ENDIF
+		;職業フェチ修正
+		IF (A & 16)
+			B += 12
+			D += 6
+		ENDIF
+
+		;セックスしていないので相手は絶頂しない
+		SIF C + D >= 100
+			D = 99 - C
+		;奴隷の快感度判定（Ｃ、Ｂ感覚と従順、欲望を見る）
+		F += ABL:Ｃ感覚
+		F += ABL:Ｂ感覚
+		F += ABL:信頼
+		F += ABL:欲望
+		F += RAND:5
+		
+		;相手が女性の場合レズ経験プラス
+		IF (FLAG:奴隷接待相手性癖 & 1)
+			EXP:レズ経験 += 1
+			PRINTL レズ経験　+1
+		ENDIF
+
+		;体力減少
+		LOSEBASE:体力 = 80
+
+	;非処女の場合セックス有り、こちらの方が満足度等が高かったりする
+	ELSE
+		IF (FLAG:奴隷接待相手性癖 & 8) && ABL:オタク知識 >= 2
+			PRINTFORML %CALLNAME:TARGET%が二言三言、わけのわからないセリフを口走ったかと思うと、
+			PRINTFORML 接待相手もわけのわからないセリフを返して、%CALLNAME:TARGET%を組み伏せてその体を味わった……
+			PRINTFORML よくわからないが、何かのエロゲーの主人公とヒロインになりきっているらしい
+		ELSEIF (FLAG:奴隷接待相手性癖 & 4) && TALENT:幼稚
+			PRINTFORML 接待相手は誘惑に耐え切れず、 %CALLNAME:TARGET%を組み伏せてその幼い体を味わった……
+		ELSEIF (FLAG:奴隷接待相手性癖 & 16) && TALENT:高校生
+			PRINTFORML 接待相手は誘惑に耐え切れず、 %CALLNAME:TARGET%を組み伏せてその若々しい体を味わった……
+		ELSEIF (FLAG:奴隷接待相手性癖 & 32) && TALENT:メイド
+			PRINTFORML 接待相手は誘惑に耐え切れず、 %CALLNAME:TARGET%を組み伏せてその熟した肉体を味わった……
+		ELSE
+			PRINTFORML 接待相手は誘惑に耐え切れず、%CALLNAME:TARGET%を組み伏せてその体を味わった……
+		ENDIF
+
+		WAIT
+
+		;年齢性癖修正
+		IF (A & 4)
+			B += 8
+			D += 10
+		ENDIF
+		;マニア修正
+		IF (A & 8)
+			B += 12
+			D += 15
+		ENDIF
+		;職業フェチ修正
+		IF (A & 16)
+			B += 16
+			IF UNLOCK_美容LV10(TARGET)
+				B += 10
+			ENDIF
+			D += 20
+		ENDIF
+
+		;奴隷の快感度判定（Ｃ、Ｂ感覚と従順、欲望を見る）
+		F += ABL:Ｃ感覚
+		F += ABL:Ｂ感覚
+		F += ABL:信頼
+		F += ABL:欲望
+		F += RAND:5
+		
+		;相手が女性の場合レズ経験プラス
+		IF (FLAG:奴隷接待相手性癖 & 1)
+			EXP:レズ経験 += 2
+			PRINTL レズ経験　+2
+		ENDIF
+
+		;体力減少
+		LOSEBASE:体力 = 120
+
+	ENDIF
+
+ELSE
+	B -= 10
+	D = 0 - 15
+	PRINTFORMW %CALLNAME:TARGET%の挑発を無粋と感じたのか、あまりいい気分ではなさそうだ……
+
+	;体力減少
+	LOSEBASE:体力 = 10
+
+ENDIF
+
+;実行回数増加
+L:2 += 1
+;
+;--------------------------------------------------
+;『身を任せる』に関する判定等
+;--------------------------------------------------
+@RECEPTION_ABANDON
+PRINTFORMW %CALLNAME:TARGET%は相手に身を任せた……
+	
+;同一コマンドの繰り返しによるペナルティ
+IF L:3 >= 7
+	S -= 100
+ELSEIF L:3 >= 6
+	S -= 50
+ELSEIF L:3 >= 5 
+	S -= 20
+ELSEIF L:3 >= 4
+	S -= 10
+ELSEIF L:3 >= 3
+	S -= 5
+ELSEIF L:3 >= 2
+	S -= 1
+ENDIF
+
+;愛撫される
+IF RAND:4 == 0
+	CALL RECEPTION_CARESS
+;イラマチオされる(相手が女性の場合はクンニ強制)
+ELSEIF RAND:3 == 0
+	CALL RECEPTION_IRRUMATIO
+;ヴァキナを犯される
+ELSEIF RAND:2 == 0
+	CALL RECEPTION_VAGINASEX
+;アナルを犯される
+ELSE
+	CALL RECEPTION_ANALSEX
+ENDIF
+
+;成功していれば職業フェチボーナス
+IF S >= 30
+	;職業フェチボーナス
+	SIF ((FLAG:奴隷接待相手性癖 & 64) && TALENT:アイドル) || ((FLAG:奴隷接待相手性癖 & 128) && TALENT:巫女)
+		B += 10
+ENDIF
+
+;実行回数増加
+L:3 += 1
+;
+;--------------------------------------------------
+;愛撫される
+;--------------------------------------------------
+@RECEPTION_CARESS
+
+;従順に応じて成否判定にプラス
+IF ABL:信頼 <= 3
+	S += 5
+ELSEIF ABL:信頼 == 4
+	S += 10
+ELSEIF ABL:信頼 == 5
+	S += 15
+ELSE
+	S += 18
+ENDIF
+
+;Ｃ感覚に応じて成否判定にプラス
+IF ABL:Ｃ感覚 <= 3
+	S += 2
+ELSEIF ABL:Ｃ感覚 == 4
+	S += 3
+ELSEIF ABL:Ｃ感覚 == 5
+	S += 5
+ELSE
+	S += 10
+ENDIF
+
+;Ｂ感覚に応じて成否判定にプラス
+IF ABL:Ｂ感覚 <= 3
+	S += 2
+ELSEIF ABL:Ｂ感覚 == 4
+	S += 3
+ELSEIF ABL:Ｂ感覚 == 5
+	S += 5
+ELSE
+	S += 10
+ENDIF
+
+;マゾっ気に応じて成否判定にプラス
+IF ABL:マゾっ気 <= 3
+	S += 5
+ELSEIF ABL:マゾっ気 == 4
+	S += 8
+ELSEIF ABL:マゾっ気 == 5
+	S += 12
+ELSE
+	S += 16
+ENDIF
+	
+;[マゾ]があれば成否判定にプラス
+SIF TALENT:マゾ
+	S += 5
+
+;[狂気][崩壊]だと成否判定にマイナス
+SIF TALENT:狂気
+	S -= 5
+SIF TALENT:崩壊
+	S -= 10
+
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気 + 2
+;接待相手がサド
+SIF (A & 2)
+	S += ABL:マゾっ気/2 + 1
+;年齢性癖合致
+SIF (A & 4)
+	S += 3
+;マニア同士
+SIF (A & 8)
+	S += ABL:オタク知識/2 + 1
+;職業性癖合致
+SIF (A & 16)
+	S += 6
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	PRINTFORM %CALLNAME:TARGET%はその
+	SIF TALENT:幼稚 == 1
+		PRINT 幼い
+	PRINTFORMW 体に愛撫を受けた……
+
+	;満足度
+	B += 5
+	;年齢性癖修正
+	IF (A & 4)
+		B += 3
+	ENDIF
+	;職業フェチ修正
+	IF (A & 16)
+		B += 5
+		IF UNLOCK_美容LV10(TARGET)
+			B += 10
+		ENDIF
+	ENDIF
+
+	;奴隷の快感度判定（Ｃ・Ｂ感覚を見る）
+	F += ABL:Ｃ感覚 * 2
+	F += ABL:Ｂ感覚 * 2
+	F += ABL:信頼
+
+	;体力減少
+	LOSEBASE:体力 = 80
+
+ELSE
+	PRINTFORMW 体を堅くしている%CALLNAME:TARGET%に興ざめのようだ……
+	B -= 3
+	;奴隷の快感度判定（Ｃ・Ｂ感覚、従順を見る）
+	F += ABL:Ｃ感覚
+	F += ABL:Ｂ感覚
+	F += ABL:信頼
+	F /= 2
+
+	;失敗だと絶頂はしない
+	SIF E + F >= 100
+		F = 99 - E
+
+	;体力減少
+	LOSEBASE:体力 = 30
+
+ENDIF
+		
+;相手が女性だった場合、レズ経験にプラス
+IF (FLAG:奴隷接待相手性癖 & 1) == 1
+	EXP:レズ経験 += 1
+	PRINTW レズ経験　+1
+ENDIF
+
+;--------------------------------------------------
+;イラマチオ
+;--------------------------------------------------
+@RECEPTION_IRRUMATIO
+
+;従順に応じて成否判定にプラス
+IF ABL:信頼 <= 3
+	S += 2
+ELSEIF ABL:信頼 == 4
+	S += 5
+ELSEIF ABL:信頼 == 5
+	S += 7
+ELSE
+	S += 12
+ENDIF
+
+;技巧か奉仕技術に応じて成否判定にプラス
+IF ABL:技巧 > ABL:奉仕技術
+	S += ABL:技巧
+	S += ABL:技巧
+ELSEIF ABL:奉仕技術 >= ABL:技巧
+	S += ABL:奉仕技術
+	S += ABL:奉仕技術
+	S += ABL:奉仕技術
+ENDIF
+
+;奉仕精神に応じて成否判定にプラス
+
+IF ABL:奉仕精神 <= 3
+	S += 2
+ELSEIF ABL:奉仕精神 == 4
+	S += 3
+ELSEIF ABL:奉仕精神 == 5
+	S += 5
+ELSE
+	S += 10
+ENDIF
+
+;マゾっ気に応じて成否判定にプラス
+IF ABL:マゾっ気 <= 3
+	S += 8
+ELSEIF ABL:マゾっ気 == 4
+	S += 10
+ELSEIF ABL:マゾっ気 == 5
+	S += 15
+ELSE
+	S += 20
+ENDIF
+	
+;[マゾ]があれば成否判定にプラス
+SIF TALENT:マゾ
+	S += 5
+
+;[狂気][崩壊]だと成否判定にマイナス
+SIF TALENT:狂気
+	S -= 5
+SIF TALENT:崩壊
+	S -= 10
+
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気/2 + 1
+;接待相手がサド
+SIF (A & 2)
+	S += ABL:マゾっ気 + 2
+;年齢性癖合致
+SIF (A & 4)
+	S += 6
+;マニア同士
+SIF (A & 8)
+	S += 0
+;職業性癖合致
+SIF (A & 16)
+	S += 12
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	PRINTFORMW %CALLNAME:TARGET%は頭を押さえられ、性器への奉仕を強制された……
+
+	;満足度
+	B += 12
+	;年齢性癖修正
+	IF (A & 4)
+		B += 6
+		D += 6
+	ENDIF
+	;職業フェチ修正
+	IF (A & 16)
+		B += 12
+		IF UNLOCK_美容LV10(TARGET)
+			B += 10
+		ENDIF
+		D += 12
+	ENDIF
+
+	D += 13
+	SIF ABL:奉仕技術 >= 3
+		D += 3
+	SIF ABL:奉仕精神 >= 3
+		D += 3
+	SIF ABL:技巧 > 5
+		D *= 2
+ELSE
+	PRINTFORMW %CALLNAME:TARGET%は頭を押さえる相手の手を振りほどき、顔をそむけた……
+	B -= 20
+	D = 0 - 10
+ENDIF
+
+;△CFLAG:16を13にすべきかとも思うけれど保留。4になっていたので1にしてCSTR活かす。
+;接待相手が女性だった場合
+IF (FLAG:奴隷接待相手性癖 & 1) == 1
+	EXP:レズ経験 += 1
+	PRINTL レズ経験　+1
+	IF CFLAG:ファーストキスの相手 == -1
+		SETCOLOR 0xF58F98
+		PRINTFORML ファーストキス
+		RESETCOLOR
+		CFLAG:ファーストキスの相手 = 1
+		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないお姉さんのアソコ
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないお姉さんのオマ○コ
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:ファーストキスの相手 = 知らない女のマンコ
+		ENDIF
+		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:ファーストキス喪失月 = DAY:1
+		CFLAG:ファーストキス喪失日 = DAY:2
+	ENDIF
+;男性だった場合
+ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0
+	EXP:フェラ経験 += 1
+	PRINTL フェラ経験　+1 
+	IF CFLAG:ファーストキスの相手 == -1
+		SETCOLOR 0xF58F98
+		PRINTFORML ファーストキス
+		RESETCOLOR
+		CFLAG:ファーストキスの相手 = 1
+		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないおじさんのおちん○ん
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = 知らないおじさんのオチ○ポ
+		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:ファーストキスの相手 = 知らないオヤジのチンポ
+		ENDIF
+		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:ファーストキス喪失月 = DAY:1
+		CFLAG:ファーストキス喪失日 = DAY:2
+	ENDIF
+ENDIF
+
+;体力減少
+LOSEBASE:体力 = 100
+
+;--------------------------------------------------
+;ヴァギナを犯される
+;--------------------------------------------------
+@RECEPTION_VAGINASEX
+
+;処女で従順Lv4以下かつ欲望Lv4以下、または貞操無頓着が付いていない場合は強制的に失敗
+IF TALENT:処女 && (ABL:信頼 <= 4 && ABL:欲望 <= 4) && TALENT:貞操無頓着 == 0
+	PRINTFORMW %CALLNAME:TARGET%は純潔を守ろうと、必死で抵抗した
+	PRINTFORMW あまりの強い抵抗に、相手も諦めざるを得なかった……
+	B -= 5
+	C -= 5
+
+	;体力減少
+	LOSEBASE:体力 = 120
+
+	RETURN 0
+ENDIF
+
+PRINTFORM %CALLNAME:TARGET%は押し倒され、
+SIF TALENT:幼稚 == 1
+	PRINT その幼い
+PRINTFORMW 秘部を貫かれた……
+
+;従順に応じて成否判定にプラス
+IF ABL:信頼 <= 3
+	S += 6
+ELSEIF ABL:信頼 == 4
+	S += 10
+ELSEIF ABL:信頼 == 5
+	S += 14
+ELSE
+	S += 20
+ENDIF
+
+;Ｖ感覚に応じて成否判定にプラス
+IF ABL:Ｖ感覚 <= 3
+	S += 2
+ELSEIF ABL:Ｖ感覚 == 4
+	S += 3
+ELSEIF ABL:Ｖ感覚 == 5
+	S += 5
+ELSE
+	S += 7
+ENDIF
+
+;性交技術に応じて成否判定にプラス
+IF ABL:性交技術 <= 3
+	S += 5
+ELSEIF ABL:性交技術 == 4
+	S += 7
+ELSEIF ABL:性交技術 == 5
+	S += 10
+ELSE
+	S += 11
+ENDIF
+	
+;奉仕精神に応じて成否判定にプラス
+IF ABL:奉仕精神 <= 3
+	S += 1
+ELSEIF ABL:信頼 == 4
+	S += 2
+ELSEIF ABL:信頼 == 5
+	S += 3
+ELSE
+	S += 5
+ENDIF
+		
+;処女の場合は抵抗するので成否判定にペナルティ
+IF TALENT:処女
+	;愛が付いているとさらにペナルティ
+	IF TALENT:恋心
+		S /= 2
+	ELSE
+		S -= 5
+	ENDIF
+ENDIF
+
+;[マゾ]があれば成否判定にプラス
+SIF TALENT:マゾ
+	S += 5
+
+;[狂気][崩壊]だと成否判定にマイナス
+SIF TALENT:狂気
+	S -= 5
+SIF TALENT:崩壊
+	S -= 10
+
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気/2 + 1
+;接待相手がサド
+SIF (A & 2)
+	S += ABL:マゾっ気/2 + 1
+;年齢性癖合致
+SIF (A & 4)
+	S += 6
+;マニア同士
+SIF (A & 8)
+	S += 0
+;職業性癖合致
+SIF (A & 16)
+	S += 12
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	PRINTFORMW %CALLNAME:TARGET%は犯されながら嬌声を上げている……
+	;処女喪失
+	IF TALENT:処女
+		PRINTFORMW %CALLNAME:TARGET%の汚れを知らない秘部が貫かれ、そこから血が一筋流れ落ちた……
+		PRINTFORMW 処女を奪えたことで、相手はかなり興奮している
+		SETCOLOR 0xF58F98
+		PRINTL 【接待で処女喪失】
+		RESETCOLOR
+		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+{2+(FLAG:奴隷接待相手性癖 & 1)}
+		EXP:異常経験 += 2 + (FLAG:奴隷接待相手性癖 & 1)
+		;処女喪失の相手を記録
+		IF CFLAG:初体験の相手 == 0
+			IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
+				CFLAG:初体験の相手 = 3
+				CSTR:処女喪失の相手 = 知らないオンナの人
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1
+				CFLAG:初体験の相手 = 3
+				CSTR:処女喪失の相手 = 知らないオンナ				
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 0
+				CFLAG:初体験の相手 = 2
+				CSTR:処女喪失の相手 = 知らないおじさん
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 1
+				CFLAG:初体験の相手 = 2
+				CSTR:処女喪失の相手 = 知らないオヤジ
+			ENDIF
+		ENDIF
+		TALENT:処女 = 0
+		B += 30
+	ENDIF
+	;相手の快感度判定（Ｖ感覚・性交技術・奉仕精神を見る）
+	D += 10
+	SIF ABL:Ｖ感覚 >= 3
+		D += 5
+	SIF ABL:性交技術 >= 3
+		D += 10
+	SIF ABL:奉仕精神 >= 3
+		D += 3
+	
+	;満足度
+	;相手が女性の場合
+	IF FLAG:奴隷接待相手性癖 & 1
+		B += 9
+	;相手が男性の場合
+	ELSE
+		B += 13
+	ENDIF
+	;年齢性癖修正
+	IF (A & 4)
+		B += 6
+		D += 8
+	ENDIF
+	;職業フェチ修正
+	IF (A & 16)
+		B += 12
+		IF UNLOCK_美容LV10(TARGET)
+			B += 10
+		ENDIF
+		D += 10
+	ENDIF
+
+	;奴隷の快感度判定（Ｖ感覚・欲望を見る）
+	IF ABL:Ｖ感覚 == 1
+		F += 5
+	ELSEIF ABL:Ｖ感覚 == 2
+		F += 10
+	ELSEIF ABL:Ｖ感覚 == 3
+		F += 13
+	ELSEIF ABL:Ｖ感覚 == 4
+		F += 15
+	ELSEIF ABL:Ｖ感覚 >= 5
+		F += 20
+	ENDIF
+	
+	IF ABL:技巧 == 1
+		F += 3
+	ELSEIF ABL:技巧 == 2
+		F += 7
+	ELSEIF ABL:技巧 == 3
+		F += 12
+	ELSEIF ABL:技巧 == 4
+		F += 14
+	ELSEIF ABL:技巧 >= 5
+		F += 15
+	ENDIF
+
+ELSE
+	IF TALENT:処女
+		PRINTFORMW 破瓜の痛みに耐えきれず、%CALLNAME:TARGET%は激しく身をよじり抵抗してしまった……
+		SETCOLOR 0xF58F98
+		PRINTL 【接待で処女喪失】
+		RESETCOLOR
+		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+{2+(FLAG:奴隷接待相手性癖 & 1)}
+		EXP:異常経験 += 2 + (FLAG:奴隷接待相手性癖 & 1)
+		;処女喪失の相手を記録
+		IF CFLAG:初体験の相手 == 0
+			IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
+				CFLAG:初体験の相手 = 3
+				CSTR:処女喪失の相手 = 知らないオンナの人
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1
+				CFLAG:初体験の相手 = 3
+				CSTR:処女喪失の相手 = 知らないオンナ				
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 0
+				CFLAG:初体験の相手 = 2
+				CSTR:処女喪失の相手 = 知らないおじさん
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 1
+				CFLAG:初体験の相手 = 2
+				CSTR:処女喪失の相手 = 知らないオヤジ
+			ENDIF
+		ENDIF
+		TALENT:処女 = 0
+		B += 10
+		D += ABL:Ｖ感覚
+		F = 0 - 30
+	ELSE
+		PRINTFORMW 犯されながらも抵抗する%CALLNAME:TARGET%に、幾分興がそがれたようだ……
+		B -= 6
+		D += ABL:Ｖ感覚
+		F = 0 - 10
+	ENDIF
+ENDIF
+
+PRINTL Ｖ経験　+1
+EXP:Ｖ経験 += 1
+
+;相手が女性だった場合、レズ経験にプラス
+IF (FLAG:奴隷接待相手性癖 & 1)
+	EXP:レズ経験 += 2
+	PRINTW レズ経験　+2
+ENDIF
+
+;体力減少
+LOSEBASE:体力 = 120
+
+;--------------------------------------------------
+;アナルを犯される
+;--------------------------------------------------
+@RECEPTION_ANALSEX
+
+PRINTFORM %CALLNAME:TARGET%は押し倒され、
+	SIF TALENT:幼稚 == 1
+		PRINT その幼い
+PRINTFORMW アヌスを貫かれた……
+	
+;従順に応じて成否判定にプラス
+IF ABL:信頼 <= 3
+	S += 6
+ELSEIF ABL:信頼 == 4
+	S += 10
+ELSEIF ABL:信頼 == 5
+	S += 14
+ELSE
+	S += 20
+ENDIF
+	
+;Ａ感覚に応じて成否判定にプラス
+IF ABL:Ａ感覚 <= 3
+	S += 2
+ELSEIF ABL:Ａ感覚 == 4
+	S += 3
+ELSEIF ABL:Ａ感覚 == 5
+	S += 5
+ELSE
+	S += 7
+ENDIF
+	
+;性交技術に応じて成否判定にプラス
+IF ABL:性交技術 <= 3
+	S += 5
+ELSEIF ABL:性交技術 == 4
+	S += 7
+ELSEIF ABL:性交技術 == 5
+	S += 10
+ELSE
+	S += 11
+ENDIF
+	
+;奉仕精神に応じて成否判定にプラス
+IF ABL:奉仕精神 <= 3
+	S += 1
+ELSEIF ABL:信頼 == 4
+	S += 2
+ELSEIF ABL:信頼 == 5
+	S += 3
+ELSE
+	S += 5
+ENDIF
+	
+;[マゾ]があれば成否判定にプラス
+SIF TALENT:マゾ
+	S += 5
+	
+;[狂気][崩壊]だと成否判定にマイナス
+SIF TALENT:狂気
+	S -= 5
+SIF TALENT:崩壊
+	S -= 10
+	
+;接待相手の性癖と奴隷の素質のマッチによるボーナス
+;女同士でレズ
+SIF (A & 1)
+	S += ABL:レズっ気/2 + 1
+;接待相手がサド
+SIF (A & 2)
+	S += ABL:マゾっ気/2 + 1
+;年齢性癖合致
+SIF (A & 4)
+	S += 6
+;マニア同士
+SIF (A & 8)
+	S += 0
+;職業性癖合致
+SIF (A & 16)
+	S += 12
+
+;最終的にSが30以上になれば成功、ならなければ失敗
+IF S >= 30
+	PRINTFORMW %CALLNAME:TARGET%はアヌスを犯されて嬌声を上げている……
+		
+	;相手の快感度判定（Ａ感覚・性交技術・奉仕精神を見る）
+	D += 10
+	SIF ABL:Ａ感覚 >= 3
+		D += 5
+	SIF ABL:性交技術 >= 3
+		D += 10
+	SIF ABL:奉仕精神 >= 3
+		D += 3
+			
+	;奴隷の快感度判定（Ａ感覚・欲望を見る）
+	IF ABL:Ａ感覚 == 1
+		F += 5
+	ELSEIF ABL:Ａ感覚 == 2
+		F += 10
+	ELSEIF ABL:Ａ感覚 == 3
+		F += 13
+	ELSEIF ABL:Ａ感覚 == 4
+		F += 15
+	ELSEIF ABL:Ａ感覚 >= 5
+		F += 20
+	ENDIF
+	
+	IF ABL:技巧 == 1
+		F += 3
+	ELSEIF ABL:技巧 == 2
+		F += 7
+	ELSEIF ABL:技巧 == 3
+		F += 12
+	ELSEIF ABL:技巧 == 4
+		F += 14
+	ELSEIF ABL:技巧 >= 5
+		F += 15
+	ENDIF
+	
+	;満足度
+	;相手が女性の場合
+	IF FLAG:奴隷接待相手性癖 & 1
+		B += 12
+	;相手が男性の場合
+	ELSE
+		B += 15
+	ENDIF
+	;年齢性癖修正
+	IF (A & 4)
+		B += 8
+		D += 8
+	ENDIF
+	;職業フェチ修正
+	IF (A & 16)
+		B += 15
+		IF UNLOCK_美容LV10(TARGET)
+			B += 10
+		ENDIF
+		D += 10
+	ENDIF
+ELSE
+	PRINTFORMW アヌスを犯されながらも抵抗する%CALLNAME:TARGET%に、幾分興がそがれたようだ……
+	B -= 6
+	D += ABL:Ａ感覚
+	F = 0 - 10
+ENDIF
+
+PRINTL Ａ経験　+1
+EXP:Ａ経験 += 1		
+IF TALENT:アナル処女 == 1
+	SETCOLOR 0xF58F98
+	PRINTL 【アナル処女喪失】
+	RESETCOLOR
+	TALENT:アナル処女 = 0
+			IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
+				CSTR:アナル処女喪失の相手 = 知らないオンナの人
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1
+				CSTR:アナル処女喪失の相手 = 知らないオンナ				
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 0
+				CSTR:アナル処女喪失の相手 = 知らないおじさん
+			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 1
+				CSTR:アナル処女喪失の相手 = 知らないオヤジ
+			ENDIF
+ENDIF
+
+;相手が女性だった場合、レズ経験にプラス
+IF (FLAG:奴隷接待相手性癖 & 1)
+	EXP:レズ経験 += 2
+	PRINTW レズ経験　+2
+ENDIF
+
+;体力減少
+LOSEBASE:体力 = 120
+

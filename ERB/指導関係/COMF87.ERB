@@ -1,0 +1,443 @@
+﻿;-------------------------------------------------
+;ピアシング
+;過激なコマンド：調教対象の体にピアスを取り付ける
+;-------------------------------------------------
+@COM87
+
+PRINTL ピアシング
+
+;-------------------------------------------------
+;装着の確認
+;-------------------------------------------------
+$INPUT_LOOP
+PRINTFORM 現在%CALLNAME:TARGET%の身体には 
+SIF CFLAG:ピアスの装着状況 & 1
+	PRINT 乳首 
+SIF CFLAG:ピアスの装着状況 & 2
+	PRINT へそ 
+SIF CFLAG:ピアスの装着状況 & 4
+	PRINT ラビア 
+IF CFLAG:ピアスの装着状況 & 8
+	IF TALENT:ふたなり || TALENT:オトコ
+		PRINT ペニス 
+	ELSE
+		PRINT クリトリス 
+	ENDIF
+ENDIF
+SIF CFLAG:ピアスの装着状況 & 16
+	PRINT 舌 
+IF (CFLAG:ピアスの装着状況 & 1) == 0 && (CFLAG:ピアスの装着状況 & 2) == 0 && (CFLAG:ピアスの装着状況 & 4) == 0  && (CFLAG:ピアスの装着状況 & 8) == 0  && (CFLAG:ピアスの装着状況 & 16) == 0
+	PRINTL ピアスは取り付けられていません
+ELSE
+	PRINTL にピアスが取り付けられています
+ENDIF
+IF ITEM:ピアスリング
+	PRINTFORML 手元にはピアスリングが{ITEM:ピアスリング}個あります
+ELSE
+	PRINTFORML 手元にはピアスリングはありません
+ENDIF
+
+SIF ITEM:ピアスリング && ((CFLAG:ピアスの装着状況 & 1) == 0 || (CFLAG:ピアスの装着状況 & 2) == 0 || (CFLAG:ピアスの装着状況 & 4) == 0 || (CFLAG:ピアスの装着状況 & 8) == 0 || (CFLAG:ピアスの装着状況 & 16) == 0)
+	PRINTL  [0] - ピアスを取り付ける
+SIF (CFLAG:ピアスの装着状況 & 1) || (CFLAG:ピアスの装着状況 & 2) || (CFLAG:ピアスの装着状況 & 4) || (CFLAG:ピアスの装着状況 & 8) || (CFLAG:ピアスの装着状況 & 16)
+	PRINTL  [1] - ピアスを取り外す
+PRINTL  [10]- やめる
+
+INPUT
+
+IF RESULT == 0
+	PRINTL どこにピアスを装着させますか？
+	SIF (CFLAG:ピアスの装着状況 & 1) == 0 && ITEM:ピアスリング >= 2
+		PRINTL  [0] - 乳首(2個消費)
+	SIF (CFLAG:ピアスの装着状況 & 2) == 0
+		PRINTL  [1] - へそ
+	SIF (CFLAG:ピアスの装着状況 & 4) == 0 && TALENT:オトコ == 0 && ITEM:ピアスリング >= 2
+		PRINTL  [2] - ラビア(2個消費)
+	IF (CFLAG:ピアスの装着状況 & 8) == 0 
+		IF TALENT:ふたなり || TALENT:オトコ
+			PRINTL  [3] - ペニス
+		ELSE
+			PRINTL  [3] - クリトリス
+		ENDIF
+	ENDIF
+	SIF (CFLAG:ピアスの装着状況 & 16) == 0
+		PRINTL  [4] - 舌
+	PRINTL  [10]- やめる
+
+	INPUT
+
+	IF RESULT == 10
+		RETURN 0
+	ELSEIF RESULT < 0 || RESULT > 4
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 2 && TALENT:オトコ
+		GOTO INPUT_LOOP
+	ENDIF
+ELSEIF RESULT == 1
+	PRINTL どのピアスを取り外しますか？
+	SIF (CFLAG:ピアスの装着状況 & 1)
+		PRINTL  [0] - 乳首
+	SIF (CFLAG:ピアスの装着状況 & 2)
+		PRINTL  [1] - へそ
+	SIF (CFLAG:ピアスの装着状況 & 4) && TALENT:オトコ == 0
+		PRINTL  [2] - ラビア
+	IF (CFLAG:ピアスの装着状況 & 8) 
+		IF TALENT:ふたなり || TALENT:オトコ
+			PRINTL  [3] - ペニス
+		ELSE
+			PRINTL  [3] - クリトリス
+		ENDIF
+	ENDIF
+	SIF (CFLAG:ピアスの装着状況 & 16)
+		PRINTL  [4] - 舌
+	PRINTL  [10]- やめる
+
+	INPUT
+
+	IF RESULT == 10
+		RETURN 0
+	ELSEIF RESULT < 0 || RESULT > 4
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 2 && TALENT:オトコ
+		GOTO INPUT_LOOP
+	ENDIF
+ELSEIF RESULT == 10
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+
+IF RESULT == 0
+	P = 1
+ELSEIF RESULT == 1
+	P = 2
+ELSEIF RESULT == 2
+	P = 4
+ELSEIF RESULT == 3
+	P = 8
+ELSEIF RESULT == 4
+	P = 16
+ENDIF
+
+;-------------------------------------------------
+;実行できるかの判定
+;-------------------------------------------------
+;縄使用中なら自動成功
+SIF TEQUIP:縄
+	GOTO SUCCESS_LOOP
+
+;外す際には自動成功
+SIF CFLAG:ピアスの装着状況 & P
+	GOTO SUCCESS_LOOP
+
+A = 0
+S = 0
+
+;すべての命令に共通の要素を考慮
+;(従順が高いと命令に従いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 3
+	PRINTS ABLNAME:[[ABL:欲望]]
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 3,')
+	S = 1
+ENDIF
+;ABL:マゾっ気
+IF ABL:マゾっ気
+	SIF S
+		PRINT  + 
+	A += ABL:マゾっ気 * 4
+	PRINTS ABLNAME:[[ABL:マゾっ気]]
+	PRINTV 'LV,ABL:マゾっ気,'(,ABL:マゾっ気 * 4,')
+	S = 1
+ENDIF
+;MARK:快楽刻印
+IF MARK:快楽刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快楽刻印 * 3
+	PRINTS MARKNAME:[[MARK:快楽刻印]]
+	PRINTV 'LV,MARK:快楽刻印,'(,MARK:快楽刻印 * 3,')
+	S = 1
+ENDIF
+
+;PALAM:欲情
+IF PALAM:欲情 < PALAMLV:1
+	L = 0
+ELSEIF PALAM:欲情 < PALAMLV:2
+	L = 1
+ELSEIF PALAM:欲情 < PALAMLV:3
+	L = 2
+ELSEIF PALAM:欲情 < PALAMLV:4
+	L = 3
+ELSEIF PALAM:欲情 < PALAMLV:5
+	L = 4
+ELSE
+	L = 5
+ENDIF
+IF L
+	SIF S
+		PRINT  + 
+	A += L * 3
+	PRINTS PALAMNAME:[[PALAM:欲情]]
+	PRINTV 'LV,L,'(,L * 3,')
+	S = 1
+ENDIF
+
+;好奇心
+IF TALENT:好奇心
+	PRINT  - 
+	A -= 3
+	PRINTS TALENTNAME:[[TALENT:好奇心]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;保守的
+IF TALENT:保守的
+	PRINT  - 
+	A -= 3
+	PRINTS TALENTNAME:[[TALENT:保守的]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;痛みに弱い
+IF TALENT:痛みに弱い
+	PRINT  - 
+	A -= 3
+	PRINTS TALENTNAME:[[TALENT:痛みに弱い]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;痛みに強い
+IF TALENT:痛みに強い
+	SIF S
+		PRINT  + 
+	A += 3
+	PRINTS TALENTNAME:[[TALENT:痛みに強い]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;愛
+IF TALENT:恋心 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINTS TALENTNAME:[[TALENT:恋心]]
+	PRINTV '(,5,')
+	S = 5
+ENDIF
+
+;しあわせ草
+IF TEQUIP:媚薬効果
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINTS ITEMNAME:[[ITEM:プリンセスポイズン]]
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+;マゾ
+IF TALENT:マゾ
+	SIF S
+		PRINT  + 
+	A += 10
+	PRINTS TALENTNAME:[[TALENT:露出狂]]
+	PRINTV '(,10,')
+	S = 1
+ENDIF
+
+;合計を表示(40以上で実行)
+PRINT  = 
+PRINTV A
+
+;取り付け位置で難易度変化
+;ニプル
+IF P == 1
+	V = 36
+;へそ
+ELSEIF P == 2
+	V = 30
+;ラビア
+ELSEIF P == 4
+	V = 40
+;クリ
+ELSEIF P == 8
+	V = 44
+;舌
+ELSEIF P == 16
+	V = 36
+ENDIF
+
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 実行値
+PRINTV V
+
+WAIT
+
+;実行できない
+IF A < V
+	PRINTW 抵抗が激しくて装着できませんでした
+	RETURN 0
+ENDIF
+
+$SUCCESS_LOOP
+
+SAVESTR:0 = ピアシング
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;実行決定
+;-------------------------------------------------
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 50
+LOSEBASE:気力 += 100
+
+;ニプル
+IF P == 1
+	;対象のＢ⇔調教者の指の汚れが移動
+	STAIN:5 |= STAIN:PLAYER:1
+	STAIN:PLAYER:1 |= STAIN:5
+;ラビア
+ELSEIF P == 4
+	;対象のＶ⇔調教者の指の汚れが移動
+	STAIN:3 |= STAIN:PLAYER:1
+	STAIN:PLAYER:1 |= STAIN:3
+;クリ
+ELSEIF P == 8
+	;対象のＶ⇔調教者の指の汚れが移動
+	STAIN:3 |= STAIN:PLAYER:1
+	STAIN:PLAYER:1 |= STAIN:3
+;舌
+ELSEIF P == 16
+	;対象の口⇔調教者の指の汚れが移動
+	STAIN:0 |= STAIN:PLAYER:1
+	STAIN:PLAYER:1 |= STAIN:0
+ENDIF
+
+SOURCE:6 = 3000
+SOURCE:13 = 1000
+SOURCE:14 = 3000
+
+;ニプル
+IF P == 1
+	LOSEBASE:体力 += 50
+	SOURCE:6 += 4000
+	SOURCE:13 += 9000
+	SOURCE:14 += 12000
+;ラビア
+ELSEIF P == 4
+	LOSEBASE:体力 += 50
+	LOSEBASE:気力 += 50
+	SOURCE:6 += 2000
+	SOURCE:13 += 9000
+	SOURCE:14 += 12000
+;クリ
+ELSEIF P == 8
+	LOSEBASE:体力 += 50
+	LOSEBASE:気力 += 50
+	SOURCE:6 += 6000
+	SOURCE:13 += 9000
+	SOURCE:14 += 17000
+;舌
+ELSEIF P == 16
+	LOSEBASE:体力 += 50
+	SOURCE:6 += 4000
+	SOURCE:13 += 2000
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 1
+	TIMES SOURCE:13 , 1.20
+	TIMES SOURCE:14 , 0.90
+ELSEIF ABL:マゾっ気 == 2
+	TIMES SOURCE:13 , 1.40
+	TIMES SOURCE:14 , 0.80
+ELSEIF ABL:マゾっ気 == 3
+	TIMES SOURCE:13 , 1.60
+	TIMES SOURCE:14 , 0.50
+ELSEIF ABL:マゾっ気 == 4
+	TIMES SOURCE:13 , 1.80
+	TIMES SOURCE:14 , 0.30
+ELSEIF ABL:マゾっ気 >= 5
+	TIMES SOURCE:13 , 2.00
+	TIMES SOURCE:14 , 0.10
+ENDIF
+
+;露出癖をみる
+IF ABL:露出癖 == 2
+	TIMES SOURCE:14 , 0.90
+ELSEIF ABL:露出癖 == 3
+	TIMES SOURCE:14 , 0.80
+ELSEIF ABL:露出癖 == 4
+	TIMES SOURCE:14 , 0.70
+ELSEIF ABL:露出癖 >= 5
+	TIMES SOURCE:14 , 0.60
+ENDIF
+
+;しあわせ草使用中なら痛み激減
+SIF TEQUIP:媚薬効果
+	TIMES SOURCE:6 , 0.05
+
+;ビデオ撮影中
+IF TEQUIP:撮影中
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:14 , 1.50
+ENDIF
+
+;過去に装着経験があれば痛み減
+IF CFLAG:ピアスの装着状況 & (P * 32)
+	TIMES SOURCE:6 , 0.30
+	TIMES SOURCE:13 , 0.20
+	TIMES SOURCE:14 , 0.50
+ENDIF
+
+;外す際にはダメージもパラメータ増減もなし
+IF CFLAG:ピアスの装着状況 & P
+	LOSEBASE:体力 = 0
+	LOSEBASE:気力 = 0
+	SOURCE:6 = 0
+	SOURCE:13 = 0
+	SOURCE:14 = 0
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;初めて付けたピアスがへそ以外なら異常経験＋１
+IF CFLAG:ピアスの装着状況 == 0 && P != 2
+	EXP:異常経験 += 1
+	PRINTL 異常経験＋１
+ENDIF
+
+IF P == 1
+	PRINTFORML %EXPNAME:[[EXP:Ｂ開発経験]]%+10
+	EXP:Ｂ開発経験 += 10
+ENDIF
+
+;-------------------------------------------------
+;装着処理
+;-------------------------------------------------
+IF CFLAG:ピアスの装着状況 & P
+	CFLAG:ピアスの装着状況 -= P
+ELSE
+	CFLAG:ピアスの装着状況 |= P
+	CFLAG:ピアスの装着状況 |= P * 32
+	ITEM:ピアスリング -= 1
+	SIF P == 1 || P == 4 
+		ITEM:ピアスリング -= 1
+ENDIF
+
+RETURN 1

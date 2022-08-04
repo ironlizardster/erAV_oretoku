@@ -1,0 +1,166 @@
+﻿@KIRYU_GUMI
+$INPUT_LOOP
+
+DRAWLINE
+PRINTL 桐生組事務所
+PRINTL 《桐生組やその系列会社に色々な手配をお願いします》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+;1と2逆じゃね……という説はある。
+;普通のとこには頼めないので系列と見てよいだろう
+SIF FLAG:女子寮建設 == 0
+	PRINTL  [1] - 女子寮を建設する（1000000ポイント）
+PRINTL  [2] - 事務所を拡張する（300000ポイント）
+;ビデオ撮らなくてもクリアできちゃう対策
+;PRINTL  [3] - 娼館への参入許可をもらう
+;一番売ってそうだった。価格は今のところ適当。
+SIF ITEM:犬 == 0
+	PRINTL  [4] - 撮影用の犬を購入する（15000ポイント）
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:桐生歌音]]
+		IF CFLAG:COUNT:売却助手可能 == 2
+			PRINTL  [10] - 歌音に相談する
+			LOCAL:1 = 1
+		ENDIF
+	ENDIF
+REND
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:桐生エレン]]
+		IF TALENT:COUNT:永遠の愛 == 1
+			PRINTL  [11] - エレンに会いに行く
+			LOCAL:2 = 1
+		ENDIF
+	ENDIF
+REND
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1 && FLAG:女子寮建設 == 0
+	CALL BOUGHT_LYCEE
+ELSEIF RESULT == 2
+	CALL BOUGHT_ROOM
+ELSEIF RESULT == 4 && ITEM:犬 == 0
+	CALL BOUGHT_DOG
+ELSEIF RESULT == 10 && LOCAL:1 == 1
+	CALL KANON_ORDER
+ELSEIF RESULT == 11 && LOCAL:2 == 1
+	CALL ELLEN_MISSION
+ELSEIF RESULT == 999
+	RETURN 0
+ENDIF
+GOTO INPUT_LOOP
+;-------------------------------------------------
+;事務所拡大
+;-------------------------------------------------
+@BOUGHT_ROOM
+C = 300000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML  現在の事務所の規模で雇える女優候補の人数は{FLAG:事務所規模}人です
+PRINTFORML  事務所の規模を拡張しますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 《事務所の規模を拡張しました》
+	FLAG:事務所規模 += 1
+	MONEY -= C
+	WAIT
+	RETURN 1
+ELSEIF RESULT == 1
+	RETURN 0
+ENDIF
+
+GOTO INPUT_LOOP
+;
+
+;-------------------------------------------------
+;女子寮建設
+;-------------------------------------------------
+@BOUGHT_LYCEE
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML  女子寮を建設しますか？
+PRINTFORML  ※女子寮について
+PRINTFORML  　契約したキャラクターを入寮させることによって女優リストに表示させなくします
+PRINTFORML  　また、各種設備を併設することもできます
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 《女子寮を建設しました》
+	PRINTFORML ※入寮、退寮、設備の追加は週のはじめにのみ行えます
+	FLAG:女子寮建設 += 1
+	MONEY -= C
+	WAIT
+	RETURN 1
+ELSEIF RESULT == 1
+	RETURN 0
+ENDIF
+
+GOTO INPUT_LOOP
+;
+;-------------------------------------------------
+;犬購入
+;-------------------------------------------------
+@BOUGHT_DOG
+C = 15000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML  撮影用の犬を購入しますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 《犬を購入しました》
+	ITEM:犬 += 1
+	MONEY -= C
+	WAIT
+	RETURN 1
+ELSEIF RESULT == 1
+	RETURN 0
+ENDIF
+
+GOTO INPUT_LOOP
+;

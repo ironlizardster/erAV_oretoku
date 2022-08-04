@@ -1,0 +1,274 @@
+﻿;=================================================
+; シーンタイトル
+;--------------------------------------------
+; RESULTS = の後にシーンのタイトルを記述する
+;=================================================
+@SCENE_TITLE_5
+RESULTS = ハードアナルセックス
+
+;=================================================
+; シーン可視条件
+;--------------------------------------------
+; 特定のキャラクターの存在や、他のシーン結果などを、
+; このシーンの表示条件に使用したい時に編集する
+;=================================================
+@SCENE_VISIBLE_5
+; 不可視なら0、可視なら1を戻す
+;男優処理がないので暫定
+IF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ABL:PLAYER:技巧 == 0 && ITEM:ペニスバンド == 0 
+	RETURN 0
+ELSE
+	RETURN 1
+ENDIF
+;=================================================
+; シーン報酬
+;--------------------------------------------
+; シーンの報酬を記述する
+; P:1 消費行動ポイント
+; P:2 基本消費体力
+; P:3 基本消費体力
+;=================================================
+@SCENE_FEE_5
+P:1 = 3
+P:2 += 150
+P:3 += 200
+
+;=================================================
+; シーン解説文
+;--------------------------------------------
+; シーンの解説文を記述する
+;=================================================
+@SCENE_INFO_5
+DRAWLINE
+PRINTL 《ハードアナルセックス》
+PRINTL カメラの前でアナルセックスを披露してもらいます
+DRAWLINE
+
+;=================================================
+; シーン成功判定
+;--------------------------------------------
+; シーンの成功判定を行います
+;=================================================
+@SCENE_CALC_5
+
+LOCAL:1 = 0
+
+LOCAL:1 += ABL:Ａ感覚
+LOCAL:1 += ABL:信頼
+LOCAL:1 += ABL:欲望
+LOCAL:1 += ABL:性交技術
+LOCAL:1 += ABL:性交中毒
+LOCAL:1 += ABL:被写技能
+
+SIF TALENT:アナル処女
+	LOCAL:1 += 10
+SIF TALENT:貞操無頓着
+	LOCAL:1 += 5
+SIF TALENT:解放
+	LOCAL:1 += 5
+SIF TALENT:恥薄い
+	LOCAL:1 += 5
+SIF TALENT:快感に素直
+	LOCAL:1 += 5
+SIF TALENT:淫乱
+	LOCAL:1 += 5
+SIF TALENT:尻穴狂い
+	LOCAL:1 += 10
+SIF TALENT:マゾ
+	LOCAL:1 += 10
+SIF TALENT:Ａ敏感
+	LOCAL:1 += 10
+SIF TALENT:絶倫
+	LOCAL:1 += 20
+
+SIF TALENT:貞操観念
+	LOCAL:1 -= 5
+SIF TALENT:抵抗
+	LOCAL:1 -= 20
+SIF TALENT:恥じらい
+	LOCAL:1 -= 5
+SIF TALENT:Ａ鈍感
+	LOCAL:1 -= 5
+SIF TALENT:妊娠
+	LOCAL:1 -= 5
+
+IF LOCAL:1 >= 10
+	IF LOCAL:1 >= 50
+		RETURN 2
+	ELSE
+		RETURN 1
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+
+
+;=================================================
+; シーン撮影開始
+;--------------------------------------------
+; シーン撮影開始時の地の文を表示します
+; 処理の都合上、ここで以下の項目を加算
+; P:4 獲得メダル
+; P:10 基本獲得ポイント
+;=================================================
+@SCENE_RESULT_START_5
+
+P:4 = 3
+P:10 = 1500
+PRINTFORML %NICKNAME:TARGET%こと%NAME:TARGET%のアナルセックスを撮影した……
+PRINTW
+
+;=================================================
+; シーン結果・大成功
+;--------------------------------------------
+; シーン成功判定で2を返した場合の処理を行います
+;=================================================
+@SCENE_RESULT_PERFECT_5
+PRINTFORMW %CALLNAME:PLAYER%
+
+PRINTFORM 催淫効果のあるお香が焚かれたラブホテルの一室で、%CALLNAME:TARGET%は%CALLNAME:PLAYER%に
+PRINT 嬌声を上げ全身を痙攣させながら、アナルが広がってしまうまで何度も
+IF TALENT:PLAYER:ふたなり == 1 || TALENT:PLAYER:オトコ == 1
+	PRINTL 肉棒
+ELSE
+	PRINTL ペニスバンド
+ENDIF
+PRINTL で突かれた…… 
+PRINTL
+IF TALENT:アナル処女 == 1
+	TFLAG:ビデオ撮影内容2 |= 1
+	SETCOLOR 0xF58F98
+	PRINTL 【アナル処女喪失】
+	RESETCOLOR
+	TALENT:アナル処女 = 0
+	CSTR:アナル処女喪失の相手 = %CALLNAME:PLAYER%
+ENDIF
+IF CFLAG:ファーストキスの相手 == -1
+	CFLAG:ファーストキスの相手 = 1
+	SETCOLOR 0xDDBBCC
+	PRINTFORML ファーストキス
+	RESETCOLOR
+	CFLAG:ファーストキスの相手 = 1
+		IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+			CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のおちん○ん
+		ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+			CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のオチ○ポ
+		ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+			CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のチンポ
+		ENDIF
+ENDIF
+
+TIMES (P:10) , 1.25
+P:4 *= 2
+
+;=================================================
+; シーン結果・成功
+;--------------------------------------------
+; シーン成功判定で1を返した場合の処理を行います
+;=================================================
+@SCENE_RESULT_SUCCESS_5
+PRINTFORMW %CALLNAME:PLAYER%
+
+PRINTFORM 催淫効果のあるお香が焚かれたラブホテルの一室で、%CALLNAME:TARGET%は%CALLNAME:PLAYER%に
+PRINTFORML 失神するまで何度もアナルを
+IF TALENT:PLAYER:ふたなり == 1 || TALENT:PLAYER:オトコ == 1
+	PRINTL 肉棒
+ELSE
+	PRINTL ペニスバンド
+ENDIF
+PRINTL で突かれた…… 
+PRINTL
+IF TALENT:アナル処女 == 1
+	TFLAG:ビデオ撮影内容2 |= 1
+	SETCOLOR 0xF58F98
+	PRINTL 【アナル処女喪失】
+	RESETCOLOR
+	TALENT:アナル処女 = 0
+	CSTR:アナル処女喪失の相手 = %CALLNAME:PLAYER%
+ENDIF
+IF CFLAG:ファーストキスの相手 == -1
+	CFLAG:ファーストキスの相手 = 1
+	SETCOLOR 0xDDBBCC
+	PRINTFORML ファーストキス
+	RESETCOLOR
+	CFLAG:ファーストキスの相手 = 1
+	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のおちん○ん
+	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のオチ○ポ
+	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のチンポ
+	ENDIF
+ENDIF
+PRINTL
+
+;=================================================
+; シーン結果・失敗
+;--------------------------------------------
+; シーン成功判定で0を返した場合の処理を行います
+;=================================================
+@SCENE_RESULT_FAILED_5
+PRINTFORMW %CALLNAME:PLAYER%
+
+PRINTFORM %NICKNAME:TARGET%は
+IF TALENT:恥じらい
+	PRINTFORM 頬を真っ赤にして
+ENDIF
+PRINTFORML %CALLNAME:PLAYER%に抱かれていたが、その動きはぎこちなく魅力に乏しい……
+PRINTL
+
+IF TALENT:アナル処女 == 1
+	SETCOLOR 0xF58F98
+	PRINTL 【アナル処女喪失】
+	RESETCOLOR
+	TALENT:アナル処女 = 0
+	CSTR:アナル処女喪失の相手 = %CALLNAME:PLAYER%
+ENDIF
+IF CFLAG:ファーストキスの相手 == -1
+	CFLAG:ファーストキスの相手 = 1
+	SETCOLOR 0xDDBBCC
+	PRINTFORML ファーストキス
+	RESETCOLOR
+	CFLAG:ファーストキスの相手 = 1
+	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のおちん○ん
+	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のオチ○ポ
+	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のチンポ
+	ENDIF
+ENDIF
+PRINTL
+
+
+TIMES (P:10), 0.8
+P:4 = 0
+
+
+;=================================================
+; シーン経験増加処理
+;--------------------------------------------
+; シーンの経験増加処理を行います
+;=================================================
+@SCENE_EXP_5
+
+VARSET LOCAL, 0
+
+LOCAL = (1 + RAND:5)
+LOCAL += ABL:性交中毒
+SIF TALENT:尻穴狂い
+	TIMES LOCAL , 1.25
+
+TCVAR:Ａ経験 += LOCAL
+TCVAR:性交経験 += LOCAL
+TCVAR:フェラ経験 += LOCAL
+
+
+IF P:4 != 0 && ABL:Ａ感覚 != 0
+	LOCAL:1 += ABL:Ａ感覚
+	SIF TALENT:尻穴狂い
+		TIMES LOCAL , 1.50
+	SIF ABL:Ｃ感覚 >= LOCAL
+		LOCAL:1 = LOCAL
+	TCVAR:絶頂経験 += LOCAL:1
+ENDIF

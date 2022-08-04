@@ -1,0 +1,1057 @@
+﻿;=================================================
+;メインコマンド画面
+;=================================================
+;BEGIN SHOP後に行われる処理
+;SHOW_SHOPでは調教開始、店や奴隷市場に移動、
+;休憩・街をうろつく、セーブ/ロード等の処理を行う
+;アイテムの購入・売却処理はSHOP_ITEM.ERBにまとめる
+;奴隷の購入・売却処理はSHOP_SLAVE.ERBにまとめる
+
+;=================================================
+;BEGIN SHOP後最初に呼び出される関数
+;=================================================
+@EVENTSHOP
+;一旦購入可能アイテムを空に
+REPEAT 100
+	ITEMSALES:COUNT = 0
+REND
+
+BOUGHT = -1
+
+;=================================================
+;関数EVENT SHOP終了後に自動的に呼び出される関数
+;=================================================
+@SHOW_SHOP
+
+[IF_DEBUG]
+;SIF MONEY < FLAG:目標金額
+;	MONEY += FLAG:目標金額
+;SIF FLAG:事務所規模 < 120
+;	FLAG:事務所規模 = 120
+[ENDIF]
+
+SIF BOUGHT >= 0
+	JUMP ITEM_SHOP
+
+$INPUT_LOOP
+DRAWLINE
+IF DAY:1 >=3 && DAY:1 <= 5
+	DAY:4 = 0
+	PRINT [春]
+ELSEIF DAY:1 >=6 && DAY:1 <= 8
+	DAY:4 = 1
+	PRINT [夏]
+ELSEIF DAY:1 >= 9 && DAY:1 <= 11
+	DAY:4 = 2
+	PRINT [秋]
+ELSE
+	DAY:4 = 3
+	PRINT [冬]
+ENDIF
+
+IF DAY:1 != 0 && DAY:2 != 0
+	PRINTFORM  {DAY:1}月 第{DAY:2}週
+ELSE
+	PRINT  ？月 ？日
+ENDIF
+
+;今週は月末？
+END_OF_MONTH = IS_END_OF_MONTH()
+SIF END_OF_MONTH
+	PRINT  （月末になりました） 
+
+;曜日の表示
+PRINTFORM   {DAY:3}年目
+
+IF TIME == 0
+	PRINT  前半
+ELSE
+	PRINT  後半
+ENDIF
+PRINTFORM /開始から{DAY+1}週目
+IF FLAG:期限日数 > 0
+	PRINTFORM (残り{FLAG:期限日数 - DAY - 1}週)
+ENDIF
+PRINTL 
+CALL PRINT_BUTTON("所持金",1,COMMAND_CHEAT)
+PRINTFORM :{MONEY}ポイント
+IF FLAG:目標金額 > 0
+	PRINTFORM /目標:{FLAG:目標金額}ポイント
+	M = MONEY
+	N = FLAG:目標金額
+	SIF M > N
+		M = N
+	BAR M,N,32
+ENDIF
+PRINTL 
+
+PRINT_ITEM
+
+DRAWLINE
+CALL PRINT_OTHERS
+
+;現助手＋元助手のキャラ数の確認
+S = 0
+T = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:売却助手可能 == 2
+		S += 1
+	SIF CFLAG:COUNT:売却助手可能 >= 1
+		T += 1
+REND
+
+;調教可能なキャラ数の確認
+E = 0
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	E += 1
+REND
+
+;主人か助手が【秘密知識】を持っているかを確認
+U = 0
+SIF TALENT:MASTER:秘密知識
+	U = 1
+;助手全体から【秘密知識】を検索
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF ISASSI:COUNT && TALENT:COUNT:秘密知識
+		U = 1
+	ENDIF
+REND
+
+DRAWLINE
+IF E >= 1
+	PRINT [100] - 指導する　　　　
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+PRINT [101] - 人材の確保　　　
+PRINT [102] - 資材の調達
+PRINTL 
+IF E >= 1
+	PRINT [103] - 娼館営業　　　　
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+PRINT [104] - ＡＶの撮影（未）
+PRINT [105] - 何もしない
+PRINTL 　　
+IF E >= 1 && FLAG:着衣使用
+	PRINT [108] - スタイリスト 　 
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+IF U == 1
+	PRINT [109] - 訪問　 　　 　
+ELSE
+	PRINTPLAIN [---] - －－－－－－－  
+ENDIF
+PRINTL 　　
+PRINT [111] - 能力の表示　　　
+IF CHARANUM > 1
+	PRINT [112] - 能力値アップ　　
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+IF CHARANUM > 1
+	PRINT [113] - キャラソート　　
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+PRINTL 
+IF CHARANUM > 1
+	PRINT [115] - お願いする　 　 
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+IF CHARANUM > 1 && TIME == 0 && FLAG:女子寮建設 == 1
+	PRINT [116] - 女子寮に赴く 　 
+ELSE
+	PRINTPLAIN [---] - －－－－－－－　
+ENDIF
+IF FLAG:ミッションモード解禁 == 1
+	PRINT [120] - ミッション
+ENDIF
+IF FLAG:難易度 != 9 && MONEY >= FLAG:目標金額
+	PRINT [150] - エンディングへ　
+ENDIF
+PRINTL
+
+
+PRINT [200] - セーブ　　　　　
+PRINT [300] - ロード　　　　　
+PRINTL [400] - コンフィグ
+PRINT [500] - 実績　　　　　　
+PRINT [600] - 情報　　　　　　
+PRINTL [700] - 女優名鑑
+PRINTL [750] - ＴＩＰＳ
+;=================================================
+;関数SHOW_SHOP終了時に入力された
+;0-99（アイテム）以外の番号を処理する関数
+;=================================================
+@USERSHOP
+;店にいる場合は買い物中フラグを外す
+IF RESULT == 999 && BOUGHT >= 0
+	CALL CLEAR_SHOP
+	BOUGHT = -1
+ELSEIF BOUGHT >= 0
+	RETURN 0
+ENDIF
+
+;調教可能なキャラ数の確認
+E = 0
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	E += 1
+REND
+
+;主人か助手が【秘密知識】を持っているかを確認
+U = 0
+SIF TALENT:MASTER:秘密知識
+	U = 1
+;助手全体から【秘密知識】を検索
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF ISASSI:COUNT && TALENT:COUNT:秘密知識
+		U = 1
+	ENDIF
+REND
+
+;調教開始
+IF RESULT == 100 && E >= 1
+	CALL BEFORE_TRAIN
+;奴隷市場
+ELSEIF RESULT == 101
+	CALL CHARA_BUY_NEW
+;アイテムショップ
+ELSEIF RESULT == 102
+	;アイテム購入中フラグを立てる
+	BOUGHT = 1
+;娼館営業
+ELSEIF RESULT == 103 && E >= 1
+	CALL YUUKAKU_TOP
+;ＡＶの撮影
+ELSEIF RESULT == 104
+	CALL AV_TOP
+;仕立屋
+ELSEIF RESULT == 108 && E >= 1 && FLAG:着衣使用
+	CALL TAILOR_MAIN
+;秘密ラボ
+ELSEIF RESULT == 109 && U == 1
+	CALL HOUMON
+;休憩
+ELSEIF RESULT == 105
+	;休憩フラグを立てる
+	FLAG:休憩 = 1
+	BEGIN TURNEND
+;エンディングへ
+ELSEIF RESULT == 150
+	IF FLAG:難易度 != 9 && MONEY >= FLAG:目標金額
+		CALL ENDING_CHECK_2
+	ELSE
+		RETURN 0
+	ENDIF
+;能力の表示
+ELSEIF RESULT == 111 && CHARANUM > 0
+	CALL SHOW_CHALADATA
+;能力値アップ
+ELSEIF RESULT == 112 && CHARANUM > 1
+	CALL ABILITY_UP
+;キャラソート
+ELSEIF RESULT == 113 && CHARANUM > 1
+	CALL CHARA_SORT
+;お願いする
+ELSEIF RESULT == 115 && CHARANUM > 1
+	CALL PLEASE_MAIN
+;女子寮
+ELSEIF RESULT == 116 && CHARANUM > 1 && FLAG:女子寮建設 && TIME == 0
+	CALL LYCEE_MAIN
+ELSEIF RESULT == 120 && FLAG:ミッションモード解禁 == 1
+	CALL MISSION_MAIN
+;セーブ
+ELSEIF RESULT == 200
+	SAVEGAME
+;ロード
+ELSEIF RESULT == 300
+	LOADGAME
+;コンフィグ
+ELSEIF RESULT == 400
+	CALL SYSTEM_CONFIGURATION
+;実績
+ELSEIF RESULT == 500
+	CALL PRINT_ACHIEVEMENT
+ELSEIF RESULT == 600
+	CALL PRINT_INFORMATION
+ELSEIF RESULT == 700
+	CALL ACTRESS_LIST
+ELSEIF RESULT == 750
+	CALL TIPS_MAIN
+;デバッグ
+ELSEIF RESULT == COMMAND_CHEAT
+	CALL DEBUG_TOP
+ENDIF
+;
+;=================================================
+;調教開始処理
+;=================================================
+@BEFORE_TRAIN
+
+P = TARGET
+
+$TARGET_LOOP
+CALL CHANGE_TARGET
+SIF RESULT == 0
+	RETURN 0
+
+CALL SELECT_ASSI
+IF RESULT == 0
+	TARGET = P
+	GOTO TARGET_LOOP
+ENDIF
+
+BEGIN TRAIN
+;
+;-------------------------------------------------
+;調教対象選択(eratohoR+ 1.31)
+;-------------------------------------------------
+@CHANGE_TARGET
+$INPUT_LOOP
+
+PRINTL 今回は誰を調教しますか？
+CALL LIFE_LIST_NEW,LL_MODE_指導可
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTL 自分は調教できません
+	WAIT
+	GOTO INPUT_LOOP
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;育児中だとダメ
+ELSEIF TALENT:RESULT:育児中
+	PRINTL 育児中の奴隷は調教できません
+	WAIT
+	GOTO INPUT_LOOP
+;臨月だとダメ
+ELSEIF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+	PRINTL 身重でとても調教できるような状態ではありません
+	WAIT
+	GOTO INPUT_LOOP
+;瀕死のキャラは排除
+ELSEIF BASE:RESULT:体力 < 500
+	PRINTL 衰弱してとても調教できるような状態ではありません
+	WAIT
+	GOTO INPUT_LOOP
+;営業中だとダメ
+ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+	PRINTL 営業が終わるまで調教対象として選択できません
+	WAIT
+	GOTO INPUT_LOOP
+;営業中だとダメ
+ELSEIF TIME == 1 && CFLAG:RESULT:401 != 0
+	PRINTL アルバイトが終わるまで調教対象として選択できません
+	WAIT
+	GOTO INPUT_LOOP
+ENDIF
+
+SIF RESULT != 0
+	TARGET = RESULT
+SIF TARGET == ASSI
+	ASSI = -1
+
+;営業フラグ外す
+CFLAG:TARGET:労役中のフラグ = 0
+
+RETURN 1
+
+;-------------------------------------------------
+;助手選択
+;-------------------------------------------------
+@SELECT_ASSI
+;助手として参加可能なキャラ数の確認
+S = 0
+REPEAT CHARANUM
+	;0（主人公）とASSI以外は排除は排除
+	SIF COUNT == 0 || CFLAG:COUNT:売却助手可能 < 2
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	;瀕死のキャラは排除
+	SIF BASE:COUNT:体力 < 500
+		CONTINUE
+	;育児中のキャラは排除
+	SIF TALENT:COUNT:育児中
+		CONTINUE
+	;臨月のキャラは排除
+	SIF CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠
+		CONTINUE
+	;営業中のキャラは排除
+	SIF TIME == 1 && CFLAG:COUNT:労役中のフラグ != 0
+		CONTINUE
+	;今回の調教対象は排除
+	SIF COUNT == TARGET
+		CONTINUE
+	SIF CFLAG:COUNT:入寮中 == 1
+		CONTINUE
+	;上の処理を抜けてきた助手の数をカウント
+	S += 1
+REND
+;助手候補がいない場合は自動的に助手なし
+IF S < 1
+	ASSI = -1
+	RETURN 1
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORM  調教対象：%NAME:TARGET%
+PRINT （体力：
+A = BASE:TARGET:体力
+SIF BASE:TARGET:体力 < 0
+	A = 0
+PRINTFORML {A}/{MAXBASE:TARGET:体力}） 
+PRINTL 誰を助手にしますか？
+
+CALL LIFE_LIST_NEW,LL_MODE_指導可, 1
+DRAWLINE
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT == 0
+	ASSI = -1
+	RETURN 1
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSEIF CFLAG:RESULT:売却助手可能 < 2
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;瀕死のキャラは排除
+ELSEIF BASE:RESULT:体力 < 500
+	PRINTL 衰弱してとても助手を務められる状態ではありません
+	WAIT
+	GOTO INPUT_LOOP
+;育児中だとダメ
+ELSEIF TALENT:RESULT:育児中
+	PRINTL 育児中の奴隷は助手になれません
+	WAIT
+	GOTO INPUT_LOOP
+;臨月だとダメ
+ELSEIF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+	PRINTL 身重でとても助手を務められる状態ではありません
+	WAIT
+	GOTO INPUT_LOOP
+;営業中だとダメ
+ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+	PRINTL 今日の営業が終わるまで助手として選択できません
+	WAIT
+	GOTO INPUT_LOOP
+;調教対象だとダメ
+ELSEIF RESULT == TARGET
+	PRINTL 調教対象に選んだキャラは、助手になれません
+	WAIT
+	GOTO INPUT_LOOP
+ENDIF
+
+ASSI = RESULT
+
+;助手経験フラグ立てる
+ISASSI:ASSI = 1
+
+;選んだ助手が前回の調教対象なら調教対象を空に
+SIF ASSI == TARGET
+	TARGET = -1
+
+;営業フラグ外す
+CFLAG:ASSI:労役中のフラグ = 0
+
+RETURN 1
+;
+;-------------------------------------------------
+;ステータス表示
+;-------------------------------------------------
+@SHOW_CHALADATA
+$INPUT_LOOP
+
+CALL LIFE_LIST_NEW,LL_MODE_ステータス表示
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;ELSEIF CFLAG:RESULT:入寮中 == 1
+;	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF  BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+						;****パラ表示改造追加ここから****
+LOCAL:21 = 0
+						;****パラ表示改造追加ここまで****
+;/////2012/09/23改造部分ここから/////
+$PRINT_LIST
+DRAWLINE
+;/////2012/09/23改造部分ここまで/////
+
+PRINT  
+IF TARGET != MASTER
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTFORM %NAME:TARGET%
+ELSE
+	PRINTFORM %NAME:MASTER% 所有メダル数:{BASE:MASTER:メダル}/{MAXBASE:MASTER:メダル}
+ENDIF
+IF TARGET > 0
+	SETFONT ""
+	IF TALENT:オトコ == 0 && TALENT:育児中 == 0
+		PRINT 　　　
+		IF CAN_GET_PREGNANT(TARGET)
+			SETCOLOR 0xF58F98 
+			PRINT 
+			CALL HEART_CODE
+			PRINTFORM 危険日
+			PRINT 
+			CALL HEART_CODE
+			RESETCOLOR
+		ELSEIF CFLAG:安全日 == 1
+			SETCOLOR 0xF58F98 
+			PRINT 
+			CALL HEART_CODE
+			PRINTFORM 生理
+			PRINT 
+			CALL HEART_CODE
+			RESETCOLOR
+		ENDIF
+	ENDIF
+		PRINTL
+	S = 0
+	SETFONT ""
+	CALL ESTIMATE_CHARA
+	SIF S > 0
+		PRINTFORM  [評価額:{S}ポイント]
+ENDIF
+
+IF BASE:ギャラ > 0 && TALENT:アンドロイド == 0 && TALENT:ＡＶ女優 == 1
+	PRINTFORM  [月々のギャラ:{BASE:ギャラ}ポイント]
+ELSEIF BASE:ギャラ > 0 && TALENT:アンドロイド == 1 && TALENT:ＡＶ女優 == 1
+	PRINTFORM  [月々の電気代:{BASE:ギャラ}ポイント]
+ENDIF
+PRINTL
+
+IF TARGET != MASTER
+	PRINT
+	IF TALENT:ＡＶ女優 == 1
+		PRINTFORM  芸名:
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		PRINTFORML %NICKNAME:TARGET%
+	ENDIF
+ENDIF
+SETFONT ""
+
+PRINTFORM 【性別:
+IF TALENT:TARGET:オトコ == 1 || TALENT:TARGET:オトコの娘 == 1
+	PRINTFORM ♂
+ELSE
+	PRINTFORM ♀
+ENDIF
+PRINTFORM 】
+
+PRINTFORM 【職業:
+CHKFONT "あくびん"
+IF RESULT
+	SETFONT "あくびん"
+ENDIF
+	IF NO:TARGET == NO:MASTER
+		PRINTFORM ＡＶ監督
+	ELSEIF TALENT:TARGET:LUXURIA
+		PRINTFORM 《色欲》LUXURIA
+	ELSEIF TALENT:TARGET:天使 && TALENT:淫魔 
+		PRINTFORM 堕天使
+	ELSEIF TALENT:褐色肌 == 1 && TALENT:アイドル == 1 && TALENT:ギャル系 == 1
+		PRINTFORM 黒ギャルのカリスマ
+	ELSEIF TALENT:TARGET:グランドマスター
+		PRINTFORM グランドマスター
+	ELSEIF TALENT:TARGET:天使
+		PRINTFORM 天使
+	ELSEIF TALENT:TARGET:あくのそしき
+		PRINTFORM ＲＢ団首領
+	ELSEIF TALENT:TARGET:淫魔
+		PRINTFORM サキュバス
+	ELSEIF TALENT:TARGET:お姫様
+		PRINTFORM お姫様
+	ELSEIF TALENT:TARGET:アイドル
+		PRINTFORM アイドル
+	ELSEIF TALENT:TARGET:ファッションモデル
+		PRINTFORM ファッションモデル
+	ELSEIF TALENT:TARGET:キャバ嬢
+		PRINTFORM キャバ嬢
+	ELSEIF TALENT:TARGET:高級娼婦
+		PRINTFORM 高級娼婦
+	ELSEIF TALENT:TARGET:風俗嬢
+		PRINTFORM 風俗嬢
+	ELSEIF TALENT:TARGET:ナース
+		PRINTFORM ナース
+	ELSEIF TALENT:TARGET:教師
+		PRINTFORM 教師
+	ELSEIF TALENT:TARGET:探偵
+		PRINTFORM ボディガード
+	ELSEIF TALENT:TARGET:医者
+		PRINTFORM 女医
+	ELSEIF TALENT:TARGET:メイド
+		PRINTFORM メイド
+	ELSEIF TALENT:TARGET:声優
+		PRINTFORM 声優
+	ELSEIF TALENT:TARGET:聖職者 && TALENT:オトコ == 0
+		PRINTFORM シスター
+	ELSEIF TALENT:TARGET:聖職者 && TALENT:オトコ == 1
+		PRINTFORM ブラザー
+	ELSEIF TALENT:TARGET:警察官 && TALENT:オトコ == 0
+		PRINTFORM 婦Ｋ
+	ELSEIF TALENT:TARGET:警察官 && TALENT:オトコ == 1
+		PRINTFORM 警○官
+	ELSEIF TALENT:TARGET:大学生
+		PRINTFORM 大学生
+	ELSEIF TALENT:TARGET:高校生
+		PRINTFORM 高校生
+	ELSEIF TALENT:TARGET:中学生
+		PRINTFORM 中学生
+	ELSEIF TALENT:TARGET:小学生
+		PRINTFORM 小学生
+	ELSEIF TALENT:TARGET:人妻 && TALENT:オトコ == 0
+		PRINTFORM 主婦
+	ELSEIF TALENT:TARGET:人妻 && TALENT:オトコ == 1
+		PRINTFORM 主夫
+	ELSEIF TALENT:褐色肌 == 1 && TALENT:アイドル == 0 && TALENT:ギャル系 == 1
+		PRINTFORM レゲエダンサー
+	;バイトかもしれないけど高城さんは店員で表示させたいので優先度上げ
+	ELSEIF CSTR:元カノ姓 != ""
+		PRINTFORM %CSTR:元カノ姓%
+	ELSEIF TALENT:TARGET:アルバイト
+		PRINTFORM フリーター
+	ELSEIF TALENT:TARGET:バイト戦士
+		PRINTFORM フリーター
+	;△ちょっと乱暴な気がする。手入れ対象
+	;↑CSTR:90で直記入すればそちらを読めるようにしたので書いてないやつは多少乱暴でもいいか感
+	ELSE
+		PRINTFORM フリーター
+	ENDIF
+SETFONT ""
+PRINTFORM 】
+
+SIF CFLAG:売却助手可能 > 0
+	PRINT (売却
+SIF CFLAG:売却助手可能 == 2
+	PRINT ・助手
+SIF CFLAG:売却助手可能 > 0
+	PRINT 可)
+IF CFLAG:出産日 - 2 <= DAY && TALENT:妊娠
+	PRINT [臨月]
+ELSEIF  TALENT:妊娠
+	PRINT [妊娠中]
+ELSEIF TALENT:抱卵
+	PRINT [抱卵中]
+ELSEIF TALENT:育児中
+	PRINT [育児中]
+ENDIF
+IF CFLAG:労役中のフラグ != 0
+	IF CFLAG:労役中のフラグ == 1
+		PRINT 《会話営業中》
+	ELSEIF CFLAG:労役中のフラグ == 2
+		PRINT 《奉仕営業中》
+	ELSEIF CFLAG:労役中のフラグ == 7
+		PRINT 《ソープ営業中》
+	ELSEIF CFLAG:労役中のフラグ == 3
+		PRINT 《Ａ営業中》
+	ELSEIF CFLAG:労役中のフラグ == 4
+		PRINT 《Ｖ営業中》
+	ELSEIF CFLAG:労役中のフラグ == 5
+		PRINT 《ＳＭ営業中》
+	ELSEIF CFLAG:労役中のフラグ == 6
+		PRINT 《出張営業中》
+	ENDIF
+ENDIF
+
+SIF CFLAG:護衛の有無 == 1
+	PRINT 《護衛あり》
+PRINTL 
+
+IF ABL:信頼 >= 3
+	PRINTFORM  習いごと：
+	IF CFLAG:習い事判定 == 0
+		PRINTFORM なし
+	ELSE
+		IF CFLAG:エステ通い判定 == 1
+			PRINTFORM エステ
+			CALL エステ通い有効
+			SIF !RESULT
+				PRINTFORM （これ以上は効果がなさそうです）
+		ENDIF
+		IF CFLAG:ジム通い判定 == 1
+			PRINTFORM ジム
+			CALL ジム通い有効
+			SIF !RESULT
+				PRINTFORM （これ以上は効果がなさそうです）
+		ENDIF
+		IF CFLAG:学習塾通い判定 == 1
+			PRINTFORM 学習塾
+			CALL 学習塾通い有効
+			SIF !RESULT
+				PRINTFORM （これ以上は効果がなさそうです）
+		ENDIF
+	ENDIF
+	PRINTL
+ENDIF
+
+
+IF TALENT:ミッション == 1
+	DRAWLINE
+	SETCOLOR 0xFFD700
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINT 
+	PRINTFORM  ※ミッション終了まで：残り{CFLAG:ミッション期間}週
+	PRINTL
+	RESETCOLOR
+	SETFONT ""
+ENDIF
+
+SIF ( CFLAG:初体験の相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:ファーストキスの相手 >= 0 || TALENT:アナル処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
+DRAWLINE
+
+IF CFLAG:ファーストキスの相手 >= 0
+	SETCOLOR 0xF58F98 
+	CALL FIRSTKISS_DETAIL
+	RESETCOLOR
+ENDIF
+
+IF CFLAG:初体験の相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0
+	SETCOLOR 0xF58F98 
+	CALL LOSTVIRGIN_DETAIL
+	RESETCOLOR
+ENDIF
+
+IF TALENT:アナル処女 == 0
+	SETCOLOR 0xF58F98 
+	CALL LOSTANALVIRGIN_DETAIL
+	RESETCOLOR
+ENDIF
+
+IF ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 )
+	SETCOLOR 0xF58F98 
+	PRINT 　
+	CALL HEART_CODE
+	PRINT 童貞喪失　　　：
+	IF ABL:信頼 < 3 && NO:TARGET != [[キャラ:あなた]]
+		PRINTL 済
+	ELSE
+		PRINTFORML %CSTR:童貞喪失の相手%
+	ENDIF
+	RESETCOLOR
+ENDIF
+
+SIF TALENT:彼氏あり || TALENT:セフレあり || TALENT:妊娠
+DRAWLINE
+
+IF TALENT:彼氏あり
+	SETCOLOR 0xF58F98 
+	PRINT 　
+	CALL HEART_CODE
+	PRINTFORM 彼氏　　　　　：
+	PRINTFORM %CSTR:彼氏姓%%CSTR:彼氏名%（
+	CALL PRINT_BOYFRIEND
+	PRINTL ）
+	RESETCOLOR
+ENDIF
+
+IF TALENT:セフレあり
+	SETCOLOR 0xF58F98 
+	PRINT 　
+	CALL HEART_CODE
+	PRINTFORM 主なセフレ　　：
+	PRINTFORML %CSTR:セフレ姓%%CSTR:セフレ名%
+	RESETCOLOR
+ENDIF
+IF TALENT:妊娠 == 1
+	SETCOLOR 0xF58F98 
+	PRINT 　
+	CALL HEART_CODE
+	PRINTFORM 妊娠中　　　　：
+	PRINTFORM %CSTR:妊娠精液%の赤ちゃん
+RESETCOLOR
+PRINTL
+ENDIF
+
+
+SETFONT ""
+DRAWLINE
+PRINT  
+CALL LIFE_BAR
+PRINT  
+CALL VITAL_BAR
+PRINT  
+CALL BEAUTY_BAR
+PRINT
+IF FLAG:リーナスタッフ動向調査 && TALENT:永遠の愛 == 0 && NO:TARGET != (NO:MASTER)
+	CALL NTR_BAR
+ENDIF
+PRINT
+;ラブスコープがあれば好感度表示
+IF ITEM:ラブスコープ && TARGET != MASTER
+	PRINT  好感度
+	BAR CFLAG:好感度,1000,32
+	PRINTFORML ({(CFLAG:好感度)/10}％)
+ENDIF
+						;****追加ここから****
+SIF TALENT:性魔術
+	CALL MP_BAR
+						;****追加ここまで****
+
+						;****パラ表示改造追加ここから****
+CALL SHOW_INFO, LOCAL:21
+;後半の表示をINFO.ERB側に移動しました
+						;****パラ表示改造追加ここまで****
+;/////2012/09/23改造部分ここから/////
+;TARGETをTに退避
+T = TARGET
+
+TEMP_NUM = 3
+[IF_DEBUG]
+TEMP_NUM = 4
+[ENDIF]
+
+;前後のキャラボタンを用意する
+TEMP_STR '= "[前のページ]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,LOCAL:21 > 0,COMMAND_PREV_PAGE)
+
+[IF_DEBUG]
+TEMP_STR '= "[素質切り替え]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_TOGGLE_TALENT)
+[ENDIF]
+
+TEMP_STR '= "[リストに戻る]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_GO_BACK)
+						;****相性表示追加ここから****
+TEMP_STR '= "[次のページ]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / TEMP_NUM - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,(LOCAL:21 < 4 && (TARGET != 0 || LOCAL:21 < 1)),COMMAND_NEXT_PAGE,1)
+						;****相性表示追加ここまで****
+						;****パラ表示改造追加ここから****
+TEMP_STR '= "[前のキャラ]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / 3 - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / 3 - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,T > 0,COMMAND_PREV_CHARA)
+
+TEMP_STR '= "[メイン画面に戻る]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / 3 - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / 3 - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_GO_BACK_TO_MAIN)
+
+TEMP_STR '= "[次のキャラ]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / 3 - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / 3 - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,T < CHARANUM - 1,COMMAND_NEXT_CHARA,1)
+						;****パラ表示改造追加ここまで****
+
+$INPUT_LOOP_01
+INPUT
+IF RESULT == COMMAND_GO_BACK
+	GOTO INPUT_LOOP
+ELSEIF RESULT == COMMAND_TOGGLE_TALENT
+	PRINTL 切り替える素質の番号を入力してください
+	INPUT
+		
+	IF RESULT >= 0 && TALENT:(RESULT)
+		TALENT:(RESULT) = 0
+		PRINTFORML %NAME:TARGET%は【%TALENTNAME:(RESULT)%】を失った
+	ELSEIF RESULT >= 0 && TALENT:(RESULT) == 0
+		TALENT:(RESULT) = 1
+		PRINTFORML %NAME:TARGET%は【%TALENTNAME:(RESULT)%】を得た
+	ENDIF
+
+	GOTO INPUT_LOOP
+ELSEIF RESULT == COMMAND_GO_BACK_TO_MAIN
+	RETURN 0
+ELSEIF RESULT == COMMAND_PREV_CHARA && T > 0
+	TARGET = T - 1
+	DRAWLINE
+	PRINTL
+						;****パラ表示改造追加ここから****
+	SIF TARGET == 0 && LOCAL:21 >= 1
+		LOCAL:21 = 1
+						;****パラ表示改造追加ここまで****
+	GOTO PRINT_LIST
+ELSEIF RESULT == COMMAND_NEXT_CHARA && T < CHARANUM - 1
+	TARGET = T + 1
+	DRAWLINE
+	PRINTL
+	GOTO PRINT_LIST
+						;****パラ表示改造追加ここから****
+ELSEIF RESULT == COMMAND_PREV_PAGE && LOCAL:21 > 0
+	LOCAL:21 = LOCAL:21 - 1
+	DRAWLINE
+	PRINTL
+	GOTO PRINT_LIST
+						;****相性表示追加ここから****
+ELSEIF RESULT == COMMAND_NEXT_PAGE && (LOCAL:21 < 4 && (TARGET != 0 || LOCAL:21 < 1))
+						;****相性表示追加ここまで****
+	LOCAL:21 = LOCAL:21 + 1
+	DRAWLINE
+	PRINTL
+	GOTO PRINT_LIST
+						;****パラ表示改造追加ここまで****
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+;/////2012/09/23改造部分ここまで/////
+
+GOTO INPUT_LOOP
+
+;-------------------------------------------------
+;能力値アップ
+;-------------------------------------------------
+@ABILITY_UP
+$INPUT_LOOP_0
+
+PRINTL 誰の能力値を上げますか？
+CALL LIFE_LIST_NEW,LL_MODE_ABLUP
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_0
+;ELSEIF CFLAG:RESULT:入寮中 == 1
+;	GOTO INPUT_LOOP_0
+;臨死中のキャラは排除
+ELSEIF  BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP_0
+;自分は排除
+ELSEIF RESULT == 0
+	PRINTL 自分の能力は上げられません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+
+LOCAL = TARGET
+TARGET = RESULT
+
+$INPUT_LOOP_1
+						;****ABL表示追加ここから****
+DRAWLINE
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTFORM %NAME:TARGET%
+	SETFONT ""
+	S = 0
+	CALL ESTIMATE_CHARA
+	SIF S > 0
+		PRINTFORM  [評価額:{S}ポイント]
+
+IF BASE:ギャラ > 0 && TALENT:アンドロイド == 0 && TALENT:ＡＶ女優 == 1
+	PRINTFORM  [月々のギャラ:{BASE:ギャラ}ポイント]
+ELSEIF BASE:ギャラ > 0 && TALENT:アンドロイド == 1 && TALENT:ＡＶ女優 == 1
+	PRINTFORM  [月々の電気代:{BASE:ギャラ}ポイント]
+ENDIF
+PRINTL
+						;****ABL表示追加ここまで****
+DRAWLINE
+CALL SHOW_INFO_EXP
+CALL SHOW_JUEL
+CALL SHOW_ABLUP_SELECT
+
+INPUT
+
+TRYCCALLFORM ABLUP{RESULT}
+CATCH
+	;反発刻印
+	IF RESULT == 99
+		CALL ABLUP99
+	ELSEIF RESULT == COMMAND_GO_BACK_TO_MAIN
+		CALL JUJUN_UP_CHECK
+		CALL YOKUBO_UP_CHECK
+		CALL CHECK_SELLASSIABLE
+		CALL CHECK_SPECIALSKILL
+		TARGET = LOCAL
+		RETURN 1
+						;****ABL表示追加ここから****
+	ELSEIF RESULT == COMMAND_PREV_CHARA && TARGET > 1
+		CALL JUJUN_UP_CHECK
+		CALL YOKUBO_UP_CHECK
+		CALL CHECK_SELLASSIABLE
+		CALL CHECK_SPECIALSKILL
+		TARGET -= 1
+	ELSEIF RESULT == COMMAND_NEXT_CHARA && TARGET < CHARANUM - 1
+		CALL JUJUN_UP_CHECK
+		CALL YOKUBO_UP_CHECK
+		CALL CHECK_SELLASSIABLE
+		CALL CHECK_SPECIALSKILL
+		TARGET += 1
+						;****ABL表示追加ここまで****
+	ELSEIF RESULT == COMMAND_ALL_ABLUP
+		CALL AUT_LVUPPER
+	ELSEIF RESULT == COMMAND_永遠の愛上昇
+		SIF EXP:TARGET:奉仕快楽経験 < 2000
+			EXP:TARGET:奉仕快楽経験 += 200
+		SIF EXP:TARGET:レズ経験 > 1200 && FLAG:恋心レズ経験無視 == 0
+			EXP:TARGET:レズ経験 -= 1200
+	ELSEIF RESULT == COMMAND_処女リセット
+		TALENT:処女 = 1 
+		CFLAG:ファーストキスの相手 = -1
+		CFLAG:初体験の相手 = -1
+		TALENT:アナル処女 = 1
+	ENDIF
+ENDCATCH
+
+GOTO INPUT_LOOP_1
+
+;---------------------------------------------------------
+;主人公名表示
+;---------------------------------------------------------
+@PRINT_SPECIAL_MASTERNAME
+	PRINTFORM %NAME:MASTER%
+
+;---------------------------------------------------------
+;初体験を奪った主人公
+;---------------------------------------------------------
+@PRINT_LOSTVIRGIN_MASTERNAME
+	CALL PRINT_SPECIAL_MASTERNAME
+
+;---------------------------------------------------------
+;ファーストキスを奪った主人公
+;---------------------------------------------------------
+@PRINT_FIRSTKISS_MASTERNAME
+	CALL PRINT_SPECIAL_MASTERNAME

@@ -1,0 +1,64 @@
+﻿;===========================================================
+;レーベル名の処理
+;===========================================================
+@LABELNAME
+LOCAL = RAND:7
+
+IF LOCAL == 0
+	PRINTFORM メディタレーニアン・コム
+	CSTR:MASTER:レーベル名 = メディタレーニアン・コム
+ELSEIF LOCAL == 1
+	PRINTFORM SkyPrincess Ent.
+	CSTR:MASTER:レーベル名 = SkyPrincess Ent
+ELSEIF LOCAL == 2
+	PRINTFORM アジアンドリーム
+	CSTR:MASTER:レーベル名 = アジアンドリーム
+ELSEIF LOCAL == 3
+	PRINTFORM Infinite Ent.
+	CSTR:MASTER:レーベル名 = Infinite Ent
+ELSEIF LOCAL == 4
+	PRINTFORM 日本熱
+	CSTR:MASTER:レーベル名 = 日本熱
+ELSEIF LOCAL == 5
+	PRINTFORM BlueCold Ent.
+	CSTR:MASTER:レーベル名 = BlueCold Ent.
+ELSEIF LOCAL == 6
+	PRINTFORM S-1 Pictures
+	CSTR:MASTER:レーベル名 = S-1 Pictures
+ELSE
+	PRINTFORM ニンジャポルノ
+	CSTR:MASTER:レーベル名 = ニンジャポルノ
+ENDIF
+;===========================================================
+;レーベル名の処理
+;===========================================================
+@PRODUCER_DEBUT
+IF EXP:MASTER:監督経験 == 0
+	PRINTFORM %CALLNAME:MASTER%の初監督作品は{ビデオ売上}ポイントの売上が見込まれており、まずまずの滑り出しと
+	PRINTFORML 言えるだろう
+	PRINTFORMW さしあたり、ＡＶをリリースするレーベル名を決めなければならない
+	PRINTFORMW %CALLNAME:MASTER%は事務所の皆と相談し、レーベル名を決めることにした
+	$INPUT_LOOP_1
+	PRINTFORM スタッフが出した案の【
+	CALL LABELNAME
+	PRINTFORML 】にしますか？
+	PRINTL [0] - はい
+	PRINTL [1] - 自分で決める
+	PRINTL [2] - 相談しなおす
+	INPUT
+	IF RESULT == 0
+		PRINTFORML レーベル名を【%CSTR:MASTER:レーベル名%】に決定しました
+	ELSEIF RESULT == 1
+		PRINTFORML レーベル名を入力してください
+		INPUTS
+			IF RESULTS == ""
+				PRINTFORML レーベル名が無くては困るのでもう一度相談しなおすことにした
+				GOTO INPUT_LOOP_1
+			ENDIF
+			PRINTFORML レーベル名を【%RESULTS%】に決定しました
+			CSTR:MASTER:レーベル名 = %RESULTS%
+	ELSE
+		GOTO INPUT_LOOP_1
+	ENDIF
+ENDIF
+DRAWLINE

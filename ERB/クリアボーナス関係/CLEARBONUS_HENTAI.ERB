@@ -1,0 +1,32 @@
+﻿;===========================================================
+;クリアボーナス：露出
+;===========================================================
+@CLEARBONUS_HENTAI
+IF TALENT:オトコ == 0
+	PRINTFORML %NAME:TARGET%が露出狂のＩＦの世界に突入しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	$INPUT_LOOP
+	INPUT
+		IF RESULT == 0
+			CALL CLEARBONUS_HENTAI_ADDEXP
+		ELSEIF RESULT == 1
+			RETURN 0
+		ELSE
+			GOTO INPUT_LOOP
+		ENDIF
+ENDIF
+
+;===========================================================
+;クリアボーナス：露出
+;===========================================================
+@CLEARBONUS_HENTAI_ADDEXP
+
+
+LOCAL = TARGET
+$INPUTLOOP_START
+
+PRINTFORMW 《%CALLNAME:LOCAL%は【%TALENTNAME:[[TALENT:露出狂]]%】になった》
+	TALENT:LOCAL:露出狂 = 1
+	TALENT:LOCAL:恥じらい = 0
+	TALENT:LOCAL:恥薄い = 1

@@ -1,0 +1,160 @@
+﻿;=================================================
+;急に歌うよ
+;=================================================
+@MIYAKO_LABO_SYMPHOGEAR
+IF MONEY < 1000000
+	PRINTFORML 「お金が足りませんの…流石にお金が無いと無理ですの」
+ELSE
+	PRINTFORML 　すっかり桐生組・都子一派の拠点と化したビル内部のシアタールームにおいて
+	PRINTFORML 　都子はうっとりとした表情で歌音が歌番組の生放送に出たときの映像を視聴していた
+	PRINTFORML 
+	PRINTFORML 「ああ、%CALLNAME:MASTER%、歌音おねーさま渾身のシングル『穢れ無き誓いのキス』はやはり素晴らしいですの…
+	PRINTFORML 　同発のＣＰＧのシングルを抑えてのオリコン１位ですの…売上１００万枚も夢ではないですの！」
+	PRINTFORML 
+	PRINTFORML 　…何か特殊な編集でもしているのだろうか、歌っている歌音の周囲にキラキラと輝くものが集まっているように見える…
+	PRINTFORML 
+	PRINTFORML 「お気付きになったですの？
+	PRINTFORML 　郁美様のお話では、これは自然エネルギーとも呼ばれる、一種の霊魂、エクトプラズムみたいなものだそうですの！
+	PRINTFORML 　歌ってるだけでこんなに集まってくるのは異例なんだそうですの！
+	PRINTFORML 　…まあ、おねーさまは昔から幽霊に好かれやすい体質だったようで、本人は嫌がっているようなんですが…
+	PRINTFORML 　本題はここからですの
+	PRINTFORML 　おねーさまの歌にこれらは反応しているみたいなので、せっかくなので利用してやろう、というわけですの！
+	PRINTFORML 　この自然エネルギーは非常に純度と指向性が高いものなので、うまい具合に操作することで
+	PRINTFORML 　操作者を守る盾にも、また敵を倒す矛にも成り得るですの！
+	PRINTFORML 　あえて名付けるなら『ソウル・バイブレーション・システム』、ＳＶＳですの！
+	PRINTFORML 　今ガーヴの連中にミーナ・クレインの洗脳歌を強化させていた機械を改良させている最中ですの！
+	PRINTFORML 　周囲の自然エネルギーを集約し、それをおねーさまの身を固める武器として再構成させるマシンを開発中ですの！
+	PRINTFORML 　最終的には完成した機械を超小型化、ブレスレットくらいの大きさにする予定ですの！
+	;バウウィッシャルエスケンガングニィルトロォン
+	PRINTFORML 　ああ…、エメラルド・クイーンの誕生まであと少しですの…！
+	PRINTL 
+	PRINTFORML 　さあ、お金の準備はいいですの！？」
+	$INPUT_LOOP
+	PRINTL 
+	PRINTL  [ 0] - はい
+	PRINTL  [ 1] - いいえ
+	DRAWLINE
+	PRINTL  [999] - 戻る
+
+	INPUT
+
+	IF RESULT == 0
+		CALL MIYAKO_SYMPHOGEAR_SS
+		FLAG:マルチナ加入イベント = 10
+		FLAG:歌音超時空アイドルルート = 1
+		MONEY -= 1000000
+		RETURN 0
+	ELSEIF RESULT == 1
+		PRINTFORMW 「むむむ、ですの！早くおねーさまを銀河一のヒロインにするんですの！」
+		RETURN 0
+	ELSEIF RESULT == 999
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+	GOTO INPUT_LOOP
+ENDIF
+
+;=================================================
+;文章
+;=================================================
+@MIYAKO_SYMPHOGEAR_SS
+
+PRINTFORML
+PRINTFORML 　※ここから先の内容は能力変化に関係ありません
+PRINTFORMW 　※飛ばしたいときは右クリックをしてください
+PRINTL
+PRINTW 　………………
+PRINTW 　…………
+PRINTL 　……
+PRINTW
+PRINTFORML 「――と、いうわけなんですの…
+PRINTFORML 　設計は間違っていないはずなんですの！
+PRINTFORML 　自然エネルギーは順調に集まってきているんですの！
+PRINTFORML 　でもそこから先が進んでいかないんですの…
+PRINTFORML 　どうして想定通りに動かないのか、教えてほしいんですの！」
+PRINTFORML 
+PRINTFORML 　廃ビルの地下を埋め尽くす巨大な装置を前に、都子は小さな身体をジタバタさせながら、技術顧問として呼んだ
+PRINTFORML 　須野郁美に助けを求めていた
+PRINTFORMW
+PRINTFORML 「んー、あのねー、都子ちゃん、こんな霊的な要素の強い、しかも各セクションで求められる動きがバラバラな
+PRINTFORML 　ものを一つの機械だけで全部再現しようってのはちょっち無理があるかなー…
+PRINTFORML 　都子ちゃんが魔術師だったらまた話は別だったんだけどねー
+PRINTFORML 　異なる機構を魔法の力で強引に繋げるなんて、闇の世界の住人達の間では当たり前のことなんだよー
+PRINTFORML 　パラディススや旧支配者達はその絶大な魔力と術で、科学では再現不可能なオーバーテクノロジーをいくつも
+PRINTFORML 　持ってるんだよねーこの機械も都子ちゃんの構想通りに作れるならそりゃあ、上等なもんなんだろうけど…
+PRINTFORML 　ちょっと無理っぽいよねー、今のままだとー
+PRINTFORML 　…というか、この機械の仕組み、昔何かの文献で見た記憶があるんだけどなー、思い出せないなー…」
+PRINTFORMW
+PRINTFORML 「で、では仮に、ワタクシが魔法の力を身に付けて、術を施せば、これは動くようになるんですの！？」
+PRINTFORML 
+PRINTFORML 「…まあ、そうなるねー
+PRINTFORML 　でもさー、どうやって魔法の力を身に付ける気なのー？
+PRINTFORML 　誰かに教えてもらうつもりなら、やめといたほうがいいよー
+PRINTFORML 　現代の魔法使いで比較的良心的なのはパラディスス家だろうけど
+PRINTFORML 　あそこは絶対に魔法の力を外部には教えないからねー
+PRINTFORML 　かといってじゃあ旧支配者達は、というと、色々とやばすぎる連中だから、多分代償としてひどいめに遭わされる
+PRINTFORML 　だろうしー…そもそも、魔法を使うには魔力を体内に宿さないといけないんだけど
+PRINTFORML 　本来、魔力というのは人間の身体には毒なんだよねー
+PRINTFORML 　だから魔力を得る時には必ず、人として大事な何かを失う、って話らしいよー」
+PRINTFORML 
+PRINTFORML 「…………」
+PRINTFORML 
+PRINTFORML 「歌音ちゃんLOVEも結構なことだけど、現実は見ないといけないよねー
+PRINTFORML 　じゃあ、私は用事があるんで帰るからー
+PRINTFORML 　…君も、たまにはこの暴走娘ちゃんを適度なところで止めてあげないとダメだよー？」
+PRINTFORML 
+PRINTFORML 　郁美は帰ってしまった…
+PRINTFORMW
+PRINTFORML 「うぅ…、そんな…、ダメなんですの…？
+PRINTFORML 　…いいえ、ワタクシは諦めないですの！
+PRINTFORML 　…こ、この、ポンコツ！
+PRINTFORML 　さっさと動くですの！」
+PRINTFORML 
+PRINTFORML 　都子は唸り声を挙げている機械を懸命に操作している、が、いつまでたっても想定通りには動いてくれないようだ
+PRINTFORML 　さすがに見ていられなくなった%CALLNAME:MASTER%が都子を制止しようとした、すると…
+PRINTFORML 
+PRINTFORML 「随分と自然エネルギーが集まってきている、一体誰の仕業かしら？」
+PRINTFORML 
+PRINTFORML 　機械動作の進行状況を示すはずのモニターに、見たことのない女性の顔が映し出された
+PRINTFORML 　歳の頃は２０歳程度に見えるが…、どこかで見たような雰囲気を漂わせている…
+PRINTFORMW
+PRINTFORML 「あ、あなた、何者なんですの！？
+PRINTFORML 　突然出てきて失礼ですの！
+PRINTFORML 　ちゃんとノックをするですの！」
+PRINTFORML 
+PRINTFORML 　都子の頓珍漢な応対に、相手の謎めいた女性は不敵な笑みを見せている
+PRINTFORMW 
+PRINTFORML 「フフフ、私はあなたのこと、知ってるわよ♪
+PRINTFORML 　確か、黒井都子――ただの人間でありながらガーヴの小娘を撃退した、裏社会では結構有名人よ？」
+PRINTFORML
+PRINTFORML 「そ、そうなんですの！？
+PRINTFORML 　それは照れるですの…、%CALLNAME:MASTER%、ワタクシもそろそろ自分のサインをデザインする時期なんですの？」
+PRINTFORML
+PRINTFORML 「…照れてる場合でもないわよ
+PRINTFORML 　あなたの属している桐生組は、まあ私の属している組織や、パラディスス、九尾会辺りとは友好的にやってるけど
+PRINTFORML 　それ以外、特に旧支配者達は桐生組をかなり危険視してるわ
+PRINTFORML 　言っておくけど、ガーヴの小娘を叩きのめしたくらいで功が成ったと思い上がるのは危ないわよ？」
+PRINTFORML
+PRINTFORML 「それは困るですの！
+PRINTFORML 　ミーナ・クレインでもかなり大変だったのに、あれ以上の奴らが来られたらひとたまりもないですの…！
+PRINTFORML 　あなた、教えてくれた責任を取って、なんとかしてほしいですの！」
+PRINTFORMW 
+PRINTFORML 「…………フフフ、あなた、面白いわね、気に入ったわ♪
+PRINTFORML 　それにしても興味深いものを作ろうとしてるのね
+PRINTFORML 　そんなに自然エネルギーを集めて、かつて隆盛したという自然エネルギーを使った戦闘技術を蘇らせようとしたのかしら？
+PRINTFORML 　その戦闘技術は確かバビロニアの聖柱に滅ぼされたと聞いてるけど、現代に蘇るというのは面白いかもね♪」
+PRINTFORML
+PRINTFORML 「な、何を言っているのかさっぱりですの！」
+PRINTFORML
+PRINTFORML 「質問には答えなくてはいけないわね
+PRINTFORML 　…私の名前は【マルチナ・パラディスス】
+PRINTFORML 　近いうちにあなた、あなたの上司、…そして『あなた』に会いに行くわ♪
+PRINTFORML 　それではごきげんよう…」
+PRINTFORMW
+PRINTFORML 　モニターからマルチナと名乗る女性の顔が消えた…
+PRINTFORML
+PRINTFORML 「い、い、今のは一体何だったんですの！？
+PRINTFORML 　パラディススって名乗ってたですの！
+PRINTFORML 　よく分からないですの…」
+PRINTFORMW

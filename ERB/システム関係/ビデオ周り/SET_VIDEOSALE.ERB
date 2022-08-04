@@ -1,0 +1,164 @@
+﻿;===========================================================
+;売れ筋のランダム生成
+;===========================================================
+@SET_VIDEOSALE
+
+;どうせ即代入してたので
+FLAG:売れ筋 = RAND:31
+
+
+						;****都子ラボ追加ここから****
+IF FLAG:歌姫の騎士団 == 3
+	SIF FLAG:売れ筋操作中 == 1
+		FLAG:売れ筋 = FLAG:来月売れ筋
+	FLAG:売れ筋操作1 = RAND:31
+	FLAG:売れ筋操作2 = RAND:31
+	FLAG:売れ筋操作3 = RAND:31
+	FLAG:124 = RAND:100
+	FLAG:売れ筋操作中 = 0
+	FLAG:来月売れ筋 = 0
+ENDIF
+						;****都子ラボ追加ここまで****
+;===========================================================
+;売れ筋の反映
+;===========================================================
+@VIDEOSALE_CALC
+						;****都子ラボ追加ここから****
+IF FLAG:売れ筋 == -1 && NO:TARGET == [[キャラ:桐生歌音]]
+	TIMES ビデオ売上 , 5.00
+						;****都子ラボ追加ここまで****
+ELSEIF FLAG:売れ筋 == 0 && TALENT:淫魔 == 0 && TALENT:アンドロイド == 0 && (BASE:実年齢 <= 15  || TALENT:童顔 == 1)
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 1 && BASE:実年齢 >= 23
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 2 && (TALENT:高校生 == 1 || TALENT:中学生 == 1)
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 3 && BASE:バスト <= 78
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 4 && FLAG:撮影開始時状況 & 4
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 5 && (TALENT:令嬢 == 1 || TALENT:貴族 == 1 || TALENT:お姫様 == 1)
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 6 && BASE:バスト >= 85
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 7 && FLAG:撮影開始時状況 & 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 8 && (TALENT:外国人 == 1 || TALENT:ハーフ == 1 || TALENT:クオーター == 1)
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 9 && (TALENT:アイドル == 1 || TALENT:声優 == 1)
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 10 && TALENT:ギャル系 == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 11 && (TFLAG:ビデオ撮影内容 & 1 || TFLAG:ビデオ撮影内容2 & 1)
+	TIMES ビデオ売上 , 2.00
+ELSEIF FLAG:売れ筋 == 12 && TALENT:人妻
+	TIMES ビデオ売上 , 2.00
+ELSEIF FLAG:売れ筋 == 13 && 撮影傾向SM
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 14 && TALENT:キャバ嬢
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 15 && 撮影特殊レズ
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 16 && (TALENT:風俗嬢 == 1 || TALENT:高級娼婦 == 1)
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 17 && TALENT:オトコの娘
+	TIMES ビデオ売上 , 2.00
+ELSEIF FLAG:売れ筋 == 18 && 撮影傾向自慰
+	TIMES ビデオ売上 , 1.20
+ELSEIF FLAG:売れ筋 == 19 && 撮影部位A && 撮影内容性交
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 20 && TALENT:妊娠 == 1
+	TIMES ビデオ売上 , 2.00
+ELSEIF FLAG:売れ筋 == 21 && TALENT:ふたなり == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 22 && TALENT:永遠の愛 == 1
+	TIMES ビデオ売上 , 2.00
+ELSEIF FLAG:売れ筋 == 23 && CFLAG:着衣状態 >= 64 && CFLAG:特別コスチュームのタイプ == 80
+	TIMES ビデオ売上 , 2.00
+ELSEIF FLAG:売れ筋 == 24 && CFLAG:陰毛の状態 < 6
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 25 && TALENT:ギャル系 == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 26 && TALENT:ファッションモデル == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 27 && TALENT:メイド == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 28 && TALENT:ナース == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 29 && TALENT:教師 == 1
+	TIMES ビデオ売上 , 1.50
+ELSEIF FLAG:売れ筋 == 30 && TALENT:ＯＬ == 1
+	TIMES ビデオ売上 , 1.50
+ENDIF
+
+;===========================================================
+;売れ筋の表示
+;===========================================================
+@VIDEOSALE_PRINT
+						;****都子ラボ追加ここから****
+IF FLAG:売れ筋 == -1
+	PRINTFORM 歌音おねーさま
+						;****都子ラボ追加ここまで****
+ELSEIF FLAG:売れ筋 == 0
+	PRINTFORM ロリ系
+ELSEIF FLAG:売れ筋 == 1
+	PRINTFORM お姉さま系
+ELSEIF FLAG:売れ筋 == 2
+	PRINTFORM 女子校生系
+ELSEIF FLAG:売れ筋 == 3
+	PRINTFORM 貧乳
+ELSEIF FLAG:売れ筋 == 4
+	PRINTFORM コスプレ系
+ELSEIF FLAG:売れ筋 == 5
+	PRINTFORM セレブ系
+ELSEIF FLAG:売れ筋 == 6
+	PRINTFORM 巨乳
+ELSEIF FLAG:売れ筋 == 7
+	PRINTFORM 野外露出モノ
+ELSEIF FLAG:売れ筋 == 8
+	PRINTFORM 外国人・ハーフ・クォーター
+ELSEIF FLAG:売れ筋 == 9
+	PRINTFORM 芸能人モノ
+ELSEIF FLAG:売れ筋 == 10
+	PRINTFORM 人妻
+ELSEIF FLAG:売れ筋 == 11
+	PRINTFORM 処女喪失モノ
+ELSEIF FLAG:売れ筋 == 12
+	PRINTFORM サキュバス
+ELSEIF FLAG:売れ筋 == 13
+	PRINTFORM ＳＭ
+ELSEIF FLAG:売れ筋 == 14
+	PRINTFORM キャバ嬢
+ELSEIF FLAG:売れ筋 == 15
+	PRINTFORM レズ系
+ELSEIF FLAG:売れ筋 == 16
+	PRINTFORM 風俗嬢
+ELSEIF FLAG:売れ筋 == 17
+	PRINTFORM オトコの娘
+ELSEIF FLAG:売れ筋 == 18
+	PRINTFORM オナニー系
+ELSEIF FLAG:売れ筋 == 19
+	PRINTFORM アナルＳＥＸ系
+ELSEIF FLAG:売れ筋 == 20
+	PRINTFORM 妊婦モノ
+ELSEIF FLAG:売れ筋 == 21
+	PRINTFORM ふたなり
+ELSEIF FLAG:売れ筋 == 22
+	PRINTFORM らぶらぶＳＥＸモノ
+ELSEIF FLAG:売れ筋 == 23
+	PRINTFORM メガネっ娘
+ELSEIF FLAG:売れ筋 == 24
+	PRINTFORM パイパン
+ELSEIF FLAG:売れ筋 == 25
+	PRINTFORM ギャル系
+ELSEIF FLAG:売れ筋 == 26
+	PRINTFORM モデル
+ELSEIF FLAG:売れ筋 == 27
+	PRINTFORM メイド
+ELSEIF FLAG:売れ筋 == 28
+	PRINTFORM ナース
+ELSEIF FLAG:売れ筋 == 29
+	PRINTFORM 女教師
+ELSEIF FLAG:売れ筋 == 30
+	PRINTFORM ＯＬ
+ENDIF

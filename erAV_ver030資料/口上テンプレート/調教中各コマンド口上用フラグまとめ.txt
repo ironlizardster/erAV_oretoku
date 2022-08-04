@@ -1,0 +1,290 @@
+現時点での調教中各コマンド口上用フラグまとめ
+エロパロスレの◆u4Kj5GZmJJvE氏制作によるまとめに加筆（pawapokya- 2010/1/31）
+
+　CFLAG:201 = 調教前セリフ（1:初調教時, 2:屈服刻印Lv1, 3:屈服刻印Lv2, 4:屈服刻印Lv3, 5:愛）
+  CFLAG:202～210 = 簡易助手口上用フラグとして予約
+　CFLAG:211～220 = 調教終了時口上用フラグとして予約
+　CFLAG:221～260 = パラメータ変動時口用フラグとして予約
+　　CFLAG:221 = 初めて潤滑がLV2超えた
+　　CFLAG:222 = 初めて欲情がLV2超えた
+　　CFLAG:223 = 初めて恥情がLV2超えた
+　　CFLAG:224 = 初めて恐怖がLV2超えた
+　　CFLAG:225 = 初めてＣ絶頂
+　　CFLAG:226 = 初めてＶ絶頂
+　　CFLAG:227 = 初めてＢ絶頂
+　　CFLAG:228 = 初めてＡ絶頂
+　　CFLAG:229 = 処女喪失
+　　CFLAG:230 = セックスで射精させた
+　　CFLAG:231 = アナルセックスで射精させた
+　　CFLAG:232 = 手で射精させた
+　　CFLAG:233 = フェラ、イマラチオで射精させた
+　　CFLAG:234 = パイズリで射精させた
+　　CFLAG:235 = （調教対象が）射精した
+　　CFLAG:236 = （調教対象が）噴乳した
+　　CFLAG:237 = Ｃ感覚Lv5でＣ絶頂50以上
+　　CFLAG:238 = Ｖ感覚Lv5でＶ絶頂50以上
+　　CFLAG:239 = Ａ感覚Lv5でＡ絶頂50以上
+　　CFLAG:240 = Ｂ感覚Lv5でＢ絶頂50以上
+　CFLAG:261 = 調教後自慰
+　CFLAG:262 = 調教後レズプレイ
+　CFLAG:263 = 朝フェラ
+　CFLAG:264 = 調教後セックス
+　CFLAG:265 = 夜這い
+　CFLAG:271 = 妊娠発覚
+　CFLAG:272 = 出産
+　CFLAG:297 = 苦痛刻印Lv3取得
+　CFLAG:298 = 快楽刻印Lv3取得
+　CFLAG:299 = 屈服刻印Lv3取得
+　CFLAG:300 = 屈服刻印Lv3取得
+
+　CFLAG:301～500は各調教コマンド口上用フラグとして予約
+　
+　CFLAG:301 = 愛撫
+　CFLAG:302 = クンニ
+　CFLAG:303 = アナル愛撫
+　CFLAG:304 = 自慰
+　CFLAG:305 = フェラされる
+　CFLAG:306 = 胸愛撫
+　CFLAG:307 = キスする
+　CFLAG:308 = 秘貝開帳
+　CFLAG:309 = 指挿入れ
+　CFLAG:310 = アナル舐め
+　CFLAG:311 = ローター
+　CFLAG:312 = バイブ
+　CFLAG:313 = Eマッサージャ
+　CFLAG:314 = アナルバイブ
+　CFLAG:315 = クリキャップ
+　CFLAG:316 = ニプルキャップ
+　CFLAG:317 = 搾乳機
+　CFLAG:318 = オナホール
+　CFLAG:319 = シャワー
+　CFLAG:320 = アナルビーズ
+　CFLAG:321 = 正常位
+　CFLAG:322 = 後背位
+　CFLAG:323 = 対面座位
+　CFLAG:324 = 背面座位
+　CFLAG:325 = 
+　CFLAG:326 = 
+　CFLAG:327 = 正常位アナル
+　CFLAG:328 = 後背位アナル
+　CFLAG:329 = 対面座位アナル
+　CFLAG:330 = 背面座位アナル
+　CFLAG:331 = 手淫
+　CFLAG:332 = フェラチオ
+　CFLAG:333 = パイズリ
+　CFLAG:334 = 素股
+　CFLAG:335 = 騎乗位
+　CFLAG:336 = 泡踊り
+　CFLAG:337 = 騎乗位アナル
+　CFLAG:338 = アナル奉仕
+　CFLAG:339 = 
+　CFLAG:340 = 
+　CFLAG:341 = スパンキング
+　CFLAG:342 = 鞭
+　CFLAG:343 = 針
+　CFLAG:344 = アイマスク
+　CFLAG:345 = 縄
+　CFLAG:346 = ボールギャグ
+　CFLAG:347 = 浣腸器+プラグ
+　CFLAG:348 = 
+　CFLAG:349 = 
+　CFLAG:350 = アナル電極
+　CFLAG:351 = キスする
+　CFLAG:352 = しあわせ草使用
+　CFLAG:353 = 利尿剤
+　CFLAG:354 = ビデオカメラ使用
+　CFLAG:355 = 野外プレイ
+　CFLAG:356 = 何もしない
+　CFLAG:357 = 会話する
+　CFLAG:358 = 羞恥プレイ
+　CFLAG:359 = お風呂場プレイ
+　CFLAG:360 = 新妻プレイ
+　CFLAG:361 = 助手にキスさせる
+　CFLAG:362 = 
+　CFLAG:363 = 助手を犯す
+　CFLAG:364 = 
+　CFLAG:365 = 
+　CFLAG:366 = 
+　CFLAG:367 = 
+　CFLAG:368 = 
+　CFLAG:369 = 
+　CFLAG:370 = 
+　CFLAG:371 = 
+　CFLAG:372 = 
+　CFLAG:373 = 
+　CFLAG:374 = 
+　CFLAG:375 = 
+　CFLAG:376 = 
+　CFLAG:377 = 
+　CFLAG:378 = 
+　CFLAG:379 = 
+　CFLAG:380 = 
+　CFLAG:381 = イラマチオ
+　CFLAG:382 = フィスト系コマンド
+　CFLAG:383 = 
+　CFLAG:384 = 
+　CFLAG:385 = 
+　CFLAG:386 = 放尿
+　CFLAG:387 = 強制放尿
+　CFLAG:388 = 
+　CFLAG:389 = 
+　CFLAG:390 = 獣姦プレイ
+　CFLAG:391 = 
+　CFLAG:392 = 
+　CFLAG:393 = 
+　CFLAG:394 = 
+　CFLAG:395 = 
+　CFLAG:396 = 
+　CFLAG:397 = 
+　CFLAG:398 = 
+　CFLAG:399 = 
+　CFLAG:400 = 
+　CFLAG:401 = 触手召喚
+　CFLAG:402 = 触手挿入
+　CFLAG:403 = 
+　CFLAG:404 = 
+　CFLAG:405 = 
+　CFLAG:406 = 
+　CFLAG:407 = 
+　CFLAG:408 = 
+　CFLAG:409 = 
+　CFLAG:410 = 
+　CFLAG:411 = 
+　CFLAG:412 = バイブ脱着
+　CFLAG:413 = 
+　CFLAG:414 = アナルバイブ脱着
+　CFLAG:415 = クリキャップ脱着
+　CFLAG:416 = ニプルキャップ脱着
+　CFLAG:417 = 搾乳機脱着
+　CFLAG:418 = オナホール脱着
+　CFLAG:419 = シャワー終了
+　CFLAG:420 = アナルビーズ脱着
+　CFLAG:421 = 
+　CFLAG:422 = 
+　CFLAG:423 = 
+　CFLAG:424 = 
+　CFLAG:425 = 
+　CFLAG:426 = 
+　CFLAG:427 = 
+　CFLAG:428 = 
+　CFLAG:429 = 
+　CFLAG:430 = 
+　CFLAG:431 = 
+　CFLAG:432 = 
+　CFLAG:433 = 
+　CFLAG:434 = 
+　CFLAG:435 = 
+　CFLAG:436 = 
+　CFLAG:437 = 
+　CFLAG:438 = 
+　CFLAG:439 = 
+　CFLAG:440 = 
+　CFLAG:441 = 
+　CFLAG:442 = 
+　CFLAG:443 = 
+　CFLAG:444 = アイマスク脱着
+　CFLAG:445 = 
+　CFLAG:446 = 
+　CFLAG:447 = 
+　CFLAG:448 = 
+　CFLAG:449 = 
+　CFLAG:450 = アナル電極脱着
+　CFLAG:451 = 
+　CFLAG:452 = 
+　CFLAG:453 = 
+　CFLAG:454 = 
+　CFLAG:455 = 野外プレイ終了
+　CFLAG:456 = 
+　CFLAG:457 = 
+　CFLAG:458 = 羞恥プレイ終了
+　CFLAG:459 = お風呂場プレイ終了
+　CFLAG:460 = 新妻プレイ終了
+　CFLAG:461 = 
+　CFLAG:462 = 
+　CFLAG:463 = 
+　CFLAG:464 = 
+　CFLAG:465 = 
+　CFLAG:466 = 
+　CFLAG:467 = 
+　CFLAG:468 = 
+　CFLAG:469 = 
+　CFLAG:470 = 
+　CFLAG:471 = 
+　CFLAG:472 = 
+　CFLAG:473 = 
+　CFLAG:474 = 
+　CFLAG:475 = 
+　CFLAG:476 = 
+　CFLAG:477 = 
+　CFLAG:478 = 
+　CFLAG:479 = 
+　CFLAG:480 = 
+　CFLAG:481 = 
+　CFLAG:482 = 
+　CFLAG:483 = 
+　CFLAG:484 = 
+　CFLAG:485 = 
+　CFLAG:486 = 
+　CFLAG:487 = 
+　CFLAG:488 = 
+　CFLAG:489 = 
+　CFLAG:490 = 獣姦プレイ終了
+　CFLAG:491 = 
+　CFLAG:492 = 
+　CFLAG:493 = 
+　CFLAG:494 = 
+　CFLAG:495 = 
+　CFLAG:496 = 
+　CFLAG:497 = 
+　CFLAG:498 = 
+　CFLAG:499 = 
+　CFLAG:500 = 触手終了
+
+
+
+TFLAG:13の値によるイベント口上判定
+
+　1:調教後自慰
+　2:調教後レズプレイ
+　3:朝フェラ
+　4:調教後セックス
+　5:夜這い
+　6:売却
+　7:職業イベント;アイドル;グラビア撮影
+　8:職業イベント;アイドル;歌唱練習
+　9:ガンダーロボ戦参加時
+　10:ガンダーロボ戦に参加して勝利
+
+　11:妊娠発覚
+　12:出産
+
+　15:勲章の力で人間になれた
+　16:痴漢イベント
+　17:痴漢イベントクリ責め
+　18:痴漢イベントアナル責め
+　19:痴漢イベントヴァギナ責め
+　20:痴漢イベントSEX
+
+  108:処女オークション・開催中
+  109:処女オークション・処女喪失
+
+  110:コンサート失敗
+  111:コンサート成功
+  112:コンサート失敗（特殊チケット）
+  113:コンサート成功（特殊チケット）
+
+  116:公衆便所プレイ
+  117:公衆便所プレイ・公開浣腸ショー
+
+  118:ストリップショー失敗
+  119:ストリップショー成功
+  120:ストリップショー失敗（特殊チケット）
+  121:ストリップショー成功（特殊チケット）
+
+  122:定食屋台失敗
+  123:定食屋台成功
+
+  125:プロローグ介入
+
+　998:寿命による死亡
+　999:死亡（死亡による消滅が確定している場合のみ）

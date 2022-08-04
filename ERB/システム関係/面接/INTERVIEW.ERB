@@ -1,0 +1,2027 @@
+﻿;面接サブルーチン
+;TFLAG:400番台を使用
+@INTERVIEW
+
+REPEAT 100
+	TFLAG:(COUNT+400) = 0
+REND
+
+;面接相手の性別
+PRINTL
+PRINTL 今回面接するのは……
+PRINTL [0] - オンナ
+;PRINTL [1] - オトコ
+;PRINTL [2] - 男の娘
+
+$INPUT_LOOP_INTERVIEW
+INPUT
+
+;TFLAG:[[TFLAG:口上番号]]:で性別を決定(0=オンナ、1=オトコ、2=男の娘)
+IF RESULT == 0
+	TFLAG:[[TFLAG:口上番号]] = 0
+ELSEIF RESULT == 1
+	TFLAG:[[TFLAG:口上番号]] = 1
+ELSEIF RESULT == 2
+	TFLAG:[[TFLAG:口上番号]] = 2
+ELSE
+	GOTO INPUT_LOOP_INTERVIEW
+ENDIF
+CALL INTERVIEW_2nd
+RETURN 0
+
+
+@INTERVIEW_2nd
+
+;TFLAG:401で年齢を決定
+;変動幅の真ん中が多く端は少なくなるように(8～30、確率上最多20)
+TFLAG:401 = 8 + RAND:13 + RAND:13
+
+;TFLAG:402、TFLAG:403で誕生日を決定
+TFLAG:402 = RAND:11 + 1
+
+IF TFLAG:402 == 1 || TFLAG:402 == 3 || TFLAG:402 == 5 || TFLAG:402 == 7 || TFLAG:402 == 8 || TFLAG:402 == 10 || TFLAG:402 == 12
+	TFLAG:403 = RAND:30 + 1
+ELSEIF TFLAG:402 == 4 || TFLAG:402 == 6 || TFLAG:402 == 9 || TFLAG:402 == 11
+	TFLAG:403 = RAND:29 + 1
+ELSEIF TFLAG:402 == 2
+	TFLAG:403 = RAND:28 + 1
+ENDIF
+
+;TFLAG:404で血液型を決定
+TFLAG:404 = RAND:3 + 1
+
+;TFLAG:405で職業を決定(15歳までなら学生固定)
+IF TFLAG:401 <= 15
+	TFLAG:405 = 0
+ELSE
+	TFLAG:405 = RAND:9 + 1
+ENDIF
+
+;TFLAG:406で髪の色を決定
+;11までは地毛、それ以上は染めている
+TFLAG:406 = RAND:21
+
+;TFLAG:407で髪型を決定
+TFLAG:407 = RAND:100	;確率の調整のため母数を大きくしている。
+
+;TFLAG:408で胸のサイズを決定
+;LOCAL:0は作業用
+;0～4で絶壁、5～19で貧乳、70～94で巨乳、95～99で爆乳
+LOCAL:0 = 0
+IF TFLAG:[[TFLAG:口上番号]] == 0
+	;真ん中の値(=50)に数値が集中するように変更
+	LOCAL:0 = RAND:51 + RAND:51
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0
+	;1/3のさらに半数以上が無、それ以外は大きいほど少数
+	LOCAL:0 = RAND:101 - RAND:101
+	SIF LOCAL:0 < 0
+		LOCAL:0 = 0	
+ENDIF
+IF LOCAL:0 <= 4
+	TFLAG:408 = 1
+ELSEIF LOCAL:0 >= 5 && LOCAL:0 <= 19
+	TFLAG:408 = 2
+ELSEIF LOCAL:0 >= 70 && LOCAL:0 <= 94
+	TFLAG:408 = 3
+ELSEIF LOCAL:0 >= 95 && LOCAL:0 <= 99
+	TFLAG:408 = 4
+ELSE
+	TFLAG:408 = 0
+ENDIF
+
+;TFLAG:409で恋人を決定
+TFLAG:409 = RAND:10
+
+;TFLAG:410でNTR進行度の上限を決定
+TFLAG:410 = 100 + RAND:100
+
+;TFLAG:411でファーストキスの有無を決定
+;LOCAL:0は作業用
+LOCAL:0 = 0
+LOCAL:0 = RAND:100
+IF LOCAL:0 < (TFLAG:401 * 2)	;LOCAL:0が年齢の2倍より小さければキス経験有
+	TFLAG:411 = 1
+ELSEIF ( TFLAG:405 == 7 && RAND:10 > 0 )
+	;未経験と判定されたうち主婦(既婚者)のうち1/10以外はキス経験済(結婚式の誓いのキスとか)
+ELSE
+	TFLAG:411 = 0
+ENDIF
+
+
+;TFLAG:412でセックス経験の有無を決定
+;LOCAL:0は作業用
+LOCAL:0 = 0
+LOCAL:0 = RAND:100
+IF ( TFLAG:409 >= 2 && TFLAG:409 <= 7 ) || TFLAG:405 == 7	;恋人あり(or既婚)の場合
+	IF LOCAL:0 < (TFLAG:401 * 3)	;LOCAL:0が年齢の3倍より小さければセックス経験有
+		TFLAG:412 = 1
+	ELSE
+		TFLAG:412 = 0
+	ENDIF
+ELSE					;恋人がいない場合
+	IF LOCAL:0 < (TFLAG:401 * 1)	;LOCAL:0が年齢より小さければセックス経験有
+		TFLAG:412 = 1
+	ELSE
+		TFLAG:412 = 0
+	ENDIF
+ENDIF
+
+;TFLAG:413でアナル経験の有無を決定
+;LOCAL:0は作業用
+LOCAL:0 = 0
+LOCAL:0 = RAND:100
+IF ( TFLAG:409 >= 2 && TFLAG:409 <= 7 ) || TFLAG:405 == 7	;恋人あり(or既婚者)の場合
+	IF LOCAL:0 < (TFLAG:401 * 1)	;LOCAL:0が年齢より小さければアナル経験有
+		TFLAG:413 = 1
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 2			;男の娘の場合、LOCAL:0が年齢の3倍より小さければアナル経験有
+		IF LOCAL:0 >= (TFLAG:401 * 3)
+			TFLAG:413 = 1
+		ELSE
+			TFLAG:413 = 0
+		ENDIF
+	ELSE
+		TFLAG:413 = 0
+	ENDIF
+ELSE					;恋人がいない場合
+	IF LOCAL:0 < (TFLAG:401 / 4)	;LOCAL:0が年齢の4分の1より小さければアナル経験有
+		TFLAG:413 = 1
+	ELSE
+		TFLAG:413 = 0
+	ENDIF
+ENDIF
+
+;TFLAG:414で性格を決定
+TFLAG:414 = RAND:19
+
+;TFLAG:415で陰毛の状態を決定
+;0-1:永久脱毛、2-5:生えてない、18-19:伸び放題
+IF TFLAG:[[TFLAG:口上番号]] < 16 && TFLAG:[[TFLAG:口上番号]] >= RAND:7 + 9
+	TFLAG:415 = 1
+ELSE
+	TFLAG:415 = RAND:20
+ENDIF
+
+;TFLAG:415 = RAND:20
+
+;TFLAG:416で乙女心系素質を決定
+IF TFLAG:[[TFLAG:口上番号]] == 0 || TFLAG:[[TFLAG:口上番号]] == 2
+	;50%で何も無い
+	TFLAG:416 = 23 + RAND:15
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+	;9割は普通、1割がお姉
+	TFLAG:416 = 20 + RAND:11
+ENDIF
+
+;TFLAG:417で痛みに弱い|痛みに強いを決定
+
+LOCAL:0 = 0
+LOCAL:0 = RAND:100
+
+IF LOCAL:0 <= 4
+	TFLAG:417 = 40
+ELSEIF LOCAL:0 >= 95
+	TFLAG:417 = 41
+ELSE
+	TFLAG:417 = 0
+ENDIF
+
+;TFLAG:418で濡れやすい|濡れにくいを決定
+LOCAL:0 = 0
+LOCAL:0 = RAND:100
+
+IF LOCAL:0 <= 4
+	TFLAG:418 = 42
+ELSEIF LOCAL:0 >= 95
+	TFLAG:418 = 43
+ELSE
+	TFLAG:418 = 0
+ENDIF
+
+;TFLAG:419で大柄|小柄を決定
+LOCAL:0 = 0
+LOCAL:0 = RAND:100
+
+IF LOCAL:0 <= 4
+	TFLAG:419 = 99
+ELSEIF LOCAL:0 >= 95
+	TFLAG:419 = 100
+ELSE
+	TFLAG:419 = 0
+ENDIF
+
+;ここから面接内容表示
+PRINT 約束の喫茶店に
+IF TFLAG:401 <= 14
+	PRINT まだ幼すぎる
+ELSEIF TFLAG:401 >= 15 && TFLAG:401 <=18
+	IF TFLAG:[[TFLAG:口上番号]] == 0
+		PRINT 少女の
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		PRINT 少年の
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+		PRINT まるで少女のような
+	ENDIF
+	PRINT あどけなさを残す
+ELSEIF TFLAG:401 >= 19
+	PRINT 大人の
+ENDIF
+
+;肥満、痩せ設定
+TFLAG:421 = RAND:6 - RAND:6
+
+IF TFLAG:421 <= -5
+	PRINT 病的なほど細い
+ELSEIF TFLAG:421 <= -3
+	PRINT 痩せすぎた
+ELSEIF TFLAG:421 == -2
+	PRINT 細身の
+ELSEIF TFLAG:421 == -1
+	PRINT やや細身な
+ELSEIF TFLAG:421 < 2
+;表記しない
+	;PRINT 標準的な体つきの
+ELSEIF TFLAG:421 == 2
+	PRINT ややふくよかな
+ELSEIF TFLAG:421 == 3
+	PRINT ふくよかな
+ELSEIF TFLAG:421 <= 5
+	PRINT むっちりした
+ELSEIF TFLAG:421 >= 6
+	PRINT 肥満気味の
+ENDIF
+;大柄|小柄を表示
+IF TFLAG:419 == 99
+	PRINT 大柄の
+ELSEIF TFLAG:419 == 100
+	PRINT ちっちゃい
+ENDIF
+
+;ギャラ要求額を設定
+;話術レベルで補正をつける？
+TFLAG:420 = (RAND:10 + 1) *100
+
+;性別を表示
+IF TFLAG:[[TFLAG:口上番号]] == 0 && TFLAG:401 <= 14
+	PRINT 少女
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 0
+	PRINT 女
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 1 && TFLAG:401 <= 14
+	PRINT 少年
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+	PRINT 男
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+	PRINT 男の娘
+ENDIF
+PRINTL がやって来た。
+
+;髪の色表示
+IF TFLAG:406 == 0 || TFLAG:406 == 11
+	PRINT 黒の
+ELSEIF TFLAG:406 == 1 || TFLAG:406 == 12
+	PRINT 茶色の
+ELSEIF TFLAG:406 == 2 || TFLAG:406 == 13
+	PRINT 金色の
+ELSEIF TFLAG:406 == 3 || TFLAG:406 == 14
+	PRINT 銀色の
+ELSEIF TFLAG:406 == 4 || TFLAG:406 == 15
+	PRINT 赤の
+ELSEIF TFLAG:406 == 5 || TFLAG:406 == 16
+	PRINT 青の
+ELSEIF TFLAG:406 == 6 || TFLAG:406 == 17
+	PRINT 緑の
+ELSEIF TFLAG:406 == 7 || TFLAG:406 == 18
+	PRINT ピンクの
+ELSEIF TFLAG:406 == 8 || TFLAG:406 == 19
+	PRINT 紫の
+ELSEIF TFLAG:406 == 9
+	PRINT 白の
+ELSEIF TFLAG:406 == 10 || TFLAG:406 == 21
+	PRINT 栗色の
+ELSEIF TFLAG:406 == 20
+	PRINT 脱色した
+ENDIF
+
+PRINT 髪を
+
+;髪型表示
+;年齢ごとに出現確率を変えてある。
+;ツインテールは幼いほど出やすく、アップは幼いほど出にくいなど。
+IF TFLAG:401 <= 15	;中○生以下を想定。
+	IF TFLAG:407 <= 10
+	TFLAG:407 = 0	;ここで元の髪型用フラグに戻す
+		PRINT ショートヘア
+	ELSEIF TFLAG:407 <= 28
+	TFLAG:407 = 1
+		PRINT セミロング
+	ELSEIF TFLAG:407 <= 43
+	TFLAG:407 = 2
+		PRINT ショートボブ
+	ELSEIF TFLAG:407 <= 58
+	TFLAG:407 = 3
+		PRINT ポニーテール
+	ELSEIF TFLAG:407 <= 68
+	TFLAG:407 = 4
+		PRINT ツインテール
+	ELSEIF TFLAG:407 <= 78
+	TFLAG:407 = 5
+		PRINT ストレートロング
+	ELSEIF TFLAG:407 <= 83
+	TFLAG:407 = 6
+		PRINT アップ
+	ELSEIF TFLAG:407 <= 93
+	TFLAG:407 = 7
+		PRINT ゆるふわパーマ
+	ELSEIF TFLAG:407 <= 98
+	TFLAG:407 = 8
+		PRINT ロングウェーブ
+	ELSEIF TFLAG:407 == 99	;一応1%の確率で出るようにした。なお、もともとこの値である。
+		PRINT 昇天ペガサスＭＩＸ盛り
+	ENDIF
+ELSEIF TFLAG:401 <=18	;高○生を想定。
+	IF TFLAG:407 <= 10
+	TFLAG:407 = 0	;ここで元の髪型用フラグに戻す
+		PRINT ショートヘア
+	ELSEIF TFLAG:407 <= 25
+	TFLAG:407 = 1
+		PRINT セミロング
+	ELSEIF TFLAG:407 <= 40
+	TFLAG:407 = 2
+		PRINT ショートボブ
+	ELSEIF TFLAG:407 <= 50
+	TFLAG:407 = 3
+		PRINT ポニーテール
+	ELSEIF TFLAG:407 <= 55
+	TFLAG:407 = 4
+		PRINT ツインテール
+	ELSEIF TFLAG:407 <= 73
+	TFLAG:407 = 5
+		PRINT ストレートロング
+	ELSEIF TFLAG:407 <= 78
+	TFLAG:407 = 6
+		PRINT アップ
+	ELSEIF TFLAG:407 <= 88
+	TFLAG:407 = 7
+		PRINT ゆるふわパーマ
+	ELSEIF TFLAG:407 <= 98
+	TFLAG:407 = 8
+		PRINT ロングウェーブ
+	ELSEIF TFLAG:407 == 99	;一応1%の確率で出るようにした。なお、もともとこの値である。
+		PRINT 昇天ペガサスＭＩＸ盛り
+	ENDIF
+ELSEIF TFLAG:401 <=22	;大学生を想定。
+	IF TFLAG:407 <= 10
+	TFLAG:407 = 0	;ここで元の髪型用フラグに戻す
+		PRINT ショートヘア
+	ELSEIF TFLAG:407 <= 25
+	TFLAG:407 = 1
+		PRINT セミロング
+	ELSEIF TFLAG:407 <= 40
+	TFLAG:407 = 2
+		PRINT ショートボブ
+	ELSEIF TFLAG:407 <= 45
+	TFLAG:407 = 3
+		PRINT ポニーテール
+	ELSEIF TFLAG:407 <= 47
+	TFLAG:407 = 4
+		PRINT ツインテール
+	ELSEIF TFLAG:407 <= 62
+	TFLAG:407 = 5
+		PRINT ストレートロング
+	ELSEIF TFLAG:407 <= 68
+	TFLAG:407 = 6
+		PRINT アップ
+	ELSEIF TFLAG:407 <= 83
+	TFLAG:407 = 7
+		PRINT ゆるふわパーマ
+	ELSEIF TFLAG:407 <= 98
+	TFLAG:407 = 8
+		PRINT ロングウェーブ
+	ELSEIF TFLAG:407 == 99	;一応1%の確率で出るようにした。なお、もともとこの値である。
+		PRINT 昇天ペガサスＭＩＸ盛り
+	ENDIF
+ELSE	;社会人を想定。
+	IF TFLAG:407 <= 10
+	TFLAG:407 = 0	;ここで元の髪型用フラグに戻す
+		PRINT ショートヘア
+	ELSEIF TFLAG:407 <= 25
+	TFLAG:407 = 1
+		PRINT セミロング
+	ELSEIF TFLAG:407 <= 35
+	TFLAG:407 = 2
+		PRINT ショートボブ
+	ELSEIF TFLAG:407 <= 38
+	TFLAG:407 = 3
+		PRINT ポニーテール
+	ELSEIF TFLAG:407 <= 39	;社会人のツインテはさすがに痛いと思うので1%。
+	TFLAG:407 = 4
+		PRINT ツインテール
+	ELSEIF TFLAG:407 <= 59
+	TFLAG:407 = 5
+		PRINT ストレートロング
+	ELSEIF TFLAG:407 <= 68
+	TFLAG:407 = 6
+		PRINT アップ
+	ELSEIF TFLAG:407 <= 83
+	TFLAG:407 = 7
+		PRINT ゆるふわパーマ
+	ELSEIF TFLAG:407 <= 98
+	TFLAG:407 = 8
+		PRINT ロングウェーブ
+	ELSEIF TFLAG:407 == 99	;一応1%の確率で出るようにした。なお、もともとこの値である。
+		PRINT 昇天ペガサスＭＩＸ盛り
+	ENDIF
+ENDIF
+
+PRINTL にしている。
+
+;胸のサイズ表示
+IF TFLAG:[[TFLAG:口上番号]] == 0 && TFLAG:408 > 0
+	PRINT 胸元に目を向けると
+	IF TFLAG:408 == 1
+		PRINTL ふくらみは皆無だが、マニア受けはするかもしれない。
+	ELSEIF TFLAG:408 == 2
+		PRINTL そのふくらみは若干控えめである。
+	ELSEIF TFLAG:408 == 3
+		PRINTL 服の上からでもその豊かなふくらみがわかる。
+	ELSEIF TFLAG:408 == 4
+		PRINTL いまにも服からまろび出そうな胸がそこにあった。
+	ENDIF
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 2 && TFLAG:408 != 0
+	PRINT 無意識に目が行った胸元には
+	IF TFLAG:408 == 1
+		PRINTL 若干のふくらみがある気がする。そんなはずはないのだが…
+	ELSEIF TFLAG:408 == 2
+		PRINTL 若干控えめなふくらみがあるような気がする。偽装だろうか？
+	ELSEIF TFLAG:408 == 3
+		PRINTL 不思議なことに服の上からでもわかる豊かなふくらみあった。
+	ELSEIF TFLAG:408 == 4
+		PRINTL 性別を疑うほどの立派な胸がそこにあった。
+	ENDIF
+ENDIF
+
+
+
+;職業表示
+PRINT 普段の職業は
+IF TFLAG:405 == 0 && TFLAG:401 <= 12
+	PRINT 小●生
+ELSEIF TFLAG:405 == 0 && TFLAG:401 >= 13 && TFLAG:401 <= 15
+	PRINT 中●生
+ELSEIF TFLAG:405 == 1
+	IF TFLAG:[[TFLAG:口上番号]] == 0 || TFLAG:[[TFLAG:口上番号]] == 2
+		PRINT ナース
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		PRINT 看護師
+	ENDIF
+ELSEIF TFLAG:405 == 2
+	PRINT 教師
+ELSEIF TFLAG:405 == 3
+	IF TFLAG:[[TFLAG:口上番号]] == 0 || TFLAG:[[TFLAG:口上番号]] == 2
+		PRINT メイド
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		PRINT 執事
+	ENDIF
+ELSEIF TFLAG:405 == 4
+	PRINT 声優
+ELSEIF TFLAG:405 == 5
+	IF TFLAG:[[TFLAG:口上番号]] == 0
+		PRINT 風俗嬢
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		PRINT 風俗男子
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+		PRINT 風俗嬢(♂)
+	ENDIF
+ELSEIF TFLAG:405 == 6
+	PRINT アイドル
+ELSEIF TFLAG:405 == 7
+	IF TFLAG:[[TFLAG:口上番号]] == 0 || TFLAG:[[TFLAG:口上番号]] == 2
+		PRINT 主婦
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		PRINT 主夫
+	ENDIF
+ELSEIF TFLAG:405 == 8
+	PRINT ファッションモデル
+ELSEIF TFLAG:405 == 9
+	PRINT フリーター
+ELSEIF TFLAG:405 == 10
+	PRINT 無職
+ENDIF
+
+SIF TFLAG:409 <= 1
+	PRINTL らしい。
+
+;恋人の職業表示
+SIF TFLAG:409 >= 2
+	PRINT で、
+SIF TFLAG:409 >= 2 && TFLAG:409 < 7
+	PRINT とある
+IF TFLAG:409 == 2
+	PRINT 高校生と
+ELSEIF TFLAG:409 == 3
+	PRINT 中学生と
+ELSEIF TFLAG:409 == 4
+	PRINT 大学生と
+ELSEIF TFLAG:409 == 5
+	PRINT サラリーマンと
+ELSEIF TFLAG:409 == 6
+	PRINT ホストと
+ELSEIF TFLAG:409 == 7
+	PRINT 誰かと背徳的な関係を
+ELSEIF TFLAG:409 > 7
+	IF TFLAG:405 == 7
+		PRINT 夫以外の異性と
+	ELSE
+		PRINT 特定の異性と
+	ENDIF
+	PRINTL 付き合った経験はないようだ。
+ENDIF
+SIF TFLAG:405 == 7
+	PRINT 夫に隠れて
+IF TFLAG:409 >= 2 && TFLAG:409 < 7
+	PRINTL つき合っているようだ。
+ELSEIF TFLAG:409 == 7
+	PRINTL 続けているようだ。
+ENDIF
+
+;ギャラの要求表示
+
+PRINTFORML ＡＶデビューする際のギャラとして{TFLAG:420}を要求された。
+
+;フラグ用変数LOCAL:1、LOCAL:2、LOCAL:3を初期化
+LOCAL:1 = 0
+LOCAL:2 = 0
+LOCAL:3 = 0
+
+REPEAT CHARANUM
+	;話術1以上のキャラがいると、相手の性格傾向がわかる
+	IF ABL:COUNT:話術 >= 1 && LOCAL:1 == 0
+		PRINTFORM %CALLNAME:COUNT%は相手の
+		IF TFLAG:414 == 10
+			PRINT 臆病さ
+		ELSEIF TFLAG:414 == 11
+			PRINT 生意気さ
+		ELSEIF TFLAG:414 == 12
+			PRINT 気丈さ
+		ELSEIF TFLAG:414 == 13
+			PRINT 素直さ
+		ELSEIF TFLAG:414 == 14
+			PRINT 大人しさ
+		ELSEIF TFLAG:414 == 15
+			PRINT 高いプライド
+		ELSEIF TFLAG:414 == 16
+			PRINT 活発さ
+		ELSEIF TFLAG:414 == 17
+			PRINT 低いプライド
+		ELSEIF TFLAG:414 == 18
+			PRINT ツンデレっぽさ
+		ELSE
+			PRINT 性格に気になる点は無い
+		ENDIF
+
+		IF TFLAG:414 >= 10 && TFLAG:416 >= 30
+			PRINT と、
+		ELSEIF TFLAG:414 <= 9 && TFLAG:416 >= 30
+			PRINT が、
+		ELSEIF TFLAG:414 <= 9 && TFLAG:416 <= 29
+			PRINTL ようだ。
+		ELSE
+			PRINTL を気にしている。
+		ENDIF
+
+		IF TFLAG:416 == 30
+			PRINTL 強い貞操観念を気にしている。
+		ELSEIF TFLAG:416 == 31
+			PRINTL 軽薄そうなところを気にしている。
+		ELSEIF TFLAG:416 == 32
+			PRINTL 欲望を無理に抑えているところを気にしている。
+		ELSEIF TFLAG:416 == 33
+			PRINTL 開けっ広げなところを気にしている。
+		ELSEIF TFLAG:416 == 34
+			PRINTL 面接に来るのがやっとの様子を気にしている。
+		ELSEIF TFLAG:416 == 35
+			PRINTL すぐに赤面するところを気にしている。
+		ELSEIF TFLAG:416 == 36
+			PRINTL 露出度が高い服装を気にしている。
+		ELSEIF TFLAG:416 == 37
+			PRINTL 何かに怯えているところを気にしている。
+		ENDIF
+
+	LOCAL:1 = 1
+	ENDIF
+
+	;話術3以上のキャラがいると、より詳しい情報を表示する
+	IF ABL:COUNT:話術 >= 3 && LOCAL:2 == 0
+		PRINTFORM 口のうまい%CALLNAME:COUNT%が緊張をほぐして詳しい話を聞くと、
+		IF TFLAG:411 == 0 && TFLAG:412 == 0 && TFLAG:413 == 0
+			PRINTL セックスどころかキスの経験すらないようだ。
+		ELSEIF TFLAG:411 == 0 && TFLAG:412 == 1 && TFLAG:413 == 0
+			PRINTL セックスの経験はあるがファーストキスはまだらしい。
+		ELSEIF TFLAG:411 == 0 && TFLAG:412 == 0 && TFLAG:413 == 1
+			PRINTL なぜかアナルでのみ経験があるらしい……
+		ELSEIF TFLAG:411 == 0 && TFLAG:412 == 1 && TFLAG:413 == 1
+			PRINTL キス以外は一通り経験しているようだ……
+		ELSEIF TFLAG:411 == 1 && TFLAG:412 == 0 && TFLAG:413 == 0
+			PRINTL キスまでは行ったが、そこから先は未経験らしい。
+		ELSEIF TFLAG:411 == 1 && TFLAG:412 == 1 && TFLAG:413 == 0
+			PRINTL 恋人とは普通にエッチをしていたようだ。
+		ELSEIF TFLAG:411 == 1 && TFLAG:412 == 0 && TFLAG:413 == 1
+			PRINTL 前の貞操だけは頑なに守り続けていたようだ……
+		ELSEIF TFLAG:411 == 1 && TFLAG:412 == 1 && TFLAG:413 == 1
+			PRINTL キスやセックスの経験はもちろん、アナルも貫通済みらしい。
+		ENDIF
+		IF TFLAG:415 <= 1
+			PRINTL 下の毛は永久脱毛しているそうだ。
+		ELSEIF TFLAG:415 >= 2 && TFLAG:415 <= 5
+			PRINTL また、パイパンがコンプレックスのようだ。
+		ELSEIF TFLAG:415 >= 6 && TFLAG:415 <= 7
+			PRINTL どうやら陰毛の手入れをしたことがないようだ……
+		ENDIF
+		IF TFLAG:417 == 40
+			PRINTL 痛いことは苦手と言っている。
+		ELSEIF TFLAG:417 == 41
+			PRINTL 多少痛くしても大丈夫だそうだ。
+		ENDIF
+		IF TFLAG:418 == 42
+			PRINTL すぐに濡れてしまう体質らしい。
+		ELSEIF TFLAG:418 == 43
+			PRINTL なかなか濡れない体質を気にしている。
+		ENDIF
+	LOCAL:2 = 1
+	ENDIF
+
+	;話術5以上で追加素質のチャンス(未実装)
+	IF ABL:COUNT:話術 >= 5 && LOCAL:3 == 0
+	LOCAL:3 = 1
+	ENDIF
+REND
+
+;キャラ登録
+@INTERVIEW_ADD
+;キャラ番号をLOCAL4に格納
+LOCAL:4 = CHARANUM - 1
+
+;TFLAG:430に初期体力を格納
+TFLAG:430 = 1500
+;TFLAG:431に初期気力を格納
+TFLAG:431 = 1500
+
+;性別による体力補正
+IF TFLAG:[[TFLAG:口上番号]] == 1
+	;男は体力はあるが気力は低い
+	TFLAG:431 -= 100
+	SIF TFLAG:402 > 12
+		TFLAG:430 += 100	;女性との差=200
+	SIF TFLAG:402 > 15
+		TFLAG:430 += 200	;さらに加算
+ENDIF
+
+;性別を登録
+IF TFLAG:[[TFLAG:口上番号]] == 1
+	TALENT:(LOCAL:4):オトコ = 1
+ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+	TALENT:(LOCAL:4):オトコ = 1
+	TALENT:(LOCAL:4):オトコの娘 = 1
+ENDIF
+
+;基本的なプロフィールを登録
+BASE:(LOCAL:4):実年齢 = TFLAG:401
+BASE:(LOCAL:4):誕生月 = TFLAG:402
+BASE:(LOCAL:4):誕生日 = TFLAG:403
+BASE:(LOCAL:4):血液型 = TFLAG:404
+
+;職業を登録(ついでに衣装も登録)
+;小●生は子供服、気力、体力ダウン
+IF TFLAG:405 == 0 && TFLAG:401 <= 12
+	TALENT:(LOCAL:4):小学生 = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 22
+	TFLAG:430 -= 100
+	TFLAG:431 -= 100
+;中●生は制服
+ELSEIF TFLAG:405 == 0 && TFLAG:401 >= 13 && TFLAG:401 <= 15
+	TALENT:(LOCAL:4):中学生 = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 18
+;ナースはナース服、体力アップ
+ELSEIF TFLAG:405 == 1
+	TALENT:(LOCAL:4):ナース = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 24
+	TFLAG:430 += 100
+;教師はスーツ、気力アップ
+ELSEIF TFLAG:405 == 2
+	TALENT:(LOCAL:4):教師 = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 21
+	TFLAG:431 += 100
+;メイドはメイド服
+ELSEIF TFLAG:405 == 3
+	TALENT:(LOCAL:4):メイド = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 25
+;声優は普段着、気力アップ
+ELSEIF TFLAG:405 == 4
+	TALENT:(LOCAL:4):声優 = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 1
+	TFLAG:430 += 100
+;風俗嬢はカクテルドレス
+ELSEIF TFLAG:405 == 5
+	TALENT:(LOCAL:4):風俗嬢 = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 203
+;アイドルはステージ衣装、気力アップ
+ELSEIF TFLAG:405 == 6
+	TALENT:(LOCAL:4):アイドル = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 30
+	TFLAG:430 += 100
+;主婦は普段着にエプロン
+ELSEIF TFLAG:405 == 7
+	TALENT:(LOCAL:4):人妻 = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 101
+	CFLAG:(LOCAL:4):特別コスチュームのタイプ = 1
+;ファッションモデルはブランド服
+ELSEIF TFLAG:405 == 8
+	TALENT:(LOCAL:4):ファッションモデル = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 23
+;フリーターはキャミとデニムショート、体力アップ
+ELSEIF TFLAG:405 == 9
+	TALENT:(LOCAL:4):アルバイト = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 140
+	TFLAG:430 += 100
+;無職はジャージ
+ELSEIF TFLAG:405 == 10
+	TALENT:(LOCAL:4):ニート = 1
+	CFLAG:(LOCAL:4):上着のタイプ = 103
+ENDIF
+IF TFLAG:[[TFLAG:口上番号]] == 1
+;男はとりあえずジャージ
+	CFLAG:(LOCAL:4):上着のタイプ = 103
+ENDIF
+
+;髪の色を登録
+;IF TFLAG:406 == 0
+;	CFLAG:(LOCAL:4):髪の色 = 0
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 1
+;	CFLAG:(LOCAL:4):髪の色 = 1
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 2
+;	CFLAG:(LOCAL:4):髪の色 = 2
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 3
+;	CFLAG:(LOCAL:4):髪の色 = 3
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 4
+;	CFLAG:(LOCAL:4):髪の色 = 4
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 5
+;	CFLAG:(LOCAL:4):髪の色 = 5
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 6
+;	CFLAG:(LOCAL:4):髪の色 = 6
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 7
+;	CFLAG:(LOCAL:4):髪の色 = 7
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 8
+;	CFLAG:(LOCAL:4):髪の色 = 8
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 9
+;	CFLAG:(LOCAL:4):髪の色 = 9
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 10
+;	CFLAG:(LOCAL:4):髪の色 = 10
+;	CFLAG:(LOCAL:4):染髪の有無 = 0
+;ELSEIF TFLAG:406 == 11
+;	CFLAG:(LOCAL:4):髪の色 = 0
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 12
+;	CFLAG:(LOCAL:4):髪の色 = 1
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 13
+;	CFLAG:(LOCAL:4):髪の色 = 2
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 14
+;	CFLAG:(LOCAL:4):髪の色 = 3
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 15
+;	CFLAG:(LOCAL:4):髪の色 = 4
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 16
+;	CFLAG:(LOCAL:4):髪の色 = 5
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 17
+;	CFLAG:(LOCAL:4):髪の色 = 6
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 18
+;	CFLAG:(LOCAL:4):髪の色 = 7
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 19
+;	CFLAG:(LOCAL:4):髪の色 = 8
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 20
+;	CFLAG:(LOCAL:4):髪の色 = 9
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ELSEIF TFLAG:406 == 21
+;	CFLAG:(LOCAL:4):髪の色 = 10
+;	CFLAG:(LOCAL:4):染髪の有無 = 1
+;ENDIF
+
+IF TFLAG:406 < 11
+	CFLAG:(LOCAL:4):髪の色 = TFLAG:406
+	CFLAG:(LOCAL:4):染髪の有無 = 0
+	CFLAG:(LOCAL:4):地毛の色 = TFLAG:406
+ELSE
+	CFLAG:(LOCAL:4):髪の色 = (TFLAG:406 - 11)
+	CFLAG:(LOCAL:4):染髪の有無 = 1
+	CFLAG:(LOCAL:4):地毛の色 = RAND:11
+ENDIF
+
+;髪型を登録
+CFLAG:(LOCAL:4):髪型 = TFLAG:407
+
+
+;*******************************************
+;ここから身長設定の変更追加箇所
+;*******************************************
+
+;158cm 48kgが基準
+;身長を登録
+LOCAL:0 = 0
+;男女分岐(LOCAL:0を一時的に借りる)
+IF TFLAG:[[TFLAG:口上番号]] == 2
+	;男の娘の場合1/3で各々男子女子身長を採用、残りの1/3で特製値を使用
+	S = RAND:3
+ELSE
+	;男子女子はそのまま
+	S = TFLAG:[[TFLAG:口上番号]]
+ENDIF
+;平均身長の設定(性別ごとに分岐)
+IF S == 0
+	;女子
+	IF TFLAG:401 == 8
+		LOCAL:0 = 128	;8歳女子の平均身長
+	ELSEIF TFLAG:401 == 9
+		LOCAL:0 = 133	;9歳女子の平均身長
+	ELSEIF TFLAG:401 == 10
+		LOCAL:0 = 140	;10歳女子の平均身長
+	ELSEIF TFLAG:401 == 11
+		LOCAL:0 = 147	;11歳女子の平均身長
+	ELSEIF TFLAG:401 == 12
+		LOCAL:0 = 152	;12歳女子の平均身長
+	ELSEIF TFLAG:401 == 13
+		LOCAL:0 = 133	;13歳女子の平均身長
+	ELSEIF TFLAG:401 == 14
+		LOCAL:0 = 156	;14歳女子の平均身長
+	ELSEIF TFLAG:401 == 15
+		LOCAL:0 = 157	;15歳女子の平均身長
+	ELSE
+		LOCAL:0 = 158	;16歳以降の女子平均身長
+	ENDIF
+ELSEIF S == 1
+	;男子
+	IF TFLAG:401 == 8
+		LOCAL:0 = 128	;8歳男子の平均身長
+	ELSEIF TFLAG:401 == 9
+		LOCAL:0 = 133	;9歳男子の平均身長
+	ELSEIF TFLAG:401 == 10
+		LOCAL:0 = 139	;10歳男子の平均身長
+	ELSEIF TFLAG:401 == 11
+		LOCAL:0 = 145	;11歳男子の平均身長
+	ELSEIF TFLAG:401 == 12
+		LOCAL:0 = 152	;12歳男子の平均身長
+	ELSEIF TFLAG:401 == 13
+		LOCAL:0 = 159	;13歳男子の平均身長
+	ELSEIF TFLAG:401 == 14
+		LOCAL:0 = 165	;14歳男子の平均身長
+	ELSEIF TFLAG:401 == 15
+		LOCAL:0 = 168	;15歳男子の平均身長
+	ELSEIF TFLAG:401 == 16
+		LOCAL:0 = 170	;16歳男子の平均身長
+	ELSE
+		LOCAL:0 = 171	;17歳以降の男子平均身長
+	ENDIF
+ELSE	;IF S == 2
+	;男の娘
+	;([同年代の男子]+[同年代の女子]+[男女の低いほう])/3で出した身長で仮設定。疑問が残る場合は変更してくれい
+	IF TFLAG:401 == 8
+		LOCAL:0 = 128	;8歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 9
+		LOCAL:0 = 133	;9歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 10
+		LOCAL:0 = 139	;10歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 11
+		LOCAL:0 = 145	;11歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 12
+		LOCAL:0 = 151	;12歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 13
+		LOCAL:0 = 156	;13歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 14
+		LOCAL:0 = 159	;14歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 15
+		LOCAL:0 = 161	;15歳男の娘の仮想平均身長(仮)
+	ELSEIF TFLAG:401 == 16
+		LOCAL:0 = 162	;16歳男の娘の仮想平均身長(仮)
+	ELSE
+		LOCAL:0 = 162	;17歳以降の男の娘の平均身長(仮)
+	ENDIF
+ENDIF
+
+;*******************************************
+;ここまで身長設定の変更追加箇所
+;*******************************************
+
+BASE:(LOCAL:4):身長 = LOCAL:0
+
+;大柄小柄補正＆個人差補正
+IF TFLAG:419 == 99	;大柄(+5%～+25％で増減)
+	LOCAL:0 = 105 + RAND:21
+ELSEIF TFLAG:419 == 100	;小柄(-15%～-5％で増減,増減なしが最多)
+	LOCAL:0 = RAND:11 - RAND:11
+	SIF LOCAL:0 > 0		;0以上の値を反転(0から離れた数字を最少とするため。問題点としてグラフで並べた場合の0だけが少なくなる1以降は順当に減少)
+		LOCAL:0 = 0 - LOCAL:0
+	LOCAL:0 = 95 + LOCAL:0
+ELSE			;普通(-5%～+5％で増減,増減なしが最多)
+	LOCAL:0 = 100 + RAND:6 - RAND:6
+ENDIF
+BASE:(LOCAL:4):身長 = BASE:(LOCAL:4):身長 * LOCAL:0 / 100
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;以前の体重＆3サイズ計算
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;体重を登録
+;;基準算出
+;LOCAL:5 = BASE:(LOCAL:4):身長 * BASE:(LOCAL:4):身長 * BASE:(LOCAL:4):身長 * 1217 
+;;プラマイ15％
+;LOCAL:6 = RAND:31
+
+;BASE:(LOCAL:4):体重 = LOCAL:5 * (85 + LOCAL:6) / 10000000000
+
+
+;;ウェストのサイズを登録 身長*0.38基準 体重影響
+;BASE:(LOCAL:4):ウェスト = BASE:(LOCAL:4):身長 * 38 * (85 + RAND:20 + (LOCAL:6 / 3)) / 10000 
+;;サバ	
+;BASE:(LOCAL:4):ウェスト -= BASE:(LOCAL:4):ウェスト / 20
+
+;;ヒップのサイズを登録 身長*0.54基準 体重影響  
+;BASE:(LOCAL:4):ヒップ = BASE:(LOCAL:4):身長 * 54 * (85 + RAND:20 + (LOCAL:6 / 3)) / 10000 	
+
+;;胸のサイズを登録 身長*0.54 Ｄカップ 基準 体重影響
+;BASE:(LOCAL:4):バスト = BASE:(LOCAL:4):身長 * 54 * (90 + RAND:10 + (LOCAL:6 / 3)) / 100
+;;ウエスト補正
+;↓ここBASE:(LOCAL:4):23のまちがいじゃない？
+;BASE:(LOCAL:4):バスト -= ((BASE:(LOCAL:4):身長 * 38) - (BASE:(LOCAL:4):ウェスト * 100)) * 250 / 342
+
+;BASE:(LOCAL:4):バスト /= 100
+
+;IF TFLAG:408 == 1						;絶壁
+;	TALENT:(LOCAL:4):絶壁 = 1
+;	BASE:(LOCAL:4):バスト -= 10 			;AAカップ相当を想定。測定不能になっても泣かない。
+;	BASE:(LOCAL:4):体重 -= RAND:2			;胸重さ
+;ELSEIF TFLAG:408 == 2					;貧乳
+;	TALENT:(LOCAL:4):貧乳 = 1
+;	BASE:(LOCAL:4):バスト -= 5				;A-Bカップ相当を想定
+;ELSEIF TFLAG:408 == 3					;巨乳
+;	TALENT:(LOCAL:4):巨乳 = 1
+;	BASE:(LOCAL:4):バスト += 5 				;E-Fカップ相当を想定
+;	BASE:(LOCAL:4):体重 += RAND:2			;胸重さ
+;ELSEIF TFLAG:408 == 4					;爆乳
+;	TALENT:(LOCAL:4):爆乳 = 1
+;	TFLAG:430 += 100					;爆乳は微妙に体力アップ
+;	BASE:(LOCAL:4):バスト += 10 			;G-Iカップ相当を想定
+;	BASE:(LOCAL:4):体重 += 1 + RAND:2		;胸重さ
+;ENDIF
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;以前の3サイズ計算ここまで
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;**********************************************************************
+;ここから新規分の体重＆3サイズ計算
+;**********************************************************************
+
+;体脂肪(1000分率)
+	F = RAND:101 - RAND:101
+	IF TFLAG:[[TFLAG:口上番号]] == 0
+		;女性:8歳=17%～16歳=25%
+		IF TFLAG:401 > 16
+			F = 16 - 8
+		ELSE
+			F = TFLAG:401 - 8
+		ENDIF
+		F = 160 + (F * 12) + RAND:121 - RAND:121
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		;男性:16.5%で一定
+		F = 165 + RAND:121 - RAND:121
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+		;男の娘(女性を参考に年齢増減をやや少なめ)
+		IF TFLAG:401 > 16
+			F = 16
+		ELSE
+			F = TFLAG:401 - 8
+		ENDIF
+		F = 160 + (F * 8)
+;		F += RAND:121 - RAND:121
+	ENDIF
+	;痩せすぎ、肥満気味補正
+	;TFLAG:421 ： 肥満ランク、マイナスは痩せ
+	IF TFLAG:421 == 0
+		F += RAND:11
+		F -= RAND:11
+	ELSEIF TFLAG:421 > 0
+		F += TFLAG:421 * 20 + RAND:20
+	ELSEIF TFLAG:421 < 0
+		F -= TFLAG:421 * 20 + RAND:20
+	ENDIF
+
+
+;成熟度
+	IF TFLAG:[[TFLAG:口上番号]] == 0 || TFLAG:[[TFLAG:口上番号]] == 2
+		IF TFLAG:401 < 10
+			;10歳未満
+			IF RAND:20 == 0
+				;1/20で最大60の成熟度に達する稀有な存在(･･･が大半は10止まり)
+				X = 10 + RAND:51 - RAND:51
+				SIF X < 10
+					X = 10
+			ELSE
+				X = RAND:11 - RAND:11
+				SIF X < 10
+					X = 10
+			ENDIF
+			E = 100
+		ELSEIF (TFLAG:401 > 10 && TFLAG:401 < 16)
+			;11歳～15歳
+			IF RAND:10 == 0
+				;1/10の確率でほぼ成長していない相手
+				X = 10 + (TFLAG:401 - 10) * 1
+			ELSE
+				X = 10 + (TFLAG:401 - 10) * 15
+			ENDIF
+			X = X + RAND:31 - RAND:31
+			SIF X < 15
+				X = 15
+			;SIF X > 100
+			;	X = 100
+			;100オーバーしたらしたでいいや
+			;成長度の差で身長が±3割増減
+			E = 100 + ( 30 * ( X - ( 10 + (TFLAG:401 - 10) * 15 ) ) / 100 )
+		ELSE
+			;16歳以上
+			IF RAND:10 == 0
+				;1/10の確率でで成長していない相手
+				X = 15
+			ELSE
+				X = 85
+			ENDIF
+			X = X + RAND:31 - RAND:31
+			SIF X < 15
+				X = 15
+			;SIF X > 100
+			;	X = 100
+			;100オーバーしたらしたでいいや
+			;成長度の差で身長が±3割増減
+			E = 100 + ( 30 * ( X - 85 ) / 100 )
+		ENDIF
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		IF TFLAG:401 < 12
+			;10歳未満
+			X = RAND:11 - RAND:11
+			SIF X < 10
+				X = 10
+			E = 100
+		ELSEIF (TFLAG:401 > 12 && TFLAG:401 < 17)
+			;12歳～17歳
+			X = 10 + (TFLAG:401 - 10) * 15
+			X = X + RAND:31 - RAND:31
+			SIF X < 15
+				X = 15
+			;成長度の差で身長が±3割増減
+			E = 100 + ( 30 * ( X - ( 10 + (TFLAG:401 - 10) * 15 ) ) / 100 )
+		ELSE
+			;17歳以上
+			X = 85
+			X = X + RAND:31 - RAND:31
+			SIF X < 15
+				X = 15
+			;成長度の差で身長が±3割増減
+			E = 100 + ( 30 * ( X - 85 ) / 100 )
+		ENDIF
+	ENDIF
+
+;筋肉度(＆体力加算)
+	IF TFLAG:[[TFLAG:口上番号]] == 0		;女子
+		;結果：M=10～60(最多:30～40[同数:11パターン])
+		M = 30 + RAND:31 - RAND:21
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1		;男子
+		;結果：M=15～95(最多:45～65[同数:21パターン])
+		M = 45 + RAND:51 - RAND:31
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 2		;男の娘
+		;結果：M=10～70(最多:26～45[同数:11パターン])
+		M = 35 + RAND:36 - RAND:26
+	ENDIF
+	TFLAG:430 = TFLAG:430 + ( M - 50 ) * 10
+	BASE:(LOCAL:4):体重 += BASE:(LOCAL:4):身長 * M / 100	;体重筋肉分加算(指数1に対して身長の2％で設定)
+
+;成熟度で身長を補正
+BASE:(LOCAL:4):身長 = BASE:(LOCAL:4):身長 * E / 100
+
+;基準体重(筋肉･脂肪抜き):身長(cm)*身長(cm)*身長(cm)*係数(4.7)
+BASE:(LOCAL:4):体重 = BASE:(LOCAL:4):身長 * BASE:(LOCAL:4):身長 * BASE:(LOCAL:4):身長 * 47 / 100 / 100 / 100 / 10
+;女性と男の娘は基礎体重に8割掛け
+SIF TFLAG:[[TFLAG:口上番号]] == 0 || TFLAG:[[TFLAG:口上番号]] == 2
+	BASE:(LOCAL:4):体重 = BASE:(LOCAL:4):体重 * 8 / 10
+
+;体重の加算(筋肉量):(15(%)+M(%))*身長(m)*係数(0.23)
+BASE:(LOCAL:4):体重 += (15 + M) * BASE:(LOCAL:4):身長 * 23 / 100 / 100
+
+;体重の加算(体脂肪):体脂肪(%)*身長(m)*係数(0.5)
+BASE:(LOCAL:4):体重 += F * 50 * BASE:(LOCAL:4):身長 / 1000 / 100
+
+
+
+
+;ウェストのサイズを登録 身長*0.38基準 体重影響
+;身長×(基礎値:32％+脂肪(F):[体脂肪1%あたり0.1%] + 筋肉(M):[M=1あたり0.1%]
+;女性:38%[ウエスト基準] = 32% + 2.5%[体脂肪平均値250] + 3.5[筋力平均35]
+	E = BASE:(LOCAL:4):身長 * (3200 + F + (M * 10) )
+	E = E / 100 * 10 / 100
+	BASE:(LOCAL:4):ウェスト = E / 10
+	E = E + BASE:(LOCAL:4):身長 * (RAND:16 - RAND:16) / 100
+	BASE:(LOCAL:4):ヒップ = E / 10
+	IF E % 10 >= 5
+		BASE:(LOCAL:4):ウェスト += 1
+	ELSE
+		;特になし
+	ENDIF
+
+;バスト(チェスト)サイズ
+;	;基本:身長 * (基礎値:40％ + 脂肪(F):([胸囲加算]体脂肪1%あたり0.2%加算) + 筋肉(M):([M]0%～100%=[胸囲加算]0%～3%)
+;	BASE:(LOCAL:4):バスト = BASE:(LOCAL:4):身長 * (4000 + (F * 2) + (M * 3) ) / 10000
+;	;↑としたかったがカップ計算とかの整合のため既存のものに近くなるよう↓
+	;基本:身長 * 0.44
+	BASE:(LOCAL:4):バスト = BASE:(LOCAL:4):身長 * 44
+	IF TFLAG:[[TFLAG:口上番号]] == 0
+		;女(おっぱい) (※ 成熟度(X)で補正 だいたい±1.5cmの範囲)
+		X = (X - 60) * 3
+		;想定カップサイズはジャストより1cm程度～余裕を持たせておく(大きくなると余裕はより大きめに)
+		IF TFLAG:408 == 1		;絶壁
+			;BT - BU = 3.5cm～7.0cm(AA未満)を想定
+			E = 350 + RAND:350 + X
+			TFLAG:431 += 100	;絶壁はかわいそう補正。気力アップ;
+		ELSEIF TFLAG:408 == 2		;貧乳
+			;BT - BU = 7.0cm～11.5cm(AA～A)を想定
+			E = 700 + RAND:450 + X
+		ELSEIF TFLAG:408 == 0		;普乳
+			;BT - BU = 11.5cm～16.5cm(B～C)を想定
+			E = 1150 + RAND:500 + X
+		ELSEIF TFLAG:408 == 3		;巨乳
+			;BT - BU = 16.5cm～23.0cm(D～F)を想定
+			E = 1650 + RAND:650 + X
+		ELSEIF TFLAG:408 == 4		;爆乳
+			;BT - BU = 23.0cm～31.0cm(G～I)を想定
+			E = 2300 + RAND:851 + X
+			TFLAG:430 += 100	;爆乳は体力アップ
+		ELSE				;普乳
+			;BT - BU = 7.0cm～11.5cm(B～D)を想定
+			E = 700 + RAND:500 + X
+
+		ENDIF
+		BASE:(LOCAL:4):体重 += E / 1250		;(体重加算)おっぱい重さ(+25cmで+2kgとしてみる)
+	ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+		;男:筋肉分を身長*2％加算
+		E = M * 2 * BASE:(LOCAL:4):身長
+		BASE:(LOCAL:4):体重 += M / 50		;筋肉重さ加算(M=100あたり2として計算)
+	ELSE
+		;男の娘:特に補正しない
+	ENDIF
+
+	E = E + BASE:(LOCAL:4):バスト
+	BASE:(LOCAL:4):バスト = E / 100
+	IF E % 100 >= 5
+		BASE:(LOCAL:4):バスト += 1
+	ELSE
+		;特になし
+	ENDIF
+
+
+
+;ヒップサイズ
+	;バストサイズを基準に身長の数%の補正
+	;暫定的に-1.5%～+1.5&とした(胸設定で細身+絶壁+乱数最小のとき、さらに-1.5%とかになると変に細くなるかもしれない)
+	E = E + BASE:(LOCAL:4):身長 * (RAND:16 - RAND:16) / 100
+	BASE:(LOCAL:4):ヒップ = E / 100
+	IF E % 100 >= 5
+		BASE:(LOCAL:4):ヒップ += 1
+	ELSE
+		;特になし
+	ENDIF
+
+;**********************************************************************
+;ここまで新規分の体重＆3サイズ計算
+;**********************************************************************
+
+
+
+
+;恋人を登録
+IF TFLAG:409 >= 2 && TFLAG:409 <= 6
+	TALENT:(LOCAL:4):彼氏あり = 1
+	CFLAG:(LOCAL:4):彼氏の有無 = 1
+	CFLAG:(LOCAL:4):彼氏の種類 = TFLAG:409
+ENDIF
+
+;NTR進行度の上限を登録
+CFLAG:(LOCAL:4):寝取られ完了値 = TFLAG:410
+
+S = 0				;妄想のカレカノの経験(一時的投入先)用の変数リセット
+;ファーストキスを登録
+IF TFLAG:411 == 0
+	CFLAG:(LOCAL:4):ファーストキスの相手 = -1
+ELSEIF TFLAG:411 == 1
+	CFLAG:(LOCAL:4):ファーストキスの相手 = 1
+	E = RAND:10
+	IF TFLAG:409 >= 2 && TFLAG:409 <= 6		;彼氏が居る場合
+		E = RAND:10
+		IF E < 5			;半分の確率で恋人
+			IF TFLAG:405 == 7
+				CSTR:(LOCAL:4):ファーストキスの相手 = 夫
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):ファーストキスの相手 = 彼女
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 彼氏
+			ENDIF
+		ELSEIF E < 7
+			IF TFLAG:405 == 7
+				CSTR:(LOCAL:4):ファーストキスの相手 = 夫のペニス
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):ファーストキスの相手 = 彼女のおっぱい
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 彼氏のペニス
+			ENDIF
+		ELSEIF E == 7
+			IF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):ファーストキスの相手 = 知らないオンナの人
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 知らないオトコの人
+			ENDIF
+		ELSE
+			IF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):ファーストキスの相手 = 元カノ
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 元カレ
+			ENDIF
+		ENDIF
+	ELSEIF TFLAG:409 == 7
+		E = RAND:8
+		IF E == 0		;兄姉
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 兄
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 義兄
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 姉
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 義姉
+				ENDIF
+			ENDIF
+		ELSEIF E == 1		;弟妹
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 弟
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 義弟
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 妹
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 義妹
+				ENDIF
+			ENDIF
+		ELSEIF E == 2
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 父
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 養父
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 母
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 義母
+				ENDIF
+			ENDIF
+		ELSEIF E == 3		;おじいちゃんおばあちゃん
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				CSTR:(LOCAL:4):ファーストキスの相手 = 祖父
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 祖母
+			ENDIF
+		;※息子/娘とか孫/孫娘とかは分岐がめんどくさいのでパス
+		ELSEIF E == 4		;おじおば
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 叔父さん
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 伯父さん
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 叔母さん
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 伯母さん
+				ENDIF
+			ENDIF
+		ELSEIF E == 5		;先生と呼ばれる相手
+			E = RAND:5
+			IF E == 0
+				CSTR:(LOCAL:4):ファーストキスの相手 = 元担任教師
+			ELSEIF E == 1
+				CSTR:(LOCAL:4):ファーストキスの相手 = 体育教師
+			ELSEIF E == 2
+				CSTR:(LOCAL:4):ファーストキスの相手 = 校長先生
+			ELSEIF E == 3
+				CSTR:(LOCAL:4):ファーストキスの相手 = 用務員
+			ELSEIF E == 4
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):ファーストキスの相手 = 家庭教師のお兄さん
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 家庭教師のお姉さん
+				ENDIF
+			ELSEIF E == 5
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):ファーストキスの相手 = 家庭教師のおじさん
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 家庭教師のおばさん
+				ENDIF
+			ELSEIF E == 6
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):ファーストキスの相手 = お医者さん
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 看護婦さん
+				ENDIF
+			ENDIF
+		ELSEIF E == 6		;使用人
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				CSTR:(LOCAL:4):ファーストキスの相手 = 使用人の執事
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 使用人のメイドさん
+			ENDIF
+		ELSE			;ペット、動物(現状犬のみ)
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				E = RAND:5
+				IF E == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 野良犬(♂)
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 飼い犬(♂)
+				ENDIF
+			ELSE
+				E = RAND:10
+				IF E < 2
+					CSTR:(LOCAL:4):ファーストキスの相手 = 野良犬(♀)
+				ELSEIF E < 9
+					CSTR:(LOCAL:4):ファーストキスの相手 = 飼い犬(♀)
+				ELSE
+					CSTR:(LOCAL:4):ファーストキスの相手 = 野良犬(♂)
+					;※ごめん、魔が差した
+				ENDIF
+				EXP:(LOCAL:4):獣姦経験 = EXP:(LOCAL:4):獣姦経験 + 1 + RAND:26
+			ENDIF
+		ENDIF
+	ELSEIF E == 0		;空想喪失(25%),見知らぬ相手(75%)
+		IF RAND:5 == 0
+			E = RAND:4
+			IF E == 3 || (S == 1 && E == 2)
+				S = 1				;仮想彼で処理したか？
+				TFLAG:411 = 0
+				CFLAG:(LOCAL:4):ファーストキスの相手 = -1
+				IF TFLAG:[[TFLAG:口上番号]] == 0
+					CSTR:(LOCAL:4):ファーストキスの相手 = 彼氏(実は未経験)
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+					CSTR:(LOCAL:4):ファーストキスの相手 = 彼女(実は未経験)
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+					IF RAND:3 == 0
+						CSTR:(LOCAL:4):ファーストキスの相手 = 彼氏(実は未経験)
+					ELSE
+						CSTR:(LOCAL:4):ファーストキスの相手 = 彼女(実は未経験)
+					ENDIF
+				ENDIF
+			ENDIF
+		ELSE
+			IF TFLAG:405 == 7 && RAND:5 == 0
+				CSTR:(LOCAL:4):ファーストキスの相手 = 夫
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 0 && (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0)
+				CSTR:(LOCAL:4):ファーストキスの相手 = 知らないオトコの人
+			ELSE
+				CSTR:(LOCAL:4):ファーストキスの相手 = 見知らぬオンナ
+			ENDIF
+		ENDIF
+	ELSE
+		IF TFLAG:[[TFLAG:口上番号]] == 0 && (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0)
+			CSTR:(LOCAL:4):ファーストキスの相手 = 元カレ
+		ELSE
+			CSTR:(LOCAL:4):ファーストキスの相手 = 元カノ
+		ENDIF
+	ENDIF
+ENDIF
+
+
+;セックス経験を登録
+IF TFLAG:412 == 0
+	TALENT:(LOCAL:4):処女 = 1
+ELSEIF TFLAG:412 == 1
+	;経験が有る場合、回数を適当に決定
+;	IF TFLAG:[[TFLAG:口上番号]] == 0	;キャラが女性の場合
+		EXP:(LOCAL:4):Ｖ経験 += 1 + RAND:20
+		EXP:(LOCAL:4):絶頂経験 += 1 + RAND:(EXP:(LOCAL:4):Ｖ経験)
+;	ENDIF
+	CFLAG:(LOCAL:4):初体験の相手2 = 1
+	E = RAND:10
+	IF TFLAG:409 >= 2 && TFLAG:409 <= 6		;彼氏/彼女が居る場合
+		E = RAND:10
+		IF E < 5			;半分の確率で恋人
+			IF TFLAG:405 == 7
+				CSTR:(LOCAL:4):処女喪失の相手 = 夫
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):処女喪失の相手 = 彼女
+			ELSE
+				CSTR:(LOCAL:4):処女喪失の相手 = 彼氏
+			ENDIF
+		ELSEIF E < 7 && TFLAG:[[TFLAG:口上番号]] == 0		;2割が道具による喪失(女性のみ)
+			E = RAND:3
+			ELSEIF E == 0
+				CSTR:(LOCAL:4):処女喪失の相手 = バイブ
+			ELSEIF E == 1
+				CSTR:(LOCAL:4):処女喪失の相手 = ディルドー
+			ELSE
+				CSTR:(LOCAL:4):処女喪失の相手 = ローター
+			ENDIF
+		ELSEIF E < 7 && TFLAG:[[TFLAG:口上番号]] != 0		;女性以外(童貞戻し)
+			TALENT:(LOCAL:4):童貞 = 1
+		ELSEIF E == 7
+			IF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):処女喪失の相手 = 知らないオンナの人
+			ELSE
+				CSTR:(LOCAL:4):処女喪失の相手 = 知らないオトコの人
+			ENDIF
+		ELSE
+			IF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):処女喪失の相手 = 元カノ
+			ELSE
+				CSTR:(LOCAL:4):処女喪失の相手 = 元カレ
+			ENDIF
+		ENDIF
+	ELSEIF TFLAG:409 == 7				;背徳的肉体関係
+		E = RAND:8
+		IF E == 0		;兄姉
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 兄
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 義兄
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 姉
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 義姉
+				ENDIF
+			ENDIF
+		ELSEIF E == 1		;弟妹
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 弟
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 義弟
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 妹
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 義妹
+				ENDIF
+			ENDIF
+		ELSEIF E == 2
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 父
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 養父
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 母
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 義母
+				ENDIF
+			ENDIF
+		ELSEIF E == 3		;おじいちゃんおばあちゃん
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				CSTR:(LOCAL:4):処女喪失の相手 = 祖父
+			ELSE
+				CSTR:(LOCAL:4):処女喪失の相手 = 祖母
+			ENDIF
+		;※息子/娘とか孫/孫娘とかは分岐がめんどくさいのでパス
+		ELSEIF E == 4		;おじおば
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 叔父さん
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 伯父さん
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 叔母さん
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 伯母さん
+				ENDIF
+			ENDIF
+		ELSEIF E == 5		;先生と呼ばれる相手
+			E = RAND:5
+			IF E == 0
+				CSTR:(LOCAL:4):処女喪失の相手 = 元担任教師
+			ELSEIF E == 1
+				CSTR:(LOCAL:4):処女喪失の相手 = 体育教師
+			ELSEIF E == 2
+				CSTR:(LOCAL:4):処女喪失の相手 = 校長先生
+			ELSEIF E == 3
+				CSTR:(LOCAL:4):処女喪失の相手 = 用務員
+			ELSEIF E == 4
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):処女喪失の相手 = 家庭教師のお兄さん
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 家庭教師のお姉さん
+				ENDIF
+			ELSEIF E == 5
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):処女喪失の相手 = 家庭教師のおじさん
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 家庭教師のおばさん
+				ENDIF
+			ELSEIF E == 6
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					IF RAND:2 == 0
+						CSTR:(LOCAL:4):処女喪失の相手 = お医者さん
+					ELSE
+						CSTR:(LOCAL:4):処女喪失の相手 = 医療器具
+					ENDIF
+				ELSE
+					E = RAND:5
+					IF E == 0
+						CSTR:(LOCAL:4):処女喪失の相手 = 医療器具
+					ELSEIF E < 4
+						CSTR:(LOCAL:4):処女喪失の相手 = 看護婦さん
+					ELSE
+						CSTR:(LOCAL:4):処女喪失の相手 = 女医さん
+					ENDIF
+				ENDIF
+			ENDIF
+		ELSEIF E == 6		;使用人
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				CSTR:(LOCAL:4):処女喪失の相手 = 使用人の執事
+			ELSE
+				CSTR:(LOCAL:4):処女喪失の相手 = 使用人のメイドさん
+			ENDIF
+		ELSE			;ペット、動物(現状犬のみ)
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				E = RAND:5
+				IF E == 0
+					CSTR:(LOCAL:4):処女喪失の相手 = 野良犬(♂)
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 飼い犬(♂)
+				ENDIF
+			ELSE
+				E = RAND:10
+				IF E < 2
+					CSTR:(LOCAL:4):処女喪失の相手 = 野良犬(♀)
+				ELSEIF E < 9
+					CSTR:(LOCAL:4):処女喪失の相手 = 飼い犬(♀)
+				ELSE
+					CSTR:(LOCAL:4):処女喪失の相手 = 野良犬(♂)
+					;※ごめん、魔が差した
+				ENDIF
+				EXP:(LOCAL:4):獣姦経験 = EXP:(LOCAL:4):獣姦経験 + 1 + RAND:26
+			ENDIF
+		ENDIF
+	ELSEIF ( E == 0 && TFLAG:[[TFLAG:口上番号]] == 0)	;自慰による喪失
+	;童貞の自慰での喪失扱いの判定はしない
+		E = RAND:3
+		IF E == 0			;日用品等
+			CSTR:(LOCAL:4):処女喪失の相手 = 筆記用具
+		ELSEIF E == 1			;野菜など
+			E = RAND:3
+			SIF E == 0
+				CSTR:(LOCAL:4):処女喪失の相手 = まつたけ
+			SIF E == 1
+				CSTR:(LOCAL:4):処女喪失の相手 = バナナ
+			SIF E == 2
+				CSTR:(LOCAL:4):処女喪失の相手 = きゅうり
+			SIF E == 3
+				CSTR:(LOCAL:4):処女喪失の相手 = にんじん
+			SIF E == 4
+				CSTR:(LOCAL:4):処女喪失の相手 = 生たまご
+		ELSE
+			CSTR:(LOCAL:4):処女喪失の相手 = 棒状の何か
+		ENDIF
+	ELSEIF ( E == 1 || S == 1 && E < 7 )		;妄想喪失
+		IF TFLAG:[[TFLAG:口上番号]] == 0
+			E = RAND:4
+			IF E == 3 || (S == 1 && E == 2)
+				S = 1				;仮想彼で処理したか？
+				E = RAND:3
+				IF TFLAG:[[TFLAG:口上番号]] == 0
+					IF E == 0
+						CSTR:(LOCAL:4):処女喪失の相手 = 二次元男子(実は未経験)
+						TALENT:(LOCAL:4):処女 = 1
+					ELSEIF E == 1
+						CSTR:(LOCAL:4):処女喪失の相手 = 妄想彼氏(自慰：自分の指)
+					ELSE
+						CSTR:(LOCAL:4):処女喪失の相手 = 空想彼氏(自慰：棒状の何か)
+					ENDIF
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+					E = RAND:10
+					IF E == 0
+						CSTR:(LOCAL:4):処女喪失の相手 = 妄想彼女(実は未経験)
+						TALENT:(LOCAL:4):童貞 = 1
+					ELSEIF E < 9
+						CSTR:(LOCAL:4):処女喪失の相手 = 二次元彼女(自慰)
+					ELSE
+						CSTR:(LOCAL:4):処女喪失の相手 = ナマコ
+					ENDIF
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+					E = RAND:10
+					IF E == 0
+						IF RAND:3 == 0
+							CSTR:(LOCAL:4):処女喪失の相手 = 妄想彼女(実は未経験)
+						ELSE
+							CSTR:(LOCAL:4):処女喪失の相手 = 妄想彼氏(実は未経験)
+						ENDIF
+						TALENT:(LOCAL:4):童貞 = 1
+					ELSEIF E < 6
+						CSTR:(LOCAL:4):処女喪失の相手 = 妄想彼女(自慰)
+					ELSE
+						CSTR:(LOCAL:4):処女喪失の相手 = 妄想彼氏(自慰)
+					ENDIF
+			ELSE
+				IF TFLAG:[[TFLAG:口上番号]] == 0 && (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0)
+					CSTR:(LOCAL:4):処女喪失の相手 = 知らないオトコの人
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+					CSTR:(LOCAL:4):処女喪失の相手 = 見知らぬオンナ
+				ENDIF
+			ENDIF
+		ENDIF
+	ELSEIF E == 2
+		CSTR:(LOCAL:4):処女喪失の相手 = 睡眠時につき喪失理由不明
+	ELSEIF E == 3
+		CSTR:(LOCAL:4):処女喪失の相手 = 凌辱被害
+	ELSE
+		IF TFLAG:405 == 7 && RAND:3 == 0		;主婦のうち1/3が夫にそれ以外は元恋人に捧げた
+			CSTR:(LOCAL:4):処女喪失の相手 = 夫
+		ELSE						;主婦以外と上記に該当しなかった
+			IF TFLAG:[[TFLAG:口上番号]] == 0 && (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0)
+				CSTR:(LOCAL:4):処女喪失の相手 = 元カレ
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+				CSTR:(LOCAL:4):処女喪失の相手 = 元カノ
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+;アナル経験を登録
+IF TFLAG:413 == 0
+	TALENT:(LOCAL:4):アナル処女 = 1
+ELSEIF TFLAG:413 == 1
+	;経験が有る場合、回数を適当に決定
+	IF TFLAG:[[TFLAG:口上番号]] == 0	;キャラが女性の場合
+		EXP:(LOCAL:4):Ａ経験 += 1 + RAND:10
+		EXP:(LOCAL:4):絶頂経験 += 1 + RAND:(EXP:(LOCAL:4):Ａ経験)
+	ENDIF
+	IF TFLAG:409 >= 2 && TFLAG:409 <= 6		;彼氏/彼女が居る場合
+		E = RAND:10
+		IF E < 5			;半分の確率で恋人
+			IF TFLAG:405 == 7
+				CSTR:(LOCAL:4):童貞喪失の相手 = 夫
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):童貞喪失の相手 = 彼女
+			ELSE
+				CSTR:(LOCAL:4):童貞喪失の相手 = 彼氏
+			ENDIF
+		ELSEIF E < 7 && TFLAG:[[TFLAG:口上番号]] == 0		;2割が道具による喪失
+			E = RAND:3
+			IF E == 0
+				CSTR:(LOCAL:4):童貞喪失の相手 = アナルバイブ
+			ELSEIF E == 1
+				CSTR:(LOCAL:4):童貞喪失の相手 = アナルビーズ
+			ELSEIF E == 2
+				CSTR:(LOCAL:4):童貞喪失の相手 = ビー玉
+			ENDIF
+		ELSEIF E == 7
+			IF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):童貞喪失の相手 = 知らないオンナの人
+			ELSE
+				CSTR:(LOCAL:4):童貞喪失の相手 = 知らないオトコの人
+			ENDIF
+		ELSE
+			IF TFLAG:[[TFLAG:口上番号]] == 1 || ( TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0 )
+				CSTR:(LOCAL:4):童貞喪失の相手 = 元カノ
+			ELSE
+				CSTR:(LOCAL:4):童貞喪失の相手 = 元カレ
+			ENDIF
+		ENDIF
+	ELSEIF TFLAG:409 == 7
+		E = RAND:8
+		IF E == 0		;兄姉
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 兄
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 義兄
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 姉
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 義姉
+				ENDIF
+			ENDIF
+		ELSEIF E == 1		;弟妹
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 弟
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 義弟
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 妹
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 義妹
+				ENDIF
+			ENDIF
+		ELSEIF E == 2
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 父
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 養父
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 母
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 義母
+				ENDIF
+			ENDIF
+		ELSEIF E == 3		;おじいちゃんおばあちゃん
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 祖父
+			ELSE
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 祖母
+			ENDIF
+		;※息子/娘とか孫/孫娘とかは分岐がめんどくさいのでパス
+		ELSEIF E == 4		;おじおば
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 叔父さん
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 伯父さん
+				ENDIF
+			ELSE
+				IF RAND:3 == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 叔母さん
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 伯母さん
+				ENDIF
+			ENDIF
+		ELSEIF E == 5		;先生と呼ばれる相手
+			E = RAND:5
+			IF E == 0
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 元担任教師
+			ELSEIF E == 1
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 体育教師
+			ELSEIF E == 2
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 校長先生
+			ELSEIF E == 3
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 用務員
+			ELSEIF E == 4
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 家庭教師のお兄さん
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 家庭教師のお姉さん
+				ENDIF
+			ELSEIF E == 5
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 家庭教師のおじさん
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 家庭教師のおばさん
+				ENDIF
+			ELSEIF E == 6
+				IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+					IF RAND:2 == 0
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = お医者さん
+					ELSE
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 医療器具
+					ENDIF
+				ELSE
+					E = RAND:5
+					IF E == 0
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 医療器具
+					ELSEIF E < 4
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 看護婦さん
+					ELSE
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 女医さん
+					ENDIF
+				ENDIF
+			ENDIF
+		ELSEIF E == 6		;使用人
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 使用人の執事
+			ELSE
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 使用人のメイドさん
+			ENDIF
+		ELSE			;ペット、動物(現状犬のみ)
+			IF TFLAG:[[TFLAG:口上番号]] == 0 || (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:2 == 0) 
+				E = RAND:5
+				IF E == 0
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 野良犬(♂)
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 飼い犬(♂)
+				ENDIF
+			ELSE
+				E = RAND:10
+				IF E < 2
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 野良犬(♀)
+				ELSEIF E < 9
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 飼い犬(♀)
+				ELSE
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 野良犬(♂)
+					;※ごめん、魔が差した
+				ENDIF
+				EXP:(LOCAL:4):獣姦経験 = EXP:(LOCAL:4):獣姦経験 + 1 + RAND:26
+			ENDIF
+		ENDIF
+	ELSEIF ( E == 1 || S == 1 && E < 7 )		;妄想喪失
+		IF TFLAG:[[TFLAG:口上番号]] == 0
+			E = RAND:4
+			IF E == 3 || (S == 1 && E == 2)
+				S = 1				;仮想彼で処理したか？
+				E = RAND:3
+				IF TFLAG:[[TFLAG:口上番号]] == 0
+					IF E == 0
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 二次元男子(実は未経験)
+						TALENT:(LOCAL:4):アナル処女 = 1
+					ELSEIF E == 1
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 妄想彼氏(自慰：自分の指)
+					ELSE
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 空想彼氏(自慰：棒状の何か)
+					ENDIF
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+					E = RAND:10
+					IF E == 0
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 妄想彼女(実は未経験)
+						TALENT:(LOCAL:4):アナル処女 = 1
+						EXP:(LOCAL:4):Ａ経験 = 0
+						EXP:(LOCAL:4):絶頂経験 = 0
+					ELSE
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 二次元彼女(自慰)
+					ENDIF
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 2
+					E = RAND:10
+					IF E == 0
+						IF RAND:3 == 0
+							CSTR:(LOCAL:4):アナル処女喪失の相手 = 妄想彼女(実は未経験)
+						ELSE
+							CSTR:(LOCAL:4):アナル処女喪失の相手 = 妄想彼氏(実は未経験)
+						ENDIF
+						TALENT:(LOCAL:4):アナル処女 = 1
+						EXP:(LOCAL:4):Ａ経験 = 0
+						EXP:(LOCAL:4):絶頂経験 = 0
+					ELSEIF E < 6
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 妄想彼女(自慰)
+					ELSE
+						CSTR:(LOCAL:4):アナル処女喪失の相手 = 妄想彼氏(自慰)
+					ENDIF
+				ENDIF
+			ELSE
+				IF TFLAG:[[TFLAG:口上番号]] == 0 && (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0)
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 知らないオトコの人
+				ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+					CSTR:(LOCAL:4):アナル処女喪失の相手 = 見知らぬオンナ
+				ENDIF
+			ENDIF
+		ENDIF
+	ELSE
+		IF TFLAG:405 == 7 && RAND:3 == 0		;主婦のうち1/3が夫にそれ以外は元恋人に捧げた
+			CSTR:(LOCAL:4):アナル処女喪失の相手 = 夫
+		ELSE						;主婦以外と上記に該当しなかった
+			IF TFLAG:[[TFLAG:口上番号]] == 0 && (TFLAG:[[TFLAG:口上番号]] == 2 && RAND:3 == 0)
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 元カレ
+			ELSEIF TFLAG:[[TFLAG:口上番号]] == 1
+				CSTR:(LOCAL:4):アナル処女喪失の相手 = 元カノ
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+;性格を登録
+IF TFLAG:414 >= 10
+	TALENT:(LOCAL:4):(TFLAG:414) = 1
+ENDIF
+
+;陰毛を登録
+IF TFLAG:415 <= 1
+	CFLAG:(LOCAL:4):陰毛の状態 = -2 
+ELSEIF TFLAG:415 >= 2 && TFLAG:415 <= 5
+	CFLAG:(LOCAL:4):陰毛の状態 = -1
+ELSEIF TFLAG:415 >= 6 && TFLAG:415 <= 7
+	CFLAG:(LOCAL:4):陰毛の状態 = 15
+ELSEIF TFLAG:415 >= 8
+	CFLAG:(LOCAL:4):陰毛の状態 = 12
+ENDIF
+
+;乙女心系素質を登録
+IF TFLAG:416 >= 30
+	TALENT:(LOCAL:4):(TFLAG:416) = 1
+ENDIF
+
+;痛みに弱い|痛みに強いを登録
+IF TFLAG:417 == 40
+	TALENT:(LOCAL:4):(TFLAG:417) = 1
+ELSEIF TFLAG:417 == 41
+	TALENT:(LOCAL:4):(TFLAG:417) = 1
+ENDIF
+
+;濡れやすい|濡れにくいを登録
+IF TFLAG:418 == 42
+	TALENT:(LOCAL:4):(TFLAG:418) = 1
+ELSEIF TFLAG:418 == 43
+	TALENT:(LOCAL:4):(TFLAG:418) = 1
+ENDIF
+
+;バストサイズの素質を登録
+IF TFLAG:408 == 1
+	TALENT:(LOCAL:4):絶壁 = 1
+ELSEIF TFLAG:408 == 2
+	TALENT:(LOCAL:4):貧乳 = 1
+ELSEIF TFLAG:408 == 3
+	TALENT:(LOCAL:4):巨乳 = 1
+ELSEIF TFLAG:408 == 4
+	TALENT:(LOCAL:4):爆乳 = 1
+ENDIF
+
+;体型の素質を登録
+;身長が150cm未満で[小柄体型]、170cm以上で[大柄]に
+IF BASE:(LOCAL:4):身長 < 150
+	TALENT:(LOCAL:4):小柄体型 = 1
+ELSEIF BASE:(LOCAL:4):身長 >= 170
+	TALENT:(LOCAL:4):大柄 = 1
+ENDIF
+
+;補正後の体力、気力を登録
+MAXBASE:(LOCAL:4):体力 = TFLAG:430
+MAXBASE:(LOCAL:4):気力 = TFLAG:431
+
+BASE:(LOCAL:4):体力 = TFLAG:430
+BASE:(LOCAL:4):気力 = TFLAG:431
+IF TALENT:(LOCAL:4):アイドル
+	MAXBASE:(LOCAL:4):魅力値 += 30
+	BASE:(LOCAL:4):魅力値 += 30
+ELSEIF TALENT:(LOCAL:4):キャバ嬢
+	MAXBASE:(LOCAL:4):魅力値 += 10
+	BASE:(LOCAL:4):魅力値 += 10
+ELSEIF TALENT:(LOCAL:4):ファッションモデル
+	MAXBASE:(LOCAL:4):魅力値 += 20
+	BASE:(LOCAL:4):魅力値 += 20
+ENDIF
+
+;ギャラを登録
+BASE:(LOCAL:4):ギャラ = TFLAG:420
+
+;NTR進行度の上限フラグ設定
+
+
+;名前を決定する
+$NAME_CHECK	;名前チェック用ラベル
+
+CALL FAMILY_NAME_JAPAN
+CALL LAST_NAME_JAPAN_FEMALE
+
+NAME:(LOCAL:4) '= TSTR:50 + TSTR:51
+
+CALLNAME:(LOCAL:4) '= TSTR:51
+NICKNAME:(LOCAL:4) '= TSTR:51
+
+LOCAL:6	= 0	;同名チェックフラグLOCAL:6をリセット
+
+REPEAT CHARANUM
+	IF CALLNAME:COUNT == CALLNAME:(LOCAL:4)
+		;同名があればLOCAL:6に加算
+		LOCAL:6	+= 1
+	ENDIF
+REND
+
+IF LOCAL:6 >= 2
+	GOTO NAME_CHECK
+ENDIF
+
+RETURN 0

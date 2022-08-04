@@ -1,0 +1,40 @@
+﻿;===========================================================
+;実績・みやまけ
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_16
+RESULTS = みやまけ
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_16
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間未依]] || NO:COUNT == [[キャラ:宮間カナ]]) && NO:MASTER == [[キャラ:あなた]] && TALENT:COUNT:永遠の愛 == 1 && PBAND:141 >= 3
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:16 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
+	GLOBAL:16 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:16
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_16
+; 解説文
+PRINTFORML 実の妹である宮間かなで、アンドロイドである宮間未依、かなでのクローン体である宮間カナ……
+PRINTFORML かなでを除いては皆いつの間にか宮間家に住み着き、そしていつの間にか本物の『家族』になっていました
+PRINTFORML この仕事を始めることにならなければ、もしかしたらこのような家族のカタチにならなかったのかもしれません
+PRINTFORML 優しい長女の未依、しっかりもので優等生の次女のかなで、イマドキの少女だけど値は素直な末っ子のカナ
+PRINTFORMW これからも皆を幸せにしてあげてください
+IF FLAG:みやまけボーナス受け取り == 0 && GLOBAL:52 == 1
+	IF GETCHARA([[キャラ:宮間カナ]], 0) >= 0
+		PRINTFORML 《実績解除のボーナスとして実績「俺の妹がこんなにビッチなわけがない」のボーナス使用フラグがリセットされました》
+		FLAG:みやまけボーナス受け取り = 1
+		FLAG:[[FLAG:俺妹ビッチボーナス受け取り]] = 0
+	ENDIF
+ENDIF

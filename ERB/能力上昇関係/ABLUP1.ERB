@@ -1,0 +1,161 @@
+﻿;Ｂ感覚のLvUP処理とその可否判定
+;eratohoA ver1,204のスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;Ｂ感覚のLvUP
+;-------------------------------------------------
+@ABLUP1
+DRAWLINE
+;SIF TALENT:オトコ == 0 && TALENT:絶壁 == 0
+;	PRINT 乳房や
+;PRINTL 乳首の感度をUPします
+;PRINTL Ｂ感覚が高まると、胸への愛撫や搾乳からより大きな快楽が得られます
+;DRAWLINE
+;最大Lvは5、[淫乳]が付いている場合はLv10まで解放
+IF ABL:Ｂ感覚 >= 5 && TALENT:乳狂い == 0
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:Ｂ感覚 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要なＢ感覚の珠
+A = 0
+
+;条件別にＯＫかダメかを記録する
+;Ｂ感覚の珠による可否（I=0:可、I&1:珠不足）
+I = 0
+
+CALL CAN_ABLUP1
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:快Ｂ]]%の珠×{JUEL:快Ｂ}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+ENDIF
+PRINTL 
+
+PRINTL [100] - やめる
+
+
+INPUT
+IF (RESULT < 0 || RESULT > 0) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:Ｂ感覚 += 1
+
+IF RESULT == 0
+	JUEL:快Ｂ -= A
+ENDIF
+
+PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%のレベルが{ABL:Ｂ感覚}になりました
+
+RETURN 0
+
+;-------------------------------------------------
+;Ｂ感覚のLvUP可否判定
+;-------------------------------------------------
+@CAN_ABLUP1
+;Ｂ感覚はLv5が上限、[淫乳]が付いている場合はLv10まで解放
+SIF ABL:Ｂ感覚 >= 5 && TALENT:乳狂い == 0
+	RETURN 0
+SIF ABL:Ｂ感覚 >= 10
+	RETURN 0
+
+;判定変数を空に
+A = 0
+I = 0
+
+IF ABL:Ｂ感覚 == 0
+	A = 1
+ELSEIF ABL:Ｂ感覚 == 1
+	A = 20
+ELSEIF ABL:Ｂ感覚 == 2
+	A = 400
+ELSEIF ABL:Ｂ感覚 == 3
+	A = 8000
+ELSEIF ABL:Ｂ感覚 == 4
+	A = 20000
+ELSEIF ABL:Ｂ感覚 == 5
+	A = 40000
+ELSEIF ABL:Ｂ感覚 == 6
+	A = 60000
+ELSEIF ABL:Ｂ感覚 == 7
+	A = 90000
+ELSEIF ABL:Ｂ感覚 == 8
+	A = 120000
+ELSEIF ABL:Ｂ感覚 == 9
+	A = 180000
+ENDIF
+
+IF TALENT:淫魔
+	TIMES A , 0.01
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	SIF ABL:Ｂ感覚 == 4
+		TIMES A , 2.00
+	SIF ABL:Ｂ感覚 == 5
+		TIMES A , 2.50
+	SIF ABL:Ｂ感覚 >= 6
+		TIMES A , 3.00
+ENDIF
+
+;B鈍感
+SIF TALENT:Ｂ鈍感
+	TIMES A , 1.20
+;巨乳
+SIF TALENT:巨乳
+	TIMES A , 1.10
+;爆乳
+SIF TALENT:爆乳
+	TIMES A , 1.20
+
+;B敏感
+SIF TALENT:Ｂ敏感
+	TIMES A , 0.80
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 0.80
+;色情狂
+SIF TALENT:絶倫
+	TIMES A , 0.20
+;淫乳
+SIF TALENT:乳狂い
+	TIMES A , 0.80
+;貧乳
+SIF TALENT:貧乳
+	TIMES A , 0.80
+;絶壁
+SIF TALENT:絶壁
+	TIMES A , 0.65
+
+;最低でも１個は必要
+SIF A < 1
+	A = 1
+
+;快Ｂの珠で上げられるか？
+SIF JUEL:快Ｂ < A
+	I |= 1
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;
+;
+;

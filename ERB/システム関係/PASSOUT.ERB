@@ -1,0 +1,600 @@
+﻿;=============================================================================
+;失神処理関連
+;=============================================================================
+;失神についての色々--------------------------------
+;失神判定
+;TFLAG:864～882：失神中の状態保存および計算用
+;TFLAG:883～894：失神中のUP保存
+;TFLAG:895は失神したかどうかの判別用
+;TFLAG:896で恐怖、TFLAG:897で絶頂、TFLAG:898で苦痛を管理（少なくとも1つのフラグが2になると失神、失神してる間は2を継続）
+;TFLAG:899で失神中のコマンド実行回数管理（失神したコマンドもカウントする、つまり1以上だと失神中）
+;--------------------------------------------------
+@PASSOUT_CHECK
+;システムを許可していない場合は処理しない
+SIF FLAG:失神なし == 1
+RETURN 0
+
+TFLAG:失神中 = 0
+
+Z = 0
+Z = NOWEX:0 + NOWEX:1 + NOWEX:2 + NOWEX:3
+
+;2コマンド連続で「2箇所以上強絶頂+αの絶頂」を満たすとランダムで失神
+;（失神中はカウントしない、「強絶頂か2箇所以上絶頂」を続けている限りランダムで外れてもフラグは維持）
+IF Z >= 16 && TFLAG:複数強絶頂 == 0 && TFLAG:失神中終了 < 1 && RAND:10 < 8
+	TFLAG:複数強絶頂 = 1
+ELSEIF Z >= 16 && TFLAG:複数強絶頂 == 1 && TFLAG:失神中終了 < 1 && RAND:10 < 6
+	TFLAG:失神中 = 1
+	TFLAG:複数強絶頂 = 2
+	EXP:調教失神経験 += 1
+	PRINTL 失神
+ELSEIF Z < 16 && TFLAG:複数強絶頂 < 2 && TFLAG:失神中終了 < 1
+	TFLAG:複数強絶頂 = 0
+ENDIF
+
+A = PALAM:苦痛
+SIF A >= 15000
+	A -= 15000
+	
+;一度に7500以上の苦痛を受けるか計15000ごとにランダムで失神（既に失神状態の場合はスキップ）
+IF (UP:9 >= 7500 || UP:9 + A >= 15000) && TFLAG:失神中終了 < 1 && RAND:10 < 5
+	IF TFLAG:失神中 == 0
+		TFLAG:失神中 = 2
+		TFLAG:苦痛強 = 2
+		EXP:調教失神経験 += 1
+		PRINTL 失神
+	ELSEIF TFLAG:失神中 == 1
+		TFLAG:失神中 = 4
+		TFLAG:苦痛強 = 2
+	ENDIF
+ENDIF
+
+;一度に5000以上の恐怖を受けるとランダムで失神
+IF UP:10 >= 5000 && TFLAG:失神中終了 < 1 && RAND:10 < 5
+	IF TFLAG:失神中 == 0
+		TFLAG:失神中 = 3
+		TFLAG:恐怖強 = 2
+		EXP:調教失神経験 += 1
+		PRINTL 失神
+	ELSEIF TFLAG:失神中 == 2
+		TFLAG:失神中 = 6
+		TFLAG:恐怖強 = 2
+	ENDIF
+ENDIF
+
+;失神中にコマンド実行
+IF TFLAG:恐怖強 >= 2 || TFLAG:複数強絶頂 >= 2 || TFLAG:苦痛強 >= 2
+	IF TFLAG:失神中終了 == 0
+		TFLAG:失神中終了 = 1
+	ELSEIF TFLAG:失神中終了 >= 1
+		TFLAG:失神中終了 += 1
+	ENDIF
+ENDIF
+
+;失神中に（失神した次のコマンドから）
+IF TFLAG:失神中終了 >= 2
+	;強烈な絶頂、一度に5000以上の苦痛を受ける、失神中に3回コマンドを実行のいずれかでランダムで失神から回復
+	;一度条件を満たした場合回復するか調教を終えるまでコマンド実行毎に判定
+	IF Z >= 16 || (TFLAG:失神中終了 >= 2 && UP:9 >= 5000) || TFLAG:失神中終了 >= 4
+		TFLAG:恐怖強 = 3
+		TFLAG:複数強絶頂 = 3
+		TFLAG:苦痛強 = 3
+		PRINTL 失神から回復
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;失神中のテキスト処理
+;-------------------------------------------------
+@PASSOUT_TEXT
+;失神した時
+IF TFLAG:失神中 > 0
+	REPEAT 31
+		TFLAG:(864 + COUNT) = 0
+	REND
+ENDIF
+
+;失神回復時のテキストや口上は以下に羅列した情報を参照します。
+;判定に加えたい調教状況やアイテムを追加したい場合はここに書き加えて下さい。
+;非挿入中且つコンドーム装備中に大量射精するとゴムから溢れる…という個人的設定のため少しややこしくなってます
+;余りにも面倒なためテキストは射精系と装備系に分け、どちらかしか表示されないようになってます（優先度は射精＞装備）。
+;また、ぶっかけ用に使われているCFLAG:74(eraIm@sPでは現在未使用）もここで一旦リセットします。
+
+;それ以降
+IF TFLAG:失神中終了 > 1
+	IF TFLAG:口で射精 + TFLAG:助手が射精 >= 1
+		IF SELECTCOM == 80 || CFLAG:74 == 1 || CFLAG:74 == 2
+			IF TEQUIP:主人コンドーム == 0
+				TFLAG:868 += TFLAG:口で射精 + TFLAG:助手が射精
+			ELSE
+				TFLAG:868 += (TFLAG:口で射精 + TFLAG:助手が射精) - 1
+			ENDIF
+		ELSEIF SELECTCOM == 29 || CFLAG:74 == 3 || CFLAG:74 == 5
+			IF TEQUIP:主人コンドーム == 0
+				TFLAG:869 += TFLAG:口で射精 + TFLAG:助手が射精
+			ELSE
+				TFLAG:869 += (TFLAG:口で射精 + TFLAG:助手が射精) - 1
+			ENDIF
+		ENDIF
+	ENDIF
+	IF TFLAG:手で射精 + TFLAG:助手が射精 >= 1
+		IF TEQUIP:主人コンドーム == 0
+			TFLAG:870 += TFLAG:手で射精 + TFLAG:助手が射精
+		ELSE
+			TFLAG:870 += (TFLAG:手で射精 + TFLAG:助手が射精) - 1
+		ENDIF
+	ENDIF
+	IF TFLAG:セックスで射精 + TFLAG:助手が射精 >= 1
+		IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 ||SELECTCOM == 64 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+			SIF TEQUIP:主人コンドーム == 0
+				TFLAG:871 += TFLAG:セックスで射精 + TFLAG:助手が射精
+		ELSEIF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29 || SELECTCOM == 36
+			SIF TEQUIP:主人コンドーム == 0
+				TFLAG:872 += TFLAG:セックスで射精 + TFLAG:助手が射精
+		ENDIF
+	ENDIF
+	TFLAG:873 += TFLAG:処女喪失
+	IF TFLAG:セックスで射精 + TFLAG:助手が射精 >= 1
+		IF SELECTCOM == 33 || CFLAG:74 == 4 || CFLAG:74 == 6 || CFLAG:74 == 7
+			IF TEQUIP:主人コンドーム == 0
+				TFLAG:874 += TFLAG:助手が射精
+			ELSE
+				TFLAG:874 += TFLAG:助手が射精 - 1
+			ENDIF
+		ENDIF
+	ENDIF
+	SIF TFLAG:セックスで射精 >= 1
+		TFLAG:875 += TFLAG:セックスで射精
+	IF TFLAG:触手が射精 >= 1
+		IF SELECTCOM == 101
+			TFLAG:876 += 100
+		ELSEIF SELECTCOM == 102
+			TFLAG:876 += 1000
+		ELSE
+			TFLAG:876 += TFLAG:触手が射精
+		ENDIF
+	ENDIF
+ENDIF
+
+;失神初回
+IF TFLAG:失神中終了 == 1
+	;バイブ等挿入系アイテム装備判定
+	TFLAG:867 = 0
+	TFLAG:877 = 0
+	SIF TEQUIP:アナルバイブ == 1 || TEQUIP:アナルビーズ == 1
+		TFLAG:867 = 1
+	SIF TEQUIP:バイブ == 1
+		TFLAG:877 = 1
+	;取り付け系アイテム装備判定
+	TFLAG:866 = 0
+	TFLAG:878 = 0
+	SIF TEQUIP:クリキャップ == 1 || TEQUIP:オナホール == 1
+		TFLAG:866 = 1
+	SIF TEQUIP:ニプルキャップ == 1 || TEQUIP:搾乳機 == 1
+		TFLAG:878 = 1
+	;被虐系アイテム装備判定
+	TFLAG:864 = 0
+	TFLAG:865 = 0
+	TFLAG:879 = 0
+	SIF TEQUIP:縄
+		TFLAG:864 = TEQUIP:縄
+	SIF TEQUIP:ボールギャグ == 1
+		TFLAG:865 = TEQUIP:ボールギャグ
+	SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 1 || TEQUIP:アナル電極 == 1
+		TFLAG:879 = 1
+	;媚薬・利尿剤使用判定
+	TFLAG:880 = 0
+	IF TEQUIP:媚薬効果
+		TFLAG:880 = 21
+	ELSEIF TEQUIP:利尿剤効果
+		TFLAG:880 = 22
+	ENDIF
+	;シチュエーション(特殊コマンド)系の実行中判定
+	TFLAG:881 = 0
+	IF TEQUIP:撮影中
+		TFLAG:881 = 53
+	ELSEIF TEQUIP:野外プレイ
+		TFLAG:881 = 54
+	ELSEIF TEQUIP:お風呂場プレイ
+		TFLAG:881 = 58
+	ENDIF
+	;触手系コマンド実行中判定
+	TFLAG:882 = TEQUIP:触手召喚
+
+	SIF CFLAG:74 != 0
+		CFLAG:74 = 0
+
+;２回目以降
+ELSE
+	;バイブ等挿入系アイテム装備判定
+	SIF TEQUIP:バイブ == 1 && (TFLAG:877 != 1)
+		TFLAG:877 = (-1)
+	SIF (TEQUIP:アナルバイブ == 1 || TEQUIP:アナルビーズ == 1) && (TFLAG:867 != 1)
+		TFLAG:867 = (-1)
+	;取り付け系アイテム装備判定
+	SIF (TEQUIP:クリキャップ == 1 || TEQUIP:オナホール == 1) && (TFLAG:866 != 1)
+		TFLAG:866 = (-1)
+	SIF (TEQUIP:ニプルキャップ == 1 || TEQUIP:搾乳機 == 1) && (TFLAG:878 != 1)
+		TFLAG:878 = (-1)
+	;被虐系アイテム装備判定
+	SIF TEQUIP:縄 && TFLAG:864 != TEQUIP:縄
+		TFLAG:864 = (-1)
+	SIF TEQUIP:ボールギャグ == 1 && TFLAG:865 != TEQUIP:ボールギャグ
+		TFLAG:865 = (-1)
+	SIF (TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 1 || TEQUIP:アナル電極 == 1) && (TFLAG:879 != 1)
+		TFLAG:879 = (-1)
+	;媚薬・利尿剤使用判定
+	SIF (TEQUIP:媚薬効果 && TFLAG:880 != 21) || (TEQUIP:利尿剤効果 && TFLAG:880 != 22)
+		TFLAG:880 = (-1)
+	;シチュエーション(特殊コマンド)系の実行中判定
+	SIF (TEQUIP:撮影中 && TFLAG:881 != 53)  || (TEQUIP:野外プレイ && TFLAG:881 != 54) || (TEQUIP:お風呂場プレイ && TFLAG:881 != 58)
+		TFLAG:881 = (-1)
+	;触手系コマンド実行中判定
+	SIF TEQUIP:触手召喚 == 1 && TFLAG:882 != 1
+		TFLAG:882 = (-1)
+ENDIF
+
+IF TFLAG:失神中終了 >= 1
+	IF TFLAG:失神中 == 1
+		;口上テンプレいじるの面倒なんでここに口上っぽいもの載せておきますね(^^)
+		SIF TEQUIP:ボールギャグ == 0
+		PRINTFORML 「んはあぁぁあぁぁぁー！！…あ゛っ……は…ぉ…ぉぉ…♪」
+		PRINTFORML 
+		PRINTFORML …%CALLNAME:TARGET%は絶頂とともに全身を痙攣させると、その場に倒れこんだ
+		PRINTFORML 強すぎる刺激に意識を失ってしまったようだ
+	ELSEIF TFLAG:失神中 == 2
+		SIF TEQUIP:ボールギャグ == 0
+		PRINTFORML 「きひいぃぃぃーっ！！…ゆ、ゆる…して……ぁあ゛…」
+		PRINTFORML 
+		PRINTFORML …%CALLNAME:TARGET%はその場に倒れこんでしまった。痛みのあまり気を失ったようだ
+	ELSEIF TFLAG:失神中 == 3
+		SIF TEQUIP:ボールギャグ == 0
+		PRINTFORML 「きひいぃぃぃーっ！！…ゆ、ゆる…して……ぁあ゛…」
+		PRINTFORML 
+		PRINTFORML …%CALLNAME:TARGET%はその場に倒れこんでしまった。恐怖のあまり気を失ったようだ
+	ELSEIF TFLAG:失神中 == 4
+		SIF TEQUIP:ボールギャグ == 0
+		PRINTFORML 「んはあぁぁあぁぁぁー！！…ゆ、ゆる…して……ぁあ゛…」
+		PRINTFORML 
+		PRINTFORML …%CALLNAME:TARGET%は全身を痙攣させると、その場に倒れこんでしまった
+		PRINTFORML 快感と痛みに同時に責め立てられ意識を失ってしまったようだ
+	ELSEIF TFLAG:失神中 == 6
+		SIF TEQUIP:ボールギャグ == 0
+		PRINTFORML 「きひいぃぃぃーっ！！…ゆ、ゆる…して……ぁあ゛…」
+		PRINTFORML 
+		PRINTFORML …%CALLNAME:TARGET%は全身を痙攣させると、その場に倒れこんでしまった
+		PRINTFORML 痛みと恐怖に耐えかね意識を失ってしまったようだ
+	ELSEIF TFLAG:恐怖強 == 3 && TFLAG:複数強絶頂 == 3 && TFLAG:苦痛強 == 3
+		PRINTFORML %CALLNAME:TARGET%は意識を取り戻した
+		WAIT
+		;地の文章カット
+		SIF CFLAG:99 == 0
+			CALL PASSOUT_MESSAGE
+		;失神回復時口上の呼び出し TFLAG:200が中身違うのでこれもスルーする
+		;TFLAG:屈服刻印2 = 12
+		;CALL SELF_KOJO
+		;PRINTL 
+	ELSE
+		PRINTFORML 
+		PRINTFORML %CALLNAME:TARGET%はまだ目を覚まさない
+	ENDIF
+ENDIF
+
+@PASSOUT_MESSAGE
+;自分でもよく分からないくらいメチャクチャな上、下に進むほど大雑把
+
+IF TFLAG:挿しっぱなし == 1
+	PRINTFORM 知らぬ間に
+	SIF SELECTCOM == 101 || SELECTCOM == 102
+		PRINT 触手に
+	IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 || SELECTCOM == 101 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+		PRINT 膣内
+	ELSE
+		PRINT 尻穴
+	ENDIF
+	PRINTFORM を犯されていることに慌てふためく%CALLNAME:TARGET%をよそに、
+	IF SELECTCOM == 101 || SELECTCOM == 102
+		PRINT 触手
+	ELSE
+		PRINTFORM %CALLNAME:PLAYER%
+	ENDIF
+	PRINTW は抽送を続けている
+ENDIF
+
+IF TFLAG:873 >= 1
+	IF TFLAG:挿しっぱなし == 1
+		IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+			PRINT ペニスを捻じ込まれている
+		ELSEIF SELECTCOM == 101
+			PRINT 触手を捻じ込まれている
+		ENDIF
+	ENDIF
+	PRINT 秘所から垂れ落ちる血
+	IF TFLAG:871 == 1
+		PRINT の混ざった精液
+	ELSEIF TFLAG:871 >= 2
+		PRINT の混ざった大量の精液
+	ELSEIF TFLAG:876 >= 100 && TFLAG:876 < 200
+		PRINT の混ざった汚液
+	ELSEIF TFLAG:876 >= 200
+		PRINT の混ざった大量の汚液
+	ENDIF
+	PRINTL に気付き、
+	PRINTFORMW 知らない間に処女を奪われたことに呆然としている…
+ELSEIF TFLAG:871 >= 1
+	IF TFLAG:挿しっぱなし == 1
+		IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+			PRINT ペニスを捻じ込まれている
+		ELSEIF SELECTCOM == 101
+			PRINT 触手を捻じ込まれている
+		ENDIF
+	ENDIF
+	PRINT 秘所
+	IF TFLAG:872 >= 1
+		PRINT と
+		IF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29
+			PRINT ペニスを捻じ込まれている
+		ELSEIF SELECTCOM == 102
+			PRINT 触手を捻じ込まれている
+		ENDIF
+		PRINT 尻穴
+	ENDIF
+	PRINT から
+	IF TFLAG:871 >= 2 || TFLAG:872 >= 2
+		PRINT 溢れ出る大量の
+	ELSE
+		PRINT 垂れ落ちる
+	ENDIF
+	PRINT 精液に気付
+	IF TALENT:恋心 == 1
+		PRINTW き戸惑っているようだ…
+	ELSEIF TALENT:臆病 == 1
+		PRINTW き今にも泣き出してしまいそうだ…
+	ELSE
+		PRINTFORMW き%CALLNAME:PLAYER%を睨みつけてきた…
+	ENDIF
+ELSEIF TFLAG:872 >= 1
+	IF TFLAG:挿しっぱなし == 1
+		IF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29
+			PRINT ペニスを捻じ込まれている
+		ELSEIF SELECTCOM == 102
+			PRINT 触手を捻じ込まれている
+		ENDIF
+	ENDIF
+	PRINT 尻穴から
+		IF TFLAG:871 >= 2 || TFLAG:872 >= 2
+			PRINT 溢れ出る大量の
+		ELSE 
+			PRINT 垂れ落ちる
+		ENDIF
+		PRINT 精液に気付
+	IF TALENT:恋心 == 1
+		PRINTW き戸惑っているようだ…
+	ELSEIF TALENT:臆病 == 1
+		PRINTW き今にも泣き出してしまいそうだ…
+	ELSE
+		PRINTFORMW き%CALLNAME:PLAYER%を睨みつけてきた…
+	ENDIF
+ELSEIF TFLAG:876 >= 1
+	PRINT 全身を滴る
+	SIF TFLAG:868 + TFLAG:869 + TFLAG:870 + TFLAG:871 + TFLAG:872 + TFLAG:873 + TFLAG:874 + TFLAG:875 >= 1
+		PRINT 精液と
+	PRINTW 触手の吐いた汚液に、戸惑いを隠せないようだ…
+ELSEIF TFLAG:868 + TFLAG:869 + TFLAG:870 + TFLAG:874 + TFLAG:875 >= 1
+	PRINT 気を失うまでは無かったはずの身体
+	SIF TFLAG:868 + TFLAG:869 + TFLAG:870 + TFLAG:874 + TFLAG:875 >= 3
+		PRINT 中
+	PRINT に撒かれた精液に、戸惑
+	IF TALENT:恋心 == 1
+		PRINTW っているようだ…
+	ELSE
+		PRINTW い怯えているようだ…
+	ENDIF
+ELSEIF TFLAG:867 < 0 || TFLAG:877 < 0
+	PRINTFORM いつの間にか
+	IF TEQUIP:バイブ == 1
+		IF TEQUIP:アナルバイブ == 1
+			PRINT 両穴にバイブ
+		ELSEIF TEQUIP:アナルビーズ == 1
+			PRINT 両穴にそれぞれバイブとビーズ
+		ELSE
+			PRINT バイブ
+		ENDIF
+	ELSEIF TEQUIP:アナルバイブ == 1
+		PRINT アナルにバイブ
+	ELSEIF TEQUIP:アナルビーズ == 1
+		PRINT アナルにビーズ
+	ENDIF	
+	PRINT を突き入れられ
+	SIF TFLAG:878 < 0 || TFLAG:866 < 0
+		PRINT 異様な器具を取り付けられ
+	SIF TFLAG:879 < 0 || TFLAG:864 < 0 || TFLAG:865 < 0
+		PRINT 器具を取り付けられ
+	SIF TEQUIP:撮影中
+		PRINT 、その姿を撮影され
+	PRINTW ていることに戸惑っているようだ…
+ELSEIF TFLAG:878 < 0 || TFLAG:866 < 0
+	PRINT いつの間にか身体に器具を取り付けられていることに戸惑っているようだ…
+ELSEIF TFLAG:879 < 0 || TFLAG:864 < 0 || TFLAG:865 < 0
+	PRINTFORM いつの間にか
+	IF TEQUIP:縄
+		PRINT 縛られ
+		SIF TFLAG:878 < 0 || TFLAG:866 < 0
+			PRINT た上、異様な器具を取り付けられ
+		PRINTFORM ていること
+	ELSEIF TEQUIP:ボールギャグ == 1 || TEQUIP:アナル電極 == 1 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 1
+		PRINT 異様な器具を取り付けられていること
+	ENDIF
+	PRINTFORMW に気付き戸惑い怯えているようだ…	
+ELSEIF TFLAG:880 < 0
+	PRINTFORMW 自分の身体の異変に気付き戸惑いを隠せないようだ
+ELSEIF TFLAG:881 < 0
+	IF TEQUIP:撮影中
+		PRINT 自分を映しているビデオカメラ
+	ELSEIF TEQUIP:野外プレイ
+		PRINT いつの間にか屋外に連れ出されていたこと
+	ELSEIF TEQUIP:お風呂場プレイ
+		PRINT いつの間にか風呂場に連れて来られていたこと
+	ENDIF
+	PRINTFORMW に気付き戸惑い怯えているようだ…
+ELSEIF TFLAG:882 < 0
+	PRINT いつの間にか身体中に絡み付いている触手に戸惑い怯えているようだ…
+ENDIF
+IF (TFLAG:867 + TFLAG:877 + TFLAG:878 + TFLAG:866 + TFLAG:879 + TFLAG:864 + TFLAG:865 + TFLAG:881 + TFLAG:882) < 0 || TFLAG:872 >= 1
+	WAIT
+ENDIF
+
+G = TFLAG:868 + TFLAG:869 + TFLAG:870 + TFLAG:874 + TFLAG:875 + TFLAG:876
+X = TFLAG:867 + TFLAG:877 + TFLAG:878 + TFLAG:866 + TFLAG:879 + TFLAG:864 + TFLAG:865 + TFLAG:880 + TFLAG:881
+Y = TFLAG:871 + TFLAG:872
+TIMES X , -1
+
+;-------------------------------------------------
+;失神中のパラメータ処理
+;-------------------------------------------------
+@PASSOUT_PALAM_CHECK
+IF TFLAG:失神中 > 0
+	TFLAG:883 += UP:6
+	TFLAG:884 += UP:8
+	TFLAG:885 += UP:10
+	TFLAG:886 += UP:11
+	TFLAG:887 += UP:12
+	TFLAG:888 += UP:13
+ELSE
+	TFLAG:889 += UP:6
+	TFLAG:890 += UP:8
+	TFLAG:891 += UP:10
+	TFLAG:892 += UP:11
+	TFLAG:893 += UP:12
+	TFLAG:894 += UP:13
+ENDIF
+
+UP:7 = 0
+UP:4 = 0
+UP:6 = 0
+UP:8 = 0
+UP:9 = 0
+UP:10 = 0
+UP:11 = 0
+UP:12 = 0
+UP:13 = 0
+
+;-------------------------------------------------
+;失神回復時のパラメータ処理
+;-------------------------------------------------
+@PASSOUT_PALAM_UP
+A = TFLAG:883 * (12 - TFLAG:失神中終了)
+B = TFLAG:884 * (12 - TFLAG:失神中終了)
+C = TFLAG:885 * (12 - TFLAG:失神中終了)
+D = TFLAG:886 * (12 - TFLAG:失神中終了)
+E = TFLAG:887 * (12 - TFLAG:失神中終了)
+F = TFLAG:888 * (12 - TFLAG:失神中終了)
+IF TFLAG:失神中終了 > 2
+	A += TFLAG:889 * (TFLAG:失神中終了 - 2)
+	B += TFLAG:890 * (TFLAG:失神中終了 - 2)
+	C += TFLAG:891 * (TFLAG:失神中終了 - 2)
+	D += TFLAG:892 * (TFLAG:失神中終了 - 2)
+	E += TFLAG:893 * (TFLAG:失神中終了 - 2)
+	F += TFLAG:894 * (TFLAG:失神中終了 - 2)
+ENDIF
+A /= 600
+B /= 240
+C /= 60
+D /= 10
+E /= 10
+F /= 10
+IF G >= 1
+	A += A * G
+	B += B * G
+	C += C * G
+	D += D * G
+	E += E * G
+	F += F * G
+	IF ABL:精液中毒 == 3
+		UP:5 += 1000
+	ELSEIF ABL:精液中毒 == 4
+		UP:5 += 1500
+	ELSEIF ABL:精液中毒 >= 5
+		UP:5 += 2000
+	ENDIF
+ENDIF
+
+IF X >= 1
+	A += A * X
+	B += B * X
+	C += C * X
+	D += D * X
+	E += E * X
+	F += F * X
+ENDIF
+
+IF Y >= 1
+	A += A * Y
+	B += B * Y
+	C += C * Y
+	D += D * Y
+	E += E * Y
+	F += F * Y
+	IF ABL:精液中毒 == 3
+		UP:5 += 1000
+	ELSEIF ABL:精液中毒 == 4
+		UP:5 += 1500
+	ELSEIF ABL:精液中毒 >= 5
+		UP:5 += 2000
+	ENDIF
+ENDIF
+
+;IF TFLAG:挿しっぱなし
+	;TIMES A , 1.50
+	;TIMES B , 1.50 
+	;TIMES C , 1.50
+	;TIMES D , 1.50
+	;TIMES E , 1.50
+	;TIMES F , 1.50
+;ENDIF
+
+IF TFLAG:873 >= 1
+	A *= 2
+	B *= 2
+	C *= 2
+	D *= 2
+	E *= 2
+	F *= 2
+ENDIF
+
+Z = 100
+Z -= MARK:屈服刻印 * 10
+Z -= ABL:信頼 * 5
+
+SIF TALENT:恋心
+	Z /= 2
+
+UP:7 += A * (100 - Z) / 100
+UP:8 += B * (100 - Z) / 100
+UP:10 += C * (100 - Z) / 100
+UP:11 += D * Z / 100
+UP:12 += E * Z / 100
+UP:13 += F * Z / 100
+
+IF TFLAG:恐怖強 == 3 || TFLAG:複数強絶頂 == 3 || TFLAG:苦痛強 == 3
+	TFLAG:恐怖強 = 0
+	TFLAG:複数強絶頂 = 0
+	TFLAG:苦痛強 = 0
+	TFLAG:失神中終了 = 0
+ENDIF
+
+;-------------------------------------------------
+;野外プレイ中の失神処理
+;-------------------------------------------------
+@PASSOUT_OUTDOOR
+;野外プレイ解除
+TEQUIP:野外プレイ = 0
+PRINTFORMW %CALLNAME:TARGET%が失神したため、部屋に戻ることにした…
+
+;調教者の体力・気力が若干減少
+BASE:MASTER:体力 -= 20
+BASE:MASTER:気力 -= 10
+SIF BASE:MASTER:体力 < 0
+	BASE:MASTER:体力  = 0
+SIF BASE:MASTER:気力 < 0
+	BASE:MASTER:気力  = 0

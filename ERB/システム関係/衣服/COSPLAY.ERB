@@ -1,0 +1,192 @@
+﻿;===========================================================
+;コスチューム名称表示
+;===========================================================
+@PRINT_COSTUME
+IF TFLAG:コスプレ衣装 == 1
+	PRINT 初音○クの
+ELSEIF TFLAG:コスプレ衣装 == 2
+	PRINT セーラー○ーンの
+ELSEIF TFLAG:コスプレ衣装 == 3
+	PRINT 綾波○イの
+ELSEIF TFLAG:コスプレ衣装 == 4
+	PRINT 暁美○むらの
+ELSEIF TFLAG:コスプレ衣装 == 5
+	PRINT アン○ラの
+ELSEIF TFLAG:コスプレ衣装 == 6
+	PRINT 高坂○乃の
+ELSEIF TFLAG:コスプレ衣装 == 7
+	PRINT ＣＰＧの
+ELSEIF TFLAG:コスプレ衣装 == 8
+	PRINT 聖ク○ニカ学園の
+ELSEIF TFLAG:コスプレ衣装 == 9
+	PRINT 血○騎士団副団長の
+ELSEIF TFLAG:コスプレ衣装 == 10
+	PRINT 私立○リアン女学園
+ELSEIF TFLAG:コスプレ衣装 == 11
+	PRINT 黒○姫の
+ELSEIF TFLAG:コスプレ衣装 == 12
+	PRINT 箱○学園の
+ELSEIF TFLAG:コスプレ衣装 == 13
+	PRINT 七森○の
+ELSEIF TFLAG:コスプレ衣装 == 14
+	PRINT ○色の闇の
+ELSEIF TFLAG:コスプレ衣装 == 15
+	PRINT 私立○が丘女子高校の
+ELSEIF TFLAG:コスプレ衣装 == 16
+	PRINT 天○学園の
+ELSEIF TFLAG:コスプレ衣装 == 17
+	PRINT ○河の妖精
+ELSEIF TFLAG:コスプレ衣装 == 18
+	PRINT キュア○ロディの
+ELSEIF TFLAG:コスプレ衣装 == 19
+	PRINT ユ○カゼの
+ELSEIF TFLAG:コスプレ衣装 == 20
+	PRINT 私立ア○ティーエ学園の
+ELSEIF TFLAG:コスプレ衣装 == 21
+	PRINT ○應女学院の
+ELSEIF TFLAG:コスプレ衣装 == 22
+	PRINT 風祭学院○校の
+ELSEIF TFLAG:コスプレ衣装 == 23
+	PRINT ○衛ヶ原学園の
+;ELSEIF TFLAG:コスプレ衣装 == 28
+;△裸エプロンコスプレ中、だとなんか違うので保留。
+ELSEIF TFLAG:コスプレ衣装 == 31
+	PRINTFORM %CSTR:MASTER:アイドルユニット名%の
+ELSE
+	PRINT 
+ENDIF
+
+;===========================================================
+;コスプレ着用コスチュームの選択
+;===========================================================
+@COSPLAY_COSTUME
+PRINTFORML ◆どの衣装を着せますか？◆
+$INPUT_LOOP_1
+DRAWLINE
+PRINTFORML [ 0] - 初音○クの衣装
+PRINTFORML [ 1] - セーラー○ーンの衣装
+PRINTFORML [ 2] - 綾波○イのプラグスーツ
+PRINTFORML [ 3] - 暁美○むらの魔法少女服
+PRINTFORML [ 4] - アン○ラの制服
+PRINTFORML [ 5] - 高坂○乃の制服
+PRINTFORML [ 6] - ColorfulPureGirlsの制服
+IF ITEM:[[ITEM:コスプレ衣装・ライトノベルパック]] == 1
+	PRINTFORML [ 7] - 聖ク○ニカ学園の制服
+	PRINTFORML [ 8] - 血○騎士団副団長の衣装
+	PRINTFORML [ 9] - 私立○リアン女学園の制服
+	PRINTFORML [10] - 黒○姫のアバター衣装
+ENDIF
+IF ITEM:[[ITEM:コスプレ衣装・アニメパック]] == 1
+	PRINTFORML [11] - 箱○学園の制服
+	PRINTFORML [12] - 七森○の制服
+	PRINTFORML [13] - ○色の闇の衣装
+	PRINTFORML [14] - 私立○が丘女子高校の制服
+ENDIF
+IF ITEM:[[ITEM:コスプレ衣装・マンガパック]] == 1
+	PRINTFORML [15] - 天○学園の制服・ブレザータイプ
+	PRINTFORML [16] - ○河の妖精のステージ衣装
+	PRINTFORML [17] - キュア○ロディの衣装
+	PRINTFORML [18] - ユ○カゼの忍装束
+ENDIF
+IF ITEM:[[ITEM:コスプレ衣装・美少女ゲームパック]] == 1
+	PRINTFORML [19] - 私立ア○ティーエ学園の制服
+	PRINTFORML [20] - ○應女学院の制服
+	PRINTFORML [21] - 風祭学院○校の制服
+	PRINTFORML [22] - ○衛ヶ原学園の制服
+ENDIF
+IF ITEM:64 == 1
+	PRINTFORML [23] - 
+	PRINTFORML [24] - 
+	PRINTFORML [25] - 
+	PRINTFORML [26] - 
+ENDIF
+IF ITEM:エプロン == 1
+	PRINTFORML [27] - 裸エプロン
+ENDIF
+IF FLAG:アイドルユニット結成
+	PRINTFORML [30] - %CSTR:MASTER:アイドルユニット名%の制服
+ENDIF
+DRAWLINE
+INPUT
+
+IF RESULT == 0 && ABL:オタク知識 >= 1
+	PRINTFORMW %CALLNAME:TARGET%に初音○クの衣装を着せた
+	TFLAG:コスプレ衣装 = 1
+ELSEIF RESULT == 1 && ABL:オタク知識 >= 2
+	PRINTFORMW %CALLNAME:TARGET%にセーラー○ーンの衣装を着せた
+	TFLAG:コスプレ衣装 = 2
+ELSEIF RESULT == 2 && ABL:オタク知識 >= 3
+	PRINTFORMW %CALLNAME:TARGET%に綾波○イの衣装を着せた
+	TFLAG:コスプレ衣装 = 3
+ELSEIF RESULT == 3 && ABL:オタク知識 >= 1
+	PRINTFORMW %CALLNAME:TARGET%に暁美○むらの魔法少女服を着せた
+	TFLAG:コスプレ衣装 = 4
+ELSEIF RESULT == 4
+	PRINTFORMW %CALLNAME:TARGET%にアン○ラの制服を着せた
+	TFLAG:コスプレ衣装 = 5
+ELSEIF RESULT == 5
+	PRINTFORMW %CALLNAME:TARGET%に高坂○乃の制服を着せた
+	TFLAG:コスプレ衣装 = 6
+ELSEIF RESULT == 6
+	PRINTFORMW %CALLNAME:TARGET%にColorfulPureGirlsの制服を着せた
+	TFLAG:コスプレ衣装 = 7
+ELSEIF RESULT == 7
+	PRINTFORMW %CALLNAME:TARGET%に聖ク○ニカ学園の制服を着せた
+	TFLAG:コスプレ衣装 = 8
+ELSEIF RESULT == 8 && ABL:オタク知識 >= 5
+	PRINTFORMW %CALLNAME:TARGET%に血○騎士団副団長の衣装を着せた
+	TFLAG:コスプレ衣装 = 9
+ELSEIF RESULT == 9 && ABL:オタク知識 >= 1
+	PRINTFORMW %CALLNAME:TARGET%に私立○リアン女学園の制服を着せた
+	TFLAG:コスプレ衣装 = 10
+ELSEIF RESULT == 10 && ABL:オタク知識 >= 6
+	PRINTFORMW %CALLNAME:TARGET%に黒○姫のアバター衣装を着せた
+	TFLAG:コスプレ衣装 = 11
+ELSEIF RESULT == 11 && ABL:オタク知識 >= 1
+	PRINTFORMW %CALLNAME:TARGET%に箱○学園の制服を着せた
+	TFLAG:コスプレ衣装 = 12
+ELSEIF RESULT == 12 && ABL:オタク知識 >= 3
+	PRINTFORMW %CALLNAME:TARGET%に七森○の制服を着せた
+	TFLAG:コスプレ衣装 = 13
+ELSEIF RESULT == 13 && ABL:オタク知識 >= 7
+	PRINTFORMW %CALLNAME:TARGET%に○色の闇の衣装を着せた
+	TFLAG:コスプレ衣装 = 14
+ELSEIF RESULT == 14
+	PRINTFORMW %CALLNAME:TARGET%に私立○が丘女子高校の制服を着せた
+	TFLAG:コスプレ衣装 = 15
+ELSEIF RESULT == 15 && ABL:オタク知識 >= 4
+	PRINTFORMW %CALLNAME:TARGET%に天○学園の制服・ブレザータイプを着せた
+	TFLAG:コスプレ衣装 = 16
+ELSEIF RESULT == 16 && ABL:オタク知識 >= 7
+	PRINTFORMW %CALLNAME:TARGET%に○河の妖精のステージ衣装を着せた
+	TFLAG:コスプレ衣装 = 17
+ELSEIF RESULT == 17 && ABL:オタク知識 >= 8
+	PRINTFORMW %CALLNAME:TARGET%にキュア○ロディの衣装を着せた
+	TFLAG:コスプレ衣装 = 18
+ELSEIF RESULT == 18 && ABL:オタク知識 >= 5
+	PRINTFORMW %CALLNAME:TARGET%にユ○カゼの忍装束を着せた
+	TFLAG:コスプレ衣装 = 19
+ELSEIF RESULT == 19 && ABL:オタク知識 >= 1
+	PRINTFORMW %CALLNAME:TARGET%に私立ア○ティーエ学園の制服を着せた
+	TFLAG:コスプレ衣装 = 20
+ELSEIF RESULT == 20 && ABL:オタク知識 >= 1
+	PRINTFORMW %CALLNAME:TARGET%に○應女学院の制服を着せた
+	TFLAG:コスプレ衣装 = 21
+ELSEIF RESULT == 21 && ABL:オタク知識 >= 4
+	PRINTFORMW %CALLNAME:TARGET%に風祭学院○校の制服を着せた
+	TFLAG:コスプレ衣装 = 22
+ELSEIF RESULT == 22 && ABL:オタク知識 >= 2
+	PRINTFORMW %CALLNAME:TARGET%に○衛ヶ原学園の制服を着せた
+	TFLAG:コスプレ衣装 = 23
+						;****スライムパッチ追加ここから****
+ELSEIF RESULT == 27 && ITEM:エプロン == 1
+	PRINTFORMW %CALLNAME:TARGET%に裸エプロンを着せた
+	TFLAG:コスプレ衣装 = 28
+						;****スライムパッチ追加ここまで****
+ELSEIF RESULT == 30 && FLAG:アイドルユニット結成
+	PRINTFORMW %CALLNAME:TARGET%に%CSTR:MASTER:アイドルユニット名%の制服を着せた
+	TFLAG:コスプレ衣装 = 31
+ELSE
+	PRINTFORMW 着用を拒否されました
+	GOTO INPUT_LOOP_1
+ENDIF

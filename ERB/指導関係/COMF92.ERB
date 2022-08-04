@@ -1,0 +1,62 @@
+﻿;-------------------------------------------------
+;乳首ローター
+;道具使用コマンド：調教対象のクリトリスをローターで刺激
+;追加されるソース：快B,露出,逸脱
+;-------------------------------------------------
+@COM92
+
+PRINTL 乳首ローター
+SAVESTR:0 = 乳首ローター
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 10
+LOSEBASE:気力 += 80
+
+SOURCE:12 = 120
+SOURCE:14 = 70
+
+;ABL:Ｂ感覚をみる
+IF ABL:Ｂ感覚 == 0
+	SOURCE:17 = 150
+ELSEIF ABL:Ｂ感覚 == 1
+	SOURCE:17 = 300
+ELSEIF ABL:Ｂ感覚 == 2
+	SOURCE:17 = 675
+ELSEIF ABL:Ｂ感覚 == 3
+	SOURCE:17 = 1200
+ELSEIF ABL:Ｂ感覚 == 4
+	SOURCE:17 = 1800
+ELSE
+	SOURCE:17 = 2250
+ENDIF
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式ローター >= 1
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:17 , 1.20
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+PRINTFORML %EXPNAME:[[EXP:Ｂ開発経験]]%+1
+EXP:Ｂ開発経験 += 1
+
+RETURN 1

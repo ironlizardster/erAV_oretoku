@@ -1,0 +1,70 @@
+﻿;=================================================
+;ターン終了時の職業素質持ちへの経験入手処理
+;=================================================
+@JOB_EXEC
+;203:アイドル 402:モデル 421:キャバ嬢
+
+
+FOR LOCAL, 0, CHARANUM
+	SIF LOCAL == MASTER
+		CONTINUE
+	;別にALLSAMESなんて使う理由はないのだが
+	SIF ALLSAMES(TALENT:LOCAL:アイドル,TALENT:LOCAL:ファッションモデル,TALENT:LOCAL:キャバ嬢)
+		CONTINUE
+	; 体力が無ければ休む
+	IF BASE:LOCAL:体力 < 500
+		PRINTFORML 体調の優れない%CALLNAME:LOCAL%は仕事を休んだようだ
+	ELSE
+		IF TALENT:LOCAL:アイドル
+			LOCAL:1 = 203
+		ELSEIF TALENT:LOCAL:ファッションモデル
+			LOCAL:1 = 402
+		ELSEIF TALENT:LOCAL:キャバ嬢
+			LOCAL:1 = 421
+		ENDIF
+		CALLFORM JOB_EXEC_{LOCAL:1}(LOCAL)
+		DRAWLINE
+	ENDIF
+	DRAWLINE
+NEXT
+
+@JOB_EXEC_203(ARG)
+;アイドル
+
+PRINTFORML %NAME:ARG%はアイドルとしてレッスンを積んでいます……
+JUEL:ARG:習得 += 500
+PRINTFORMW 習得の珠＋500
+
+SELECTCASE RAND:3
+	;被写、歌唱、舞踊
+	CASE 0
+		EXP:ARG:被写経験 += 1
+		PRINTFORMW 被写経験＋1
+	CASE 1
+		EXP:ARG:歌唱経験 += 1
+		PRINTFORMW 歌唱経験＋1
+	CASE 2
+		EXP:ARG:舞踊経験 += 1
+		PRINTFORMW 舞踊経験＋1
+ENDSELECT
+
+
+@JOB_EXEC_402(ARG)
+;モデル
+
+JUEL:ARG:習得 += 500
+EXP:ARG:被写経験 += 1
+
+PRINTFORML %NAME:ARG%はモデルの仕事をしています……
+PRINTFORMW 習得の珠＋500
+PRINTFORMW 被写経験＋1
+
+@JOB_EXEC_421(ARG)
+;モデル
+
+JUEL:ARG:習得 += 500
+EXP:ARG:会話経験 += 1
+
+PRINTFORML %NAME:ARG%はキャバ嬢の仕事をしています……
+PRINTFORMW 習得の珠＋500
+PRINTFORMW 会話経験＋1

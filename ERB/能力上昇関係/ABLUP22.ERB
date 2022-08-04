@@ -1,0 +1,420 @@
+﻿;レズっ気のLvUP処理とその可否判定
+;eratohoA ver1,204のスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;レズっ気のLvUP
+;-------------------------------------------------
+@ABLUP22
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+DRAWLINE
+;PRINTL 奴隷のレズっ気を高めます
+;PRINTL レズっ気が高いと、女同士の性行為や奉仕からより大きな快楽を得られるようになります
+;DRAWLINE
+;レズっ気はLv5が上限
+;[解放][倒錯的][両刀][男嫌い][狂気]が付いている場合はLv10まで解放
+;[淫魔]、[お姫様]、かなでとカナも
+IF ABL:レズっ気 >= 5 && (TALENT:解放 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:男性不信 == 0 && TALENT:狂気 == 0 && TALENT:淫魔 == 0 && TALENT:お姫様 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]])
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:レズっ気 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な欲情の珠
+A = 0
+;必要なレズ経験
+B = 0
+;必要な屈服の珠
+C = 0
+;必要な快Ｃの珠
+D = 0
+;必要な異常経験回数
+E = 0
+
+;条件別にＯＫかダメかを記録する
+;欲情＋屈服の珠による可否（I=0:可、I&1:珠不足、I&2:経験不足、I&4:能力不足）
+I = 0
+;快Ｃの珠による可否（I=0:可、I&1:珠不足、I&2:経験不足、I&4:能力不足）
+J = 0
+
+CALL CAN_ABLUP22
+
+;ＬＶ３から４、４から５に上げるときは異常経験必要（素質：[レズ]なら無視できる）
+SIF E > 0
+	PRINTFORML %EXPNAME:[[EXP:異常経験]]%{E}以上(現在{EXP:異常経験})かつ
+
+;欲望が必要
+PRINTFORML %ABLNAME:[[ABL:欲望]]%{ABL:レズっ気 + 1}LV以上(現在{ABL:欲望}LV)かつ
+
+;欲情＋屈服の珠で上げる場合
+PRINTFORM [0] - %PALAMNAME:[[PALAM:欲情]]%の珠×{JUEL:欲情}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+	SIF I & 4
+		PRINT 能力不足 
+ENDIF
+PRINTL 
+SIF C > 0
+	PRINTFORML 　　　%PALAMNAME:[[PALAM:屈服]]%の珠×{JUEL:屈服}/{C}
+PRINTFORML 　　　%EXPNAME:[[EXP:レズ経験]]%　{EXP:レズ経験}/{B}
+
+;快Ｃの珠で上げる場合
+IF D > 0
+	PRINTFORM [1] - %PALAMNAME:[[PALAM:快Ｃ]]%の珠×{JUEL:快Ｃ}/{D} ……
+	IF J == 0
+		PRINT ＯＫ
+	ELSE
+		SIF J & 1
+			PRINT 珠不足 
+		SIF J & 2
+			PRINT 経験不足 
+		SIF J & 4
+			PRINT 能力不足 
+	ENDIF
+	PRINTL 
+	PRINTFORML 　　　%EXPNAME:[[EXP:レズ経験]]%　{EXP:レズ経験}/{B}
+ENDIF
+
+PRINTL [100] - やめる
+
+
+INPUT
+IF (RESULT < 0 || RESULT > 1) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF J == 256 && RESULT == 1
+	RESTART
+ELSEIF J != 0 && RESULT == 1
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:レズっ気 += 1
+
+IF RESULT == 0
+	JUEL:欲情 -= A
+	JUEL:屈服 -= C
+ELSEIF RESULT == 1
+	JUEL:快Ｃ -= D
+ENDIF
+
+PRINTFORML %ABLNAME:[[ABL:レズっ気]]%のレベルが{ABL:レズっ気}になりました
+
+RETURN 0
+
+;-------------------------------------------------
+;レズっ気のLvUP可否判定
+;-------------------------------------------------
+@CAN_ABLUP22
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;レズっ気はLv10が上限
+;[解放][倒錯的][両刀][男嫌い][狂気]が付いている場合はLv10まで解放
+IF ABL:レズっ気 >= 5 && (TALENT:解放 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:男性不信 == 0 && TALENT:狂気 == 0 && TALENT:淫魔 == 0 && TALENT:お姫様 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]])
+	RETURN 0
+ELSEIF ABL:レズっ気 >= 10
+	RETURN 0
+ENDIF
+
+;判定変数を空に
+I = 0
+J = 0
+
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+
+
+
+IF ABL:レズっ気 == 0
+	A = 200
+	B = 50
+	C = 0
+	D = 1000
+ELSEIF ABL:レズっ気 == 1
+	A = 1000
+	B = 150
+	C = 0
+	D = 5000
+ELSEIF ABL:レズっ気 == 2
+	A = 3000
+	B = 300
+	C = 1000
+	D = 0
+ELSEIF ABL:レズっ気 == 3
+	A = 8000
+	B = 500
+	C = 2000
+	D = 0
+ELSEIF ABL:レズっ気 == 4
+	A = 20000
+	B = 800
+	C = 5000
+	D = 0
+ELSEIF ABL:レズっ気 == 5
+	A = 40000
+	B = 1200
+	C = 10000
+	D = 0
+ELSEIF ABL:レズっ気 == 6
+	A = 80000
+	B = 1800
+	C = 13000
+	D = 0
+ELSEIF ABL:レズっ気 == 7
+	A = 150000
+	B = 2600
+	C = 18000
+	D = 0
+ELSEIF ABL:レズっ気 == 8
+	A = 200000
+	B = 3600
+	C = 30000
+	D = 0
+ELSEIF ABL:レズっ気 == 9
+	A = 300000
+	B = 5000
+	C = 50000
+	D = 0
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	IF ABL:レズっ気 == 3
+		TIMES A , 1.50
+		TIMES B , 1.50
+		TIMES C , 1.50
+	ELSEIF ABL:レズっ気 == 4
+		TIMES A , 2.00
+		TIMES B , 2.00
+		TIMES C , 2.00
+	ELSEIF ABL:レズっ気 == 5
+		TIMES A , 2.50
+		TIMES B , 2.50
+		TIMES C , 2.50
+	ELSEIF ABL:レズっ気 >= 6
+		TIMES A , 3.00
+		TIMES B , 3.00
+		TIMES C , 3.00
+	ENDIF
+ENDIF
+
+;ＬＶ３以上に上げるときは異常経験必要（素質：[解放][倒錯的][両刀][狂気]なら無視できる）
+SIF ABL:レズっ気 >= 3 && (TALENT:解放 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:狂気 == 0 && TALENT:淫魔 == 0 && TALENT:お姫様 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]])
+	E = ABL:レズっ気 - 2
+
+;素直
+IF TALENT:素直
+	TIMES A , 0.95
+	TIMES B , 0.95
+	TIMES C , 0.95
+	TIMES D , 0.95
+ENDIF
+;無関心
+IF TALENT:クール
+	TIMES A , 1.20
+	TIMES B , 1.20
+	TIMES C , 1.20
+	TIMES D , 1.20
+ENDIF
+;好奇心
+IF TALENT:好奇心
+	TIMES A , 0.95
+	TIMES B , 0.95
+	TIMES C , 0.95
+	TIMES D , 0.95
+ENDIF
+;保守的
+IF TALENT:保守的
+	TIMES A , 1.20
+	TIMES B , 1.20
+	TIMES C , 1.20
+	TIMES D , 1.20
+ENDIF
+
+;貞操観念
+IF TALENT:貞操観念
+	TIMES A , 1.20
+	TIMES B , 1.20
+	TIMES C , 1.20
+	TIMES D , 1.20
+;貞操無頓着
+ELSEIF TALENT:貞操無頓着
+	TIMES A , 0.95
+	TIMES B , 0.95
+	TIMES C , 0.95
+	TIMES D , 0.95
+ENDIF
+
+;献身的
+IF TALENT:献身的
+	TIMES A , 0.95
+	TIMES B , 0.95
+	TIMES C , 0.95
+	TIMES D , 0.95
+ENDIF
+
+;快感に素直
+IF TALENT:快感に素直
+	TIMES A , 0.95
+	TIMES B , 0.95
+	TIMES C , 0.95
+	TIMES D , 0.95
+;快感の否定
+ELSEIF TALENT:快感の否定
+	TIMES A , 1.20
+	TIMES B , 1.20
+	TIMES C , 1.20
+	TIMES D , 1.20
+ENDIF
+
+;倒錯的
+IF TALENT:倒錯的
+	TIMES A , 0.80
+	TIMES B , 0.80
+	TIMES C , 0.80
+	TIMES D , 0.80
+ENDIF
+
+;淫乱
+IF TALENT:淫乱
+	TIMES A , 0.80
+	TIMES B , 0.80
+	TIMES C , 0.80
+	TIMES D , 0.80
+ENDIF
+
+;色情狂
+IF TALENT:絶倫
+	TIMES A , 0.20
+	TIMES B , 0.20
+	TIMES C , 0.20
+	TIMES D , 0.20
+ENDIF
+
+
+;女嫌い
+IF TALENT:ボーイッシュ
+	TIMES A , 2.00
+	TIMES B , 2.00
+	TIMES C , 2.00
+	TIMES D , 2.00
+ENDIF
+
+;両刀
+IF TALENT:両刀
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+	TIMES D , 0.50
+ENDIF
+;男嫌い
+IF TALENT:男性不信
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+	TIMES D , 0.50
+ENDIF
+;狂気
+IF TALENT:狂気
+	TIMES A , 0.50
+	TIMES B , 0.50
+	TIMES C , 0.50
+	TIMES D , 0.50
+ENDIF
+
+;お姫様
+IF TALENT:お姫様
+	TIMES A , 0.75
+	TIMES B , 0.75
+	TIMES C , 0.75
+	TIMES D , 0.75
+ENDIF
+
+;かなで
+IF NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]
+	TIMES A , 0.70
+	TIMES B , 0.70
+	TIMES C , 0.70
+	TIMES D , 0.70
+ENDIF
+
+;マザコン
+IF TALENT:マザコン
+	TIMES A , 0.95
+	TIMES B , 0.95
+	TIMES C , 0.95
+	TIMES D , 0.95
+ENDIF
+
+IF TALENT:淫魔
+	TIMES A , 0.10
+	TIMES B , 0.10
+	TIMES C , 0.10
+	TIMES D , 0.10
+ENDIF
+
+;最低でも1回・1個は必要
+SIF A < 1
+	A = 1
+SIF B < 1
+	B = 1
+
+;異常経験が不足
+IF EXP:異常経験 < E
+	I |= 2
+	J |= 2
+ENDIF
+
+;欲情の珠が不足
+SIF JUEL:欲情 < A
+	I |= 1
+;屈服の珠が不足
+SIF JUEL:屈服 < C
+	I |= 1
+;レズ経験が不足
+SIF EXP:レズ経験 < B
+	I |= 2
+
+;欲望がレズっ気+1Lvでないといけない
+IF ABL:欲望 < ABL:レズっ気 + 1
+	;欲望が不足
+	I |= 4
+	J |= 4
+ENDIF
+
+;Ｃ感覚で上げる場合
+IF D > 0
+	;快Ｃの珠が不足
+	SIF JUEL:快Ｃ < D
+		J |= 1
+	;レズ経験が不足
+	SIF EXP:レズ経験 < B
+		J |= 2
+ELSE
+	J = 256
+ENDIF
+
+IF I == 0 || J == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+;
+;
+;

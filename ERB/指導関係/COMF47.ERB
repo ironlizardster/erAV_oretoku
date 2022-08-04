@@ -1,0 +1,127 @@
+﻿;-------------------------------------------------
+;ボンデージ装着
+;助手系コマンド
+;-------------------------------------------------
+@COM47
+
+PRINTL ボンデージ装着
+SAVESTR:0 = ボンデージ装着
+CALL TRAIN_MESSAGE_B
+
+;終了時は修正なし
+IF TEQUIP:助手ボンデージ
+	TEQUIP:助手ボンデージ = 0
+	RETURN 1
+ENDIF
+
+LOSEBASE:体力 += 0
+;マゾっ気が高いと気力消費減少
+IF ABL:マゾっ気 == 0
+	LOSEBASE:気力 += 60
+ELSEIF ABL:マゾっ気 <= 2 
+	LOSEBASE:気力 += 45
+ELSE
+	LOSEBASE:気力 += 30
+ENDIF
+
+;ボンデージルックの装着
+TEQUIP:助手ボンデージ = 1
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;ボンデージ装着中
+;-------------------------------------------------
+@EQUIP_COM47
+
+PRINTFORML ＜%NAME:ASSI%ボンデージ装着中＞
+
+;マゾっ気が高いと気力消費減少
+IF ABL:マゾっ気 == 0
+	LOSEBASE:気力 += 60
+ELSEIF ABL:マゾっ気 <= 2 
+	LOSEBASE:気力 += 45
+ELSE
+	LOSEBASE:気力 += 30
+ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+A = 300
+
+SIF TALENT:ASSI:[[TALENT:ONLY ONE EMPRESS]]
+	A *= 3
+
+;PALAM:恐怖をみる
+IF PALAM:恐怖 < PALAMLV:1
+	TIMES A , 1.00
+ELSEIF PALAM:恐怖 < PALAMLV:2
+	TIMES A , 1.10
+ELSEIF PALAM:恐怖 < PALAMLV:3
+	TIMES A , 1.20
+ELSEIF PALAM:恐怖 < PALAMLV:4
+	TIMES A , 1.30
+ELSEIF PALAM:恐怖 >= PALAMLV:4
+	TIMES A , 1.40
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 0
+	SOURCE:11 += 0
+	SOURCE:10 += 0
+	SOURCE:15 += 100
+	TIMES A, 0.60
+ELSEIF ABL:マゾっ気 == 1
+	SOURCE:11 += 50
+	SOURCE:10 += 150
+	SOURCE:15 += 0
+	TIMES A, 1.00
+ELSEIF ABL:マゾっ気 == 2
+	SOURCE:11 += 100
+	SOURCE:10 += 300
+	SOURCE:15 += 0
+	TIMES A, 1.60
+ELSEIF ABL:マゾっ気 == 3
+	SOURCE:11 += 150
+	SOURCE:10 += 600
+	SOURCE:15 += 0
+ELSEIF ABL:マゾっ気 == 4
+	SOURCE:11 += 200
+	SOURCE:10 += 1000
+	SOURCE:15 += 0
+ELSEIF ABL:マゾっ気 >= 5
+	SOURCE:11 += 300
+	SOURCE:10 += 2000
+	SOURCE:15 += 0
+ENDIF
+
+;ASSIのABL:サドっ気をみる
+IF ABL:ASSI:サドっ気 == 0
+	TIMES A , 0.20
+ELSEIF ABL:ASSI:サドっ気 == 1
+	TIMES A , 0.50
+ELSEIF ABL:ASSI:サドっ気 == 2
+	TIMES A , 1.00
+ELSEIF ABL:ASSI:サドっ気 == 3
+	TIMES A , 1.50
+ELSEIF ABL:ASSI:サドっ気 == 4
+	TIMES A , 2.50
+ELSEIF ABL:ASSI:サドっ気 >= 5
+	TIMES A , 3.00
+ENDIF
+
+;臆病
+SIF TALENT:臆病
+	TIMES A , 2.00
+
+SOURCE:14 += A
+
+UP:10 += SOURCE:14
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;
+RETURN 1

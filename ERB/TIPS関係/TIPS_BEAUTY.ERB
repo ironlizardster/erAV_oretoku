@@ -1,0 +1,116 @@
+﻿;===========================================================
+;TIPS 魅力値目次
+;===========================================================
+@TIPS_BEAUTY
+PRINTFORML 《ＴＩＰＳ》
+PRINTFORML 魅力値について
+DRAWLINE
+PRINTL  [0] - 魅力値の効果
+PRINTL  [1] - 現在魅力値の減少条件
+PRINTL  [2] - 現在魅力値の回復条件
+PRINTL  [3] - 美容感覚の上昇条件
+PRINTL  [4] - 最大魅力値の増加条件
+DRAWLINE
+PRINTL [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL TIPS_BEAUTYPOINT
+ELSEIF RESULT == 1
+	CALL TIPS_DOWNBEAUTY
+ELSEIF RESULT == 2
+	CALL TIPS_BEAUTY_RECOVER
+ELSEIF RESULT == 3
+	CALL TIPS_BEAUTYSENSE
+ELSEIF RESULT == 4
+	CALL TIPS_MAXBEAUTY
+ELSEIF RESULT == 999
+	CALL TIPS_MAIN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+
+;===========================================================
+;魅力値の効果
+;===========================================================
+@TIPS_BEAUTYPOINT
+
+DRAWLINE
+PRINTFORML ◆魅力値の効果◆
+PRINTFORML 現在魅力値を1/100した倍率が撮影したビデオの売却金額に乗算される
+PRINTFORML （例：現在魅力値が115の場合、ビデオの売却金額が1.15倍）
+DRAWLINE
+WAIT
+CALL TIPS_BEAUTY
+
+;===========================================================
+;魅力値の減少条件
+;===========================================================
+@TIPS_DOWNBEAUTY
+
+DRAWLINE
+PRINTFORML ◆現在魅力値の減少条件◆
+PRINTFORML 指導1回につき必ず5減少
+PRINTFORML なお、指導が強制終了した場合は0～5の範囲で更に減少する
+PRINTFORML 指導以外では娼館による営業、特定条件下で解禁されるミッションでも減少する場合がある
+PRINTFORML 
+PRINTFORML また指導・娼館営業・ミッション中に以下の条件を満たした場合、追加で更に減少する
+PRINTFORML 
+PRINTFORML ○　　　処女喪失　……　-10
+PRINTFORML ○アナル処女喪失　……　 -5
+PRINTFORML ○ファーストキス　……　 -5～10
+PRINTFORML ※ファーストキスは「口をつける」行為すべてで判定され通常のキスの場合は魅力値が5減少、
+PRINTFORML 　フェラチオやクンニなど「唇以外の部位」でのファーストキスの場合は魅力値が10減少する
+DRAWLINE
+WAIT
+CALL TIPS_BEAUTY
+
+;===========================================================
+;魅力値の回復条件
+;===========================================================
+@TIPS_BEAUTY_RECOVER
+
+DRAWLINE
+PRINTFORML ◆現在魅力値の回復条件◆
+PRINTFORML 月末処理時に現在の美容感覚のレベルと同等の数値＋0～5回復する
+PRINTFORML また女子寮を建設しておりエステルームを拡張済みで、キャラクターにエステルームを使用させている場合
+PRINTFORML キャラクターの最大魅力値を1/100し四捨五入した数値が週末処理時に回復する
+PRINTFORML （例：最大魅力値が150のキャラの場合、週末処理時に2回復）
+PRINTFORML ミッションクリアにより解禁されるスペシャルエステを利用した場合、最大魅力値まで回復する
+PRINTFORML ※ただし各キャラクターごとに1回しか利用できない
+DRAWLINE
+WAIT
+CALL TIPS_BEAUTY
+
+;===========================================================
+;美容感覚の上昇条件
+;===========================================================
+@TIPS_BEAUTYSENSE
+
+DRAWLINE
+PRINTFORML ◆美容感覚の上昇条件◆
+PRINTFORML キャラクターの信頼LV3以上で使用可能になるショップ画面の「お願いする」で
+PRINTFORML エステに通ってもらい、一定の経験を積むと美容感覚LVが上昇する
+PRINTFORML ただし職業系素質を取得していない場合はLV5までしか上昇させられない
+DRAWLINE
+WAIT
+CALL TIPS_BEAUTY
+
+;===========================================================
+;最大魅力値の増加条件
+;===========================================================
+@TIPS_MAXBEAUTY
+
+DRAWLINE
+PRINTFORML ◆最大魅力値の増加条件◆
+PRINTFORML 以下の条件を満たした場合、最大魅力値が増加する
+PRINTFORML
+PRINTFORML ○【ＡＶ女優】を取得した後、ランダムで発生するスカウトイベントで職業系素質を取得した
+PRINTFORML ○娼館営業の結果【風俗嬢】や【高級娼婦】を取得した
+PRINTFORML ○特定条件下で解禁されるミッションに成功した
+PRINTFORML ○特定条件下で実行可能な「遺伝子改造：淫魔化」を実行した
+DRAWLINE
+WAIT
+CALL TIPS_BEAUTY

@@ -1,0 +1,212 @@
+﻿;===========================================================
+;ファーストキスの状況
+;===========================================================
+@FIRSTKISS_DETAIL_CALC
+
+VARSET LOCAL, 0
+IF CFLAG:ファーストキス喪失日付固定 == 0
+	IF CFLAG:ファーストキス喪失月 == 1 || CFLAG:ファーストキス喪失月 == 2 || CFLAG:ファーストキス喪失月 == 4 || CFLAG:ファーストキス喪失月 == 6 || CFLAG:ファーストキス喪失月 == 7 || CFLAG:ファーストキス喪失月 == 9 || CFLAG:ファーストキス喪失月 == 11 
+		IF CFLAG:ファーストキス喪失日 == 1
+			CFLAG:ファーストキス喪失日付固定 = RAND:7
+				SIF CFLAG:ファーストキス喪失日付固定 == 0
+					CFLAG:ファーストキス喪失日付固定 = 1
+		ELSEIF CFLAG:ファーストキス喪失日 == 2
+			CFLAG:ファーストキス喪失日付固定 = 8 + RAND:7
+		ELSEIF CFLAG:ファーストキス喪失日 == 3
+			CFLAG:ファーストキス喪失日付固定 = 15 + RAND:8
+			SIF CFLAG:ファーストキス喪失日付固定 == 14
+				CFLAG:ファーストキス喪失日付固定 = 15
+		ELSEIF CFLAG:ファーストキス喪失日 == 4
+			CFLAG:ファーストキス喪失日付固定 = 23 + RAND:7
+		ENDIF
+	ELSE
+		IF CFLAG:ファーストキス喪失日 == 1
+			CFLAG:ファーストキス喪失日付固定 = RAND:7
+				SIF CFLAG:ファーストキス喪失日付固定 == 0
+					CFLAG:ファーストキス喪失日付固定 = 1
+		ELSEIF CFLAG:ファーストキス喪失日 == 2
+			CFLAG:ファーストキス喪失日付固定 = 7 + RAND:7
+		ELSEIF CFLAG:ファーストキス喪失日 == 3
+			CFLAG:ファーストキス喪失日付固定 = 14 + RAND:7
+			SIF CFLAG:ファーストキス喪失日付固定 == 14
+				CFLAG:ファーストキス喪失日付固定 = 15
+		ELSEIF CFLAG:ファーストキス喪失日 == 4
+			CFLAG:ファーストキス喪失日付固定 = 21 + RAND:7
+		ELSEIF CFLAG:ファーストキス喪失日 == 5
+			CFLAG:ファーストキス喪失日付固定 = 28 + RAND:7
+			SIF CFLAG:ファーストキス喪失日付固定 >= 31
+				CFLAG:ファーストキス喪失日付固定 = 31
+		ENDIF		
+	ENDIF
+	SIF CFLAG:ファーストキス喪失日付固定 == MAXBASE:誕生日 && CFLAG:ファーストキス喪失月 == MAXBASE:誕生月
+		CFLAG:ファーストキス喪失誕生日記念 = 1
+ENDIF
+
+;===========================================================
+;CFLAG:ファーストキス喪失年齢 = 年齢
+;CFLAG:ファーストキス喪失月 = 月
+;CFLAG:ファーストキス喪失日 = 週
+;CFLAG:ファーストキス喪失場所 = 場所
+;CFLAG:ファーストキス喪失シチュ = 状況
+;CFLAG:ファーストキス喪失日付固定 = 日付固定用
+;===========================================================
+@FIRSTKISS_DETAIL
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	SETCOLOR 0xF58F98 
+	PRINT 　
+	CALL HEART_CODE
+	PRINT ファーストキス：
+
+IF ABL:信頼 < 3 && NO:TARGET != [[キャラ:あなた]]
+	PRINTL 経験済
+
+ELSE
+
+
+
+CALL FIRSTKISS_DETAIL_CALC
+
+IF CFLAG:ファーストキス喪失年齢 == 0
+	PRINTFORM 何年か前の
+ELSE
+	PRINTFORM  {CFLAG:ファーストキス喪失年齢}歳の
+ENDIF
+
+IF CFLAG:ファーストキス喪失月 == 0
+	PRINTFORM ある日
+ELSE
+	SIF CFLAG:ファーストキス喪失月 <= 9
+		PRINTFORM  
+	PRINTFORM {CFLAG:ファーストキス喪失月}月
+ENDIF
+
+IF ( CFLAG:ファーストキス喪失年齢 == 0 && CFLAG:ファーストキス喪失月 == 0 ) || CFLAG:ファーストキス喪失日付固定 == 0
+ELSE
+	SIF CFLAG:ファーストキス喪失日付固定 <= 9
+		PRINTFORM  
+	PRINTFORM {CFLAG:ファーストキス喪失日付固定}日
+ENDIF
+
+PRINTFORM に
+
+IF CFLAG:ファーストキス喪失場所 == 0 || CFLAG:ファーストキス喪失場所 >= 15
+ELSE
+	IF CFLAG:ファーストキス喪失場所 == 1
+		PRINTFORM %CALLNAME:TARGET%の部屋
+	ELSEIF CFLAG:ファーストキス喪失場所 == 2 && CFLAG:ファーストキスの相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏とのＳＥＸ回数 >= 1
+		IF CSTR:ファーストキスの相手 == ""
+			PRINTFORM 元カレの部屋
+		ELSE
+			PRINTFORM %CSTR:ファーストキスの相手%（元カレ）の部屋
+		ENDIF		
+	ELSEIF CFLAG:ファーストキス喪失場所 == 2 && CFLAG:ファーストキスの相手 == 8 && TALENT:彼氏あり == 1
+		IF CSTR:ファーストキスの相手 == ""
+			PRINTFORM カレシの部屋
+		ELSE
+			PRINTFORM %CSTR:ファーストキスの相手%（カレシ）の部屋
+		ENDIF				
+	ELSEIF CFLAG:ファーストキス喪失場所 == 3
+		PRINTFORM ラブホテル
+	ELSEIF CFLAG:ファーストキス喪失場所 == 4
+		PRINTFORM 海
+	ELSEIF CFLAG:ファーストキス喪失場所 == 5
+		PRINTFORM 学校
+	ELSEIF CFLAG:ファーストキス喪失場所 == 6
+		PRINTFORM 廃工場
+	ELSEIF CFLAG:ファーストキス喪失場所 == 7
+		PRINTFORM 娼館
+	ELSEIF CFLAG:ファーストキス喪失場所 == 8
+		PRINTFORM 電車の中
+	ELSEIF CFLAG:ファーストキス喪失場所 == 9
+		PRINTFORM バスの中
+	ELSEIF CFLAG:ファーストキス喪失場所 == 10
+		PRINTFORM 野外
+	ELSEIF CFLAG:ファーストキス喪失場所 == 11
+		PRINTFORM プール
+	ELSEIF CFLAG:ファーストキス喪失場所 == 12
+		PRINTFORM 秘密の地下室
+	ELSEIF CFLAG:ファーストキス喪失場所 == 13
+		PRINTFORM 会員制の秘密クラブ
+	ELSEIF CFLAG:ファーストキス喪失場所 == 14
+		PRINTFORM 撮影スタジオ
+	ENDIF
+	PRINTFORM で、
+ENDIF
+
+SIF CFLAG:ファーストキス喪失誕生日記念 == 1
+	PRINTFORM 誕生日記念に
+
+IF CFLAG:ファーストキスの相手 == 0
+	PRINTFORM 覚えていない誰か
+ELSEIF CFLAG:ファーストキスの相手 == 1
+	PRINTFORM %CSTR:ファーストキスの相手%
+ELSEIF CFLAG:ファーストキスの相手 == 2
+	PRINTFORM 売春で名前も知らない男性客
+ELSEIF CFLAG:ファーストキスの相手 == 3
+	PRINTFORM 売春で名前も知らない女性客
+ELSEIF CFLAG:ファーストキスの相手 == 4
+	PRINTFORM バイブ
+ELSEIF CFLAG:ファーストキスの相手 == 5
+	PRINTFORM 極太バイブ
+ELSEIF CFLAG:ファーストキスの相手 == 6
+	PRINTFORM 売春で名前も知らない客
+ELSEIF CFLAG:ファーストキスの相手 == 7
+	PRINTFORM 痴漢
+ELSEIF CFLAG:ファーストキスの相手 == 8 && CFLAG:827 == 1
+	IF CSTR:ファーストキスの相手 == ""
+		PRINTFORM 元カレ
+	ELSE
+		PRINTFORM %CSTR:ファーストキスの相手%（元カレ）
+	ENDIF	
+ELSEIF CFLAG:ファーストキスの相手 == 8 && TALENT:彼氏あり == 1
+	IF CSTR:ファーストキスの相手 == ""
+		PRINTFORM カレシ
+	ELSE
+		PRINTFORM %CSTR:ファーストキスの相手%（カレシ）
+	ENDIF	
+ELSEIF CFLAG:ファーストキスの相手 == 9
+	PRINTFORM セフレの%CSTR:セフレ姓%
+ELSEIF CFLAG:ファーストキスの相手 == 11
+	PRINTFORM 不良
+;;;このあたりは対象者を入れる（状況だと、のちのち記述上の問題が生じやすいので）
+ELSEIF CFLAG:ファーストキスの相手 == 12
+	PRINTFORM 枕営業のお相手
+ELSEIF CFLAG:ファーストキスの相手 == 13
+	PRINTFORM 『接待』客
+ELSEIF CFLAG:ファーストキスの相手 == 14
+	PRINTFORM 触手生物
+ELSEIF CFLAG:ファーストキスの相手 == 15
+	PRINTFORM 夫
+ELSEIF CFLAG:ファーストキスの相手 == 16
+	PRINTFORM %CALLNAME:MASTER%
+ENDIF
+
+IF CFLAG:ファーストキスの相手 == 10
+	;空分岐。STAFFNTR用。
+ELSEIF CFLAG:ファーストキス喪失シチュ != 0
+	PRINTFORM の
+ELSEIF CFLAG:ファーストキスの相手 == 1 && CSTR:ファーストキスの相手 == ""
+	;名前が設定されていない経験済キャラクターのための
+ELSE
+	PRINTFORM と
+ENDIF
+
+IF CFLAG:ファーストキス喪失シチュ == 1
+	PRINTFORM %CSTR:男性器呼び方%に
+ELSEIF CFLAG:ファーストキス喪失シチュ == 2
+	PRINTFORM %CSTR:肛門呼び方%に
+ELSEIF CFLAG:ファーストキス喪失シチュ == 3
+	PRINTFORM %CSTR:女性器呼び方%に
+ENDIF
+
+PRINTFORML %UNICODE(0x2665)%
+
+
+ENDIF
+
+SETFONT ""
+RESETCOLOR

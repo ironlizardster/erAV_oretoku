@@ -1,0 +1,375 @@
+﻿;-------------------------------------------------
+;調教中のユーザーコマンド表示
+;-------------------------------------------------
+@SHOW_USERCOM
+;**********改造部分************************************************
+;VARSET LOCAL
+;**********改造ここまで********************************************
+
+PRINTC 履歴表示[120]
+PRINTC 汚れ表示[121]
+PRINTC 能力表示[122]
+PRINTL 
+IF ASSI > 0
+						;****スライムパッチ追加ここから****
+	IF ASSIPLAY && TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+		PRINTC マスターと交代[200]
+	ELSEIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+		PRINTC 助手と交代[200]
+	ENDIF
+						;****スライムパッチ追加ここまで****
+ENDIF
+IF ASSIPLAY 
+	PRINTC 能力表示(助手)[202]
+ELSE
+	PRINTC 能力表示(マスター)[202]
+ENDIF
+IF TALENT:PLAYER:具現 && TALENT:PLAYER:ふたなり == 0
+	PRINTC 具現化（ペニス生成）[300]
+ELSEIF  TALENT:PLAYER:具現 && TALENT:PLAYER:ふたなり == 1
+	PRINTC 具現化（ペニス消去）[300]
+ENDIF
+PRINTL 
+PRINTC 射精箇所変更[400]
+SIF ITEM:コンドーム >= 1 && TEQUIP:主人コンドーム == 0 && (TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ)
+	PRINTC コンドーム装着 [500]
+PRINTL 
+PRINTC 調教メニュー登録[990]
+PRINTC 調教メニュー表示[991]
+PRINTC 調教メニュー実行[992]
+PRINTL 
+
+PRINTC 調教終了[999]
+PRINTL 
+PRINTC 前回調教コマンド:
+PRINTS SAVESTR:0
+
+
+;-------------------------------------------------
+;調教中のユーザーコマンド判定
+;-------------------------------------------------
+@USERCOM
+IF RESULT == 120
+	CALL SHOW_EQUIP
+	RETURN 1
+ELSEIF RESULT == 121
+	CALL STAIN_INFO
+	RETURN 1
+ELSEIF RESULT == 122
+	CALL SHOW_INFO
+	WAIT
+	RETURN 1
+						;****スライムパッチ追加ここから****
+ELSEIF RESULT == 200 && ASSI > 0 && TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+						;****スライムパッチ追加ここまで****
+	IF ASSIPLAY
+		ASSIPLAY = 0
+		PLAYER = MASTER
+	ELSE
+		ASSIPLAY = 1
+		PLAYER = ASSI
+	ENDIF
+	RETURN 1
+ELSEIF RESULT == 202
+	T = TARGET
+	TARGET = PLAYER
+	CALL SHOW_INFO
+	WAIT
+	TARGET = T
+	RETURN 1
+ELSEIF RESULT == 300 && TALENT:PLAYER:具現 && TALENT:PLAYER:ふたなり == 0
+	PRINTFORM 《%CALLNAME:PLAYER%はペニスを具現化させた》
+	SIF CFLAG:PLAYER:ファーストキスの相手 == 0
+		TALENT:PLAYER:童貞 = 1
+	TALENT:PLAYER:ふたなり = 1
+	WAIT
+	RETURN 1
+ELSEIF RESULT == 300 && TALENT:PLAYER:具現 && TALENT:PLAYER:ふたなり == 1
+	PRINTFORM 《%CALLNAME:PLAYER%は具現化したペニスを消去した》
+	SIF CFLAG:PLAYER:ファーストキスの相手 == 0
+		TALENT:PLAYER:童貞 = 0
+	TALENT:PLAYER:ふたなり = 0
+	WAIT
+	RETURN 1
+ELSEIF RESULT == 400
+	CALL SHOOT_POSITION
+ELSEIF RESULT == 500 && ITEM:コンドーム >= 1 && TEQUIP:主人コンドーム == 0 && (TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ)
+	CALL SET_CONDOM
+ELSEIF RESULT == 990
+	CALL COMSEQ_REGISTER_BEGIN
+	RETURN 1
+ELSEIF RESULT == 991
+	CALL SHOW_COMSEQ_REGISTER
+	RETURN 1
+ELSEIF RESULT == 992
+	CALL COMSEQ_REGISTER_TRAIN
+	RETURN 1
+
+ELSEIF RESULT == 999
+
+;終了時に失神していた場合は口上を表示しない
+	IF TFLAG:失神中終了 >= 1 && FLAG:口上使用 > 0
+		IF FLAG:口上使用 == 1
+			FLAG:口上使用 = 0
+			TFLAG:失神回復 = 1
+		ELSEIF FLAG:口上使用 == 2
+			FLAG:口上使用 = 0
+			TFLAG:失神回復 = 2
+		ENDIF
+	ENDIF
+	BEGIN AFTERTRAIN
+	RETURN 1
+ENDIF
+RETURN 0
+
+;-------------------------------------------------
+;履歴の表示
+;-------------------------------------------------
+@SHOOT_POSITION
+
+PRINTFORM 《Ｖ経験を伴う指導の際、%CALLNAME:TARGET%への射精箇所を変更することができます(現在の部位：
+CALL SHOOT_POSITION_PRINT
+PRINTL  )》
+PRINTFORML どこに射精しますか？
+SIF CFLAG:33 != 0
+	PRINTL  [0] - 膣内
+SIF CFLAG:33 != 1
+	PRINTL  [1] - 恥丘
+SIF CFLAG:33 != 2
+	PRINTL  [2] - 太もも
+SIF CFLAG:33 != 3
+	PRINTL  [3] - へそ
+SIF CFLAG:33 != 4
+	PRINTL  [4] - 胸
+SIF CFLAG:33 != 5
+	PRINTL  [5] - 口
+SIF CFLAG:33 != 6
+	PRINTL  [6] - 顔
+SIF CFLAG:33 != 7
+	PRINTL  [7] - 髪
+IF CFLAG:33 != 8 && (CFLAG:特別コスチュームのタイプ == 80 && CFLAG:特別コスチュームのタイプ == 81)
+	PRINT  [8] - 
+	IF CFLAG:特別コスチュームのタイプ == 80
+		PRINT 眼鏡
+	ELSEIF CFLAG:特別コスチュームのタイプ == 80
+		PRINT サングラス
+	ENDIF
+ENDIF
+$INPUT_LOOP
+INPUT
+
+IF RESULT < 0 || RESULT > 8
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 8 && CFLAG:特別コスチュームのタイプ != 80 && CFLAG:特別コスチュームのタイプ != 81
+	GOTO INPUT_LOOP
+ELSEIF CFLAG:33 != RESULT
+	CFLAG:33 = RESULT
+	PRINTFORM 《%CALLNAME:TARGET%への射精箇所を
+	CALL SHOOT_POSITION_PRINT
+	PRINT へと変更しました》
+	WAIT
+	RETURN 1
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;履歴の表示
+;-------------------------------------------------
+@SHOOT_POSITION_PRINT
+
+IF CFLAG:33 == 0
+	PRINT 膣内
+ELSEIF CFLAG:33 == 1
+	PRINT 恥丘
+ELSEIF CFLAG:33 == 2
+	PRINT 太もも
+ELSEIF CFLAG:33 == 3
+	PRINT へそ
+ELSEIF CFLAG:33 == 4
+	PRINT 胸
+ELSEIF CFLAG:33 == 5
+	PRINT 口
+ELSEIF CFLAG:33 == 6
+	PRINT 顔
+ELSEIF CFLAG:33 == 7
+	PRINT 髪
+ELSEIF CFLAG:33 == 8
+	IF CFLAG:特別コスチュームのタイプ == 80
+		PRINT 眼鏡
+	ELSEIF CFLAG:特別コスチュームのタイプ == 81
+		PRINT サングラス
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;履歴の表示
+;-------------------------------------------------
+@SHOW_EQUIP
+CALL SHOW_JUEL
+IF PREVCOM >= 0
+	PRINT 前回調教コマンド:
+	PRINTS SAVESTR:0
+	SIF TFLAG:前回の調教者が助手
+		PRINT (助手)
+	;PRINT (COMF:
+	;PRINTV PREVCOM
+	;PRINTL )
+	PRINTL  
+ENDIF
+SIF TEQUIP:媚薬効果
+	PRINTL [媚薬効果発揮中]
+SIF TEQUIP:利尿剤効果
+	PRINTL [利尿剤効果発揮中]
+SIF TEQUIP:主人コンドーム && (TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ)
+	PRINTFORML [コンドーム装着中(%CALLNAME:PLAYER%)]
+SIF TEQUIP:撮影中
+	PRINTFORML [ビデオ撮影中({TFLAG:ビデオ撮影回数 - 1}/10)]
+SIF TEQUIP:野外プレイ
+	PRINTL [野外プレイ中]
+SIF TEQUIP:羞恥大鏡プレイ
+	PRINTL [羞恥プレイ中]
+SIF TEQUIP:お風呂場プレイ
+	PRINTL [お風呂場プレイ中]
+IF TEQUIP:コスプレ
+	PRINT [
+	CALL PRINT_COSTUME
+	PRINTL コスプレ中]
+ENDIF
+SIF TEQUIP:触手召喚
+	PRINTL [触手調教中]
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム生成
+	PRINTL [スライム生成中]
+						;****スライムパッチ追加ここまで****
+IF TEQUIP:バイブ && TEQUIP:触手召喚
+	PRINTL [触手挿入]
+ELSEIF TEQUIP:バイブ
+	PRINTL [バイブ装備中]
+ENDIF
+
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム膣内進入
+	PRINTL [スライム膣内進入]
+						;****スライムパッチ追加ここまで****
+IF TEQUIP:アナルバイブ && TEQUIP:触手召喚
+	PRINTL [触手アナル挿入]
+ELSEIF TEQUIP:アナルバイブ
+	PRINTL [アナルバイブ装備中]
+ENDIF
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム肛門進入
+	PRINTL [スライム肛門進入]
+						;****スライムパッチ追加ここまで****
+IF TEQUIP:クリキャップ && TEQUIP:触手召喚
+	PRINTL [触手クリ責め]
+ELSEIF TEQUIP:クリキャップ
+	PRINTL [クリキャップ装着中]
+ENDIF
+
+IF TEQUIP:ニプルキャップ && TEQUIP:触手召喚
+	PRINTL [触手乳首責め]
+ELSEIF TEQUIP:ニプルキャップ
+	PRINTL [ニプルキャップ装着中]
+ENDIF
+
+IF TEQUIP:搾乳機 && TEQUIP:触手召喚
+	PRINTL [触手搾乳]
+ELSEIF TEQUIP:搾乳機
+	PRINTL [搾乳器装備中]
+ENDIF
+
+IF TEQUIP:オナホール && TEQUIP:触手召喚
+	PRINTL [触手ペニス責め]
+ELSEIF TEQUIP:オナホール
+	PRINTL [オナホール装備中]
+ENDIF
+
+IF TEQUIP:シャワー
+	PRINTL [シャワー使用中]
+ENDIF
+
+IF TEQUIP:縄 && TEQUIP:触手召喚
+	PRINTL [触手緊縛]
+						;****追加ここから****
+ELSEIF TEQUIP:縄 && TEQUIP:三角木馬騎乗
+	PRINTL [三角木馬騎乗中]
+ELSEIF TEQUIP:縄
+						;****追加ここまで****
+	PRINTL [縄で緊縛中]
+ENDIF
+
+IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] && TEQUIP:触手召喚
+	PRINTL [触手浣腸]
+ELSEIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	PRINTL [浣腸＋アナルプラグ装備中]
+ENDIF
+
+SIF TEQUIP:触手口辱
+	PRINTL [触手口辱中]
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム口辱
+	PRINTL [スライム口辱]
+						;****スライムパッチ追加ここまで****
+SIF TEQUIP:アイマスク
+	PRINTL [アイマスク装備中]
+SIF TEQUIP:ボールギャグ
+	PRINTL [ボールギャグ装備中]
+SIF TEQUIP:アナルビーズ
+	PRINT [アナルビーズ使用中]
+SIF TEQUIP:アナル電極
+	PRINT [アナル電極挿入中]
+SIF TEQUIP:獣姦プレイ
+	PRINTL [獣姦プレイ中]
+
+SIF EX:0
+	PRINTFORM C絶頂:{EX:0}回 
+SIF EX:1
+	PRINTFORM V絶頂:{EX:1}回 
+SIF EX:2
+	PRINTFORM A絶頂:{EX:2}回 
+SIF EX:3
+	PRINTFORM B絶頂:{EX:3}回 
+SIF EX:4
+	PRINTFORM 噴乳:{EX:4}回 
+SIF EX:5
+	PRINTFORM 射精:{EX:5}回 
+SIF EX:0 || EX:1 || EX:2 || EX:3 || EX:4 || EX:5
+	PRINTL 
+WAIT
+
+;-------------------------------------------------
+;履歴の表示
+;-------------------------------------------------
+@SET_CONDOM
+
+SIF ITEM:コンドーム <= 0
+	RETURN
+
+IF ABL:奉仕精神 >= 4 && ABL:奉仕技術 >= 4 && TALENT:舌使い
+	PRINTFORM %CALLNAME:TARGET%は
+	IF RAND:3 == 0
+		PRINTFORM 薄紫
+	ELSEIF RAND:2 == 0
+		PRINTFORM 薄桃
+	ELSE
+		PRINTFORM 薄青
+	ENDIF
+	PRINTFORM 色のコンドームを、舌と口腔内を器用に使って%CALLNAME:PLAYER%のペニスに
+	PRINTFORML 被せた
+ELSE
+	PRINTFORM %CALLNAME:PLAYER%は
+	IF RAND:3 == 0
+		PRINTFORM 薄紫
+	ELSEIF RAND:2 == 0
+		PRINTFORM 薄桃
+	ELSE
+		PRINTFORM 薄青
+	ENDIF
+	PRINTFORML 色のコンドームを、勃起した自身のペニスに被せた
+ENDIF
+
+PRINTFORMW 《%CALLNAME:PLAYER%はコンドームを装着した》
+TEQUIP:主人コンドーム = 1

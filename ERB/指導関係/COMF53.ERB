@@ -1,0 +1,174 @@
+﻿@COM53
+;ビデオカメラ
+
+SAVESTR:0 = ビデオカメラ
+CALL TRAIN_MESSAGE_B
+
+;カウントは10回とします
+K = 10
+
+IF TEQUIP:撮影中
+;ビデオ撮影がされていれば終了させる
+;テープは終了時に数を減らす
+	TEQUIP:撮影中 = 0
+;	ITEM:ビデオテープ -= 1
+ELSE
+;ビデオ撮影してなければ初期化して開始
+	TEQUIP:撮影中 = 1
+	TFLAG:ビデオ撮影回数 = 0
+	REPEAT K
+		S = COUNT + 11
+		FLAG:S = 0
+	REND
+	;撮影開始時の状態を記録
+	FLAG:撮影開始時状況 = 0
+	SIF TEQUIP:野外プレイ
+		FLAG:撮影開始時状況 |= 1
+	SIF TEQUIP:お風呂場プレイ
+		FLAG:撮影開始時状況 |= 2
+	SIF TEQUIP:コスプレ
+		FLAG:撮影開始時状況 |= 4
+	SIF TEQUIP:縄
+		FLAG:撮影開始時状況 |= 8
+	SIF TEQUIP:バイブ
+		FLAG:撮影開始時状況 |= 16
+	SIF TEQUIP:アナルバイブ
+		FLAG:撮影開始時状況 |= 32
+	SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+		FLAG:撮影開始時状況 |= 64
+	SIF TEQUIP:獣姦プレイ
+		FLAG:撮影開始時状況 |= 128
+	SIF TEQUIP:触手召喚
+		FLAG:撮影開始時状況 |= 256
+	SIF TEQUIP:シャワー
+		FLAG:撮影開始時状況 |= 512
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;ビデオ撮影中･･･
+;-------------------------------------------------
+@EQUIP_COM53
+
+;カウントは10回とします
+K = 10
+
+IF TFLAG:ビデオ撮影回数 == 0
+;初回はカウントに入れない
+	TFLAG:ビデオ撮影回数 += 1
+ELSEIF TFLAG:ビデオ撮影回数 > 0 && TFLAG:ビデオ撮影回数 <= K
+	S = TFLAG:ビデオ撮影回数 + 10
+	FLAG:S = SELECTCOM
+	SIF ASSIPLAY
+		FLAG:S += 1000
+
+	PRINTFORML ＜ビデオ撮影中{TFLAG:ビデオ撮影回数}/{K}＞
+
+	TFLAG:ビデオ撮影回数 += 1
+
+	;パラメータ変化
+	;TODO バランス調整(ビデオによるパラメータ変化は考慮しないか？)
+	LOSEBASE:体力 += 0
+	LOSEBASE:気力 += 50
+
+	A = 370
+	B = 1750
+	C = 700
+
+	;PALAM:欲情をみる
+	IF PALAM:欲情 < PALAMLV:1
+		TIMES A , 0.80
+	ELSEIF PALAM:欲情 < PALAMLV:2
+		TIMES A , 0.90
+	ELSEIF PALAM:欲情 < PALAMLV:3
+		TIMES A , 1.00
+	ELSEIF PALAM:欲情 < PALAMLV:4
+		TIMES A , 1.10
+	ELSEIF PALAM:欲情 >= PALAMLV:4
+		TIMES A , 1.20
+	ENDIF
+
+	;ABL:従順をみる
+	IF ABL:信頼 == 0
+		TIMES A , 0.40
+	ELSEIF ABL:信頼 == 1
+		TIMES A , 0.60
+	ELSEIF ABL:信頼 == 2
+		TIMES A , 0.80
+	ELSEIF ABL:信頼 == 3
+		TIMES A , 1.00
+	ELSEIF ABL:信頼 == 4
+		TIMES A , 1.10
+	ELSE
+		TIMES A , 1.20
+	ENDIF
+
+	;ABL:露出癖をみる
+	IF ABL:露出癖 == 0
+		TIMES A , 0.80
+		TIMES C , 2.00
+	ELSEIF ABL:露出癖 == 1
+		TIMES A , 1.00
+		TIMES C , 1.70
+	ELSEIF ABL:露出癖 == 2
+		TIMES A , 1.30
+		TIMES C , 1.40
+	ELSEIF ABL:露出癖 == 3
+		TIMES A , 1.60
+		TIMES C , 1.00
+	ELSEIF ABL:露出癖 == 4
+		TIMES A , 2.00
+		TIMES C , 0.80
+	ELSE
+		TIMES A , 3.00
+		TIMES C , 0.60
+	ENDIF
+
+	;倒錯的
+	SIF TALENT:倒錯的
+		TIMES A , 2.00
+	;目立ちたがり
+	SIF TALENT:目立ちたがり
+		TIMES A , 1.50
+	;臆病
+	SIF TALENT:臆病
+		TIMES C , 1.70
+	;露出狂
+	IF TALENT:露出狂
+		TIMES A , 2.00
+		TIMES B , 1.20
+		TIMES C , 0.50
+	ENDIF
+
+	SOURCE:10 += A
+	SOURCE:12 += B
+	SOURCE:14 += C
+
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TFLAG:ビデオ撮影回数 > 1
+	EXP:被写経験 += 1
+	PRINTL 被写経験＋１
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:7 >= 3
+	TFLAG:主人経験 += 1
+
+RETURN 1
+
+;-------------------------------------------------
+;テープ終了
+;-------------------------------------------------
+
+@REJECT_CAMERA
+;テープ残量がなくなると強制的にEQUIPフラグを外す
+IF TFLAG:ビデオ撮影回数 > K
+	TEQUIP:撮影中 = 0
+;	ITEM:ビデオテープ -= 1
+	PRINTL ＜テープの残量がなくなりました。ビデオ撮影を終了します＞
+ENDIF
+

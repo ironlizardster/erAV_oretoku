@@ -1,0 +1,378 @@
+﻿;-------------------------------------------------
+;売却と助手化のチェック
+;-------------------------------------------------
+@CHECK_SELLASSIABLE
+
+;【売却不可】を持っておらず
+SIF TALENT:売却不可 == 1
+	RETURN 0
+;従順+欲望が6LV以上であるか
+SIF ABL:信頼+ABL:欲望 < 6
+	RETURN 0
+;C感覚・V感覚・A感覚・B感覚のいずれかが最低3LVであり
+SIF ABL:Ｃ感覚 < 3 && ABL:Ｂ感覚 < 3 && ABL:Ｖ感覚 < 3 && ABL:Ａ感覚 < 3
+	RETURN 0
+;【反抗的】か【気丈】を持っているなら従順が4LV以上になっており
+SIF ABL:信頼 < 4 && (TALENT:ナマイキ || TALENT:気丈)
+	RETURN 0
+;【自制心】【抑圧】【抵抗】を持っているなら欲望が4LV以上になっており
+SIF ABL:欲望 < 4 && (TALENT:自制心 || TALENT:抑圧 || TALENT:抵抗)
+	RETURN 0
+;「〈技巧〉3LV以上で〈奉仕精神〉3LV以上」か「〈露出癖〉3LV以上で〈自慰中毒〉2LV以上」か「C・V・A・B感覚の合計が13LV以上」か「従順か欲望がLV5」に達しているか
+IF ((ABL:技巧 >= 3 && ABL:奉仕精神 >= 3) || (ABL:露出癖 >= 3 && ABL:自慰中毒 >= 2) || ABL:マゾっ気 >= 3 || (ABL:Ｃ感覚+ABL:Ｂ感覚+ABL:Ｖ感覚+ABL:Ａ感覚 >= 13) || ABL:信頼 >= 5 || ABL:欲望 >= 5) && TALENT:ＡＶ女優 == 1
+	IF CFLAG:売却助手可能 <= 0
+		PRINTFORMW %NAME:TARGET%が引退可能になりました
+		CFLAG:売却助手可能 = 1
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+
+;「〈従順〉〈欲望〉〈技巧〉〈Ｃ感覚〉〈レズっ気〉がすべて3LV以上」か「〈従順〉が5LV以上かつ〈欲望〉が4LV以上」か
+IF ((ABL:信頼 >= 3 && ABL:欲望 >= 3 && ABL:技巧 >= 3 && ABL:Ｃ感覚 >= 3 && (ABL:レズっ気 >= 3 || ABL:ＢＬっ気 >= 3)) || (ABL:信頼 >= 5 && ABL:欲望 >= 4)) && TALENT:ＡＶ女優 == 1 && EXP:ＡＶ出演経験 >= 3
+	IF CFLAG:売却助手可能 <= 1
+		PRINTFORMW %NAME:TARGET%が助手可能になりました
+		CFLAG:売却助手可能 = 2
+	ENDIF
+ENDIF
+;
+;-------------------------------------------------
+;奴隷売却の処理
+;-------------------------------------------------
+@CHARA_SALE
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：${MONEY}ポイント
+DRAWLINE
+
+$INPUT_LOOP
+
+PRINTL 誰を引退させますか？？
+DRAWLINE
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	;売却不可のキャラは排除
+	ELSEIF TALENT:COUNT:売却不可
+		CONTINUE
+	;売れないキャラは排除
+	ELSEIF CFLAG:COUNT:売却助手可能 < 1
+		CONTINUE
+	;臨死中のキャラは排除
+	ELSEIF  BASE:COUNT:体力 < 1
+		CONTINUE
+	ELSEIF CFLAG:COUNT:売却助手可能 >= 1
+		PRINTFORM [{COUNT}] %NAME:COUNT% 
+		TARGET = COUNT
+		S = 0
+		CALL ESTIMATE_CHARA
+		IF S > 0
+			PRINTFORM [評価額:{S}ポイント]
+		ELSE
+			PRINTFORM [売却不可]
+		ENDIF
+		IF ISASSI:COUNT == 1
+			PRINT (元助手)
+		ELSEIF CFLAG:COUNT:売却助手可能 == 2
+			PRINT (助手可)
+		ENDIF
+		PRINTL  
+	ENDIF
+REND
+DRAWLINE
+PRINTFORML [999] - 戻る
+
+INPUT
+
+IF RESULT == 999
+	RETURN 999
+ELSEIF RESULT <= 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+ELSEIF TALENT:RESULT:売却不可
+	GOTO INPUT_LOOP
+ELSEIF CFLAG:RESULT:売却助手可能 < 1
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;営業中のキャラは排除
+ELSEIF  CFLAG:RESULT:労役中のフラグ && TIME == 1
+	PRINTL 今日の営業が済むまでは引退させられません
+	WAIT
+	GOTO INPUT_LOOP
+ENDIF
+
+;現在の調教対象の情報を取得
+SIF TARGET > 0
+	T = NO:TARGET
+
+TARGET = RESULT
+
+;売却処理
+S = 0
+CALL SALE_CHARA
+
+;売却した場合はキャラを削除
+IF S > 0
+	SIF CFLAG:習い事判定 == 1
+		FLAG:習い事人数 -= 1
+	SIF CFLAG:お弁当作成判定 == 1
+		FLAG:弁当 = 0
+	SIF CFLAG:朝フェラ係に任命 == 1
+		FLAG:朝起こしてもらう = 0
+	T = -1
+	CALL KILL_TARGET
+	EXP:MASTER:[[EXP:キャラ売却経験（MASTER）]] += 1
+ENDIF
+
+;対象を戻す
+TARGET = -1
+REPEAT CHARANUM
+	SIF NO:COUNT == T
+		TARGET = COUNT
+REND
+
+RESTART
+;
+;-------------------------------------------------
+;現在の調教対象の削除
+;-------------------------------------------------
+@KILL_TARGET
+;助手の情報を取得
+;N = -1
+;SIF ASSI >= 0
+;	N = NO:ASSI
+
+;キャラ削除
+CALL キャラ削除, TARGET
+
+;;前回の助手・調教対象だった場合はフラグを空に
+;SIF FLAG:前回調教対象 == TARGET
+;	FLAG:前回調教対象 = -1
+;SIF FLAG:前回助手 == TARGET
+;	FLAG:前回助手 = -1
+
+;;前回の助手・調教対象より前だった場合はフラグを減算
+;SIF FLAG:前回調教対象 > TARGET
+;	FLAG:前回調教対象 -= 1
+;SIF FLAG:前回助手 > TARGET
+;	FLAG:前回助手 -= 1
+
+;;調教対象を空に
+;TARGET = -1
+
+;;助手を戻す
+;ASSI = -1
+;REPEAT CHARANUM
+;	SIF NO:COUNT == N
+;		ASSI = COUNT
+;REND
+;
+;-------------------------------------------------
+;長いお別れ
+;-------------------------------------------------
+@LONG_GOOD_BYE
+A = NO:TARGET
+
+REPEAT CHARANUM
+	SIF COUNT == 0
+		CONTINUE
+	;キャラのストレス値
+	U = 0
+	SIF A == (CFLAG:COUNT:21 % 100) && (CFLAG:COUNT:21 / 100) < 2
+		U += 40
+	SIF A == (CFLAG:COUNT:21 % 100)
+		U += 80
+	SIF A == (CFLAG:COUNT:22 % 100) && (CFLAG:COUNT:22 / 100) < 2
+		U += 40
+	SIF A == (CFLAG:COUNT:22 % 100)
+		U += 80
+	SIF A == (CFLAG:COUNT:23 % 100) && (CFLAG:COUNT:23 / 100) < 2
+		U += 40
+	SIF A == (CFLAG:COUNT:23 % 100)
+		U += 80
+	SIF A == (CFLAG:COUNT:24 % 100) && (CFLAG:COUNT:24 / 100) < 2
+		U += 40
+	SIF A == (CFLAG:COUNT:24 % 100)
+		U += 80
+	SIF A == (CFLAG:COUNT:ミッション期間 % 100) && (CFLAG:COUNT:ミッション期間 / 100) < 2
+		U += 40
+	SIF A == (CFLAG:COUNT:ミッション期間 % 100)
+		U += 80
+	SIF RELATION:COUNT:A > 100
+		U += RELATION:COUNT:A - 100
+	IF U > 50
+		DRAWLINE
+		PRINTL 
+		PRINTFORML その日、%NAME:COUNT%は、売られていく%NAME:TARGET%が乗っている輸送車が、
+		SIF !TALENT:COUNT:泣かない
+			PRINT 涙でぼやけた
+		PRINTFORML 視界の外に出て見えなくなるまで、
+		PRINTFORML そして見えなくなった後も、ずっと見送っていた。
+		WAIT
+		;恋心
+		SIF TALENT:COUNT:恋心
+			U -= 120
+		;淫乱
+		SIF TALENT:COUNT:淫乱
+			U -= 60
+		;気丈
+		SIF TALENT:COUNT:気丈
+			U -= 20
+		;感情乏しい
+		SIF TALENT:COUNT:感情乏しい
+			U -= 20
+		;心弱い
+		SIF TALENT:COUNT:心弱い
+			U += 20
+		;ヒーロー
+		SIF TALENT:COUNT:メガネっ娘
+			U -= 100
+		;従順
+		U -= ABL:COUNT:信頼 * 10
+		;反発刻印
+		U += MARK:COUNT:反発刻印 * 30
+
+		;ストレス値の累積が100を超えた場合
+		IF U >= 100 && TALENT:COUNT:崩壊 == 0
+		DRAWLINE
+			PRINTFORML %CALLNAME:COUNT%は呆然とした面持ちをしている
+			PRINTFORML %CALLNAME:COUNT%の中で何かが壊れてしまったようだ……
+			PRINTFORML %CALLNAME:COUNT%の精神は【%TALENTNAME:[[TALENT:崩壊]]%】してしまった
+			WAIT
+			IF TALENT:COUNT:恋心
+				PRINTFORML %CALLNAME:COUNT%は【%TALENTNAME:[[TALENT:恋心]]%】を失った
+				TALENT:COUNT:恋心 = 0
+			ENDIF
+			IF TALENT:COUNT:淫乱
+				PRINTFORML %CALLNAME:COUNT%は【%TALENTNAME:[[TALENT:淫乱]]%】を失った
+				TALENT:COUNT:淫乱 = 0
+			ENDIF
+			TALENT:COUNT:崩壊 = 1
+			WAIT
+		ENDIF
+	ENDIF
+REND
+;-------------------------------------------------
+;奴隷売却
+;-------------------------------------------------
+@SALE_CHARA
+
+;売却額
+S = 0
+CALL ESTIMATE_CHARA
+
+;評価表示
+SIF A:10 > 0
+	PRINTFORML %ABLNAME:[[ABL:信頼]]%{ABL:信頼}LV +{A:10}
+SIF A:11 > 0
+	PRINTFORML %ABLNAME:[[ABL:欲望]]%{ABL:欲望}LV +{A:11}
+SIF A:12 > 0
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%{ABL:技巧}LV +{A:12}
+SIF A:13 > 0
+	PRINTFORML %ABLNAME:[[ABL:奉仕技術]]%{ABL:奉仕技術}LV +{A:13}
+SIF A:14 > 0
+	PRINTFORML %ABLNAME:[[ABL:性交技術]]%{ABL:性交技術}LV +{A:14}
+SIF A:15 > 0
+	PRINTFORML %ABLNAME:[[ABL:話術]]%{ABL:話術}LV +{A:15}
+SIF A:30 > 0
+	PRINTFORML %ABLNAME:[[ABL:性交中毒]]%{ABL:性交中毒}LV +{A:30}
+SIF A:31 > 0
+	PRINTFORML %ABLNAME:[[ABL:自慰中毒]]%{ABL:自慰中毒}LV +{A:31}
+SIF A:32 > 0
+	PRINTFORML %ABLNAME:[[ABL:精液中毒]]%{ABL:精液中毒}LV +{A:32}
+SIF A:33 > 0
+	PRINTFORML %ABLNAME:[[ABL:レズ中毒]]%{ABL:レズ中毒}LV +{A:33}
+SIF A:39 > 0
+	PRINTFORML %ABLNAME:[[ABL:噴乳中毒]]%{ABL:噴乳中毒}LV +{A:39}
+SIF A:37 > 0
+	PRINTFORML %ABLNAME:[[ABL:売春中毒]]%{ABL:売春中毒}LV -{A:37}
+
+SIF A:0 != 100
+	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%{ABL:Ｃ感覚}LV ×{A:0/100}.{A:0%100}
+SIF A:1 != 100
+	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%{ABL:Ｂ感覚}LV ×{A:1/100}.{A:1%100}
+SIF A:2 != 100
+	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%{ABL:Ｖ感覚}LV ×{A:2/100}.{A:2%100}
+SIF A:3 != 100
+	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%{ABL:Ａ感覚}LV ×{A:3/100}.{A:3%100}
+SIF A:16 != 100
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%{ABL:奉仕精神}LV ×{A:16/100}.{A:16%100}
+SIF A:17 != 100
+	PRINTFORML %ABLNAME:[[ABL:露出癖]]%{ABL:露出癖}LV ×{A:17/100}.{A:17%100}
+SIF A:20 != 100
+	PRINTFORML %ABLNAME:[[ABL:サドっ気]]%{ABL:サドっ気}LV ×{A:20/100}.{A:20%100}
+SIF A:21 != 100
+	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%{ABL:マゾっ気}LV ×{A:21/100}.{A:21%100}
+SIF A:22 != 100
+	PRINTFORML %ABLNAME:[[ABL:レズっ気]]%{ABL:レズっ気}LV ×{A:22/100}.{A:22%100}
+SIF A:23 != 100
+	PRINTFORML %ABLNAME:[[ABL:ＢＬっ気]]%{ABL:ＢＬっ気}LV ×{A:23/100}.{A:23%100}
+SIF E:60 != 100
+	PRINTFORML %EXPNAME:[[EXP:出産経験]]%{EXP:出産経験} ×{E:60/100}.{E:60%100}
+
+REPEAT 800
+	IF T:COUNT != 100 && T:COUNT != 515
+		PRINTFORML %TALENTNAME:COUNT% ×{T:COUNT/100}.{T:COUNT%100}
+	ELSEIF T:COUNT != 100 && T:COUNT == 515
+		PRINTFORML %CSTR:MASTER:アイドルユニット名% ×{T:COUNT/100}.{T:COUNT%100}
+	ENDIF
+REND
+
+;REPEAT 600
+;	IF COUNT < 100 || ISASSI:TARGET || TALENT:恋心
+;		IF T:COUNT != 100
+;			PRINTFORML %TALENTNAME:COUNT% ×{T:COUNT/100}.{T:COUNT%100}
+;		ENDIF
+;	ELSE
+;		IF T:COUNT != 100 && T:COUNT != 515
+;			PRINTFORML ？？？ ×{T:COUNT/100}.{T:COUNT%100}
+;		ENDIF
+;	ENDIF
+;REND
+
+IF O:1 != 100
+	PRINTFORM 値上げ交渉 ×{O:1/100}.
+	SIF O:1 > 100 && O:1 < 110
+		PRINT 0
+	PRINTFORML {O:1%100}
+ENDIF
+
+;売却額表示
+PRINTFORML %NAME:TARGET%の引退作は{S}ポイントで売れそうです。
+PRINTFORML %NAME:TARGET%を引退させますか？
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	;売却時口上
+	TFLAG:口上番号 = 6
+	CALL SELF_KOJO
+	CALL EVENT_SELL_AFTER
+	PRINTFORMW %NAME:TARGET%の引退作は{S}ポイントの売り上げになりました
+	IF ABL:信頼 < 5 && (TALENT:ボーイッシュ || TALENT:嫉妬)
+		PRINTFORML %NAME:TARGET%は輸送中に失踪したため、
+		PRINTFORMW 見積もりの1/5、{S / 5}ポイントしか支払われませんでした…
+		S /= 5
+	ENDIF
+	MONEY += S
+	RETURN 1
+ELSEIF RESULT == 1
+	S = -1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+;
+;
+;

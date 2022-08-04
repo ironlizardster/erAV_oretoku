@@ -1,0 +1,91 @@
+﻿;===========================================================
+;ヘアスタイルの処理
+;===========================================================
+@MODEL_EVENT_CALL
+
+LOCAL = 0
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:ファッションモデル
+		LOCAL = RAND:3
+		TARGET = COUNT
+		TRYCALLFORM MODEL_EVENT(LOCAL)
+	ENDIF
+REND
+
+;===========================================================
+;ヘアスタイルの処理
+;===========================================================
+@MODEL_EVENT0
+
+LOCAL = RAND:3
+DRAWLINE
+PRINTFORML  休日を利用して、スタジオで%CALLNAME:TARGET%の撮影が行われた……
+PRINTFORM  今回の撮影の内容は
+IF LOCAL == 1 && DAY:1 >= 5 && DAY:1 <= 7
+	PRINTFORM 新作水着
+	LOCAL:1 = 1
+ELSEIF LOCAL == 2 && ABL:露出癖 >= 3
+	PRINTFORM 新作下着
+	LOCAL:1 = 2
+ELSE
+	IF DAY:1 >=4 && DAY:1 <= 6
+		PRINT 夏の新作
+	ELSEIF DAY:1 >=7 && DAY:1 <= 9
+		PRINT 秋の新作
+	ELSEIF DAY:1 >= 10 && DAY:1 <= 12
+		PRINT 冬の新作
+	ELSE
+		PRINT 春の新作
+	ENDIF
+ENDIF	
+PRINTFORM のプロモーションのようだ
+PRINTFORM  後日、
+SIF TALENT:ギャル系 == 1
+	PRINTFORM ギャル系をターゲットにした
+PRINTFORM ファッション誌に
+
+IF LOCAL:1 == 1
+	SELECTCASE RAND:3
+	CASE 0
+			PRINTFORM 布面積の少ない大胆なＴバックとトップスの
+	CASE 1
+		PRINTFORM 水着というよりはもはやヒモそのものなスリングショット系のアダルティな
+	CASEELSE
+		PRINTFORM パレオと可愛らしいフリルの付いた
+	ENDSELECT
+	PRINTFORM 水着姿の
+ELSEIF LOCAL:1 == 2
+	IF RAND:3 == 0
+		PRINTFORM 細かな刺繍の入ったアダルティな
+	ELSEIF RAND:2 == 0
+		PRINTFORM 大事なところが見えそうなシースルーの
+	ELSE
+		PRINTFORM 可愛らしいフリルの付いた
+	ENDIF
+	PRINTFORM 下着姿の
+ENDIF
+
+
+PRINTFORM %CALLNAME:TARGET%が、
+IF ABL:露出癖 >= 3 && ABL:露出癖 <= 7
+	PRINTFORM 『見られている』ということにだいぶ抵抗がなくなった表情
+ELSEIF ABL:露出癖 >= 8
+	PRINTFORM 堂々としている――というよりはむしろ『見せつける』ようなポージング
+ELSE
+	PRINTFORM 撮影に苦労したのがわかるような、恥じらいが感じられる表情
+ENDIF
+PRINTFORML をした写真が掲載されていた……
+PRINTL
+PRINTFORML %EXPNAME:[[EXP:被写経験]]%＋5
+EXP:被写経験 += 5
+EXP:美容トレーニング経験 += 2
+BASE:魅力値 += RAND:6
+SIF TALENT:露出狂
+	BASE:魅力値 += RAND:6
+SIF BASE:魅力値 >= MAXBASE:魅力値
+	BASE:魅力値 = MAXBASE:魅力値
+WAIT
+
+RETURN 0

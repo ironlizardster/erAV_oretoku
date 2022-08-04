@@ -1,0 +1,109 @@
+﻿;===========================================================
+;ターン終了時の処理
+;===========================================================
+@START_COOCKING
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:お弁当作成判定 == 1
+		CALL COOKING_DETAIL
+	ENDIF
+REND
+
+;===========================================================
+;イベントの内容
+;===========================================================
+@COOKING_DETAIL
+A = 1
+B = 0
+
+DRAWLINE
+
+PRINTFORM %CALLNAME:MASTER%が事務所の自分のデスクに就いたのを見計らって、駆け寄ってきた%NAME:COUNT%が
+IF TALENT:COUNT:貴族 || TALENT:COUNT:お姫様 || TALENT:COUNT:令嬢
+	PRINTFORM 有名ブランドの小さなトートバッグ
+ELSEIF TALENT:COUNT:大和撫子
+	PRINTFORM シックな色使いの風呂敷
+ELSE
+	PRINTFORM 可愛らしい巾着袋
+ENDIF
+PRINTFORM を
+IF TALENT:COUNT:ツンデレ
+	PRINTFORM 頬を染めてそっぽを向き、お決まりのセリフを言いながら
+ENDIF
+PRINTFORML %CALLNAME:MASTER%に手渡そうとしている
+PRINTFORML 中身はどうやら%CALLNAME:MASTER%がお願いしていたお弁当らしい
+IF ABL:COUNT:料理技能 <= 2
+	IF TALENT:COUNT:貴族 || TALENT:COUNT:お姫様 || TALENT:COUNT:令嬢
+		PRINTFORM トートバッグの取っ手を握る
+	ELSEIF TALENT:COUNT:大和撫子
+		PRINTFORM 風呂敷を抱える
+	ELSE
+		PRINTFORM 巾着袋を差し出している
+	ENDIF
+	PRINTFORML %CALLNAME:COUNT%の指先には、絆創膏がいくつも貼られていた
+ENDIF
+PRINTFORM %CALLNAME:MASTER%に自分が見ている前で食べて欲しいと言った%CALLNAME:COUNT%は
+IF ABL:COUNT:料理技能 <= 2
+	PRINTFORM 自信無さげな
+ELSE
+	PRINTFORM 自信たっぷりの
+ENDIF
+PRINTFORML 表情をしている……
+PRINTFORM お弁当のフタを開けると、そこには一生懸命作ってくれたものなのが一目でわかる、
+IF ABL:COUNT:料理技能 <= 2
+	PRINTFORM やや不恰好な
+ELSE
+	PRINTFORM 色とりどりの
+ENDIF
+IF TALENT:COUNT:恋心 == 0
+	TEMP_NUM = RAND:5
+	IF TEMP_NUM == 0
+		PRINTFORM サンドウィッチ
+	ELSEIF TEMP_NUM == 1
+		PRINTFORM おにぎり
+	ELSEIF TEMP_NUM == 2
+		PRINTFORM 三色ごはん
+	ELSEIF TEMP_NUM == 3
+		PRINTFORM 五目ごはん
+	ELSEIF TEMP_NUM == 4
+		PRINTFORM ナポリタン
+	ENDIF
+ELSEIF TALENT:COUNT:恋心 == 1
+	PRINTFORM 桜でんぶでハートマークの描かれたごはん
+ENDIF
+PRINTFORML とおかずが詰まっていた
+PRINTFORML %CALLNAME:MASTER%の感謝の言葉に、%CALLNAME:COUNT%は頬をほころばせている……
+PRINTFORM %CALLNAME:COUNT%が期待した眼差しで感想を待っているので、さっそく口に運んだ料理は
+IF ABL:COUNT:料理技能 <= 2
+	PRINTFORM ところどころ味付けに違和感はあるものの、決して食べられなくはない
+ELSE
+	PRINTFORM 冷めていても美味しくいただける
+ENDIF
+PRINTFORM 味付け
+IF TALENT:COUNT:恋心 == 1
+	PRINTFORM で、そして何より愛情がこもっているのが分かる
+ELSE
+	PRINTFORM だった
+ENDIF
+PRINTL
+PRINTL
+
+A += RAND:6
+B += RAND:6
+
+IF TALENT:COUNT:料理上手 == 1
+	A *= 2
+	SIF A < 5
+		A = 5
+ENDIF
+PRINTFORML 料理経験＋{A}
+EXP:COUNT:料理経験 += A
+IF TALENT:COUNT:恋心 == 1
+	IF B > 0
+		PRINTFORML 愛情経験＋{B}
+		EXP:COUNT:愛情経験 += B
+	ENDIF
+ENDIF
+PRINTW 

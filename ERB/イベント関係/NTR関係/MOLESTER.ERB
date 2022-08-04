@@ -1,0 +1,133 @@
+﻿;===========================================================
+;痴漢発生の処理
+;===========================================================
+@EVENT_MOLESTER
+
+SIF FLAG:治安悪化レベル == 0
+	RETURN 1
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+						;****痴漢誘惑追加ここから****
+	ELSEIF NO:COUNT == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:佐々木美乃里]] && NO:MASTER == [[キャラ:あなた]] && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:須野郁美]] && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:オトコ == 1
+		CONTINUE
+	ELSEIF CFLAG:COUNT:入寮中 == 1
+		CONTINUE
+	ELSEIF TALENT:COUNT:極道の娘 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:護身術 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:アンドロイド == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:淫魔 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:警察官 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:天使 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:極道の妻 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:探偵 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:Triptych == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:幽霊 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:[[TALENT:ONLY ONE EMPRESS]] == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:護衛の有無 == 1 && CFLAG:COUNT:痴漢誘惑 == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスチュームのタイプ == 79
+		CONTINUE
+						;****痴漢誘惑追加ここまで****
+	ELSE
+		LOCAL = RAND:100
+			IF TALENT:COUNT:臆病 == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:大人しい == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:解放 == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:恥じらい == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:即落ち == 1
+				LOCAL += 50
+			ENDIF
+			IF TALENT:COUNT:淫乱 == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:魅力 == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:心弱い == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:地味 == 1
+				LOCAL += RAND:10
+			ENDIF
+			IF TALENT:COUNT:ナマイキ == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:気丈 == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:活発 == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:貞操観念 == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:抵抗 == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:恥薄い == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:ボーイッシュ == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:男性不信 == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:カリスマ == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:逆襲 == 1
+				LOCAL -= RAND:10
+			ENDIF
+			IF TALENT:COUNT:彼氏あり == 1
+				LOCAL -= 50
+			ENDIF
+			IF TALENT:COUNT:運動部 == 1
+				LOCAL -= RAND:10
+			ENDIF
+						;****痴漢誘惑追加ここから****
+			IF CFLAG:COUNT:痴漢誘惑 == 1
+				LOCAL += 50
+			ENDIF
+						;****痴漢誘惑追加ここまで****
+			SIF FLAG:治安悪化レベル == 1
+				LOCAL += 10
+			SIF FLAG:治安悪化レベル == 2
+				LOCAL += 20
+			SIF FLAG:治安悪化レベル == 3
+				LOCAL += 30
+		IF LOCAL >= 90
+			CALL MOLESTER_BRUNCH
+			LOCAL = 0
+		ELSE
+			LOCAL = 0
+		ENDIF
+	ENDIF
+REND

@@ -1,0 +1,253 @@
+﻿;性交技術のLvUP処理とその可否判定
+;eraIm@s_ver.0.17βdのスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;性交技術のLvUP
+;-------------------------------------------------
+@ABLUP14
+DRAWLINE
+;PRINTL 奴隷の性行為の技術をUPします
+;PRINTL 性交技術が高いと、性行為の際に相手をイかせやすくなります
+;DRAWLINE
+;性交技術の上限は10
+IF (ABL:技巧 >= 5 && ABL:技巧 < 5) || ABL:性交技術 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な習得の珠
+A = 0
+;必要な性交経験
+B = 0
+
+;条件別にＯＫかダメかを記録する
+;習得の珠による可否（I=0:可、I&1:珠不足、I&2:経験不足）
+I = 0
+
+CALL CAN_ABLUP14
+
+;Lv5までは技巧が性交技術+1Lvでないといけない
+SIF ABL:性交技術 < 5
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%{ABL:性交技術 + 1}LV以上(現在{ABL:技巧}LV)かつ
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:習得]]%の珠×{JUEL:習得}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+	SIF I & 4
+		PRINT 能力不足
+ENDIF
+PRINTL 
+PRINTFORML       %EXPNAME:[[EXP:性交経験]]%　{EXP:性交経験}/{B}
+
+PRINTL [100] - やめる
+
+INPUT
+IF (RESULT < 0 || RESULT > 0) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:性交技術 += 1
+SIF RESULT == 0
+	JUEL:習得 -= A
+
+PRINTFORML %ABLNAME:[[ABL:性交技術]]%のレベルが{ABL:性交技術}になりました
+
+RETURN 0
+
+;--------------------------------------------------
+;性交技術のLvUP可否判定
+;--------------------------------------------------
+@CAN_ABLUP14
+IF (ABL:技巧 >= 5 && ABL:技巧 < 5) || ABL:性交技術 >= 10
+	RETURN 0
+ENDIF
+;判定変数を空に
+A = 0
+B = 0
+I = 0
+
+IF ABL:性交技術 == 0
+	A = 1
+	B = 3
+ELSEIF ABL:性交技術 == 1
+	A = 10
+	B = 10
+ELSEIF ABL:性交技術 == 2
+	A = 100
+	B = 30
+ELSEIF ABL:性交技術 == 3
+	A = 1500
+	B = 80
+ELSEIF ABL:性交技術 == 4
+	A = 4000
+	B = 100
+ELSEIF ABL:性交技術 == 5
+	A = 5000
+	B = 130
+ELSEIF ABL:性交技術 == 6
+	A = 6500
+	B = 160
+ELSEIF ABL:性交技術 == 7
+	A = 8000
+	B = 200
+ELSEIF ABL:性交技術 == 8
+	A = 10000
+	B = 250
+ELSEIF ABL:性交技術 == 9
+	A = 15000
+	B = 300
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	IF ABL:性交技術 == 3
+		TIMES A , 1.50
+		TIMES B , 1.50
+	ELSEIF ABL:性交技術 == 4
+		TIMES A , 2.00
+		TIMES B , 2.00
+	ELSEIF ABL:性交技術 == 5
+		TIMES A , 2.50
+		TIMES B , 2.50
+	ELSEIF ABL:性交技術 >= 6
+		TIMES A , 3.00
+		TIMES B , 3.00
+	ENDIF
+ENDIF
+
+;素直
+IF TALENT:素直
+	TIMES A , 0.90
+	TIMES B , 0.95
+ENDIF
+;無関心
+IF TALENT:クール
+	TIMES A , 1.10
+	TIMES B , 1.05
+ENDIF
+;感情乏しい
+IF TALENT:感情乏しい
+	TIMES A , 1.10
+	TIMES B , 1.05
+ENDIF
+;好奇心
+IF TALENT:好奇心
+	TIMES A , 0.95
+	TIMES B , 0.95
+ENDIF
+;保守的
+IF TALENT:保守的
+	TIMES A , 1.20
+	TIMES B , 1.10
+ENDIF
+
+;抑圧
+IF TALENT:抑圧
+	TIMES A , 1.10
+	TIMES B , 1.05
+;解放
+ELSEIF TALENT:解放
+	TIMES A , 0.90
+	TIMES B , 0.95
+ENDIF
+
+;抵抗
+IF TALENT:抵抗
+	TIMES A , 1.20
+	TIMES B , 1.10
+ENDIF
+
+;色情狂
+IF TALENT:絶倫
+	TIMES A , 0.40
+	TIMES B , 0.40
+ENDIF
+
+;恥じらい
+IF TALENT:恥じらい
+	TIMES A , 1.10
+	TIMES B , 1.05
+;恥薄い
+ELSEIF TALENT:恥薄い
+	TIMES A , 0.95
+	TIMES B , 0.95
+ENDIF
+
+;習得早い
+IF TALENT:素質
+	TIMES A , 0.80
+	TIMES B , 0.80
+;習得遅い
+ELSEIF TALENT:習得遅い
+	TIMES A , 1.50
+	TIMES B , 1.20
+ENDIF
+
+;献身的
+IF TALENT:献身的
+	TIMES A , 0.95
+	TIMES B , 0.95
+ENDIF
+;汚れ無視
+IF TALENT:汚れ無視
+	TIMES A , 0.95
+	TIMES B , 0.95
+ENDIF
+
+;性交中毒
+IF ABL:性交中毒 < 3
+	TIMES A , 1.00
+	TIMES B , 1.00
+ELSEIF ABL:性交中毒 < 6
+	TIMES A , 0.95
+	TIMES B , 0.95
+ELSEIF ABL:性交中毒 < 8
+	TIMES A , 0.90
+	TIMES B , 0.90
+ELSEIF ABL:性交中毒 < 10
+	TIMES A , 0.85
+	TIMES B , 0.85
+ELSE
+	TIMES A , 0.80
+	TIMES B , 0.80
+ENDIF
+
+IF TALENT:淫魔
+	TIMES A , 0.01
+	TIMES B , 0.10
+ENDIF
+
+;最低でも1回・1個は必要
+SIF A < 1
+	A = 1
+SIF B < 1
+	B = 1
+
+;習得の珠は足りている？
+SIF JUEL:習得 < A
+	I |= 1
+;性交経験が必要
+SIF EXP:性交経験 < B
+	I |= 2
+;Lv4までは技巧が必要
+SIF ABL:技巧 < 5 && ABL:技巧 < ABL:性交技術 + 1
+	I |= 4
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+;
+;
+;

@@ -1,0 +1,354 @@
+﻿;===========================================================
+;特殊営業で使用する補助関数群
+;===========================================================
+;-----------------------------------------------------------
+;特殊営業参加キャラの相性をチェック
+;-----------------------------------------------------------
+@WORK_SUB_RELATION
+FLAG:特殊営業時のキャラの相性 = 0
+IF FLAG:特殊営業参加人数 >= 2
+	E = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130
+			CALL WORK_SUB_RELATION_02
+		IF E == -1
+			E = 0
+			BREAK
+		ENDIF
+	REND
+	E /= FLAG:特殊営業参加人数
+	E /= FLAG:特殊営業参加人数 - 1
+	SIF E < 50
+		E = 50
+	SIF E > 200
+		E = 200
+	FLAG:特殊営業時のキャラの相性 = E
+ENDIF
+
+@WORK_SUB_RELATION_02
+X = COUNT
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF X == COUNT
+		CONTINUE
+	F = NO:COUNT
+	IF RELATION:X:F == 0
+		E += 100
+	ELSEIF RELATION:X:F < 100
+		E = -1
+		BREAK
+	ELSE
+		E += RELATION:X:F
+	ENDIF
+REND
+COUNT = X
+
+
+;-----------------------------------------------------------
+;特殊営業夜の部で起こる乱交内容の判定
+;-----------------------------------------------------------
+@WORK_SP_SEX_01
+
+;メンバー全員が淫乱・娼婦持ちか
+E = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF TALENT:COUNT:淫乱 == 0 || TALENT:COUNT:風俗嬢 == 0
+		E = 0
+REND
+;メンバー全員がＶ使用不可ならＶ使用なし
+F = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+		CONTINUE
+	F = 0
+REND
+
+SIF E == 0 && FLAG:特殊営業時のキャラの相性 >= 150 && FLAG:特殊営業参加人数 >= 2
+	PRINT 恐怖のあまり寄り添っていた
+CALL WORK_SUB_PRINT_MEMBER
+PRINT は
+
+IF E == 0 && FLAG:特殊営業時のキャラの相性 >= 150 && FLAG:特殊営業参加人数 >= 2
+	PRINTL 、暴徒の手で強引に引き離され、
+ELSEIF E == 0
+	PRINTFORML 逃げようとしたが捕まってしまい、
+ENDIF
+
+PRINTFORM 群がった群衆に
+SIF F == 0
+	PRINT ヴァギナと
+PRINTFORM アヌスと口を繰り返し犯され続けた……
+PRINTL 
+
+;処女喪失
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF CFLAG:営業でＶ使用不能フラグ
+		CONTINUE
+	IF TALENT:COUNT:処女
+		CFLAG:COUNT:Ｖ売春で処女喪失フラグ = 1
+	ENDIF
+REND
+
+;-----------------------------------------------------------
+;特殊営業で起こる乱交内容の判定（その２）
+;-----------------------------------------------------------
+@WORK_SP_SEX_02
+
+;参加人数が多ければ一人あたりの負担減
+;Ｖ使用回数は人数＋０～５
+TCVAR:Ｖ経験 = (G / FLAG:特殊営業参加人数) + RAND:6
+;Ｖ使用不可フラグチェック
+SIF CFLAG:営業でＶ使用不能フラグ
+	TCVAR:Ｖ経験 = 0
+
+;Ａ使用回数は人数＋０～５
+TCVAR:Ａ経験 = (G / FLAG:特殊営業参加人数) + RAND:6
+
+;フェラ回数は人数＋０～４
+TCVAR:フェラ経験 = (G / FLAG:特殊営業参加人数) + RAND:5
+
+;精液経験はＶ＋Ａ＋フェラ回数
+TCVAR:精液経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験 + TCVAR:フェラ経験
+
+;総性交経験はＶ＋Ａ使用回数
+TCVAR:性交経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験
+
+;ファーストキス
+IF CFLAG:ファーストキスの相手 == -1
+	PRINTFORML %CALLNAME:TARGET%は見知らぬ男にファーストキスを奪われた……
+	IF CFLAG:ファーストキスの相手 == -1
+		CFLAG:ファーストキスの相手 = 2
+		CSTR:ファーストキスの相手 = 知らないオトコの人
+		BASE:魅力値 -= 10
+	ENDIF
+	;異常体験に＋１
+	TCVAR:異常経験 += 1
+ENDIF
+
+;処女喪失
+IF CFLAG:Ｖ売春で処女喪失フラグ == 1
+	SETCOLOR 0xF58F98
+	PRINTFORML 【処女喪失】
+	RESETCOLOR
+	TALENT:処女 = 0
+	;初体験の相手（輪姦）を記録
+	IF CFLAG:初体験の相手 == 0
+		CFLAG:初体験の相手 = 1
+		CSTR:処女喪失の相手 = 知らないオトコの人
+		BASE:魅力値 -= 20
+	ENDIF
+	;異常体験に＋２
+	TCVAR:異常経験 += 2
+ENDIF
+
+;アナル処女喪失
+IF TALENT:アナル処女 == 1
+	SETCOLOR 0xF58F98
+	PRINTFORML 【アナル処女喪失】
+	RESETCOLOR
+	TALENT:アナル処女 = 0
+	;初体験の相手（輪姦）を記録
+		CSTR:アナル処女喪失の相手 = 知らないオトコの人
+	;異常体験に＋２
+	TCVAR:異常経験 += 2
+	BASE:魅力値 -= 10
+ENDIF
+
+
+;異常経験が10未満なら+1
+SIF EXP:異常経験 < 10
+	TCVAR:異常経験 += 1
+
+;欲望５以上か淫乱か娼婦ならＡ・Ｖ感覚に応じて絶頂経験に加算
+IF ABL:欲望 >= 5 || TALENT:淫乱 || TALENT:風俗嬢
+	IF ABL:Ｖ感覚 >= 5 && ABL:Ａ感覚 >= 5
+		TCVAR:絶頂経験 = ( TCVAR:Ｖ経験 + TCVAR:Ａ経験 )/2
+	ELSEIF ABL:Ｖ感覚 >= 5
+		TCVAR:絶頂経験 = ( TCVAR:Ｖ経験 / 2 )
+	ELSEIF ABL:Ａ感覚 >= 5
+		TCVAR:絶頂経験 = ( TCVAR:Ａ経験 / 2 )
+	ENDIF
+ENDIF
+
+;否定の珠
+;輪姦だとモリモリ溜まる
+TIMES U:100 , 1.20
+U:100 *= M
+	
+;経験補正
+;処女喪失だとかなり増える
+SIF CFLAG:Ｖ売春で処女喪失フラグ
+	TIMES U:100 , 10.00
+;Ｖ経験が足りないとちょっと増える
+SIF EXP:Ｖ経験 <= 200 && CFLAG:営業でＶ使用不能フラグ == 0
+	TIMES U:100 , 1.10
+;Ａ経験が足りないとちょっと増える
+SIF EXP:Ａ経験 <= 200
+	TIMES U:100 , 1.20
+
+;売春中毒のレベルに応じてちょっとずつ減る
+IF ABL:売春中毒 == 1
+	TIMES U:100 , 0.90
+ELSEIF ABL:売春中毒 == 2
+	TIMES U:100 , 0.80
+ELSEIF ABL:売春中毒 == 3
+	TIMES U:100 , 0.70
+ELSEIF ABL:売春中毒 == 4
+	TIMES U:100 , 0.60
+ELSEIF ABL:売春中毒 >= 5
+	TIMES U:100 , 0.50
+ENDIF
+
+;素質補正
+;反抗的だと増える
+SIF TALENT:ナマイキ
+	TIMES U:100 , 1.20
+;保守的だと増える
+SIF TALENT:保守的
+	TIMES U:100 , 1.30
+;貞操観念だと凄く増える
+SIF TALENT:貞操観念
+	TIMES U:100 , 2.50
+;貞操無頓着だと少なくなる
+SIF TALENT:貞操無頓着
+	TIMES U:100 , 0.90
+;抵抗だと増える
+SIF TALENT:抵抗
+	TIMES U:100 , 2.00
+;淫乱だと一気に少なくなる
+SIF TALENT:淫乱
+	TIMES U:100 , 0.50
+;倒錯的だと少なくなる
+SIF TALENT:倒錯的
+	TIMES U:100 , 0.80
+;マゾだと一気に少なくなる
+SIF TALENT:マゾ
+	TIMES U:100 , 0.50
+;愛してるとかなり嫌な気分
+SIF TALENT:恋心
+	TIMES U:100 , 2.50
+;妄信してるとわりと少なくなる
+SIF TALENT:妄信
+	TIMES U:100 , 0.70
+;嫉妬してるとこれは酷い
+SIF TALENT:嫉妬
+	U:100 *= 100
+;娼婦だと一気に少なくなる
+SIF TALENT:風俗嬢
+	TIMES U:100 , 0.60
+;傾城だとほとんどなくなる
+SIF TALENT:高級娼婦
+	TIMES U:100 , 0.10
+;求愛だと凄く嫌な気分
+SIF TALENT:彼氏あり
+	TIMES U:100 , 2.50
+
+;参加人数による軽減
+U:100 /= FLAG:特殊営業参加人数
+
+RETURN 1
+
+;-----------------------------------------------------------
+;共通する獲得資金処理
+;-----------------------------------------------------------
+@WORK_SP_MONEY_CM
+;参加者同士の相性による補正
+IF FLAG:特殊営業参加人数 >= 2 && FLAG:特殊営業時のキャラの相性 != 100
+	V = FLAG:特殊営業時のキャラの相性
+	PRINT 相性補正
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;失敗だと半額払い戻し。
+IF A <= 1
+	V = 50
+	PRINT 営業失敗
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;難易度補正
+;HARD
+IF FLAG:難易度 == 3
+	V = 80
+;POWERFUL
+ELSEIF FLAG:難易度 == 4
+	V = 60
+ENDIF
+IF V
+	PRINT 難易度補正
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;-----------------------------------------------------------
+;特殊営業終了処理
+;-----------------------------------------------------------
+@WORK_SP_AFTER
+;処女喪失フラグ、Ａ・Ｖ経験判定フラグはここで消す
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	CFLAG:Ｖ売春で処女喪失フラグ = 0
+	CFLAG:Ｖ売春で否定の珠増加フラグ = 0
+	CFLAG:Ａ売春で否定の珠増加フラグ = 0
+	CFLAG:公衆便所プレイで公開浣腸ショー = 0
+	CFLAG:営業でＶ使用不能フラグ = 0
+REND
+
+;参加人数初期化
+FLAG:特殊営業参加人数 = 0
+
+;特殊チケット初期化
+FLAG:特殊営業で夜の部を開催フラグ = 0
+;相性フラグ初期化
+FLAG:特殊営業時のキャラの相性 = 0
+;お揃いフラグ初期化
+FLAG:特殊営業時お揃い衣装 = 0
+;特殊営業のタイプ詳細フラグ初期化
+FLAG:特殊営業タイプ詳細 = 0
+
+;近親フラグクリア
+TFLAG:近親相姦 = 0
+
+;-----------------------------------------------------------
+;その他の特殊営業用サブ関数群
+;-----------------------------------------------------------
+;参加キャラのフルネームを表示
+@WORK_SUB_PRINT_FULLNAME
+S = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF S
+		PRINT と
+	PRINTFORM %NAME:COUNT%
+	S = 1
+REND
+S = 0
+
+;参加キャラの呼び名を表示
+@WORK_SUB_PRINT_MEMBER
+IF FLAG:特殊営業参加人数 == 1
+	PRINTFORM %CALLNAME:TARGET%
+ELSEIF FLAG:特殊営業参加人数 == 2
+	PRINTFORM ２人
+ELSEIF FLAG:特殊営業参加人数 == 3
+	PRINT ３人
+ELSEIF FLAG:特殊営業参加人数 >= 4
+	PRINTFORM %CALLNAME:TARGET%たち
+ENDIF

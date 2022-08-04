@@ -1,0 +1,473 @@
+﻿;===========================================================
+;処女オークション関係の処理はここで
+;===========================================================
+;eraIm@s_ver.0.17βdより流用して改造(pawapokya-)
+;===========================================================
+@V_AUCTION
+DRAWLINE
+
+;コンドーム使用フラグ外す
+CFLAG:労役でコンドーム使用 = 0
+
+;ローカル変数初期化
+A = 0
+B = 0
+C = 0
+G = 0
+M = 0
+N = 0
+O = 0
+L = 0
+
+REPEAT 101
+	TCVAR:COUNT = 0
+	U:COUNT = 0
+REND
+
+;調教対象と助手を空に
+TARGET = -1
+ASSI = -1
+;対象キャラをTARGETに代入
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		TARGET = COUNT
+REND
+
+;客の数を計算
+C = EXP:人気
+C /= 5
+IF C
+	REPEAT C
+		G += RAND:2
+	REND
+ENDIF
+
+;娼館自体の人気による加算
+D = EXP:MASTER:人気
+D /= 5
+IF D
+	REPEAT D
+		G += RAND:2
+	REND
+ENDIF
+
+;特定の素質を持っていた場合ボーナス
+;人気者
+SIF TALENT:人気者
+	G += 1
+;娼婦
+SIF TALENT:風俗嬢
+	G += 2
+;娼婦
+SIF TALENT:風俗嬢
+	G += 6
+;傾城
+SIF TALENT:高級娼婦
+	G += 3
+;アイドル
+SIF TALENT:アイドル
+	G += 10
+;令嬢
+SIF TALENT:令嬢
+	G += 5
+;貴族
+SIF TALENT:貴族
+	G += 8
+;貴族
+SIF TALENT:ＡＶ女優
+	G += 5
+;貴族
+SIF TALENT:人気ＡＶ女優
+	G += 20
+;狂気
+SIF TALENT:狂気
+	G -= 5
+;崩壊
+SIF TALENT:崩壊
+	G -= 15
+
+;10人以下だった場合、10人にします
+SIF G < 10
+	G = 10
+
+PRINTFORML %NAME:TARGET%の処女オークションを開いた……
+	CALL PRINT_CLOTHTYPE
+PRINTFORML の%NAME:TARGET%が会場に連れて来られた…
+	CALL PRINT_BODYPIERCE
+PRINTFORM 
+PRINTFORML 
+	IF TALENT:淫乱
+
+		PRINTFORM %CALLNAME:TARGET%は
+		PRINTFORM これから名前も知らない誰かによってもたらせられる未知の快楽に興奮したのか、
+		PRINTFORML 淫らな声をあげて秘所をぐちゅぐちゅとまさぐり始めた…
+		PRINTFORM 美少女が他人の視線もはばからずオナニーに耽る姿に客たちからは
+		PRINTFORM 興奮した吐息が漏れ出ていた…　
+		PRINTW 　　　　　 
+	ENDIF
+
+;	IF TALENT:ＡＶ女優
+;		PRINTFORM %CALLNAME:TARGET%の汗にまみれ日焼けした肌は
+;		PRINTFORM スポットライトを浴びて淫靡に照らされている…　　　
+;		PRINTW 　　　　　 
+;	ENDIF
+
+
+	IF TALENT:ふたなり
+		PRINTFORM %CALLNAME:TARGET%のような美少女にはあまりにもアンバランスな、
+		PRINTFORM 肉体改造によって生やされたズル剥けの極太ふたなりペニスが
+		PRINTFORM 観客の視線に晒されて%CALLNAME:TARGET%は興奮しているのか、
+			SIF CFLAG:陰毛の状態 >= 2
+				PRINT 陰毛が茂っている
+		PRINTFORML 股間でむくむくと勃起しはじめた…　　
+		PRINTW 　　　　　 
+	ENDIF
+
+	;人気AV女優が取得できるようになったのでそっちで
+	IF TALENT:人気ＡＶ女優
+		SIF CFLAG:アイドル引退判定 == 1
+			PRINT アイドルを引退した後、
+		PRINTFORM 人気ＡＶ女優になった%CALLNAME:TARGET%だが、
+		PRINTFORML 未だ本番行為を撮影したビデオはリリースされていなかった
+		PRINTFORML 今回のオークションはそんな%CALLNAME:TARGET%の処女喪失シーンの撮影も兼ねていた
+		PRINTFORM ＡＶ女優の処女を奪えるという滅多にない経験に興奮した客たちは
+		PRINTFORM ステージ上で
+		CALL PRINT_CLOTHTYPE
+		PRINTFORM を晒す%CALLNAME:TARGET%をオカズに肉棒をしごき
+		PRINTFORM 挿入への準備を整えていた…
+		PRINTW 　　　　　 
+	ENDIF
+;口上
+TFLAG:口上番号 = 108
+CALL SELF_KOJO
+
+WAIT
+
+REPEAT (G / 5)
+	M = COUNT * 5000 + 5000
+	;気丈
+	SIF TALENT:気丈
+		TIMES M , 1.10
+	;素直
+	SIF TALENT:素直
+		TIMES M , 1.10
+	;恥じらい
+	SIF TALENT:恥じらい
+		TIMES M , 1.10
+	;献身的
+	SIF TALENT:献身的
+		TIMES M , 1.10
+	;淫乱
+	SIF TALENT:淫乱
+		TIMES M , 2.00
+	;魅惑
+	SIF TALENT:魅惑
+		TIMES M , 1.50
+	;謎の魅力
+	SIF TALENT:謎の魅力
+		TIMES M , 2.00
+	;人気者
+	SIF TALENT:人気者
+		TIMES M , 1.50
+	;幼稚
+	SIF TALENT:幼稚
+		TIMES M , 1.10
+	;狂気
+	SIF TALENT:狂気
+		TIMES M , 0.50
+	;崩壊
+	SIF TALENT:崩壊
+		TIMES M , 0.10
+	;娼婦
+	SIF TALENT:風俗嬢
+		TIMES M , 1.30
+	;傾城
+	SIF TALENT:高級娼婦
+		TIMES M , 1.50
+	;アイドル
+	SIF TALENT:アイドル
+		TIMES M , 1.50
+	;令嬢
+	SIF TALENT:令嬢
+		TIMES M , 1.50
+	;貴族
+	SIF TALENT:貴族
+		TIMES M , 2.00
+	;貴族
+;	SIF TALENT:ＡＶ女優
+;		TIMES M , 2.00
+	;AV女優
+	SIF TALENT:ＡＶ女優
+		TIMES M , 5.00
+	PRINTFORML 「{M}ポイント！」
+	PRINTW 　　……
+REND
+PRINTW 　…………
+PRINTW ………………
+PRINTFORMW どうやら落札者が出たようだ
+
+;落札額算出
+M = 1000
+
+M *= G
+
+;素質によるボーナス
+;気丈
+SIF TALENT:気丈
+	TIMES M , 1.10
+;素直
+SIF TALENT:素直
+	TIMES M , 1.10
+;恥じらい
+SIF TALENT:恥じらい
+	TIMES M , 1.10
+;献身的
+SIF TALENT:献身的
+	TIMES M , 1.10
+;淫乱
+SIF TALENT:淫乱
+	TIMES M , 2.00
+;魅惑
+SIF TALENT:魅惑
+	TIMES M , 1.50
+;謎の魅力
+SIF TALENT:謎の魅力
+	TIMES M , 2.00
+;人気者
+SIF TALENT:人気者
+	TIMES M , 1.50
+;幼稚
+SIF TALENT:幼稚
+	TIMES M , 1.10
+;狂気
+SIF TALENT:狂気
+	TIMES M , 0.50
+;崩壊
+SIF TALENT:崩壊
+	TIMES M , 0.10
+;娼婦
+SIF TALENT:風俗嬢
+	TIMES M , 1.30
+;傾城
+SIF TALENT:高級娼婦
+	TIMES M , 1.50
+;アイドル
+SIF TALENT:アイドル
+	TIMES M , 1.50
+;令嬢
+SIF TALENT:令嬢
+	TIMES M , 1.50
+;貴族
+SIF TALENT:貴族
+	TIMES M , 2.00
+;貴族
+;SIF TALENT:ＡＶ女優
+;	TIMES M , 2.00
+;貴族
+SIF TALENT:ＡＶ女優
+	TIMES M , 5.00
+
+PRINTFORML %CALLNAME:TARGET%の処女は{M}ポイントで落札されました
+	IF TALENT:ふたなり
+		PRINTFORM %CALLNAME:TARGET%のペニスは興奮のあまり完全に勃起し
+		PRINTFORML 鈴口から先走りの汁をよだれのように垂れ流していた……
+	ENDIF
+PRINTFORML %CALLNAME:TARGET%の処女は落札者に捧げられた……
+PRINTFORML  
+PRINTFORML ……翌朝。
+PRINTFORM 落札者が会場から去った後、プレイルームから出てこない%CALLNAME:TARGET%を迎えに行くと
+PRINTFORML %CALLNAME:TARGET%はベッドの上で精液まみれのまま、うつろな目で横たわっていた…
+
+MONEY += M
+
+	
+
+WAIT
+
+PRINTFORML 【処女喪失】
+CFLAG:Ｖ売春で処女喪失フラグ = 1
+TALENT:処女 = 0
+;初体験の相手（処女オークション）を記録
+IF CFLAG:初体験の相手 == 0
+	CFLAG:初体験の相手 = 2
+	CSTR:処女喪失の相手 = 知らないオトコの人
+ENDIF
+IF CFLAG:ファーストキスの相手 == -1
+	PRINTFORML %CALLNAME:TARGET%は落札者にファーストキスを奪われた……
+	;CFLAG:16を2にするより現行ままのがいいかな……
+	;場所は娼館のプレイルームという前提で娼館フラグ立ててます
+	CFLAG:ファーストキスの相手 = 1
+	CSTR:ファーストキスの相手 = 知らないオトコの人
+	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+	CFLAG:ファーストキス喪失月 = DAY:1
+	CFLAG:ファーストキス喪失日 = DAY:2
+	CFLAG:ファーストキス喪失場所 = 7
+	;異常体験に＋１
+	TCVAR:異常経験 += 1
+ENDIF
+;口上
+TFLAG:口上番号 = 109
+CALL SELF_KOJO
+
+;Ｖ経験
+TCVAR:Ｖ経験 = RAND:10 > 1
+;精液経験
+TCVAR:精液経験 = TCVAR:Ｖ経験
+;性交経験
+TCVAR:性交経験 = TCVAR:Ｖ経験
+;売春経験
+TCVAR:売春経験 = 1
+;異常経験
+TCVAR:異常経験 = 2
+
+;売春中毒のレベルに応じてちょっとずつ減る
+IF ABL:売春中毒 == 1
+	TIMES U:100 , 0.90
+ELSEIF ABL:売春中毒 == 2
+	TIMES U:100 , 0.80
+ELSEIF ABL:売春中毒 == 3
+	TIMES U:100 , 0.70
+ELSEIF ABL:売春中毒 == 4
+	TIMES U:100 , 0.60
+ELSEIF ABL:売春中毒 >= 5
+	TIMES U:100 , 0.50
+ENDIF
+
+;素質補正
+;反抗的だと増える
+SIF TALENT:ナマイキ
+	TIMES U:100 , 1.20
+;プライド高いと増える
+SIF TALENT:プライド高い
+	TIMES U:100 , 1.50
+;プライド低いと少なくなる
+SIF TALENT:プライド低い
+	TIMES U:100 , 0.90
+;無関心だと少なくなる
+SIF TALENT:クール
+	TIMES U:100 , 0.90
+;感情乏しいと少なくなる
+SIF TALENT:感情乏しい
+	TIMES U:100 , 0.90
+;保守的だと増える
+SIF TALENT:保守的
+	TIMES U:100 , 1.30
+;目立ちたがりだと少なくなる
+SIF TALENT:目立ちたがり
+	TIMES U:100 , 0.80
+;貞操観念だと凄く増える
+SIF TALENT:貞操観念
+	TIMES U:100 , 2.50
+;貞操無頓着だと少なくなる
+SIF TALENT:貞操無頓着
+	TIMES U:100 , 0.90
+;抑圧だと増える
+SIF TALENT:抑圧
+	TIMES U:100 , 1.20
+;解放だと少なくなる
+SIF TALENT:解放
+	TIMES U:100 , 0.80
+;抵抗だと増える
+SIF TALENT:抵抗
+	TIMES U:100 , 2.00
+;恥じらいだと増える
+SIF TALENT:恥じらい
+	TIMES U:100 , 1.10
+;淫乱だとぐっと少なくなる
+SIF TALENT:淫乱
+	TIMES U:100 , 0.20
+;倒錯的だとわりと少なくなる
+SIF TALENT:倒錯的
+	TIMES U:100 , 0.80
+;マゾだと凄く少なくなる
+SIF TALENT:マゾ
+	TIMES U:100 , 0.30
+;嫉妬してると破滅的
+SIF TALENT:嫉妬
+	U:100 *= 200
+;愛してると破滅的
+SIF TALENT:恋心
+	U:100 *= 100
+;妄信してるとわりと少なくなる
+SIF TALENT:妄信
+	TIMES U:100 , 0.70
+;娼婦だとかなり少なくなる
+SIF TALENT:風俗嬢
+	TIMES U:100 , 0.60
+;傾城だと一気に少なくなる
+SIF TALENT:高級娼婦
+	TIMES U:100 , 0.10
+;求愛だと破滅的
+SIF TALENT:彼氏あり
+	U:100 *= 100
+
+;客は処女を散らす目的で来ているので、奴隷が処女であるだけで満足を得る
+A = 5
+
+DRAWLINE
+
+CALL WORK_EXP
+
+
+DRAWLINE
+
+;体力減少の計算
+LOSEBASE:体力 = 500 + G * 2
+
+;売春中毒のレベルに応じてちょっとずつ減る
+IF ABL:売春中毒 == 1
+	TIMES LOSEBASE:体力 , 0.90
+ELSEIF ABL:売春中毒 == 2
+	TIMES LOSEBASE:体力 , 0.80
+ELSEIF ABL:売春中毒 == 3
+	TIMES LOSEBASE:体力 , 0.70
+ELSEIF ABL:売春中毒 == 4
+	TIMES LOSEBASE:体力 , 0.60
+ELSEIF ABL:売春中毒 >= 5
+	TIMES LOSEBASE:体力 , 0.50
+ENDIF
+
+SIF LOSEBASE:体力 >= BASE:体力
+	LOSEBASE:体力 = BASE:体力
+
+PRINT  体力消費　　:
+N = BASE:体力
+CALL FIGURE_INDENT
+PRINTV BASE:体力
+PRINT  - 
+N = LOSEBASE:体力
+CALL FIGURE_INDENT
+PRINTV LOSEBASE:体力
+PRINT  = 
+N = BASE:体力 - LOSEBASE:体力
+CALL FIGURE_INDENT
+PRINTVL BASE:体力 - LOSEBASE:体力
+
+BASE:体力 -= LOSEBASE:体力
+
+PRINT  体力　　　　:
+BAR BASE:体力, MAXBASE:体力, 32
+PRINTFORML ({BASE:体力}/{MAXBASE:体力})
+
+;フラグリセット
+CALL WORK_SP_AFTER
+
+;体力が0以下になった場合の処理
+IF BASE:体力 <= 0
+	PRINTFORML 処女を散らされた%CALLNAME:TARGET%は、ぴくりとも動かなくなった
+	PRINTFORML 何をやっても反応がない……
+	WAIT
+	;キャラの死亡確認
+	CALL CHARADEAD_CHECK
+ENDIF
+
+
+;処女オークションに伴う妊娠チェック
+;通常のセックスより妊娠リスクがかなり高い（理由：その方が面白いから）
+CFLAG:娼館などの客から奴隷への中田氏カウント += 100
+
+WAIT
+
+BEGIN TURNEND
+
+RETURN 1

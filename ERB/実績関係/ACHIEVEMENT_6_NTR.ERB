@@ -1,0 +1,38 @@
+﻿;===========================================================
+;実績・NTR ＝ CUCKOLD
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_6
+RESULTS = NTR ＝ CUCKOLD
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_6
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:彼氏あり == 1 && EXP:COUNT:彼氏とのＳＥＸ回数 >= 1
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:6 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	GLOBAL:6 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:6
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_6
+; 解説文
+PRINTFORM 大勢の女の子とそれなりにいい関係になっていたものの、そんな彼女たちの身も心も
+PRINTFORML 他の男に寝取られてしまったあなたにぴったりの実績ですね
+PRINTFORML 英語では『寝取られ』を『CUCKOLD』と言うそうです。
+PRINTFORMW 今度は寝取られないようにあなたのテクニックで女の子たちを骨抜きにしてみるといいでしょう
+; ボーナスなどの処理はここ以降に記述する
+PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
+PRINTFORM 引き継ぎプレイではなく、新規ゲーム開始後にこの実績を選択していただくと主人の技量が4
+PRINTFORMW 以下の場合、主人の技量が５となります
+SIF ABL:MASTER:技巧 <= 4
+	ABL:MASTER:技巧 = 5

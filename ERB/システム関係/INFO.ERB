@@ -1,0 +1,1204 @@
+﻿;========================================================
+;キャラの能力表示
+;eratohoAよりスクリプトを流用
+;========================================================
+@SHOW_INFO, ARG
+						;****パラ表示改造追加ここから****
+IF ARG == 0
+	DRAWLINE
+	CALL SHOW_TALENT
+	DRAWLINE
+	CALL SHOW_INFO_ABL
+	DRAWLINE
+	IF TARGET != 0
+		CALL SHOW_INFO_MARK
+	DRAWLINE
+	ENDIF
+	CALL SHOW_INFO_EXP
+	CALL SHOW_JUEL
+ELSEIF ARG == 1
+	DRAWLINE
+	CALL SHOW_INFO_BIRTHDAY
+	PRINT   
+	CALL SHOW_INFO_BODYSIZE
+						;****追加ここから****
+	IF FLAG:淫語なし == 0
+		DRAWLINE
+		CALL SHOW_INFO_SLUNG
+	ENDIF
+	DRAWLINE
+	CALL SHOW_INFO_LESSON
+						;****追加ここまで****
+	DRAWLINE
+	CALL SHOW_INFO_CASUALWEAR
+	DRAWLINE
+	IF TARGET != MASTER
+		CALL SHOW_APPEARACE
+		DRAWLINE
+	ENDIF
+ELSEIF ARG == 2
+		DRAWLINE
+	IF TARGET != MASTER
+		CALL SHOW_PROF
+		DRAWLINE
+	ENDIF
+ELSEIF ARG == 3
+	CALL PRINT_ACTRESS_STR
+						;****相性表示追加ここから****
+ELSEIF ARG == 4
+	DRAWLINE
+	CALL PRINT_ACTRESS_RELATION
+	DRAWLINE
+						;****相性表示追加ここまで****
+ENDIF
+						;****パラ表示改造追加ここまで****
+
+@PRINT_TALENTNAME(ARGS,COLUMN,SHOWCOLUMN)
+#DIM REF COLUMN
+#DIM SHOWCOLUMN
+
+PRINTFORM  %@"[%ARGS%]", SHOWLENGTH / SHOWCOLUMN, LEFT%
+RESETCOLOR
+COLUMN++
+
+IF COLUMN == SHOWCOLUMN
+	PRINTL
+	COLUMN = 0
+ENDIF
+
+;-------------------------------------------------
+;素質の表示 PRINT_TALENTと交換
+;-------------------------------------------------
+@SHOW_TALENT
+#DIM SHOWCOLUMN = 4
+#DIM COLUMN
+COLUMN = 0
+IF TALENT:処女
+	SETCOLOR 0xDDBBCC
+	CALL PRINT_TALENTNAME("処女",COLUMN,SHOWCOLUMN)
+ELSEIF !TALENT:処女 && !TALENT:オトコ
+	IF !TALENT:アナル処女
+		SETCOLOR 0xF58F98
+		CALL PRINT_TALENTNAME("両穴貫通済",COLUMN,SHOWCOLUMN)
+	ELSE
+		CALL PRINT_TALENTNAME("非処女",COLUMN,SHOWCOLUMN)
+	ENDIF
+ENDIF
+IF TALENT:童貞
+	SETCOLOR 0xDDBBCC
+	CALL PRINT_TALENTNAME("童貞",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:アナル処女
+	SETCOLOR 0xDDBBCC
+	CALL PRINT_TALENTNAME("アナル処女",COLUMN,SHOWCOLUMN)
+ELSEIF !TALENT:アナル処女
+	IF TALENT:処女
+		CALL PRINT_TALENTNAME("アナル非処女",COLUMN,SHOWCOLUMN)
+	ENDIF
+ENDIF
+IF TALENT:具現
+	SETCOLOR 0xFFD700
+	CALL PRINT_TALENTNAME("具現",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:ふたなり
+	CALL PRINT_TALENTNAME("ふたなり",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:オトコ
+	CALL PRINT_TALENTNAME("オトコ",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:恋心 && !TALENT:永遠の愛
+	SETCOLOR 0xDDBBCC
+	CALL PRINT_TALENTNAME("恋心",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:永遠の愛
+	SETCOLOR 0xAFB4DB
+	CALL PRINT_TALENTNAME("永遠の愛",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:絶倫 == 1
+	SETCOLOR 0xAFB4DB
+	CALL PRINT_TALENTNAME("絶倫",COLUMN,SHOWCOLUMN)
+ENDIF	
+IF TALENT:淫乱 && TALENT:褐色肌 && TALENT:ギャル系 && !TALENT:天使 && !TALENT:淫魔
+	SETCOLOR 0xAFB4DB
+	CALL PRINT_TALENTNAME("黒ギャルビッチ",COLUMN,SHOWCOLUMN)
+ELSEIF TALENT:淫乱 && TALENT:ギャル系
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("淫乱ギャル",COLUMN,SHOWCOLUMN)
+ELSEIF TALENT:淫乱 && !TALENT:絶倫
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("淫乱",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:褐色肌 && TALENT:ギャル系 && !TALENT:淫乱 && !TALENT:天使 && !TALENT:淫魔
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("黒ギャル",COLUMN,SHOWCOLUMN)
+ELSEIF !TALENT:褐色肌 && TALENT:ギャル系 && !TALENT:淫乱 && !TALENT:天使 && !TALENT:淫魔
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("ギャル",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:セフレ
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("セフレ",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:淫魔 && TALENT:天使
+	SETCOLOR 0xFFD700
+	CALL PRINT_TALENTNAME("堕天使",COLUMN,SHOWCOLUMN)
+ELSEIF TALENT:淫魔 && !TALENT:天使
+	SETCOLOR 0xF58F98
+	IF !TALENT:オトコ
+		CALL PRINT_TALENTNAME("サキュバス",COLUMN,SHOWCOLUMN)
+	ELSEIF TALENT:ふたなり == 1
+		CALL PRINT_TALENTNAME("インキュバス",COLUMN,SHOWCOLUMN)
+	ENDIF
+ELSEIF TALENT:天使
+	SETCOLOR 0xDDBBCC
+	CALL PRINT_TALENTNAME("天使",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:高級娼婦
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("高級娼婦",COLUMN,SHOWCOLUMN)
+ELSEIF TALENT:風俗嬢
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("風俗嬢",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:彼氏あり
+	IF TALENT:清い付き合い
+		SETCOLOR 0xF58F98
+		CALL PRINT_TALENTNAME("清い付き合い",COLUMN,SHOWCOLUMN)
+	ELSE
+		SETCOLOR 0xF58F98
+		CALL PRINT_TALENTNAME("彼氏あり",COLUMN,SHOWCOLUMN)
+	ENDIF
+ENDIF
+IF TALENT:人気ＡＶ女優
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("人気ＡＶ女優",COLUMN,SHOWCOLUMN)
+ELSEIF TALENT:ＡＶ女優
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("ＡＶ女優",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:褐色肌 && (!TALENT:ギャル系 || TALENT:ギャル系 && (TALENT:天使 || TALENT:淫魔))
+	SETCOLOR 0xDDBBCC
+	CALL PRINT_TALENTNAME("褐色肌",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:セフレあり
+	SETCOLOR 0xF58F98
+	CALL PRINT_TALENTNAME("セフレあり",COLUMN,SHOWCOLUMN)
+ENDIF
+
+IF TALENT:ColorfulPureGirls 
+	SETCOLOR 0xAFB4DB
+	SIF TALENT:アイドル 
+		SETCOLOR 0xFFD700
+	CALL PRINT_TALENTNAME("ColorfulPureGirls",COLUMN,SHOWCOLUMN)
+ENDIF
+IF TALENT:オリジナルユニット && TALENT:アイドル
+	SETCOLOR 0xFFD700
+	CALL PRINT_TALENTNAME(CSTR:MASTER:アイドルユニット名,COLUMN,SHOWCOLUMN)
+ENDIF
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+FOR LOCAL, [[TALENT:特技素質]] + 1, [[TALENT:特技素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL || LOCAL == [[TALENT:オリジナルユニット]] || LOCAL == [[TALENT:ColorfulPureGirls]] || LOCAL == [[TALENT:天使]] || LOCAL == [[TALENT:淫魔]]
+		CONTINUE
+
+	SETCOLOR 0xFFD700
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+
+FOR LOCAL, [[TALENT:職業素質]] + 1, [[TALENT:職業素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL || LOCAL == [[TALENT:ＡＶ女優]] || LOCAL == [[TALENT:人気ＡＶ女優]] || LOCAL == [[TALENT:高級娼婦]] || LOCAL == [[TALENT:風俗嬢]]
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+
+FOR LOCAL, [[TALENT:技能素質]] + 1, [[TALENT:技能素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+
+FOR LOCAL, [[TALENT:性的関心素質]] + 1, [[TALENT:性的関心素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL || LOCAL == [[TALENT:ギャル系]] || LOCAL == [[TALENT:セフレ]] || LOCAL == [[TALENT:セフレあり]] || LOCAL == [[TALENT:彼氏あり]]
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+
+FOR LOCAL, [[TALENT:性格素質]] + 1, [[TALENT:性格素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL || LOCAL == [[TALENT:清い付き合い]]
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+
+FOR LOCAL, [[TALENT:Ｃ鈍感]], [[TALENT:Ｂ敏感]] + 1
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+FOR LOCAL, [[TALENT:陥落素質]] + 1, [[TALENT:陥落素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL || LOCAL == [[TALENT:永遠の愛]] || LOCAL == [[TALENT:絶倫]] || LOCAL == [[TALENT:恋心]] || LOCAL == [[TALENT:淫乱]]
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+COLUMN = 0
+
+FOR LOCAL, [[TALENT:身体特徴素質]] + 1, [[TALENT:身体特徴素質]] + 100
+	STRLENS TALENTNAME:LOCAL
+	SIF !RESULT || !TALENT:LOCAL || LOCAL == [[TALENT:褐色肌]]
+		CONTINUE
+
+	CALL PRINT_TALENTNAME(TALENTNAME:LOCAL,COLUMN,SHOWCOLUMN)
+NEXT 
+SIF COLUMN > 0
+	PRINTL
+
+;-------------------------------------------------
+;能力の表示 PRINT_ABLと交換
+;-------------------------------------------------
+@SHOW_INFO_ABL(MAKE_ABLUP_BUTTON=0)
+#DIM MAKE_ABLUP_BUTTON
+#DIM SHOWCOLUMN = 5
+#DIM COLUMN
+U = 0
+COLUMN = 0
+SIF MAKE_ABLUP_BUTTON
+	SHOWCOLUMN = 4
+REPEAT 100
+	STRLENS ABLNAME:COUNT
+	SIF !RESULT
+		CONTINUE
+	;男ならＶ感覚とレズっ気とレズ中毒は表示しない
+	SIF TALENT:オトコ && (COUNT == [[ABL:Ｖ感覚]] || COUNT == [[ABL:レズっ気]] || COUNT == [[ABL:レズ中毒]])
+		CONTINUE
+	;女ならホモっ気とホモ中毒は表示しない
+	SIF !TALENT:オトコ && COUNT == [[ABL:ＢＬっ気]]
+		CONTINUE
+	TRYCCALLFORM CAN_ABLUP{COUNT}
+	CATCH
+		SIF MAKE_ABLUP_BUTTON
+			CONTINUE
+	ENDCATCH
+
+	TEMP_STR '= @"%ABLNAME:COUNT, 10, LEFT%"
+	IF MAKE_ABLUP_BUTTON
+		PRINTFORM %TEMP_STR%
+		RESULT = 0
+		TRYCALLFORM CAN_ABLUP{COUNT}
+		CALL PRINT_BUTTON(@"[{ABL:COUNT, 2}LV]" + \@ RESULT ? %" * "% # %" " * 3% \@,ABL:COUNT < 10,COUNT)
+	ELSE
+		TEMP_STR '= TEMP_STR + @"{ABL:COUNT, 2}LV"
+		RESULT = 0
+		TRYCALLFORM CAN_ABLUP{COUNT}
+		TEMP_STR '= TEMP_STR + \@ RESULT ? %" * "% # %" " * 3% \@
+		PRINTFORM %TEMP_STR%
+	ENDIF
+	COLUMN++
+	IF COLUMN == SHOWCOLUMN
+		COLUMN = 0
+		PRINTL
+	ENDIF
+REND 
+SIF COLUMN > 0
+	PRINTL
+IF MAKE_ABLUP_BUTTON
+	PRINTFORM %MARKNAME:3, 10, LEFT%
+	RESULT = 0
+	TRYCALLFORM CAN_ABLUP99
+	CALL PRINT_BUTTON(@"[{MARK:反発刻印, 2}LV]" + \@ RESULT ? %" * "% # %" " * 3% \@,MARK:反発刻印,99,1)
+ENDIF
+
+;-------------------------------------------------
+;刻印の表示 PRINT_MARKと交換
+;-------------------------------------------------
+@SHOW_INFO_MARK
+PRINTFORM  苦痛:LV{MARK:苦痛刻印} 
+BAR MARK:苦痛刻印, 3, 3
+PRINTFORM    快楽:LV{MARK:快楽刻印} 
+BAR MARK:快楽刻印, 3, 3
+PRINTFORM    屈服:LV{MARK:屈服刻印} 
+BAR MARK:屈服刻印, 3, 3
+PRINTFORM    反発:LV{MARK:反発刻印} 
+BAR MARK:反発刻印, 3, 3
+CALL CAN_ABLUP99
+SIF RESULT == 1
+	PRINT  *
+PRINTL 
+
+
+;-------------------------------------------------
+;経験の表示 PRINT_EXPと交換
+;-------------------------------------------------
+@SHOW_INFO_EXP
+U = 0
+REPEAT 100
+	SIF EXP:COUNT == 0
+		CONTINUE
+	PRINTFORM  %EXPNAME:COUNT%:{EXP:COUNT} 
+	U += 1
+		IF U % 4 == 0
+			PRINTL 
+		ENDIF
+REND
+SIF U % 4 != 0
+	PRINTL 
+
+;-------------------------------------------------
+;現在のターゲットの体力バーを表示
+;-------------------------------------------------
+@LIFE_BAR
+
+SIF MAXBASE:体力 <= 0
+	RETURN 0
+
+LOCAL:1 = BASE:体力 * 100
+LOCAL = LOCAL:1 / MAXBASE:体力
+
+
+PRINT 体力値
+
+IF BASE:体力 < 0
+	BAR 0,MAXBASE:体力,32
+	PRINTFORM (0/{MAXBASE:体力})
+ELSE
+	BAR BASE:体力,MAXBASE:体力,32
+	PRINTFORM ({BASE:体力}/{MAXBASE:体力})
+ENDIF
+IF BASE:体力 < 0
+	PRINT ★死亡★
+ELSEIF BASE:体力 < 500
+	PRINT ★瀕死★
+ENDIF
+PRINTL 
+RESETCOLOR
+
+;-------------------------------------------------
+;現在のターゲットの気力バーを表示
+;-------------------------------------------------
+@VITAL_BAR
+SIF MAXBASE:気力 <= 0
+	RETURN 0
+
+PRINT 気力値
+IF BASE:気力 < 0
+	BAR 0,MAXBASE:気力,32
+	PRINTFORM (0/{MAXBASE:気力})
+ELSE
+	BAR BASE:気力,MAXBASE:気力,32
+	PRINTFORM ({BASE:気力}/{MAXBASE:気力})
+ENDIF
+
+SIF BASE:気力 <= 0
+	PRINT ★気力０★
+PRINTL
+RESETCOLOR
+
+;-------------------------------------------------
+;現在のターゲットの魅力値を表示
+;-------------------------------------------------
+@BEAUTY_BAR
+SIF MAXBASE:魅力値 <= 0
+	RETURN 0
+
+PRINT 魅力値
+IF BASE:魅力値 < 0
+	BAR 0,MAXBASE:魅力値,32
+	PRINTFORM (0/{MAXBASE:魅力値})
+ELSE
+	BAR BASE:魅力値,MAXBASE:魅力値,32
+	PRINTFORM ({BASE:魅力値}/{MAXBASE:魅力値})
+ENDIF
+PRINTL 
+
+;****追加ここから****
+;-------------------------------------------------
+;現在のターゲットの魔力量を表示
+;-------------------------------------------------
+@MP_BAR
+SIF MAXBASE:魔力 <= 0
+	RETURN 0
+
+PRINT  　魔力
+IF BASE:魔力 < 0 || TALENT:崩壊 == 1
+	BAR 0,MAXBASE:魔力,32
+	PRINTFORM (0/{MAXBASE:魔力})
+ELSE
+	BAR BASE:魔力,MAXBASE:魔力,32
+	PRINTFORM ({BASE:魔力}/{MAXBASE:魔力})
+ENDIF
+PRINTL 
+						;****追加ここまで****
+
+
+;-------------------------------------------------
+;現在のターゲットの寝取られ進行を表示
+;-------------------------------------------------
+@NTR_BAR
+SIF CFLAG:寝取られ完了値 <= 0
+	RETURN 0
+
+PRINT  寝行度
+IF CFLAG:寝取られ進行ポイント < 0
+	BAR 0,CFLAG:寝取られ完了値,32
+	PRINTFORM (0/{CFLAG:寝取られ完了値})
+ELSE
+	BAR CFLAG:寝取られ進行ポイント,CFLAG:寝取られ完了値,32
+	PRINTFORM ({CFLAG:寝取られ進行ポイント}/{CFLAG:寝取られ完了値})
+ENDIF
+PRINTL 
+
+
+;-------------------
+;現在のターゲットの外見情報を表示
+;-------------------------------------------------
+@SHOW_APPEARACE
+;髪色の状態 
+PRINTFORM  %CALLNAME:TARGET%は
+CALL PRINT_HAIRSTYLE
+PRINTL 。
+
+;現在の格好
+IF FLAG:着衣使用
+	PRINTFORM  指導ルームに呼び出す時の服装は
+	CALL PRINT_CLOTHTYPE
+		IF CFLAG:着衣状態 == 0
+			PRINTFORM 
+		ELSE
+			PRINTFORM 姿
+
+		ENDIF
+	PRINTL です。
+ENDIF
+
+;ズーコの着ぐるみを着ていたらここで終了
+IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	SIF CFLAG:着衣状態 == 64
+		PRINTL  どうやら、中身は全裸のようです。
+	RETURN 1
+ENDIF
+
+SIF (CFLAG:着衣状態 & 8) && (CFLAG:着衣状態 & 1) == 0 && CFLAG:上着のタイプ <= 240 && CFLAG:上着のタイプ >= 251
+	PRINTL  どうやら、パンツははいていないようです。
+
+IF CFLAG:タトゥーの有無 >= 1 && ((CFLAG:着衣状態 <= 3 || (CFLAG:着衣状態 == 15 && CFLAG:上着のタイプ >= 241 && CFLAG:上着のタイプ <= 250)) || (CFLAG:着衣状態 >= 64 && CFLAG:着衣状態 <= 67 && CFLAG:特別コスチュームのタイプ >= 51))
+	CALL PRINT_TATTO
+	PRINTFORML タトゥーが施されています。
+ENDIF
+
+
+
+IF (CFLAG:着衣状態 & 6) == 0 || CFLAG:着衣状態 == 0 || (CFLAG:着衣状態 & 1) == 1
+	IF CFLAG:腋毛の有無 == 1
+		PRINTL  両方の腋では腋毛が綺麗に生えそろっています。
+	ELSE
+		PRINTL  ムダ毛の処理は完璧のようです。
+	ENDIF
+ENDIF
+
+;性器周辺が確認できない状況ならここで終了
+SIF CFLAG:着衣状態 & 17
+	RETURN 0
+;オムツ着用中でも終了
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 69
+	RETURN 0
+;スカートタイプ着用で従順＋露出度が３未満でもここで終了
+SIF (CFLAG:着衣状態 & 8) && ABL:信頼 + ABL:露出癖 < 3
+	RETURN 0
+SIF (CFLAG:着衣状態 & 8) && (CFLAG:上着のタイプ >= 240 && CFLAG:上着のタイプ <= 250)
+	RETURN 0
+
+PRINT  
+IF (CFLAG:着衣状態 & 8) && (FLAG:陰毛を生やす || (CFLAG:ピアスの装着状況 & 12)) 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINT の裾を持ち上げさせると、
+ENDIF
+
+;陰毛の状態
+IF FLAG:陰毛を生やす 
+	IF CFLAG:陰毛の状態 > 18
+		PRINTL 恥丘からアナルまで密生した陰毛に覆われています。
+	ELSEIF CFLAG:陰毛の状態 > 13
+		PRINTL 股間では伸び放題の陰毛が繁っています。
+	ELSEIF CFLAG:陰毛の状態 > 10
+		PRINTL 恥丘では陰毛が綺麗に生えそろっています。
+	ELSEIF CFLAG:陰毛の状態 > 8 && TALENT:褐色肌 == 0
+		PRINTL 陰部はうっすらと陰毛に覆われています。
+	ELSEIF CFLAG:陰毛の状態 > 8 && TALENT:褐色肌 == 1
+		PRINTL マイクロビキニのラインに沿って陰毛が整えられています。
+	ELSEIF CFLAG:陰毛の状態 > 6
+		PRINTL 陰部を微かに生えかけの陰毛が覆っています。
+	ELSEIF CFLAG:陰毛の状態 > 0 && TALENT:パイパン
+		PRINTL 性器はまったくの無毛です。
+	ELSEIF CFLAG:陰毛の状態 > 0
+		PRINTL 性器は綺麗に剃り上げられています。
+	ELSEIF CFLAG:陰毛の状態 == 0 || CFLAG:陰毛の状態 == 0 - 1
+		PRINTL 性器はまったくの無毛です。
+	ELSEIF CFLAG:陰毛の状態 == 0 - 2
+		PRINTL 陰毛は永久脱毛されています。	
+	ENDIF
+ENDIF
+
+;女性器の形状
+IF TALENT:オトコ == 0
+	IF FLAG:陰毛を生やす == 1
+		IF CFLAG:陰毛の状態 > 6
+			PRINTFORM  陰毛に覆われた
+		ELSE
+			PRINTFORM  陰毛の生えていないつるつるの
+		ENDIF
+	ENDIF
+	PRINTFORM 陰裂は
+	CALL VAGINAFORM
+	PRINTFORML 。
+ENDIF
+
+;ピアシング
+S = 0
+IF (CFLAG:ピアスの装着状況 & 8)
+	IF TALENT:オトコ || TALENT:ふたなり
+		PRINT  ペニス
+	ELSE
+		PRINT  クリトリス
+	ENDIF
+	S = 1
+ENDIF
+IF (CFLAG:ピアスの装着状況 & 4)
+	IF S
+		PRINT と
+	ELSE
+		PRINT  
+	ENDIF
+	PRINT ラビア
+	S = 1
+ENDIF
+IF (CFLAG:着衣状態 & 6) == 0
+	IF (CFLAG:ピアスの装着状況 & 1)
+		IF S
+			PRINT と
+		ELSE
+			PRINT  
+		ENDIF
+		PRINT 乳首
+		S = 1
+	ENDIF
+ENDIF
+IF (CFLAG:ピアスの装着状況 & 2)
+	IF S
+		PRINT と
+	ELSE
+		PRINT  
+	ENDIF
+	PRINT おへそ
+	S = 1
+ENDIF
+IF (CFLAG:ピアスの装着状況 & 16)
+	IF S
+		PRINT と
+	ELSE
+		PRINT  
+	ENDIF
+	PRINT 舌
+	S = 1
+ENDIF
+SIF S
+	PRINTL にピアスが施されています。
+
+S = 0
+
+;-------------------------------------------------
+;汚れ状況を表示
+;-------------------------------------------------
+@STAIN_INFO
+
+REPEAT 6
+	SIF COUNT == 2 && TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+		CONTINUE
+	SIF COUNT == 3 && TALENT:MASTER:オトコ
+		CONTINUE
+	SIF COUNT == 5 && TALENT:MASTER:オトコ
+		CONTINUE
+	PRINTS NAME:MASTER
+	IF COUNT == 0
+		PRINT の口：
+	ELSEIF COUNT == 1
+		PRINT の手：
+	ELSEIF COUNT == 2
+		PRINT のＰ：
+	ELSEIF COUNT == 3
+		PRINT のＶ：
+	ELSEIF COUNT == 4
+		PRINT のＡ：
+	ELSEIF COUNT == 5
+		PRINT のＢ：
+	ENDIF
+	SIF STAIN:MASTER:COUNT & 1
+		PRINT <Ｖ>
+	SIF STAIN:MASTER:COUNT & 2
+		PRINT <Ｐ>
+	SIF STAIN:MASTER:COUNT & 4
+		PRINT <精>
+	SIF STAIN:MASTER:COUNT & 8
+		PRINT <Ａ>
+	SIF STAIN:MASTER:COUNT & 16
+		PRINT <乳>
+	SIF STAIN:MASTER:COUNT & 32
+		PRINT <尿>
+	PRINTL 
+REND
+
+REPEAT 6
+	SIF COUNT == 2 && TALENT:ふたなり == 0 && TALENT:オトコ == 0
+		CONTINUE
+	SIF COUNT == 3 && TALENT:オトコ
+		CONTINUE
+	SIF COUNT == 5 && TALENT:オトコ
+		CONTINUE
+	PRINTS NAME:TARGET
+	IF COUNT == 0
+		PRINT の口：
+	ELSEIF COUNT == 1
+		PRINT の手：
+	ELSEIF COUNT == 2
+		PRINT のＰ：
+	ELSEIF COUNT == 3
+		PRINT のＶ：
+	ELSEIF COUNT == 4
+		PRINT のＡ：
+	ELSEIF COUNT == 5
+		PRINT のＢ：
+	ENDIF
+	
+	SIF STAIN:COUNT & 1
+		PRINT <Ｖ>
+	SIF STAIN:COUNT & 2
+		PRINT <Ｐ>
+	SIF STAIN:COUNT & 4
+		PRINT <精>
+	SIF STAIN:COUNT & 8
+		PRINT <Ａ>
+	SIF STAIN:COUNT & 16
+		PRINT <乳>
+	SIF STAIN:COUNT & 32
+		PRINT <尿>
+	PRINTL 
+REND
+
+REPEAT 6
+	SIF ASSI < 0
+		BREAK
+	SIF COUNT == 2 && TALENT:ASSI:ふたなり == 0 && TALENT:ASSI:オトコ == 0
+		CONTINUE
+	SIF COUNT == 3 && TALENT:ASSI:オトコ
+		CONTINUE
+	SIF COUNT == 5 && TALENT:ASSI:オトコ
+		CONTINUE
+	PRINTS NAME:ASSI
+	IF COUNT == 0
+		PRINT の口：
+	ELSEIF COUNT == 1
+		PRINT の手：
+	ELSEIF COUNT == 2
+		PRINT のＰ：
+	ELSEIF COUNT == 3
+		PRINT のＶ：
+	ELSEIF COUNT == 4
+		PRINT のＡ：
+	ELSEIF COUNT == 5
+		PRINT のＢ：
+	ENDIF
+	
+	SIF STAIN:ASSI:COUNT & 1
+		PRINT <Ｖ>
+	SIF STAIN:ASSI:COUNT & 2
+		PRINT <Ｐ>
+	SIF STAIN:ASSI:COUNT & 4
+		PRINT <精>
+	SIF STAIN:ASSI:COUNT & 8
+		PRINT <Ａ>
+	SIF STAIN:ASSI:COUNT & 16
+		PRINT <乳>
+	SIF STAIN:ASSI:COUNT & 32
+		PRINT <尿>
+	PRINTL 
+REND
+
+WAIT
+
+RETURN 1
+
+;-------------------------------------------------
+;状況の表示
+;-------------------------------------------------
+;調教対象には使わない、特殊な着脱式の道具を追加した場合はここに追加をしてください
+;（場所変更、マスターや助手が使用する道具等）
+;-------------------------------------------------
+@SHOW_EQUIP_2
+IF TEQUIP:撮影中
+	V = 10 - TFLAG:ビデオ撮影回数 + 1
+	PRINTFORM [撮影中(残{V}回)]
+ENDIF
+SIF TEQUIP:野外プレイ
+	PRINT  [野外プレイ中]
+SIF TEQUIP:羞恥大鏡プレイ
+	PRINT  [羞恥（大鏡）プレイ中]
+SIF TEQUIP:お風呂場プレイ
+	PRINT  [お風呂場プレイ中]
+IF TEQUIP:コスプレ
+	PRINT  [
+	CALL PRINT_COSTUME
+	PRINT コスプレ中]
+ENDIF
+SIF TEQUIP:獣姦プレイ
+	PRINT  [獣姦プレイ中]
+SIF TEQUIP:触手召喚
+	PRINT  [触手召喚中] 
+						;****追加ここから****
+SIF TEQUIP:三角木馬騎乗
+	PRINT  [三角木馬騎乗中]
+PRINTL  
+						;****追加ここまで****						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム生成
+	PRINT  [スライム生成中] 
+						;****スライムパッチ追加ここまで****
+						;****追加ここから****
+SIF TEQUIP:三角木馬騎乗
+	PRINT  [三角木馬騎乗中]
+PRINTL  
+						;****追加ここまで****
+
+;-------------------------------------------------
+;使用中の道具を表示する
+;-------------------------------------------------
+;一度使用したら解除するまで止まらない道具や調教を
+;追加した場合はここに追加をしてください
+;-------------------------------------------------
+@SHOW_EQUIP_1
+
+IF TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:シャワー || TEQUIP:アナルビーズ || TEQUIP:媚薬効果 || TEQUIP:利尿剤効果 || TEQUIP:アイマスク || TEQUIP:縄 || TEQUIP:ボールギャグ || TEQUIP:[[TEQUIP:浣腸器＋プラグ]] || TEQUIP:助手ボンデージ || TEQUIP:48 || TEQUIP:アナル電極 || TEQUIP:触手口辱 || TFLAG:失神中終了 >= 1
+	PRINTFORM 使用中(%NAME:TARGET%) 
+
+SIF TEQUIP:媚薬効果
+	PRINT [媚薬効果発揮中]
+SIF TEQUIP:利尿剤効果
+	PRINT [利尿剤効果発揮中]
+IF TEQUIP:バイブ && TEQUIP:触手召喚
+	PRINT [触手挿入]
+ELSEIF TEQUIP:バイブ
+	PRINT [バイブ]
+ENDIF
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム膣内進入
+	PRINT [スライム膣内進入]
+						;****スライムパッチ追加ここまで****
+
+IF TEQUIP:アナルバイブ && TEQUIP:触手召喚
+	PRINT [触手アナル挿入]
+ELSEIF TEQUIP:アナルバイブ
+	PRINT [アナルバイブ]
+ENDIF
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム肛門進入
+	PRINT [スライム肛門進入]
+						;****スライムパッチ追加ここまで****
+
+IF TEQUIP:クリキャップ && TEQUIP:触手召喚
+	PRINT [触手クリ責め]
+ELSEIF TEQUIP:クリキャップ
+	PRINT [クリキャップ]
+ENDIF
+
+IF TEQUIP:ニプルキャップ && TEQUIP:触手召喚
+	PRINT [触手乳首責め]
+ELSEIF TEQUIP:ニプルキャップ
+	PRINT [ニプルキャップ]
+ENDIF
+
+IF TEQUIP:搾乳機 && TEQUIP:触手召喚
+	PRINT [触手搾乳]
+ELSEIF TEQUIP:搾乳機
+	PRINT [搾乳器]
+ENDIF
+
+IF TEQUIP:オナホール && TEQUIP:触手召喚
+	PRINT [触手ペニス責め]
+ELSEIF TEQUIP:オナホール
+	PRINT [オナホール]
+ENDIF
+
+IF TEQUIP:縄 && TEQUIP:触手召喚
+	PRINT [触手緊縛]
+ELSEIF TEQUIP:縄
+	PRINT [縄で緊縛]
+ENDIF
+
+IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] && TEQUIP:触手召喚
+	PRINT [触手浣腸]
+ELSEIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	PRINT [浣腸＋アナルプラグ]
+ENDIF
+SIF TEQUIP:触手口辱
+	PRINT [触手口辱]
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム口辱
+	PRINT [スライム口辱]
+						;****スライムパッチ追加ここまで****
+SIF TEQUIP:アイマスク
+	PRINT [アイマスク]
+SIF TEQUIP:ボールギャグ
+	PRINT [ボールギャグ]
+SIF TEQUIP:シャワー
+	PRINT [シャワー]
+SIF TEQUIP:アナルビーズ
+	PRINT [アナルビーズ]
+SIF TEQUIP:アナル電極
+	PRINT [アナル電極]
+SIF TFLAG:失神中終了 >= 1
+	PRINT [失神中]
+
+;ココより↑にTEQUIPに登録したものを書き込む
+PRINTL  
+ENDIF
+
+;========================================================
+;セーブ時のテキストの設定
+;;========================================================
+@SAVEINFO
+
+IF FLAG:難易度 == 1
+	PUTFORM EASY/
+ELSEIF FLAG:難易度 == 2
+	IF FLAG:EASYモードを経由したデータ
+		PUTFORM NORMAL/
+	ELSE
+		PUTFORM 実績チャレンジ/
+	ENDIF
+ELSEIF FLAG:難易度 == 3
+	PUTFORM HARD/
+ELSEIF FLAG:難易度 == 4
+	PUTFORM POWERFUL/
+ELSEIF FLAG:難易度 == 9
+	PUTFORM EXTRA/
+ENDIF
+
+IF TIME == 0
+	PUTFORM {DAY+1}週目・前半
+ELSE
+	PUTFORM {DAY+1}週目・後半
+ENDIF
+
+SIF FLAG:前回調教対象 >= 0
+	TARGET = FLAG:前回調教対象
+SIF FLAG:前回助手 >= 0
+	ASSI = FLAG:前回助手
+
+SIF TARGET >= 1
+	PUTFORM  前回:%NAME:TARGET%指導
+;
+;
+;
+
+;****追加ここから****
+
+;=========================================================
+;淫語の表示
+;;========================================================
+@SHOW_INFO_SLUNG
+PRINTFORML 　 男性器の呼称：%CSTR:男性器呼び方%
+PRINTFORML 　 女性器の呼称：%CSTR:女性器呼び方%
+PRINTFORML 　   肛門の呼称：%CSTR:肛門呼び方%
+PRINTFORM  卑語指導の可否：
+IF CFLAG:8 == 1
+	PRINTFORML 不可
+ELSE
+	PRINTFORML 可
+ENDIF
+
+;=========================================================
+;習い事の経験値
+;;========================================================
+@SHOW_INFO_LESSON
+
+IF EXP:美容トレーニング経験 <= 5 && ABL:美容感覚 == 1
+	EXP:美容トレーニング経験 = 5
+ELSEIF EXP:美容トレーニング経験 <= 10 && ABL:美容感覚 == 2
+	EXP:美容トレーニング経験 = 10
+ELSEIF EXP:美容トレーニング経験 <= 15 && ABL:美容感覚 == 3
+	EXP:美容トレーニング経験 = 15
+ELSEIF EXP:美容トレーニング経験 <= 20 && ABL:美容感覚 == 4
+	EXP:美容トレーニング経験 = 20
+ELSEIF EXP:美容トレーニング経験 <= 25 && ABL:美容感覚 == 5
+	EXP:美容トレーニング経験 = 25
+ELSEIF EXP:美容トレーニング経験 <= 30 && ABL:美容感覚 == 6 && UNLOCK_美容LV8(TARGET)
+	EXP:美容トレーニング経験 = 30
+ELSEIF EXP:美容トレーニング経験 <= 40 && ABL:美容感覚 == 7 && UNLOCK_美容LV8(TARGET)
+	EXP:美容トレーニング経験 = 40
+ELSEIF EXP:美容トレーニング経験 <= 50 && ABL:美容感覚 == 8 && UNLOCK_美容LV8(TARGET)
+	EXP:美容トレーニング経験 = 50
+ELSEIF EXP:美容トレーニング経験 <= 60 && ABL:美容感覚 == 9 && UNLOCK_美容LV10(TARGET)
+	EXP:美容トレーニング経験 = 60
+ELSEIF EXP:美容トレーニング経験 <= 70 && ABL:美容感覚 == 10 && UNLOCK_美容LV10(TARGET)
+	EXP:美容トレーニング経験 = 70
+ENDIF
+IF EXP:運動トレーニング経験 <= 5 && ABL:運動能力 == 1
+	EXP:運動トレーニング経験 = 5
+ELSEIF EXP:運動トレーニング経験 <= 10 && ABL:運動能力 == 2
+	EXP:運動トレーニング経験 = 10
+ELSEIF EXP:運動トレーニング経験 <= 15 && ABL:運動能力 == 3
+	EXP:運動トレーニング経験 = 15
+ELSEIF EXP:運動トレーニング経験 <= 20 && ABL:運動能力 == 4
+	EXP:運動トレーニング経験 = 20
+ELSEIF EXP:運動トレーニング経験 <= 25 && ABL:運動能力 == 5
+	EXP:運動トレーニング経験 = 25
+ELSEIF EXP:運動トレーニング経験 <= 30 && ABL:運動能力 == 6 && UNLOCK_運動LV8(TARGET)
+	EXP:運動トレーニング経験 = 30
+ELSEIF EXP:運動トレーニング経験 <= 40 && ABL:運動能力 == 7 && UNLOCK_運動LV8(TARGET)
+	EXP:運動トレーニング経験 = 40
+ELSEIF EXP:運動トレーニング経験 <= 50 && ABL:運動能力 == 8 && UNLOCK_運動LV8(TARGET)
+	EXP:運動トレーニング経験 = 50
+ELSEIF EXP:運動トレーニング経験 <= 60 && ABL:運動能力 == 9 && UNLOCK_運動LV10(TARGET)
+	EXP:運動トレーニング経験 = 60
+ELSEIF EXP:運動トレーニング経験 <= 70 && ABL:運動能力 == 10 && UNLOCK_運動LV10(TARGET)
+	EXP:運動トレーニング経験 = 70
+ENDIF
+IF EXP:学業トレーニング経験 <= 5 && ABL:学力 == 1
+	EXP:学業トレーニング経験 = 5
+ELSEIF EXP:学業トレーニング経験 <= 10 && ABL:学力 == 2
+	EXP:学業トレーニング経験 = 10
+ELSEIF EXP:学業トレーニング経験 <= 15 && ABL:学力 == 3
+	EXP:学業トレーニング経験 = 15
+ELSEIF EXP:学業トレーニング経験 <= 20 && ABL:学力 == 4
+	EXP:学業トレーニング経験 = 20
+ELSEIF EXP:学業トレーニング経験 <= 25 && ABL:学力 == 5
+	EXP:学業トレーニング経験 = 25
+ELSEIF EXP:学業トレーニング経験 <= 30 && ABL:学力 == 6 && UNLOCK_学力LV8(TARGET)
+	EXP:学業トレーニング経験 = 30
+ELSEIF EXP:学業トレーニング経験 <= 40 && ABL:学力 == 7 && UNLOCK_学力LV8(TARGET)
+	EXP:学業トレーニング経験 = 40
+ELSEIF EXP:学業トレーニング経験 <= 50 && ABL:学力 == 8 && UNLOCK_学力LV8(TARGET)
+	EXP:学業トレーニング経験 = 50
+ELSEIF EXP:学業トレーニング経験 <= 60 && ABL:学力 == 9 && UNLOCK_学力LV10(TARGET)
+	EXP:学業トレーニング経験 = 60
+ELSEIF EXP:学業トレーニング経験 <= 70 && ABL:学力 == 10 && UNLOCK_学力LV10(TARGET)
+	EXP:学業トレーニング経験 = 70
+ENDIF
+IF EXP:オタクトレーニング経験 <= 5 && ABL:オタク知識 == 1
+	EXP:オタクトレーニング経験 = 5
+ELSEIF EXP:オタクトレーニング経験 <= 10 && ABL:オタク知識 == 2
+	EXP:オタクトレーニング経験 = 10
+ELSEIF EXP:オタクトレーニング経験 <= 15 && ABL:オタク知識 == 3
+	EXP:オタクトレーニング経験 = 15
+ELSEIF EXP:オタクトレーニング経験 <= 20 && ABL:オタク知識 == 4
+	EXP:オタクトレーニング経験 = 20
+ELSEIF EXP:オタクトレーニング経験 <= 25 && ABL:オタク知識 == 5
+	EXP:オタクトレーニング経験 = 25
+ELSEIF EXP:オタクトレーニング経験 <= 30 && ABL:オタク知識 == 6 && UNLOCK_オタLV8(TARGET)
+	EXP:オタクトレーニング経験 = 30
+ELSEIF EXP:オタクトレーニング経験 <= 40 && ABL:オタク知識 == 7 && UNLOCK_オタLV8(TARGET)
+	EXP:オタクトレーニング経験 = 40
+ELSEIF EXP:オタクトレーニング経験 <= 50 && ABL:オタク知識 == 8 && UNLOCK_オタLV8(TARGET)
+	EXP:オタクトレーニング経験 = 50
+ELSEIF EXP:オタクトレーニング経験 <= 60 && ABL:オタク知識 == 9 && UNLOCK_オタLV10(TARGET)
+	EXP:オタクトレーニング経験 = 60
+ELSEIF EXP:オタクトレーニング経験 <= 70 && ABL:オタク知識 == 10 && UNLOCK_オタLV10(TARGET)
+	EXP:オタクトレーニング経験 = 70
+ENDIF
+
+PRINTFORM 　美容感覚:{ABL:美容感覚, 3}
+IF ABL:美容感覚 < 1
+	BAR EXP:美容トレーニング経験,5,5
+ELSEIF ABL:美容感覚 < 2
+	BAR (EXP:美容トレーニング経験-5),5,5
+ELSEIF ABL:美容感覚 < 3
+	BAR (EXP:美容トレーニング経験-10),5,5
+ELSEIF ABL:美容感覚 < 4
+	BAR (EXP:美容トレーニング経験-15),5,5
+ELSEIF ABL:美容感覚 < 5
+	BAR (EXP:美容トレーニング経験-20),5,5
+ELSEIF ABL:美容感覚 < 6 && UNLOCK_美容LV8(TARGET)
+	BAR (EXP:美容トレーニング経験-25),5,5
+ELSEIF ABL:美容感覚 < 7 && UNLOCK_美容LV8(TARGET)
+	BAR (EXP:美容トレーニング経験-30),10,5
+ELSEIF ABL:美容感覚 < 8 && UNLOCK_美容LV8(TARGET)
+	BAR (EXP:美容トレーニング経験-40),10,5
+ELSEIF ABL:美容感覚 < 9 && UNLOCK_美容LV10(TARGET)
+	BAR (EXP:美容トレーニング経験-50),10,5
+ELSEIF ABL:美容感覚 < 10 && UNLOCK_美容LV10(TARGET)
+	BAR (EXP:美容トレーニング経験-60),10,5
+ELSE
+	PRINT [*MAX*]
+ENDIF
+
+PRINT 　　　　　　
+
+PRINTFORM 　運動能力:{ABL:運動能力, 3}
+IF ABL:運動能力 < 1
+	BAR EXP:運動トレーニング経験,5,5
+ELSEIF ABL:運動能力 < 2
+	BAR (EXP:運動トレーニング経験-5),5,5
+ELSEIF ABL:運動能力 < 3
+	BAR (EXP:運動トレーニング経験-10),5,5
+ELSEIF ABL:運動能力 < 4
+	BAR (EXP:運動トレーニング経験-15),5,5
+ELSEIF ABL:運動能力 < 5
+	BAR (EXP:運動トレーニング経験-20),5,5
+ELSEIF ABL:運動能力 < 6 && UNLOCK_運動LV8(TARGET)
+	BAR (EXP:運動トレーニング経験-25),5,5
+ELSEIF ABL:運動能力 < 7 && UNLOCK_運動LV8(TARGET)
+	BAR (EXP:運動トレーニング経験-30),10,5
+ELSEIF ABL:運動能力 < 8 && UNLOCK_運動LV8(TARGET)
+	BAR (EXP:運動トレーニング経験-40),10,5
+ELSEIF ABL:運動能力 < 9 && UNLOCK_運動LV10(TARGET)
+	BAR (EXP:運動トレーニング経験-50),10,5
+ELSEIF ABL:運動能力 < 10 && UNLOCK_運動LV10(TARGET)
+	BAR (EXP:運動トレーニング経験-60),10,5
+ELSE
+	PRINT [*MAX*]
+ENDIF
+
+PRINTL
+
+PRINTFORM 　　　学力:{ABL:学力, 3}
+IF ABL:学力 < 1
+	BAR EXP:学業トレーニング経験,5,5
+ELSEIF ABL:学力 < 2
+	BAR (EXP:学業トレーニング経験-5),5,5
+ELSEIF ABL:学力 < 3
+	BAR (EXP:学業トレーニング経験-10),5,5
+ELSEIF ABL:学力 < 4
+	BAR (EXP:学業トレーニング経験-15),5,5
+ELSEIF ABL:学力 < 5
+	BAR (EXP:学業トレーニング経験-20),5,5
+ELSEIF ABL:学力 < 6 && UNLOCK_学力LV8(TARGET)
+	BAR (EXP:学業トレーニング経験-25),5,5
+ELSEIF ABL:学力 < 7 && UNLOCK_学力LV8(TARGET)
+	BAR (EXP:学業トレーニング経験-30),10,5
+ELSEIF ABL:学力 < 8 && UNLOCK_学力LV8(TARGET)
+	BAR (EXP:学業トレーニング経験-40),10,5
+ELSEIF ABL:学力 < 9 && UNLOCK_学力LV10(TARGET)
+	BAR (EXP:学業トレーニング経験-50),10,5
+ELSEIF ABL:学力 < 10 && UNLOCK_学力LV10(TARGET)
+	BAR (EXP:学業トレーニング経験-60),10,5
+ELSE
+	PRINT [*MAX*]
+ENDIF
+
+PRINT 　　　　　　
+
+PRINTFORM オタク知識:{ABL:オタク知識, 3}
+IF ABL:オタク知識 < 1
+	BAR EXP:オタクトレーニング経験,5,5
+ELSEIF ABL:オタク知識 < 2
+	BAR (EXP:オタクトレーニング経験-5),5,5
+ELSEIF ABL:オタク知識 < 3
+	BAR (EXP:オタクトレーニング経験-10),5,5
+ELSEIF ABL:オタク知識 < 4
+	BAR (EXP:オタクトレーニング経験-15),5,5
+ELSEIF ABL:オタク知識 < 5
+	BAR (EXP:オタクトレーニング経験-20),5,5
+ELSEIF ABL:オタク知識 < 6 && UNLOCK_オタLV8(TARGET)
+	BAR (EXP:オタクトレーニング経験-25),5,5
+ELSEIF ABL:オタク知識 < 7 && UNLOCK_オタLV8(TARGET)
+	BAR (EXP:オタクトレーニング経験-30),10,5
+ELSEIF ABL:オタク知識 < 8 && UNLOCK_オタLV8(TARGET)
+	BAR (EXP:オタクトレーニング経験-40),10,5
+ELSEIF ABL:オタク知識 < 9 && UNLOCK_オタLV10(TARGET)
+	BAR (EXP:オタクトレーニング経験-50),10,5
+ELSEIF ABL:オタク知識 < 10 && UNLOCK_オタLV10(TARGET)
+	BAR (EXP:オタクトレーニング経験-60),10,5
+ELSE
+	PRINT [*MAX*]
+ENDIF
+
+PRINTL
+						;****追加ここまで****
+						;****相性表示追加ここから****
+;=========================================================
+;変化後の相性表示
+;;========================================================
+@PRINT_ACTRESS_RELATION
+LOCAL:3 = 0
+FOR LOCAL:1, 0, CHARANUM
+	;相性
+	LOCAL:2 = NO:(LOCAL:1)
+	IF RELATION:(LOCAL:2) != 0 && RELATION:(LOCAL:2) != CSVRELATION(NO:TARGET, (LOCAL:2), 0)
+		IF RELATION:(LOCAL:2)%100 > 9
+			PRINTFORM %CALLNAME:(LOCAL:1),12,LEFT%＜相性{RELATION:(LOCAL:2)/100,2}.{RELATION:(LOCAL:2)%100}倍＞　
+		ELSE
+			PRINTFORM %CALLNAME:(LOCAL:1),12,LEFT%＜相性{RELATION:(LOCAL:2)/100,2}.0{RELATION:(LOCAL:2)%100}倍＞　
+		ENDIF
+		LOCAL:3 += 1
+		IF LOCAL:3 == 3
+			PRINTL
+			LOCAL:3 = 0
+		ENDIF
+	ELSEIF TARGET != LOCAL:1
+		PRINTFORM %CALLNAME:(LOCAL:1),12,LEFT%＜相性??.??倍＞　
+		LOCAL:3 += 1
+		IF LOCAL:3 == 3
+			PRINTL
+			LOCAL:3 = 0
+		ENDIF
+	ENDIF
+NEXT
+SIF LOCAL:3 > 0
+	PRINTL
+						;****相性表示追加ここまで****
+
+@エステ通い有効(ARG=-1)
+SIF ARG < 0
+	ARG = TARGET
+SIF (ABL:ARG:美容感覚 == 10) || (ABL:ARG:美容感覚 >= 8 && !UNLOCK_美容LV10(ARG)) ||(ABL:ARG:美容感覚 >= 5 && !UNLOCK_美容LV8(ARG))
+	RETURN 0
+RETURN 1
+
+@ジム通い有効(ARG=-1)
+SIF ARG < 0
+	ARG = TARGET
+SIF (ABL:ARG:運動能力 == 10) || (ABL:ARG:運動能力 >= 8 && !UNLOCK_運動LV10(ARG)) ||(ABL:ARG:運動能力 >= 5 && !UNLOCK_運動LV8(ARG))
+	RETURN 0
+RETURN 1
+
+@学習塾通い有効(ARG=-1)
+SIF ARG < 0
+	ARG = TARGET
+SIF (ABL:ARG:学力 == 10) || (ABL:ARG:学力 >= 8 && !UNLOCK_学力LV10(ARG)) ||(ABL:ARG:学力 >= 5 && !UNLOCK_学力LV8(ARG))
+	RETURN 0
+RETURN 1
+

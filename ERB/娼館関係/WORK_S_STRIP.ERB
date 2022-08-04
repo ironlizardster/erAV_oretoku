@@ -1,0 +1,1685 @@
+﻿;===========================================================
+;ストリップショー関係の処理はここで
+;===========================================================
+;eraIm@s_ver.0.17βdのダンスショーより流用して改造(pawapokya-)
+;===========================================================
+@STRIPTEASE
+DRAWLINE
+
+;特殊チケットフラグ初期化
+FLAG:特殊営業で夜の部を開催フラグ = 0
+
+;ショーの形式を初期化
+FLAG:特殊営業タイプ詳細 = 0
+
+;夜の場合、通常ストリップショーか特殊ストリップショーかを選択
+PRINTL どのチケットを販売しますか？
+PRINTL  [0] - 通常チケット
+SIF TIME == 1
+	PRINTL  [1] - 特殊チケット
+PRINTL  [100] - やめる
+	
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	PRINTFORMW 通常チケットを販売します
+ELSEIF RESULT == 1 && TIME == 1
+	PRINTFORMW 特殊チケットを販売します。ストリップショー後にお楽しみがあります
+	FLAG:特殊営業で夜の部を開催フラグ = 1
+	;コンドーム使用フラグ外す
+	CFLAG:労役でコンドーム使用 = 0
+ELSEIF RESULT == 100
+	RETURN 100
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+DRAWLINE
+
+;ローカル変数初期化
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+F = 0
+
+G = 0
+H = 0
+I = 0
+J = 0
+N = 0
+O = 0
+P = 0
+Q = 0
+R = 0
+S = 0
+;L = 呼び出し元で代入される参加人数
+
+;COUNT用待避変数
+X = 0
+
+REPEAT 101
+	TCVAR:COUNT = 0
+	U:COUNT = 0
+REND
+
+
+;調教対象と助手を空に
+TARGET = -1
+ASSI = -1
+;参加人数が一人の場合はTARGETにそのキャラを代入
+IF FLAG:特殊営業参加人数 == 1
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130
+			TARGET = COUNT
+	REND
+;参加人数が二人の場合は調教自慰経験の高い方をTARGETに、もう一人をASSIに代入
+ELSEIF FLAG:特殊営業参加人数 == 2
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF TARGET == -1
+			TARGET = COUNT
+		ELSEIF EXP:COUNT:調教自慰経験 > EXP:TARGET:調教自慰経験
+			ASSI = TARGET
+			TARGET = COUNT
+		ELSE
+			ASSI = COUNT
+		ENDIF
+	REND
+;参加人数が３人以上の場合は、最も調教自慰経験の高い者をTARGETに代入
+ELSEIF FLAG:特殊営業参加人数 >= 3
+	E = -1
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		IF E < EXP:COUNT:調教自慰経験
+			TARGET = COUNT
+			E = EXP:COUNT:調教自慰経験
+		ENDIF
+	REND
+	E = 0
+ENDIF
+
+;参加者が２人の場合はキャラ同志の近親チェック
+IF FLAG:特殊営業参加人数 == 2
+	PLAYER = ASSI
+	TFLAG:近親相姦 = 0
+	CALL INCEST
+ENDIF
+
+;FLAG:53でショーの形式を決定
+FLAG:特殊営業タイプ詳細 = 0
+;&1:オナニー &2:レズ &4:セックス &8:近親
+;参加者2人で近親関係なら近親ショー
+SIF FLAG:特殊営業参加人数 == 2 && ((TALENT:オトコ || TALENT:ふたなり) || (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり))
+	FLAG:特殊営業タイプ詳細 |= 4
+E = 0
+;参加者全員が自慰中毒3以上か自慰狂いならオナニーショー
+E = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF ABL:COUNT:自慰中毒 < 3 && TALENT:COUNT:自慰狂い == 0
+		E = 0
+REND
+SIF E
+	FLAG:特殊営業タイプ詳細 |= 1
+E = 0
+;参加者複数で全員がレズっ気2以上ならレズショー
+E = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF ABL:COUNT:レズっ気 < 2
+		E = 0
+REND
+SIF E && FLAG:特殊営業参加人数 >= 2
+	FLAG:特殊営業タイプ詳細 |= 2
+E = 0
+
+;特殊営業参加キャラの相性をチェック
+CALL WORK_SUB_RELATION
+
+;客の数を計算
+;参加するキャラの人気の最大値に応じて客が来ます
+E = 0
+REPEAT CHARANUM
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+		E = EXP:COUNT:人気
+REND
+C = E / 4
+G = C / 2
+IF C
+	IF C < 13
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 16
+		TIMES G , 1.10
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 20
+		TIMES G , 1.30
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSEIF C < 24
+		TIMES G , 1.50
+		REPEAT C
+			G += RAND:2
+		REND
+	ELSE
+		TIMES G , 2.00
+		REPEAT C
+			G += RAND:3
+		REND
+	ENDIF
+ENDIF
+
+;娼館の人気に応じてさらにプラス
+C = (EXP:MASTER:人気 / 5)
+IF C
+	REPEAT C
+		G += RAND:2
+	REND
+ENDIF
+
+;参加者が特定の素質を持っていた場合ボーナス
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	;社会的ステータスが影響
+	;人気者
+	SIF TALENT:COUNT:人気者
+		G += 10
+	;アイドル
+	SIF TALENT:COUNT:アイドル
+		G += 5
+	;娼婦
+	SIF TALENT:COUNT:風俗嬢
+		G += 2
+	;傾城
+	SIF TALENT:COUNT:高級娼婦
+		G += 3
+	;饒舌
+	SIF TALENT:COUNT:饒舌
+		G += 2
+	;常連客
+	SIF TALENT:COUNT:常連客
+		G += 2
+	;求愛
+	SIF TALENT:COUNT:彼氏あり
+		G += 1
+	;歌姫
+	SIF TALENT:COUNT:歌姫
+		G += 5
+	;舞姫
+	SIF TALENT:COUNT:舞姫
+		G += 15
+	;美姫
+	SIF TALENT:COUNT:美姫
+		G += 10
+	;優等生
+	SIF TALENT:COUNT:優等生
+		G += 5
+	;人気ＡＶ女優
+	SIF TALENT:COUNT:人気ＡＶ女優
+		G += 3
+	;ファッションモデル
+	SIF TALENT:COUNT:ファッションモデル
+		G += 3
+		
+	;専用素質(まあ(差別化する必要もあるし)多少はね？)
+	;極道の娘
+	SIF TALENT:COUNT:極道の娘
+		G += 20
+	;淫魔
+	SIF TALENT:COUNT:淫魔
+		G += 30
+	;声優
+	SIF TALENT:COUNT:声優
+		G += 5
+	;はるうられ
+	SIF TALENT:COUNT:はるうられ
+		G += 10
+	;ColorfulPureGirls
+	SIF TALENT:COUNT:ColorfulPureGirls
+		G += 15
+	;神巫
+	SIF TALENT:COUNT:神巫
+		G += 25
+	;天使
+	SIF TALENT:COUNT:天使
+		G += 25
+	;グランドマスター
+	SIF TALENT:COUNT:グランドマスター
+		G += 20
+	;極道の妻
+	SIF TALENT:COUNT:極道の妻
+		G += 15
+	;Mermaid girl
+	SIF TALENT:COUNT:[[TALENT:Mermaid girl]]
+		G += 20
+	;FallenFallAngel
+	;Triptych
+	SIF TALENT:COUNT:Triptych
+		G += 30
+	;Emerald Queen
+	SIF TALENT:COUNT:[[TALENT:Emerald Queen]]
+		G += 25
+	;堕ちた歌姫
+	SIF TALENT:COUNT:[[TALENT:平和の歌姫？]] || TALENT:COUNT:堕ちた歌姫
+		G += 20
+	;ルーンマスター 
+	SIF TALENT:COUNT:ルーンマスター || TALENT:COUNT:奇蹟
+		G += 20
+	;ONLY ONE IDOL
+	SIF TALENT:COUNT:[[TALENT:ONLY ONE IDOL]] || TALENT:COUNT:ILMATAR || TALENT:COUNT:AVALOKITESVARA || TALENT:COUNT:QueenB
+		G += 40
+	;SUPER HEROINE
+	SIF TALENT:COUNT:[[TALENT:SUPER HEROINE]]
+		G += 25
+REND
+
+	;警備員の数に応じて観客数の限界が伸びます。500000Pをケチってはいけない(戒め)
+	IF G > 50 && FLAG:警備員人数 < 10
+		IF (50 + (FLAG:警備員人数 * 5)) < G
+			G = (50 + (FLAG:警備員人数 * 5))
+		ENDIF
+	ENDIF
+
+;通常チケットなら2/3程度の人数になる
+SIF FLAG:特殊営業で夜の部を開催フラグ == 0
+	G = G * 2 / 3
+
+;10人以下だった場合、10人にします
+SIF G < 10
+	G = 10
+
+;次に成功か失敗かの判定を計算
+;参加者の調教自慰経験の平均値によって基礎値が決定
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	E += EXP:COUNT:調教自慰経験
+REND
+E /= FLAG:特殊営業参加人数
+;調教自慰経験によって基礎値が決定
+IF E < 10
+	D = 0 + RAND:5
+ELSEIF E < 20
+	D = 1 + RAND:5
+ELSEIF E < 30
+	D = 2 + RAND:6
+ELSEIF E < 40
+	D = 4 + RAND:6
+ELSEIF E < 50
+	D = 7 + RAND:7
+ELSEIF E < 75
+	D = 10 + RAND:8
+ELSEIF E < 100
+	D = 13 + RAND:9
+ELSEIF E < 150
+	D = 16 + RAND:10
+ELSEIF E < 200
+	D = 20 + RAND:12
+ELSEIF E < 300
+	D = 25 + RAND:14
+ELSEIF E < 500
+	D = 30 + RAND:16
+ELSEIF E < 1000
+	D = 40 + RAND:18
+ELSE
+	D = 50 + RAND:20
+ENDIF
+E = 0
+
+;参加者全員の技能・素質による修正値を加算
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+
+	;全員の露出癖をプラス
+	D += ABL:COUNT:露出癖
+
+	;公開セックスがある場合は全員の性交中毒の1/2をプラス
+	SIF FLAG:特殊営業タイプ詳細 & 4
+		D += ABL:COUNT:性交中毒 / 2
+	;レズショーがある場合は全員のレズ中毒の1/2をプラス
+	SIF FLAG:特殊営業タイプ詳細 & 2
+		D += ABL:COUNT:レズ中毒 / 2
+	;公開オナニーがある場合は全員の自慰中毒の1/2をプラス
+	SIF FLAG:特殊営業タイプ詳細 & 1
+		D += ABL:COUNT:自慰中毒 / 2
+
+	;技巧と舞踏技能は1/3をプラス
+	D += ABL:COUNT:技巧 / 3
+	D += ABL:COUNT:舞踊技能 / 3
+
+	;全員の美容感覚をプラス
+	D += ABL:COUNT:美容感覚
+
+	;素質に応じて加減
+	;性格的な素質が影響
+	;臆病
+	SIF TALENT:COUNT:臆病
+		D -= 1
+	;大人しい
+	SIF TALENT:COUNT:大人しい
+		D -= 1
+	;プライド高い
+	SIF TALENT:COUNT:プライド高い
+		D += 2
+	;プライド低い
+	SIF TALENT:COUNT:プライド低い
+		D -= 2
+	;感情乏しい
+	SIF TALENT:COUNT:感情乏しい
+		D -= 1
+	;好奇心
+	SIF TALENT:COUNT:好奇心
+		D += 1
+	;目立ちたがり
+	SIF TALENT:COUNT:目立ちたがり
+		D += 3
+	;抑圧
+	SIF TALENT:COUNT:抑圧
+		D -= 2
+	;解放
+	SIF TALENT:COUNT:解放
+		D += 2
+	;抵抗
+	SIF TALENT:COUNT:抵抗
+		D -= 2
+	;恥じらい
+	SIF TALENT:COUNT:恥じらい
+		D -= 2
+	;恥薄い
+	SIF TALENT:COUNT:恥薄い
+		D += 2
+	;自慰しやすい
+	SIF TALENT:COUNT:自慰しやすい
+		D += 5
+	;快感に素直
+	SIF TALENT:COUNT:快感に素直
+		D += 3
+	;淫乱
+	SIF TALENT:COUNT:淫乱
+		D += 10
+	;倒錯的
+	SIF TALENT:COUNT:倒錯的
+		D += 2
+	;露出狂
+	SIF TALENT:COUNT:露出狂
+		D += 10
+	;謎の魅力
+	SIF TALENT:COUNT:謎の魅力
+		D += 15
+
+	;公開セックスがある場合
+	IF FLAG:特殊営業タイプ詳細 & 4
+		;セックス狂い
+		SIF TALENT:COUNT:セックス狂
+			D += 10
+		;性別が同じで両刀
+		SIF TALENT:COUNT:両刀 && (TALENT:TARGET:オトコ == TALENT:ASSI:オトコ)
+			D += 5
+		;片方が女で女嫌い
+		SIF TALENT:COUNT:ボーイッシュ && (TALENT:TARGET:オトコ == 0 || TALENT:ASSI:オトコ == 0)
+			D -= 3
+		;片方が男で男嫌い
+		SIF TALENT:COUNT:男性不信 && (TALENT:TARGET:オトコ || TALENT:ASSI:オトコ)
+			D -= 3
+	ENDIF
+
+	;レズショーがある場合
+	IF FLAG:特殊営業タイプ詳細 & 2
+		;両刀
+		SIF TALENT:COUNT:両刀
+			D += 5
+		;女嫌い
+		SIF TALENT:COUNT:ボーイッシュ
+			D -= 5
+	ENDIF
+
+	;公開オナニーがある場合
+	IF FLAG:特殊営業タイプ詳細 & 1
+		;自慰しやすい
+		SIF TALENT:COUNT:自慰しやすい
+			D += 2
+		;自慰狂い
+		SIF TALENT:COUNT:自慰狂い
+			D += 10
+	ENDIF
+
+	;肥満があると満足度半減
+	SIF TALENT:COUNT:肥満
+		D /= 2
+
+	;狂気・崩壊があると満足度激減
+	SIF TALENT:COUNT:狂気 || TALENT:COUNT:崩壊
+		D /= 5
+REND
+
+;相性による修正
+IF FLAG:特殊営業時のキャラの相性 >= 200
+	TIMES D , 2.00
+ELSEIF FLAG:特殊営業時のキャラの相性 >= 150
+	TIMES D , 1.50
+ELSEIF FLAG:特殊営業時のキャラの相性 >= 120
+	TIMES D , 1.20
+ELSEIF FLAG:特殊営業時のキャラの相性 < 100
+	TIMES D , 0.50
+ENDIF
+
+;満足度Dが目標値Pを上回れば成功、下回れば失敗
+;２週目以降は相性値込でなければまず超成功は狙えないでしょう。
+IF FLAG:周回数 > 1
+	P = 41 + RAND:10
+ELSE
+	P = 21 + RAND:5
+ENDIF
+
+;特殊チケットの場合は客の目的が目的なのでちょっと下がる
+SIF FLAG:特殊営業で夜の部を開催フラグ == 1
+	P -= 5
+
+;満足度DがPの50%未満だったら大失敗
+IF D < (P / 2)
+	A = 0
+;P未満だったら小失敗
+ELSEIF D < P
+	A = 1
+;Pの150%未満だったら普通
+ELSEIF D < (P * 3) / 2
+	A = 2
+;Pの200%未満だったら小成功
+ELSEIF D < P * 2
+	A = 3
+;Pの400%未満だったら大成功
+ELSEIF D < P * 4
+	A = 4
+;それ以上だったら超成功
+ELSE
+	A = 5
+ENDIF
+Z = 0
+Z = A
+
+;成功値が低いと一部のショーは行われない
+SIF A < 2
+	FLAG:特殊営業タイプ詳細 -= FLAG:特殊営業タイプ詳細 & 1
+SIF A < 3
+	FLAG:特殊営業タイプ詳細 -= FLAG:特殊営業タイプ詳細 & 2
+SIF A < 4
+	FLAG:特殊営業タイプ詳細 -= FLAG:特殊営業タイプ詳細 & 4
+
+IF FLAG:特殊営業参加人数 == 1
+	PRINTFORM %NAME:TARGET%
+ELSEIF FLAG:特殊営業参加人数 == 2
+	PRINTFORM %NAME:TARGET%と%NAME:ASSI%
+ELSE
+	S = 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF S
+			PRINT と
+		PRINTFORM %NAME:COUNT%
+		S = 1
+	REND
+ENDIF
+
+IF FLAG:特殊営業タイプ詳細 & 8
+	IF TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ == 0 && TALENT:ASSI:オトコ == 0
+		PRINT による母と娘の
+	ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0 && TALENT:ASSI:オトコ
+		PRINT による母と息子の
+	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0 && TALENT:ASSI:オトコ == 0
+		PRINT による姉と妹の
+	ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0 && TALENT:ASSI:オトコ
+		PRINT による姉と弟の
+	ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ && TALENT:ASSI:オトコ == 0
+		PRINT による兄と妹の
+	ELSE
+		PRINT による近親
+	ENDIF
+ELSE
+	PRINT の
+ENDIF
+IF FLAG:特殊営業タイプ詳細 & 4
+	PRINT 公開セックス
+ELSEIF FLAG:特殊営業タイプ詳細 & 2
+	PRINT レズビアン
+ELSEIF FLAG:特殊営業タイプ詳細 & 1
+	PRINT 公開オナニー
+ELSE
+	PRINT ストリップ
+ENDIF
+PRINTL ショーを開いた……
+PRINTFORML 今回のストリップショーには{G}人の観客が集まった
+WAIT
+
+;通常ストリップ
+PRINT スポットライトを浴びながら、
+CALL WORK_SUB_PRINT_MEMBER
+PRINTL は観客に裸身を晒している……
+
+WAIT
+
+;公開オナニー
+IF FLAG:特殊営業タイプ詳細 & 1
+	PRINT そして
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINTL は客席に向かって足を開いて秘所をさらけ出し、
+	PRINTL いやらしい音を立てて性器をまさぐり始めた……
+	WAIT
+	;近親オナニーショー
+	IF FLAG:特殊営業タイプ詳細 & 8
+		PRINT 無数の目が見守る中で並んでオナニーを続けている
+		IF TFLAG:近親相姦 == 2  && TALENT:オトコ
+			PRINT 父
+		ELSEIF TFLAG:近親相姦 == 2  && TALENT:オトコ == 0
+			PRINT 母
+		ELSEIF TFLAG:近親相姦 == 4  && TALENT:オトコ
+			PRINT 兄
+		ELSEIF TFLAG:近親相姦 == 4  && TALENT:オトコ == 0
+			PRINT 姉
+		ENDIF
+		PRINT と
+		IF TFLAG:近親相姦 == 2  && TALENT:ASSI:オトコ
+			PRINT 息子
+		ELSEIF TFLAG:近親相姦 == 2  && TALENT:ASSI:オトコ == 0
+			PRINT 娘
+		ELSEIF TFLAG:近親相姦 == 4  && TALENT:ASSI:オトコ
+			PRINT 弟
+		ELSEIF TFLAG:近親相姦 == 4  && TALENT:ASSI:オトコ == 0
+			PRINT 妹
+		ENDIF
+		PRINTL に、
+		PRINTL 客席から卑猥な野次が飛んだ……
+		WAIT
+	ENDIF
+ENDIF
+
+;レズショー
+IF FLAG:特殊営業タイプ詳細 & 2
+	PRINT やがて
+	CALL WORK_SUB_PRINT_MEMBER
+	PRINTL は互いの裸身を淫らに絡めあい始めた……
+	WAIT
+	;近親レズビアンショー
+	IF FLAG:特殊営業タイプ詳細 & 8
+		IF TFLAG:近親相姦 == 2
+			PRINTL Ｍ字に開かれた母親の股間に顔をうずめ、
+			PRINT 自分が生まれてきた場所に舌を這わせる
+			IF TALENT:ASSI:未熟
+				PRINT 幼女
+			ELSEIF TALENT:ASSI:幼稚
+				PRINT 少女
+			ELSE
+				PRINT 娘
+			ENDIF
+		ELSEIF TFLAG:近親相姦 == 4
+			PRINT 互いにさかさまになって相手の性器を舐めあう姉と妹
+		ENDIF
+		PRINTL の姿を、
+		PRINTL 観客は固唾を呑んで見守っている……
+		WAIT
+	ENDIF
+ENDIF
+
+;公開セックス
+IF FLAG:特殊営業タイプ詳細 & 4
+	E = 0
+	PRINTW 本番行為が始まった……
+	;TARGETとASSI双方がふたなりでＶ使用可
+	IF TALENT:TARGET:ふたなり && CFLAG:TARGET:営業でＶ使用不能フラグ == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+		PRINTFORM %CALLNAME:TARGET%と%CALLNAME:ASSI%は
+		PRINTFORMW お互いのペニスでお互いのヴァギナを交互に貫きあった
+		SIF TALENT:処女
+			E |= 1
+		SIF TALENT:童貞
+			E |= 2
+		SIF TALENT:ASSI:処女
+			E |= 4
+		SIF TALENT:ASSI:童貞
+			E |= 8
+		;助手→奴隷の妊娠フラグを加算
+		SIF CFLAG:労役でコンドーム使用 == 0
+			CFLAG:助手から奴隷への膣内射精カウント += G / 10 + 1
+		;奴隷→助手の妊娠フラグを加算
+		SIF CFLAG:労役でコンドーム使用 == 0
+			CFLAG:奴隷から助手への膣内射精ウント += G / 10 + 1
+	;TARGETがオトコorふたなりでASSIがＶ使用可
+	ELSEIF (TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり) && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+		PRINTFORM %CALLNAME:TARGET%は勃起した自分のペニスを
+		PRINTFORMW %CALLNAME:ASSI%の陰唇に出し入れする様子を観客に見せつけた
+		SIF TALENT:童貞
+			E |= 2
+		SIF TALENT:ASSI:処女
+			E |= 4
+		;奴隷→助手の妊娠フラグを加算
+		SIF CFLAG:労役でコンドーム使用 == 0
+			CFLAG:奴隷から助手への膣内射精ウント += G / 10 + 1
+	;ASSIがオトコorふたなりでTARGETがＶ使用可
+	ELSEIF  (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:営業でＶ使用不能フラグ == 0
+		PRINTFORM %CALLNAME:TARGET%は自分のヴァギナが
+		PRINTFORMW %CALLNAME:ASSI%の陰茎で貫かれる様子を観客に見せつけた
+		SIF TALENT:処女
+			E |= 1
+		SIF TALENT:ASSI:童貞
+			E |= 8
+		;助手→奴隷の妊娠フラグを加算
+		SIF CFLAG:労役でコンドーム使用 == 0
+			CFLAG:助手から奴隷への膣内射精カウント += G / 10 + 1
+	ENDIF
+
+	;近親相姦ショー
+	IF FLAG:特殊営業タイプ詳細 & 8 
+		IF TFLAG:近親相姦 == 2 && TALENT:ASSI:オトコ == 0
+			PRINT 自分の娘
+		ELSEIF TFLAG:近親相姦 == 2 && TALENT:ASSI:オトコ
+			PRINT 自分の息子
+		ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ == 0
+			PRINT 自分の妹
+		ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ
+			PRINT 自分の弟
+		ENDIF
+		IF TALENT:ふたなり && CFLAG:営業でＶ使用不能フラグ == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+			PRINT と互いに犯しあう
+		ELSEIF (TALENT:オトコ || TALENT:ふたなり) && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+			PRINT を犯し続ける
+		ELSEIF (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:営業でＶ使用不能フラグ == 0
+			PRINT に犯され続ける
+		ENDIF
+		IF TFLAG:近親相姦 == 2 && TALENT:オトコ
+			PRINT 父親
+		ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0
+			PRINT 母親
+		ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ
+			PRINT 兄
+		ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0
+			PRINT 姉
+		ENDIF
+		PRINTL という異常な光景に、観客席は静まり返っている……
+		WAIT
+	ENDIF
+
+	;TARGETの処女・童貞喪失判定
+	F = 0
+	IF E & 1
+		TALENT:処女 = 0
+		CFLAG:Ｖ売春で処女喪失フラグ = 1
+		PRINTFORML %NAME:TARGET%【処女喪失】
+		F += 1
+		SIF FLAG:特殊営業タイプ詳細 & 8
+			F += 1
+		SIF TALENT:ASSI:オトコ == 0
+			F += 1
+		SIF CFLAG:ファーストキスの相手 == 0
+			CFLAG:ファーストキスの相手 = 1
+		ENDIF
+	IF E & 2
+		TALENT:童貞 = 0
+		PRINTFORML %NAME:TARGET%【童貞喪失】
+		F += 1
+		SIF FLAG:特殊営業タイプ詳細 & 8
+			F += 1
+		SIF CFLAG:ファーストキスの相手 == 0
+			CFLAG:ファーストキスの相手 = 1
+	ENDIF
+	IF E & 1 || E & 2
+		IF CFLAG:TARGET:初体験の相手 == 0
+			CFLAG:TARGET:初体験の相手 = NO:ASSI + 1
+			;初体験が近親相姦
+			;初体験の相手が自分の息子・娘という状況は生物学的にありえないので省く
+			IF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ
+				CFLAG:初体験の相手 = 306
+			ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ == 0
+				CFLAG:初体験の相手 = 307
+			ENDIF
+			SIF CFLAG:ファーストキスの相手 == 0
+				CFLAG:ファーストキスの相手 = 1
+		ENDIF
+	ENDIF
+	IF F
+		SIF F > 3
+			F = 3
+		PRINTFORML 異常経験＋{F}
+		EXP:異常経験 += F
+		F = 0
+	ENDIF
+	;ASSIの処女・童貞喪失判定
+	F = 0
+	IF E & 4
+		TALENT:ASSI:処女 = 0
+		CFLAG:ASSI:Ｖ売春で処女喪失フラグ = 1
+		PRINTFORML %NAME:ASSI%【処女喪失】
+		F += 1
+		SIF FLAG:特殊営業タイプ詳細 & 8
+			F += 1
+		SIF TALENT:オトコ == 0
+			F += 1
+		SIF CFLAG:ASSI:ファーストキスの相手 == 0
+			CFLAG:ASSI:ファーストキスの相手 = 1
+	ENDIF
+	IF E & 8
+		TALENT:ASSI:童貞 = 0
+		PRINTFORML %NAME:ASSI%【童貞喪失】
+		F += 1
+		SIF FLAG:特殊営業タイプ詳細 & 8
+			F += 1
+		SIF CFLAG:ASSI:ファーストキスの相手 == 0
+			CFLAG:ASSI:ファーストキスの相手 = 1
+	ENDIF
+	IF E & 4 || E & 8
+		IF CFLAG:ASSI:初体験の相手 == 0
+			CFLAG:ASSI:初体験の相手 = NO:TARGET + 1
+			;初体験が近親相姦
+			;初体験の相手が自分の息子・娘という状況は生物学的にありえないので省く
+			IF TFLAG:近親相姦 == 2 && TALENT:オトコ
+				CFLAG:ASSI:初体験の相手 = 300
+			ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0
+				CFLAG:ASSI:初体験の相手 = 301
+			ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ
+				CFLAG:ASSI:初体験の相手 = 304
+			ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0
+				CFLAG:ASSI:初体験の相手 = 305
+			ENDIF
+		ENDIF
+		SIF CFLAG:ASSI:ファーストキスの相手 == 0
+			CFLAG:ASSI:ファーストキスの相手 = 1
+	ENDIF
+	IF F
+		SIF F > 3
+			F = 3
+		PRINTFORML 異常経験＋{F}
+		EXP:ASSI:異常経験 += F
+		F = 0
+	ENDIF
+	SIF E
+		WAIT
+
+	E = 0
+
+	;妊娠チェックはここですませておく
+	CALL IN_VAGINA_ALL
+	CALL CONCEPTION_CHECK_ALL
+ENDIF
+
+PRINTL      
+;結果を一応視覚化しておく。デバッグ用なので、消してもいい。
+PRINTFORML 満足度:{D}％
+P *= 4
+PRINTFORMW 目標満足度:{P}％
+PRINTL      
+
+;失敗時メッセージ
+IF A <= 1
+	PRINTFORM 羞恥に耐え切れなくなったのか、途中で
+	IF FLAG:特殊営業参加人数 == 1 && TARGET > 0
+		PRINTFORM %CALLNAME:TARGET%
+	ELSEIF FLAG:特殊営業参加人数 == 2
+		PRINTFORM %CALLNAME:TARGET%と%CALLNAME:ASSI%
+	ELSEIF FLAG:特殊営業参加人数 ==3
+		PRINT ３人
+	ELSE
+		PRINTFORM {FLAG:特殊営業参加人数}人
+	ENDIF
+	PRINTFORML は固まってしまった
+	PRINTFORML どうやら今回のショーは失敗したようだ……
+	WAIT
+	TFLAG:口上番号 = 118
+;成功時メッセージ
+ELSE
+	PRINTFORML いい感じに成功したようだ
+	WAIT
+	;放尿はサービス
+	IF FLAG:特殊営業参加人数 >= 2
+		IF ASSI > 0 && (FLAG:特殊営業タイプ詳細 & 8) && ABL:露出癖 >= 4 && TALENT:おもらし癖 && ABL:ASSI:露出癖 >= 4 && TALENT:ASSI:おもらし癖
+			PRINTFORML 最後に%CALLNAME:TARGET%が%CALLNAME:ASSI%の両足を赤ちゃんのように抱え上げて放尿させ、
+			PRINTFORML 自分自身ももその体勢のまま足をがに股に開いて同時に放尿してみせると、
+			PRINTFORMW 客席から大歓声が湧き上がった……
+		ELSEIF ASSI > 0 && (FLAG:特殊営業タイプ詳細 & 8) && ABL:ASSI:露出癖 >= 4 && TALENT:ASSI:おもらし癖
+			PRINTFORML 最後に%CALLNAME:TARGET%が%CALLNAME:ASSI%の両足を赤ちゃんのように抱え上げ、
+			PRINTFORMW 客席に向かって放尿させてみせると、大歓声が湧き上がった……
+		ELSEIF (ASSI > 0) && ABL:露出癖 >= 4 && TALENT:おもらし癖 && ABL:ASSI:露出癖 >= 4 && TALENT:ASSI:おもらし癖
+			PRINTFORML 最後に%CALLNAME:TARGET%と%CALLNAME:ASSI%がふたり並んで両足を開いて立ち、
+			PRINTFORMW 同時に放尿してみせると、歓声が上がった……
+		ELSEIF ABL:露出癖 >= 4 && TALENT:おもらし癖
+			IF (ASSI > 0) && ABL:レズっ気 + ABL:ASSI:レズっ気 >= 6 && ABL:サドっ気 + ABL:ASSI:マゾっ気 >= 6
+				PRINTFORMW 最後に%CALLNAME:TARGET%が%CALLNAME:ASSI%の大きく開いた口の中へ放尿してみせると、大歓声が湧き上がった……
+			ELSE
+				PRINTFORMW 最後に%CALLNAME:TARGET%が客席に向かって放尿してみせると、歓声が上がった……
+			ENDIF
+		ENDIF
+	ELSE
+		SIF ABL:露出癖 >= 4 && TALENT:おもらし癖
+			PRINTFORMW 最後に%CALLNAME:TARGET%が客席に向かって放尿してみせると、歓声が上がった……
+	ENDIF
+	IF FLAG:特殊営業で夜の部を開催フラグ == 0
+		CALL WORK_SUB_PRINT_MEMBER
+		PRINTFORMW は照れくさそうに微笑むと、ステージから消えていった……
+	ENDIF
+	TFLAG:口上番号 = 119
+ENDIF
+
+;特殊コンサート用処理
+IF FLAG:特殊営業で夜の部を開催フラグ == 1
+	IF A <= 1
+		PRINTFORM 不満を覚えた観客達は
+		CALL WORK_SUB_PRINT_MEMBER
+		PRINTFORMW に向かってなだれ込んでいった……
+	ELSE
+		PRINTFORM %CALLNAME:TARGET%
+		SIF FLAG:特殊営業参加人数 >= 2
+			PRINT たち
+		PRINTFORML の痴態に魅せられたのか
+		PRINTFORM 興奮した観客達は一斉に
+		CALL WORK_SUB_PRINT_MEMBER
+		PRINTFORMW のもとへなだれ込んでいった……
+	ENDIF
+	PRINTW      ･
+	PRINTW      ･
+	PRINTW      ･
+
+	CALL WORK_SP_SEX_01
+
+	;口上の判定
+	IF A <= 1
+		TFLAG:口上番号 = 120
+	ELSE
+		TFLAG:口上番号 = 121
+	ENDIF
+	
+	WAIT
+ENDIF
+
+;口上処理
+X = TARGET
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	TARGET = COUNT
+	CALL SELF_KOJO
+REND
+TARGET = X
+;念のため口上用フラグを空に
+TFLAG:口上番号 = 0
+
+;/_/_/_/_/_/※ここから下の処理ではTARGETは保存されていません/_/_/_/_/_/
+
+DRAWLINE
+
+;パラメータ変化
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	
+	TARGET = COUNT
+
+	PRINTFORML %NAME:TARGET%のパラメータが以下の通り変化しました
+
+	U:7 = ((G * 80 * Z) / 5 )
+	U:8 = ((G * 100 * Z) / 5 )
+	;近親ショーだった
+	SIF FLAG:特殊営業タイプ詳細 & 8
+		U:6 = ((G * 60 * Z) / 5 )
+	;失敗時経験値
+	IF Z <= 1
+		TCVAR:舞踊経験 = G / 20 + 1
+		TCVAR:被写経験 = G / 10 + 1
+	;成功時経験値
+	ELSE
+	;今後技能が充実してくれば書き換える可能性有
+		TCVAR:舞踊経験 = ((G / (7 - Z)) * ABL:舞踊技能) + (G / 10)
+		TCVAR:被写経験 = ((G / (10 - Z)) * ABL:被写技能) + (G / 2)
+	ENDIF
+
+	;公開オナニー成功
+	IF FLAG:特殊営業タイプ詳細 & 1
+		TCVAR:絶頂経験 = (G / (10 - Z)) + (G / 10)
+		SIF TALENT:オトコ || TALENT:ふたなり
+			TCVAR:射精経験 = (G / (10 - Z)) + (G / 10)
+		TCVAR:自慰経験 = (G / (6 - Z)) + (G / 2)
+		U:0 = G * (ABL:自慰中毒 + TALENT:自慰狂い * 5) * 10
+		U:14 = G * (ABL:自慰中毒 + TALENT:自慰狂い * 5) * 10
+		U:6 *= 2
+		U:7 *= 2
+		U:8 *= 2
+	ENDIF
+	;レズショー成功
+	IF FLAG:特殊営業タイプ詳細 & 2
+		TCVAR:絶頂経験 += (G / (10 - Z)) + (G / 10)
+		TCVAR:レズ経験 += (G / (6 - Z)) + (G / 2)
+		U:0 += G * (ABL:レズっ気 + ABL:レズ中毒 * 2) * 10
+		U:14 += G * (ABL:レズっ気 + ABL:レズ中毒 * 2) * 10
+		U:6 *= 2
+		U:8 *= 2
+	ENDIF
+	;公開セックス成功
+	IF FLAG:特殊営業タイプ詳細 & 2
+		IF TALENT:オトコ == 0 && CFLAG:営業でＶ使用不能フラグ == 0
+			TCVAR:Ｖ経験 = (G / (10 - Z)) + (G / 10)
+			U:1 = G * (ABL:性交中毒 + TALENT:セックス狂 * 5) * 10
+			TCVAR:性交経験 = (G / (10 - Z)) + (G / 10)
+		ENDIF
+		IF TALENT:オトコ || TALENT:ふたなり
+			TCVAR:射精経験 += (G / (10 - Z)) + (G / 10)
+			U:0 += G * (ABL:性交中毒 + TALENT:セックス狂 * 5) * 10
+			TCVAR:性交経験 +=(G / (10 - Z)) + (G / 10)
+		ENDIF
+		TCVAR:絶頂経験 += (G / (10 - Z)) + (G / 10)
+		U:6 *= 2
+		U:8 *= 2
+	ENDIF
+	;ステージで放尿した
+	IF A >= 2 && ABL:露出癖 >= 4 && TALENT:おもらし癖
+		TCVAR:放尿経験 = G / 10 + 1
+		U:8 *= 2
+	ENDIF
+
+	;参加者が複数の場合は得られる珠、経験がやや目減り
+	IF FLAG:特殊営業参加人数 == 2
+		TIMES U:6 , 0.80
+		TIMES U:7 , 0.80
+		TIMES U:8 , 0.80
+		TIMES TCVAR:被写経験 , 0.50
+		TIMES TCVAR:舞踊経験 , 0.50
+	ELSEIF FLAG:特殊営業参加人数 >= 3
+		TIMES U:6 , 0.60
+		TIMES U:7 , 0.60
+		TIMES U:8 , 0.60
+		TIMES TCVAR:被写経験 , 0.30
+		TIMES TCVAR:舞踊経験 , 0.30
+	ENDIF
+
+	;否定の珠の計算（基礎値は人数ベースで、従順に応じて減少）
+	;特殊チケットだと一気に溜まる
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		M = 15 - ABL:信頼
+	ELSE
+		M = 9 - ABL:信頼
+	ENDIF
+
+	;否定の珠が増加しないという事はない
+	SIF M <= 0
+		M = 1
+	
+	U:100 = G * M * 2
+
+	;素質補正
+	;無関心だと少なくなる
+	SIF TALENT:クール
+		TIMES U:100 , 0.90
+	;感情乏しいと少なくなる
+	SIF TALENT:感情乏しい
+		TIMES U:100 , 0.90
+	;プライドが高いと増える
+	SIF TALENT:プライド高い
+		TIMES U:100 , 1.50
+	;目立ちたがりだと少なくなる
+	SIF TALENT:目立ちたがり
+		TIMES U:100 , 0.80
+	;抑圧だと増える
+	SIF TALENT:抑圧
+		TIMES U:100 , 1.20
+	;解放だと少なくなる
+	SIF TALENT:解放
+		TIMES U:100 , 0.80
+	;露出狂だとほとんどなくなる
+	SIF TALENT:露出狂
+		TIMES U:100 , 0.05
+	;ストリップショー失敗かつ恥じらいだと結構増える
+	SIF TALENT:恥じらい && A <= 1
+		TIMES U:100 , 1.50
+	;公開セックスがあった場合セックス狂いがないと増える
+	SIF FLAG:特殊営業タイプ詳細 & 4 && TALENT:セックス狂 == 0
+		TIMES U:100 , 1.20
+	;レズショーがあった場合レズ中毒３未満か両刀がないと増える
+	SIF FLAG:特殊営業タイプ詳細 & 2 && (ABL:レズ中毒 < 3 && TALENT:両刀 == 0)
+		TIMES U:100 , 1.20
+	;公開オナニーがあった場合自慰狂いがないと増える
+	SIF FLAG:特殊営業タイプ詳細 & 1 && TALENT:自慰狂い == 0
+		TIMES U:100 , 1.20
+
+	;近親ショーだと否定の珠倍増
+	SIF FLAG:特殊営業タイプ詳細 & 8
+		U:100 *= 2
+
+	;特殊ストリップ用処理その２
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		CALL WORK_SP_SEX_02
+		;客は輪姦目的で来ているので、営業が成功しても失敗しても一定の満足を得る
+		A += 1
+	ELSE
+		;昼の部でも処女喪失だとかなり増える
+		SIF CFLAG:Ｖ売春で処女喪失フラグ
+			U:100 *= 3
+		;昼の部の参加人数による否定の珠補正
+		IF FLAG:特殊営業参加人数 == 2
+			TIMES U:100 , 0.80
+		ELSEIF FLAG:特殊営業参加人数 >= 3
+			TIMES U:100 , 0.60
+		ENDIF
+	ENDIF
+
+	DRAWLINE
+
+	X = COUNT
+	CALL WORK_EXP
+	COUNT = X
+
+	;反発刻印取得の判定
+	;通常チケットは従順の200倍+1000まで、特殊チケットは100倍まで許容します
+	O = ABL:信頼
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		O *= 100
+	ELSE
+		O *= 200
+		O += 1000
+	ENDIF
+	
+	;反発刻印LV2はLV1の√3倍、LV3は√5倍で獲得
+	I = O
+	TIMES I , 2.23
+	J = O
+	TIMES J , 1.73
+	
+	IF MARK:反発刻印 != 3 && JUEL:否定 > I
+		PRINTL  反発刻印LV3を取得
+		MARK:反発刻印 = 3
+	ELSEIF MARK:反発刻印 != 2 && JUEL:否定 > J
+		PRINTL  反発刻印LV2を取得
+		MARK:反発刻印 = 2
+	ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > O
+		PRINTL  反発刻印LV1を取得
+		MARK:反発刻印 = 1
+	ENDIF
+
+	DRAWLINE
+
+	;体力減少の計算
+	LOSEBASE:体力 = G * 30
+
+	;小柄だと疲労増加
+	SIF TALENT:小柄体型
+		TIMES LOSEBASE:体力 , 1.20
+	;露出狂だと疲労半減
+	SIF TALENT:露出狂
+		TIMES LOSEBASE:体力 , 0.50
+
+	;特殊チケットの場合
+	IF FLAG:特殊営業で夜の部を開催フラグ == 1
+		;特殊チケットだと人数ベースでかなり疲れる
+		LOSEBASE:体力 += G * 40
+
+		;売春中毒のレベルに応じてちょっとずつ減る
+		IF ABL:売春中毒 == 1
+			TIMES LOSEBASE:体力 , 0.90
+		ELSEIF ABL:売春中毒 == 2
+			TIMES LOSEBASE:体力 , 0.80
+		ELSEIF ABL:売春中毒 == 3
+			TIMES LOSEBASE:体力 , 0.70
+		ELSEIF ABL:売春中毒 == 4
+			TIMES LOSEBASE:体力 , 0.60
+		ELSEIF ABL:売春中毒 >= 5
+			TIMES LOSEBASE:体力 , 0.50
+		ENDIF
+
+		;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
+		SIF EXP:Ｖ経験 <= 200 && TALENT:オトコ == 0
+			TIMES LOSEBASE:体力 , 1.10
+		SIF EXP:Ａ経験 <= 200
+			TIMES LOSEBASE:体力 , 1.20
+
+	ENDIF
+	
+	;処女喪失だとかなり増える
+	SIF CFLAG:Ｖ売春で処女喪失フラグ
+		TIMES LOSEBASE:体力 , 2.00
+
+	;運動能力に応じて疲労軽減
+	IF ABL:運動能力 == 1
+		TIMES LOSEBASE:体力 , 0.95
+	ELSEIF ABL:運動能力 == 2
+		TIMES LOSEBASE:体力 , 0.90
+	ELSEIF ABL:運動能力 == 3
+		TIMES LOSEBASE:体力 , 0.85
+	ELSEIF ABL:運動能力 == 4
+		TIMES LOSEBASE:体力 , 0.80
+	ELSEIF ABL:運動能力 == 5
+		TIMES LOSEBASE:体力 , 0.75
+	ELSEIF ABL:運動能力 == 6
+		TIMES LOSEBASE:体力 , 0.70
+	ELSEIF ABL:運動能力 == 7
+		TIMES LOSEBASE:体力 , 0.65
+	ELSEIF ABL:運動能力 == 8
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF ABL:運動能力 == 9
+		TIMES LOSEBASE:体力 , 0.55
+	ELSEIF ABL:運動能力 >= 10
+		TIMES LOSEBASE:体力 , 0.50
+	ENDIF
+
+	;参加人数に応じて疲労軽減
+	IF FLAG:特殊営業で夜の部を開催フラグ
+		LOSEBASE:体力 /= FLAG:特殊営業参加人数
+	ELSEIF FLAG:特殊営業参加人数 >= 3
+		TIMES LOSEBASE:体力 , 0.60
+	ELSEIF FLAG:特殊営業参加人数 >= 2
+		TIMES LOSEBASE:体力 , 0.80
+	ENDIF
+
+	;警備員の人数に応じてちょっとずつ減る（最大1～2割減）
+	;特殊チケットなら警備員とても大事（効果2倍）
+	LOSEBASE:体力 *= 100 - FLAG:警備員人数 * (1 + FLAG:特殊営業で夜の部を開催フラグ)
+	LOSEBASE:体力 /= 100
+
+	;警備員の人数に応じて即死回避
+	IF LOSEBASE:体力 >= BASE:体力
+		;警備員の人数*9+9%の確率で体力が1残る（救済フラグを立てる）
+		SIF RAND:100 < (FLAG:警備員人数 * 9 + 9)
+		LOSEBASE:体力 = BASE:体力 - 1
+	ENDIF
+
+	SIF LOSEBASE:体力 >= BASE:体力
+		LOSEBASE:体力 = BASE:体力
+
+	PRINT  体力消費　　:
+	N = BASE:体力
+	CALL FIGURE_INDENT
+	PRINTV BASE:体力
+	PRINT  - 
+	N = LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTV LOSEBASE:体力
+	PRINT  = 
+	N = BASE:体力 - LOSEBASE:体力
+	CALL FIGURE_INDENT
+	PRINTVL BASE:体力 - LOSEBASE:体力
+	
+	BASE:体力 -= LOSEBASE:体力
+	
+	PRINT  体力　　　　:
+	BAR BASE:体力, MAXBASE:体力, 32
+	PRINTFORML ({BASE:体力}/{MAXBASE:体力})
+
+	;体力が0以下、または500以下だった場合の処理
+	IF BASE:体力 <= 0
+		PRINTFORML %CALLNAME:TARGET%は、最後のショーの後に突っ伏すように倒れた
+		PRINTFORML 何をやっても反応がない……
+		WAIT
+		;キャラの死亡確認
+		CALL CHARADEAD_CHECK
+	ELSEIF BASE:体力 <= 500
+		PRINTFORML 体力が限界に来ています。休ませてあげてください
+	ENDIF
+
+	DRAWLINE
+	WAIT
+REND
+
+;売上金を計算します
+Q = 0
+
+;基準額
+
+;バストの平均値を見る
+B = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		B += BASE:COUNT:バスト
+REND
+B /= FLAG:特殊営業参加人数
+
+;ウエストの平均値を見る
+W = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		W += BASE:COUNT:ウェスト
+REND
+W /= FLAG:特殊営業参加人数
+
+;ヒップの平均値を見る
+H = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		H += BASE:COUNT:ヒップ
+REND
+H /= FLAG:特殊営業参加人数
+
+;体重の平均値を見る
+T = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		T += BASE:COUNT:体重
+REND
+T /= FLAG:特殊営業参加人数
+
+;身長の平均値を見る
+;身長ボーナス重要
+S = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		S += BASE:COUNT:身長
+REND
+
+S /= FLAG:特殊営業参加人数
+IF S >= 161
+	V += S - 160
+	V *= V
+ENDIF
+IF V > 100
+	V = 100
+ENDIF
+
+L = 0
+;身長の平均値によって求められる能力が変わります
+IF S < 150
+	L += (45 - T) * (45 - T)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (B - 75) * (B - 75)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (55 - W) * (55 - W)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (H - 75) * (H - 75)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+ELSEIF S < 160
+	L += (50 - T) * (50 - T)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (B - 80) * (B - 80)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (60 - W) * (60 - W)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (H - 80) * (H - 80)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+ELSEIF S < 170
+	L += (55 - T) * (55 - T)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (90 - B) * (90 - B)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (65 - W) * (65 - W)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (90 - H) * (90 - H)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+ELSE
+	L += (60 - T) * (60 - T)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (95 - B) * (95 - B)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (70 - W) * (70 - W)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+
+	L += (95 - H) * (95 - H)
+	IF L >= 100
+		L = 100
+	ELSEIF L <= 0
+		L = 0
+	ENDIF
+	V += L
+	L = 0
+ENDIF
+
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+;技能・素質による修正値を加算
+	;巨乳
+	SIF TALENT:COUNT:巨乳
+		V += 3
+	;爆乳
+	SIF TALENT:COUNT:爆乳
+		V += 2
+	;貧乳
+	SIF TALENT:COUNT:貧乳
+		V -= 3
+	;絶壁
+	SIF TALENT:COUNT:絶壁
+		V -= 5
+	;魅力
+	SIF TALENT:COUNT:魅力
+		V += 10
+	;パイパン
+	SIF TALENT:COUNT:パイパン
+		V += 3
+	;ロリ系
+	SIF TALENT:COUNT:童顔
+		V += 5
+
+	;剛毛
+	SIF TALENT:COUNT:剛毛
+		V /= 2
+	;肥満
+	SIF TALENT:COUNT:肥満
+		V /= 4
+REND
+
+PRINT 基準額
+PRINTFORML  +{V}
+Q += V
+V = 0
+
+B = 0
+W = 0
+H = 0
+S = 0
+T = 0
+
+;能力補正
+;露出癖の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:露出癖
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 50
+ELSEIF E == 1
+	V = 70
+ELSEIF E == 2
+	V = 100
+ELSEIF E == 3
+	V = 110
+ELSEIF E == 4
+	V = 120
+ELSEIF E == 5
+	V = 130
+ELSEIF E == 6
+	V = 140
+ELSEIF E == 7
+	V = 150
+ELSEIF E == 8
+	V = 160
+ELSEIF E == 9
+	V = 180
+ELSEIF E >= 10
+	V = 200
+ENDIF
+PRINT 露出
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;被写技能の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:被写技能
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 100
+ELSEIF E == 1
+	V = 110
+ELSEIF E == 2
+	V = 120
+ELSEIF E == 3
+	V = 130
+ELSEIF E == 4
+	V = 140
+ELSEIF E == 5
+	V = 150
+ELSEIF E == 6
+	V = 160
+ELSEIF E == 7
+	V = 170
+ELSEIF E == 8
+	V = 180
+ELSEIF E == 9
+	V = 190
+ELSEIF E >= 10
+	V = 200
+ENDIF
+PRINT 被写
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;舞踊技能の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += ABL:COUNT:舞踊技能
+REND
+E /= FLAG:特殊営業参加人数
+IF E == 0
+	V = 100
+ELSEIF E == 1
+	V = 120
+ELSEIF E == 2
+	V = 140
+ELSEIF E == 3
+	V = 160
+ELSEIF E == 4
+	V = 180
+ELSEIF E == 5
+	V = 200
+ELSEIF E == 6
+	V = 240
+ELSEIF E == 7
+	V = 280
+ELSEIF E == 8
+	V = 320
+ELSEIF E == 9
+	V = 360
+ELSEIF E >= 10
+	V = 400
+ENDIF
+PRINT 舞踏
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML {E}LV ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+
+;参加キャラの素質補正
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	V = 100
+	;カリスマ
+	SIF TALENT:COUNT:カリスマ
+		TIMES V , 2.00
+	;魅惑
+	SIF TALENT:COUNT:謎の魅力
+		TIMES V , 1.50
+	IF V != 100
+		PRINTFORML %NAME:COUNT% ×{V/100}.{V%100}
+		Q *= V
+		Q /= 100
+	ENDIF
+REND
+V = 0
+
+;魅力値の平均値を見る
+E = 0
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130
+		E += BASE:COUNT:魅力値
+REND
+E /= FLAG:特殊営業参加人数
+V = E
+PRINT 魅力値
+SIF FLAG:特殊営業参加人数 >= 2
+	PRINT 平均
+PRINTFORML ×{V/100}.{V%100}
+Q *= V
+Q /= 100
+V = 0
+E = 0
+
+;特殊チケット
+IF FLAG:特殊営業で夜の部を開催フラグ == 1
+	V = 150
+	;Ｖ使用不可キャラがいると減る
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+			TIMES V , 0.70
+	REND
+	PRINT 特殊チケット
+	PRINTFORML  ×{V/100}.{V%100}
+	Q *= V
+	Q /= 100
+	V = 0
+ENDIF
+
+;共通する獲得資金処理
+CALL WORK_SP_MONEY_CM
+
+PRINTFORML 今回のストリップショーでは{Q}ポイントのチケットを{G}人に販売し、
+
+;チケット一枚あたりの金額×客の人数が収入となる
+Q *= G
+
+PRINTFORML 合計{Q}ポイント稼ぎました
+MONEY += Q
+
+;昼の部だった場合客からの膣内射精フラグはクリア
+IF FLAG:特殊営業で夜の部を開催フラグ == 0
+	REPEAT CHARANUM
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		CFLAG:COUNT:娼館などの客から奴隷への中田氏カウント = 0
+	REND
+ENDIF
+
+;素質【舞姫】の判定
+;ストリップ終了時に生きていて、技巧LV5以上、舞踊技能LV5以上で舞踊経験1000以上かつ【歌姫】【美姫】をもっていない場合に通常コンサートをした時に取得
+
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	IF BASE:COUNT:体力 > 0 && ABL:COUNT:技巧 >= 5 && ABL:COUNT:舞踊技能 >= 5 && EXP:COUNT:舞踊経験 >= 1000 && TALENT:COUNT:舞姫 == 0 && FLAG:特殊営業で夜の部を開催フラグ == 0
+		PRINTFORMW %CALLNAME:COUNT%の舞の素晴らしさは世間でも評判になっているようだ……
+		PRINTFORMW 素質【舞姫】を取得しました
+		TALENT:COUNT:舞姫 = 1
+	ENDIF
+REND
+
+
+;特殊営業終了処理
+CALL WORK_SP_AFTER
+
+WAIT
+
+BEGIN TURNEND
+
+RETURN 1

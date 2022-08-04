@@ -1,0 +1,157 @@
+﻿;===========================================================
+;ヴァギナの形状
+;===========================================================
+@VAGINAFORM
+IF CFLAG:性器の形状 == 1 && FLAG:性器形状変化なし == 0
+	PRINT 小陰唇がはみ出しています
+ELSEIF CFLAG:性器の形状 == 2 && FLAG:性器形状変化なし == 0
+	PRINT 淫水焼けして黒ずんだ小陰唇がはみ出しています
+ELSE
+	PRINT 綺麗なタテスジです
+ENDIF
+;===========================================================
+;ヴァギナの形状変更
+;===========================================================
+@VAGINAFORM_CHANGE
+V = 0
+
+REPEAT CHARANUM
+	IF TALENT:COUNT:オトコ
+		CONTINUE
+	ELSEIF TALENT:COUNT:オトコ == 0
+		V = EXP:COUNT:Ｖ経験 + EXP:COUNT:自慰経験
+		IF V >= 120 && V < 300
+			CFLAG:COUNT:性器の形状 = 1
+		ELSEIF V >= 300
+			CFLAG:COUNT:性器の形状 = 2
+		ENDIF
+		V = 0
+	ENDIF
+REND
+		
+;===========================================================
+;ペニスの形状
+;===========================================================
+@PENISFORM
+IF CFLAG:ペニスのサイズ == 0
+	PRINT 小さめの
+ELSEIF CFLAG:ペニスのサイズ == 1
+	PRINT 
+ELSEIF CFLAG:ペニスのサイズ == 2
+	PRINT 極太
+ENDIF
+
+IF CFLAG:包皮の状態 == 0
+	PRINTFORM 真性包茎
+ELSEIF CFLAG:包皮の状態 == 1
+	PRINTFORM 仮性包茎
+ELSEIF CFLAG:包皮の状態 == 2 && TALENT:童貞 == 1
+	PRINTFORM 仮性包茎
+ELSEIF CFLAG:包皮の状態 == 2 && TALENT:童貞 == 0
+	PRINTFORM ズル剥け
+ELSEIF CFLAG:包皮の状態 == 3
+	PRINTFORM ズル剥け
+ELSE
+	PRINTFORM 仮性包茎
+ENDIF
+
+;===========================================================
+;ペニスサイズ
+;===========================================================
+@DECIDE_PENISSIZE
+
+IF CFLAG:T:ペニスのサイズ == 0
+	BASE:T:ペニスサイズ = 9 + RAND:4
+ELSEIF CFLAG:T:ペニスのサイズ == 1
+	BASE:T:ペニスサイズ = 13 + RAND:4
+ELSEIF CFLAG:T:ペニスのサイズ == 2
+	BASE:T:ペニスサイズ = 17 + RAND:4
+ENDIF
+
+;===========================================================
+;ペニスサイズ任意選択
+;===========================================================
+@DECIDE_PENISSELECT
+
+$INPUTLOOP_START
+PRINTL 《ペニスサイズを選んで下さい》
+
+PRINTL [0] - 短小
+PRINTL [1] - 平均
+PRINTL [2] - 巨根
+
+$INPUTLOOP_1
+INPUT
+
+IF RESULT == 0
+	CFLAG:T:ペニスのサイズ = 0
+	BASE:T:ペニスサイズ = 9 + RAND:4
+ELSEIF RESULT == 1
+	CFLAG:T:ペニスのサイズ = 1
+	BASE:T:ペニスサイズ = 13 + RAND:4
+ELSEIF RESULT == 2
+	CFLAG:T:ペニスのサイズ = 2
+	BASE:T:ペニスサイズ = 17 + RAND:4
+ELSE
+	GOTO INPUTLOOP_1
+ENDIF
+
+PRINTL 《包皮の状態を選んで下さい》
+
+PRINTL [0] - 真性包茎
+PRINTL [1] - 仮性包茎（永続的）
+PRINTL [2] - 仮性包茎（童貞喪失後「ズル剥け」になる）
+PRINTL [3] - ズル剥け
+
+$INPUTLOOP_2
+INPUT
+
+IF RESULT == 0
+	CFLAG:T:包皮の状態 = 0
+ELSEIF RESULT == 1
+	CFLAG:T:包皮の状態 = 1
+ELSEIF RESULT == 2
+	CFLAG:T:包皮の状態 = 2
+ELSEIF RESULT == 3
+	CFLAG:T:包皮の状態 = 3
+ELSE
+	GOTO INPUTLOOP_2
+ENDIF
+
+PRINTFORM %NAME:T%に生やすふたなりペニスは{BASE:T:ペニスサイズ}cmの
+
+IF CFLAG:T:ペニスのサイズ == 0
+	PRINTFORM 短小
+ELSEIF CFLAG:T:ペニスのサイズ == 1
+	PRINTFORM 
+ELSEIF CFLAG:T:ペニスのサイズ == 2
+	PRINTFORM 極太
+ENDIF
+
+IF CFLAG:T:包皮の状態 == 0
+	PRINTFORM 真性包茎
+ELSEIF CFLAG:T:包皮の状態 == 1
+	PRINTFORM 仮性包茎
+ELSEIF CFLAG:T:包皮の状態 == 2
+	PRINTFORM 仮性包茎
+ELSEIF CFLAG:T:包皮の状態 == 3
+	PRINTFORM ズル剥け
+ENDIF
+
+PRINTFORML ペニスでよろしいですか？
+
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUTLOOP_3
+INPUT
+
+IF RESULT == 0
+	PRINTFORMW 《%CALLNAME:T%は【%TALENTNAME:[[TALENT:ふたなり]]%】になった》
+	TALENT:T:ふたなり = 1
+	TALENT:T:童貞 = 1
+ELSEIF RESULT == 1
+	PRINTFORML 再選択してください
+	GOTO INPUTLOOP_START
+ELSE
+	GOTO INPUTLOOP_3
+ENDIF

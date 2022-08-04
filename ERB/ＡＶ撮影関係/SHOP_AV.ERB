@@ -1,0 +1,580 @@
+﻿;===========================================================
+;メイン画面の決定
+;===========================================================
+@AV_TOP
+
+全撮影シーン = 10 + ABL:MASTER:技巧 * 4
+撮影シーン = 全撮影シーン
+
+VARSET P, 0, 0
+VARSET TFLAG, 0, 0
+ビデオ売上 = 0
+
+CALL AV_CALC
+$DRAW
+DRAWLINE
+PRINTL ＡＶ撮影
+PRINTL 《指導中の女優候補のＡＶを撮影しポイントを稼ぎます》
+;PRINTL ※指導時のビデオ撮影より収入が多くなります
+PRINTL ※この機能は未完成です。
+PRINTL 　システム完成の暁には指導時のビデオ撮影より収入が多くなるように調整されると思います。
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  平日
+ELSE
+	PRINTL  週末
+ENDIF
+
+;撮影可能な女優数の確認
+T = 0
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF ABL:COUNT:信頼 >= 3 
+		T += 1
+	ENDIF
+REND
+
+PRINTFORML 所持金：{MONEY}ポイント
+PRINTFORM 今月の売れ筋：
+CALL VIDEOSALE_PRINT
+PRINTL
+
+$INPUT_LOOP
+
+DRAWLINE
+IF T >= 1
+	PRINTL  [0] - 撮影を開始する
+ELSE
+	PRINTL  [-] - －－－－－－－
+ENDIF
+;PRINTL  [1] - 男優と契約する
+DRAWLINE
+PRINTFORML  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+;	IF ITEM:ビデオカメラ == 1 && ITEM:ビデオテープ > 0 && T >= 1
+	IF ITEM:ビデオカメラ == 1 && T >= 1
+		CALL CHARA_SELECT_AV
+		;
+		SIF RESULT == 1
+			GOTO DRAW
+	ELSE
+		PRINTL 撮影に必要な機材がありません
+		RETURN
+	ENDIF
+;ELSEIF RESULT == 1
+;	CALL AV_LABO
+ELSEIF RESULT == 999
+	RETURN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN 0
+;-----------------------------------------------------------
+;通常営業の営業内容を決定します
+;-----------------------------------------------------------
+@CHARA_SELECT_AV
+
+$INPUT_LOOP_0
+
+DRAWLINE
+PRINTL 誰の撮影を開始しますか？
+CALL LIFE_LIST_NEW,LL_MODE_撮影
+IF RESULT == COMMAND_GO_BACK
+	RETURN 1
+;	CALL AV_TOP
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_0
+ENDIF
+
+;以下営業させられる条件
+;主人だと不可
+IF RESULT == MASTER
+	PRINTL %CALLNAME:MASTER%は監督です
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+
+;体力が500未満だと不可
+IF BASE:RESULT:体力 < 500
+	PRINTL 衰弱して、とても撮影を行えるような状態ではありません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;反発刻印2以上が付いていると不可
+IF MARK:RESULT:反発刻印 >= 2
+	PRINTL 反発感情が強く、撮影を行なえません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;従順と欲望の合計値が6以下だと不可
+B = ABL:RESULT:信頼
+B += ABL:RESULT:欲望
+IF B < 3
+	PRINTL 能力不足です。撮影をするにはもっと育ててください
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;臨月・育児中だと不可
+IF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+	PRINTL 身重で、とても撮影を行えるような状態ではありません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+IF TALENT:RESULT:育児中
+	PRINTL 育児中のため、撮影を行えません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+;素質【オトコ】が付いていると不可
+IF TALENT:RESULT:オトコ
+	PRINTL すまないがホモは帰ってくれないか！
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+IF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+	PRINTL 営業が終わるまで調教対象として選択できません
+	WAIT
+	GOTO INPUT_LOOP_0
+ENDIF
+
+CFLAG:RESULT:労役中のフラグ = 0
+TARGET = RESULT
+
+;まだデビュー前の場合、ここで芸名を決定する
+IF TALENT:ＡＶ女優 == 0
+	PRINTL
+	$INPUTLOOP_DECIDENAME
+	PRINTFORML 《%CALLNAME:TARGET%の芸名を決めて下さい》
+
+	INPUTS
+		SIF RESULTS == ""
+			RESULTS = %NICKNAME%
+	PRINTFORML %CALLNAME:TARGET%の芸名は%RESULTS%でよろしいですか？
+	NICKNAME:TARGET = %RESULTS%
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUTLOOP_DECIDE
+	INPUT
+		IF RESULT == 0
+				PRINTFORML 本人と話し合った結果、%NICKNAME:TARGET%に決まった
+		ELSEIF RESULT == 1
+			PRINTFORML 芸名を再入力してください
+			GOTO INPUTLOOP_DECIDENAME
+		ELSE
+			GOTO INPUTLOOP_DECIDE
+		ENDIF
+	PRINTL
+ENDIF
+
+PRINTL 誰を助手にしますか？
+CALL LIFE_LIST_NEW,LL_MODE_指導可, 1
+DRAWLINE
+IF RESULT == COMMAND_GO_BACK || RESULT == 0 || RESULT < 0 || RESULT >= CHARANUM || CFLAG:RESULT:売却助手可能 < 2 || BASE:RESULT:体力 < 500 || TALENT:RESULT:育児中 || (CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠) || (TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0) || RESULT == TARGET
+	ASSI = -1
+ELSE
+	ASSI = RESULT
+
+	;助手経験フラグ立てる
+	ISASSI:ASSI = 1
+ENDIF
+
+CALL AV_LIST
+
+;-----------------------------------------------------------
+;通常営業の営業内容を決定します
+;-----------------------------------------------------------
+@AV_LABO
+$INPUT_LOOP_02
+PRINTL 誰と契約しますか？
+DRAWLINE
+IF FLAG:有名男優契約 == 0
+	PRINTL [0] - 有名ＡＶ男優【向井裕也】と契約する（1000000ポイント）
+ELSE
+	PRINTL [-] - －－－－－－－
+ENDIF
+IF C == 1 && FLAG:男優契約 == 0
+	PRINTL [1] - 【五十嵐亮】と契約する（2000000ポイント）
+ELSE
+	PRINTL [-] - －－－－－－－
+ENDIF
+IF G == 1 && FLAG:黒人男優契約 == 0
+	PRINTL [2] - 黒人ＡＶ男優【ロバート・パーマー】と契約する（1000000ポイント）
+ELSE
+	PRINTL [-] - －－－－－－－
+ENDIF
+IF D == 1 && FLAG:あゆむ男優契約 == 0
+	PRINTL [3] - 【榊あゆむ】を男優に起用する
+ELSE
+	PRINTL [-] - －－－－－－－
+ENDIF
+IF B == 1 && FLAG:桔梗男優契約 == 0
+	PRINTL [4] - 既に女優デビューした【渡会桔梗】を男優の代わりに起用する
+ELSE
+	PRINTL [-] - －－－－－－－
+ENDIF
+IF A == 1 && FLAG:かなで男優契約 == 0
+	PRINTL [5] - 既に女優デビューした【宮間かなで】を男優の代わりに起用する
+ELSE
+	PRINTL [-] - －－－－－－－
+ENDIF
+DRAWLINE
+PRINTL [999] - 戻る
+INPUT
+
+IF RESULT == 999
+	RETURN 999
+ELSEIF RESULT == 0 
+	IF MONEY >= 1000000 && FLAG:有名男優契約 == 0
+		PRINTL 有名ＡＶ男優【向井裕也】と契約しました
+		FLAG:有名男優契約 = 1
+		WAIT
+		GOTO INPUT_LOOP_02
+	ELSE
+		PRINTL ポイントが足りません
+		WAIT
+		GOTO INPUT_LOOP_02
+	ENDIF
+ELSEIF RESULT == 1 
+	IF MONEY >= 2000000 && FLAG:男優契約 == 0
+		PRINTL 【五十嵐亮】と契約しました
+		FLAG:男優契約 = 1
+		WAIT
+		GOTO INPUT_LOOP_02
+	ELSE
+		PRINTL ポイントが足りません
+		WAIT
+		GOTO INPUT_LOOP_02
+	ENDIF
+ELSEIF RESULT == 2
+	IF MONEY >= 1000000 && FLAG:黒人男優契約 == 0
+		PRINTL 黒人ＡＶ男優【ロバート・パーマー】と契約しました
+		FLAG:黒人男優契約 = 1
+		WAIT
+		GOTO INPUT_LOOP_02
+	ELSE
+		PRINTL ポイントが足りません
+		WAIT
+		GOTO INPUT_LOOP_02
+	ENDIF
+ELSEIF RESULT == 3 && FLAG:あゆむ男優契約 == 0
+	PRINTL 【榊あゆむ】を男優に起用しました
+	FLAG:あゆむ男優契約 = 1
+	WAIT
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 4 && FLAG:桔梗男優契約 == 0
+	PRINTL 既に女優デビューしている【渡会桔梗】を男優の代わりに起用しました
+	FLAG:桔梗男優契約 = 1
+	WAIT
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 5 && FLAG:かなで男優契約 == 0
+	PRINTL 既に女優デビューしている【宮間かなで】を男優の代わりに起用しました
+	FLAG:かなで男優契約 = 1
+	WAIT
+	GOTO INPUT_LOOP_02
+ELSE
+	GOTO INPUT_LOOP_02
+ENDIF
+;===========================================================
+;シーンの決定
+;===========================================================
+@AV_LIST
+; 変数の定義と初期化
+; LOCAL		一時変数(要素数2)
+; LIST		存在するミッション番号を格納する変数(要素数250)
+; PAGE		現在の表示ページ番号を格納する変数 (要素数1)
+; PAGE_END	ページ番号の最大値を格納する変数 (要素数1)
+#LOCALSIZE 50
+#DIM LIST, CURRENT_MAX_CHARA_ID
+#DIM PAGE
+#DIM PAGE_END
+VARSET LIST, -1
+PAGE = 0
+VARSET LOCAL, 0
+VARSET TCVAR, 0
+; ミッションの存在判定
+K = 0
+FOR LOCAL, 0, 50
+	; ミッションの存在チェック
+	; 存在するミッションタイトルを戻す関数の番号をリスト変数に格納し、
+	; リストの要素番号を格納するカウンタ変数LOCAL:1をインクリメントする
+	; 存在しない場合は次のループへ移る
+	TRYCCALLFORM SCENE_TITLE_{LOCAL}
+		DEBUGPRINTFORML リスト番号{LOCAL:1}にミッション番号{LOCAL} %RESULTS%を登録します
+		LIST:(LOCAL:1) = LOCAL
+		LOCAL:1++
+	CATCH
+		CONTINUE
+	ENDCATCH
+NEXT
+; ページ終端の計算
+PAGE_END = (LOCAL:1 - 1 < 0 ? 0 # LOCAL:1 - 1) / 10
+; ここからリスト表示処理
+$SCENE_LIST
+PRINTFORML 《%NICKNAME:TARGET%の撮影シーンを決定してください》
+PRINTFORML 残りシーン数：{撮影シーン} / {全撮影シーン}
+DRAWLINE
+; リストヘッダーの表示
+; リスト本体の表示
+FOR LOCAL, PAGE * 10, PAGE * 10 + 10
+	; リスト終端ならループ終了
+	SIF LIST:LOCAL < 0
+		BREAK
+	; リスト描画
+	CALLFORM SCENE_VISIBLE_{LIST:LOCAL}
+	IF  RESULT == 1
+		; ミッションタイトルの取得
+		CALLFORM SCENE_TITLE_{LIST:LOCAL}
+		PRINTFORML [{LOCAL, 3}] - %RESULTS%
+	ELSE
+		PRINTFORML [ - ] - －－－－－
+	ENDIF
+NEXT
+DRAWLINE
+; リストフッターの表示
+CALL PRINT_PAGE_NAVI(PAGE > 0,PAGE < PAGE_END)
+; ここから入力処理
+$INPUT_LOOP
+INPUT
+; 既にミッションを請け負っていて、
+; なおかつ請け負っているミッションではない場合は弾く
+IF RESULT >= 0 && RESULT < 250 && P:1 < 全撮影シーン
+	LOCAL = (LIST:RESULT)
+	CALLFORM SCENE_INFO_{LOCAL}
+	CALLFORM SCENE_FEE_{LOCAL}
+	撮影シーン -= P:1
+	IF (撮影シーン < 0)
+		CLEARLINE 1
+		PRINTFORML これ以上撮影できません
+			撮影シーン += P:1
+			P:1 = 0
+			GOTO SCENE_LIST
+	ELSE
+		$INPUT_LOOP_RECEIVE
+		PRINTFORML このシーンを撮影しますか？
+		PRINT [  1] - はい
+		PRINTL 　　[  0] - いいえ
+		INPUT
+		IF RESULT == 1
+			PRINTFORML このシーンを撮影します
+			TFLAG:(500 + K) = LOCAL
+			TFLAG:700 += 1
+			K++
+			P:1 = 0
+			GOTO SCENE_LIST
+		ELSE
+			撮影シーン += P:1
+			P:1 = 0
+			GOTO SCENE_LIST
+		ENDIF
+	ENDIF
+ELSEIF RESULT >= 0 && RESULT < 250 && P:1 >= 全撮影シーン
+
+ELSEIF RESULT == COMMAND_PREV_PAGE && PAGE > 0
+	PAGE--
+	GOTO SCENE_LIST
+ELSEIF RESULT == 998 && TFLAG:700 == 0
+	RETURN
+ELSEIF RESULT == COMMAND_GO_BACK
+	CALL AV_CHOOSE
+ELSEIF RESULT == COMMAND_NEXT_PAGE && PAGE < PAGE_END
+	PAGE++
+	GOTO SCENE_LIST
+ELSE
+	CLEARLINE 1
+	REUSELASTLINE 無効な数値の入力です
+	GOTO INPUT_LOOP
+ENDIF
+
+;=================================================
+; ミッションリストの表示
+;--------------------------------------------
+;=================================================
+@AV_CHOOSE
+
+M = 0
+
+DRAWLINE
+PRINTL 《今回の撮影シーンは次の通りです》
+PRINTL
+
+VARSET LOCAL, 0, 0
+
+FOR LOCAL, 0, 100
+	IF TFLAG:(500 + LOCAL)
+		PRINTFORM ・
+		CALLFORM SCENE_TITLE_{TFLAG:(500 + LOCAL)}
+		PRINTFORML %RESULTS%
+	ENDIF
+NEXT
+
+PRINTL
+PRINTFORML 《以上のシーンを撮影します。よろしいですか？》
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 《撮影を開始します》
+	CALL AV_RESULT
+ELSEIF RESULT == 1
+	PRINTW 《再設定してください》
+	VARSET P, 0, 0
+	VARSET TFLAG, 0, 0
+	撮影シーン = 全撮影シーン
+	CALL AV_LIST
+ELSE
+	GOTO INPUT_LOOP
+ENDIF	
+
+
+
+;=================================================
+; ミッションリストの表示
+;--------------------------------------------
+;=================================================
+@AV_RESULT
+
+
+DRAWLINE
+
+VARSET LOCAL, 0, 0
+
+FOR LOCAL, 0, 100
+	IF TFLAG:(500 + LOCAL)
+		LOCAL:1++
+	ENDIF
+NEXT
+
+FOR LOCAL, 0, 100
+	IF TFLAG:(500 + LOCAL)
+		PRINTFORML ◆撮影シーン ({LOCAL + 1} / {LOCAL:1})
+		CALLFORM SCENE_TITLE_{TFLAG:(500 + LOCAL)}
+		PRINTFORML 《%RESULTS%》
+		DRAWLINE
+		CALLFORM SCENE_RESULT_START_{TFLAG:(500 + LOCAL)}
+
+		CALLFORM SCENE_CALC_{TFLAG:(500 + LOCAL)}
+		IF RESULT == 2
+			CALLFORM SCENE_RESULT_PERFECT_{TFLAG:(500 + LOCAL)}
+			PRINTFORML 《シーン撮影大成功》
+		ELSEIF RESULT == 1
+			CALLFORM SCENE_RESULT_SUCCESS_{TFLAG:(500 + LOCAL)}
+			PRINTFORML 《シーン撮影成功》
+		ELSE
+			CALLFORM SCENE_RESULT_FAILED_{TFLAG:(500 + LOCAL)}
+			PRINTFORML 《シーン撮影失敗》
+		ENDIF
+		CALLFORM SCENE_EXP_{TFLAG:(500 + LOCAL)}
+		ビデオ売上 += P:10 
+		M += P:4
+		DRAWLINE
+		WAIT
+	ENDIF
+NEXT
+
+PRINTFORML 《全てのシーンの撮影が終了しました》
+PRINTL
+PRINTFORML ・%NAME:TARGET%
+PRINTFORM 体力消費　　　　:　　　  
+PRINTFORML {BASE:体力} - {P:2}
+BASE:体力 -= P:2
+PRINTFORM 気力消費　　　　:　　　  
+PRINTFORML {BASE:気力} - {P:3}
+BASE:気力 -= P:3
+PRINTL
+FOR LOCAL:3, 0, 90
+	IF TCVAR:(LOCAL:3)
+		; 経験値の加算処理
+		; 経験名が定義されているのみ加算処理を行う
+		IF STRLENS(EXPNAME:(LOCAL:3)) > 0
+			EXP:(LOCAL:3) += TCVAR:(LOCAL:3)
+		ELSE
+			DEBUGPRINTFORML EXP:{(LOCAL:3)}は定義されていないため加算処理をスキップします
+		ENDIF
+		SIF TCVAR:(LOCAL:3) != 101
+			PRINTFORML %EXPNAME:(LOCAL:3)% + {TCVAR:(LOCAL:3)}
+	ENDIF
+NEXT
+SIF TALENT:ＡＶ女優 == 0
+	TALENT:ＡＶ女優 = 1
+PRINTL
+
+CALL AV_POINTCALC
+
+CALL VIDEOSALE_CALC
+
+IF SPECIAL_TITLE_CALC() > -1
+	TIMES ビデオ売上 , 2.50
+ENDIF 
+
+BASE:魅力値 -= 10
+
+;魅力値
+ビデオ売上 *= BASE:TARGET:魅力値
+ビデオ売上 /= 100
+
+;ビデオテープ分をここで減算（暫定処置
+ビデオ売上 -= 500
+
+IF EXP:ＡＶ出演経験 == 0
+	CFLAG:デビュー作売上 = ビデオ売上
+	CFLAG:TARGET:最新作売上 = CFLAG:TARGET:デビュー作売上
+	CFLAG:TARGET:代表作売上 = CFLAG:TARGET:最新作売上
+	PRINTFORML %NICKNAME:TARGET%のデビュー作は
+	PRINTFORM 『
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	SETCOLOR 0xDDBBCC
+	CALL VIDEO_TITLE_DEBUT
+	RESETCOLOR
+	SETFONT ""	
+	PRINTFORML 』
+	PRINTFORML というタイトルでネット配信された……
+	IF CFLAG:デビュー作売上 >= 10000
+		PRINTFORML デビュー作が大ヒットし、次作を待ち望む声がサイトにコメントされている……
+	ENDIF
+ELSE
+	CFLAG:TARGET:最新作売上 = ビデオ売上
+	PRINTFORML %NICKNAME:TARGET%の今回の作品は
+	PRINTFORM 『
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	SETCOLOR 0xDDBBCC
+	CALL VIDEO_TITLE_NEW
+	RESETCOLOR
+	SETFONT ""	
+	PRINTFORML 』
+	PRINTFORML というタイトルでネット配信された……
+	IF CFLAG:TARGET:最新作売上 >= 100000
+		PRINTFORML 今回の作品が大ヒットし、次作を待ち望む声がサイトにコメントされている……
+	ENDIF
+	IF CFLAG:TARGET:代表作売上 < CFLAG:TARGET:最新作売上
+		CFLAG:TARGET:代表作売上 = CFLAG:TARGET:最新作売上
+		CALL CHANGE_VIDEOTITLE_REPRESENT
+	ENDIF
+ENDIF
+
+EXP:ＡＶ出演経験 += 1
+EXP:MASTER:監督経験 += 1
+CFLAG:AVファン人数 += RAND:20
+;ITEM:ビデオテープ -= 1
+CFLAG:TARGET:総売上 += ビデオ売上
+MONEY:2 += ビデオ売上
+
+PRINTFORML 獲得ポイント：{ビデオ売上}ポイント
+;PRINTFORML 獲得メダル：{M}枚
+MONEY += ビデオ売上
+WAIT
+BEGIN TURNEND

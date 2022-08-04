@@ -1,0 +1,53 @@
+﻿;===========================================================
+;天使の取得
+;===========================================================
+@ADD_ANGEL(ARG)
+
+CALL RESET_CHARA_STATUS(ARG)
+
+CFLAG:ARG:寝取られ完了値 = 999999
+TALENT:ARG:処女 = 1
+TALENT:ARG:童貞 = 1
+TALENT:ARG:アナル処女 = 1
+TALENT:ARG:素直 = 1
+TALENT:ARG:保守的 = 1
+TALENT:ARG:貞操観念 = 1
+TALENT:ARG:素質 = 1
+TALENT:ARG:薬毒耐性 = 1
+TALENT:ARG:献身的 = 1
+TALENT:ARG:両刀 = 1
+TALENT:ARG:カリスマ = 1
+TALENT:ARG:魅力 = 1
+IF TALENT:ARG:ふたなり == 0 && TALENT:ARG:オトコ == 0
+	BASE:ARG:ペニスサイズ = 13 + RAND:5
+	CFLAG:ARG:包皮の状態 = RAND:4
+ENDIF
+TALENT:ARG:ふたなり = 1
+TALENT:ARG:オトコ = 0
+TALENT:ARG:交渉上手 = 1
+TALENT:ARG:天使 = 1
+TALENT:ARG:永遠の愛 = 0
+TALENT:ARG:絶倫 = 0
+TALENT:ARG:貞操無頓着 = 0
+TALENT:ARG:淫乱 = 0
+TALENT:ARG:恋心 = 0
+TALENT:ARG:回復遅い = 0
+TALENT:ARG:魅力 = 0
+TALENT:ARG:風俗嬢 = 0
+TALENT:ARG:高級娼婦 = 0
+TALENT:ARG:彼氏あり = 0
+TALENT:ARG:清い付き合い = 0
+TALENT:ARG:常時発情 = 0
+TALENT:ARG:性豪 = 0
+TALENT:ARG:喫煙者 = 0
+TALENT:ARG:ＡＶ女優 = 0
+TALENT:ARG:人気ＡＶ女優 = 0
+TALENT:ARG:セフレあり = 0
+TALENT:ARG:地味 = 0
+TALENT:ARG:ギャル系 = 0
+MAXBASE:ARG:体力 += 1000
+MAXBASE:ARG:気力 += 1000
+MAXBASE:ARG:魅力値 += 80
+BASE:ARG:体力 = MAXBASE:ARG:体力
+BASE:ARG:気力 = MAXBASE:ARG:気力
+BASE:ARG:魅力値 = MAXBASE:ARG:魅力値

@@ -1,0 +1,49 @@
+﻿;===========================================================
+;実績・第三の幼馴染
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_13
+RESULTS = 第三の幼馴染み
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_13
+; 条件を満たす人数の計算 (※ これは例文です)
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF  (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:佐々木美乃里]] || NO:COUNT == [[キャラ:新島みひろ]]) && TALENT:COUNT:永遠の愛 == 1
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:13 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
+	GLOBAL:13 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:13
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_13
+; 解説文
+PRINTFORML %CALLNAME:MASTER%にとっては妹の「宮間かなで」と、そして幼馴染みと言える「佐々木美乃里」「新島みひろ」……
+PRINTFORML みひろとは一度疎遠になってしまったものの、こうして再び昔のような……だけど以前とは違う関係に戻ることができました
+PRINTFORML ……しかし忘れていませんか？　もう一人%CALLNAME:MASTER%には幼馴染みがいたことを
+PRINTFORML 彼女の名前は「羽瀬川みこと」。誰よりも頭がよく、そしてお姫様のように可憐でした
+; ボーナスなどの処理はここ以降に記述する
+PRINTFORMW しかし、ある日を境に『どこか遠いところ』へ行ってしまった幼馴染み
+PRINTFORML ……そんな彼女がようやく、長い海外での闘病生活から帰ってくることになりました
+PRINTFORM あの頃よりも綺麗になった彼女は、かつての幼馴染みたちの現状をどこかからか聞きつけたようで、帰国するや否や%CALLNAME:MASTER%に
+PRINTFORM 協力を申し出
+IF FLAG:第三の幼馴染ボーナス受け取り == 0
+	PRINTFORML ました
+	PRINTFORML どう説得しても意思を曲げることはなく、それどころか%CALLNAME:MASTER%が首を縦に振るまで居座り続けるつもりのようです
+	PRINTFORML 無口で頑固な性格が昔と変わっていないことに安堵しつつも、%CALLNAME:MASTER%は彼女と契約することにしました……
+	PRINTFORMW 昔と同じような関係を維持するか、それとも新しいステップに進むかは、全て%CALLNAME:MASTER%次第です
+	PRINTL
+	PRINTFORMW 《羽瀬川みことと契約しました》
+	CALL キャラ追加([[キャラ:羽瀬川みこと]])
+	FLAG:第三の幼馴染ボーナス受け取り = 1
+ELSEIF FLAG:第三の幼馴染ボーナス受け取り == 1
+	PRINTFORMW たことは記憶に新しいでしょう
+ENDIF

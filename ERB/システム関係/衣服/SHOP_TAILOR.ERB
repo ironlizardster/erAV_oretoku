@@ -1,0 +1,1902 @@
+﻿;=================================================
+;仕立て屋
+;=================================================
+@TAILOR_MAIN
+;購入した品物の種類（1～9:通常衣類 2:学生服 3:子供服 10:下着 11:替えオムツ 20:装備品 ）
+A = 0
+;選んだ服の種類
+R = 0
+;服の価格
+C = 0
+;着せ替えるのに必要な従順Lv
+S = 0
+;着衣時の服の損傷フラグ
+F = 0
+
+$INPUT_LOOP_01
+
+DRAWLINE
+PRINTL 仕立て屋
+PRINTL 《どんな衣装や装備品でも誂えてくれる仕立て屋です》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+PRINTL 誰を連れて行ってあげますか？　
+DRAWLINE
+CALL LIFE_LIST_NEW,LL_MODE_衣装
+
+IF RESULT == COMMAND_GO_BACK
+	A = 0
+	C = 0
+	R = 0
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_01
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP_01
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_02
+
+A = 0
+C = 0
+R = 0
+S = 0
+
+DRAWLINE
+PRINTFORML 所持金：{MONEY}ポイント
+PRINTFORM 現在の%NAME:TARGET%の格好は
+CALL PRINT_CLOTHTYPE
+PRINTL です。
+
+PRINTFORML %CALLNAME:TARGET%にどんな格好をしてもらいますか？
+DRAWLINE
+
+CALL SHOW_INFO_CASUALWEAR
+DRAWLINE
+
+PRINTL  [ 0] - 普段着（100ポイント）
+PRINTL  [ 1] - 一般的な服（1000ポイント）
+PRINTL  [ 2] - 学校指定制服（5000ポイント）
+PRINTL  [ 3] - その他の衣装（10000ポイント）
+PRINTL  [ 4] - 装備品
+PRINTL  [ 5] - 替え下着（100ポイント）
+SIF CFLAG:特別コスチュームのタイプ == 69 && ((CFLAG:着衣状態 & 64) == 0 || CFLAG:特別コスチュームの状態 > 0)
+	PRINTL  [ 6] - 替えオムツ（50ポイント）
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯のカギを捨てた == 0 && TALENT:処女
+	PRINTL  [ 7] - 貞操帯のカギを捨てる
+;SIF TALENT:恋心 == 1
+;	PRINTL  [ 8] - 専用装備
+SIF TALENT:褐色肌 == 0
+	PRINTL  [ 9] - 日焼けサロン（1000ポイント）
+PRINTL  [10] - ヘアサロン
+PRINTL  [11] - 靴下
+PRINTL  [12] - 靴
+SIF PBAND:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
+	PRINTL  [13] - スペシャルエステ（3000000ポイント）
+SIF CFLAG:上着のタイプ
+	DRAWLINE
+IF CFLAG:上着のタイプ && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
+	PRINT  [20] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL を処分する
+ENDIF
+
+
+
+;/////2012/09/23改造部分ここから/////
+
+SIF CFLAG:パンツの状態 == 0 || CFLAG:ブラジャーの状態 == 0
+	PRINTL  [21] - 下着を処分する
+IF CFLAG:特別コスチュームのタイプ && CFLAG:特別コスチュームの状態 == 0 && CFLAG:貞操帯のカギを捨てた == 0
+	PRINT  [22] - 
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	PRINTL を処分する
+ENDIF
+
+IF CFLAG:予備の衣装 != 0
+	PRINT  [23] - 予備の衣装（
+		CALL PRINT_CLOTHTYPE_CASUALWEAR
+	PRINTL ）と取り替える
+ENDIF
+
+
+DRAWLINE
+
+;TARGETをTに退避
+T = TARGET
+
+;前後のキャラボタンを用意する
+PRINTFORMLC \@(T <= 0) ? %" " * 16% # [1001] 前のキャラ\@
+PRINTLC [999] リストに戻る
+PRINTFORMLC \@(T >= CHARANUM - 1) ? %" " * 16% # [1003] 次のキャラ\@
+PRINTL
+PRINTFORMLC %" " * 24% [1000] メイン画面に戻る
+
+
+INPUT
+
+IF RESULT == 0
+	CALL TAILOR_CASUAL
+ELSEIF RESULT == 1
+	CALL TAILOR_NORMAL
+ELSEIF RESULT == 2
+	CALL TAILOR_STUDENT
+ELSEIF RESULT == 3
+	CALL TAILOR_OTHER
+ELSEIF RESULT == 4
+	CALL TAILOR_ACCESSORY
+ELSEIF RESULT == 5
+	CALL TAILOR_UNDERWARE
+ELSEIF RESULT == 6 && CFLAG:特別コスチュームのタイプ == 69
+	CALL TAILOR_DIAPER
+ELSEIF RESULT == 7 && CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯のカギを捨てた == 0 && TALENT:処女
+	CALL CHASTITY_KEY
+;ELSEIF RESULT == 8 && TALENT:恋心 == 1
+;	CALL TAILOR_SPECIA
+ELSEIF RESULT == 9 && TALENT:褐色肌 == 0
+	CALL TAILOR_BLACKGIRL
+ELSEIF RESULT == 10
+	CALL HAIRSTYLE_CHANGE
+ELSEIF RESULT == 11
+	CALL TAILOR_SOCKS
+ELSEIF RESULT == 12
+	CALL TAILOR_SHOES
+ELSEIF RESULT == 13 && PBAND:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
+	CALL TAILOR_ESTHETIC
+ELSEIF RESULT == 20 && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
+	PRINTFORM %CALLNAME:TARGET%の着ていた
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL を焼却処分しました
+	CFLAG:上着のタイプ = 0
+	CFLAG:上着上の状態 = -3
+	CFLAG:上着下の状態 = -3
+	CFLAG:着衣状態 -= CFLAG:着衣状態 & 28
+	WAIT
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 21 && (CFLAG:パンツの状態 == 0 || CFLAG:ブラジャーの状態 == 0)
+	IF CFLAG:パンツの状態 >= 0
+		CALL SELLING_PANTS
+	ELSE
+		PRINTFORMW %CALLNAME:TARGET%の着ていた下着を焼却処分しました
+	ENDIF
+	CFLAG:パンツの状態 = -3
+	CFLAG:ブラジャーの状態 = -3
+	CFLAG:着衣状態 -= CFLAG:着衣状態 & 3
+	CFLAG:ブラの色 = 99
+	CFLAG:ブラの種類 = -1
+	CFLAG:パンツの色 = 99
+	CFLAG:パンツの種類 = -1
+	WAIT
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 22 && CFLAG:特別コスチュームの状態 == 0 && CFLAG:貞操帯のカギを捨てた == 0
+	PRINTFORM %CALLNAME:TARGET%の使っていた
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	PRINTL を焼却処分しました
+	CFLAG:特別コスチュームのタイプ = 0
+	CFLAG:着衣状態 -= CFLAG:着衣状態 & 64
+	WAIT
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 23 && CFLAG:予備の衣装 != 0
+	PRINTFORM 《現在着ている
+		CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTFORM を予備の
+		CALL PRINT_CLOTHTYPE_CASUALWEAR
+	PRINTFORMW に着替えさせました》
+		CFLAG:179 = CFLAG:上着のタイプ
+		CFLAG:上着のタイプ = CFLAG:予備の衣装
+		CFLAG:予備の衣装 = CFLAG:179
+
+ELSEIF RESULT == 999
+	GOTO INPUT_LOOP_01
+
+
+ELSEIF RESULT == 1000
+	RETURN 0
+
+ELSEIF RESULT == 1001 && T > 0
+	PRINTFORM %CALLNAME:TARGET%と交代に、
+	TARGET = T - 1
+	PRINTFORMW %NAME:TARGET%を仕立て屋に連れてきました
+	GOTO INPUT_LOOP_02
+
+ELSEIF RESULT == 1003 && T < CHARANUM - 1
+	PRINTFORM %CALLNAME:TARGET%と交代に、
+	TARGET = T + 1
+	PRINTFORMW %NAME:TARGET%を仕立て屋に連れてきました
+	GOTO INPUT_LOOP_02
+ELSE
+	GOTO INPUT_LOOP_02
+ENDIF
+;/////2012/09/23改造部分ここまで/////
+
+
+
+IF A == 0
+	GOTO INPUT_LOOP_02
+ELSEIF A == 20 && CFLAG:貞操帯のカギを捨てた
+	PRINTFORMW 貞操帯が外せない限り、他の装備品は付けられません
+	GOTO INPUT_LOOP_02
+ELSEIF MONEY < C
+	PRINTW お金が足りません
+	GOTO INPUT_LOOP_02
+ELSEIF ABL:信頼 < S
+	PRINTFORMW 着用を拒否されました
+	GOTO INPUT_LOOP_02
+ENDIF
+
+;【大柄】キャラに子供服を買ってやった場合
+IF TALENT:大柄 && A == 3
+	$INPUT_LOOP_03
+	PRINTFORML %CALLNAME:TARGET%に、この服は着られそうにありません……
+	PRINTFORML  [0] - 強引に着せる
+	PRINTFORML  [1] - あきらめる
+	INPUT
+	IF RESULT == 0
+		PRINTL 強引に着せたところ、下半身が破れてしまいました。
+		WAIT
+		;下半身が破れたフラグ
+		F = 2
+	ELSEIF RESULT == 1
+		GOTO INPUT_LOOP_02
+	ELSE
+		GOTO INPUT_LOOP_03
+	ENDIF
+;【小型体型】でない【巨乳】【爆乳】キャラに子供服を買ってやった場合
+ELSEIF (TALENT:小柄体型 == 0 && (TALENT:爆乳 || TALENT:巨乳)) && A == 3
+	$INPUT_LOOP_04
+	PRINTFORML %CALLNAME:TARGET%に、この服は着られそうにありません……
+	PRINTFORML  [0] - 強引に着せる
+	PRINTFORML  [1] - あきらめる
+	INPUT
+	IF RESULT == 0
+		PRINTL 強引に着せたところ、上半身が破れてしまいました。
+		WAIT
+		;上半身が破れたフラグ
+		F = 1
+	ELSEIF RESULT == 1
+		GOTO INPUT_LOOP_02
+	ELSE
+		GOTO INPUT_LOOP_04
+	ENDIF
+ENDIF
+
+IF A <= 9 
+	PRINTFORM %NAME:TARGET%を
+	IF CFLAG:上着のタイプ && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
+		CALL PRINT_CLOTHTYPE_MAIN2
+		PRINTFORM から
+		CFLAG:179 = CFLAG:上着のタイプ
+		CFLAG:予備の衣装 = CFLAG:179
+	ENDIF
+	
+	CFLAG:上着のタイプ = R
+	CFLAG:上着上の状態 = 0
+	CFLAG:上着下の状態 = 0
+	
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTFORML に着替えさせました。
+
+	IF F == 1
+		PRINT 買ったばかりの
+		CALL PRINT_CLOTHTYPE_MAIN2
+		PRINTFORML は上半身が破れて、
+		PRINTFORML %CALLNAME:TARGET%のおっぱいが丸見えになっています……
+		CFLAG:ブラジャーの状態 = 0 - 3
+		CFLAG:上着上の状態 = 0 - 3
+	ELSEIF F == 2
+		PRINT 買ったばかりの
+		CALL PRINT_CLOTHTYPE_MAIN2
+		PRINTFORML は下半身が破れて、
+		PRINTFORML %CALLNAME:TARGET%のお尻が丸見えになっています……
+		CFLAG:上着下の状態 = 0 - 3
+	ENDIF
+
+	CALL WEARING_CLOTH_ABLE
+
+	IF CFLAG:179 != R
+		PRINT 今まで着ていた
+			CALL PRINT_CLOTHTYPE_CASUALWEAR
+		PRINTL を予備にしますか？
+		PRINTL [0] - はい
+		PRINTL [1] - いいえ
+		$INPUTLOOP_CASUALCHANGE
+		INPUT
+	
+		IF RESULT == 0
+			PRINTFORM 《
+			CALL PRINT_CLOTHTYPE_CASUALWEAR
+			PRINTFORML を予備の衣装にしました》
+			CFLAG:上着のタイプ = R
+			CFLAG:179 = 0
+		ELSEIF RESULT == 1
+			PRINTFORM 《
+			CALL PRINT_CLOTHTYPE_CASUALWEAR
+			PRINTFORML を予備の衣装にしませんでした》
+			CFLAG:予備の衣装 = CFLAG:180
+			CFLAG:179 = 0
+		ELSE
+			GOTO INPUTLOOP_CASUALCHANGE
+		ENDIF
+	ENDIF
+
+ELSEIF A == 10
+	PRINTFORML %NAME:TARGET%に新しい下着を買ってやりました。
+	IF CFLAG:パンツの状態 >= 0 && CFLAG:現在のパンツを穿き続けている期間 >= 6
+		WAIT
+		CALL SELLING_PANTS
+	ENDIF
+
+	;全裸だった場合は通常コスに普段着を代入しておく
+	IF CFLAG:上着のタイプ == 0
+
+		;/////2012/09/22改造部分/////
+		;挙動がバグにしか見えないのでコメントアウトしました。
+		;CFLAG:上着のタイプ = 1
+
+		CFLAG:上着上の状態 = -3
+		CFLAG:上着下の状態 = -3
+	ENDIF
+
+	CFLAG:パンツの状態 = 0
+	CFLAG:ブラジャーの状態 = 0
+
+	;下着着衣フラグの初期化
+	CALL WEARING_UNDERWARE_ALL
+
+ELSEIF A == 11
+	PRINTFORML 店の隅を借りて、%CALLNAME:TARGET%にオムツをはかせてやりました。
+	CFLAG:特別コスチュームの状態 = 0
+ELSEIF A == 20
+	IF CFLAG:特別コスチュームのタイプ && CFLAG:特別コスチュームの状態 == 0
+		PRINTFORM %NAME:TARGET%から
+		CALL PRINT_CLOTHTYPE_SPECIAL
+		PRINTFORM を外させて、
+	ELSE
+		PRINTFORM %NAME:TARGET%に
+	ENDIF
+
+	CFLAG:特別コスチュームのタイプ = R
+	CFLAG:特別コスチュームの状態 = 0
+
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	PRINTFORML を装着させました。
+
+	CFLAG:着衣状態 |= 64
+
+ENDIF
+
+MONEY -= C
+
+WAIT
+
+TARGET = -1
+
+RESTART
+
+;-------------------------------------------------
+;普段着
+;-------------------------------------------------
+@TAILOR_CASUAL
+A = 1
+C = 100
+F = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_01
+
+PRINTL □普段着
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [1] - 普段着・スカートタイプ
+PRINTL  [2] - 普段着・ズボンタイプ
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1
+	R = 1
+	S = 0
+	SIF TALENT:オトコ
+		S = 3
+ELSEIF RESULT == 2
+	R = 101
+	S = 0
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+RETURN 1
+
+;-------------------------------------------------
+;一般的な服
+;-------------------------------------------------
+@TAILOR_NORMAL
+A = 1
+C = 1000
+F = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_01
+
+PRINTL □一般的な服
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [1] - スーツ・スカートタイプ
+PRINTL  [2] - 子供服（女児用）
+PRINTL  [3] - ブランド服
+PRINTL  [4] - ブレザー・スカートタイプ
+PRINTL  [5] - スーツ・パンツタイプ
+PRINTL  [6] - ジャージ
+PRINTL  [7] - ブレザー・ズボンタイプ
+PRINTL  [8] - 子供服（男児用）
+PRINTL  [9] - パジャマ
+PRINTL  [10] - ワンピース
+PRINTL  [11] - 和服
+PRINTL  [12] - カクテルドレス
+PRINTL  [13] - 浴衣
+PRINTL  [14] - マイクロミニタイトワンピース
+PRINTL  [15] - フェミニンワンピース
+PRINTL  [16] - オーバーオール
+PRINTL  [17] - ワンピーススーツ
+PRINTL  [18] - キャミとデニムミニ
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+
+IF RESULT == 1
+	R = 21
+	S = 0
+	SIF TALENT:オトコ
+		S = 3
+ELSEIF RESULT == 2
+	A = 3
+	R = 22
+	S = 5
+	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+		S = 0
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 3
+	R = 23
+	S = 0
+ELSEIF RESULT == 4
+	R = 31
+	S = 0
+	SIF TALENT:オトコ
+		S = 3
+ELSEIF RESULT == 5
+	R = 102
+	S = 0
+ELSEIF RESULT == 6
+	R = 103
+	S = 0
+ELSEIF RESULT == 7
+	R = 108
+	S = 0
+ELSEIF RESULT == 8
+	A = 3
+	R = 122
+	S = 5
+	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+		S = 0
+ELSEIF RESULT == 9
+	R = 131
+	S = 0
+ELSEIF RESULT == 10
+	R = 201
+	S = 0
+	SIF TALENT:オトコ
+		S = 3
+ELSEIF RESULT == 11
+	R = 202
+	S = 0
+ELSEIF RESULT == 12
+	R = 203
+	S = 1
+	SIF TALENT:オトコ && TALENT:ニューハーフ == 0
+		S = 3
+ELSEIF RESULT == 13
+	R = 204
+	S = 1
+ELSEIF RESULT == 14
+	R = 205
+	S = 4
+	SIF TALENT:妊娠
+		S = 1
+ELSEIF RESULT == 15
+	A = 3
+	R = 222
+	S = 5
+	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+		S = 0
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 16
+	R = 252
+	S = 0
+ELSEIF RESULT == 17
+	R = 232
+	S = 0
+ELSEIF RESULT == 18
+	R = 40
+	S = 0
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;学校指定制服
+;-------------------------------------------------
+@TAILOR_STUDENT
+A = 2
+C = 5000
+F = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_01
+
+PRINTL □学校指定制服
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [1] - 極亜久高校の制服
+PRINTL  [2] - 日の出高校の制服
+PRINTL  [3] - 花丸高校の制服
+PRINTL  [4] - 親切高校の制服
+PRINTL  [5] - 星英高校の制服
+PRINTL  [6] - パライソ中学の制服
+PRINTL  [7] - 私立メキメキ学園の制服
+PRINTL  [8] - 高校の制服
+PRINTL  [9] - 中学校の制服
+PRINTL  [10] - セーラー服
+PRINTL  [11] - 体操着とブルマ
+PRINTL  [12] - 園児服
+PRINTL  [13] - スクール水着
+PRINTL  [14] - 麻帆良学園初等部制服
+PRINTL  [15] - 麻帆良女子中学の制服
+PRINTL  [16] - 聖ウルスラ高校の制服
+PRINTL  [17] - 麻帆良芸大付属中の制服
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1
+	R = 2
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 2
+	R = 3
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 3
+	R = 4
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 4
+	R = 5
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 5
+	R = 6
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 6
+	R = 7
+	S = 4
+	SIF TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 7
+	R = 8
+	S = 4 - ABL:オタク知識
+	SIF S < 1
+		S = 1
+ELSEIF RESULT == 8
+	R = 17
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 9
+	R = 18
+	S = 4
+	SIF TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 10
+	R = 19
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 2
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 11
+	R = 109
+	S = 5
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 2
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 12
+	A = 3
+	R = 221
+	S = 5
+	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+		S = 0
+ELSEIF RESULT == 13
+	R = 291
+	S = 5
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 2
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 14
+	A = 3
+	R = 229
+	S = 5
+	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+		S = 0
+ELSEIF RESULT == 15
+	R = 20
+	S = 4
+	SIF TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 16
+	R = 230
+	S = 4
+	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 17
+	R = 53
+	S = 4
+	SIF TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+		S = 0
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;コスプレ用衣装
+;-------------------------------------------------
+@TAILOR_OTHER
+A = 1
+C = 10000
+F = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_01
+
+PRINTL □その他の衣装
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [1] - ナース服
+PRINTL  [2] - メイド服
+PRINTL  [3] - ウェイトレスの制服
+PRINTL  [4] - コンビニの制服
+PRINTL  [5] - 事務員の制服
+PRINTL  [6] - ＣＰＧの制服
+PRINTL  [7] - パンクロリータ
+PRINTL  [8] - 喪服
+PRINTL  [9] - 巫女装束
+PRINTL  [10] - 野球のユニフォーム
+PRINTL  [11] - 軍服
+PRINTL  [12] - 忍者装束
+PRINTL  [13] - 王子の正装
+PRINTL  [14] - マイクロビキニ
+PRINTL  [15] - 旧型スクール水着
+PRINTL  [16] - ボンテージ
+PRINTL  [17] - 全身タイツ
+PRINTL  [18] - バニースーツ
+PRINTL  [19] - 軍服（スカートタイプ）
+PRINTL  [20] - 修道服
+PRINTL  [21] - レオタード
+PRINTL  [22] - ゴシックロリータ
+PRINTL  [23] - 女陰陽師の衣装
+PRINTL  [24] - チアリーダーの衣装
+SIF PBAND:141 >= 3
+	PRINTL  [25] - ウェディングドレス
+SIF PBAND:51 >= 3
+	PRINTL  [26] - ベリーダンスの衣装
+SIF PBAND:54 >= 3
+	PRINTL  [27] - ハロウィン魔女っ子
+SIF PBAND:84 >= 3
+	PRINTL  [28] - テニスウェア
+SIF PBAND:68 >= 3
+	PRINTL  [29] - スリングショット
+SIF PBAND:146 >= 3
+	PRINTL  [28] - ラバーボディスーツ
+SIF PBAND:304 >= 3
+	PRINTL  [99] - ガラスのメイド服
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1
+	R = 24
+	S = 2 - TALENT:献身的
+	SIF TALENT:オトコ && S < 2
+		S = 3
+ELSEIF RESULT == 2
+	R = 25
+	S = 3 - (ABL:オタク知識 + TALENT:献身的)
+	SIF S < 1
+		S = 1
+ELSEIF RESULT == 3
+	R = 26
+	S = 0
+ELSEIF RESULT == 4
+	R = 27
+	S = 0
+ELSEIF RESULT == 5
+	R = 28
+	S = 0
+ELSEIF RESULT == 6
+	R = 29
+	S = 4
+	;インミン用処理
+	SIF NO:TARGET == [[キャラ:アンドロイド]]
+		S = 0
+ELSEIF RESULT == 7
+	R = 30
+	S = 3
+	SIF TALENT:アイドル
+		S = 0
+ELSEIF RESULT == 8
+	R = 32
+	S = 2
+ELSEIF RESULT == 9
+	R = 104
+	S = 3 - (ABL:オタク知識 + TALENT:巫女 * 2)
+	SIF S < 0
+		S = 0
+ELSEIF RESULT == 10
+	R = 105
+	S = 0
+ELSEIF RESULT == 11
+	R = 106
+	S = 3 - ABL:79
+	SIF S < 0
+		S = 0
+ELSEIF RESULT == 12
+	R = 110
+	S = 3
+	SIF TALENT:感情乏しい
+		S = 0
+ELSEIF RESULT == 13
+	R = 111
+	S = 3
+	SIF TALENT:貴族
+		S = 0
+ELSEIF RESULT == 14
+	R = 191
+	S = 8 - ABL:露出癖
+	SIF S < 3
+		S = 3
+ELSEIF RESULT == 15
+	R = 244
+	IF TALENT:運動部 == 0
+		S = 5 - ABL:露出癖
+		SIF S < 4
+			S = 4
+	ENDIF
+ELSEIF RESULT == 16
+	R = 241
+	S = 8 - ABL:サドっ気
+	SIF TALENT:サド || S < 1
+		S = 1
+ELSEIF RESULT == 17
+	R = 251
+	S = 4
+ELSEIF RESULT == 18
+	R = 254
+	S = 4
+ELSEIF RESULT == 19
+	R = 51
+	S = 3 - ABL:オタク知識
+ELSEIF RESULT == 20
+	R = 231
+	S = 3 - (ABL:オタク知識 + TALENT:運動部 * 2)
+	SIF S < 0
+		S = 0
+ELSEIF RESULT == 21
+	R = 295
+	S = 4 - ABL:露出癖
+ELSEIF RESULT == 22
+	R = 52
+	S = 2
+ELSEIF RESULT == 23
+	R = 233
+	S = 2
+ELSEIF RESULT == 24
+	R = 54
+	S = 2
+ELSEIF RESULT == 25 && PBAND:141 >= 3
+	R = 240
+	S = 3
+ELSEIF RESULT == 26 && PBAND:51 >= 3
+	R = 243
+	S = 3
+ELSEIF RESULT == 27 && PBAND:54 >= 3
+	R = 56
+	S = 3
+ELSEIF RESULT == 27 && PBAND:54 >= 3
+	R = 56
+	S = 3
+ELSEIF RESULT == 28 && PBAND:84 >= 3
+	R = 55
+	S = 3
+ELSEIF RESULT == 29 && PBAND:68 >= 3
+	R = 246
+	S = 3
+ELSEIF RESULT == 30 && PBAND:84 >= 3
+	R = 245
+	S = 3
+ELSEIF RESULT == 99 && PBAND:304 >= 3
+	R = 99
+	S = 0
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;装備品
+;-------------------------------------------------
+@TAILOR_ACCESSORY
+A = 20
+F = 0
+
+$INPUT_LOOP_01
+
+PRINTL □装備品
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [1] - エプロン（10000ポイント）
+PRINTL  [2] - コート（10000ポイント）
+PRINTL  [3] - 白衣（10000ポイント）
+PRINTL  [4] - 男物のワイシャツ（10000ポイント）
+PRINTL  [5] - 地味な色のベスト（10000ポイント）
+PRINTL  [6] - 風来坊のマント（10000ポイント）
+PRINTL  [7] - マフラー（10000ポイント）
+PRINTL  [8] - ナース帽（10000ポイント）
+PRINTL  [9] - 首輪（10000ポイント）
+PRINTL  [10] - 亀甲縛り用の縄（10000ポイント）
+PRINTL  [11] - カウベルと鼻輪（10000ポイント）
+PRINTL  [12] - オムツ（100ポイント）
+PRINTL  [13] - 貞操帯（10000ポイント）
+PRINTL  [14] - シスターヴェール（3000ポイント）
+PRINTL  [15] - ウェディングベール（3000ポイント）
+;PRINTL  [16] - 麻帆良学園初等部帽子（2000ポイント）
+;PRINTL  [17] - 聖ウルスラ高校帽子（2000ポイント）
+PRINTL  [18] - スーツジャケット（1000ポイント）
+PRINTL  [19] - バングル＆リング（2000ポイント）
+PRINTL  [20] - 眼鏡（1000ポイント）
+PRINTL  [21] - 魔法使いのローブ（10000ポイント）
+PRINTL  [22] - 猫耳＆尻尾（10000ポイント）
+PRINTL  [23] - チアボンボン（1000ポイント）
+PRINTL  [24] - レースパーティグローブ（1000ポイント）
+PRINTL  [25] - エナメルロンググローブ（10000ポイント）
+SIF PBAND:83 >= 3
+	PRINTL  [26] - しっぽ付きアナルプラグ（50000ポイント）
+SIF PBAND:304 == 4
+	PRINTL  [27] - ガラスのねこみみ（100000ポイント）
+SIF PBAND:56 >= 3
+	PRINTL  [28] - フリルエプロン（10000ポイント）
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1
+	R = 1
+	C = 10000
+	S = 0
+ELSEIF RESULT == 2
+	R = 2
+	C = 10000
+	S = 0
+ELSEIF RESULT == 3
+	R = 3
+	C = 10000
+	S = 0
+ELSEIF RESULT == 4
+	R = 4
+	C = 10000
+	S = 1
+ELSEIF RESULT == 5
+	R = 10
+	C = 10000
+	S = 0
+ELSEIF RESULT == 6
+	R = 12
+	C = 10000
+	S = 1
+ELSEIF RESULT == 7
+	R = 51
+	S = 0
+ELSEIF RESULT == 8
+	R = 52
+	C = 10000
+	S = 2 - TALENT:献身的
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 9
+	R = 71
+	C = 10000
+	S = 10 - ABL:マゾっ気
+	SIF TALENT:動物耳 && S > 5
+		S = 5
+	SIF TALENT:牝犬 || S < 3
+		S = 3
+ELSEIF RESULT == 10
+	R = 72
+	C = 10000
+	S = 8 - ABL:マゾっ気
+	SIF TALENT:マゾ || S < 3
+		S = 3
+ELSEIF RESULT == 11
+	R = 73
+	C = 10000
+	S = 5
+	SIF (TALENT:巨乳 || TALENT:爆乳) && TALENT:母乳体質
+		S = 3
+ELSEIF RESULT == 12
+	R = 69
+	C = 100
+	S = 5
+	SIF TALENT:おもらし癖
+		S = 1
+ELSEIF RESULT == 13
+	R = 79
+	C = 10000
+	S = 0
+	SIF TALENT:オトコ
+		S = 99
+ELSEIF RESULT == 14
+	R = 60
+	C = 3000
+	S = 3
+ELSEIF RESULT == 15
+	R = 61
+	C = 3000
+	S = 3 - (ABL:オタク知識 + TALENT:運動部 * 2)
+;ELSEIF RESULT == 16
+;	R = 62
+;	C = 2000
+;	S = 3
+;	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+;		S = 0
+;ELSEIF RESULT == 17
+;	R = 63
+;	C = 2000
+;	S = 2
+;	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+;		S = 0
+ELSEIF RESULT == 18
+	R = 40
+	C = 1000
+	S = 0
+ELSEIF RESULT == 19
+	R = 74
+	C = 2000
+	S = 2
+	SIF TALENT:ギャル系 || TALENT:褐色肌
+		S = 0
+ELSEIF RESULT == 20
+	R = 80
+	C = 1000
+	S = 0
+ELSEIF RESULT == 21
+	R = 41
+	C = 10000
+	S = 0
+ELSEIF RESULT == 22
+	R = 65
+	C = 10000
+	S = 1
+ELSEIF RESULT == 23
+	R = 66
+	C = 1000
+	S = 1
+ELSEIF RESULT == 24
+	R = 83
+	C = 1000
+	S = 1
+ELSEIF RESULT == 25
+	R = 85
+	C = 10000
+	S = 1
+ELSEIF RESULT == 26 && PBAND:83 >= 3
+	R = 82
+	C = 50000
+	S = 1
+	SIF TALENT:アナル処女 == 1
+		S = 11
+ELSEIF RESULT == 27 && PBAND:304 == 4
+	R = 99
+	C = 100000
+	S = 1
+ELSEIF RESULT == 28 && PBAND:56 >= 3
+	R = 50
+	C = 10000
+	S = 1
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;下着
+;-------------------------------------------------
+@TAILOR_UNDERWARE
+A = 10
+C = 100
+F = 0
+S = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	C = 0
+	R = 0
+	T = 0
+	RETURN 0
+ENDIF
+
+	CALL TAILOR_UNDER_MAIN
+
+RETURN 1
+
+;-------------------------------------------------
+;替えオムツ
+;-------------------------------------------------
+@TAILOR_DIAPER
+A = 11
+C = 50
+F = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	C = 0
+	R = 0
+	T = 0
+	RETURN 0
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;パンツ売却
+;-------------------------------------------------
+@SELLING_PANTS
+M = 100 * CFLAG:現在のパンツを穿き続けている期間
+SIF M == 0
+	M = 50
+
+;補正前の金額は200ポイント以上にならない
+SIF M > 500
+	M = 500
+;自慰狂い
+SIF TALENT:自慰狂い
+	TIMES M , 1.50
+;謎の魅力
+SIF TALENT:謎の魅力
+	TIMES M , 2.00
+;人気者
+SIF TALENT:人気者
+	TIMES M , 1.50
+;アイドル
+SIF TALENT:アイドル
+	TIMES M , 2.00
+;女子高校生
+SIF TALENT:高校生
+	TIMES M , 5.00
+;女子中学生
+SIF TALENT:中学生
+	TIMES M , 5.00
+SIF TALENT:童顔
+	TIMES M , 2.00
+SIF TALENT:常時発情
+	TIMES M , 2.00
+PRINTFORML %CALLNAME:TARGET%のはいていたパンツは、{M}ポイントで売れました。
+MONEY += M
+CFLAG:現在のパンツを穿き続けている期間 = 0
+
+;-------------------------------------------------
+;貞操帯のカギを捨てる
+;-------------------------------------------------
+@CHASTITY_KEY
+A = 0
+
+PRINTFORML %CALLNAME:TARGET%の貞操帯のカギを捨ててしまえば、
+PRINTFORML もはや%CALLNAME:MASTER%にも貞操帯を外すことはできなくなります。
+PRINTFORML 捨ててしまったカギは、もう二度と戻ってこないかもしれません
+$INPUT_LOOP_01
+PRINTL  
+PRINTFORML 本当に、%NAME:TARGET%の貞操帯のカギを捨てますか？
+PRINTFORML  [0] - はい
+PRINTFORML  [1] - いいえ
+INPUT
+IF RESULT == 0
+	PRINTFORML 呆然と見守る%CALLNAME:TARGET%の目の前で、
+	PRINTFORMW %CALLNAME:MASTER%は貞操帯のカギを遥か遠くへ投げ捨てた
+	PRINTFORML カギがどこへ落ちたかは、もう誰にもわからなくなった
+	WAIT
+	CFLAG:貞操帯のカギを捨てた = 1
+ELSEIF RESULT != 1
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;装備品
+;-------------------------------------------------
+@TAILOR_SPECIAL
+A = 20
+F = 0
+
+$INPUT_LOOP_01
+
+PRINTL □装備品
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL   [1] - ひよこエプロン  　　　 （ 100000ポイント）
+PRINTL   [2] - 大きな白いリボン　　　  ( 100000ポイント）
+PRINTL   [3] - ハイビスカスのシュシュ （ 100000ポイント）
+PRINTL   [4] - パールネックレス　　　 （ 500000ポイント）
+PRINTL   [5] - ホワイトブリム         （ 200000ポイント）
+PRINTL   [6] - ロケットペンダント     （ 500000ポイント）
+PRINTL   [7] - ゆなのリボン           （ 100000ポイント）
+PRINTL   [8] - ひなのリボン           （ 100000ポイント）
+PRINTL   [9] - コロネット             （1000000ポイント）
+PRINTL  [10] - 五右衛門の煙管         （1000000ポイント）
+PRINTL  [11] - 鳳○院○真の白衣       （ 500000ポイント）
+PRINTL  [12] - ラメ入りネイル         （ 100000ポイント）
+PRINTL  [13] - エクステ               （ 100000ポイント）
+PRINTL  [14] - 赤い紐リボン           （ 100000ポイント）
+PRINTL  [15] - 鈴付きチョーカー       （ 200000ポイント）
+PRINTL  [16] - 黒のツインリボン       （ 200000ポイント）
+PRINTL  [17] - フリルエプロン         （ 200000ポイント）
+PRINTL  [18] - リストバンド           （ 100000ポイント）
+PRINTL  [20] - カウボーイハット       （ 100000ポイント）
+PRINTL  [21] - 琥珀のバレッタ         （ 200000ポイント）
+PRINTL  [70] - 黒いリボン             （ 100000ポイント）
+PRINTL  [72] - 赤いツインリボン       （ 100000ポイント）
+PRINTL  [80] - 革のブレスレット       （ 500000ポイント）
+PRINTL  [81] - 黒革のアームカバー     （ 500000ポイント）
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1 && NO:TARGET == [[キャラ:宮間かなで]]
+	R = 100
+	C = 1000000
+	S = 0
+ELSEIF RESULT == 2 && NO:TARGET == [[キャラ:佐々木美乃里]]
+	R = 101
+	C = 10000
+	S = 0
+ELSEIF RESULT == 3
+	R = 3
+	C = 10000
+	S = 0
+ELSEIF RESULT == 4
+	R = 4
+	C = 10000
+	S = 1
+ELSEIF RESULT == 5
+	R = 10
+	C = 10000
+	S = 0
+ELSEIF RESULT == 6
+	R = 12
+	C = 10000
+	S = 1
+ELSEIF RESULT == 7
+	R = 51
+	S = 0
+ELSEIF RESULT == 8
+	R = 52
+	C = 10000
+	S = 2 - TALENT:献身的
+	SIF TALENT:オトコ && S < 3
+		S = 3
+ELSEIF RESULT == 9
+	R = 71
+	C = 10000
+	S = 10 - ABL:マゾっ気
+	SIF TALENT:動物耳 && S > 5
+		S = 5
+	SIF TALENT:牝犬 || S < 3
+		S = 3
+ELSEIF RESULT == 10
+	R = 72
+	C = 10000
+	S = 8 - ABL:マゾっ気
+	SIF TALENT:マゾ || S < 3
+		S = 3
+ELSEIF RESULT == 11
+	R = 73
+	C = 10000
+	S = 5
+	SIF (TALENT:巨乳 || TALENT:爆乳) && TALENT:母乳体質
+		S = 3
+ELSEIF RESULT == 12
+	R = 69
+	C = 100
+	S = 5
+	SIF TALENT:おもらし癖
+		S = 1
+ELSEIF RESULT == 13
+	R = 79
+	C = 100
+	S = 0
+	SIF TALENT:オトコ
+		S = 99
+ELSEIF RESULT == 14
+	R = 60
+	C = 3000
+	S = 3
+ELSEIF RESULT == 15
+	R = 61
+	C = 3000
+	S = 3 - (ABL:オタク知識 + TALENT:運動部 * 2)
+;ELSEIF RESULT == 16
+;	R = 62
+;	C = 2000
+;	S = 3
+;	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
+;		S = 0
+;ELSEIF RESULT == 17
+;	R = 63
+;	C = 2000
+;	S = 2
+;	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+;		S = 0
+ELSEIF RESULT == 18
+	R = 40
+	C = 1000
+	S = 0
+;ELSEIF RESULT == 19
+;	R = 64
+;	C = 2000
+;	S = 2
+;	SIF TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
+;		S = 0
+ELSEIF RESULT == 20
+	R = 80
+	C = 1000
+	S = 0
+ELSEIF RESULT == 21
+	R = 41
+	C = 10000
+	S = 0
+ELSEIF RESULT == 22
+	R = 65
+	C = 10000
+	S = 1
+ELSEIF RESULT == 23
+	R = 66
+	C = 1000
+	S = 1
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_01
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;日焼け
+;-------------------------------------------------
+@TAILOR_BLACKGIRL
+C = 1000
+F = 0
+S = 3
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	C = 0
+	R = 0
+	T = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_BG
+PRINTFORML  %NAME:TARGET%を日焼けサロンに通わせて健康的な【%TALENTNAME:[[TALENT:褐色肌]]%】にさせます
+PRINTFORML  ※【ギャル系】を取得していない場合、定期的に通わなければおよそ1ヶ月程度で元の肌色に戻ります
+PRINTFORML  %CALLNAME:TARGET%を日焼けサロンに通わせますか？  
+PRINTL
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+INPUT
+IF RESULT == 0 && TALENT:オトコ == 0 
+	DRAWLINE
+	PRINTFORMW  日焼けサロンから戻ってきた%CALLNAME:TARGET%は《%TALENTNAME:[[TALENT:褐色肌]]%》になりました
+	TALENT:褐色肌 = 1
+	CFLAG:614 = 4 + RAND:4
+ELSEIF RESULT == 0 && TALENT:オトコ == 1
+	DRAWLINE
+	PRINTFORMW  日焼けサロンから戻ってきた%CALLNAME:TARGET%は《%TALENTNAME:[[TALENT:褐色肌]]%》になりました
+	TALENT:褐色肌 = 1
+	CFLAG:614 = 4 + RAND:4
+ELSE 
+	RETURN 1
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;日焼け
+;-------------------------------------------------
+@TAILOR_ESTHETIC
+C = 3000000
+F = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	C = 0
+	R = 0
+	T = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_ESTHETIC
+PRINTFORML  %NAME:TARGET%を特別なエステサロンに通わせて魅力値を回復させます
+PRINTFORML  ※この項目はキャラクターひとりにつき一度しか使用できません！
+PRINTFORML  %CALLNAME:TARGET%を特別なエステサロンに通わせますか？  
+PRINTL
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+INPUT
+IF RESULT == 0 
+	DRAWLINE
+	PRINTFORMW  《エステサロンから戻ってきた%CALLNAME:TARGET%は以前の魅力を取り戻した》
+	BASE:魅力値 = MAXBASE:魅力値
+	EXP:スペシャルエステ使用経験 = 1
+	MONEY -= C
+ELSEIF RESULT == 1 
+	RETURN 1
+ELSE
+	GOTO INPUT_LOOP_ESTHETIC
+ENDIF
+	
+RETURN 1
+
+
+;-------------------------------------------------
+;仕立屋用メンバーリスト
+;-------------------------------------------------
+@LIFE_LIST_TAILOR
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	TARGET = COUNT
+	PRINTFORM  [{COUNT}] %NAME:COUNT% 
+	IF CFLAG:上着のタイプ && (CFLAG:上着上の状態 >= 0 || CFLAG:上着下の状態 >= 0)
+		PRINT / 
+		CALL PRINT_CLOTHTYPE_MAIN2
+	ELSEIF CFLAG:上着のタイプ && (CFLAG:パンツの状態 >= 0 || CFLAG:ブラジャーの状態 >= 0)
+		PRINT / 下着
+	ELSE
+		PRINT / 全裸
+	ENDIF
+	IF CFLAG:特別コスチュームのタイプ && CFLAG:特別コスチュームの状態 >= 0
+		PRINT / 
+		CALL PRINT_CLOTHTYPE_SPECIAL
+	ENDIF
+	PRINTL 
+REND
+;===========================================================
+;ヘアサロン
+;===========================================================
+@HAIRSTYLE_CHANGE
+
+$INPUT_LOOP_50
+
+PRINTL □ヘアサロン
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+PRINTFORM %NAME:TARGET%は
+CALL PRINT_HAIRSTYLE
+PRINTFORML 。
+DRAWLINE
+PRINTL  [0] - 髪型を変える（500ポイント）
+PRINTL        ※変更前より長い髪にも変更できます
+PRINTL  [1] - 髪の色を変える（1000ポイント）
+PRINTL        ※地毛の色に戻す場合、1500ポイント必要になります
+DRAWLINE
+PRINTL [999] - 戻る
+INPUT
+IF RESULT == 0
+	CALL HAIRCUT
+ELSEIF RESULT == 1
+	CALL HAIRCOLOR
+ELSEIF RESULT == 999
+	RETURN 1
+ELSE
+	GOTO INPUT_LOOP_50
+ENDIF
+;===========================================================
+;ヘアスタイルの変更
+;===========================================================
+@HAIRCUT
+C = 500
+X = 0
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_51
+
+PRINTL □髪型一覧
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 0] - ショートヘア
+PRINTL  [ 1] - セミロング
+PRINTL  [ 2] - ショートボブ
+PRINTL  [ 3] - ポニーテール
+PRINTL  [ 4] - ツインテール
+PRINTL  [ 5] - ストレートロング
+PRINTL  [ 6] - アップ
+PRINTL  [ 7] - ゆるふわパーマ
+PRINTL  [ 8] - ロングウェーブ
+PRINTL  [ 9] - 三つ編み
+PRINTL  [10] - ツーサイドアップ
+PRINTL  [11] - ツインドリルテール
+PRINTL  [12] - お団子ヘア
+PRINTL  [99] - 昇天ペガサスＭＩＸ盛り
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+
+;999は前の選択肢に戻る
+IF RESULT == 999
+	RETURN 1
+
+;不正な値は弾く
+ELSEIF RESULT != 99 && RESULT >= 13
+	GOTO INPUT_LOOP_51
+
+ELSEIF CFLAG:髪型 != RESULT
+	CFLAG:TARGET:髪型 = RESULT
+	PRINTFORM  《%CALLNAME:TARGET%は髪型を
+		CALL PRINT_HAIRSTYLE_TAILOR
+	PRINTFORMW にしてもらった》
+ELSEIF CFLAG:髪型 == RESULT
+	PRINTFORMW  《%CALLNAME:TARGET%の現在の髪型です》
+
+ELSE
+	GOTO INPUT_LOOP_51
+ENDIF
+
+RETURN 1
+;===========================================================
+;髪色の変更
+;===========================================================
+@HAIRCOLOR
+C = 1000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	A = 0
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP_52
+
+PRINTL □髪色一覧
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 0] - 黒色
+PRINTL  [ 1] - 茶色
+PRINTL  [ 2] - 金色
+PRINTL  [ 3] - 銀色
+PRINTL  [ 4] - 赤色
+PRINTL  [ 5] - 青色
+PRINTL  [ 6] - 緑色
+PRINTL  [ 7] - ピンク
+PRINTL  [ 8] - 紫色
+PRINTL  [ 9] - 脱色する
+PRINTL  [10] - 栗色
+PRINTL  [99] - 地毛の色に戻す
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+;今の髪色と同じ場合は染めない（地毛色→染色同色も不可（現実的に意味ないことはしない））
+IF RESULT == CFLAG:髪の色
+	PRINTFORMW %CALLNAME:TARGET%の現在の髪色です
+	GOTO INPUT_LOOP_52
+
+;999は前の選択肢に戻る
+ELSEIF RESULT == 999
+	RETURN 1
+
+;不正な値は弾く
+ELSEIF RESULT != 99 && RESULT >= 11
+	GOTO INPUT_LOOP_52
+
+;地毛の色に戻す以外の選択肢を選んだ場合の処理（肢０－１０）
+ELSEIF RESULT != 99 && RESULT != CFLAG:髪の色 
+	PRINTFORM %CALLNAME:TARGET%は髪を
+	IF RESULT == 0
+		PRINTFORM 黒色に染め
+	ELSEIF RESULT == 1
+		PRINTFORM 茶色に染め
+	ELSEIF RESULT == 2
+		PRINTFORM 金色に染め
+	ELSEIF RESULT == 3
+		PRINTFORM 銀色に染め
+	ELSEIF RESULT == 4
+		PRINTFORM 赤色に染め
+	ELSEIF RESULT == 5
+		PRINTFORM 青色に染め
+	ELSEIF RESULT == 6
+		PRINTFORM 緑色に染め
+	ELSEIF RESULT == 7
+		PRINTFORM ピンクに染め
+	ELSEIF RESULT == 8
+		PRINTFORM 紫色に染め
+	ELSEIF RESULT == 9
+		PRINTFORM 脱色し
+	ELSEIF RESULT == 10
+		PRINTFORM 栗色に染め
+	ENDIF
+	PRINTFORMW てもらった
+	CFLAG:TARGET:髪の色 = RESULT
+	CFLAG:TARGET:染髪の有無 = 1
+	MONEY -= C	
+
+ELSEIF RESULT == 99 && CFLAG:TARGET:染髪の有無 == 1
+
+	IF MONEY < 1500
+		PRINTW お金が足りません
+		GOTO INPUT_LOOP_52
+	ENDIF
+
+	;地毛色の値がある→0でないとき
+	;未入力の時はCSVCFLAGを取ってこれる。未指定なら0のはず
+	IF CFLAG:TARGET:地毛の色 
+		PRINTFORMW %CALLNAME:TARGET%は髪の色を地毛に戻した。
+		CFLAG:TARGET:髪の色 = CFLAG:TARGET:地毛の色
+	;初期設定で髪を染めているキャラは、地毛を黒髪とみなします。
+	;CFLAG:603をCSVで指定することでみなしを免れます
+	ELSEIF CSVCFLAG(NO:TARGET,601) == 1
+		PRINTFORMW %CALLNAME:TARGET%は髪の色を地毛に戻した。
+		CFLAG:TARGET:髪の色 = 0
+	ELSE
+		PRINTFORMW %CALLNAME:TARGET%は髪の色を地毛に戻した。
+		CFLAG:TARGET:髪の色 = CSVCFLAG(NO:TARGET,600)
+	ENDIF
+	;染髪なしにする。
+	CFLAG:TARGET:染髪の有無 = 0
+	MONEY -= 1500
+
+ELSEIF RESULT == 99 && CFLAG:TARGET:染髪の有無 == 0
+	PRINTFORMW %CALLNAME:TARGET%は髪の毛を染めていません。
+	GOTO INPUT_LOOP_52
+ELSE	
+	GOTO INPUT_LOOP_52
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;靴下
+;-------------------------------------------------
+@TAILOR_SOCKS
+
+$INPUT_LOOP_SOCKS
+
+PRINTL □装備品
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 1] - ショートソックス（5ポイント）
+PRINTL  [ 2] - 学校指定ソックス（10ポイント）
+PRINTL  [ 3] - ハイソックス（20ポイント）
+PRINTL  [ 4] - ルーズソックス（25ポイント）
+PRINTL  [ 5] - ニーソックス（30ポイント）
+PRINTL  [ 6] - 黒ストッキング（40ポイント）
+PRINTL  [ 7] - ガーターストッキング（50ポイント）
+PRINTL  [ 8] - ニーハイネットストッキング（100ポイント）
+SIF PBAND:304 == 4
+	PRINTL  [99] - ガラスのニーソックス（100000ポイント）
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1
+	PRINTFORMW 《%CALLNAME:TARGET%にショートソックスを買ってあげました》
+	C = 5
+	S = 0
+	CFLAG:靴下の種類 = 1
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 2
+	PRINTFORMW 《%CALLNAME:TARGET%に学園指定ソックスを買ってあげました》
+	C = 10
+	S = 0
+	CFLAG:靴下の種類 = 2
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 3
+	PRINTFORMW 《%CALLNAME:TARGET%にハイソックスを買ってあげました》
+	C = 15
+	S = 0
+	CFLAG:靴下の種類 = 3
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 4
+	PRINTFORMW 《%CALLNAME:TARGET%にルーズソックスを買ってあげました》
+	C = 20
+	S = 0
+	CFLAG:靴下の種類 = 4
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 5
+	PRINTFORMW 《%CALLNAME:TARGET%にニーソックスを買ってあげました》
+	C = 30
+	S = 0
+	CFLAG:靴下の種類 = 5
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 6
+	PRINTFORMW 《%CALLNAME:TARGET%に黒ストッキングを買ってあげました》
+	C = 40
+	S = 0
+	CFLAG:靴下の種類 = 6
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 7
+	PRINTFORMW 《%CALLNAME:TARGET%にガーターストッキングを買ってあげました》
+	C = 50
+	S = 0
+	CFLAG:靴下の種類 = 7
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 8
+	PRINTFORMW 《%CALLNAME:TARGET%にニーハイネットストッキングを買ってあげました》
+	C = 20
+	S = 0
+	CFLAG:靴下の種類 = 8
+	CFLAG:靴下の着用状態 = 0
+ELSEIF RESULT == 99 && PBAND:304 == 4
+	PRINTFORMW 《%CALLNAME:TARGET%にガラスのニーソックスを買ってあげました》
+	C = 20
+	S = 0
+	CFLAG:靴下の種類 = 99
+	CFLAG:靴の種類 = 0
+	CFLAG:靴下の着用状態 = -1
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_SOCKS
+ENDIF
+
+RETURN 1
+;-------------------------------------------------
+;靴
+;-------------------------------------------------
+@TAILOR_SHOES
+
+$INPUT_LOOP_SHOES
+
+PRINTL □装備品
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 1] - スニーカー（100ポイント）
+PRINTL  [ 2] - 学校指定ローファー（200ポイント）
+PRINTL  [ 3] - パンプス（250ポイント）
+PRINTL  [ 4] - ハイヒール（300ポイント）
+PRINTL  [ 5] - サンダル（50ポイント）
+PRINTL  [ 6] - ビーチサンダル（80ポイント）
+PRINTL  [ 7] - ナースサンダル（100ポイント）
+PRINTL  [ 8] - パールピンクミュール（1000ポイント）
+PRINTL  [ 9] - 下駄（150ポイント）
+PRINTL  [10] - もこもこスリッパ（80ポイント）
+PRINTL  [11] - 便所スリッパ（10ポイント）
+PRINTL  [12] - 編み上げブーツ（500ポイント）
+PRINTL  [13] - カウボーイブーツ（700ポイント）
+PRINTL  [14] - ピンヒールニーハイブーツ（1500ポイント）
+PRINTL  [15] - クロックス（150ポイント）
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 1
+	PRINTFORMW 《%CALLNAME:TARGET%にスニーカーを買ってあげました》
+	C = 100
+	S = 0
+	CFLAG:靴の種類 = 1
+ELSEIF RESULT == 2
+	PRINTFORMW 《%CALLNAME:TARGET%に学園指定ローファーを買ってあげました》
+	C = 200
+	S = 0
+	CFLAG:靴の種類 = 2
+ELSEIF RESULT == 3
+	PRINTFORMW 《%CALLNAME:TARGET%にパンプスを買ってあげました》
+	C = 250
+	S = 0
+	CFLAG:靴の種類 = 3
+ELSEIF RESULT == 4
+	PRINTFORMW 《%CALLNAME:TARGET%にハイヒールを買ってあげました》
+	C = 300
+	S = 0
+	CFLAG:靴の種類 = 4
+ELSEIF RESULT == 5
+	PRINTFORMW 《%CALLNAME:TARGET%にサンダルを買ってあげました》
+	C = 50
+	S = 0
+	CFLAG:靴の種類 = 5
+ELSEIF RESULT == 6
+	PRINTFORMW 《%CALLNAME:TARGET%にビーチサンダルを買ってあげました》
+	C = 80
+	S = 0
+	CFLAG:靴の種類 = 6
+ELSEIF RESULT == 7
+	PRINTFORMW 《%CALLNAME:TARGET%にナースサンダルを買ってあげました》
+	C = 100
+	S = 0
+	CFLAG:靴の種類 = 7
+ELSEIF RESULT == 8
+	PRINTFORMW 《%CALLNAME:TARGET%にパールピンクミュールを買ってあげました》
+	C = 1000
+	S = 0
+	CFLAG:靴の種類 = 8
+ELSEIF RESULT == 9
+	PRINTFORMW 《%CALLNAME:TARGET%に下駄を買ってあげました》
+	C = 150
+	S = 0
+	CFLAG:靴の種類 = 9
+ELSEIF RESULT == 10
+	PRINTFORMW 《%CALLNAME:TARGET%にもこもこスリッパを買ってあげました》
+	C = 70
+	S = 0
+	CFLAG:靴の種類 = 10
+ELSEIF RESULT == 11
+	PRINTFORMW 《%CALLNAME:TARGET%に便所スリッパを買ってあげました》
+	C = 10
+	S = 3
+	CFLAG:靴の種類 = 11
+ELSEIF RESULT == 12
+	PRINTFORMW 《%CALLNAME:TARGET%に編み上げブーツを買ってあげました》
+	C = 500
+	S = 0
+	CFLAG:靴の種類 = 12
+ELSEIF RESULT == 13
+	PRINTFORMW 《%CALLNAME:TARGET%にカウボーイブーツを買ってあげました》
+	C = 700
+	S = 0
+	CFLAG:靴の種類 = 13
+ELSEIF RESULT == 14
+	PRINTFORMW 《%CALLNAME:TARGET%にピンヒールニーハイブーツを買ってあげました》
+	C = 1500
+	S = 0
+	CFLAG:靴の種類 = 14
+ELSEIF RESULT == 15
+	PRINTFORMW 《%CALLNAME:TARGET%にクロックスを買ってあげました》
+	C = 150
+	S = 0
+	CFLAG:靴の種類 = 15
+ELSEIF RESULT == 999
+	A = 0
+	C = 0
+	R = 0
+	S = 0
+	T = 0
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_SHOES
+ENDIF
+
+RETURN 1

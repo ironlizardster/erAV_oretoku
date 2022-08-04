@@ -1,0 +1,212 @@
+﻿;===========================================================
+;マルチナ加入イベント
+;===========================================================
+@MARTINA_APPROACHING_CALC
+
+;既にいたら戻る
+IF GETCHARA([[キャラ:マルチナ・パラディスス]], 0) != -1
+	FLAG:マルチナ加入イベント発生済み = 1
+	RETURN 0
+ENDIF
+	
+;;ユーニスがいる場合、永久にイベントは起きません
+;SIF GETCHARA([[キャラ:ユーニス・パラディスス]], 0) != -1
+;	RETURN 0
+
+;;操辻蜂香がいる場合、永久にイベントは起きません
+;SIF GETCHARA([[キャラ:操辻蜂香]], 0) != -1
+;	RETURN 0
+
+;;瑠衣ミッションを成功以上させている場合、永久に(ry
+;SIF PBAND:73 >= 3
+;	RETURN 0
+
+;;リリスミッションを(ry
+;SIF PBAND:132 >= 3
+;	RETURN 0
+
+;週替わりごとに必ず-1
+FLAG:マルチナ加入イベント -= 1
+
+;週替わりごとにランダムで減少
+FLAG:マルチナ加入イベント -= RAND:10
+
+;念のため0以下になった場合は0に再セット
+SIF FLAG:マルチナ加入イベント <= 0
+	FLAG:マルチナ加入イベント = 0
+
+;FLAG:マルチナ加入イベントが0になったらイベント開始
+SIF FLAG:マルチナ加入イベント == 0
+	CALL MARTINA_APPROACHING
+
+RETURN 0
+
+
+;===========================================================
+;加入イベント・本体
+;===========================================================
+@MARTINA_APPROACHING
+
+DRAWLINE
+PRINTFORML 　明くる日の週末、%CALLNAME:MASTER%と歌音は事務所の待合室である人物と待ち合わせをしていた。
+PRINTFORML 　マルチナ・パラディスス、と名乗るその相手の女性は、裏社会では超が２０個は付くほどの危険人物らしく、さすがの
+PRINTFORML 　歌音も部下の前では表面上余裕振っていたが、ここでは緊張した面持ちを見せていた。
+PRINTFORML 　
+PRINTFORML 「…レイチェルの話だとパラディスス、という苗字だけでこの女を人畜無害な女性だと思わないほうがいいらしいさね…
+PRINTFORML 　かつて、この女はパラディススの女王を数ヶ月の間勤めていた時期があったそうだが、この間はまさに恐怖政治そのも
+PRINTFORML 　のだったそうで、しかもどうしてそういう考えになったのか知らないが、パラディススのしきたりも随分と変えてし
+PRINTFORML 　まったそうだ…身内外戚からの退陣要求には怖いくらいすんなり応じたらしいんだが、追放された後は、表向きはモデ
+PRINTFORML 　ルをしているそうだが裏社会では自分の血液を高値を付けて売り捌いて、パラディススが認知していない異能者を量産
+PRINTFORML 　したり、途上国で内乱の扇動や、クーデターを幇助したりと、とにかく自分の実力にかこつけてやりたい放題やってる
+PRINTFORML 　というわけさ
+PRINTFORMW 
+PRINTFORML 　そんな女がどうして今日まで平気でいられるか、といえば、あまり大きな声では言えないが、今あの女が所属している
+PRINTFORML 　組織が文字通り世界最大の組織で、しかも奴がそこの幹部の一席を務めているから、だろうね…
+PRINTFORML 　…でも、考えようによってはチャンスでもある――この女とパイプを結ぶことができれば、桐生組の今後の発展は磐石
+PRINTFORML 　なものになる…、そうは思わないかい？
+PRINTFORML 　しかしそれにしても、こんな大物が直接連絡を付けてくるとは驚いたよ…
+PRINTFORML 　ウチもそれだけ、世界的に無視できない組になったってことかね？」
+PRINTFORMW
+PRINTFORML 　……さすがにこの一大事を招いた遠因が、いつもの都子の悪ふざけ（本人は大真面目だが）の延長線上にあるとは歌音
+PRINTFORML 　には言えない…
+PRINTFORML 　そんなことを%CALLNAME:MASTER%が考えていると、コンコンとドアをノックをする音が聞こえてきた
+PRINTFORML 　そのノックに対して歌音が反応する前に、全身にローブを身に纏った集団が、ドアや壁をすり抜けて歌音達を取り囲
+PRINTFORML 　んだ。
+PRINTFORML 　…一部の者は何やら部屋の中をゴソゴソと調べまわっているように見える
+PRINTFORMW 
+PRINTFORML 「な、なんだい、お前らは！
+PRINTFORML 　ここがどこだか分かっているのかい！？」
+PRINTFORML 
+PRINTFORML 　突然の出来事に呆気に取られていた歌音はようやくこの怪しげな集団にいつもの啖呵を切った。
+PRINTFORML 　並の男なら萎縮してしまうだろう剣幕に対してもこの集団はまったく動じず、代表と思われる２名が話しかけてきた
+PRINTFORML 　背丈からは女性、それも歌音や都子と同世代のようにも見えるが、フードを目深に被っており顔は確認できない
+PRINTFORML 
+PRINTFORML 「私たちは【ルーンマスター】の僕の者…」
+PRINTFORML 「部屋の中に爆発物、毒物、対魔術師用武器等がないかを調べさせてもらっていたぞ～！
+PRINTFORML 　…どうやら問題はないようだね…、よし…、みんないくぞ～！
+PRINTFORML 　ヘイル・マルチナ～！」
+PRINTFORMW
+PRINTFORML 「「「「「「「「「「ヘイル・マルチナ！（マルチナ、万歳！）」」」」」」」」」」
+PRINTFORMW 
+PRINTFORML 　ローブの者達は、突如敬礼のような姿勢を取ったと思えば、大声で合唱し始めた。
+PRINTFORML 　あまりの出来事に%CALLNAME:MASTER%と歌音は口を開けポカンとしている…
+PRINTFORML 
+PRINTFORML 「ご苦労、もう下がっていいわよ、あなた達♪」
+PRINTFORML 
+PRINTFORML 　聞いたことのある声が部屋中に響いた――そう思った直後には、向かいのソファーに妖艶な格好をした女性が足を組
+PRINTFORML 　んで座っていた…
+PRINTFORML 　あの時モニターに写っていた女性に間違いない
+PRINTFORML 　そして、ローブを纏った者たちはいつの間にか消え去っていた…
+PRINTFORMW 
+PRINTFORML 「フフフ、また会ったわね、あなた…、いえ、『あなた』と呼んだほうがいいのかしら？
+PRINTFORML 　都子ちゃんは元気にしてる？
+PRINTFORML 　そして、はじめまして、ジャパニィズ・ヤクザ・ガール、桐生歌音…
+PRINTFORML 　あなた、そしてあなた達に会えるのを楽しみにしていたわ♪」
+PRINTFORML 
+PRINTFORML 「（都子のことも知ってるなんて、どういう関係なんだ？）
+PRINTFORML 　ひとまず、はじめましてだな…、マルチナ・パラディスス…
+PRINTFORML 　さっそくだが、一体、何が望みで来日してきたんだい？」
+PRINTFORML 
+PRINTFORML 「…あなた、随分とせっかちなのね？
+PRINTFORML 　まあいいわ、まず来日してきた理由だけど、そうね…、『あなた』や都子ちゃんに免じて本当のことを話してあげる♪
+PRINTFORML 　『娘の様子を確認しに来た』、これが最大の理由よ」
+PRINTFORMW 
+PRINTFORML 　歌音は口に含んでいた飲み物を吹き出しかけながら、驚愕した様子で尋ねる。
+PRINTFORML 
+PRINTFORML 「うぶ…！ゴホゴホ…！
+PRINTFORML 　む、む、娘、だって！？
+PRINTFORML 　あんたに、む、娘がいるのか！？
+PRINTFORML 　そんな話、聞いたことがないぞ！？」
+PRINTFORML 
+PRINTFORML 「そりゃあ当然よ――身内以外に話すのは、今回が初めてですもの♪
+PRINTFORML 　一応内緒にしてることだから、あまり言いふらさないでね？
+PRINTFORML 　で、ついでだから、ちょっとあなた達桐生組とビジネスの話をしたいと思ってね
+PRINTFORML 　だからそんな怖い顔しないでほしいわね♪」
+PRINTFORML 
+PRINTFORML 　そう言うとマルチナは一枚の名刺を%CALLNAME:MASTER%達に渡してきた
+PRINTFORML 　名刺には『ビューティサロン・メルティーナ』と書かれている…
+PRINTFORMW 
+PRINTL
+PRINTW 　………………
+PRINTW 　…………
+PRINTL 　……
+PRINTW
+PRINTFORML 　マルチナの話をまとめると、自身が表社会で展開している事業…件のビューティサロン日本法人のステルス・マーケ
+PRINTFORML 　ティングを桐生組に援助してもらうことが目的らしい
+PRINTFORML 　既に何人かの新人アイドルを使って大々的にコマーシャルを打つことも決まっているらしく、最近アイドルとしても
+PRINTFORML 　トップを走っている歌音にはそうしたアイドル達の教育も任せたい、ということだった
+PRINTFORML 　マルチナがやってきた当初は、部下の対応や、娘がいたという事実、これらに驚きと緊張を隠せない歌音だったが商
+PRINTFORML 　売の話になってくると調子を取り戻したのか、お得意のハッタリと吹っ掛けを見せ始めた
+PRINTFORML 
+PRINTFORML 「ジャパニィズ・ヤクザはなかなか威勢がいいわね♪
+PRINTFORML 　…さて、こっちの話はまとまりそうだし、次はそっちのあなたにお願いがあるんだけど？」
+PRINTFORMW 
+PRINTFORML 　マルチナはそう言うと%CALLNAME:MASTER%のほうに向き直り、値踏みするかのように瞳を見つめてきた
+PRINTFORML 　歌音はそんなマルチナを見て、やや牽制するかのように言い放った
+PRINTFORML 
+PRINTFORML 「この人に用事だって？
+PRINTFORML 　残念だけど、桐生組のすべての業務はアタシを中心にして動いているんだよ？
+PRINTFORML 　この人がやってることなんて精々ＡＶの撮影くらいしか…」
+PRINTFORML 
+PRINTFORML 「そうそう、それ♪
+PRINTFORML 　私をＡＶ女優にしてくれないかしら？」
+PRINTFORMW 
+PRINTFORML 　歌音は椅子から転げ落ちてしまった…
+PRINTFORML 　そして、予想外な出来事に頭を抱えている
+PRINTFORML 
+PRINTFORML 「まあ、あなたが今まで扱ってきた女の子みたいに、安々と愛を誓ったりすることはないと思うわ
+PRINTFORML 　私が愛している男は、今も昔も、１人だけだから…
+PRINTFORML 　あなたがそこのところだけでも納得してくれるなら、きっと役には立てると思うわよ♪」
+PRINTFORML 
+PRINTFORML 「ま、ま、待て待て待て…！
+PRINTFORML 　いくらなんでもおかしいさね…、それに、このことを口実に、桐生組をお取り潰しにするつもりじゃあ…」
+PRINTFORML 
+PRINTFORML 「私のところのボスには既に許可を貰ってるから大丈夫よ♪
+PRINTFORML 　それにあの子が夢中になってる男がどれほどのものか、女としては興味もあるし…
+PRINTFORML 　別に無理強いはしないけど…、どうかしら？」
+PRINTW
+PRINTFORML 　決して心を開かない、というのは引っかかるが
+PRINTFORML 　見た目や、その立場からして即戦力になることは間違いないだろう
+PRINTFORML 　ただ、希望するギャラがかなりの高額ではあるが……どうするべきだろうか？
+PRINTL 《マルチナ・パラディススと契約しますか？》
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+$INPUT_LOOP_MARTINA
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 「フフフ、ありがとう♪
+	PRINTFORML 　なんだかわくわくしてくるわね♪」
+	PRINTFORML 
+	PRINTFORML 《マルチナ・パラディススが女優候補になりました》
+	PRINTFORMW
+	CALL キャラ追加([[キャラ:マルチナ・パラディスス]])
+	IF FLAG:女子寮建設 > 0
+		PRINTFORML 「そうそう、あなた、女子寮のオーナーをしているみたいね？
+		PRINTFORML 　私の魔術を使えばあなたの女子寮をちょっとだけ居心地の良い場所に変えられるわよ♪
+		PRINTFORML 　ほかにもいろいろサービスしてあげるから、この○○県の郊外にある私の別荘に
+		PRINTFORML 　ある程度私と親しくなったと思ったら、きっと来てね♪」
+	ENDIF
+	PRINTFORMW
+ELSEIF RESULT == 1
+	PRINTFORML 「そう、仕方ないわね…
+	PRINTFORML 　この世界では縁がなかった、ということなのね、きっと…
+	PRINTFORML 　私もそのあたりはまだまだ勉強中の身だけど…
+	PRINTFORML 　まあ、いずれまた会う機会もあるでしょう
+	PRINTFORML 　それがこの場所なのか、それとも別の場所かは分からないけれど…」
+	PRINTFORML 
+	PRINTFORML 　そこまで言うとマルチナは風のように姿を消した
+	PRINTFORML 　そして%CALLNAME:MASTER%も歌音も、そして都子も、マルチナと名乗る女性のことを思い出すことは二度となかった…
+	PRINTFORMW
+	PRINTFORML 《マルチナ・パラディススとの契約を見送りました》
+	PRINTFORMW
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_MARTINA
+ENDIF
+
+FLAG:マルチナ加入イベント発生済み = 1
+DRAWLINE
+
+RETURN 0
+

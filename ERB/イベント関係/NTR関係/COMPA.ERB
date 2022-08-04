@@ -1,0 +1,104 @@
+﻿;===========================================================
+;合コンの処理
+;===========================================================
+@COMPA_START
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:合コン参加判定 == 1 && CFLAG:COUNT:彼氏の有無 != 1 && TALENT:COUNT:彼氏あり == 0
+		CALL COMPA_MAIN
+	ENDIF
+REND
+
+;===========================================================
+;合コン・本体
+;===========================================================
+@COMPA_MAIN
+X = 5 + RAND:16
+Y = BASE:COUNT:魅力値
+P = 0
+
+PRINTFORM %NAME:COUNT%を始めとして{X}人が
+IF RAND:2 == 0
+	PRINTFORM 大学のテニスサークル主催の合コン
+	P = 1
+ELSE
+	PRINTFORM 有名ＳＮＳのコミュニティ主催のオフ会
+	P = 2
+ENDIF
+PRINTFORMW に参加した
+IF Y >= 80
+	PRINTFORML %CALLNAME:COUNT%はひっきりなしに様々な職業の異性からアプローチを受けている
+ELSE
+	PRINTFORML %CALLNAME:COUNT%は様々な職業の異性と楽しそうに談笑している
+ENDIF
+PRINTW
+PRINTW ………………
+PRINTW …………
+PRINTL ……
+PRINTW
+
+;LOCAL = RAND:100
+;
+;IF LOCAL >= 90
+;	CALL COMPA_TAKEOUT
+;ELSE
+	IF P == 1
+		PRINTFORM 合コン
+	ELSEIF P == 2
+		PRINTFORM オフ会
+	ENDIF
+	PRINTFORM の結果、%CALLNAME:COUNT%は
+	SIF FLAG:チャラ男固定 == 1
+		X = 150
+	IF Y + RAND:100 + X >= 150
+		IF FLAG:チャラ男固定 == 0
+			CFLAG:COUNT:彼氏の種類 = RAND:7
+			IF CFLAG:COUNT:彼氏の種類 == 1
+				CFLAG:COUNT:彼氏の種類 = 0
+			ELSEIF CFLAG:COUNT:彼氏の種類 == 3
+				CFLAG:COUNT:彼氏の種類 = 6
+			ENDIF
+		ENDIF
+		IF P == 1
+			PRINTFORM 合コン
+		ELSEIF P == 2
+			PRINTFORM オフ会
+		ENDIF
+		PRINTFORM に参加していた
+			IF CFLAG:COUNT:彼氏の種類 == 1
+				PRINT クラスメイト
+			ELSEIF CFLAG:COUNT:彼氏の種類 == 2
+				PRINT 高校生
+			ELSEIF CFLAG:COUNT:彼氏の種類 == 3
+				PRINT 中学生
+			ELSEIF CFLAG:COUNT:彼氏の種類 == 4
+				PRINT 大学生
+			ELSEIF CFLAG:COUNT:彼氏の種類 == 5
+				PRINT サラリーマン
+			ELSEIF CFLAG:COUNT:彼氏の種類 == 6
+				PRINT ホスト
+			ELSE
+				PRINT チャラ男
+			ENDIF
+		PRINTFORML と付き合うことになったようだ……
+			CFLAG:COUNT:彼氏の有無 = 1
+			TALENT:COUNT:彼氏あり = 1
+			CALL DECIDE_BOYFRIEND,COUNT
+			CFLAG:COUNT:合コン参加判定 = 0
+			CFLAG:COUNT:彼氏とラブホに寄る判定用 = 1
+	ELSE
+		PRINTFORML 特に誰からも声をかけられなかったようだ……
+			CFLAG:COUNT:合コン参加判定 = 0
+	ENDIF
+	DRAWLINE
+;ENDIF
+
+;===========================================================
+;合コン・本体
+;===========================================================
+@COMPA_TAKEOUT
+
+TARGET = COUNT
+

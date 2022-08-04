@@ -1,0 +1,59 @@
+﻿						;****パラ表示改造追加ここから****
+;===========================================================
+;ステータス表示用
+;===========================================================
+@PRINT_ACTRESS_STR
+
+IF TALENT:ＡＶ女優 == 0
+	DRAWLINE
+	PRINTFORML まだデビューしていません
+	DRAWLINE
+ELSE
+	CALL ACTRESS_ARTICLE
+	
+	DRAWLINE
+	PRINTFORML  総売上：{CFLAG:総売上}ポイント　／　出演本数：{EXP:ＡＶ出演経験}本
+	PRINTFORML  現在の称号：%CSTR:称号1%%CSTR:称号2%
+	PRINTFORML  ファン人数：{CFLAG:AVファン人数}人　／　専属契約：%CSTR:MASTER:レーベル名%
+	DRAWLINE
+	PRINTFORML  ★デビュー作のタイトル★
+		CHKFONT "あくびん"
+				IF RESULT
+					SETFONT "あくびん"
+				ENDIF
+				SETCOLOR 0xDDBBCC
+		PRINT  
+		CALL PRINT_VIDEO_TITLE_DEBUT
+		SETFONT ""
+		RESETCOLOR
+	PRINTFORML  売上：{CFLAG:デビュー作売上}ポイント
+	IF CFLAG:最新作売上 > 0
+		PRINTFORML  ★最新作のタイトル★
+			CHKFONT "あくびん"
+					IF RESULT
+						SETFONT "あくびん"
+					ENDIF
+					SETCOLOR 0xDDBBCC
+			PRINT  
+			CALL PRINT_VIDEO_TITLE_NEW
+			SETFONT ""
+			RESETCOLOR
+		PRINTFORML  売上：{CFLAG:最新作売上}ポイント
+	ENDIF
+	IF CFLAG:最新作売上 > 0
+		PRINTFORML  ★代表作のタイトル★
+			CHKFONT "あくびん"
+					IF RESULT
+						SETFONT "あくびん"
+					ENDIF
+					SETCOLOR 0xDDBBCC
+			PRINT  
+			CALL PRINT_VIDEO_TITLE_REPRESENT
+			SETFONT ""
+			RESETCOLOR
+		PRINTFORML  売上：{CFLAG:代表作売上}ポイント
+	ENDIF
+	DRAWLINE
+ENDIF
+						;****パラ表示改造追加ここまで****
+

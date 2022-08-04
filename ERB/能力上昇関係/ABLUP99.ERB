@@ -1,0 +1,144 @@
+﻿;反発刻印の消去処理とその可否判定
+;eratohoA ver1,204のスクリプトを参考に処理を簡略化
+
+;>屈服刻印を消してみるテスト
+;>使う場合は↓をABL.ERBの「PRINTL [100] 能力値アップの終了」の前に挿入すること
+;>PRINTFORML [99]%MARKNAME:[[MARK:反発刻印]]%-{MARK:反発刻印}LV
+;>
+;>SYSTEM_SOURCE_SUB.ERB内の@MARK_GOT_CHECKも弄ると再度反発刻印が付いたりしないので吉
+;>●改変前
+;>IF A >= 500 && A < 1200 && MARK:反発刻印 <= 0
+;>	MARK:反発刻印 = 1
+;>●改変後
+;>IF A >= 500 && A < 1200 && MARK:4 <= 0
+;>	MARK:反発刻印 = 1
+;>	MARK:4 = 1
+;>●以上の内容を3LVの3箇所にすること
+;>上記の解らないor解ってもやらない場合に再度屈服刻印付いた場合の弊害は保証しかねます
+
+;-------------------------------------------------
+;反発刻印の消去処理
+;-------------------------------------------------
+@ABLUP99
+DRAWLINE
+;PRINTL 奴隷に付いた反発刻印を消去します
+;PRINTL 反発刻印の付いている奴隷は、主人の命令に従いにくくなります
+;DRAWLINE
+;反発刻印が存在しない場合
+IF MARK:反発刻印 <= 0
+	PRINTL 反発刻印はありません
+	WAIT
+	RETURN 0
+ENDIF
+
+;必要な屈服の珠
+A = 0
+;必要な従順LV
+B = 0
+
+;条件別にＯＫかダメかを記録する
+I = 0
+
+CALL CAN_ABLUP99
+
+;反発刻印Lvと同じLvの屈服刻印が必要
+PRINTFORML %MARKNAME:[[MARK:屈服刻印]]%{MARK:反発刻印}以上(現在{MARK:屈服刻印})かつ
+
+;反発刻印Lv+2Lvの従順が必要
+PRINTFORML %ABLNAME:[[ABL:信頼]]%{B}LV以上(現在{ABL:信頼}LV)LV必要
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:屈服]]%の珠×{JUEL:屈服}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 刻印不足 
+	SIF I & 4
+		PRINT 能力不足 
+ENDIF
+PRINTL 
+
+PRINTL [100] - やめる
+
+INPUT
+IF RESULT != 0 && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+MARK:反発刻印 -= 1
+
+JUEL:屈服 -= A
+
+PRINTFORML %MARKNAME:[[MARK:反発刻印]]%が{MARK:反発刻印}に下がりました
+
+RETURN 0
+
+;-------------------------------------------------
+;反発刻印の消去可否判定
+;-------------------------------------------------
+@CAN_ABLUP99
+;反発刻印が存在しない場合
+SIF MARK:反発刻印 <= 0
+	RETURN 0
+
+;判定変数を空に
+I = 0
+
+B = 0
+
+IF MARK:反発刻印 == 1
+	A = 5000
+ELSEIF MARK:反発刻印 == 2
+	A = 10000
+ELSEIF MARK:反発刻印 == 3
+	A = 50000
+ENDIF
+
+;気丈
+IF TALENT:気丈
+	TIMES A , 3.00
+ENDIF
+
+;生意気
+IF TALENT:活発
+	TIMES A , 1.50
+ENDIF
+
+;素直
+IF TALENT:素直
+	TIMES A , 0.50
+ENDIF
+
+;愛
+IF TALENT:恋心
+	TIMES A , 0.50
+ENDIF
+
+;反発刻印Lvと同じLvの屈服刻印が必要
+SIF MARK:反発刻印 > MARK:屈服刻印
+	I |= 2
+
+;反発刻印Lv+2Lvの従順が必要
+B = MARK:反発刻印 + 2
+SIF B > ABL:信頼
+	I |= 4
+
+;屈服の宝珠が不足
+SIF JUEL:屈服 < A
+	I |= 1
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+;
+;
+;

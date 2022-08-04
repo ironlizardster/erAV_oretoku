@@ -1,0 +1,232 @@
+﻿;欲望のLvUP処理とその可否判定
+;eratohoA ver1,204のスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;欲望のLvUP
+;-------------------------------------------------
+@ABLUP11
+DRAWLINE
+;PRINTL 奴隷の性欲の強さを高めます
+;PRINTL 欲望が高いと、より大きな快楽が得られ、快楽によって恭順が高まるようになります
+;DRAWLINE
+;欲望はLv5が上限
+;[即落ち][淫乱]が付いている場合は10まで上昇可能
+IF ABL:欲望 >= 5 && (TALENT:即落ち == 0 && TALENT:淫乱 == 0)
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:欲望 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な欲情の珠
+A = 0
+
+;条件別にＯＫかダメかを記録する
+;欲情の珠による可否（I=0:可、I&1:珠不足、I&2:経験不足）
+I = 0
+
+;異常経験が必要か
+E = 0
+
+CALL CAN_ABLUP11
+
+;異常経験が必要か
+SIF E > 0
+	PRINTFORML %EXPNAME:[[EXP:異常経験]]%{E}以上(現在{EXP:異常経験})かつ
+
+;欲情の珠で上げる
+PRINTFORM [0] - %PALAMNAME:[[PALAM:欲情]]%の珠×{JUEL:欲情}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+ENDIF
+PRINTL 
+
+PRINTL [100] - やめる
+
+INPUT
+IF (RESULT < 0 || RESULT > 0) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:欲望 += 1
+
+IF RESULT == 0
+	JUEL:欲情 -= A
+ENDIF
+
+PRINTFORML %ABLNAME:[[ABL:欲望]]%のレベルが{ABL:欲望}になりました
+
+RETURN 0
+
+;-------------------------------------------------
+;欲望のLvUP可否判定
+;-------------------------------------------------
+@CAN_ABLUP11
+;欲望はLv5が上限、
+;[即落ち][淫乱]が付いている場合は10まで上昇可能
+SIF ABL:欲望 >= 5 && (TALENT:即落ち == 0 && TALENT:淫乱 == 0)
+	RETURN 0
+SIF ABL:欲望 >= 10
+	RETURN 0
+
+;判定変数を空に
+A = 0
+E = 0
+I = 0
+
+IF ABL:欲望 == 0
+	A = 5
+ELSEIF ABL:欲望 == 1
+	A = 50
+ELSEIF ABL:欲望 == 2
+	A = 1000
+ELSEIF ABL:欲望 == 3
+	A = 5000
+ELSEIF ABL:欲望 == 4
+	A = 12000
+ELSEIF ABL:欲望 == 5
+	A = 20000
+ELSEIF ABL:欲望 == 6
+	A = 30000
+ELSEIF ABL:欲望 == 7
+	A = 50000
+ELSEIF ABL:欲望 == 8
+	A = 80000
+ELSEIF ABL:欲望 == 9
+	A = 150000
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	SIF ABL:欲望 == 3
+		TIMES A , 1.50
+	SIF ABL:欲望 == 4
+		TIMES A , 2.00
+	SIF ABL:欲望 == 5
+		TIMES A , 2.50
+	SIF ABL:欲望 >= 6
+		TIMES A , 3.00
+ENDIF
+
+;自制心
+IF TALENT:自制心
+	TIMES A , 1.20
+ENDIF
+
+;保守的
+IF TALENT:保守的
+	TIMES A , 1.10
+ENDIF
+
+;貞操観念
+IF TALENT:貞操観念
+	TIMES A , 1.50
+;貞操無頓着
+ELSEIF TALENT:貞操無頓着
+	TIMES A , 0.95
+ENDIF
+
+;抑圧
+IF TALENT:抑圧
+	TIMES A , 1.50
+;解放
+ELSEIF TALENT:解放
+	TIMES A , 0.90
+ENDIF
+
+;抵抗
+SIF TALENT:抵抗
+	TIMES A , 1.50
+
+;恥じらい
+IF TALENT:恥じらい
+	TIMES A , 1.10
+;恥薄い
+ELSEIF TALENT:恥薄い
+	TIMES A , 0.95
+ENDIF
+
+;快感に素直
+IF TALENT:快感に素直
+	TIMES A , 0.80
+;快感の否定
+ELSEIF TALENT:快感の否定
+	TIMES A , 1.50
+ENDIF
+
+;中毒しやすい
+SIF TALENT:中毒しやすい
+	TIMES A , 0.95
+;即落ち
+SIF TALENT:即落ち
+	TIMES A , 0.50
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 0.70
+;色情狂
+SIF TALENT:絶倫
+	TIMES A , 0.20
+;色情狂
+SIF TALENT:[[TALENT:ONLY ONE EMPRESS]]
+	TIMES A , 0.40
+;大和撫子
+SIF TALENT:大和撫子
+	TIMES B , 1.50
+;娼婦
+SIF TALENT:風俗嬢
+	TIMES A , 0.90
+;褐色肌
+SIF TALENT:褐色肌
+	TIMES A , 0.70
+;ギャル系
+SIF TALENT:ギャル系
+	TIMES A , 0.50
+;傾城
+SIF TALENT:高級娼婦
+	TIMES A , 0.80
+;未亡人
+SIF TALENT:人妻
+	TIMES A , 0.80
+IF TALENT:淫魔
+	TIMES A , 0.01
+ENDIF
+
+;ＬＶ４から５に上げるときは異常経験必要（素質：[解放][快感に素直][即落ち][淫乱][狂気]なら無視できる）
+IF ABL:欲望 == 4 && (TALENT:解放 == 0 && TALENT:快感に素直 == 0 && TALENT:即落ち == 0 && TALENT:淫乱 == 0 && TALENT:狂気 == 0)
+	E = 1
+;ＬＶ７から８に上げるときは異常経験が３以上必要（素質：[解放][快感に素直][即落ち][淫乱][狂気]なら無視できる）
+ELSEIF ABL:欲望 == 7 && (TALENT:解放 == 0 && TALENT:快感に素直 == 0 && TALENT:即落ち == 0 && TALENT:淫乱 == 0 && TALENT:狂気 && TALENT:淫魔 == 0)
+	E = 3
+ENDIF
+
+;最低でも1個は必要
+SIF A < 1
+	A = 1
+
+;欲情の珠は足りている？
+SIF JUEL:欲情 < A
+	I |= 1
+
+;異常経験は足りている？
+SIF E > EXP:異常経験
+	I |= 2
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+;
+;
+;

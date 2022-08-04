@@ -1,0 +1,838 @@
+;===========================================================
+;特殊タイトルの計算
+;===========================================================
+@SPECIAL_TITLE_CALC
+
+SIF ASSI <= 0
+	RETURN
+;-----------------------------------------------------------
+;キャラ別
+;-----------------------------------------------------------
+;未依×かなで
+IF (NO:TARGET == 1 && NO:ASSI == 17)
+	TFLAG:160 = 1
+;春乃×かなで
+ELSEIF ((NO:TARGET == 1 && TALENT:TARGET:432 == 0) && (NO:ASSI == 15 && TALENT:TARGET:432 == 0))
+	TFLAG:160 = 1
+;黒かなで×かなで
+ELSEIF ((NO:TARGET == 1 && TALENT:TARGET:432 == 0) && (NO:ASSI == 91 && TALENT:TARGET:432 == 1)) 
+	TFLAG:160 = 1
+;かなで×黒かなで
+ELSEIF ((NO:TARGET == 91 && TALENT:TARGET:432 == 1) && (NO:ASSI == 1 && TALENT:TARGET:432 == 0)) 
+	TFLAG:160 = 1
+;かなで×春乃
+ELSEIF ((NO:TARGET == 15 && TALENT:TARGET:432 == 0) && (NO:ASSI == 1 && TALENT:TARGET:432 == 0)) 
+	TFLAG:160 = 1
+;かなで×未依
+ELSEIF (NO:TARGET == 17 && NO:ASSI == 1)
+	TFLAG:160 = 1
+;真理×紗英
+ELSEIF (NO:TARGET == 3 && NO:ASSI == 20)
+	TFLAG:160 = 1
+;紗英×真理
+ELSEIF (NO:TARGET == 20 && NO:ASSI == 3)
+	TFLAG:160 = 1
+;ひより×美樹
+ELSEIF (NO:TARGET == 4 && NO:ASSI == 6)
+	TFLAG:160 = 1
+;ひより×美樹
+ELSEIF (NO:TARGET == 6 && NO:ASSI == 4)
+	TFLAG:160 = 1
+;桜子×桔梗
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 26)
+	TFLAG:160 = 1
+;桔梗×桜子
+ELSEIF (NO:TARGET == 26 && NO:ASSI == 5)
+	TFLAG:160 = 1
+;ゆな×ひな
+ELSEIF (NO:TARGET == 7 && NO:ASSI == 8)
+	TFLAG:160 = 1
+;ひな×ゆな
+ELSEIF (NO:TARGET == 8 && NO:ASSI == 7)
+	TFLAG:160 = 1
+;ユーニス×レイチェル
+ELSEIF (NO:TARGET == 9 && NO:ASSI == 86)
+	TFLAG:160 = 1
+;レイチェル×ユーニス
+ELSEIF (NO:TARGET == 86 && NO:ASSI == 9)
+	TFLAG:160 = 1
+;乙姫×歌音
+ELSEIF (NO:TARGET == 10 && NO:ASSI == 75)
+	TFLAG:160 = 1
+;歌音×乙姫
+ELSEIF (NO:TARGET == 75 && NO:ASSI == 10)
+	TFLAG:160 = 1
+;桜子×郁美
+ELSEIF (NO:TARGET == 11 && NO:ASSI == 26)
+	TFLAG:160 = 1
+;郁美×桜子
+ELSEIF (NO:TARGET == 26 && NO:ASSI == 11)
+	TFLAG:160 = 1
+;すみれ×あゆむ
+ELSEIF (NO:TARGET == 13 && (NO:ASSI == 71 || NO:ASSI == 77))
+	TFLAG:160 = 1
+;あゆむ×すみれ
+ELSEIF ((NO:TARGET == 71 || TARGET == 77) && NO:ASSI == 13)
+	TFLAG:160 = 1
+;真すみれ×湊
+ELSEIF (NO:TARGET == 21 && NO:ASSI == 77)
+	TFLAG:160 = 1
+;湊×真すみれ
+ELSEIF (NO:TARGET == 77 && NO:ASSI == 21)
+	TFLAG:160 = 1
+;遙×聖佳
+ELSEIF (NO:TARGET == 25 && NO:ASSI == 29)
+	TFLAG:160 = 1
+;聖佳×遙
+ELSEIF (NO:TARGET == 29 && NO:ASSI == 25)
+	TFLAG:160 = 1
+;綾乃×プリシラ
+ELSEIF (NO:TARGET == 27 && NO:ASSI == 28)
+	TFLAG:160 = 1
+;プリシラ×綾乃
+ELSEIF (NO:TARGET == 28 && NO:ASSI == 27)
+	TFLAG:160 = 1
+;のどか×志乃
+ELSEIF (NO:TARGET == 72 && NO:ASSI == 74)
+	TFLAG:160 = 1
+;志乃×のどか
+ELSEIF (NO:TARGET == 74 && NO:ASSI == 72)
+	TFLAG:160 = 1
+;由希×みひろ
+ELSEIF (NO:TARGET == 80 && NO:ASSI == 997)
+	TFLAG:160 = 1
+;みひろ×由希
+ELSEIF (NO:TARGET == 997 && NO:ASSI == 80)
+	TFLAG:160 = 1
+;エリナ×アリサ
+ELSEIF (NO:TARGET == 32 && NO:ASSI == 33)
+	TFLAG:160 = 1
+;アリサ×エリナ
+ELSEIF (NO:TARGET == 33 && NO:ASSI == 32)
+	TFLAG:160 = 1
+;あさひ×葉月
+ELSEIF (NO:TARGET == 34 && NO:ASSI == 36)
+	TFLAG:160 = 1
+;葉月×あさひ
+ELSEIF (NO:TARGET == 36 && NO:ASSI == 34)
+	TFLAG:160 = 1
+;歌音×エレン
+ELSEIF (NO:TARGET == 95 && NO:ASSI == 10)
+	TFLAG:160 = 1
+;エレン×歌音
+ELSEIF (NO:TARGET == 10 && NO:ASSI == 95)
+	TFLAG:160 = 1
+;真菜香×夏美
+ELSEIF (NO:TARGET == 22 && NO:ASSI == 35)
+	TFLAG:160 = 1
+;夏美×真菜香
+ELSEIF (NO:TARGET == 35 && NO:ASSI == 22)
+	TFLAG:160 = 1
+;桔梗×あゆむ
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 13)
+	TFLAG:160 = 1
+;あゆむ×桔梗
+ELSEIF (NO:TARGET == 13 && NO:ASSI == 5)
+	TFLAG:160 = 1
+;春乃×まゆ
+ELSEIF (NO:TARGET == 15 && NO:ASSI == 85)
+	TFLAG:160 = 1
+;まゆ×春乃
+ELSEIF (NO:TARGET == 85 && NO:ASSI == 15)
+	TFLAG:160 = 1
+;リーナ×レイチェル
+ELSEIF (NO:TARGET == 9 && NO:ASSI == 96)
+	TFLAG:160 = 1
+;レイチェル×リーナ
+ELSEIF (NO:TARGET == 96 && NO:ASSI == 9)
+	TFLAG:160 = 1
+;美樹×アイーシャ
+ELSEIF (NO:TARGET == 200 && NO:ASSI == 4)
+	TFLAG:160 = 1
+;アイーシャ×美樹
+ELSEIF (NO:TARGET == 4 && NO:ASSI == 200)
+	TFLAG:160 = 1
+;恋歌×桔梗
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 18)
+	TFLAG:160 = 1
+;桔梗×恋歌
+ELSEIF (NO:TARGET == 18 && NO:ASSI == 5)
+	TFLAG:160 = 1
+;エレナ×美鈴
+ELSEIF (NO:TARGET == 93 && NO:ASSI == 32)
+	TFLAG:160 = 1
+;美鈴×エレナ
+ELSEIF (NO:TARGET == 32 && NO:ASSI == 93)
+	TFLAG:160 = 1
+;アリサ×美鈴
+ELSEIF (NO:TARGET == 93 && NO:ASSI == 33)
+	TFLAG:160 = 1
+;美鈴×アリサ
+ELSEIF (NO:TARGET == 33 && NO:ASSI == 93)
+	TFLAG:160 = 1
+;未澪×あんず
+ELSEIF (NO:TARGET == 202 && NO:ASSI == 37)
+	TFLAG:160 = 1
+;あんず×未澪
+ELSEIF (NO:TARGET == 37 && NO:ASSI == 202)
+	TFLAG:160 = 1
+;伊月×翔子
+ELSEIF (NO:TARGET == 87 && NO:ASSI == 14)
+	TFLAG:160 = 1
+;翔子×伊月
+ELSEIF (NO:TARGET == 14 && NO:ASSI == 87)
+	TFLAG:160 = 1
+;-----------------------------------------------------------
+;衣装別
+;-----------------------------------------------------------
+;ベリーダンスの衣装
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 243 && TALENT:422 == 1)
+	TFLAG:160 = 1
+;ニーソ姫セット
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 99 && CFLAG:42 == 99 && CFLAG:170 == 99 && TALENT:87 == 1)
+	TFLAG:160 = 1
+;ローゼンメイデンな組み合わせ
+ELSEIF ((CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 52 && CFLAG:600 == 2 && CFLAG:602 == 11) && (CFLAG:40 >= 12 && CFLAG:41 == 52 &&  CFLAG:40 != 64 && CFLAG:600 == 3 && CFLAG:602 == 5)) 
+	TFLAG:160 = 1
+;レーティアちゃんセット
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 51 && CFLAG:600 == 2 && CFLAG:602 == 8 && TALENT:203 == 1 && TALENT:93 == 1)
+	TFLAG:160 = 1
+;肉食系。タイトルは雑誌「TOKYO BAD GIRLS」のパクり（←
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 40 && CFLAG:42 == 74 && (TALENT:87 == 1 || TALENT:432 == 1))
+	TFLAG:160 = 1
+;ウェディングドレス
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 240 && CFLAG:42 == 61 && TALENT:432 == 1 && TFLAG:32 & 1)
+	TFLAG:160 = 1
+;パンクロリータセット。サブタイトルはTom-H@ckのけいおん関係ではない曲から。あんずにどうぞ（←
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 30 && TALENT:109 == 0 && TALENT:116 == 0)
+	TFLAG:160 = 1
+;スク水。現実にあるタイトルそのままになりました（←
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 244)
+	TFLAG:160 = 1
+;-----------------------------------------------------------
+;コスプレ衣装別
+;-----------------------------------------------------------
+ELSEIF (TFLAG:180 == 1 && CFLAG:600 == 6 && CFLAG:602 == 4)
+	TFLAG:160 = 1
+ELSEIF (TFLAG:180 == 16 && CFLAG:600 == 11 && CFLAG:602 == 5)
+	TFLAG:160 = 1
+ELSEIF (TFLAG:180 == 20 && TFLAG:32 & 1 && TALENT:320)
+	TFLAG:160 = 1
+ELSEIF (TFLAG:180 == 8 && A:3 && B:3 && CFLAG:600 == 10 && CFLAG:602 == 5 && BASE:9 <= 22)
+	TFLAG:160 = 1
+ENDIF
+
+;===========================================================
+;特殊タイトルの計算
+;===========================================================
+@SPECIAL_TITLE_DECIDE_DEBUT
+;-----------------------------------------------------------
+;キャラ別
+;-----------------------------------------------------------
+;未依×かなで
+IF (NO:TARGET == 1 && NO:ASSI == 17)
+	PRINTFORM 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+	CSTR:13 = 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+;春乃×かなで
+ELSEIF ((NO:TARGET == 1 && TALENT:TARGET:432 == 0) && (NO:ASSI == 15 && TALENT:ASSI:432 == 0))
+	PRINTFORM Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+	CSTR:13 = Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+;黒かなで×かなで
+ELSEIF ((NO:TARGET == 1 && TALENT:TARGET:432 == 0) && (NO:ASSI == 91 && TALENT:ASSI:432 == 1)) 
+	PRINTFORM 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+	CSTR:13 = 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+;かなで×黒かなで
+ELSEIF ((NO:TARGET == 91 && TALENT:TARGET:432 == 1) && (NO:ASSI == 1 && TALENT:ASSI:432 == 0)) 
+	PRINTFORM 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+	CSTR:13 = 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+;かなで×春乃
+ELSEIF ((NO:TARGET == 15 && TALENT:TARGET:432 == 0) && (NO:ASSI == 1 && TALENT:ASSI:432 == 0)) 
+	PRINTFORM Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+	CSTR:13 = Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+;かなで×未依
+ELSEIF (NO:TARGET == 17 && NO:ASSI == 1)
+	PRINTFORM 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+	CSTR:13 = 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+;真理×紗英
+ELSEIF (NO:TARGET == 3 && NO:ASSI == 20)
+	PRINTFORM 白黒ギャル大乱交　～Sex on the bitch！～
+	CSTR:13 = 白黒ギャル大乱交　～Sex on the bitch！～
+;紗英×真理
+ELSEIF (NO:TARGET == 20 && NO:ASSI == 3)
+	PRINTFORM 白黒ギャル大乱交　～Sex on the bitch！～
+	CSTR:13 = 白黒ギャル大乱交　～Sex on the bitch！～
+;ひより×美樹
+ELSEIF (NO:TARGET == 4 && NO:ASSI == 6)
+	PRINTFORM 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+	CSTR:13 = 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+;美樹×ひより
+ELSEIF (NO:TARGET == 6 && NO:ASSI == 4)
+	PRINTFORM 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+	CSTR:13 = 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+;桜子×桔梗
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 26)
+	PRINTFORM Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+	CSTR:13 = Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+;桔梗×桜子
+ELSEIF (NO:TARGET == 26 && NO:ASSI == 5)
+	PRINTFORM Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+	CSTR:13 = Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+;ゆな×ひな
+ELSEIF (NO:TARGET == 7 && NO:ASSI == 8)
+	PRINTFORM 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+	CSTR:13 = 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+;ひな×ゆな
+ELSEIF (NO:TARGET == 8 && NO:ASSI == 7)
+	PRINTFORM 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+	CSTR:13 = 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+;ユーニス×レイチェル
+ELSEIF (NO:TARGET == 9 && NO:ASSI == 86)
+	PRINTFORM PARADISE LOST　～失楽園の姉妹姫～
+	CSTR:13 = PARADISE LOST　～失楽園の姉妹姫～
+;レイチェル×ユーニス
+ELSEIF (NO:TARGET == 86 && NO:ASSI == 9)
+	PRINTFORM PARADISE LOST　～失楽園の姉妹姫～
+	CSTR:13 = PARADISE LOST　～失楽園の姉妹姫～
+;乙姫×歌音
+ELSEIF (NO:TARGET == 10 && NO:ASSI == 75)
+;「生徒会のイキ損」とかＴＭＡかよと思ったのでやめました
+	PRINTFORM 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+	CSTR:13 = 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+;歌音×乙姫
+ELSEIF (NO:TARGET == 75 && NO:ASSI == 10)
+	PRINTFORM 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+	CSTR:13 = 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+;桜子×郁美
+ELSEIF (NO:TARGET == 11 && NO:ASSI == 26)
+	PRINTFORM コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+	CSTR:13 = コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+;郁美×桜子
+ELSEIF (NO:TARGET == 26 && NO:ASSI == 11)
+	PRINTFORM コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+	CSTR:13 = コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+;すみれ×あゆむ
+ELSEIF (NO:TARGET == 13 && (NO:ASSI == 71 || NO:ASSI == 77))
+	PRINTFORM ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+	CSTR:13 = ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+;あゆむ×すみれ
+ELSEIF ((NO:TARGET == 71 || TARGET == 77) && NO:ASSI == 13)
+	PRINTFORM ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+	CSTR:13 = ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+;真すみれ×湊
+ELSEIF (NO:TARGET == 21 && NO:ASSI == 77)
+;ＳＯＤでありそうｗ
+	PRINTFORM 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+	CSTR:13 = 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+;湊×真すみれ
+ELSEIF (NO:TARGET == 77 && NO:ASSI == 21)
+	PRINTFORM 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+	CSTR:13 = 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+;遙×聖佳
+ELSEIF (NO:TARGET == 25 && NO:ASSI == 29)
+	PRINTFORM 背徳シスター絶頂地獄　～神様、お許しください～
+	CSTR:13 = 背徳シスター絶頂地獄　～神様、お許しください～
+;聖佳×遙
+ELSEIF (NO:TARGET == 29 && NO:ASSI == 25)
+	PRINTFORM 発情シスター・教会の黒ミサ　～マリア様にみられてる～
+	CSTR:13 = 発情シスター・教会の黒ミサ　～マリア様にみられてる～
+;綾乃×プリシラ
+ELSEIF (NO:TARGET == 27 && NO:ASSI == 28)
+;俺はアホなんじゃないかと思った
+	PRINTFORM SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+	CSTR:13 = SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+;プリシラ×綾乃
+ELSEIF (NO:TARGET == 28 && NO:ASSI == 27)
+	PRINTFORM SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+	CSTR:13 = SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+;のどか×志乃
+ELSEIF (NO:TARGET == 72 && NO:ASSI == 74)
+	PRINTFORM 潜入・援交少女高級クラブ　～秘密の花園～
+	CSTR:13 = 潜入・援交少女高級クラブ　～秘密の花園～
+;志乃×のどか
+ELSEIF (NO:TARGET == 74 && NO:ASSI == 72)
+	PRINTFORM 潜入・援交少女高級クラブ　～秘密の花園～
+	CSTR:13 = 潜入・援交少女高級クラブ　～秘密の花園～
+;由希×みひろ
+ELSEIF (NO:TARGET == 80 && NO:ASSI == 997)
+;「超激似！！国民的アイドル夢のWキャスト 高城み○り 橘美○」より
+	PRINTFORM 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+	CSTR:13 = 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+;みひろ×由希
+ELSEIF (NO:TARGET == 997 && NO:ASSI == 80)
+	PRINTFORM 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+	CSTR:13 = 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+;エリナ×アリサ
+ELSEIF (NO:TARGET == 32 && NO:ASSI == 33)
+;おまめじゃなくて「くり。」にしようかと思った。ペドいなあ
+	PRINTFORM 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+	CSTR:13 = 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+;アリサ×エリナ
+ELSEIF (NO:TARGET == 33 && NO:ASSI == 32)
+	PRINTFORM 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+	CSTR:13 = 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+;あさひ×葉月
+ELSEIF (NO:TARGET == 34 && NO:ASSI == 36)
+	PRINTFORM インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+	CSTR:13 = インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+;葉月×あさひ
+ELSEIF (NO:TARGET == 36 && NO:ASSI == 34)
+	PRINTFORM インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+	CSTR:13 = インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+;歌音×エレン
+ELSEIF (NO:TARGET == 95 && NO:ASSI == 10)
+	PRINTFORM 和服姉妹・汚された団欒　～お母さん？　いやいや、妹さんですよね？ｗ～
+	CSTR:13 = 和服姉妹・汚された団欒　～お母さん？　いやいや、妹さんですよね？ｗ～
+;エレン×歌音
+	ELSEIF (NO:TARGET == 10 && NO:ASSI == 95)
+	PRINTFORM 和服姉妹・汚された団欒　～獣欲の部屋～
+	CSTR:13 = 和服姉妹・汚された団欒　～獣欲の部屋～
+;真菜香×夏美
+ELSEIF (NO:TARGET == 22 && NO:ASSI == 35)
+;「ファーストキス物語」をもじって「パンツとＫＩＳＳ物語」とか「ファーストＡＳＳ物語」とか考えたがやめた
+	PRINTFORM 美少女姉妹・恋の課外授業！　～男の人のこと教えてください～
+	CSTR:13 = 美少女姉妹・恋の課外授業！　～男の人のこと教えてください～
+;夏美×真菜香
+ELSEIF (NO:TARGET == 35 && NO:ASSI == 22)
+	PRINTFORM こあくま☆リトルシスター　～お姉ちゃん、エッチ教えてあげるねｖ～
+	CSTR:13 = こあくま☆リトルシスター　～お姉ちゃん、エッチ教えてあげるねｖ～
+;あゆむ×桔梗
+;「えーマジ童貞！？」「童貞が許され（略
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 13)
+	PRINTFORM 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+	CSTR:13 = 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+;桔梗×あゆむ
+ELSEIF (NO:TARGET == 13 && NO:ASSI == 5)
+	PRINTFORM 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+	CSTR:13 = 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+;春乃×まゆ
+ELSEIF (NO:TARGET == 15 && NO:ASSI == 85)
+	PRINTFORM ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+	CSTR:13 = ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+;まゆ×春乃
+ELSEIF (NO:TARGET == 85 && NO:ASSI == 15)
+	PRINTFORM ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+	CSTR:13 = ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+;リーナ×レイチェル
+ELSEIF (NO:TARGET == 9 && NO:ASSI == 96)
+;ひどいタイトルだ……ｗ
+	PRINTFORM 探偵貴族・下剋上ＳＥＸ　～女探偵が主のアソコを強制捜索～
+	CSTR:13 = 探偵貴族・下剋上ＳＥＸ　～女探偵が主のアソコを強制捜索～
+;レイチェル×リーナ
+ELSEIF (NO:TARGET == 96 && NO:ASSI == 9)
+	PRINTFORM 姫様ご乱心！　～国民の牝穴は私のモノｖ～
+	CSTR:13 = 姫様ご乱心！　～国民の牝穴は私のモノｖ～
+;美樹×アイーシャ
+ELSEIF (NO:TARGET == 200 && NO:ASSI == 4)
+	PRINTFORM 美少女令嬢・内緒の午後　～淫烙の花園～
+	CSTR:13 = 美少女令嬢・内緒の午後　～淫烙の花園～
+;アイーシャ×美樹
+ELSEIF (NO:TARGET == 4 && NO:ASSI == 200)
+	PRINTFORM 美少女令嬢・内緒の午後　～淫烙の花園～
+	CSTR:13 = 美少女令嬢・内緒の午後　～淫烙の花園～
+;恋歌×桔梗
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 18)
+	PRINTFORM 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+	CSTR:13 = 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+;桔梗×恋歌
+ELSEIF (NO:TARGET == 18 && NO:ASSI == 5)
+	PRINTFORM 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+	CSTR:13 = 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+;エレナ×美鈴
+;ケモミミつながり
+ELSEIF (NO:TARGET == 93 && NO:ASSI == 32)
+	PRINTFORM ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+	CSTR:13 = ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+;美鈴×エレナ
+ELSEIF (NO:TARGET == 32 && NO:ASSI == 93)
+	PRINTFORM ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+	CSTR:13 = ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+;アリサ×美鈴
+;東京ミュウミュウをもじろうとしたがうまくいかなかったなあ
+ELSEIF (NO:TARGET == 93 && NO:ASSI == 33)
+	PRINTFORM けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+	CSTR:13 = けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+;美鈴×アリサ
+ELSEIF (NO:TARGET == 33 && NO:ASSI == 93)
+	PRINTFORM けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+	CSTR:13 = けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+;未澪×あんず
+;別に未澪はガルデモメンバーでもないけどそっくりさんって言ってたから
+ELSEIF (NO:TARGET == 202 && NO:ASSI == 37)
+	PRINTFORM 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+	CSTR:13 = 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+;あんず×未澪
+ELSEIF (NO:TARGET == 37 && NO:ASSI == 202)
+	PRINTFORM 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+	CSTR:13 = 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+;伊月×翔子
+ELSEIF (NO:TARGET == 87 && NO:ASSI == 14)
+	PRINTFORM 発情キャットファイト　～イキ地獄三本勝負～
+	CSTR:13 = 発情キャットファイト　～イキ地獄三本勝負～
+;翔子×伊月
+ELSEIF (NO:TARGET == 14 && NO:ASSI == 87)
+	PRINTFORM 発情キャットファイト２　～ムチムチパンツレスリングｖ～
+	CSTR:13 = 発情キャットファイト２　～ムチムチパンツレスリングｖ～
+;-----------------------------------------------------------
+;衣装別
+;-----------------------------------------------------------
+;ベリーダンスの衣装
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64  && CFLAG:41 == 243 && TALENT:422 == 1)
+	PRINTFORM Arabian Rave Night ～BLACK ANOTHER EX-HARD HARD HARD!!～
+	CSTR:13 = Arabian Rave Night　～BLACK ANOTHER EX-HARD HARD HARD!!～
+;ニーソ姫セット
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 99 && CFLAG:42 == 99 && CFLAG:170 == 99 && TALENT:87 == 1)
+	PRINTFORM 突撃！ガラスのニーソ姫！　～いったいどうしてこうなった～
+	CSTR:13 = 突撃！ガラスのニーソ姫！　～いったいどうしてこうなった～
+;ローゼンメイデンな組み合わせ
+ELSEIF ((CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 52 && CFLAG:600 == 2 && CFLAG:602 == 4) && (CFLAG:40 >= 12 && CFLAG:41 == 52 &&  CFLAG:40 != 64 && CFLAG:600 == 3 && CFLAG:602 == 5)) 
+	PRINTFORM 禁じられた遊び　～性少女領域、淫欲のアリス・ゲーム～
+	CSTR:13 = 禁じられた遊び　～性少女領域、淫欲のアリス・ゲーム～
+;レーティアちゃんセット
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 51 && CFLAG:600 == 2 && CFLAG:602 == 8 && TALENT:203 == 1 && TALENT:93 == 1)
+	PRINTFORM 超銀河アイドル総統感謝祭！　～私のオマ○コにたくさんザーメン投票してねｖ～
+	CSTR:13 = 超銀河アイドル総統感謝祭！　～私のオマ○コにたくさんザーメン投票してねｖ～
+;肉食系。タイトルは雑誌「TOKYO BAD GIRLS」のパクり（←
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 40 && CFLAG:42 == 74 && (TALENT:87 == 1 || TALENT:432 == 1))
+	PRINTFORM PREMIUM BAD GIRLS　～キミのザーメン、%NICKNAME:TARGET%が絞り尽くしてア・ゲ・ル☆～
+	CSTR:13 = PREMIUM BAD GIRLS　～キミのザーメン、%NICKNAME:TARGET%が絞り尽くしてア・ゲ・ル☆～
+;ウェディングドレス
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 240 && CFLAG:42 == 61 && TALENT:432 == 1 && TFLAG:32 & 1)
+	PRINTFORM Princess Bride! 　～お願い、私の初めて貰ってダンナさまｖ～
+	CSTR:13 = Princess Bride! 　～お願い、私の初めて貰ってダンナさまｖ～
+;パンクロリータセット。サブタイトルはTom-H@ckのけいおん関係ではない曲から。あんずにどうぞ（←
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 30 && TALENT:109 == 0 && TALENT:116 == 0)
+	PRINTFORM 放課後ティッツタイム　～それがアタシのX-Plan～
+	CSTR:13 = 放課後ティッツタイム　～それがアタシのX-Plan～
+;スク水。現実にあるタイトルそのままになりました（←
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 244)
+	PRINTFORM スク水Ｈ。 ～%NICKNAME:TARGET%～
+	CSTR:13 = スク水Ｈ。 ～%NICKNAME:TARGET%～
+
+;-----------------------------------------------------------
+;コスプレ衣装別
+;-----------------------------------------------------------
+ELSEIF (TFLAG:180 == 1 && CFLAG:600 == 6 && CFLAG:602 == 4)
+	PRINTFORM 電子の歌姫・淫欲に堕ちて　～初音○クの欲情～
+	CSTR:13 = 電子の歌姫・淫欲に堕ちて　～初音○クの欲情～
+ELSEIF (TFLAG:180 == 16 && CFLAG:600 == 11 && CFLAG:602 == 5)
+	PRINTFORM Angel Bitch!　～天使ちゃんマジえっち～
+	CSTR:13 = Angel Bitch!　～天使ちゃんマジえっち～
+ELSEIF (TFLAG:180 == 20 && TFLAG:32 & 1 && TALENT:320)
+	PRINTFORM あかね色に染まる破瓜・ハードコア ～処女喪失ですよっにいさんｖ～
+	CSTR:13 = あかね色に染まる破瓜・ハードコア ～処女喪失ですよっにいさんｖ～
+ELSEIF (TFLAG:180 == 8 && A:3 && B:3 && CFLAG:600 == 10 && CFLAG:602 == 5 && BASE:9 <= 22)
+	PRINTFORM ヌードアウト・オフライン ～ケツ名器四段・美少女副団長のハードアナルファック～
+	CSTR:13 = ヌードアウト・オフライン ～ケツ名器四段・美少女副団長のハードアナルファック～
+ENDIF
+
+;===========================================================
+;特殊タイトルの計算
+;===========================================================
+@SPECIAL_TITLE_DECIDE
+;未依×かなで
+;-----------------------------------------------------------
+;キャラ別
+;-----------------------------------------------------------
+;未依×かなで
+IF (NO:TARGET == 1 && NO:ASSI == 17)
+	PRINTFORM 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+	CSTR:33 = 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+;春乃×かなで
+ELSEIF ((NO:TARGET == 1 && TALENT:TARGET:432 == 0) && (NO:ASSI == 15 && TALENT:ASSI:432 == 0))
+	PRINTFORM Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+	CSTR:33 = Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+;黒かなで×かなで
+ELSEIF ((NO:TARGET == 1 && TALENT:TARGET:432 == 0) && (NO:ASSI == 91 && TALENT:ASSI:432 == 1)) 
+	PRINTFORM 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+	CSTR:33 = 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+;かなで×黒かなで
+ELSEIF ((NO:TARGET == 91 && TALENT:TARGET:432 == 1) && (NO:ASSI == 1 && TALENT:ASSI:432 == 0)) 
+	PRINTFORM 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+	CSTR:33 = 鏡の中のもうひとりのワタシ ～GIRL IN THE MIRROR～
+;かなで×春乃
+ELSEIF ((NO:TARGET == 15 && TALENT:TARGET:432 == 0) && (NO:ASSI == 1 && TALENT:ASSI:432 == 0)) 
+	PRINTFORM Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+	CSTR:33 = Lily's Garden ～清楚な黒髪美少女たちの秘密の百合園～
+;かなで×未依
+ELSEIF (NO:TARGET == 17 && NO:ASSI == 1)
+	PRINTFORM 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+	CSTR:33 = 奴隷姉妹凌辱 ～淫欲に溺れる美少女姉妹～
+;真理×紗英
+ELSEIF (NO:TARGET == 3 && NO:ASSI == 20)
+	PRINTFORM 白黒ギャル大乱交　～Sex on the bitch！～
+	CSTR:33 = 白黒ギャル大乱交　～Sex on the bitch！～
+;紗英×真理
+ELSEIF (NO:TARGET == 20 && NO:ASSI == 3)
+	PRINTFORM 白黒ギャル大乱交　～Sex on the bitch！～
+	CSTR:33 = 白黒ギャル大乱交　～Sex on the bitch！～
+;ひより×美樹
+ELSEIF (NO:TARGET == 4 && NO:ASSI == 6)
+	PRINTFORM 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+	CSTR:33 = 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+;美樹×ひより
+ELSEIF (NO:TARGET == 6 && NO:ASSI == 4)
+	PRINTFORM 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+	CSTR:33 = 有閑セレブ姉妹　～人妻お姉様が妹に淫乱てほどき～
+;桜子×桔梗
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 26)
+	PRINTFORM Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+	CSTR:33 = Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+;桔梗×桜子
+ELSEIF (NO:TARGET == 26 && NO:ASSI == 5)
+	PRINTFORM Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+	CSTR:33 = Ｗロリータ白濁漬け　～こんなにいっぱい注がれたら溢れちゃうｖ～
+;ゆな×ひな
+ELSEIF (NO:TARGET == 7 && NO:ASSI == 8)
+	PRINTFORM 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+	CSTR:33 = 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+;ひな×ゆな
+ELSEIF (NO:TARGET == 8 && NO:ASSI == 7)
+	PRINTFORM 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+	CSTR:33 = 百合美少女相姦　～姉妹だけの秘密のエッチ覗かれちゃいましたｖ～
+;ユーニス×レイチェル
+ELSEIF (NO:TARGET == 9 && NO:ASSI == 86)
+	PRINTFORM PARADISE LOST　～失楽園の姉妹姫～
+	CSTR:33 = PARADISE LOST　～失楽園の姉妹姫～
+;レイチェル×ユーニス
+ELSEIF (NO:TARGET == 86 && NO:ASSI == 9)
+	PRINTFORM PARADISE LOST　～失楽園の姉妹姫～
+	CSTR:33 = PARADISE LOST　～失楽園の姉妹姫～
+;乙姫×歌音
+ELSEIF (NO:TARGET == 10 && NO:ASSI == 75)
+;「生徒会のイキ損」とかＴＭＡかよと思ったのでやめました
+	PRINTFORM 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+	CSTR:33 = 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+;歌音×乙姫
+ELSEIF (NO:TARGET == 75 && NO:ASSI == 10)
+	PRINTFORM 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+	CSTR:33 = 淫欲に溺れる生徒会室　～エリートお嬢様ザーメンまみれ～
+;桜子×郁美
+ELSEIF (NO:TARGET == 11 && NO:ASSI == 26)
+	PRINTFORM コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+	CSTR:33 = コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+;郁美×桜子
+ELSEIF (NO:TARGET == 26 && NO:ASSI == 11)
+	PRINTFORM コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+	CSTR:33 = コッキングホース☆ラプソディ　～特濃ザーメン生搾り♪～ 
+;すみれ×あゆむ
+ELSEIF (NO:TARGET == 13 && (NO:ASSI == 71 || NO:ASSI == 77))
+	PRINTFORM ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+	CSTR:33 = ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+;あゆむ×すみれ
+ELSEIF ((NO:TARGET == 71 || TARGET == 77) && NO:ASSI == 13)
+	PRINTFORM ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+	CSTR:33 = ショタ喰い美人女教師　～先生が淫獣に変わるとき～
+;真すみれ×湊
+ELSEIF (NO:TARGET == 21 && NO:ASSI == 77)
+;ＳＯＤでありそうｗ
+	PRINTFORM 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+	CSTR:33 = 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+;湊×真すみれ
+ELSEIF (NO:TARGET == 77 && NO:ASSI == 21)
+	PRINTFORM 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+	CSTR:33 = 美人女教師・教えてアゲル　～世界一受けたいＳＥＸ授業～
+;遙×聖佳
+ELSEIF (NO:TARGET == 25 && NO:ASSI == 29)
+	PRINTFORM 背徳シスター絶頂地獄　～神様、お許しください～
+	CSTR:33 = 背徳シスター絶頂地獄　～神様、お許しください～
+;聖佳×遙
+ELSEIF (NO:TARGET == 29 && NO:ASSI == 25)
+	PRINTFORM 発情シスター・教会の黒ミサ　～マリア様にみられてる～
+	CSTR:33 = 発情シスター・教会の黒ミサ　～マリア様にみられてる～
+;綾乃×プリシラ
+ELSEIF (NO:TARGET == 27 && NO:ASSI == 28)
+;俺はアホなんじゃないかと思った
+	PRINTFORM SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+	CSTR:33 = SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+;プリシラ×綾乃
+ELSEIF (NO:TARGET == 28 && NO:ASSI == 27)
+	PRINTFORM SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+	CSTR:33 = SPERMA Capter Cherry　～精子不法所持罪でタイホします！～
+;のどか×志乃
+ELSEIF (NO:TARGET == 72 && NO:ASSI == 74)
+	PRINTFORM 潜入・援交少女高級クラブ　～秘密の花園～
+	CSTR:33 = 潜入・援交少女高級クラブ　～秘密の花園～
+;志乃×のどか
+ELSEIF (NO:TARGET == 74 && NO:ASSI == 72)
+	PRINTFORM 潜入・援交少女高級クラブ　～秘密の花園～
+	CSTR:33 = 潜入・援交少女高級クラブ　～秘密の花園～
+;由希×みひろ
+ELSEIF (NO:TARGET == 80 && NO:ASSI == 997)
+;「超激似！！国民的アイドル夢のWキャスト 高城み○り 橘美○」より
+	PRINTFORM 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+	CSTR:33 = 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+;みひろ×由希
+ELSEIF (NO:TARGET == 997 && NO:ASSI == 80)
+	PRINTFORM 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+	CSTR:33 = 超激似!!　国民的アイドル夢のＷキャスト～み○ろ＆ゆ○～ 
+;エリナ×アリサ
+ELSEIF (NO:TARGET == 32 && NO:ASSI == 33)
+;おまめじゃなくて「くり。」にしようかと思った。ペドいなあ
+	PRINTFORM 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+	CSTR:33 = 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+;アリサ×エリナ
+ELSEIF (NO:TARGET == 33 && NO:ASSI == 32)
+	PRINTFORM 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+	CSTR:33 = 美人姉妹・ないしょのお医者さんごっこ　～お姉ちゃん、お豆がじんじんするの～
+;あさひ×葉月
+ELSEIF (NO:TARGET == 34 && NO:ASSI == 36)
+	PRINTFORM インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+	CSTR:33 = インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+;葉月×あさひ
+ELSEIF (NO:TARGET == 36 && NO:ASSI == 34)
+	PRINTFORM インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+	CSTR:33 = インラン浮気少女　～彼氏を裏切ってＡＶ出ちゃいましたｖ～
+;歌音×エレン
+ELSEIF (NO:TARGET == 95 && NO:ASSI == 10)
+	PRINTFORM 和服姉妹・汚された団欒　～お母さん？　いやいや、妹さんですよね？ｗ～
+	CSTR:13 = 和服姉妹・汚された団欒　～お母さん？　いやいや、妹さんですよね？ｗ～
+;エレン×歌音
+	ELSEIF (NO:TARGET == 10 && NO:ASSI == 95)
+	PRINTFORM 和服姉妹・汚された団欒　～獣欲の部屋～
+	CSTR:13 = 和服姉妹・汚された団欒　～獣欲の部屋～
+;真菜香×夏美
+ELSEIF (NO:TARGET == 22 && NO:ASSI == 35)
+;「ファーストキス物語」をもじって「パンツとＫＩＳＳ物語」とか「ファーストＡＳＳ物語」とか考えたがやめた
+	PRINTFORM 美少女姉妹・恋の課外授業！　～男の人のこと教えてください～
+	CSTR:13 = 美少女姉妹・恋の課外授業！　～男の人のこと教えてください～
+;夏美×真菜香
+ELSEIF (NO:TARGET == 35 && NO:ASSI == 22)
+	PRINTFORM こあくま☆リトルシスター　～お姉ちゃん、エッチ教えてあげるねｖ～
+	CSTR:13 = こあくま☆リトルシスター　～お姉ちゃん、エッチ教えてあげるねｖ～
+;あゆむ×桔梗
+;「えーマジ童貞！？」「童貞が許され（略
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 13)
+	PRINTFORM 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+	CSTR:13 = 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+;桔梗×あゆむ
+ELSEIF (NO:TARGET == 13 && NO:ASSI == 5)
+	PRINTFORM 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+	CSTR:13 = 肉食少女　奪・童貞！　～女装男子がチラチラ見てたので食べちゃいましたｖ～
+;春乃×まゆ
+ELSEIF (NO:TARGET == 15 && NO:ASSI == 85)
+	PRINTFORM ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+	CSTR:13 = ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+;まゆ×春乃
+ELSEIF (NO:TARGET == 85 && NO:ASSI == 15)
+	PRINTFORM ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+	CSTR:13 = ああっ天使さまっ　～天使と巫女の和洋折衷ＳＥＸフルコースｖ～
+;リーナ×レイチェル
+ELSEIF (NO:TARGET == 9 && NO:ASSI == 96)
+;ひどいタイトルだ……ｗ
+	PRINTFORM 探偵貴族・下剋上ＳＥＸ　～女探偵が主のアソコを強制捜索～
+	CSTR:13 = 探偵貴族・下剋上ＳＥＸ　～女探偵が主のアソコを強制捜索～
+;レイチェル×リーナ
+ELSEIF (NO:TARGET == 96 && NO:ASSI == 9)
+	PRINTFORM 姫様ご乱心！　～国民の牝穴は私のモノｖ～
+	CSTR:13 = 姫様ご乱心！　～国民の牝穴は私のモノｖ～
+;美樹×アイーシャ
+ELSEIF (NO:TARGET == 200 && NO:ASSI == 4)
+	PRINTFORM 美少女令嬢・内緒の午後　～淫烙の花園～
+	CSTR:13 = 美少女令嬢・内緒の午後　～淫烙の花園～
+;アイーシャ×美樹
+ELSEIF (NO:TARGET == 4 && NO:ASSI == 200)
+	PRINTFORM 美少女令嬢・内緒の午後　～淫烙の花園～
+	CSTR:13 = 美少女令嬢・内緒の午後　～淫烙の花園～
+;恋歌×桔梗
+ELSEIF (NO:TARGET == 5 && NO:ASSI == 18)
+	PRINTFORM 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+	CSTR:13 = 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+;桔梗×恋歌
+ELSEIF (NO:TARGET == 18 && NO:ASSI == 5)
+	PRINTFORM 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+	CSTR:13 = 日米対決！美少女コスプレイヤー　～エロは世界の共通言語ｖ～
+;エレナ×美鈴
+;ケモミミつながり
+ELSEIF (NO:TARGET == 93 && NO:ASSI == 32)
+	PRINTFORM ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+	CSTR:13 = ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+;美鈴×エレナ
+ELSEIF (NO:TARGET == 32 && NO:ASSI == 93)
+	PRINTFORM ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+	CSTR:13 = ケモミミ乱舞！　～動物娘を後ろから前からｖ～
+;アリサ×美鈴
+;東京ミュウミュウをもじろうとしたがうまくいかなかったなあ
+ELSEIF (NO:TARGET == 93 && NO:ASSI == 33)
+	PRINTFORM けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+	CSTR:13 = けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+;美鈴×アリサ
+ELSEIF (NO:TARGET == 33 && NO:ASSI == 93)
+	PRINTFORM けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+	CSTR:13 = けもみみ娘・ザーメンchuchuｖ　～今日もいっぱいご奉仕するわんｖ～
+;未澪×あんず
+;別に未澪はガルデモメンバーでもないけどそっくりさんって言ってたから
+ELSEIF (NO:TARGET == 202 && NO:ASSI == 37)
+	PRINTFORM 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+	CSTR:13 = 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+;あんず×未澪
+ELSEIF (NO:TARGET == 37 && NO:ASSI == 202)
+	PRINTFORM 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+	CSTR:13 = 人気ガルデモ・姦射祭！　～私たちのアソコが萌え萌えキュンｖ～
+;伊月×翔子
+ELSEIF (NO:TARGET == 87 && NO:ASSI == 14)
+	PRINTFORM 発情キャットファイト　～イキ地獄三本勝負～
+	CSTR:13 = 発情キャットファイト　～イキ地獄三本勝負～
+;翔子×伊月
+ELSEIF (NO:TARGET == 14 && NO:ASSI == 87)
+	PRINTFORM 発情キャットファイト２　～ムチムチパンツレスリングｖ～
+	CSTR:13 = 発情キャットファイト２　～ムチムチパンツレスリングｖ～
+;-----------------------------------------------------------
+;衣装別
+;-----------------------------------------------------------
+;ベリーダンスの衣装
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 243 && TALENT:422 == 1)
+	PRINTFORM Arabian Rave Night　～BLACK ANOTHER EX-HARD HARD HARD!!～
+	CSTR:33 = Arabian Rave Night　～BLACK ANOTHER EX-HARD HARD HARD!!～
+;ニーソ姫セット
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 99 && CFLAG:42 == 99 && CFLAG:170 == 99 && TALENT:87 == 1)
+	PRINTFORM 突撃！ガラスのニーソ姫　～いったいどうしてこうなった～
+	CSTR:33 = 突撃！ガラスのニーソ姫　～いったいどうしてこうなった～
+;ローゼンメイデンな組み合わせ
+ELSEIF ((CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 52 && CFLAG:600 == 2 && CFLAG:604 == 4) && (CFLAG:40 >= 12 && CFLAG:41 == 52 &&  CFLAG:40 != 64 && CFLAG:600 == 3 && CFLAG:604 == 5)) 
+	PRINTFORM 禁じられた遊び ～性少女領域、淫欲のアリス・ゲーム～
+	CSTR:33 = 禁じられた遊び ～性少女領域、淫欲のアリス・ゲーム～
+;レーティアちゃんセット
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 51 && CFLAG:600 == 2 && CFLAG:602 == 8 && TALENT:203 == 1 && TALENT:93 == 1)
+	PRINTFORM 超銀河アイドル総統感謝祭！　～私のオマ○コにたくさんザーメン投票してねｖ～
+	CSTR:33 = 超銀河アイドル総統感謝祭！　～私のオマ○コにたくさんザーメン投票してねｖ～
+;肉食系。タイトルは雑誌「TOKYO BAD GIRLS」のパクり（←
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 40 && CFLAG:42 == 74 && (TALENT:87 == 1 || TALENT:432 == 1))
+	PRINTFORM PREMIUM BAD GIRLS　～キミのザーメン、%NICKNAME:TARGET%が絞り尽くしてア・ゲ・ル☆～
+	CSTR:33 = PREMIUM BAD GIRLS　～キミのザーメン、%NICKNAME:TARGET%が絞り尽くしてア・ゲ・ル☆～
+;ウェディングドレス
+ELSEIF (CFLAG:40 >= 76 && CFLAG:41 == 240 && CFLAG:42 == 61 && TALENT:432 == 1 && TFLAG:32 & 1)
+	PRINTFORM Princess Bride! 　～お願い、私の初めて貰ってダンナさまｖ～
+	CSTR:33 = Princess Bride! 　～お願い、私の初めて貰ってダンナさまｖ～
+;パンクロリータセット。サブタイトルはTom-H@ckのけいおん関係ではない曲から。あんずにどうぞ（←
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 30 && TALENT:109 == 0 && TALENT:116 == 0)
+	PRINTFORM 放課後ティッツタイム　～それがアタシのX-Plan～
+	CSTR:33 = 放課後ティッツタイム　～それがアタシのX-Plan～
+;スク水。現実にあるタイトルそのままになりました（←
+ELSEIF (CFLAG:40 >= 12 && CFLAG:40 != 64 && CFLAG:41 == 244)
+	PRINTFORM スク水Ｈ。 ～%NICKNAME:TARGET%～
+	CSTR:33 = スク水Ｈ。 ～%NICKNAME:TARGET%～
+;-----------------------------------------------------------
+;衣装別
+;-----------------------------------------------------------
+ELSEIF (TFLAG:180 == 1 && CFLAG:600 == 6 && CFLAG:602 == 4)
+	PRINTFORM 電子の歌姫・淫欲に堕ちて　～初音○クの欲情～
+	CSTR:33 = 電子の歌姫・淫欲に堕ちて　～初音○クの欲情～
+ELSEIF (TFLAG:180 == 16 && CFLAG:600 == 11 && CFLAG:602 == 5)
+	PRINTFORM Angel Bitch!　～天使ちゃんマジ淫乱～
+	CSTR:33 = Angel Bitch!　～天使ちゃんマジ淫乱～
+ELSEIF (TFLAG:180 == 20 && TFLAG:32 & 1 && TALENT:320)
+	PRINTFORM あかね色に染まる破瓜・ハードコア ～処女喪失ですよっにいさんｖ～
+	CSTR:33 = あかね色に染まる破瓜・ハードコア ～処女喪失ですよっにいさんｖ～
+ELSEIF (TFLAG:180 == 8 &&  A:3 && B:3 && CFLAG:600 == 10 && CFLAG:602 == 5 && BASE:9 <= 22)
+	PRINTFORM ヌードアウト・オフライン ～ケツ名器四段・美少女副団長のハードアナルファック～
+	CSTR:33 = ヌードアウト・オフライン ～ケツ名器四段・美少女副団長のハードアナルファック～
+ENDIF
+
+CSTR:30 = 
+CSTR:31 = 
+CSTR:32 = 
+CSTR:34 = 
+CSTR:35 = 
+CSTR:36 = 
+CSTR:37 = 
+CFLAG:642 = 0

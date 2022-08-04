@@ -1,0 +1,311 @@
+﻿;===========================================================
+;誕生日イベント
+;===========================================================
+@EVENT_BIRTHDAY
+
+SIF ABL:信頼 < 3
+	RETURN
+
+PRINTFORML %CALLNAME:MASTER%は誕生日を迎えた%CALLNAME:TARGET%を祝ってやることにした……
+PRINTFORML 《%CALLNAME:TARGET%をどのようにして祝いますか？》
+
+PRINTL [0] - 誕生日プレゼントを贈る
+;IF TALENT:恋心 == 1
+;	PRINTL [1] - デートに連れていってあげる
+;	PRINTL [2] - 何もしない
+;ELSE
+	PRINTL [1] - 何もしない
+;ENDIF
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL BIRTHDAY_PRESENT
+;ELSEIF RESULT == 1 && TALENT:恋心
+;	CALL BIRTHDAY_DATE
+ELSEIF RESULT == 1
+	PRINTFORMW 《%CALLNAME:TARGET%の誕生日を祝いませんでした》
+	IF TALENT:恋心
+		PRINTFORML 誕生日を祝ってもらえなかった%CALLNAME:TARGET%は拗ねているようだ……
+		PRINTL
+		PRINTFORMW 《%ABLNAME:[[ABL:信頼]]%：Lv{ABL:信頼}　→　Lv{(ABL:信頼 - 1)}》
+		ABL:信頼 -= 1
+	ENDIF
+ELSEIF RESULT == 2 && TALENT:恋心
+	PRINTFORMW 《%CALLNAME:TARGET%の誕生日を祝いませんでした》
+	IF TALENT:恋心
+		PRINTFORML 誕生日を祝ってもらえなかった%CALLNAME:TARGET%は拗ねているようだ……
+		PRINTL
+		PRINTFORMW 《%ABLNAME:[[ABL:信頼]]%：Lv{ABL:信頼}　→　Lv{(ABL:信頼 - 1)}》
+		ABL:信頼 -= 1
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN
+
+;===========================================================
+;誕生日イベント
+;===========================================================
+@BIRTHDAY_PRESENT
+
+VARSET LOCAL, 0
+PRINTFORML 《%CALLNAME:TARGET%にどのようなプレゼントを贈りますか？》
+PRINTFORML %CALLNAME:TARGET%  魅力値:{BASE:魅力値}/{MAXBASE:魅力値} 体力:{BASE:体力}/{MAXBASE:体力} 気力:{BASE:気力}/{MAXBASE:気力}
+
+PRINTL [0] - 化粧品　　　　　　　　　（値段：1000ポイント）
+PRINTL [1] - エクササイズ器具　　　　（値段：5000ポイント）
+PRINTL [2] - アロマキャンドルセット　（値段： 500ポイント）
+PRINTL [3] - 手作り料理              （値段：   0ポイント）
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%に化粧品をプレゼントすることにした……
+	IF CFLAG:西方杏子雇用判定 != 1 || TALENT:永遠の愛 == 1
+		LOCAL = 5
+		LOCAL += RAND:6
+		SIF TALENT:おしゃれ
+			LOCAL *= 2
+		SIF (BASE:魅力値 + LOCAL) >= MAXBASE:魅力値
+			LOCAL = MAXBASE:魅力値 - BASE:魅力値
+		LOCAL:1 = 1 + RAND:5
+		LOCAL:1 *= 10
+		PRINTFORML どうやら%CALLNAME:TARGET%のお気に召したようで、%CALLNAME:TARGET%は嬉しそうにしている
+		PRINTL
+		IF BASE:魅力値 < MAXBASE:魅力値
+			PRINTFORML 《%CALLNAME:TARGET%の魅力値が{LOCAL}回復した》
+			BASE:魅力値 += LOCAL
+		ENDIF
+		IF TALENT:恋心 == 0
+
+			PRINTFORML 好感度＋{LOCAL:1}
+			CFLAG:好感度 += (LOCAL:1 * 10)
+		ELSE
+			PRINTFORML 愛情経験＋{LOCAL:1}
+			EXP:愛情経験 += LOCAL:1
+		ENDIF
+		WAIT
+	ELSE
+		LOCAL = 1
+		LOCAL += RAND:4
+		SIF (BASE:魅力値 + LOCAL) >= MAXBASE:魅力値
+			LOCAL = MAXBASE:魅力値 - BASE:魅力値
+		LOCAL:1 = 1 + RAND:5
+		LOCAL:1 *= 5
+		PRINTFORML %CALLNAME:TARGET%は顔には出さないものの、去年と同じ誕生日プレゼントに不満そうだ……
+		PRINTL
+		IF BASE:魅力値 < MAXBASE:魅力値
+			PRINTFORML 《%CALLNAME:TARGET%の魅力値が{LOCAL}回復した》
+			BASE:魅力値 += LOCAL
+		ENDIF
+		IF TALENT:恋心 == 0
+
+			PRINTFORML 好感度＋{LOCAL:1}
+			CFLAG:好感度 += (LOCAL:1 * 10)
+		ELSE
+			PRINTFORML 愛情経験＋{LOCAL:1}
+			EXP:愛情経験 += LOCAL:1
+		ENDIF
+		WAIT
+	ENDIF
+	CFLAG:西方杏子雇用判定 = 1
+	MONEY -= 1000
+ELSEIF RESULT == 1
+	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%にエクササイズ器具をプレゼントすることにした……
+	IF CFLAG:西方杏子雇用判定 != 2 || TALENT:永遠の愛 == 1
+		LOCAL = 100
+		LOCAL *= RAND:3
+		SIF LOCAL == 0
+			LOCAL = 100
+		SIF TALENT:[[TALENT:Mermaid girl]]
+			LOCAL += 100
+		LOCAL:1 = 1 + RAND:5
+		LOCAL:1 *= 10
+		PRINTFORML どうやら%CALLNAME:TARGET%のお気に召したようで、%CALLNAME:TARGET%は嬉しそうにしている
+		PRINTL
+		PRINTFORML 《%CALLNAME:TARGET%の最大体力が{LOCAL}増加した》
+		MAXBASE:体力 += LOCAL
+		IF TALENT:恋心 == 0
+			PRINTFORML 好感度＋{LOCAL:1}
+			CFLAG:好感度 += (LOCAL:1 * 10)
+		ELSE
+			PRINTFORML 愛情経験＋{LOCAL:1}
+			EXP:愛情経験 += LOCAL:1
+		ENDIF
+		WAIT
+	ELSE
+		LOCAL = 100
+		SIF TALENT:[[TALENT:Mermaid girl]]
+			LOCAL += 100
+		LOCAL:1 = 1 + RAND:5
+		LOCAL:1 *= 10
+		PRINTFORML %CALLNAME:TARGET%は顔には出さないものの、去年と同じ誕生日プレゼントに不満そうだ……
+		PRINTL
+		PRINTFORML 《%CALLNAME:TARGET%の最大体力が{LOCAL}増加した》
+		MAXBASE:体力 += LOCAL
+		IF TALENT:恋心 == 0
+			PRINTFORML 好感度＋{LOCAL:1}
+			CFLAG:好感度 += (LOCAL:1 * 10)
+		ELSE
+			PRINTFORML 愛情経験＋{LOCAL:1}
+			EXP:愛情経験 += LOCAL:1
+		ENDIF
+		WAIT
+	ENDIF
+	CFLAG:西方杏子雇用判定 = 2
+	MONEY -= 5000
+ELSEIF RESULT == 2
+	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%にアロマキャンドルセットをプレゼントすることにした……
+	IF CFLAG:西方杏子雇用判定 != 3 || TALENT:永遠の愛 == 1
+		LOCAL = 100
+		LOCAL *= RAND:3
+		SIF LOCAL == 0
+			LOCAL = 100
+		LOCAL:1 = 1 + RAND:5
+		LOCAL:1 *= 10
+		PRINTFORML どうやら%CALLNAME:TARGET%のお気に召したようで、%CALLNAME:TARGET%は嬉しそうにしている
+		PRINTL
+		PRINTFORML 《%CALLNAME:TARGET%の最大気力が{LOCAL}増加した》
+		MAXBASE:気力 += LOCAL
+		IF TALENT:恋心 == 0
+			PRINTFORML 好感度＋{LOCAL:1}
+			CFLAG:好感度 += (LOCAL:1 * 10)
+		ELSE
+			PRINTFORML 愛情経験＋{LOCAL:1}
+			EXP:愛情経験 += LOCAL:1
+		ENDIF
+		WAIT
+	ELSE
+		LOCAL = 100
+		SIF TALENT:[[TALENT:Mermaid girl]]
+			LOCAL += 100
+		LOCAL:1 = 1 + RAND:5
+		LOCAL:1 *= 10
+		PRINTFORML %CALLNAME:TARGET%は顔には出さないものの、去年と同じ誕生日プレゼントに不満そうだ……
+		PRINTL
+		PRINTFORML 《%CALLNAME:TARGET%の最大気力が{LOCAL}増加した》
+		MAXBASE:体力 += LOCAL
+		IF TALENT:恋心 == 0
+			PRINTFORML 好感度＋{LOCAL:1}
+			CFLAG:好感度 += (LOCAL:1 * 10)
+		ELSE
+			PRINTFORML 愛情経験＋{LOCAL:1}
+			EXP:愛情経験 += LOCAL:1
+		ENDIF
+		WAIT
+	ENDIF
+	CFLAG:西方杏子雇用判定 = 3
+	MONEY -= 500
+ELSEIF RESULT == 3
+	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%に手料理を振舞ってあげることにした……
+	LOCAL:1 = 1 + RAND:5
+	LOCAL:1 *= 10
+	PRINTFORML どうやら%CALLNAME:TARGET%のお気に召したようで、%CALLNAME:TARGET%は嬉しそうにしている
+	PRINTL
+	IF TALENT:恋心 == 0
+		PRINTFORML 好感度＋{LOCAL:1}
+		CFLAG:好感度 += (LOCAL:1 * 10)
+	ELSE
+		PRINTFORML 愛情経験＋{LOCAL:1}
+		EXP:愛情経験 += LOCAL:1
+	ENDIF
+	WAIT
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN
+
+;===========================================================
+;誕生日イベント
+;===========================================================
+;@BIRTHDAY_DATE
+
+PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%とデートすることにした……
+PRINTFORMW
+PRINTFORM しかし簡単ではあるものの、事務所の代表として緊急で処理しなければならない案件のせいで待ち合わせ時間に遅れてしまった
+PRINTFORM 既に待ち合わせ場所で
+IF TALENT:おしゃれ || TALENT:ファッションモデル
+	PRINTFORM いつも以上に気合の入った
+ELSE
+	PRINTFORM 精一杯おめかしした
+ENDIF
+SIF ABL:露出癖 >= 4
+	PRINTFORM 、露出度の高い
+PRINTFORML 服装で待っていた%CALLNAME:TARGET%は、%CALLNAME:MASTER%の姿を認めるなり拗ねた
+PRINTFORML ような、だがどこか嬉しそうな表情を浮かべている
+IF MAXBASE:魅力値 >= 120 && TALENT:小悪魔
+	PRINTFORML 謝る%CALLNAME:MASTER%に%CALLNAME:TARGET%は嫉妬心を煽るように、待っている間に{1 + RAND:10}人にナンパされたことを告げてきた
+	PRINTFORML やはり他のオトコの目から見ても、%CALLNAME:TARGET%は相当魅力的のようだ……
+ENDIF
+PRINTFORML
+PRINTFORMW ………………
+PRINTFORMW …………
+PRINTFORML ……
+PRINTW
+PRINTFORML カラオケやゲームセンター、ウインドウショッピングなどでひとしきり二人っきりの時間を満喫した%CALLNAME:MASTER%と%CALLNAME:TARGET%だっ
+PRINTFORML たが、%CALLNAME:TARGET%は今日一日は%CALLNAME:MASTER%とずっと一緒にいたい、とおねだりしてきた
+PRINTL
+PRINTFORML 《%CALLNAME:TARGET%とのデートを続行しますか？》
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+;$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+;	CALL BIRTHDAY_SEX
+ELSEIF RESULT == 1
+	PRINTFORML %CALLNAME:TARGET%はやや残念そうにしていたものの、来年もまたデートしようと約束してあげると、嬉しそうな満面の笑みで
+	PRINTFORML %CALLNAME:MASTER%に不意打ち気味にキスをしてきた……
+	PRINTFORML 
+	PRINTFORML どうやら%CALLNAME:TARGET%とのデートは成功に終わったようだった
+	IF CFLAG:ファーストキスの相手 == -1
+		CFLAG:ファーストキスの相手 = 1
+		SETCOLOR 0xDDBBCC
+		PRINTFORML ファーストキス
+		RESETCOLOR
+		CFLAG:ファーストキスの相手 = 1
+		IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
+			CSTR:ファーストキスの相手 = お兄ちゃん
+		ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
+			CSTR:ファーストキスの相手 = お兄ぃ
+		ELSEIF NO:TARGET == [[キャラ:加瀬芙美香]] && NO:MASTER == [[キャラ:あなた]]
+			CSTR:ファーストキスの相手 = アニキ
+		ELSE
+			CSTR:ファーストキスの相手 = %NAME:MASTER%
+		ENDIF
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN
+
+;===========================================================
+;誕生日イベント
+;===========================================================
+;@BIRTHDAY_SEX
+
+PRINTFORML 熱に浮かされたかのような表情の%CALLNAME:TARGET%のおねだりの真意を理解した%CALLNAME:MASTER%は、駅裏にあるラブホテルに向かう
+PRINTFORML ことにした……
+PRINTW
+
+;===========================================================
+;誕生日イベント
+;===========================================================
+;@BIRTHDAY_SEX_SS
+
+
+PRINTFORML ピンク色の間接照明に照らされた部屋の中心のベッドの上で、%CALLNAME:MASTER%と%CALLNAME:TARGET%はどちらからともなくお互いの唇を
+PRINTFORML 重ね、お互い服の上から激しく鼓動する胸に手を這わせて寄り添うようにしている
+PRINTFORM そしてそれは次第に、
+SIF (CFLAG:ピアスの装着状況 & 16)
+	PRINTFORM ピアスが輝く
+PRINTFORML %CALLNAME:TARGET%の舌と%CALLNAME:MASTER%の舌を絡めて唾液を交換するような濃厚なものへと変わっていった
+PRINTFORML %CALLNAME:MASTER%が%CALLNAME:TARGET%と視線を合わせると、朱色に染まった頬の%CALLNAME:TARGET%は潤んだ瞳でゆっくりと頷く
+PRINTFORML ベッドの上に横たわった%CALLNAME:TARGET%の服を丁寧に脱がせると、いわゆる勝負下着なのだろう、いつもより若干大胆なデ
+PRINTFORML ザインの下着があらわになった
+PRINTFORM 照明の色も相まって
+

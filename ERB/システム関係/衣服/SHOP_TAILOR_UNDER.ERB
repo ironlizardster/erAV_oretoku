@@ -1,0 +1,268 @@
+﻿;===========================================================
+;下着購入時の処理
+;===========================================================
+@TAILOR_UNDER_MAIN
+
+IF TALENT:絶壁 == 0 && TALENT:未熟 == 0 && (TALENT:幼稚 == 0 || TALENT:貧乳 == 0)
+	CALL CHOICE_TOPS
+ELSE
+	CALL CHOICE_UNDER
+ENDIF
+
+;===========================================================
+;トップスの種類
+;===========================================================
+@CHOICE_TOPS
+
+X = 0
+Y = 19
+
+PRINTFORML □ブラジャー一覧
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+PRINTFORML [ 0] - シンプルブラ
+PRINTFORML [ 1] - ハーフカップブラ
+PRINTFORML [ 2] - フリルブラ
+PRINTFORML [ 3] - スポーツブラ
+PRINTFORML [ 4] - 刺繍入りブラ
+PRINTFORML [ 5] - シルクブラ
+PRINTFORML [ 6] - マイクロビキニブラ
+PRINTFORML [ 7] - しましまブラ
+PRINTFORML [ 8] - スパンコールブラ
+PRINTFORML [ 9] - チューブトップブラ
+PRINTFORML [10] - バンソーコー
+PRINTFORML [11] - ニップレス
+PRINTFORML [12] - フェザーモチーフブラ
+PRINTFORML [13] - ワイルドレザーブラ
+PRINTFORML [14] - さらし
+PRINTFORML [15] - チェックプリントブラ
+PRINTFORML [16] - オープンブラ
+PRINTFORML [17] - シースルーレースブラ
+PRINTFORML [18] - シルクビスチェ
+PRINTFORML [19] - レザービスチェ
+DRAWLINE
+PRINTFORML [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+X = RESULT
+
+	IF RESULT == X && X != 999 && X <= Y
+		CFLAG:ブラの種類 = X
+		PRINTFORM 《ブラのデザインは
+		CALL PRINT_UNDERWEAR_TOPS
+		PRINTFORMW にしました》
+		IF CFLAG:ブラの種類 != 12 && CFLAG:ブラの種類 != 11 && CFLAG:ブラの種類 != 14 && CFLAG:ブラの種類 != 10
+			CALL CHOICE_TOPS_COLOR
+		ELSE
+			CFLAG:ブラの色 = 99
+			CALL CHOICE_UNDER
+		ENDIF
+	ELSEIF RESULT == 999
+		RETURN 999
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+;===========================================================
+;トップスの色
+;===========================================================
+@CHOICE_TOPS_COLOR
+
+X = 0
+Y = 21
+
+DRAWLINE
+PRINTFORML □ブラジャー一覧
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+PRINTFORML [ 0] - 白
+PRINTFORML [ 1] - 黒
+PRINTFORML [ 2] - ピンク
+PRINTFORML [ 3] - 薄緑
+PRINTFORML [ 4] - 水色
+PRINTFORML [ 5] - 赤
+PRINTFORML [ 6] - 紫
+PRINTFORML [ 7] - 橙
+PRINTFORML [ 8] - 黄色
+PRINTFORML [ 9] - ベージュ
+PRINTFORML [10] - 灰色
+PRINTFORML [11] - シャンパンゴールド
+PRINTFORML [12] - ポリッシュシルバー
+PRINTFORML [13] - チェリーピンク
+PRINTFORML [14] - ペールブルー
+PRINTFORML [15] - パールホワイト
+PRINTFORML [16] - ライムグリーン
+PRINTFORML [17] - ターコイズブルー
+PRINTFORML [18] - ロイヤルブルー
+PRINTFORML [19] - ワインレッド
+PRINTFORML [20] - ブラックパープル
+SIF CFLAG:ブラの種類 != 8 && CFLAG:ブラの種類 != 12 && CFLAG:ブラの種類 != 15
+	PRINTFORML [21] - ヒョウ柄
+DRAWLINE
+PRINTFORML [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+X = RESULT
+
+	IF RESULT == X && X != 999 && X <= Y && X != 21
+		CFLAG:ブラの色 = X
+		PRINTFORM 《ブラの色は
+		CALL PRINT_UNDERWEAR_COLOR_TOPS
+		PRINTFORMW にしました》
+		CALL CHOICE_UNDER
+	ELSEIF RESULT == 21 && CFLAG:ブラの種類 != 8 && CFLAG:ブラの種類 != 12 && CFLAG:ブラの種類 != 15
+		CFLAG:ブラの色 = X
+		PRINTFORM 《ブラの色は
+		CALL PRINT_UNDERWEAR_COLOR_TOPS
+		PRINTFORMW にしました》
+		CALL CHOICE_UNDER
+	ELSEIF RESULT == 999
+		RETURN 999
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+;===========================================================
+;トップスの種類
+;===========================================================
+@CHOICE_UNDER
+
+X = 0
+Y = 20
+
+PRINTFORML □ショーツ一覧
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+PRINTFORML [ 0] - シンプルショーツ
+PRINTFORML [ 1] - ハイレグショーツ
+PRINTFORML [ 2] - フリルショーツ
+PRINTFORML [ 3] - ローライズ＆ローレグ
+PRINTFORML [ 4] - 刺繍入りショーツ
+PRINTFORML [ 5] - シルクショーツ
+PRINTFORML [ 6] - マイクロビキニショーツ
+PRINTFORML [ 7] - しまぱん
+PRINTFORML [ 8] - スパンコールショーツ
+PRINTFORML [ 9] - プリントぱんつ
+PRINTFORML [10] - バンソーコー
+PRINTFORML [11] - ドロワーズ
+PRINTFORML [12] - フェザーモチーフショーツ
+PRINTFORML [13] - ワイルドレザーショーツ
+PRINTFORML [14] - ふんどし
+PRINTFORML [15] - チェックプリントショーツ
+PRINTFORML [16] - オープンショーツ
+PRINTFORML [17] - シースルーレースショーツ
+IF TALENT:オトコ == 1
+	PRINTFORML [18] - トランクス
+	PRINTFORML [19] - ボクサーパンツ
+	PRINTFORML [20] - ブーメランパンツ
+ENDIF
+DRAWLINE
+PRINTFORML [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+X = RESULT
+
+	IF RESULT == X && X != 999 && X <= Y && X != 18 && X != 19 && X != 20
+		CFLAG:パンツの種類 = X
+		PRINTFORM 《
+		IF TALENT:オトコ == 0 
+			PRINTFORM ショーツ
+		ELSE
+			PRINTFORM パンツ
+		ENDIF
+		PRINTFORM のデザインは
+		CALL PRINT_UNDERWEAR_UNDER
+		PRINTFORMW にしました》
+		IF CFLAG:パンツの種類 != 12 && CFLAG:パンツの種類 != 11 && CFLAG:パンツの種類 != 14 && CFLAG:パンツの種類 != 10
+			CALL CHOICE_UNDER_COLOR
+		ELSE
+			CFLAG:パンツの色 = 99
+		ENDIF
+	ELSEIF RESULT >= 18 && X <= Y && X != 999 && TALENT:オトコ == 1
+		CFLAG:パンツの種類 = X
+		PRINTFORM 《
+		PRINTFORM パンツ
+		PRINTFORM のデザインは
+		CALL PRINT_UNDERWEAR_UNDER
+		PRINTFORMW にしました》
+		IF CFLAG:パンツの種類 != 12 && CFLAG:パンツの種類 != 11 && CFLAG:パンツの種類 != 14 && CFLAG:パンツの種類 != 10
+			CALL CHOICE_UNDER_COLOR
+		ENDIF
+	ELSEIF RESULT == 999
+		RETURN 999
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+;===========================================================
+;トップスの色
+;===========================================================
+@CHOICE_UNDER_COLOR
+
+X = 0
+Y = 21
+
+DRAWLINE
+PRINTFORML □ブラジャー一覧
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+PRINTFORML [ 0] - 白
+PRINTFORML [ 1] - 黒
+PRINTFORML [ 2] - ピンク
+PRINTFORML [ 3] - 薄緑
+PRINTFORML [ 4] - 水色
+PRINTFORML [ 5] - 赤
+PRINTFORML [ 6] - 紫
+PRINTFORML [ 7] - 橙
+PRINTFORML [ 8] - 黄色
+PRINTFORML [ 9] - ベージュ
+PRINTFORML [10] - 灰色
+PRINTFORML [11] - シャンパンゴールド
+PRINTFORML [12] - ポリッシュシルバー
+PRINTFORML [13] - チェリーピンク
+PRINTFORML [14] - ペールブルー
+PRINTFORML [15] - パールホワイト
+PRINTFORML [16] - ライムグリーン
+PRINTFORML [17] - ターコイズブルー
+PRINTFORML [18] - ロイヤルブルー
+PRINTFORML [19] - ワインレッド
+PRINTFORML [20] - ブラックパープル
+SIF CFLAG:パンツの種類 != 7 && CFLAG:パンツの種類 != 9 && CFLAG:パンツの種類 != 15
+	PRINTFORML [21] - ヒョウ柄
+DRAWLINE
+PRINTFORML [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+X = RESULT
+
+	IF RESULT == X && X != 999 && X <= Y && X != 21
+		CFLAG:パンツの色 = X
+		PRINTFORM 《
+		IF TALENT:オトコ == 0 
+			PRINTFORM ショーツ
+		ELSE
+			PRINTFORM パンツ
+		ENDIF
+		PRINTFORM の色は
+		CALL PRINT_UNDERWEAR_COLOR_UNDER
+		PRINTFORMW にしました》
+	ELSEIF RESULT == 21 && CFLAG:パンツの種類 != 7 && CFLAG:パンツの種類 != 9 && CFLAG:パンツの種類 != 15
+		CFLAG:パンツの色 = X
+		PRINTFORM 《
+		IF TALENT:オトコ == 0 
+			PRINTFORM ショーツ
+		ELSE
+			PRINTFORM パンツ
+		ENDIF
+		PRINTFORM の色は
+		CALL PRINT_UNDERWEAR_COLOR_UNDER
+		PRINTFORMW にしました》
+	ELSEIF RESULT == 999
+		RETURN 999
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF

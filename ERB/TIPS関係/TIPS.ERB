@@ -1,0 +1,373 @@
+﻿;===========================================================
+;TIPS目次
+;===========================================================
+@TIPS_MAIN
+
+PRINTFORML 《ＴＩＰＳ》
+PRINTFORML 攻略のヒントなど
+DRAWLINE
+PRINTL  [0] - 女優候補の陥落・引退可能条件
+PRINTL  [1] - 特殊な素質の獲得方法
+PRINTL  [2] - 魅力値について
+PRINTL  [3] - ミッションとは
+PRINTL  [4] - 各種実績解禁まで
+PRINTL  [5] - 初心者向け講座
+PRINTL  [6] - 加入条件が特殊なキャラ
+PRINTL  [7] - 妊娠まわりの情報
+DRAWLINE
+PRINTL [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL TIPS_CHARACLEAR
+ELSEIF RESULT == 1
+	CALL TIPS_TALENT
+ELSEIF RESULT == 2
+	CALL TIPS_BEAUTY
+ELSEIF RESULT == 3
+	CALL TIPS_MISSION
+ELSEIF RESULT == 4
+	CALL TIPS_ACHIEVEMENT
+ELSEIF RESULT == 5
+	CALL TIPS_HINT
+ELSEIF RESULT == 6
+	CALL TIPS_EXTRACHARA
+ELSEIF RESULT == 7
+	CALL TIPS_PREGNANCY
+ELSEIF RESULT == 792
+	CALL TESTMODE
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;===========================================================
+;TIPS ミッションの説明
+;===========================================================
+@TIPS_MISSION
+
+DRAWLINE
+PRINTFORML ◆ミッション◆
+PRINTFORML 指定されたキャラクターを指定された条件に育成するモード
+PRINTFORML 難易度はSS→Ｆまでの７段階あり、難易度によって得られるポイントや貢献度が異なる
+PRINTFORML 
+PRINTFORML ◆ミッションの解禁条件◆
+PRINTFORML ミッションの解禁には以下の条件を満たす必要がある
+PRINTFORML 
+PRINTFORML ○桐生エレンおよび桐生歌音が【永遠の愛】を取得している
+PRINTFORML ※桐生エレンとの契約は実績「もっと姉！ちゃんとしようよ」の達成ボーナス
+PRINTFORML 
+PRINTFORML 以上の条件を満たした上で桐生組事務所より「エレンに会いに行く」を実行すると解禁される
+PRINTFORML 
+PRINTFORML ◆ＥＸミッション◆
+PRINTFORML キャラクター固有、または特定の素質を所持しているキャラクターを対象に
+PRINTFORML 異なる条件を達成することにより最大魅力値にボーナスが得られたり、専用素質が取得できる
+PRINTFORML 
+PRINTFORML ◆ＥＸミッションの解禁条件◆
+PRINTFORML ＥＸミッションの解禁には以下の条件を満たす必要がある
+PRINTFORML 
+PRINTFORML ○ミッションを解禁している
+PRINTFORML ○MASTER（キャラ番号０番）の貢献度が５０
+PRINTFORML 
+PRINTFORML 以上の条件を満たしている場合、ミッションに「ＥＸミッション」が解禁される
+PRINTFORML ※ミッション内容によっては出現に更なる条件が必要となる場合がある
+DRAWLINE
+WAIT
+CALL TIPS_MAIN
+
+;===========================================================
+;TIPS 実績の説明
+;===========================================================
+@TIPS_ACHIEVEMENT
+
+DRAWLINE
+PRINTFORML ◆実績◆
+PRINTFORML 特定の条件を満たした場合に開放される
+PRINTFORML 実績の開放により通常では出現しない特殊キャラや素質を獲得できるようになる
+PRINTFORML 
+PRINTFORML ◆実績のアンロック条件◆
+PRINTFORML 
+PRINTFORML 実績番号00：スケコマシ
+PRINTFORML 陥落した女優の数が10人以上
+PRINTFORML ※ただしレイチェル・パラディススの秘薬により【恋心】【淫乱】を取得したキャラクターはカウントされない
+PRINTFORML 
+PRINTFORML 実績番号01：ロリきゅーぶ
+PRINTFORML 15歳以下または【童顔】を取得しているキャラクターを４人以上助手可能にしている
+PRINTFORML ※ただし【淫魔】【アンドロイド】【天使】を取得しているキャラクターはカウントされない
+PRINTFORML 
+PRINTFORML 実績番号02：もっと姉！ちゃんとしようよ
+PRINTFORML 20歳以上のキャラクターを４人以上助手可能にしている
+PRINTFORML ※ただし【淫魔】【アンドロイド】【天使】を取得しているキャラクターはカウントされない
+PRINTFORML 
+PRINTFORML 実績番号03：妹ぱらだいす！
+PRINTFORML 【妹】を取得しているキャラクターが４人以上【恋心】を取得している
+PRINTFORML 
+PRINTFORML 実績番号04：とらぶるサッキュバス
+PRINTFORML 【淫魔】を取得しているキャラクターが４人以上【恋心】を取得している
+PRINTFORML 
+PRINTFORML 実績番号05：偉大なる処女厨
+PRINTFORML 【処女】【アナル処女】を取得しているキャラクターが５人以上【永遠の愛】を取得しており、
+PRINTFORML 現在の所持ポイントが５００万以上
+PRINTFORML ※ただし【淫魔】【アンドロイド】【天使】を取得しているキャラクター、
+PRINTFORML 　または研究所にて処女膜の再生手術を行ったキャラクターはカウントされない
+PRINTFORML 　また、GOLD RUSHの実績ボーナスを受け取った後ではアンロックされない
+PRINTFORML 
+PRINTFORML 実績番号06：NTR = CUCKOLD
+PRINTFORML 【彼氏あり】を取得しているキャラクターが４人以上彼氏とのセックスを経験している
+PRINTFORML 
+PRINTFORML 実績番号07：BLACK IMPACT
+PRINTFORML 【ギャル系】および【褐色肌】を取得しているキャラクターが４人以上
+PRINTFORML 
+PRINTFORML 実績番号08：俺の妹がこんなにビッチなわけがない
+PRINTFORML 宮間かなでが【非処女】または【アナル非処女】で
+PRINTFORML 【絶倫】【彼氏あり】【セフレあり】【褐色肌】【ギャル系】を取得している
+PRINTFORML 
+PRINTFORML 実績番号09：はるうられ
+PRINTFORML 【はるうられ】を取得しているキャラクターが３人以上引退可能
+PRINTFORMW 
+PRINTFORML 実績番号10：GOLD RUSH
+PRINTFORML ビデオ販売の総ポイントが５００万以上
+PRINTFORML 
+PRINTFORML 実績番号11：夜王
+PRINTFORML 貢献度が５００以上
+PRINTFORML 
+PRINTFORML 実績番号12：借金完済！
+PRINTFORML 三上聖佳、蒼井遙、桐島翔子、雨草愛理のビデオ販売の総ポイントが２００万以上
+PRINTFORML 
+PRINTFORML 実績番号13：第三の幼馴染み
+PRINTFORML 宮間かなで、佐々木美乃里、新島みひろが【永遠の愛】を取得している
+PRINTFORML 
+PRINTFORML 実績番号14：ＢＩＧ３
+PRINTFORML レイチェル・パラディスス、桐生歌音、須野郁美が【永遠の愛】を取得している
+PRINTFORML 
+PRINTFORML 実績番号15：HAERETICUS
+PRINTFORML レイチェル・パラディスス、ユーニス・パラディスス、リーナ・レスピーチオ、上坂美紅が
+PRINTFORML 【永遠の愛】を取得している
+PRINTFORML 
+PRINTFORML 実績番号16：みやまけ
+PRINTFORML 宮間かなで、宮間未依、宮間カナが【永遠の愛】を取得しており
+PRINTFORML ＥＸミッション「私の『妹』がこんなに可愛いわけがない」を成功している
+PRINTFORML 
+PRINTFORML 実績番号17：FALLEN ANGELS
+PRINTFORML 雛見春乃、雛見まゆ、羽瀬川みことが【非処女】【アナル非処女】で【絶倫】を取得しており
+PRINTFORML ＥＸミッション「THE FALLEN」と「ツバサノテンシ」を成功している
+PRINTFORML 
+PRINTFORML 実績番号18：ふたなりっ娘らばーず
+PRINTFORML 【ふたなり】を所持しているキャラクターが５人以上射精中毒がLV3以上で【童貞】を所持していない
+PRINTFORML 
+PRINTFORML 実績番号19：ONLY ONE EMPRESS
+PRINTFORML 宮間かなでが【ONLY ONE EMPRESS】と【高級娼婦】を取得しており
+PRINTFORML ＥＸミッション「宮間さんは裏表のない素敵な人です」を成功している
+PRINTFORML 
+PRINTFORML 実績番号20：Strawberry Panic!
+PRINTFORML レズっ気がLV10のキャラクターが７人以上
+DRAWLINE
+WAIT
+CALL TIPS_MAIN
+
+;===========================================================
+;TIPS 攻略方法
+;===========================================================
+@TIPS_HINT
+
+DRAWLINE
+PRINTFORML ◆初心者向け攻略方法◆
+PRINTFORML 講師：小鳥遊乃絵美
+CUSTOMDRAWLINE ==
+PRINTFORML それじゃあ簡単な攻略方法をおねーさんが教えてあげるわね♪
+PRINTFORML まずは女優になってくれそうな女のコと契約しなければならないんだけど……
+PRINTFORML 女のコにはそれぞれ契約金が決まっていて、最初にきみが持っているポイントだと契約できない女のコもいっぱいいるわね
+PRINTFORML 最初はきみの指導の腕もそこまで高くないし、とにかく女のコとたくさん触れ合って腕を磨くほうがいいと思うの
+PRINTFORML だから最初のポイントでふたりぐらいと契約するのがいいかしら？
+PRINTFORML ちなみに私のオススメはこのコたちね
+PRINTFORMW 
+PRINTFORML ・宮間かなで
+PRINTFORML Extraモードでなければきみの【妹】の女のコよ
+PRINTFORML 【大人しい】し【素直】で、しかもＡＶ業界では需要の高い【童顔】
+PRINTFORML もちろんきみの家族だから相性はかなり高いわよ
+PRINTFORML それに【おしゃれ】さんだから美容にも気を使ってるみたいだし……
+PRINTFORML 欠点はちょっと運動がニガテなところかしら？
+PRINTFORML あと人には言えない趣味を抑えてはいるみたいだけど隠し持っているようね
+PRINTFORML とにかく、最初に契約できるコの中ではトップクラスの女優のタマゴよ
+PRINTFORMW
+PRINTFORML ・佐々木美乃里
+PRINTFORML Extraモードでなければきみの【幼馴染み】の女のコよ
+PRINTFORML えっちなことに【好奇心】があって、しかもどうやらオシリでオナニーするぐらいの【倒錯的】な趣味を持っているみたい
+PRINTFORML そのせいか性欲も結構強いみたいだけど……
+PRINTFORML もちろんきみの【幼馴染み】だから相性は高いわね
+PRINTFORML 【運動部】なだけあって運動はかなり得意みたいだし、それにどれだけ激しい指導をしても翌週には元気いっぱいなぐらい
+PRINTFORML 【回復早い】みたい
+PRINTFORML 欠点らしい欠点は撮影の回数が多くなって、お客さんが飽きやすくなっちゃうことかな？
+PRINTFORMW 
+PRINTFORML ・渡会桔梗
+PRINTFORML インターネットでSmileVidzっていう動画サイトがあるでしょ？
+PRINTFORML このコはそこで【童顔】が人気の【コスプレイヤー】よ
+PRINTFORML それもあってカメラ慣れしているし、男のコに【好奇心】があるみたいだから撮影は楽だと思うわ
+PRINTFORML でもちょっとしたことで息切れしちゃうぐらい【回復遅い】のと、それと【クール】な性格だからあまり他の人に懐かない
+PRINTFORML かもしれないわね
+PRINTFORML 欠点は運動がかなりニガテみたい
+PRINTFORML でも【コスプレイヤー】なだけあってオタクな知識は豊富みたいだから、そういう人と話が合うみたい
+PRINTFORML 最初に契約できるコの中ではかなりの高スペックの持ち主ね
+PRINTFORMW
+PRINTFORML ・織部真菜香
+PRINTFORML きみのことを「おにーさん」と慕ってくれる【妹】っぽい女のコよ
+PRINTFORML 【素直】でえっちなことにも【好奇心】があるし、なにより【目立ちたがり】だからカメラにすぐ慣れてくれると思うわ
+PRINTFORML それにちょっとイタズラ好きな【小悪魔】なところもあるから、そういう趣味に目覚めるかもしれないわよ
+PRINTFORML 欠点はまだ【中学生】だから自分の魅力に無自覚なところかな？
+PRINTFORML でも若いだけあって【回復早い】し、指導の回数もそれなりに増やせると思うわ
+PRINTFORMW 
+PRINTFORML ・三好ゆか子
+PRINTFORML お菓子が大好きなぽっちゃり気味の女のコね
+PRINTFORML ちょっと【地味】なんだけどかなりおっぱいは大きい【巨乳】ちゃんだから、こういうコが好きな人にはたまらない
+PRINTFORML 【魅力】があると思うわ
+PRINTFORML それに【素直】で【大人しい】し、あんまり自分に自信がないのか【プライド低い】みたいだから、女のコに慣れると
+PRINTFORML いう意味ではちょうどいいかもね♪
+PRINTFORML 欠点は運動音痴といっても差し支えないぐらい運動がニガテみたい
+PRINTFORML でもお菓子を食べると元気いっぱいになるぐらい【回復早い】からあんまり気にならないかも？
+PRINTFORMW
+PRINTFORML ・面接相手
+PRINTFORML 私にもどんなコが来るか分からないわ
+PRINTFORML もちろん私たちもしっかりと事前審査してからきみに引きあわせているけど、魅力的かどうかと言えば他のコより少し
+PRINTFORML 落ちるかもしれないわ
+PRINTFORML でもそのぶん契約金は他のコよりも安くなるはずだから、一度面接してみるといいかも？
+PRINTFORMW
+PRINTFORML もちろんこのコたち以外にも育てれば化けるコはいっぱいいるわよ
+PRINTFORML でも不慣れなきみにはこのコたちを相手に指導の腕を磨くのがベターかしら？
+PRINTFORML それでこのコたちを撮影してお金が貯まったら少しずつ撮影の道具を買うといいかもしれないわね
+PRINTFORML オススメはコスプレ衣装、プレイマット、Ｅマッサージャかしら
+PRINTFORML コスプレ衣装は撮影のときに着せてあげると、コスプレモノっていうことでたくさんのお客さんがビデオを買ってくれる
+PRINTFORML ようになるわ
+PRINTFORML あと女のコたちも可愛い服を着せてもらえるから、きみを信頼するようになってくれるはずよ
+PRINTFORML プレイマットはお風呂場に置いてソーププレイを撮影するためにあるわ
+PRINTFORML Ｅマッサージャはいわゆる電マね
+;PRINTFORML ……あ、あと最初はビデオテープは１本しかないから買うのは忘れないでね
+PRINTFORMW
+PRINTFORML この辺りを買ってお金が貯まってきたら次はもっと高額の女優候補たちと契約してみましょう
+PRINTFORML 高額なコたちはそれぞれ特殊な技能を持っているわ
+PRINTFORML その中でも特に優秀な女のコたちを紹介するわね
+PRINTFORMW 
+PRINTFORML ・桐生歌音
+PRINTFORML きみをこの業界に引きずり込んだ張本人よ
+PRINTFORML でもお金さえ積めばなんでもやってくれる【極道の娘】で、いろいろな方面に顔が利くぐらい【交渉上手】よ
+PRINTFORML それにきみの事情を知っているから撮影にも協力的だし、最初から撮影のパートナーになってくれるみたい
+PRINTFORML 欠点はかなり多忙だからモデルとかそういう副業はやってくれそうにないみたい
+PRINTFORMW 
+PRINTFORML ・レイチェル・パラディスス
+PRINTFORML 欧州のとある小国から留学してきた【外国人】のホンモノの【お姫様】よ
+PRINTFORML 【調合知識】があるおかげか【治療】も得意みたい
+PRINTFORML オカルトっぽいとは思うけど【異界知識】なんてとんでもないモノを持っているらしいんだけど……
+PRINTFORML 欠点はおっとりとしているんだけど芯がしっかりしている【気丈】なところぐらいかしら？
+PRINTFORMW 
+PRINTFORML ・須野郁美
+PRINTFORML きみの事務所の隣の雑居ビルに住んでいる不思議な女のコよ
+PRINTFORML どうやらお仕事についていないみたいで【ニート】と呼ばれる人みたいなんだけど……
+PRINTFORML でもなぜかまだ世の中に出まわっていないような【最先端科学】の知識を持っていたりする謎の多いコなのよね
+PRINTFORML 【ニート】なおかげかかなりオタクな知識も豊富みたい
+PRINTFORML 欠点は出不精なせいか運動音痴だし、自分の容姿に無頓着だからお肌の手入れとかにも興味が無いみたい
+PRINTFORMW 
+PRINTFORML ・清水桜子
+PRINTFORML 本人は【あくのそしき】と名乗っているけど、このＸＸ市でいわゆるリア充カップルの邪魔をしている団体
+PRINTFORML 『ＲＢ団』のボスで、【小柄体型】で【絶壁】な、非常にマニア受けのよさそうなコね
+PRINTFORML いわゆる天才の女のコで、飛び級で海外の大学で心理学を専攻していたみたい
+PRINTFORML でもただのひがみだけじゃなくて、自分を磨くためのセミナーなんかも開催しているみたいで、モテるための
+PRINTFORML 知識だけは豊富な耳年増さんみたい
+PRINTFORML 欠点は【発育悪い】せいでちょっと挿れるのには苦労しそうなことぐらいかしら？
+PRINTFORMW
+PRINTFORML この４人と契約すればきみの借金も簡単に返せるようになると思うわよ
+PRINTFORML もちろん、このコたち以外にも優秀な素質を持ったコもいっぱいいるし、逆に売り上げは低いけど助手として
+PRINTFORML 優秀なコもいるから頑張って探してみてね♪
+PRINTFORML 
+PRINTFORML ……あ、そうそう
+PRINTFORML ゲーム開始時に『EASY』を選んでくれればきみに私が最初から協力するわ
+PRINTFORML でもEASYだとこの講座の中にある実績が使用できないのが欠点だから気をつけてね
+DRAWLINE
+WAIT
+CALL TIPS_MAIN
+
+;===========================================================
+;TIPS:ＥＸキャラクター
+;===========================================================
+@TIPS_EXTRACHARA
+
+DRAWLINE
+PRINTFORML ◆ＥＸキャラクター◆
+PRINTFORML 加入条件が複雑なキャラクターのことを便宜上『ＥＸキャラクター』と呼ぶ
+PRINTFORML 一部ＥＸキャラクターのみが持つ特殊な技能もあり、ビデオの売り上げも通常契約できるキャラクターよりも高
+PRINTFORML 額となる場合もある
+PRINTFORML なお、ＥＸキャラクターを引退させた場合、そのプレイデータにおける周回プレイ中に再契約することはできな
+PRINTFORML い
+PRINTFORML 
+PRINTFORML ◆ＥＸキャラで条件が記載されていないキャラクターの加入条件◆
+PRINTFORML ○新型アンドロイド
+PRINTFORML 須野郁美と宮間未依が助手可能で【秘密知識】を持っている
+PRINTFORML 
+PRINTFORML ○鎌瀬縫子 / 本庄のどか / 橘乙姫 / 海老原真与
+PRINTFORML 桐生歌音が助手可能で【秘密知識】を持っており、実績『はるうられ』をアンロックしている
+PRINTFORML 
+PRINTFORML ○キャバ嬢
+PRINTFORML 契約している女優の中に【キャバ嬢】を持っているキャラクターがいる
+PRINTFORML 
+PRINTFORML ○雛見まゆ
+PRINTFORML 実績『偉大なる処女厨』をアンロックしている
+PRINTFORML 
+PRINTFORML ○ユーニス・パラディスス
+PRINTFORML 実績『偉大なる処女厨』をアンロックしている
+PRINTFORML 
+PRINTFORML ○李美鈴
+PRINTFORML 実績『ＢＩＧ３』をアンロックしている
+PRINTFORML 
+PRINTFORML ○桐生エレン
+PRINTFORML 実績『もっと姉！ちゃんとしようよ』をアンロックしている
+PRINTFORML 
+PRINTFORML ○アイリス
+PRINTFORML 実績『とらぶるサッキュバス』をアンロックしている
+PRINTFORML 
+PRINTFORML ○宮間カナ
+PRINTFORML 実績『俺の妹がこんなにビッチなわけがない』をアンロックしており、須野郁美を助手にしたことがある
+PRINTFORML 
+PRINTFORML ○羽瀬川みこと
+PRINTFORML 実績『第三の幼馴染み』をアンロックしている
+PRINTFORML 
+PRINTFORML ○黒井都子
+PRINTFORML ミッション『歌音おねーさまアイドル化計画』を桐生歌音がレズっ気LV2以上で成功する
+PRINTFORML 
+PRINTFORML ○エルファリア・ロココ・ラーグラーデ（エルファリア・ラーグラーデ）
+PRINTFORML ミッション『お姫様は特訓中』をクリスティナ・ロココ・ラーグラーデが【妊娠】した状態で成功する
+PRINTFORML 
+PRINTFORML ○ミーナ・クレイン
+PRINTFORML ミッション『逆襲のミヤコ・クロイ』を大成功する
+PRINTFORML 
+PRINTFORML ○槇原さち
+PRINTFORML クリアボーナスまたはミッション『情欲の裏切り』を成功した場合、ランダムで加入する
+PRINTFORML 
+PRINTFORML ○赤坂姫乃
+PRINTFORML クリアボーナスまたはミッション『Mermaid girl』を大成功した場合、ランダムで加入する
+PRINTFORML 
+PRINTFORML ○桜野環
+PRINTFORML ミッション『MIRACLE MEETS』を成功した場合、ランダムで加入する
+DRAWLINE
+WAIT
+CALL TIPS_MAIN
+
+;===========================================================
+;TIPS 妊娠まわりの情報
+;===========================================================
+@TIPS_PREGNANCY
+DRAWLINE
+PRINTFORML ◆妊娠まわりの走り書き◆
+PRINTFORML 普通であれば（コンフィグがONなら）中に出していれば妊娠する可能性はある
+PRINTFORML ただし、例外が存在する
+PRINTFORML ◎アンドロイド　－　まあ仕方ない
+PRINTFORML ◎淫魔、天使　－　さすがに種族が違うとなかなか
+PRINTFORML ◎異界知識、最先端科学、性魔術　－　それぞれの避妊術があるとか
+PRINTFORML ◎避妊治療済　－　そういう治療だし
+PRINTFORML 
+PRINTFORML 一方で、例外を例外ではなくする方法も存在している
+PRINTFORML 天才が触手を研究したならば道が開けるだろう
+PRINTFORML 
+
+DRAWLINE
+WAIT
+CALL TIPS_MAIN

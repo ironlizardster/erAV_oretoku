@@ -1,0 +1,765 @@
+﻿;-------------------------------------------------
+;体力増強
+;-------------------------------------------------
+@BASEHP_UP
+C = 300000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTL 「お好きな方の体力を強化する秘薬ですか？　はい、作れますよ――ですが」
+PRINTL そう言ってレイチェルが提示した材料は気軽に揃えられるものではなかったものの、
+PRINTL 金さえ積めば裏ルートから入手できるものだった
+PRINTL ただしその合計金額は目を疑うような額面で、頻繁に精製してもらうのは難しそうだ
+PRINTL ……
+PRINTL なんとか資金を工面して揃えた材料をレイチェルに渡すと、彼女はしばらく工房に引
+PRINTL きこもった
+PRINTL 工房の前を通り過ぎると鼻を突くような異臭がし、怪しげな声が聞こえてくる……
+PRINTW  
+PRINTL 「はい、できました」
+PRINTL ややあってレイチェルが紫色の液体で満たされた小瓶をあなたに手渡した
+PRINTL 「注意事項がありまして……人間ではない方、たとえばアンドロイドや淫魔。そうい
+PRINTL った方々には効果がありません。
+PRINTL また、副作用として体質が変化する場合もありますのでご注意ください」
+PRINTL さて、誰に飲ませようか……
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は体力強化ができません
+	RETURN 0
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象は体力強化ができません
+	RETURN 0
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】は体力強化ができません
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+$INPUT_LOOP_ADD_PHYSICAL
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+PRINTL  [2] - まとめて飲む
+[IF_DEBUG]
+PRINTL  [3] - まとめて15回飲む
+[ENDIF]
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%の最大体力が100増加した
+	MAXBASE:T:体力 += 100
+	BASE:T:体力 += 100
+	CFLAG:T:体力増強剤投与回数 += 1
+[IF_NDEBUG]
+	MONEY -= C
+[ENDIF]
+ELSEIF RESULT == 2 || RESULT == 3
+	$INPUT_LOOP_BASE1
+	IF RESULT == 2 
+		PRINTFORML %NAME:T%に何回体力増強剤を飲ませますか？
+		INPUT
+	ELSE
+		RESULT = 15
+	ENDIF
+	IF RESULT == 0
+		RETURN 1
+[IF_NDEBUG]
+	ELSEIF MONEY < 300000 * RESULT
+		PRINTFORMW ポイントが足りません
+		RESULT = 2 
+		GOTO INPUT_LOOP_BASE1
+[ENDIF]
+	ELSE
+		PRINTFORMW %CALLNAME:T%に{RESULT}回飲ませます（必要ポイント：{300000 * RESULT}）
+		PRINTFORMW %CALLNAME:T%の最大体力が{100 * RESULT}増加した
+		MAXBASE:T:体力 += 100 * RESULT
+		BASE:T:体力 += 100 * RESULT
+		CFLAG:T:体力増強剤投与回数 += 1 * RESULT
+[IF_NDEBUG]
+		MONEY -= C * RESULT
+[ENDIF]
+	ENDIF		
+ELSE 
+	GOTO INPUT_LOOP_ADD_PHYSICAL
+ENDIF
+
+IF CFLAG:T:体力増強剤投与回数 == 5 && TALENT:T:回復遅い
+	PRINTFORMW %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%TALENTNAME:[[TALENT:回復遅い]]%】ではなくなった
+	TALENT:T:回復遅い = 0
+ELSEIF CFLAG:T:体力増強剤投与回数 == 10 && TALENT:T:回復早い == 0 && TALENT:T:異常回復 == 0
+	IF TALENT:T:最先端科学 == 0
+		IF TALENT:T:天使 == 0
+			PRINTFORMW %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%TALENTNAME:[[TALENT:回復早い]]%】になった
+			TALENT:T:回復遅い = 0
+			TALENT:T:回復早い = 1
+		ENDIF
+	ENDIF
+ELSEIF CFLAG:T:体力増強剤投与回数 == 15 && TALENT:T:異常回復 == 0
+	PRINTFORML %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%TALENTNAME:[[TALENT:異常回復]]%】になった
+	PRINTFORMW %EXPNAME:[[EXP:異常経験]]%+1
+	TALENT:T:回復早い = 0
+	TALENT:T:回復遅い = 0
+	TALENT:T:異常回復 = 1
+	EXP:T:異常経験 += 1
+ENDIF
+
+[IF_NDEBUG]
+IF CFLAG:T:体力増強剤投与回数 + CFLAG:T:気力増強剤投与回数 >= 21 && TALENT:T:崩壊 == 0
+	PRINTFORMW %CALLNAME:T%の様子がおかしい……
+	PRINTFORML 度重なる秘薬の投与によって%CALLNAME:T%の精神は崩壊してしまった……
+	CALL ADD_CATASTROPH(T)
+ENDIF
+[ENDIF]
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;気力増強
+;-------------------------------------------------
+@BASESP_UP
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTL 「お好きな方の気力を強化する秘薬ですか？　はい、作れますよ――ですが」
+PRINTL そう言ってレイチェルが提示した材料は気軽に揃えられるものではなかったものの、
+PRINTL 金さえ積めば裏ルートから入手できるものだった
+PRINTL ただしその合計金額は目を疑うような額面で、頻繁に精製してもらうのは難しそうだ
+PRINTL ……
+PRINTL なんとか資金を工面して揃えた材料をレイチェルに渡すと、彼女はしばらく工房に引
+PRINTL きこもった
+PRINTL 工房の前を通り過ぎると甘ったるい香りがし、怪しげな声が聞こえてくる……
+PRINTW  
+PRINTL 「はい、できました」
+PRINTL ややあってレイチェルが緑色の液体で満たされた小瓶をあなたに手渡した
+PRINTL 「注意事項がありまして……人間ではない方、たとえばアンドロイドや淫魔。そうい
+PRINTL った方々には効果がありません。
+PRINTL また、副作用として体質が変化する場合もありますのでご注意ください」
+PRINTL さて、誰に飲ませようか……
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は気力強化ができません
+	RETURN 0
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象は気力強化ができません
+	RETURN 0
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】は気力強化ができません
+	RETURN 0
+ENDIF
+
+T = RESULT
+$INPUT_LOOP_ADD_SP
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+PRINTL  [2] - まとめて飲む
+[IF_DEBUG]
+PRINTL  [3] - まとめて10回飲む
+[ENDIF]
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORMW %NAME:T%の最大気力が100増加した
+	MAXBASE:T:気力 += 100
+	BASE:T:気力 += 100
+	CFLAG:T:気力増強剤投与回数 += 1
+[IF_NDEBUG]
+	MONEY -= C
+[ENDIF]
+ELSEIF RESULT == 2 || RESULT == 3
+	$INPUT_LOOP_BASE2
+	IF RESULT == 2 
+		PRINTFORML %NAME:T%に何回気力増強剤を飲ませますか？
+		INPUT
+	ELSE
+		RESULT = 10
+	ENDIF
+	IF RESULT == 0
+		RETURN 1
+[IF_NDEBUG]
+	ELSEIF MONEY < 500000 * RESULT
+		PRINTFORMW ポイントが足りません
+		RESULT = 2 
+		GOTO INPUT_LOOP_BASE2
+[ENDIF]
+	ELSE
+		PRINTFORMW %CALLNAME:T%に{RESULT}回飲ませます（必要ポイント：{500000 * RESULT}）
+		PRINTFORMW %CALLNAME:T%の最大気力が{100 * RESULT}増加した
+		MAXBASE:T:気力 += 100 * RESULT
+		BASE:T:気力 += 100 * RESULT
+		CFLAG:T:気力増強剤投与回数 += 1 * RESULT
+[IF_NDEBUG]
+		MONEY -= C * RESULT
+[ENDIF]
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP_ADD_SP
+ENDIF
+
+[IF_NDEBUG]
+IF CFLAG:T:体力増強剤投与回数 + CFLAG:T:気力増強剤投与回数 >= 21 && TALENT:T:崩壊 == 0
+	PRINTFORMW %CALLNAME:T%の様子がおかしい……
+	PRINTFORML 度重なる秘薬の投与によって%CALLNAME:T%の精神は崩壊してしまった……
+	CALL ADD_CATASTROPH(T)
+ENDIF
+[ENDIF]
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;惚れ薬
+;-------------------------------------------------
+@ADD_LOVE
+C = 1500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTL 「惚れ薬ですか？　はい、作れますよ――ですが」
+PRINTL そう言ってレイチェルが提示した材料は気軽に揃えられるものではなかったものの、
+PRINTL 金さえ積めば裏ルートから入手できるものだった
+PRINTL ただしその合計金額は目を疑うような額面で、頻繁に精製してもらうのは難しそうだ
+PRINTL ……
+PRINTL なんとか資金を工面して揃えた材料をレイチェルに渡すと、彼女はしばらく工房に引
+PRINTL きこもった
+PRINTL 工房の前を通り過ぎると卵が腐ったような異臭がし、怪しげな声が聞こえてくる……
+PRINTW  
+PRINTL 「はい、できました」
+PRINTL ややあってレイチェルが茶色の液体で満たされた小瓶をあなたに手渡した
+PRINTL 「注意事項がありまして……人間ではない方、たとえばアンドロイドや淫魔。そうい
+PRINT った方々には効果がありません
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:異界知識 == 1
+		IF TALENT:COUNT:恋心 == 0
+			PRINTL
+			PRINT また……わたしには解毒剤がありますので注意してください
+		ENDIF
+	ENDIF
+REND
+PRINTL 」
+PRINTL さて、誰に飲ませようか……
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】には惚れ薬は効きません
+	RETURN 0
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】には惚れ薬は効きません
+	RETURN 0
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象には惚れ薬は効きません
+	RETURN 0
+ELSEIF TALENT:RESULT:彼氏あり
+	PRINTFORMW 【%TALENTNAME:[[TALENT:彼氏あり]]%】には惚れ薬は効きません
+	RETURN 0
+;△異界知識にはって表示されるのもどうなのよ。要修正
+ELSEIF TALENT:RESULT:異界知識 && TALENT:RESULT:恋心 == 0
+	PRINTFORMW 【%TALENTNAME:[[TALENT:異界知識]]%】には惚れ薬は効きません
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:T%のお茶にこっそりと惚れ薬を混ぜてみた
+	PRINTFORML %CALLNAME:T%はなんの疑いもなくそのお茶を飲んでいる……
+	PRINTW
+	PRINTFORMW %CALLNAME:T%の様子がおかしい……
+	PRINTFORML %CALLNAME:T%は頬を赤らめてあなたに向き直ると、思いの丈を%CALLNAME:MASTER%に打ち明けた
+	PRINTFORML %CALLNAME:T%は【%TALENTNAME:[[TALENT:恋心]]%】を得た
+	PRINTFORMW %EXPNAME:[[EXP:薬物経験]]%+1
+	TALENT:T:セフレ = 0
+	TALENT:T:恋心 = 1
+	EXP:T:薬物経験 += 1
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;超強力媚薬
+;-------------------------------------------------
+@ADD_LEWD
+C = 1500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTL 「清純な乙女でも乱れるような媚薬ですか？　はい、作れますよ――ですが」
+PRINTL そう言ってレイチェルが提示した材料は気軽に揃えられるものではなかったものの、
+PRINTL 金さえ積めば裏ルートから入手できるものだった
+PRINTL ただしその合計金額は目を疑うような額面で、頻繁に精製してもらうのは難しそうだ
+PRINTL ……
+PRINTL なんとか資金を工面して揃えた材料をレイチェルに渡すと、彼女はしばらく工房に引
+PRINTL きこもった
+PRINTL 工房の前を通り過ぎると栗の花のような異臭がし、怪しげな声が聞こえてくる……
+PRINTW  
+PRINTL 「はい、できました」
+PRINTL ややあってレイチェルが茶色の液体で満たされた小瓶をあなたに手渡した
+PRINTL 「注意事項がありまして……人間ではない方、たとえばアンドロイドや淫魔。そうい
+PRINT った方々には効果がありません
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:異界知識 == 1
+		IF TALENT:COUNT:恋心 == 0
+			PRINTL
+			PRINT また……わたしには解毒剤がありますので注意してください
+		ENDIF
+	ENDIF
+REND
+PRINTL 」
+PRINTL さて、誰に飲ませようか……
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】には超強力媚薬は効きません
+	RETURN 0
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】には超強力媚薬は効きません
+	RETURN 0
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象には超強力媚薬は効きません
+	RETURN 0
+ELSEIF TALENT:RESULT:異界知識 && TALENT:RESULT:恋心 == 0
+	PRINTFORMW 【%TALENTNAME:[[TALENT:異界知識]]%】には超強力媚薬は効きません
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:T%のお茶にこっそりと惚れ薬を混ぜてみた
+	PRINTFORML %CALLNAME:T%はなんの疑いもなくそのお茶を飲んでいる……
+	PRINTW
+	PRINTFORMW %CALLNAME:T%の様子がおかしい……
+	PRINTFORML %CALLNAME:T%は瞳をうるませながら%CALLNAME:MASTER%の隣に座り、
+	PRINTFORM 自らの秘所をまさぐりながら%CALLNAME:MASTER%の肉棒をズボンの上から
+	PRINTFORML 撫で回し始めた……
+	PRINTFORML そして愛液でぬかるんだ秘唇を二本の指で押し広げ、熱のこもった視線と普段の
+	PRINTFORML %CALLNAME:T%が口にするとは思えないような卑語で%CALLNAME:MASTER%を挑発してきた……
+	PRINTFORML %CALLNAME:T%は【%TALENTNAME:[[TALENT:淫乱]]%】を得た
+	PRINTFORMW %EXPNAME:[[EXP:薬物経験]]%+1
+	TALENT:T:淫乱 = 1
+	EXP:T:薬物経験 += 1
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;若返り
+;-------------------------------------------------
+@ANTIAGING
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTL 「若返りの秘薬ですか？　はい、作れますよ――ですが」
+PRINTL そう言ってレイチェルが提示した材料は気軽に揃えられるものではなかったものの、
+PRINTL 金さえ積めば裏ルートから入手できるものだった
+PRINTL ただしその合計金額は目を疑うような額面で、頻繁に精製してもらうのは難しそうだ
+PRINTL ……
+PRINTL なんとか資金を工面して揃えた材料をレイチェルに渡すと、彼女はしばらく工房に引
+PRINTL きこもった
+PRINTL 工房の前を通り過ぎると鼻を突くような異臭がし、怪しげな声が聞こえてくる……
+PRINTW  
+PRINTL 「はい、できました」
+PRINTL ややあってレイチェルが紫色の液体で満たされた小瓶をあなたに手渡した
+PRINTL 「注意事項がありまして……人間ではない方、たとえばアンドロイドや淫魔。そうい
+PRINTL った方々には効果がありません。
+PRINTL また、どういうわけか１２歳以下にはならないのでご注意ください。
+PRINTL なお、若返らせると言っても実年齢を下げるだけですので見た目は変化しません」
+PRINTL さて、誰に飲ませようか……
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】は若返らせません
+	RETURN 0
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】は若返らせません
+	RETURN 0
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW 【%TALENTNAME:[[TALENT:ミッション]]%】対象は若返らせません
+	RETURN 0
+;アンドロイドは排除
+ELSEIF BASE:RESULT:実年齢 <= 12
+	PRINTFORMW %CALLNAME:RESULT%はこれ以上若返らせられません
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML %NAME:T%が1歳若返った
+	PRINTFORMW %EXPNAME:[[EXP:薬物経験]]%+1
+	BASE:T:実年齢 -= 1
+	EXP:T:薬物経験 += 1
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;-------------------------------------------------
+;サキュバス召喚
+;-------------------------------------------------
+@ADD_SUCCUBUS
+C = 2000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+IF FLAG:淫魔召還回数 == 3
+	PRINTW もう呼び出せる淫魔はいないようです
+	RETURN 0
+ENDIF
+
+
+PRINTFORML 「あの、試してみたい儀式があるんですが……」
+PRINTFORML 真剣な面持ちで%CALLNAME:MASTER%にレイチェルがそう切り出してきたのは、有り体に言うと召喚儀式
+PRINTFORML についての相談だった
+PRINTFORML いくらレイチェルが不思議な、魔法としか思えないような力を持っていたとしても、それ
+PRINTFORML こそファンタジーな芸当ができるはずがない
+PRINTFORML ただ、女優候補への指導のアシスタントを健気に務めてくれているレイチェルの望みを無
+PRINTFORML 下にするのも気が引けた%CALLNAME:MASTER%は、一応何が必要でどのぐらいの金額がかかるのかを教え
+PRINTFORML てもらうことにした
+PRINTFORMW  
+PRINTFORML 必要な資金は桐生組に返済しなければならない額と同額、しかも儀式に必要なのは「罪人
+PRINTFORML の命」と、金銭的にも――そして倫理的にもかなり厳しいものがある
+PRINTFORML %CALLNAME:MASTER%は一旦レイチェルの提案を保留にし、桐生組に相談することにした……
+PRINTFORMW  
+PRINTFORML 「レイチェル嬢のことはよく知っておる。儂らも非合法な薬を嬢に作ってもらって
+PRINTFORML おるからのぅ」
+PRINTFORML %CALLNAME:MASTER%の話を聞いた桐生組の組長は、しみじみと頷くと%CALLNAME:MASTER%にある条件を突きつ
+PRINTFORML けた
+PRINTFORMW  
+PRINTFORML ・罪人の手配は桐生組がするが、それ以外の儀式に必要な道具などは自分たちで用意する
+PRINTFORML ・２００万Ｐの返済猶予は十日だけ延長する
+PRINTFORML ・もし儀式に失敗しても自己責任である
+PRINTFORMW
+PRINTFORML ある程度女優候補たちが育ってきているから、今から十日も返済猶予が延長されるのであ
+PRINTFORML れば２００万Ｐを稼ぐのはぎりぎりなんとかなる
+PRINTFORMW 残るは倫理観の問題だが――
+PRINTFORML 「こう言ってはなんですがわたしのような生娘を『指導』して、性のはけ口にさせている
+PRINTFORML 時点で倫理観もなにも無いと思いますよ？」
+PRINTFORML レイチェルの言うとおりで、そもそもこの仕事を無理やりとはいえやり始めた時にそうい
+PRINTFORML った倫理観は捨てたつもりだった
+PRINTFORML そうして覚悟を決めた%CALLNAME:MASTER%は桐生組に罪人の手配をしてもらい、レイチェルが必要とす
+PRINTFORML る材料をすべて用意した
+PRINTFORMW  
+PRINTFORML レイチェルの工房の床に奇妙な図形を組み合わせた幾何学的な紋様が描かれ、その中心に
+PRINTFORML 罪人――桐生組の『鉄砲玉』が気絶した状態で寝転がされている
+PRINTFORML 真剣な面持ちで名状しがたい異臭の中、分厚い本を捧げ持ち、レイチェルが呪文のような
+PRINTFORML ものを唱えつづけていた
+PRINTFORMW  
+PRINTFORML 「どうやら召喚できるのは淫魔、サキュバスやインキュバスのようです」
+PRINTFORML 儀式の内容について調べていたレイチェルが言うにはそういった――何の因果かこの仕事
+PRINTFORML に最も適している人外の存在の召喚儀式だったようだ
+PRINTFORML 儀式は滞り無く進んでいるように思われ、そして儀式が始まってから数十分が経過した今、
+PRINTFORML 床に寝転がされた男が苦悶の声をあげ始めた
+PRINTFORML 男は床を激しくのたうちまわりながら、早送りした映像のようにみるみるうちにミイラ化
+PRINTFORML していった
+PRINTFORML 本を閉じ、詠唱を終えたらしいレイチェルが紋様の中心をじっと見つめている……
+PRINTFORMW
+PRINTFORML 突如爆発的な光が発生した後に男のミイラが跡形もなく消滅し、そしてそこには――
+PRINTW
+$INPUT_LOOP
+SIF GETCHARA([[キャラ:エリス]],0 ) < 0 && (FLAG:淫魔召還回数 & 1) == 0
+	PRINTL  [0] - 大人しそうな半裸の、高●生ぐらいの見た目の少女がいた
+SIF GETCHARA([[キャラ:リリス]],0 ) < 0 && (FLAG:淫魔召還回数 & 2) == 0
+	PRINTL  [1] - 生意気そうな全裸の、中●生ぐらいの見た目の少女がいた
+PRINTL ※CAUTION※
+PRINTL この儀式で召喚できるキャラクターを引退させた場合、再度契約することはできません！
+
+INPUT
+
+IF RESULT == 0 && GETCHARA([[キャラ:エリス]],0 ) < 0 && (FLAG:淫魔召還回数 ^ 1)
+	PRINTFORML ここがどこなのかわかっていないのか、その少女は周囲を怯えた目できょろきょろと見回
+	PRINTFORML している
+	PRINTFORML そして%CALLNAME:MASTER%やレイチェルの存在に気づくと、やたら流暢な日本語で自己紹介を始めた…
+	PRINTFORML …
+	PRINTW
+	PRINTFORML よく分からないことを言っていたが、%CALLNAME:MASTER%が理解できたのはこの少女はまごうことなき
+	PRINTFORML サキュバスで、名前を「エリス」ということ
+	PRINTFORML そして淫魔の名家の令嬢で箱入り同然に育てられてきたため、なんとサキュバスだという
+	PRINTFORML のにまだ処女だという
+	PRINTFORML %CALLNAME:MASTER%がエリスにこれからしてもらうことを説明すると、エリスは恥ずかしがりながらも
+	PRINTFORML 容易に「食餌」が行える環境だと知ると笑顔でうなずいてみせた……
+	PRINTFORMW
+	PRINTFORML 《エリスが女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:エリス]])
+		FLAG:淫魔召還回数 |= 1
+ELSEIF RESULT == 1 && GETCHARA([[キャラ:リリス]],0 ) < 0 && (FLAG:淫魔召還回数 ^ 2)
+	PRINTFORML ここがどこなのかわかっていないのか、その少女は周囲を好奇心旺盛にきょろきょろと
+	PRINTFORML 見回している
+	PRINTFORML そして%CALLNAME:MASTER%やレイチェルの存在に気づくと、やたら流暢な日本語で自己紹介を始めた…
+	PRINTFORML …
+	PRINTW
+	PRINTFORML よく分からないことを言っていたが、%CALLNAME:MASTER%が理解できたのはこの少女はまごうことなき
+	PRINTFORML サキュバスで、名前を「リリス」ということ
+	PRINTFORML サキュバスらしく経験豊富で、男の精を吸う技術は同世代のサキュバスと比べても優れて
+	PRINTFORML いるという
+	PRINTFORML %CALLNAME:MASTER%がエリスにこれからしてもらうことを説明すると、リリスは妖艶に舌なめずりして
+	PRINTFORML 容易に「食餌」が行える環境だと知ると笑顔でうなずいてみせた……
+	PRINTFORMW
+	PRINTFORML 《リリスが女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:リリス]])
+		FLAG:淫魔召還回数 |= 2
+ENDIF
+
+MONEY -= C
+FLAG:期限日数 += 10
+RETURN 1
+
+;-------------------------------------------------
+;リーナ契約
+;-------------------------------------------------
+@ADD_REENA
+
+C = 500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+PRINTFORML 「貴方にお願いがあるのですが……よろしいでしょうか？」
+PRINTFORML レイチェルの工房にて、作業中の主人に代わり%CALLNAME:MASTER%の相手をしていた女性が、唐突に話を切り出してきた
+PRINTFORML クールビューティーという言葉が似合う、有能な秘書のような印象の彼女の名前はリーナ・レスピーチオ
+PRINTFORML 海外留学中のレイチェルのお目付け役とボディガードを兼ねており、何度も工房や事務所で顔を合わせている
+PRINTFORM 直接言葉を交わしたことは数えるほどしかないリーナの、
+PRINTFORMW 神妙な表情での《お願い》とは一体どのようなものなのだろうか……
+PRINTFORML 「姫様が貴方に信頼を寄せているのは……我が国の秘術を提供していることからもお分かり頂けますよね？
+PRINTFORML 　同時に、姫様が貴方を見る瞳が恋する乙女のものであることも
+PRINTFORML 　……まあ、既に貴方に特定の想い人がいるのだとしても、それは不問に致します
+PRINTFORML 　いかなる形であれ、姫様の想いが報われるのであれば
+PRINTFORML 　さて、本題に入りましょうか
+PRINTFORML 　ご存知の通り私はボディガードであり、また姫様の命を受けて密偵のようなこともしております
+PRINTFORML 　密偵、つまりスパイですから身体を使って情報を引き出す可能性もあるのです
+PRINTFORML 　ただ幸いと云いますか……そういう経験もなく、お恥ずかしいのですが私は未だ生娘です
+PRINTFORML 　今後、万が一そのような事態になった際、相手に対して何も出来ないのであれば密偵として失格でしょう？
+PRINTFORML 　そこで貴方にお願いしたい事というのは……この国で言うところの『房中術』ですね、それを私に指導していただきたい
+PRINTFORML 　単刀直入に言えば、私を姫様と同じようにポルノ女優として契約して欲しい、というわけです
+PRINTFORML 　姫様の了解を得ておりますし、私も貴方であれば安心して身を任せることができます
+PRINTFORML 　姫様の想い人であれば間違いはない、と信じておりますから
+PRINTFORML 　ただ……この件について姫様は貴方に５０万ポイントを要求するように、と仰いました
+PRINTFORML 　この額面はいずれ私が貴方に、密偵としての力を貸すようになった際の調査費用の前払金であると解釈してください
+PRINTFORML 　例えば桐生組など裏稼業の人間に依頼する際の調査費用が、正当な手続きだと２００万ポイントは必要となります
+PRINTFORML 　調査のみとなりますが、私が貴方に力を貸すことになったら貴方に関わる全ての人の調査を約束しましょう
+PRINTFORMW 　《お願い》というよりは《交渉》となってしまいましたが……いかがでしょう？」
+PRINTFORML リーナの言葉は魅力的な提案で、なにか裏があるようには思えない
+PRINTFORML ５０万ポイントで女優候補たちの身辺調査を常時行なってくれると考えれば安いものだが……
+PRINTFORML
+$INPUT_LOOP_REENA
+PRINTFORML リーナ・レスピーチオと契約しますか？
+PRINTL [0] - 契約する
+PRINTL [1] - やっぱりやめる
+INPUT
+
+IF RESULT == 0 && FLAG:リーナ雇用 == 0
+	PRINTFORML 「契約していただいてありがとうございます
+	PRINTFORML 　私ごときのポルノが売れるかどうかは分かりませんが、誠心誠意ご協力させていただきます」
+	PRINTFORMW
+	PRINTFORML 《リーナ・レスピーチオが女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:リーナ・レスピーチオ]])
+		FLAG:リーナ雇用 = 1
+		CALL REENA_ABLCHECK
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_REENA
+ENDIF
+
+MONEY -= C
+
+RETURN 0
+
+;-------------------------------------------------
+;リーナ契約
+;-------------------------------------------------
+@REENA_ABLCHECK
+K = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]]
+		K += ABL:COUNT:信頼
+	ENDIF
+REND
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:リーナ・レスピーチオ]]
+		ABL:COUNT:信頼 += K - 2
+	ENDIF
+REND
+
+;-------------------------------------------------
+;リーナ契約
+;-------------------------------------------------
+@REENA_SEARCH
+
+PRINTFORMW 《リーナにスタッフたちの動向をチェックしてもらうようにお願いしました》
+FLAG:リーナスタッフ動向調査 = 1
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF CFLAG:COUNT:スタッフ寝取られイベントの進行度 == 1
+		CFLAG:COUNT:スタッフ寝取られイベントの進行度 = 0
+		CFLAG:COUNT:彼氏の有無 = 0
+	ENDIF
+REND
+
+;-------------------------------------------------
+;触手召喚
+;-------------------------------------------------
+@ADD_TENTACLE
+C = 75000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML  触手生物を召喚しますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 《触手生物を召喚しました》
+	ITEM:触手生物 += 1
+	MONEY -= C
+	WAIT
+	RETURN 1
+ELSEIF RESULT == 1
+	RETURN 0
+ENDIF
+
+GOTO INPUT_LOOP

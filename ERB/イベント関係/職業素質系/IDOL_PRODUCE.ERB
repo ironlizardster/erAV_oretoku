@@ -1,0 +1,152 @@
+﻿;===========================================================
+;ユニット結成の計算
+;===========================================================
+@IDOL_PRODUCE_CALC
+
+;月初めのみ
+SIF DAY:2 > 1 
+	RETURN
+
+A = 0
+B = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	;既にユニット所属またはソロで確固たる地歩のある者の除外
+	ELSEIF SKIP_ADD_ORIGINAL(COUNT)
+		CONTINUE
+	ELSEIF TALENT:COUNT:アイドル == 1
+		A += 1
+		SIF B == 0
+			B = COUNT
+	ENDIF
+REND
+
+IF A >= 4 && MONEY >= 10000000
+	CALL IDOL_PRODUCE
+ENDIF
+
+;===========================================================
+;ユニット結成の内容
+;===========================================================
+@IDOL_PRODUCE
+
+PRINTFORML %CALLNAME:MASTER%が付けっぱなしのテレビにふと気を向けると、とあるバラエティ番組が垂れ流されていた
+PRINTFORM ひな壇には超人気アイドルユニット『ColorfulPureGirls』のメンバーたちが座っており、いわゆる「世界のおもしろ動画」を見て
+PRINTFORML ＭＣに振られた者が差し障りの無い適当なコメントをしている
+PRINTFORM そんな光景をぼんやりと流し見しながら、
+PRINTFORM ファンには現役ＡＶ女優というのは隠してあるが、%CALLNAME:MASTER%の事務所には%NAME:B%を始めとする、ＣＰＧたちにも負けず劣らず
+PRINTFORML のルックスのアイドルたちが所属していることを%CALLNAME:MASTER%は思い出した
+PRINTFORM いっそのこと%CALLNAME:B%たちもＣＰＧと同じようにユニットとして売り、もしもそのユニットに人気が出たなら……『そっくりさん』という
+PRINTFORML 付加価値が生まれるかもしれない
+PRINTFORMW 歌音にその『思いつき』を相談してみると、５００万ポイントあれば%CALLNAME:B%たちをＣＰＧにも比肩するようなユニットにすることができるらしい……
+PRINTL
+$INPUT_LOOP_PRODUCE
+PRINTFORML アイドルユニットを結成しますか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+INPUT
+	IF RESULT == 0
+		PRINTL
+		PRINTFORML これまでソロ活動だった%CALLNAME:B%たちをアイドルユニットとして売り出しました
+		$INPUT_LOOP_DECIDE1
+		PRINTL 《アイドルユニットの名前を決定してください》
+		INPUTS
+			$INPUT_LOOP_DECIDE2
+			PRINTFORML 《%RESULTS%》をユニット名にしますか？
+			PRINTL [0] - はい
+			PRINTL [1] - いいえ
+			INPUT
+				IF RESULT == 0
+					PRINTFORML %CALLNAME:B%たちを%RESULTS%として売り出すことにしました
+					DRAWLINE
+					CSTR:MASTER:アイドルユニット名 = %RESULTS%
+					FLAG:アイドルユニット結成 = 1
+					REPEAT CHARANUM
+						IF COUNT == 0
+							CONTINUE
+						ELSEIF SKIP_ADD_ORIGINAL(COUNT)
+							CONTINUE
+						ELSE
+							CALL IDOL_PRODUCE_ADD_ORIGINAL(COUNT)
+						ENDIF
+					REND
+					MONEY -= 5000000
+				ELSEIF RESULT == 1
+					PRINTFORML 再入力してください
+					GOTO INPUT_LOOP_DECIDE1
+				ELSE
+					GOTO INPUT_LOOP_DECIDE2
+				ENDIF
+	ELSEIF RESULT == 1
+		PRINTFORML ユニット結成は見送りました
+		DRAWLINE
+	ELSE
+		GOTO INPUT_LOOP_PRODUCE
+	ENDIF
+
+;===========================================================
+;ユニット結成の内容
+;===========================================================
+@IDOL_PRODUCE_ADD
+REPEAT CHARANUM
+	SIF MONEY < 500000*2
+		BREAK
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF SKIP_ADD_ORIGINAL(COUNT)
+		CONTINUE
+	ELSE
+		$INPUT_LOOP_DECIDE3
+		PRINTFORML ソロ活動中の%NAME:COUNT%を%CSTR:MASTER:アイドルユニット名%に加入させますか？
+		PRINTFORML （%CALLNAME:COUNT%のレッスン料として500000ポイントかかります）
+			PRINTL [0] - はい
+			PRINTL [1] - いいえ
+			INPUT
+				IF RESULT == 0
+					PRINTFORML %CALLNAME:COUNT%を%CSTR:MASTER:アイドルユニット名%に加入させました
+					DRAWLINE
+					CALL IDOL_PRODUCE_ADD_ORIGINAL(COUNT)
+					MONEY -= 500000
+				ELSEIF RESULT == 1
+					PRINTFORML ユニット加入は見送りました
+					PRINTFORML ※今後%CALLNAME:COUNT%のユニット加入の確認をしますか？
+					PRINTL [0] - はい
+					PRINTL [1] - いいえ
+					$INPUT_LOOP_DECIDE4
+					INPUT
+						IF RESULT == 0
+							PRINTFORML %CALLNAME:COUNT%のユニット加入を確認します
+						ELSEIF RESULT == 1
+							PRINTFORML %CALLNAME:COUNT%のユニット加入を確認しません
+							CFLAG:COUNT:[[CFLAG:ユニット加入なし]] = 1
+						ELSE
+							GOTO INPUT_LOOP_DECIDE4
+						ENDIF
+						
+					DRAWLINE
+				ELSE
+					GOTO INPUT_LOOP_DECIDE3
+				ENDIF
+	ENDIF
+REND
+
+@IDOL_PRODUCE_ADD_ORIGINAL, ARG
+TALENT:ARG:オリジナルユニット = 1
+MAXBASE:ARG:魅力値 += 30
+BASE:ARG:魅力値 += 30
+FOR LOCAL,0,CHARANUM
+	IF TALENT:LOCAL:オリジナルユニット == 0
+		CONTINUE
+	ELSE
+		SIF RELATION:LOCAL:ARG <= 300
+			RELATION:LOCAL:ARG = 300
+		SIF RELATION:ARG:LOCAL <= 300
+			RELATION:ARG:LOCAL = 300
+	ENDIF
+NEXT 
+
+@SKIP_ADD_ORIGINAL(ARG)
+#FUNCTION
+RETURNF !TALENT:ARG:アイドル || CFLAG:ARG:[[CFLAG:ユニット加入なし]] || TALENT:ARG:ColorfulPureGirls || TALENT:ARG:オリジナルユニット || TALENT:ARG:[[TALENT:Mermaid girl]] || TALENT:ARG:Triptych || TALENT:ARG:[[TALENT:Emerald Queen]] || TALENT:ARG:[[TALENT:Lily Princess]] || TALENT:ARG:ILMATAR || TALENT:ARG:AVALOKITESVARA || TALENT:ARG:QueenB 

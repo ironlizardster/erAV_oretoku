@@ -1,0 +1,576 @@
+﻿;===========================================================
+;クリアボーナス
+;===========================================================
+@CLEARBONUS
+#DIM POINT
+
+LOADGLOBAL
+POINT = GLOBAL:200
+
+$INPUT_LOOP
+PRINTL □キャラクリボーナス□
+PRINTFORML 所持クリアポイント：{POINT}ポイント
+DRAWLINE
+IF LOCAL:0 == 0
+	PRINTL [ 0] - ゲーム期間を倍に延長した状態で開始　  　　　　     　       （  2ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:1 == 0
+	PRINTL [ 1] - 所持金を500000ポイントで開始　　　　　     　　　　  　　　 （  3ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:2 == 0
+	PRINTL [ 2] - ものすごいアイドルと契約した状態で開始　　 　　　　　　　　 （  5ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:3 == 0
+	PRINTL [ 3] - 伝説のＡＶ男優・兼監督に弟子入りする　 　　　　　　　　　　 （ 10ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:4 == 0
+	PRINTL [ 4] - ミッションモードを解禁した状態で開始　　　　 　　　　　　　 （ 15ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:5 == 0
+	PRINTL [ 5] - 購入可能なアイテムを全て所持した状態で開始　　 　　　　　   （ 30ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:6 == 0
+	PRINTL [ 6] - ＥＸミッションを解禁した状態で開始　　　　　　 　　　  　　 （ 50ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:7 == 0 && GLOBAL:60 == 1
+	PRINTL [ 7] - 借金が一切ない状態で開始　　　　　　　　　　　　 　　　  　 （100ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:8 == 0
+	PRINTL [ 8] - 契約できるキャラの彼氏の有無を選択可能にする 　　　　 　　 　（ 10ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:9 == 0
+	PRINTL [ 9] - 強気でヘタレなあの娘と契約した状態で開始する　　　　 　  　　（ 30ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:10 == 0
+	PRINTL [10] - 契約できるキャラのペニスの有無を選択可能にする 　　　 　　　 （ 40ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:11 == 0
+	PRINTL [11] - いつでも全力熱血なあの娘と契約した状態で開始する 　　　 　　 （ 30ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:12 == 0
+	PRINTL [12] - 契約できるキャラが見られて興奮するかどうかを選択可能にする 　（200ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:13 == 0
+	PRINTL [13] - ゴーストプリンセスなあの娘と契約した状態で開始する 　 　　　 （ 30ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:2 == 0 && LOCAL:9 == 0 && LOCAL:11 == 0 && LOCAL:13 == 0
+	PRINTL [14] - クリアボーナスキャラお得セット　　　　　　　　　　 　　 　　 （ 80ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+IF LOCAL:15 == 0 && GLOBAL:30 == 1
+	PRINTL [15] - 全ての女優候補のうち一名が最初から所属している状態で開始する （300ポイント）
+ELSE
+	PRINTL [ -] - －－－－－－－－－－
+ENDIF
+DRAWLINE
+PRINTL [999] - 戻る 
+INPUT
+IF RESULT == 0 && LOCAL:0 == 0 && POINT >= 2
+	PRINTL ゲーム期間を倍にした状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_EXTEND
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			FLAG:期限日数 *= 2
+			PRINTFORMW ゲーム期間を{FLAG:期限日数}週に延長しました
+			POINT -= 2
+			LOCAL:0 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW このボーナスを取得しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_EXTEND
+		ENDIF
+ELSEIF RESULT == 0 && LOCAL:0 == 0 && POINT < 2
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 1 && LOCAL:1 == 0 && POINT >= 3
+	PRINTL ゲーム開始時の資金を500000ポイントから開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_HALFMILLION
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			MONEY = 500000
+			PRINTFORMW ゲーム開始時の資金を500000ポイントに変更しました
+			POINT -= 3
+			LOCAL:1 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW ゲーム期間を延長しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_HALFMILLION
+		ENDIF
+ELSEIF RESULT == 1 && LOCAL:1 == 0 && POINT < 3
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 2 && LOCAL:2 == 0 && POINT >= 5
+	PRINTL ものすごいアイドルと契約した状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_ADDYUKI
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			CALL キャラ追加([[キャラ:佐倉由希]])
+			PRINTFORMW ものすごいアイドルと契約してスタートします
+			POINT -= 5
+			LOCAL:2 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW ものすごいアイドルと契約しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_ADDYUKI
+		ENDIF
+ELSEIF RESULT == 2 && LOCAL:2 == 0 && POINT < 5
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 3 && LOCAL:3 == 0 && POINT >= 10
+	PRINTL 伝説のＡＶ男優・兼監督に弟子入りした状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_CHOCOBALL
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 伝説のＡＶ男優・兼監督に弟子入りした状態でゲームを開始します
+			POINT -= 10
+			LOCAL:3 = 1
+			TALENT:MASTER:調合知識 = 1
+			TALENT:MASTER:魅惑 = 1
+			TALENT:MASTER:謎の魅力 = 1
+			TALENT:MASTER:カリスマ = 1
+			TALENT:MASTER:秘密知識 = 1
+			ABL:MASTER:技巧 = 10
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW 伝説のＡＶ男優・兼監督に弟子入りしませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_CHOCOBALL
+		ENDIF
+ELSEIF RESULT == 3 && LOCAL:3 == 0 && POINT < 10
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 4 && LOCAL:4 == 0 && POINT >= 15
+	PRINTL ミッションモードを解禁した状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_MISSION
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW ミッションモードを解禁した状態で開始します
+			POINT -= 15
+			FLAG:ミッションモード解禁 = 1
+			LOCAL:4 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW ミッションモードを解禁した状態で開始しません
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_MISSION
+		ENDIF
+ELSEIF RESULT == 4 && LOCAL:4 == 0 && POINT < 15
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 5 && LOCAL:5 == 0 && POINT >= 30
+	PRINTL 購入できるアイテムを全て所持した状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_ITEM
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 購入できるアイテムを全て所持した状態で開始します
+			POINT -= 30
+
+			REPEAT 25
+				SIF COUNT == 22
+					CONTINUE
+				ITEM:COUNT = 1
+			REND
+			
+			REPEAT 5
+				ITEM:(COUNT + 24) = 99
+			REND
+			
+			ITEM:ピアスリング = 99
+			ITEM:ラブスコープ = 1
+
+			LOCAL:5 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW 購入できるアイテムを全て所持した状態で開始しません
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_ITEM
+		ENDIF
+ELSEIF RESULT == 5 && LOCAL:5 == 0 && POINT < 30
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 6 && LOCAL:6 == 0 && POINT >= 50
+	PRINTL ＥＸミッションを解禁した状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	PRINTL ※このボーナスは「ミッションモードを解禁して始める」を選択していないと効果がありません
+	$INPUT_LOOP_MISSION2
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW ＥＸミッションモードを解禁した状態で開始します
+			POINT -= 50
+			EXP:MASTER:貢献度 += 50
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW ＥＸミッションを解禁した状態で開始しません
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_MISSION2
+		ENDIF
+ELSEIF RESULT == 6 && LOCAL:6 == 0 && POINT < 50
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 7 && LOCAL:7 == 0 && GLOBAL:60 == 1 && POINT >= 100
+	PRINTL ゲームクリアに必要な借金が無い状態でゲームを開始します
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_NOCHARGE2
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 必要な借金が無い状態でゲームを開始します
+			POINT -= 100
+			LOCAL:7 = 1
+			FLAG:目標金額 = 0
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW 必要な借金が無い状態でゲームを開始しません
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_NOCHARGE2
+		ENDIF
+ELSEIF RESULT == 7 && LOCAL:7 == 0 && POINT < 100
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 8 && LOCAL:8 == 0 && POINT >= 10
+	PRINTL 契約できるキャラの彼氏の有無を選択可能にします
+	PRINTL ※一部キャラクターを除きます
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_BOYFRIEND
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 契約できるキャラの彼氏の有無を選択可能にします
+			POINT -= 10
+			LOCAL:8 = 1
+			FLAG:彼氏選択 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW 契約できるキャラの彼氏の有無を選択可能にしませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_BOYFRIEND
+		ENDIF
+ELSEIF RESULT == 8 && LOCAL:8 == 0 && POINT < 10
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 9 && LOCAL:9 == 0 && POINT >= 30
+	PRINTL 強気でヘタレなあの娘と契約した状態でスタートします
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_ADDSACHI
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			CALL キャラ追加([[キャラ:槇原さち]])
+			PRINTFORMW  強気でヘタレなあの娘と契約してスタートします
+			POINT -= 30
+			LOCAL:9 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW  強気でヘタレなあの娘と契約しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_ADDSACHI
+		ENDIF
+ELSEIF RESULT == 9 && LOCAL:9 == 0 && POINT < 30
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 10 && LOCAL:10 == 0 && POINT >= 40
+	PRINTL 契約できるキャラのペニスの有無を選択可能にします
+	PRINTL ※一部キャラクターを除きます
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_FUTANARI
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 契約できるキャラのペニスの有無を選択可能にします
+			POINT -= 40
+			LOCAL:10 = 1
+			FLAG:ペニス選択 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW 契約できるキャラのペニスの有無を選択可能にしませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_FUTANARI
+		ENDIF
+ELSEIF RESULT == 10 && LOCAL:10 == 0 && POINT < 40
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 11 && LOCAL:11 == 0 && POINT >= 30
+	PRINTL いつでも全力熱血なあの娘と契約した状態でスタートします
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_ADDHIMENO
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			CALL キャラ追加([[キャラ:赤坂姫乃]])
+			PRINTFORMW  いつでも全力熱血なあの娘と契約してスタートします
+			POINT -= 30
+			LOCAL:11 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW  いつでも全力熱血なあの娘と契約しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_ADDHIMENO
+		ENDIF
+ELSEIF RESULT == 11 && LOCAL:11 == 0 && POINT < 30
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP	
+ELSEIF RESULT == 12 && LOCAL:12 == 0 && POINT >= 200
+	PRINTL 契約できるキャラが見られて興奮するかどうかを選択可能にします
+	PRINTL このボーナスを使用したことによるペナルティは
+	PRINTL 【恥薄い】を持っていないキャラ全員が【恥薄い】を取得します
+	$INPUT_LOOP_HENTAI
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			PRINTFORMW 契約できるキャラが見られて興奮するかどうかを選択可能にします
+			POINT -= 200
+			LOCAL:12 = 1
+			FLAG:露出癖 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW 契約できるキャラが見られて興奮するかどうかを選択可能にしませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_HENTAI
+		ENDIF
+ELSEIF RESULT == 12 && LOCAL:12 == 0 && POINT < 200
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP	
+ELSEIF RESULT == 13 && LOCAL:13 == 0 && POINT >= 30
+	PRINTL ゴーストプリンセスなあの娘と契約した状態でスタートします
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_ADDTAMAKI
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			CALL キャラ追加([[キャラ:桜野環]])
+			PRINTFORMW  ゴーストプリンセスなあの娘と契約してスタートします
+			POINT -= 30
+			LOCAL:13 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW  ゴーストプリンセスなあの娘と契約しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_ADDTAMAKI
+		ENDIF
+ELSEIF RESULT == 13 && LOCAL:13 == 0 && POINT < 30
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP	
+ELSEIF RESULT == 14 && LOCAL:14 == 0 && LOCAL:2 == 0 && LOCAL:11 == 0 && LOCAL:9 == 0 && LOCAL:13 == 0 && POINT >= 80
+	PRINTL クリアボーナスで契約できるキャラ全員と契約した状態でスタートします
+	PRINTL このボーナスを使用したことによるペナルティはありません
+	$INPUT_LOOP_ADDALL
+	PRINTL このボーナスを取得しますか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+		IF RESULT == 0
+			CALL キャラ追加([[キャラ:槇原さち]])
+			CALL キャラ追加([[キャラ:赤坂姫乃]])
+			CALL キャラ追加([[キャラ:桜野環]])
+			CALL キャラ追加([[キャラ:佐倉由希]])
+			PRINTFORMW  クリアボーナスで契約できるキャラ全員と契約してスタートします
+			POINT -= 80
+			LOCAL:2 = 1
+			LOCAL:9 = 1
+			LOCAL:11 = 1
+			LOCAL:13 = 1
+			LOCAL:14 = 1
+			GOTO INPUT_LOOP
+		ELSEIF RESULT == 1
+			PRINTW  クリアボーナスで契約できるキャラ全員と契約しませんでした
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_ADDALL
+		ENDIF
+
+ELSEIF RESULT == 14 && LOCAL:14 == 0 && POINT < 80
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP	
+ELSEIF RESULT == 15 && LOCAL:15 == 0 && POINT >= 300
+	CALL ACTRESS_LIST(ACTRESS_LIST_CB_MODE)
+	IF RESULT == 1
+		POINT -= 300
+		LOCAL:15 = 1
+	ENDIF	
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 15 && LOCAL:15 == 0 && POINT < 300
+	PRINTL 《ボーナスポイントが不足しています》
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 8826 && LOCAL:0 == 0 && LOCAL:0 == 0 && LOCAL:1 == 0 && LOCAL:2 == 0 && LOCAL:3 == 0 && LOCAL:4 == 0 && LOCAL:5 == 0 && LOCAL:6 == 0 && LOCAL:7 == 0 && LOCAL:8 == 0 && LOCAL:11 == 0 && LOCAL:12 == 0
+	PRINTFORMW デバッグ用です
+
+	FLAG:期限日数 *= 2
+	LOCAL:0 = 1
+	MONEY = 500000
+	LOCAL:1 = 1
+	LOCAL:3 = 1
+	TALENT:MASTER:調合知識 = 1
+	TALENT:MASTER:魅惑 = 1
+	TALENT:MASTER:謎の魅力 = 1
+	TALENT:MASTER:カリスマ = 1
+	TALENT:MASTER:秘密知識 = 1
+	ABL:MASTER:技巧 = 10
+	FLAG:ミッションモード解禁 = 1
+	LOCAL:4 = 1
+	REPEAT 25
+		SIF COUNT == 22
+			CONTINUE
+		ITEM:COUNT = 1
+	REND
+	REPEAT 5
+		ITEM:(COUNT + 24) = 99
+	REND
+	ITEM:ピアスリング = 99
+	ITEM:ラブスコープ = 1
+	LOCAL:6 = 1
+	EXP:MASTER:貢献度 += 50
+	LOCAL:7 = 1
+	FLAG:目標金額 = 0
+	LOCAL:8 = 1
+	FLAG:彼氏選択 = 1
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 999
+
+	IF GETCHARA(S, 0) != -1
+		TARGET = GETCHARA(S)
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+
+	IF GETCHARA([[キャラ:野々宮初佳]], 0) != -1
+		TARGET = GETCHARA([[キャラ:野々宮初佳]])
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+
+	IF GETCHARA([[キャラ:槇原さち]], 0) != -1
+		TARGET = GETCHARA([[キャラ:槇原さち]])
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+
+	IF GETCHARA([[キャラ:赤坂姫乃]], 0) != -1
+		TARGET = GETCHARA([[キャラ:赤坂姫乃]])
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+
+	IF GETCHARA([[キャラ:桜野環]], 0) != -1
+		TARGET = GETCHARA([[キャラ:桜野環]])
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+
+	IF GETCHARA([[キャラ:佐倉由希]], 0) != -1
+		TARGET = GETCHARA([[キャラ:佐倉由希]])
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+	
+	IF GETCHARA(Y, 0) != -1
+		TARGET = GETCHARA(Y)
+		CALL DEFOLT_GENITALCALL
+		CALL CLEARBONUS_CALL
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN
+
+;===========================================================
+;クリアボーナスの計算
+;===========================================================
+@CHARACLEAR_CALC
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:永遠の愛 == 1 && CFLAG:COUNT:850 == 0
+		LOADGLOBAL
+		CFLAG:COUNT:850 = 1
+		GLOBAL:200 += 1
+		SAVEGLOBAL
+	ENDIF
+REND

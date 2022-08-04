@@ -1,0 +1,181 @@
+﻿;-------------------------------------------------
+;三角木馬
+;道具使用コマンド：三角木馬に乗せてクリトリスを刺激
+;-------------------------------------------------
+@COM137
+
+PRINTL 三角木馬
+SAVESTR:0 = 三角木馬
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 0
+LOSEBASE:気力 += 20
+SOURCE:14 = 1000
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 400
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 800
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 1800
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 3200
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 4800
+ELSE
+	SOURCE:0 = 6000
+ENDIF
+
+;PALAM:苦痛をみる
+IF PALAM:苦痛 < PALAMLV:1
+	SOURCE:6 = 3000
+ELSEIF PALAM:苦痛 < PALAMLV:2
+	SOURCE:6 = 3300
+ELSEIF PALAM:苦痛 < PALAMLV:3
+	SOURCE:6 = 3600
+ELSEIF PALAM:苦痛 < PALAMLV:4
+	SOURCE:6 = 4000
+ELSEIF PALAM:苦痛 >= PALAMLV:4
+	SOURCE:6 = 4500
+ENDIF
+
+;大きいと重いので食い込みが強くなる
+;大柄
+IF TALENT:大柄
+	TIMES SOURCE:0 , 1.80
+	TIMES SOURCE:6 , 1.80
+ENDIF
+;小柄体型
+IF TALENT:小柄体型
+	TIMES SOURCE:0 , 0.80
+	TIMES SOURCE:6 , 0.80
+ENDIF
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式三角木馬 >= 1
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:6 , 1.50
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +2
+	EXP:レズ経験 += 2
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +2
+	EXP:ＢＬ経験 += 2
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:マゾっ気 >= 3
+	TFLAG:主人経験 += 1
+
+;愛情経験
+E = 0
+
+
+;-------------------------------------------------
+;三角木馬の乗降
+;-------------------------------------------------
+IF TEQUIP:三角木馬騎乗 >= 1
+	TEQUIP:三角木馬騎乗 = 0
+ELSE
+	TEQUIP:三角木馬騎乗 = 1
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;-------------------------------------------------
+;三角木馬騎乗中
+;-------------------------------------------------
+@EQUIP_COM137
+
+PRINTL ＜三角木馬騎乗中＞
+
+LOSEBASE:体力 += 10
+LOSEBASE:気力 += 20
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	A = 40 + 10 * TEQUIP:三角木馬騎乗
+ELSEIF ABL:Ｃ感覚 == 1
+	A = 80 + 20 * TEQUIP:三角木馬騎乗
+ELSEIF ABL:Ｃ感覚 == 2
+	A = 180 + 30 * TEQUIP:三角木馬騎乗
+ELSEIF ABL:Ｃ感覚 == 3
+	A = 320 + 40 * TEQUIP:三角木馬騎乗
+ELSEIF ABL:Ｃ感覚 == 4
+	A = 480 + 50 * TEQUIP:三角木馬騎乗
+ELSE
+	A = 600 + 100 * TEQUIP:三角木馬騎乗
+ENDIF
+
+SOURCE:14 = 100
+
+;PALAM:苦痛をみる
+IF PALAM:苦痛 < PALAMLV:1
+	B = 290 + 10 * TEQUIP:三角木馬騎乗
+ELSEIF PALAM:苦痛 < PALAMLV:2
+	B = 320 + 10 * TEQUIP:三角木馬騎乗
+ELSEIF PALAM:苦痛 < PALAMLV:3
+	B = 350 + 10 * TEQUIP:三角木馬騎乗
+ELSEIF PALAM:苦痛 < PALAMLV:4
+	B = 390 + 10 * TEQUIP:三角木馬騎乗
+ELSEIF PALAM:苦痛 >= PALAMLV:4
+	B = 440 + 10 * TEQUIP:三角木馬騎乗
+ENDIF
+
+;大きいと重いので食い込みが強くなる
+;大柄
+IF TALENT:大柄
+	TIMES A , 1.80
+	TIMES B , 1.80
+ENDIF
+;小柄体型
+IF TALENT:小柄体型
+	TIMES A , 0.80
+	TIMES B , 0.80
+ENDIF
+
+SOURCE:0 += A
+SOURCE:6 += B
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式三角木馬 >= 1
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:11 , 1.50
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:マゾっ気 >= 3
+	TFLAG:主人経験 += 1
+
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+;放置すると食い込んで効果が高くなる
+TEQUIP:三角木馬騎乗 += 1
+
+RETURN 1

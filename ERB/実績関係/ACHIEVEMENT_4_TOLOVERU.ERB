@@ -1,0 +1,70 @@
+﻿;===========================================================
+;実績・とらぶるサッキュバス
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_4
+RESULTS = とらぶるサッキュバス
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_4
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:淫魔 && TALENT:COUNT:恋心 == 1
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:4 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	GLOBAL:4 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:4
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_4
+; 解説文
+PRINTFORML 大勢の淫魔の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
+PRINTFORM とあるエロゲーのタイトルのようなシチュエーションがお好みのようなので
+PRINTFORMW これからも『サキュバス』たちとのトラブルをお楽しみください
+; ボーナスなどの処理はここ以降に記述する
+IF FLAG:とらぶるサッキュバスボーナス受け取り == 0
+	PRINTL
+	PRINTFORML 「ふふ、そこのボウヤ……わたくしとイイコトしない？」
+	PRINTFORML ある日、%CALLNAME:MASTER%が街を歩いていると露出度の高い、妖艶な美女が突然声をかけてきた
+	PRINTFORM 風俗嬢にしては所作のひとつひとつに気品があり、
+	PRINTFORML ただそこにいるだけで誘蛾灯のようにオトコを引き寄せる魔性の魅力がある
+	PRINTFORML これまでに何人もの淫魔と接してきた%CALLNAME:MASTER%には、彼女の正体が淫魔であることは明確だった
+	PRINTFORMW 今日もこってりと絞られたばかりなので、あまり相手にしたくはないのだが……
+	PRINTFORML 「あら残念
+	PRINTFORML 　せっかく人間の女では味わえない極上の快楽をボウヤに味あわせてあげれたのに……って何ですって？
+	PRINTFORM 　ボウヤ、
+	IF GETCHARA([[キャラ:エリス]]) > 0
+		PRINTFORM エリス
+	ELSEIF GETCHARA([[キャラ:リリス]]) > 0
+		PRINTFORM リリス
+	ELSE
+		PRINTFORM 淫魔の存在
+	ENDIF
+	PRINTFORML を知っているというの！？
+	PRINTFORML 　……そう、それなら話が早いわ
+	PRINTFORMW 　わたくしはアイリス、同胞を探しにこの世界にやってきた淫魔よ」
+	PRINTFORM アイリスと名乗った淫魔の女性が言うには、異なる世界……つまりこの世界で淫魔の存在が観測されたらしく、
+	PRINTFORML 同胞を迎え入れるために彼女はやってきたらしい
+	PRINTFORML 「なるほど……つまりボウヤの知っている淫魔は効率良くオトコの精を吸い取れるのね？
+	PRINTFORML 　そしてボウヤには淫魔に対する抗体……とでも言うべきものがある、と
+	PRINTFORML 　ついでに、抗体持ちのボウヤの精は淫魔にとって極上の味でもある……
+	PRINTFORML 　それをもってボウヤが何人もの淫魔を飼いならしている……なるほど
+	PRINTFORML 　ふふ、おもしろいわ……ボウヤ、わたくしを他の淫魔と同じように飼い慣らしてみない？
+	PRINTFORMW 　まあ、ボウヤがダメと言っても勝手について行くけどね♪」
+	PRINTFORML ……どうやら妙なところで気に入られたようだった
+	PRINTFORM 細かい事情などは後ほど説明すればいいか、と思いながら、%CALLNAME:MASTER%は予定を変更して報告の
+	PRINTFORML 為に歌音のもとへと赴くことにした……
+	PRINTL
+	PRINTFORML 《アイリスが女優候補になりました》
+	PRINTW
+	CALL キャラ追加([[キャラ:アイリス]])
+	FLAG:とらぶるサッキュバスボーナス受け取り = 1
+ENDIF

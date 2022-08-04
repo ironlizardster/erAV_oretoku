@@ -1,0 +1,581 @@
+﻿;=================================================
+;アイテム購入用スクリプト
+;=================================================
+;eratohoRR1317系列スクリプトを流用し改造
+;>複数調教と大人数対応を合成。複数調教用キャラカードチェックを削除
+;>コマンドメニュー及び条件を変更
+;>｢@SELECT_TARGET｣を削除
+;>｢@SHOW_CHALADATA｣＝ステータス表示
+;>｢@CHARA_SALE｣＝キャラ売却
+;>｢@SALEITEM_CHECK｣｢@USE_ITEM｣＝アイテムの購入と使用
+
+;=================================================
+;アイテム購入・売却処理画面
+;=================================================
+@ITEM_SHOP
+DRAWLINE
+PRINTL アダルトショップ『NIGHT LOVE STORE』
+PRINTL 《指導に使用するアイテムを購入できます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+
+PRINT_ITEM
+
+DRAWLINE
+
+CALL SALEITEM_CHECK
+;所持ポイントを一時保存
+TFLAG:触手が射精 = MONEY
+
+$INPUT_LOOP
+;以下に自動的に売り物が表示される
+PRINT_SHOPITEM
+
+PRINTL 《購入するアイテムの番号を入力してください》
+
+DRAWLINE
+
+PRINTL [999] - 戻る
+;
+;=================================================
+;アイテム購入時に呼び出される関数
+;=================================================
+@EVENTBUY
+;購入確認
+;複数持てるアイテム
+IF BOUGHT == 24 || BOUGHT == 25 || BOUGHT == 26 || BOUGHT == 27 || BOUGHT == 29 || BOUGHT == 28 || BOUGHT == 34
+	CALL BUY_PLURAL
+	RETURN 1
+;その場で使うアイテム
+ELSEIF BOUGHT == 30 || BOUGHT == 31 || BOUGHT == 32 || BOUGHT == 33 || BOUGHT == 40 || BOUGHT == 41 || BOUGHT == 43
+	CALL USE_ITEM
+	ITEM:BOUGHT = 0
+	RETURN 1
+ENDIF
+CALL Item_Effect_Explanation(BOUGHT)
+$INPUT_LOOP
+PRINTFORML %ITEMNAME:BOUGHT%を購入しますか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+INPUT
+IF RESULT == 1
+	ITEM:BOUGHT -= 1
+	BOUGHT = 0
+	;退避していたポイントを戻す
+	MONEY = TFLAG:触手が射精
+	RETURN 0
+ELSEIF RESULT != 0
+	GOTO INPUT_LOOP
+ENDIF
+
+PRINTFORML 《%ITEMNAME:BOUGHT%を購入しました》
+
+;素質アイテム・ラブダイナミックス
+IF BOUGHT == 38
+	PRINTFORML 《%NAME:MASTER%は【%TALENTNAME:[[TALENT:魅惑]]%】を身につけた》
+	TALENT:MASTER:魅惑 = 1
+	ITEM:BOUGHT = 0
+ENDIF
+;素質アイテム【秘密知識】
+IF BOUGHT == 39
+	TALENT:MASTER:秘密知識 = 1
+	ITEM:BOUGHT = 0
+ENDIF
+;素質アイテム【調合知識】
+IF BOUGHT == 42
+	TALENT:MASTER:調合知識 = 1
+	ITEM:BOUGHT = 0
+ENDIF
+;素質アイテム【技巧LV】
+IF BOUGHT == 52
+	;EASYなら1つで1Lv上がる
+	IF FLAG:難易度 == 1
+		CALL TECHNIQUE_OF_MASTER_UP
+	;NORMAL/EXTRAならLv3までは1つで1Lv上がり、それ以降は技巧Lv-1分必要になる
+	ELSEIF FLAG:難易度 == 2 || FLAG:難易度 == 9
+		IF ABL:MASTER:技巧 >= 3
+			F = ABL:MASTER:技巧 - 1
+			CALL TECHNIQUE_OF_MASTER
+		ELSE
+			CALL TECHNIQUE_OF_MASTER_UP
+		ENDIF
+	;HARDならLv2までは1つで1Lv上がり、それ以降は技巧Lv*2分必要になる
+	ELSEIF FLAG:難易度 == 3
+		IF ABL:MASTER:技巧 >= 2
+			F = ABL:MASTER:技巧
+			F *= 2
+			CALL TECHNIQUE_OF_MASTER
+		ELSE
+			CALL TECHNIQUE_OF_MASTER_UP
+		ENDIF
+	;POWERFULならLv1までは1つで1Lv上がり、それ以降は技巧Lv*5分必要になる
+	ELSEIF FLAG:難易度 == 4
+		IF ABL:MASTER:技巧 >= 1
+			F = ABL:MASTER:技巧
+			F *= 5
+			CALL TECHNIQUE_OF_MASTER
+		ELSE
+			CALL TECHNIQUE_OF_MASTER_UP
+		ENDIF
+	;PHANTASM以上なら技巧Lv*100分必要になる
+	ELSE
+		F = ABL:MASTER:技巧
+		F *= 100
+		CALL TECHNIQUE_OF_MASTER
+	ENDIF
+	;撮影可能シーン数らしいよ
+ENDIF
+
+WAIT
+
+RETURN 1
+;
+;-------------------------------------------------
+;アイテム出現条件
+;-------------------------------------------------
+@SALEITEM_CHECK
+;初期状態で販売されているアイテム
+REPEAT 24
+	SIF COUNT == 22
+		CONTINUE
+	ITEMSALES:COUNT = 1
+REND
+
+;エプロン、電極プラグ、ボンデージスーツはEXTRAでのみ
+;実際には[カリスマ]（【威圧感】）を見ている。
+ITEMSALES:21 = 0
+ITEMSALES:23 = 0
+IF TALENT:MASTER:カリスマ == 1
+	ITEMSALES:21 = 1
+	ITEMSALES:23 = 1
+ENDIF
+
+;栄養剤は【調合知識】所持でEXTRAでのみ
+;とあるがEXTRA条件は外れている。調合知識は助手経験者が持てばよい。
+ITEMSALES:30 = 0
+M = 0
+IF TALENT:MASTER:調合知識
+	M = 1
+ENDIF
+REPEAT CHARANUM
+	SIF COUNT == 0
+		CONTINUE
+	IF CFLAG:COUNT:売却助手可能 >= 1 && ISASSI:COUNT == 1
+		SIF TALENT:COUNT:調合知識
+			M = 1
+	ENDIF
+REND
+IF M == 1
+	ITEMSALES:30 = 1
+ENDIF
+
+;ビデオカメラ・搾乳器・アナルビーズはEXTRAかNORMAL以下でのみ
+;ビデオカメラは失わないので消した
+ITEMSALES:17 = 0
+ITEMSALES:20 = 0
+IF FLAG:難易度 == 9 || FLAG:難易度 <= 2
+	ITEMSALES:17 = 1
+	ITEMSALES:20 = 1
+ENDIF
+
+;もう持っている非消耗アイテムを消す
+REPEAT 24
+	SIF ITEM:COUNT == 1
+		ITEMSALES:COUNT = 0
+REND
+
+;消耗系アイテムを追加
+ITEMSALES:24 = 1
+ITEMSALES:25 = 1
+ITEMSALES:29 = 1
+ITEMSALES:34 = 1
+
+;主人か助手経験者の誰かが【調合知識】を持っているなら
+;薬品系アイテム追加
+ITEMSALES:26 = 0
+ITEMSALES:27 = 0
+ITEMSALES:31 = 0
+ITEMSALES:40 = 0
+ITEMSALES:41 = 0
+ITEMSALES:43 = 0
+M = 0
+IF TALENT:MASTER:調合知識
+	M = 1
+ENDIF
+REPEAT CHARANUM
+	SIF COUNT == 0
+		CONTINUE
+	IF CFLAG:COUNT:売却助手可能 >= 1 && ISASSI:COUNT == 1
+		SIF TALENT:COUNT:調合知識
+			M = 1
+	ENDIF
+REND
+IF M == 1
+	ITEMSALES:26 = 1
+	ITEMSALES:27 = 1
+	ITEMSALES:31 = 1
+	ITEMSALES:40 = 1
+	SIF FLAG:陰毛を生やす
+		ITEMSALES:41 = 1
+	ITEMSALES:43 = 1
+ENDIF
+
+;お香はHARDでは1日3個、POWERFULでは1個まで
+SIF (FLAG:難易度 == 3 && FLAG:１日あたりにお香を購入した数 >= 3) || (FLAG:難易度 == 4 && FLAG:１日あたりにお香を購入した数 >= 1)
+	ITEMSALES:31 = 0
+
+;;主人か助手経験者の誰かが【秘密知識】を持っているなら
+;;秘密アイテム追加
+;;WGバッテリーはerAV世界にはない
+;ITEMSALES:33 = 0
+;M = 0
+;IF TALENT:MASTER:秘密知識
+;	M = 1
+;ENDIF
+;REPEAT CHARANUM
+;	SIF COUNT == 0
+;		CONTINUE
+;	IF CFLAG:COUNT:売却助手可能 >= 1 && ISASSI:COUNT == 1
+;		SIF TALENT:COUNT:秘密知識
+;			M = 1
+;	ENDIF
+;REND
+;IF M == 1
+;	ITEMSALES:33 = 1
+;ENDIF
+
+;コンドーム、ローション、媚薬、利尿剤、ビデオテープ、ピアスリングは99個まで
+SIF ITEM:コンドーム >= 99
+	ITEMSALES:24 = 0
+SIF ITEM:ローション >= 99
+	ITEMSALES:25 = 0
+SIF ITEM:プリンセスポイズン >= 99
+	ITEMSALES:26 = 0
+SIF ITEM:利尿剤 >= 99
+	ITEMSALES:27 = 0
+;SIF ITEM:ビデオテープ >= 99
+;	ITEMSALES:28 = 0
+SIF ITEM:サインペン >= 99
+	ITEMSALES:29 = 0
+SIF ITEM:ピアスリング >= 99
+	ITEMSALES:34 = 0
+	
+;ラブスコープ
+ITEMSALES:37 = 1
+SIF ITEM:ラブスコープ
+	ITEMSALES:37 = 0
+
+
+;素質アイテム「ラブダイナミックス」
+ITEMSALES:38 = 1
+SIF TALENT:MASTER:魅惑 == 1
+	ITEMSALES:38 = 0
+;ラブダイナミックスはHARD・POWERFULでは販売しない
+SIF FLAG:難易度 == 3 || FLAG:難易度 == 4
+	ITEMSALES:38 = 0
+
+;素質アイテム【秘密知識】
+ITEMSALES:39 = 1
+SIF TALENT:MASTER:秘密知識 == 1
+	ITEMSALES:39 = 0
+
+;素質アイテム【調合知識】
+ITEMSALES:42 = 1
+SIF TALENT:MASTER:調合知識 == 1
+	ITEMSALES:42 = 0
+
+;素質アイテム【技巧Lv】
+ITEMSALES:52 = 1
+;技巧Lvの上限は10、また堕とした人数+2までしか上げられない
+SIF ABL:MASTER:技巧 >= 10 || ABL:MASTER:技巧 > FLAG:陥落人数 + 1
+	ITEMSALES:52 = 0
+
+;-------------------------------------------------
+;複数個所持可能なアイテムの処理
+;-------------------------------------------------
+@BUY_PLURAL
+;現在の購入可能数、Bは所持可能最大数（現在100個）、Cは所持金によるもの
+;Aはアイテムの単価、DはBとCのうち小さい方、EはB<=Cであれば0、B>Cであれば1
+SIF BOUGHT == 24
+	A = 100
+SIF BOUGHT == 25
+	A = 200
+SIF BOUGHT == 26
+	A = 2000
+SIF BOUGHT == 29
+	A = 100
+SIF BOUGHT == 27
+	A = 1000
+SIF BOUGHT == 28
+	A = 500
+SIF BOUGHT == 34
+	A = 5000
+B = 100-ITEM:BOUGHT
+C = MONEY/A+1
+IF B <= C
+	D = B
+	E = 0
+ELSE
+	D = C
+	E = 1
+ENDIF
+CALL Item_Effect_Explanation(BOUGHT)
+DRAWLINE
+PRINTFORM %ITEMNAME:BOUGHT%をいくつ買いますか？ （1-
+PRINTV D
+PRINTL 、0で戻る）
+
+;1個買い、大人買い、キャンセルをマウス操作で可能に
+PRINT [1]
+PRINTFORM [{D}]
+PRINT [0]
+
+$INPUT_LOOP
+INPUT
+IF RESULT == 0
+	ITEM:BOUGHT -= 1
+						;****使用アイテム連続購入改造ここから****
+	;払い戻し
+	MONEY += ITEMPRICE:BOUGHT
+						;****使用アイテム連続購入改造ここまで****
+	RETURN 0
+ELSEIF RESULT < 0
+	GOTO INPUT_LOOP
+ELSEIF RESULT > D
+	IF RESULT > D && E == 0
+		PRINTL そんなに持てません
+	ELSEIF RESULT > D && E == 1
+		PRINTL お金が足りません
+	ENDIF
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 1
+	PRINTFORML 《%ITEMNAME:BOUGHT%を購入しました》
+	WAIT
+	RETURN 0
+ELSE
+	PRINTFORML 《%ITEMNAME:BOUGHT%を{RESULT}個購入しました》
+	WAIT
+	ITEM:BOUGHT += RESULT-1
+	MONEY -= A*(RESULT-1)
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;その場で使用するアイテムの処理
+;-------------------------------------------------
+@USE_ITEM
+DRAWLINE
+;アイテムの効果を表示する
+						;****使用アイテム連続購入改造ここから****
+SIF BOUGHT == 30
+	PRINTFORML %ITEMNAME:BOUGHT%:体力を回復します
+SIF BOUGHT == 31
+	PRINTFORML %ITEMNAME:BOUGHT%:否定の珠を半減します
+SIF BOUGHT == 33
+	PRINTFORML %ITEMNAME:BOUGHT%:世界の歴史を変えたエネルギー源です
+SIF BOUGHT == 40
+	PRINTFORML %ITEMNAME:BOUGHT%:妊娠確率を高めます
+SIF BOUGHT == 41
+	PRINTFORML %ITEMNAME:BOUGHT%:陰毛の成長を早めます
+SIF BOUGHT == 43
+	PRINTFORML %ITEMNAME:BOUGHT%:妊娠確率を下げます
+$INPUT_LOOP
+PRINTFORML %ITEMNAME:BOUGHT%を誰に使いますか？　所持金：{MONEY+(ITEMPRICE:BOUGHT)}ポイント
+						;****使用アイテム連続購入改造ここまで****
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	ITEM:BOUGHT = 0
+						;****使用アイテム連続購入改造ここから****
+	;払い戻し
+	MONEY += ITEMPRICE:BOUGHT
+						;****使用アイテム連続購入改造ここまで****
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;主人公は排除
+ELSEIF  RESULT == 0
+	GOTO INPUT_LOOP
+;売却済み・臨死中のキャラは排除
+ELSEIF  BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;体力ＭＡＸのキャラに栄養剤は使えない
+ELSEIF BOUGHT == 30 && BASE:RESULT:体力 == MAXBASE:RESULT:体力
+	PRINTFORML すでに%NAME:RESULT%の体力はＭＡＸです
+	WAIT
+	GOTO INPUT_LOOP
+;否定の珠を持ってないキャラにお香は使えない
+ELSEIF BOUGHT == 31 && JUEL:RESULT:否定 < 1
+	PRINTFORML %NAME:RESULT%は%PALAMNAME:[[PALAM:否定]]%の珠を持っていません
+	WAIT 
+	GOTO INPUT_LOOP
+;妊娠中・育児中のキャラに排卵促進剤は使えない
+ELSEIF BOUGHT == 40 && TALENT:RESULT:妊娠 || TALENT:RESULT:育児中
+	PRINTFORM %NAME:RESULT%は
+	IF TALENT:RESULT:妊娠
+		PRINTL すでに妊娠しています
+	ELSEIF TALENT:RESULT:育児中
+		PRINTL 育児中です
+	ENDIF
+	WAIT 
+	GOTO INPUT_LOOP
+;妊娠中・育児中のキャラに排卵促進剤は使えない
+ELSEIF BOUGHT == 43 && TALENT:RESULT:妊娠 || TALENT:RESULT:育児中
+	PRINTFORM %NAME:RESULT%は
+	IF TALENT:RESULT:妊娠
+		PRINTL すでに妊娠しています
+	ELSEIF TALENT:RESULT:育児中
+		PRINTL 育児中です
+	ENDIF
+	WAIT 
+	GOTO INPUT_LOOP
+ENDIF
+
+;体力回復
+IF BOUGHT == 30
+	PRINTFORML 《%NAME:RESULT%の体力が回復しました》
+	BASE:RESULT:体力 += 500
+	SIF BASE:RESULT:体力 > MAXBASE:RESULT:体力
+		BASE:RESULT:体力 = MAXBASE:RESULT:体力
+	WAIT
+						;****使用アイテム連続購入改造ここから****
+	IF MONEY >= 1000
+		MONEY -= 1000
+		GOTO INPUT_LOOP
+	ELSE
+		PRINTL お金が足りないのでこれ以上買えません
+	ENDIF
+						;****使用アイテム連続購入改造ここまで****
+;否定の珠半減
+ELSEIF BOUGHT == 31
+	PRINTFORML 《%NAME:RESULT%の否定の珠が半分になりました》
+	PRINTFORML  否定の珠:{JUEL:RESULT:否定} -> {JUEL:RESULT:否定 / 2}
+	JUEL:RESULT:否定 /= 2
+	FLAG:１日あたりにお香を購入した数 += 1
+	WAIT
+						;****使用アイテム連続購入改造ここから****
+	IF MONEY >= 3000
+		MONEY -= 3000
+		GOTO INPUT_LOOP
+	ELSE
+		PRINTL お金が足りないのでこれ以上買えません
+	ENDIF
+						;****使用アイテム連続購入改造ここまで****
+;排卵促進
+ELSEIF BOUGHT == 40
+	PRINTFORML 《%NAME:RESULT%は妊娠しやすくなりました》
+	CFLAG:RESULT:排卵促進剤使用 = 1
+	CFLAG:RESULT:危険日 = 1
+	SIF PBAND:303 >= 3
+		CFLAG:RESULT:排卵促進剤使用 += RAND:2
+	WAIT
+						;****使用アイテム連続購入改造ここから****
+	IF MONEY >= 2000
+		MONEY -= 2000
+		GOTO INPUT_LOOP
+	ELSE
+		PRINTL お金が足りないのでこれ以上買えません
+	ENDIF
+						;****使用アイテム連続購入改造ここまで****
+;剛毛剤
+ELSEIF BOUGHT == 41
+	PRINTFORML 《%NAME:RESULT%の陰毛の成長が早まりました》
+	CFLAG:RESULT:剛毛剤使用フラグ = 1
+	WAIT
+						;****使用アイテム連続購入改造ここから****
+	IF MONEY >= 1000
+		MONEY -= 1000
+		GOTO INPUT_LOOP
+	ELSE
+		PRINTL お金が足りないのでこれ以上買えません
+	ENDIF
+						;****使用アイテム連続購入改造ここまで****
+;排卵抑制
+ELSEIF BOUGHT == 43
+	PRINTFORML 《%NAME:RESULT%は妊娠しにくくなりました》
+	CFLAG:RESULT:排卵促進剤使用 = -1
+	CFLAG:RESULT:危険日 = 0
+	WAIT
+						;****使用アイテム連続購入改造ここから****
+	IF MONEY >= 50000
+		MONEY -= 50000
+		GOTO INPUT_LOOP
+	ELSE
+		PRINTL お金が足りないのでこれ以上買えません
+	ENDIF
+						;****使用アイテム連続購入改造ここまで****
+ENDIF
+
+
+;-------------------------------------------------
+;素質アイテム【技巧Lv】処理
+;-------------------------------------------------
+@TECHNIQUE_OF_MASTER
+IF FLAG:技巧アイテム == F - 1
+	CALL TECHNIQUE_OF_MASTER_UP
+ELSE
+	FLAG:技巧アイテム += 1
+	PRINTL 
+	PRINTFORML 技巧LVを上げるためにはあと {F - FLAG:技巧アイテム} 個必要です
+	PRINTL 残りをまとめて購入しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	$INPUT_LOOP
+	INPUT
+	IF RESULT == 0
+		IF MONEY < (F - FLAG:技巧アイテム) * 5000
+			PRINTL お金が足りません
+		ELSE
+			MONEY -= (F - FLAG:技巧アイテム) * 5000
+			CALL TECHNIQUE_OF_MASTER_UP
+		ENDIF
+	ELSEIF RESULT == 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+ENDIF
+
+@TECHNIQUE_OF_MASTER_UP
+ABL:MASTER:技巧 += 1
+FLAG:技巧アイテム = 0
+ITEM:BOUGHT = 0
+PRINTFORML 《%NAME:MASTER%の技巧がLV{ABL:MASTER:技巧}になった》
+
+;-------------------------------------------------
+;販売アイテムフラグ全削除処理
+;-------------------------------------------------
+@CLEAR_SHOP
+
+;一旦購入可能アイテムを空に
+REPEAT 100
+	ITEMSALES:COUNT = 0
+REND
+;
+;
+;
+
+;-------------------------------------------------
+;アイテム効果説明
+;-------------------------------------------------
+@Item_Effect_Explanation(ARG)
+
+SELECTCASE ARG
+	CASE 26
+		;地の文でほとんど使われないし何ならコマンド名にも使われないプリンセスポイズン
+		;なんで桐生組が扱ってるわりに調合知識がないと買えないのかって、まあ歌音が止めてるんでしょうね
+		;乱用するとふつうに中毒になるし……
+		PRINTFORML %ITEMNAME:ARG%:桐生組が扱っている媚薬。
+	CASE 37
+		PRINTFORML %ITEMNAME:ARG%:好感度が分かる不思議なスコープ。
+	CASE 38
+		PRINTFORML %ITEMNAME:ARG%:あなたをもっと魅力的に。
+ENDSELECT

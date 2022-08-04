@@ -1,0 +1,89 @@
+﻿;=================================================
+;RB団
+;=================================================
+@SAKURA_AZITO
+
+$INPUT_LOOP
+
+DRAWLINE
+PRINTL ＲＢ団のアジト
+PRINTL 《メチャモテ☆リア充になれるような様々なセミナーを受けることができます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 0] - 貞操改革：貞操観念        　(参加費：1000000ポイント)
+PRINTL  [ 1] - 貞操改革：ニュートラル　 　（参加費： 100000ポイント）
+PRINTL  [ 2] - 貞操改革：貞操無頓着     　（参加費： 500000ポイント）
+PRINTL  [ 3] - 恥情改革：恥じらい       　（参加費：1000000ポイント）
+PRINTL  [ 4] - 恥情改革：ニュートラル　 　（参加費： 100000ポイント）
+PRINTL  [ 5] - 恥情改革：恥薄い　     　  （参加費： 500000ポイント）
+PRINTL  [ 6] - 性格改革：素直　　      　 （参加費： 500000ポイント）
+PRINTL  [ 7] - 性格改革：ナマイキ      　 （参加費： 500000ポイント）
+PRINTL  [ 8] - 性格改革：大人しい      　 （参加費： 500000ポイント）
+PRINTL  [ 9] - 性格改革：活発　　      　 （参加費： 500000ポイント）
+PRINTL  [10] - 性格改革：ニュートラル  　 （参加費： 100000ポイント）
+PRINTL  [11] - 妨害工作：キッキングホース （依頼料： 100000ポイント）
+SIF PBAND:76 >= 3
+	PRINTL  [12] - 個性改革：ギャル系 　　　　（参加費：3000000ポイント）
+SIF PBAND:76 >= 3
+	PRINTL  [13] - 個性改革：ニュートラル     （参加費：3000000ポイント）
+SIF PBAND:65 == 4
+	PRINTL  [14] - 個性改革：大和撫子　　　　 （参加費：3000000ポイント）
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	CALL CHASTITY_UP
+ELSEIF RESULT == 1
+	CALL CHASTITY_NEUTRAL
+ELSEIF RESULT == 2
+	CALL CHASTITY_DOWN
+ELSEIF RESULT == 3
+	CALL SHAME_UP
+ELSEIF RESULT == 4
+	CALL SHAME_NEUTRAL
+ELSEIF RESULT == 5
+	CALL SHAME_DOWN
+ELSEIF RESULT == 6
+	CALL PERSONALITY_GENTLE
+ELSEIF RESULT == 7
+	CALL PERSONALITY_BRAZEN
+ELSEIF RESULT == 8
+	CALL PERSONALITY_QUIET
+ELSEIF RESULT == 9
+	CALL PERSONALITY_LIVELY
+ELSEIF RESULT == 10
+	CALL PERSONALITY_NEUTRAL
+ELSEIF RESULT == 11
+	CALL KICKINGHORSE
+ELSEIF RESULT == 12 && PBAND:76 >= 3
+	CALL PERSONALITY_GAL
+ELSEIF RESULT == 13 && PBAND:76 >= 3
+	CALL GAL_NEUTRAL
+;ELSEIF RESULT == 14
+;	CALL INTEREST_UP
+;ELSEIF RESULT == 15
+;	CALL INTEREST_DOWN
+;ELSEIF RESULT == 16
+;	CALL INTEREST_NEUTRAL
+;ELSEIF RESULT == 99 && FLAG:544 ==1
+;	CALL FALLDOWN
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN 0
+;

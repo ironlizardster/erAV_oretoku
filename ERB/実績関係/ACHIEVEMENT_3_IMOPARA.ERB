@@ -1,0 +1,37 @@
+﻿;===========================================================
+;実績・妹ぱらだいす！
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_3
+RESULTS = 妹ぱらだいす！
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_3
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:妹 && TALENT:COUNT:恋心 == 1
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:3 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	GLOBAL:3 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:3
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_3
+; 解説文
+PRINTFORML 大勢の妹属性の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
+PRINTFORM とある名作エロゲーのタイトルのようなシチュエーションがお好みのようなので
+PRINTFORMW これからも『妹』たちとのパラダイスをお楽しみください
+; ボーナスなどの処理はここ以降に記述する
+IF TALENT:MASTER:妹想い == 0
+	PRINTFORML 血が繋がっていなくてもあなたが『妹』たちに注いだ愛情は本物のようですね
+	PRINTFORML そんな%CALLNAME:MASTER%には【妹想い】の称号を授けましょう
+	TALENT:MASTER:妹想い = 1
+ENDIF

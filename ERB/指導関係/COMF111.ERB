@@ -1,0 +1,261 @@
+﻿;-------------------------------------------------
+;服を破る
+;着衣・脱衣関連コマンド：調教対象の服を破る
+;-------------------------------------------------
+@COM111
+
+$INPUT_LOOP
+
+PRINTL 服を破る
+
+A = CFLAG:着衣状態
+CALL WEARING_CLOTH_ALL
+B = CFLAG:着衣状態
+CFLAG:着衣状態 = A
+
+;-------------------------------------------------
+;破り取る部位の確認
+;-------------------------------------------------
+PRINTFORM 現在の%CALLNAME:TARGET%の格好は、
+CALL PRINT_CLOTHTYPE
+PRINTFORML です……
+
+;引き裂き判定変数をLに保存
+CALL COM111_ABLE0L
+L:0 = RESULT
+CALL COM111_ABLE1L
+L:1 = RESULT
+CALL COM111_ABLE2L
+L:2 = RESULT
+CALL COM111_ABLE3L
+L:3 = RESULT
+CALL COM111_ABLE4L
+L:4 = RESULT
+CALL COM111_ABLE5L
+L:5 = RESULT
+CALL COM111_ABLE6L
+L:6 = RESULT
+
+;特別コス
+IF L:0
+	PRINT  [10] - 
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	PRINTL をはぎ取る
+ENDIF
+;ワンピース上半身
+IF L:1
+	PRINT  [11] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL の上半身を破る
+ENDIF
+;ワンピース下半身
+IF L:2
+	PRINT  [12] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL の下半身を破る
+ENDIF
+;ツーピース上
+IF L:3
+	PRINT  [11] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL 上を破る
+ENDIF
+;ツーピース下
+IF L:4
+	PRINT  [12] - 
+	CALL PRINT_CLOTHTYPE_MAIN2
+	IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+		PRINTL のスカートを破る
+	ELSE
+		PRINTL 下を破る
+	ENDIF
+ENDIF
+;ブラジャー
+SIF L:5
+	PRINTL  [13] - ブラジャーを引き千切る
+;パンツ
+SIF L:6
+	PRINTL  [14] - パンツを引き千切る
+;服の着脱
+PRINTL  [19] - [服の着脱]に戻る
+PRINTL  [100]- やめる
+
+INPUT
+
+;-------------------------------------------------
+;引き裂き処理
+;-------------------------------------------------
+;剥ぎ取れない特別コス
+IF RESULT == 10 && (CFLAG:着衣状態 & 64) && (CFLAG:特別コスチュームのタイプ == 11 || CFLAG:特別コスチュームのタイプ == 79)
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	PRINTL は素手では破れそうにない
+	WAIT
+	RETURN 0
+;特別コス引き裂き
+ELSEIF RESULT == 10 && L:0
+	PRINTFORM %CALLNAME:TARGET%から
+	CALL PRINT_CLOTHTYPE_SPECIAL
+	PRINTL を強引に剥ぎ取った
+	CFLAG:着衣状態 -= 64
+	CFLAG:特別コスチュームの状態 = -3
+;ワンピース上半身引き裂き
+ELSEIF RESULT == 11 && L:1
+	PRINTFORM %CALLNAME:TARGET%の着ている
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL の上半身を破り取った
+	CFLAG:着衣状態 -= 4
+	CFLAG:上着上の状態 = -3
+;ワンピース下半身引き裂き
+ELSEIF RESULT == 12 && L:2
+	PRINTFORM %CALLNAME:TARGET%の着ている
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL の下半身を破り取った
+	SIF CFLAG:着衣状態 & 8
+		CFLAG:着衣状態 -= 8
+	SIF CFLAG:着衣状態 & 16
+		CFLAG:着衣状態 -= 16
+	CFLAG:上着下の状態 = -3
+;ツーピース上引き裂き
+ELSEIF RESULT == 11 && L:3
+	PRINTFORM %CALLNAME:TARGET%の着ている
+	CALL PRINT_CLOTHTYPE_MAIN2
+	PRINTL 上を引き裂いた
+	CFLAG:着衣状態 -= 4
+	CFLAG:上着上の状態 = -3
+;ツーピース下引き裂き
+ELSEIF RESULT == 12 && L:4
+	PRINTFORM %CALLNAME:TARGET%の着ている
+	CALL PRINT_CLOTHTYPE_MAIN2
+	IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+		PRINTL のスカートを引き裂いた
+	ELSE
+		PRINTL 下を引き裂いた
+	ENDIF
+	SIF CFLAG:着衣状態 & 8
+		CFLAG:着衣状態 -= 8
+	SIF CFLAG:着衣状態 & 16
+		CFLAG:着衣状態 -= 16
+	CFLAG:上着下の状態 = -3
+;ブラジャー引き裂き
+ELSEIF RESULT == 13 && L:5
+	PRINTFORML %CALLNAME:TARGET%のブラジャーを引き千切った
+	CFLAG:着衣状態 -= 2
+	CFLAG:ブラジャーの状態 = -3
+;パンツ引き裂き
+ELSEIF RESULT == 14 && L:6
+	PRINTFORML %CALLNAME:TARGET%のパンツをむしり取った
+	CFLAG:着衣状態 -= 1
+	CFLAG:パンツの状態 = -3
+ELSEIF RESULT == 19
+	RETURN 0
+ELSEIF RESULT == 100
+	RETURN 1
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+IF CFLAG:着衣状態 == 0
+	PRINTL （全裸になったので服の着脱に戻ります）
+	PRINTL 
+	WAIT
+	RETURN 0
+ENDIF
+
+PRINTL 
+
+GOTO INPUT_LOOP
+
+;=================================================
+;判定用関数群
+;=================================================
+;特別コス引き裂き判定
+@COM111_ABLE0L
+;特別コスが設定されていないとダメ
+SIF CFLAG:特別コスチュームのタイプ == 0
+	RETURN 0
+;特別コスを付けていないとダメ
+SIF (CFLAG:着衣状態 & 64) == 0
+	RETURN 0
+RETURN 1
+
+;ワンピース上引き裂き判定
+@COM111_ABLE1L
+;設定衣装がワンピースでないとダメ
+SIF CFLAG:上着のタイプ <= 200
+	RETURN 0
+;上着上が残ってないとダメ
+SIF (CFLAG:着衣状態 & 4) == 0
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ワンピース下引き裂き判定
+@COM111_ABLE2L
+;設定衣装がワンピースでないとダメ
+SIF CFLAG:上着のタイプ <= 200
+	RETURN 0
+;上着下が残ってないとダメ
+SIF (CFLAG:着衣状態 & 24) == 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+RETURN 1
+
+;ツーピース上引き裂き判定
+@COM111_ABLE3L
+;設定衣装がツーピースでないとダメ
+SIF CFLAG:上着のタイプ >= 201
+	RETURN 0
+;上着上を付けてないとダメ
+SIF (CFLAG:着衣状態 & 4) == 0
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;ツーピース下引き裂き判定
+@COM111_ABLE4L
+;設定衣装がツーピースでないとダメ
+SIF CFLAG:上着のタイプ >= 201
+	RETURN 0
+;上着下を付けてないとダメ
+SIF (CFLAG:着衣状態 & 24) == 0
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+RETURN 1
+
+;ブラジャー引き裂き判定
+@COM111_ABLE5L
+;ブラジャーを付けてないとダメ
+SIF (CFLAG:着衣状態 & 2) == 0
+	RETURN 0
+;上着上を着ているとダメ
+SIF (CFLAG:着衣状態 & 4)
+	RETURN 0
+;邪魔になる特別コスを付けているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	RETURN 0
+RETURN 1
+
+;パンツ引き裂き判定
+@COM111_ABLE6L
+;パンツを穿いてないとダメ
+SIF (CFLAG:着衣状態 & 1) == 0
+	RETURN 0
+;上着下・ズボンタイプを穿いてるとダメ
+SIF (CFLAG:着衣状態 & 16) 
+	RETURN 0
+;ズーコの着ぐるみを着ているとダメ
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 11
+	RETURN 0
+;和服の場合は上着下・スカートタイプを着ているとダメ
+SIF CFLAG:上着のタイプ == 202 && (CFLAG:着衣状態 & 8)
+	RETURN 0
+RETURN 1
+

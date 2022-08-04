@@ -1,0 +1,336 @@
+﻿;-------------------------------------------------
+;秘貝開帳
+;愛撫系コマンド：調教対象自身が自分の%CSTR:女性器呼び方%を手で開いてみせる
+;-------------------------------------------------
+@COM7
+;秘貝開帳
+
+SIF TEQUIP:撮影中
+	PRINT 公開
+
+PRINTL 秘貝開帳
+
+;-------------------------------------------------
+;実行できるかの判定
+;-------------------------------------------------
+A = 0
+S = 0
+
+;すべての命令に共通の要素を考慮
+;(従順が高いと命令に従いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 3
+	PRINTS ABLNAME:[[ABL:欲望]]
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 3,')
+	S = 1
+ENDIF
+;ABL:Ｖ感覚
+IF ABL:Ｖ感覚
+	SIF S
+		PRINT  + 
+	A += ABL:Ｖ感覚 * 2
+	PRINTS ABLNAME:[[ABL:Ｖ感覚]]
+	PRINTV 'LV,ABL:Ｖ感覚,'(,ABL:Ｖ感覚 * 2,')
+	S = 1
+ENDIF
+;ABL:奉仕精神
+IF ABL:奉仕精神
+	SIF S
+		PRINT  + 
+	A += ABL:奉仕精神 * 4
+	PRINTS ABLNAME:[[ABL:奉仕精神]]
+	PRINTV 'LV,ABL:奉仕精神,'(,ABL:奉仕精神 * 4,')
+	S = 1
+ENDIF
+;ABL:露出癖
+IF ABL:露出癖
+	SIF S
+		PRINT  + 
+	A += ABL:露出癖 * 3
+	PRINTS ABLNAME:[[ABL:露出癖]]
+	PRINTV 'LV,ABL:露出癖,'(,ABL:露出癖 * 3,')
+	S = 1
+ENDIF
+;ABL:自慰中毒
+IF ABL:自慰中毒
+	SIF S
+		PRINT  + 
+	A += ABL:自慰中毒 * 3
+	PRINTS ABLNAME:[[ABL:自慰中毒]]
+	PRINTV 'LV,ABL:自慰中毒,'(,ABL:自慰中毒 * 3,')
+	S = 1
+ENDIF
+
+;PALAM:潤滑（の不足）
+IF PALAM:潤滑 < PALAMLV:3
+	PRINT  - 
+	A -= 5
+	PRINT 潤滑不足
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+
+;PALAM:欲情
+IF PALAM:欲情 < PALAMLV:1
+	L = 0
+ELSEIF PALAM:欲情 < PALAMLV:2
+	L = 1
+ELSEIF PALAM:欲情 < PALAMLV:3
+	L = 2
+ELSEIF PALAM:欲情 < PALAMLV:4
+	L = 3
+ELSEIF PALAM:欲情 < PALAMLV:5
+	L = 4
+ELSE
+	L = 5
+ENDIF
+IF L
+	SIF S
+		PRINT  + 
+	A += L * 3
+	PRINTS PALAMNAME:[[PALAM:欲情]]
+	PRINTV 'LV,L,'(,L * 3,')
+	S = 1
+ENDIF
+
+;恥じらい
+IF TALENT:恥じらい
+	PRINT  - 
+	A -= 2
+	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTV '(,2,')
+	S = 1
+ENDIF
+;恥薄い
+IF TALENT:恥薄い
+	SIF S
+		PRINT  + 
+	A += 2
+	PRINTS TALENTNAME:[[TALENT:恥薄い]]
+	PRINTV '(,2,')
+	S = 1
+ENDIF
+
+;快感に素直
+IF TALENT:快感に素直
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINTS TALENTNAME:[[TALENT:快感に素直]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;快感の否定
+IF TALENT:快感の否定
+	PRINT  - 
+	A -= 5
+	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+
+;露出狂
+IF TALENT:露出狂
+	SIF S
+		PRINT  + 
+	A += 10
+	PRINTS TALENTNAME:[[TALENT:露出狂]]
+	PRINTV '(,10,')
+	S = 1
+ENDIF
+
+;処女
+IF TALENT:処女
+	PRINT  - 
+	A -= 20
+	PRINTS TALENTNAME:[[TALENT:処女]]
+	PRINTV '(,20,')
+	S = 1
+ELSEIF EXP:Ｖ経験 < EXPLV:2
+	PRINT  - 
+	A -= 5
+	PRINTS EXPNAME:[[EXP:Ｖ経験]]
+	PRINT 不足
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+
+;媚薬
+IF TEQUIP:媚薬効果
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINTS ITEMNAME:[[ITEM:プリンセスポイズン]]
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+
+;合計を表示(22以上で実行)
+PRINT  = 
+PRINTV A
+
+;難易度上昇
+;公開で+10
+V = 22
+SIF TEQUIP:撮影中
+	V += 10
+
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 実行値
+PRINTV V
+
+WAIT
+
+;実行できない
+SIF A < V
+	RETURN 0
+
+SAVESTR:0 = 秘貝開帳
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;実行決定
+;-------------------------------------------------
+LOSEBASE:体力 += 10
+LOSEBASE:気力 += 50
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:14 = 400
+
+;ABL:Ｖ感覚をみる
+IF ABL:Ｖ感覚 == 0
+	SOURCE:12 = 1500
+	SOURCE:13 = 300
+ELSEIF ABL:Ｖ感覚 == 1
+	SOURCE:12 = 1800
+	SOURCE:13 = 600
+ELSEIF ABL:Ｖ感覚 == 2
+	SOURCE:12 = 2100
+	SOURCE:13 = 1000
+ELSEIF ABL:Ｖ感覚 == 3
+	SOURCE:12 = 2400
+	SOURCE:13 = 1500
+ELSEIF ABL:Ｖ感覚 == 4
+	SOURCE:12 = 2700
+	SOURCE:13 = 2100
+ELSE
+	SOURCE:12 = 3000
+	SOURCE:13 = 2800
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:4 = 100
+	SOURCE:5 = 50
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:4 = 150
+	SOURCE:5 = 100
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:4 = 200
+	SOURCE:5 = 200
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:4 = 250
+	SOURCE:5 = 300
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:4 = 300
+	SOURCE:5 = 500
+ELSE
+	SOURCE:4 = 350
+	SOURCE:5 = 750
+ENDIF
+
+;ABL:露出癖をみる
+IF ABL:露出癖 == 0
+	SOURCE:7 += 0
+	TIMES SOURCE:12, 1.00
+	TIMES SOURCE:5, 1.00
+ELSEIF ABL:露出癖 == 1
+	SOURCE:7 += 100
+	TIMES SOURCE:12, 1.20
+	TIMES SOURCE:5, 1.20
+ELSEIF ABL:露出癖 == 2
+	SOURCE:7 += 300
+	TIMES SOURCE:12, 1.40
+	TIMES SOURCE:5, 1.40
+ELSEIF ABL:露出癖 == 3
+	SOURCE:7 += 800
+	TIMES SOURCE:12, 1.60
+	TIMES SOURCE:5, 1.60
+ELSEIF ABL:露出癖 == 4
+	SOURCE:7 += 1500
+	TIMES SOURCE:12, 2.00
+	TIMES SOURCE:5, 2.00
+ELSE
+	SOURCE:7 += 2500
+	TIMES SOURCE:12, 3.00
+	TIMES SOURCE:5, 3.00
+ENDIF
+
+;TALENT:露出狂
+IF TALENT:露出狂
+	SOURCE:7 += 500
+	TIMES SOURCE:12, 1.50
+	TIMES SOURCE:5, 1.50
+ENDIF
+
+;陰毛を生やす設定で剃毛状態
+SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛の状態 <= 5
+	TIMES SOURCE:12 , 2.00
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+;奴隷の指⇔奴隷のＶの汚れが移動
+STAIN:1 |= STAIN:3
+STAIN:3 |= STAIN:1
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;露出癖Lv３以上で自慰経験に＋１
+IF ABL:露出癖 >= 3 
+;ビデオ撮影時は経験にプラス
+	IF TEQUIP:撮影中
+		EXP:自慰経験 += 2
+		PRINTL 自慰経験＋２
+		EXP:調教自慰経験 += 2
+		PRINTL 調教自慰経験＋２
+	ELSE
+		EXP:自慰経験 += 1
+		PRINTL 自慰経験＋１
+		EXP:調教自慰経験 += 1
+		PRINTL 調教自慰経験＋１
+	ENDIF
+	IF TEQUIP:撮影中 && CFLAG:公開オナニーの経験 == 0
+		EXP:異常経験 += 1
+		PRINTL 異常経験＋１
+		CFLAG:公開オナニーの経験 = 1
+	ENDIF
+ENDIF
+
+;レズ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +2
+	EXP:レズ経験 += 2
+ENDIF
+
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+;屈服刻印１に相当
+TFLAG:屈服刻印2 = 1
+
+RETURN 1

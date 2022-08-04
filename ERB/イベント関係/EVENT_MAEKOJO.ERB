@@ -1,0 +1,449 @@
+﻿@MAEKOJO_LESPLAY,ARG,ARG:1
+
+LOCAL = ARG
+LOCAL:1 = ARG:1
+
+;特殊処理：
+;レイチェル、MIIは常に丁寧語
+;かなでがMASTERを呼ぶときのいつもの処理
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF	
+SETCOLOR 0xDDBBCC
+
+PRINTFORM 「んちゅっ、んっ……ぷぁっ、ダメ
+	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		PRINTFORM ですよぅ……
+	ELSE
+		PRINTFORM だよぅ……
+	ENDIF
+PRINTFORM となりで
+	IF TALENT:LOCAL:アンドロイド == 1
+		PRINTFORM マスター
+	ELSEIF NO:LOCAL == [[キャラ:宮間かなで]] && TALENT:LOCAL:ギャル系 == 0 && NO:MASTER == [[キャラ:あなた]]
+		PRINTFORM お兄ちゃん
+	ELSEIF (NO:LOCAL == [[キャラ:宮間かなで]] || NO:LOCAL == [[キャラ:宮間カナ]]) && TALENT:LOCAL:ギャル系 == 1 && NO:MASTER == [[キャラ:あなた]]
+		PRINTFORM アニキ
+	ELSE
+		PRINTFORM あの人
+	ENDIF
+PRINTFORML が寝てるのにぃ……ｖ」
+PRINTFORM 「えっ……『%CALLNAME:LOCAL%
+	IF (BASE:LOCAL:実年齢 > BASE:(LOCAL:1):実年齢) || NO:(LOCAL:1) == 9 || NO:(LOCAL:1) == 17
+		PRINTFORM さん
+	ELSE
+		PRINTFORM ちゃん
+	ENDIF
+PRINTFORML と一緒にオフロ入った時からムラムラしてた』だなんて……
+PRINTFORM 　もうっ、%CALLNAME:(LOCAL:1)%
+	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		PRINTFORM さん
+	ELSE
+		PRINTFORM ちゃん
+	ENDIF
+PRINTFORM ったらえっちなん
+	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		PRINTFORM です
+	ELSE
+		PRINTFORM だ
+	ENDIF
+PRINTFORML からぁｖ」
+
+IF TALENT:(LOCAL:1):ふたなり == 1
+	PRINTFORM 「きゃっ……%CALLNAME:(LOCAL:1)%
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM さん
+		ELSE
+			PRINTFORM ちゃん
+		ENDIF
+	PRINTFORM の
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オチ○ポ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM チンポ
+		ELSE
+			PRINTFORM おちん○ん
+		ENDIF
+	PRINTFORM 、パジャマの上からでも分かるぐらい
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM カタくなって
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM ボッキして
+		ELSE
+			PRINTFORM 大きくなって
+		ENDIF
+	PRINTFORML るぅ……ｖ」
+ENDIF
+PRINTFORM 「でも……実を言うと%CSTR:LOCAL:一人称%もさっきからガマンできない
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM んです
+		ELSE
+			PRINTFORM の
+		ENDIF
+PRINTFORML ｖ
+PRINTFORM 　だから……
+	IF TALENT:LOCAL:アンドロイド == 1
+		PRINTFORM マスター
+	ELSEIF NO:LOCAL == [[キャラ:宮間かなで]] && TALENT:LOCAL:ギャル系 == 0 && NO:MASTER == [[キャラ:あなた]]
+		PRINTFORM お兄ちゃん
+	ELSEIF (NO:LOCAL == [[キャラ:宮間かなで]] || NO:LOCAL == [[キャラ:宮間カナ]]) && TALENT:LOCAL:ギャル系 == 1 && NO:MASTER == [[キャラ:あなた]]
+		PRINTFORM アニキ
+	ELSE
+		PRINTFORM あの人
+	ENDIF
+PRINTFORM ももう寝ちゃってるから……ふたりで一緒にキモチよくな
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM りましょう
+		ELSE
+			PRINTFORM ろう
+		ENDIF
+PRINTFORML ｖ」
+PRINTFORM 「あっ……あァンっｖ%CALLNAME:(LOCAL:1)%
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM さん
+		ELSE
+			PRINTFORM ちゃん
+		ENDIF
+PRINTFORM の
+	IF TALENT:(LOCAL:1):ふたなり == 1
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オチ○ポ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM チンポ
+		ELSE
+			PRINTFORM おちん○ん
+		ENDIF
+	ELSE
+		PRINTFORM クリトリス
+	ENDIF
+PRINTFORM 、%CSTR:LOCAL:一人称%の
+	IF TALENT:LOCAL:ふたなり == 1
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オチ○ポの先っぽ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM チンポの先っぽ
+		ELSE
+			PRINTFORM おちん○んの先っぽ
+		ENDIF
+	ELSE
+		PRINTFORM クリトリス
+	ENDIF
+PRINTFORML とキスしちゃってるぅ……♪」
+IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
+	PRINTFORM 「あはっ、%CALLNAME:(LOCAL:1)%
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM さん
+		ELSE
+			PRINTFORM ちゃん
+		ENDIF
+	PRINTFORM の
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オチ○ポ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM チンポ
+		ELSE
+			PRINTFORM おちん○ん
+		ENDIF
+	PRINTFORM 、
+		IF CFLAG:LOCAL:ペニスのサイズ < CFLAG:(LOCAL:1):ペニスのサイズ
+			PRINTFORM %CSTR:LOCAL:一人称%のより大きか
+		ELSEIF CFLAG:LOCAL:ペニスのサイズ > CFLAG:(LOCAL:1):ペニスのサイズ
+			PRINTFORM %CSTR:LOCAL:一人称%のより小さか
+		ELSE
+			PRINTFORM %CSTR:LOCAL:一人称%のと同じぐらいの大きさだ
+		ENDIF
+	PRINTFORM ったん
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM ですねぇ
+		ELSE
+			PRINTFORM だぁ
+		ENDIF
+	PRINTFORML ……♪
+	PRINTFORM 　それに
+		IF CFLAG:(LOCAL:1):包皮の状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
+			PRINTFORM ズル剥け
+		ELSEIF CFLAG:(LOCAL:1):包皮の状態 == 3
+			PRINTFORM ズル剥け
+		ELSE
+			PRINTFORM 包茎
+		ENDIF
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オチ○ポ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM チンポ
+		ELSE
+			PRINTFORM おちん○ん
+		ENDIF
+		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+			PRINTFORM ですし
+		ELSE
+			PRINTFORM だし
+		ENDIF
+	PRINTFORML ……
+	PRINTFORM 　
+		IF CFLAG:(LOCAL:1):包皮の状態 < 2 && CFLAG:LOCAL:包皮の状態 == 2 && TALENT:LOCAL:童貞 == 0
+			PRINTFORM %CSTR:LOCAL:一人称%みたいにムケてた方が
+				IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+					PRINTFORM オチ○ポ
+				ELSEIF TALENT:LOCAL:ギャル系 == 1
+					PRINTFORM チンポ
+				ELSE
+					PRINTFORM おちん○ん
+				ENDIF
+			PRINTFORM がビンカンになってキモチいいん
+				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+					PRINTFORM です
+				ELSE
+					PRINTFORM だ
+				ENDIF
+			PRINTFORM よ♪
+		ELSEIF CFLAG:LOCAL:包皮の状態 < 2  && CFLAG:(LOCAL:1):包皮の状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
+			PRINTFORM %CSTR:LOCAL:一人称%も%CALLNAME:(LOCAL:1)%
+				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+					PRINTFORM さん
+				ELSEIF NO:LOCAL != [[キャラ:桐生歌音]]
+					PRINTFORM ちゃん
+				ENDIF
+			PRINTFORM みたいにムケてたらもっと
+				IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+					PRINTFORM オチ○ポ
+				ELSEIF TALENT:LOCAL:ギャル系 == 1
+					PRINTFORM チンポ
+				ELSE
+					PRINTFORM おちん○ん
+				ENDIF
+			PRINTFORM でキモチよくなれたのに……♪
+		ELSE
+			PRINTFORM %CSTR:LOCAL:一人称%と同じ
+				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+					PRINTFORM です
+				ELSE
+					PRINTFORM だ
+				ENDIF
+			PRINTFORM ね♪
+		ENDIF
+	PRINTFORML 」
+ENDIF
+PRINTFORM 「ねぇ……もっとぎゅってして
+	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		PRINTFORM ください
+	ELSE
+		PRINTFORM ぇ
+	ENDIF
+PRINTFORML ｖ
+PRINTFORM 　おクチと
+	IF TALENT:LOCAL:ふたなり == 1
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オチ○ポの先っぽ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM チンポの先っぽ
+		ELSE
+			PRINTFORM おちん○んの先っぽ
+		ENDIF
+	ELSE
+		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
+			PRINTFORM オマ○コ
+		ELSEIF TALENT:LOCAL:ギャル系 == 1
+			PRINTFORM マンコ
+		ELSE
+			PRINTFORM アソコ
+		ENDIF
+	ENDIF
+PRINTFORM の両方でえっちなキスし
+	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		PRINTFORM ましょう
+	ELSE
+		PRINTFORM たいのぉ
+	ENDIF
+PRINTFORML ……ｖ」
+	RESETCOLOR
+	SETFONT ""
+PRINTW
+
+RETURN
+
+;-----------------------------------------------------------------------------------
+@MAEKOJO_NTR_STAFF
+;無駄な分岐が多いのは淫語生成システムの導入時に一括置換されたんだろうなと思われます。
+;どうすっかなあ。そのへん。
+;褐色肌で分岐してたのだけどギャル系で分岐に直していいよね……
+
+CHKFONT "あくびん"
+IF RESULT
+	SETFONT "あくびん"
+ENDIF
+SETCOLOR 0xDDBBCC
+PRINTFORML 「んっ……%CSTR:COUNT:彼氏姓%さん、もっとえっちなキスしてぇ%UNICODE(0x2665)%」
+PRINTFORM 「ぷぁっ……キスしながら%CSTR:COUNT:一人称%の
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ENDIF
+PRINTFORML いじるのダメぇ%UNICODE(0x2665)%感じすぎちゃって立ってられなくなっちゃうからぁ……%UNICODE(0x2665)%
+PRINTFORML 　感じてる%CSTR:COUNT:一人称%の顔がカワイイからいじわるしたくなったって……嬉しい%UNICODE(0x2665)%
+PRINTFORM 　じゃ、お返しに%CSTR:COUNT:彼氏姓%さんの
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ENDIF
+PRINTFORML 舐めてあげるね♪」
+PRINTFORML 「ちぅ……ん、んふ…………んんっ……んふっ……じゅる……ちゅ、れる……ん、んく、んふぅ……
+PRINTFORM 　んふぅ……ん……やっぱり%CSTR:COUNT:彼氏姓%さんの
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ENDIF
+PRINTFORM 、
+	IF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
+		PRINTFORM お兄ちゃん
+	ELSEIF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
+		PRINTFORM お兄ぃ
+	ELSEIF NO:COUNT == [[キャラ:宮間カナ]]
+		PRINTFORM アニキ
+	ELSE
+		PRINTFORM あの人
+	ENDIF
+PRINTFORML より大きい%UNICODE(0x2665)%
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM 　セーエキ
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM 　ザーメン
+	ELSE
+		PRINTFORM 　精液
+	ENDIF
+PRINTFORML も濃くてドロっとして美味しいし……%UNICODE(0x2665)%
+PRINTFORML 　ちゅる、んっ、ちゅ……んふぅんっ……もう出ちゃう？　いいよ、%CSTR:COUNT:一人称%の口にいっぱい出して%UNICODE(0x2665)%
+PRINTFORML 　んくっ……んっ……ぷはっ、えへへ……今日もちゃんと飲めたよ♪でもぉ……%CSTR:COUNT:彼氏姓%さんもまだシたりないよね%UNICODE(0x2665)%」
+PRINTFORML 「ううぅ～……だっていつも%CSTR:COUNT:彼氏姓%さん、３回は中に出さないと満足しないし、それにぃ……♪
+PRINTFORM 　%CSTR:COUNT:一人称%も
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%ハメて
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%入れて
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%入れて
+	ENDIF
+PRINTFORML 欲しいんだもん%UNICODE(0x2665)%
+PRINTFORM 　危ない日だけど……約束通りいつも通りゴム無しで……ね♪%CSTR:COUNT:彼氏姓%さんの
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ENDIF
+PRINTFORML 、ナマで感じたいからぁ……%UNICODE(0x2665)%」
+PRINTFORM 「あァァァんっ%UNICODE(0x2665)%%CSTR:COUNT:一人称%の
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ENDIF
+PRINTFORML 、%CSTR:COUNT:彼氏姓%さんの形に拡がっていくぅ……♪
+IF CFLAG:COUNT:初体験の相手 == 10
+	PRINTFORM 　%CSTR:COUNT:一人称%をオトナにしてくれた
+		IF TALENT:COUNT:ギャル系 == 1
+			PRINTFORM %CSTR:COUNT:男性器呼び方%
+		ELSEIF TALENT:COUNT:淫乱 == 1
+			PRINTFORM %CSTR:COUNT:男性器呼び方%
+		ELSE
+			PRINTFORM %CSTR:COUNT:男性器呼び方%
+		ENDIF
+	PRINTFORM だもんっ、
+ELSE
+	PRINTFORM 　何回もえっちしたから……もう%CSTR:COUNT:一人称%の
+ENDIF
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:女性器呼び方%
+	ENDIF
+PRINTFORML もこの形じゃないとダメって言ってるよぉ%UNICODE(0x2665)%
+PRINTFORM 　うんっ%UNICODE(0x2665)%もうゼッタイ
+	IF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
+		PRINTFORM お兄ちゃん
+	ELSEIF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
+		PRINTFORM お兄ぃ
+	ELSEIF NO:COUNT == [[キャラ:宮間カナ]]
+		PRINTFORM アニキ
+	ELSE
+		PRINTFORM あの人
+	ENDIF
+PRINTFORM の
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ENDIF
+PRINTFORML じゃ満足できないっ%UNICODE(0x2665)%
+PRINTFORM 　あはっ……うんっ、そうっ♪
+	IF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
+		PRINTFORM お兄ちゃん
+	ELSEIF NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
+		PRINTFORM お兄ぃ
+	ELSEIF NO:COUNT == [[キャラ:宮間カナ]]
+		PRINTFORM アニキ
+	ELSE
+		PRINTFORM あの人
+	ENDIF
+PRINTFORM の
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ENDIF
+PRINTFORML なんか%CSTR:COUNT:彼氏姓%さんのに比べたら粗チンだよっ%UNICODE(0x2665)%」
+PRINTFORML 「あんな粗チンのなんかじゃなくて、%CSTR:COUNT:彼氏姓%さんの赤ちゃん欲しいのぉ……%UNICODE(0x2665)%
+PRINTFORM 　言われた通り排卵促進剤も飲んできたし、%CSTR:COUNT:彼氏姓%さんの
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM セーエキ
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM ザーメン
+	ELSE
+		PRINTFORM 精液
+	ENDIF
+PRINTFORML で卵子が溺れちゃうぐらいに中出ししてぇ%UNICODE(0x2665)%
+PRINTFORM 　ほらぁ、子宮の入り口が
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ELSE
+		PRINTFORM %CSTR:COUNT:男性器呼び方%
+	ENDIF
+PRINTFORML の先っぽとえっちなキスしておねだりしちゃってるのわかるよね%UNICODE(0x2665)%」
+PRINTFORML 「うんっ、妊娠してもいいのっ%UNICODE(0x2665)%%CSTR:COUNT:彼氏姓%さんに認知してもらえなくてもいいのぉっ！
+PRINTFORML 　子どもが生まれても%CSTR:COUNT:一人称%だけで育てるからぁ……%UNICODE(0x2665)%
+PRINTFORML 　だからいっぱい中出しして……%CSTR:COUNT:彼氏姓%さんの赤ちゃん孕ませてぇ……っ！！」
+PRINTFORML 「イくっ、ぃっ、イっちゃうぅぅぅぅぅぅッ！！
+PRINTFORM 　子宮で%CSTR:COUNT:彼氏姓%さんの
+	IF TALENT:COUNT:ギャル系 == 1
+		PRINTFORM セーエキ
+	ELSEIF TALENT:COUNT:淫乱 == 1
+		PRINTFORM ザーメン
+	ELSE
+		PRINTFORM 精液
+	ENDIF
+PRINTFORML ごくごくしながらイっちゃうううううううううううううう～っ%UNICODE(0x2665)%」
+RESETCOLOR
+SETFONT ""
+PRINTW

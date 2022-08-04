@@ -1,0 +1,1121 @@
+﻿;-------------------------------------------------
+;彼氏を「消す」
+;-------------------------------------------------
+@BOYFRIEND_LOST
+C = 300000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML 「ふむふむ、気になるあの娘に悪い虫がくっついちまったたんだね」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら興味深そうに歌音は頷いた
+PRINTFORML %CALLNAME:MASTER%が持ち掛けた相談は女優候補に悪い虫、つまり彼氏ができたらしいということ
+PRINTFORML 恋愛を咎める気はさらさらないが、万が一女優候補たちが傷物になってしまっては元
+PRINTFORML も子もない。
+PRINTFORML その前になんとかできないだろうか、と思った%CALLNAME:MASTER%は秘密裏に処理するべく裏社会
+PRINTFORML に精通する桐生組に依頼してみようと思ったのだ
+PRINTFORML 「要するにその娘の彼氏を脅すなりなんなりして別れさせればいいんだね？
+PRINTFORML それならちょいと強面のうちの若い衆を使えばいいだけだから簡単さ」
+PRINTFORML そうして歌音は手を鳴らし、襖の向こうに控えていた黒服を呼びつけ人員を用意する
+PRINTFORML よう伝えたが、黒服が歌音に耳打ちすると次第に歌音の表情が曇りだした
+PRINTFORML 「あー……どうもいくらアタシとアンタの仲でもタダってわけにはいかないようさね」
+PRINTFORML なんでも下準備など諸経費として結構な額がかかってしまうらしく、歌音の口利き
+PRINTFORML だとしても、どうしても%CALLNAME:MASTER%が３０万Ｐ負担しなければならないらしい
+PRINTFORML しかしよくよく考えてみると女優候補が傷物になって『商品』として成り立たなく
+PRINTFORML なるぐらいなら安いものだ
+PRINTFORML そう考えたあなたは歌音に３０万Ｐの支払いを約束し、早速依頼を遂行してもらうこ
+PRINTFORML とにした……
+PRINTW  
+PRINTFORML 「あーそうそう、アンドロイドだとか淫魔だとか、そういった彼氏ができそうもない
+PRINTFORML 連中には意味ないかんね。
+PRINTFORML ああ、それと彼氏がいない娘やアンタの彼女にアプローチかけてるバカを排除できるよ」
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】には彼氏ができそうにもないです
+	RETURN 0
+;サキュバスは排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】には彼氏ができそうにもないです
+	RETURN 0
+;人妻は排除
+ELSEIF TALENT:RESULT:彼氏あり && TALENT:RESULT:人妻
+	PRINTFORMW 【%TALENTNAME:[[TALENT:人妻]]%】を別れさせることはできません
+	RETURN 0
+;天使は排除
+ELSEIF TALENT:RESULT:天使
+	PRINTFORMW 【%TALENTNAME:[[TALENT:天使]]%】には彼氏ができそうにもないです
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	IF TALENT:T:彼氏あり
+		PRINTFORMW %NAME:T%が気落ちしている……
+		PRINTFORML どうやら付き合っていた彼氏と別れてしまったようだ
+		PRINTFORM %CALLNAME:MASTER%が事務所のソファに腰掛け、日本茶をすすっている
+		PRINTFORML 歌音を見ると、意味ありげな笑みを浮かべていた……
+		PRINTFORMW %CALLNAME:T%は【%TALENTNAME:[[TALENT:彼氏あり]]%】ではなくなった
+		TALENT:T:彼氏あり = 0
+		TALENT:T:清い付き合い = 0
+		CFLAG:T:寝取られ進行ポイント = 0
+		CFLAG:T:彼氏の有無 = 2
+		CFLAG:T:彼氏の種類 = 0
+		IF CFLAG:T:ファーストキスの相手 == 8 && CFLAG:T:ファーストキス喪失シチュ == 0 && CFLAG:T:827 == 0
+			CSTR:T:ファーストキスの相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:827 = 1
+		ELSEIF CFLAG:T:ファーストキスの相手 == 8 && CFLAG:T:ファーストキス喪失シチュ == 1 && CFLAG:T:827 == 0
+			CSTR:T:ファーストキスの相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:827 = 1
+		ENDIF
+		IF CFLAG:T:初体験の相手 == 8 && CFLAG:T:167 == 0
+			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:167 = 1
+		ENDIF
+		IF CFLAG:T:アナル処女喪失の相手 == 8 && CFLAG:T:837 == 0
+			CSTR:T:アナル処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:837 = 1
+		ENDIF
+		EXP:T:交際人数 += 1
+	ELSEIF CFLAG:T:スタッフ寝取られイベントの進行度 == 1 && CFLAG:T:スタッフ寝取られイベントの進行度 == 1
+		PRINTFORMW %NAME:T%が気落ちしている……
+		PRINTFORML スタッフの%CSTR:T:彼氏姓%がここのところ姿を見せていないのと何か関係があるのだろうか
+		PRINTFORM %CALLNAME:MASTER%が事務所のソファに腰掛け、日本茶をすすっている
+		PRINTFORMW 歌音を見ると、意味ありげな笑みを浮かべていた……
+		TALENT:T:彼氏あり = 0
+		CFLAG:T:寝取られ進行ポイント = 0
+		CFLAG:T:彼氏の有無 = 2
+		CFLAG:T:彼氏の種類 = 0
+		CFLAG:T:スタッフ寝取られイベントの進行度 = 0
+		CFLAG:T:スタッフ寝取られイベントの進行度 = 0
+		IF CFLAG:T:ファーストキスの相手 == 10
+			CSTR:T:ファーストキスの相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
+		ENDIF
+		IF CFLAG:T:初体験の相手 == 10
+			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
+		ENDIF
+		CFLAG:T:寝取りスタッフ抹殺依頼判定 = 1
+		EXP:T:交際人数 += 1
+	ELSE
+		PRINTFORM %CALLNAME:MASTER%が事務所のソファに腰掛け、日本茶をすすっている
+		PRINTFORML 歌音を見ると、意味ありげな笑みを浮かべていた……
+		PRINTFORM どうやら%CALLNAME:T%にアプローチをかけていた男たちを桐生組の力を使ってアレコレしてど
+		PRINTFORML うにかしたようだ……
+		CFLAG:T:寝取られ進行ポイント = 0
+	ENDIF
+ENDIF
+PRINTW
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;タトゥーを入れる
+;-------------------------------------------------
+@TATTO
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML 「ふむふむ、女優候補にタトゥーを入れたいから彫り師を紹介して欲しい、と」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら興味深そうに歌音は頷いた
+PRINTFORML %CALLNAME:MASTER%が持ち掛けた相談は女優候補にタトゥーを入れたいということだった
+PRINTFORML 今日びファッションとしてタトゥーを入れるケースもあるし、欧米のポルノ女優は自
+PRINTFORML 身が出演したタイトルと制作レーベルを守るために入れているともいう
+PRINTFORML そして度重なる指導で感覚が麻痺してきた%CALLNAME:MASTER%は美少女・美女揃いの女優候補たち
+PRINTFORML の綺麗な肌にタトゥーが彫られた姿を見たいという欲望が堪えきれなくなっていた…
+PRINTFORML …
+PRINTFORML 「まー、その気持ちはなんとなく分かるよ。
+PRINTFORML キレイなモノを壊したい……というより、この場合は穢したいというか、堕としたい。
+PRINTFORML キレイどころの肌にモンモン入ってるなんてアンバランスさがイイって男もいるだろ
+PRINTFORML うしねぇ……」
+PRINTFORML そうして歌音は手を鳴らし、襖の向こうに控えていた黒服を呼びつけ人員を用意する
+PRINTFORML よう伝えたが、黒服が歌音に耳打ちすると次第に歌音の表情が曇りだした
+PRINTFORML 「あー……とりあえず条件がいくつかあるよ。
+PRINTFORML モンモン入れる娘がアンタになついていること、同意もなしに彫るのはアレだかんね。
+PRINTFORML 次に、既に女優としてデビューしていること――ま、これは簡単さね。
+PRINTFORML そして彫り師に裸を見られても平気なこと、脱いでもらわなきゃ彫れないからね
+PRINTFORML まあ、もうモンモン入れてる娘なら話は別だけどさ」
+PRINTFORML 歌音はそう言うと彫り師が住んでいるらしい住所が書かれたメモを%CALLNAME:MASTER%に手渡した
+PRINTFORML いくつか彫れる部位があるが、どこに彫っても金額は一律１０万Ｐらしい
+PRINTW  
+PRINTFORML 「あーそうそう、アンドロイドには彫れないから注意しとくれ。
+PRINTFORML ああいう精密機器は壊しちまったら元も子もないしね。
+PRINTFORML もしアンドロイドにモンモン入れたいなら専門知識持ったヤツに頼んでおくれ」
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+;△なついている云々は判定されてなさげ
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】にはタトゥーが入れられません
+	RETURN 0
+;デビュー前の女優候補は排除
+ELSEIF EXP:RESULT:ＡＶ出演経験 == 0 && CFLAG:RESULT:タトゥーの有無 == 0
+	PRINTFORMW %CALLNAME:RESULT%はまだ女優デビューしていません
+	RETURN 0
+;露出癖3以下は排除
+ELSEIF ABL:RESULT:露出癖 <= 3 && CFLAG:RESULT:タトゥーの有無 == 0
+	PRINTFORMW %CALLNAME:RESULT%は裸を見られるのが恥ずかしいようです
+	RETURN 0
+ELSEIF CFLAG:RESULT:タトゥーの有無 == 15
+	PRINTFORMW %CALLNAME:RESULT%にはもうタトゥーを入れられません
+	RETURN 0
+ENDIF
+
+TARGET = RESULT
+
+PRINTFORML %NAME:TARGET%にタトゥーを彫りますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+$INPUT_LOOP_000
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0 && CFLAG:タトゥーの有無 != 15
+	$INPUTLOOP_00
+	PRINTFORML どこに彫りますか？
+	PRINTFORML 《部位の名前を入力してください》
+	INPUTS
+	CSTR:タトゥー5場所 = %RESULTS%
+	
+	PRINTFORML どのような柄を彫りますか？
+	PRINTFORML 《図柄や彫る文字を入力してください》
+	INPUTS
+	CSTR:タトゥー5モチーフ = %RESULTS%
+
+	PRINTFORML %CSTR:タトゥー5場所%に彫ったのは……
+	PRINTL [0] - 図柄
+	PRINTL [1] - 文字
+	PRINTL [2] - それ以外
+	$INPUT_LOOP_01
+	INPUT
+	IF RESULT == 0
+		LOCAL = 1
+	ELSEIF RESULT == 1
+		LOCAL = 2
+	ELSEIF RESULT == 2
+		LOCAL = 3
+	ENDIF
+	
+	PRINTFORM %CALLNAME:TARGET%の%CSTR:タトゥー5場所%に%CSTR:タトゥー5モチーフ%
+	IF LOCAL == 1
+		PRINTFORM を象った
+	ELSEIF LOCAL == 2
+		PRINTFORM という文字列の
+	ELSEIF LOCAL == 3
+		PRINTFORM の
+	ENDIF
+	PRINTFORML タトゥーを彫ります
+	PRINTFORML よろしいですか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUT_LOOP01
+	INPUT
+	IF RESULT == 0
+		PRINTFORML 《%CALLNAME:TARGET%の%CSTR:タトゥー5場所%にタトゥーを彫りました》
+		IF LOCAL == 1
+			LOCALS = %CSTR:タトゥー5モチーフ%
+			PRINTFORML 図柄：%CSTR:タトゥー5モチーフ%
+			IF RAND:2 == 0
+				CSTR:タトゥー5モチーフ = %LOCALS%を象った
+			ELSE
+				CSTR:タトゥー5モチーフ = %LOCALS%をモチーフにした
+			ENDIF
+		ELSEIF LOCAL == 2
+			LOCALS = %CSTR:タトゥー5モチーフ%
+			PRINTFORML 文字列：%CSTR:タトゥー5モチーフ%
+			IF RAND:2 == 0
+				CSTR:タトゥー5モチーフ = %LOCALS%という文字の
+			ELSE
+				CSTR:タトゥー5モチーフ = %LOCALS%という文字の
+			ENDIF
+		ELSEIF LOCAL == 3
+			LOCALS = %CSTR:タトゥー5モチーフ%
+			PRINTFORML %CSTR:タトゥー5モチーフ%
+			IF RAND:2 == 0
+				CSTR:タトゥー5モチーフ = %LOCALS%の
+			ELSE
+				CSTR:タトゥー5モチーフ = %LOCALS%の
+			ENDIF
+		ENDIF
+		PRINTFORMW 異常経験＋１
+		EXP:異常経験 += 1
+		IF CFLAG:タトゥーの有無 == 0
+			CSTR:タトゥー1場所 = %CSTR:タトゥー5場所%
+			CSTR:タトゥー1モチーフ = %CSTR:タトゥー5モチーフ%
+			CFLAG:タトゥーの有無 |= 1
+			MONEY -= C
+			RETURN 1
+		ELSEIF (CFLAG:タトゥーの有無 & 1)
+			CSTR:タトゥー2場所 = %CSTR:タトゥー5場所%
+			CSTR:タトゥー2モチーフ = %CSTR:タトゥー5モチーフ%
+			CFLAG:タトゥーの有無 |= 2
+			MONEY -= C
+			RETURN 1
+		ELSEIF (CFLAG:タトゥーの有無 & 2)
+			CSTR:タトゥー3場所 = %CSTR:タトゥー5場所%
+			CSTR:タトゥー3モチーフ = %CSTR:タトゥー5モチーフ%
+			CFLAG:タトゥーの有無 |= 4
+			MONEY -= C
+			RETURN 1
+		ELSEIF (CFLAG:タトゥーの有無 & 4)
+			CSTR:タトゥー4場所 = %CSTR:タトゥー5場所%
+			CSTR:タトゥー4モチーフ = %CSTR:タトゥー5モチーフ%
+			CFLAG:タトゥーの有無 |= 8
+			MONEY -= C
+			RETURN 1
+		ENDIF
+	ELSEIF RESULT == 1
+		PRINTFORMW 《再入力してください》
+		GOTO INPUTLOOP_00
+	ELSE
+		GOTO INPUT_LOOP01
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP_000
+ENDIF
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;護衛依頼
+;-------------------------------------------------
+@BODYGUARD
+C = 800000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML 「ふむふむ、気になるあの娘の護衛をお願いしたい、と」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら興味深そうに歌音は頷いた
+PRINTFORML %CALLNAME:MASTER%が持ち掛けた相談は女優候補が痴漢に遭ったということ
+PRINTFORML まだ身体をまさぐられるぐらいならいいが、もしも傷物にでもされてしまったら元も
+PRINTFORML 子もない
+PRINTFORML その前になんとかできないだろうか、と思った%CALLNAME:MASTER%は秘密裏に処理するべく裏社会
+PRINTFORML に精通する桐生組に依頼してみようと思ったのだ
+PRINTFORML 「要するにその娘の送迎をすりゃいいわけだ。
+PRINTFORML それでもって……まぁ、その娘に惚れないような男ならなおのことよし、と。
+PRINTFORML それならちょいとうちの若い衆でゲイのヤツが何人かいるから、そいつを使えばいい
+PRINTFORML だけだから簡単さ」
+PRINTFORML そうして歌音は手を鳴らし、襖の向こうに控えていた黒服を呼びつけ人員を用意する
+PRINTFORML よう伝えたが、黒服が歌音に耳打ちすると次第に歌音の表情が曇りだした
+PRINTFORML 「あー……どうもいくらアタシとアンタの仲でもタダってわけにはいかないようさね」
+PRINTFORML なんでも下準備など諸経費として結構な額がかかってしまうらしく、歌音の口利きだ
+PRINTFORML としても、どうしても%CALLNAME:MASTER%に８０万Ｐ負担してもらわならければならないらしい
+PRINTFORML しかしよくよく考えてみると女優候補が傷物になって『商品』として成り立たなく
+PRINTFORML なるぐらいなら安いものだ
+PRINTFORML そう考えたあなたは歌音に８０万Ｐの支払いを約束し、早速依頼を遂行してもらうこ
+PRINTFORML とにした……
+PRINTW  
+PRINTFORML 「あーそうそう、アンドロイドだとか淫魔だとか、そういった痴漢を撃退できそうな
+PRINTFORML 連中には意味ないかんね。
+PRINTFORML あとアタシは最初から護衛がいるから意味がないよ」
+PRINTW
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;アンドロイドは排除
+ELSEIF TALENT:RESULT:アンドロイド
+	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】には護衛は必要なさそうです
+	RETURN 0
+;淫魔は排除
+ELSEIF TALENT:RESULT:淫魔
+	PRINTFORMW 【%TALENTNAME:[[TALENT:淫魔]]%】には護衛は必要なさそうです
+	RETURN 0
+;天使は排除
+ELSEIF TALENT:RESULT:天使
+	PRINTFORMW 【%TALENTNAME:[[TALENT:天使]]%】には護衛は必要なさそうです
+	RETURN 0
+;伊月は排除
+ELSEIF TALENT:RESULT:護身術
+	PRINTFORMW %CALLNAME:RESULT%には護衛は必要なさそうです
+	RETURN 0
+;歌音は排除
+ELSEIF TALENT:RESULT:極道の娘
+	PRINTFORMW %CALLNAME:RESULT%には既に護衛がいます
+	RETURN 0
+;護衛ありは排除
+ELSEIF CFLAG:RESULT:護衛の有無 == 1
+	PRINTFORMW %CALLNAME:RESULT%には既に護衛がいます
+	RETURN 0
+ENDIF
+
+T = RESULT
+
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML %CALLNAME:T%に護衛を付けました
+	CFLAG:T:護衛の有無 = 1
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+;-------------------------------------------------
+;みひろ加入
+;-------------------------------------------------
+@ADD_IDOL
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+
+
+PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は一枚の紙を取り出した
+PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+PRINTFORML 言ってたのを思い出してね。
+PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+PRINTFORML だろう
+PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+DRAWLINE
+PRINTFORML 【新島 みひろ】
+PRINTFORML 国民的アイドルユニットのセンターを務める人気アイドルで、かつてあなた（＝監督）
+PRINTFORML やかなで、美乃里の幼馴染みだった少女
+PRINTFORML 父親が事業に失敗した際に桐生組に莫大な借金をしており、その借金のカタとして桐
+PRINTFORML 生組に身柄を拘束され、監視状態にあった
+PRINTFORML 彼女が芸能活動で稼いだギャラの大半が桐生組への借金の返済に充てられていたのだ
+PRINTFORML が、あなたの『指導』のパートナーとなった歌音がみひろとあなたの関係を調べ上げ、
+PRINTFORML 様々な意味で利用価値があると判断し、現在では歌音が身柄を預っている
+PRINTFORML 枕営業や広告代理店のゴリ押しなく、実力でスターダムにのし上がったほどだけあっ
+PRINTFORML て、かなり負けん気は強いが結構素直。
+PRINTFORML 幼い頃からずっと想い人がおり、その想いはかなり強いため、そう簡単に男にはなび
+PRINTFORML くことはない
+;PRINTFORML 当然想い人＝あなたなのだが……
+PRINTFORML 年齢：17歳　難易度：Ｅ　成長度：Ａ　貢献度：Ａ　売却値：SS
+DRAWLINE
+PRINTFORMW
+PRINTFORML 「で、この娘どうするかい？　紹介料は１００万Ｐだよ」
+PRINTFORML 
+$INPUT_LOOP
+PRINTL  [0] - 紹介してもらう
+PRINTL  [1] - やっぱりやめる
+PRINTL ※CAUTION※
+PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML アイマスクを着けられたみひろが座敷に連れて来られた……
+	PRINTFORML 黒服がアイマスクを外し、あたりを見回していたみひろが%CALLNAME:MASTER%や歌音の存在に気づ
+	PRINTFORML くと、目を丸くして%CALLNAME:MASTER%を凝視した……
+	PRINTFORML かつての幼馴染みが桐生組の敷居をまたいでいることに驚いているようだ
+	PRINTW
+	PRINTFORML 歌音がひと通りこれからしてもらうことを説明すると、%CALLNAME:MASTER%が自分と似た境遇に置
+	PRINTFORML かれていることを知ったみひろは、やや困惑しながらも自身に拒否権が無い事を理解
+	PRINTFORML し、ゆっくりと契約書にサインした……
+	PRINTFORMW
+	PRINTFORML 《新島 みひろが女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:新島みひろ]])
+		FLAG:歌音紹介雇用 |= 1
+ELSEIF RESULT == 1
+	RETURN 0
+ENDIF
+
+MONEY -= C
+
+RETURN 0
+;
+
+;-------------------------------------------------
+;結衣花加入
+;-------------------------------------------------
+@ADD_VA
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は一枚の紙を取り出した
+PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+PRINTFORML 言ってたのを思い出してね。
+PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+PRINTFORML だろう
+PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+DRAWLINE
+PRINTFORML 【佐倉 結衣花】
+PRINTFORML 人気急上昇中の、幼児から老婆までこなすほどの優れた演技力を持つ声優
+PRINTFORML アニメ雑誌や声優情報誌に名前は載っていても写真など個人を特定できる素材が掲載
+PRINTFORML されておらず、ここ数年で頭角を現してきたことから大御所の覆面名義などといった
+PRINTFORML 憶測が飛び交っている
+PRINTFORML その正体は覆面名義などではなくまだ年若い新人声優であり、かつて桐生組の関連会
+PRINTFORML 社が定期的にリリースしていた微エロイメージビデオに出演していた元・ジュニアア
+PRINTFORML イドル
+PRINTFORML 雑誌などに露出がないのはそういった過去と、ルックスではなく実力を評価して欲し
+PRINTFORML いからである
+PRINTFORML 偶然関連会社の資料を整理していた歌音が声優としてブレイクしている彼女の過去を
+PRINTFORML 知り、ありもしない当時の契約書と、それに書かれた契約内容の不履行を盾に彼女の
+PRINTFORML 身柄を抑えることに成功した
+PRINTFORML ……がしかし、演技力を磨くためならなんだってするという向上心の塊のような彼女
+PRINTFORML にとってＡＶに出演するということはまたとない機会だったようで、歌音とはある種
+PRINTFORML のギブアンドテイクの関係にある
+PRINTFORML 特定の男性と付き合うのは自身の声のイメージを固定化してしまう、という理解不能
+PRINTFORML な持論により、身持ちはかなり固い
+PRINTFORML 年齢：22歳　難易度：Ｄ　成長度：Ａ　貢献度：Ａ　売却値：SS
+DRAWLINE
+PRINTFORMW
+PRINTFORML 「で、この娘どうするかい？　紹介料は１００万Ｐだよ」
+PRINTFORML 
+PRINTL  [0] - 紹介してもらう
+PRINTL  [1] - やっぱりやめる
+PRINTL ※CAUTION※
+PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 歌音から連絡を受けた結衣花が座敷にやってきた……
+	PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された結衣花は温和な笑顔を浮かべて挨拶した……
+	PRINTW
+	PRINTFORML 歌音が改めてひと通りこれからしてもらうことを説明すると、結衣花は内容をきちん
+	PRINTFORML と確認しながらもスムーズに契約書にサインした……
+	PRINTFORMW
+	PRINTFORML 《佐倉 結衣花が女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:佐倉結衣花]])
+		FLAG:歌音紹介雇用 |= 2
+ELSEIF RESULT == 1
+	RETURN 0
+ENDIF
+
+MONEY -= C
+
+RETURN 0
+
+;-------------------------------------------------
+;南加入
+;-------------------------------------------------
+@ADD_MINAMI
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は一枚の紙を取り出した
+PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+PRINTFORML 言ってたのを思い出してね。
+PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+PRINTFORML だろう
+PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+DRAWLINE
+PRINTFORML 【春風南】（はるかぜ・みなみ）
+PRINTFORML 元は明るく成績優秀、通っていた学園でも男女問わず人気の美少女だった
+PRINTFORML しかし学園の不良連中に学園内で組織されている売春組織に拉致され、強制的に生徒
+PRINTFORML や教師、財界の重鎮たちに売春させられていた
+PRINTFORML 用済みになるまで売春させられた後、その組織からの『処分』を請け負っていた桐生
+PRINTFORML 組へと引き渡されたのだが、そのルックスの良さから再利用価値があると判断され、
+PRINTFORML 歌音により『処分』は保留状態にされている
+PRINTFORML かつてより想い人がいるらしく、今までに何度も告白されているがそのほとんどを断
+PRINTFORML ってきた
+PRINTFORML ちなみにボクっ娘である
+PRINTFORML 
+;PRINTFORML 原作で言うと50万稼いだ後に南加入、その後個別ルートに入らず退部させたケース
+PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+PRINTFORML 年齢：16歳　難易度：Ｃ　成長度：Ｃ　貢献度：Ａ　売却値：SS
+DRAWLINE
+PRINTFORMW
+PRINTFORML 「で、この娘どうするかい？　紹介料は１００万Ｐだよ」
+PRINTFORML 
+$INPUT_LOOP_MINAMI
+PRINTL  [0] - 紹介してもらう
+PRINTL  [1] - やっぱりやめる
+PRINTL ※CAUTION※
+PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML アイマスクを着けられた南が座敷に連れて来られた……
+	PRINTFORML 黒服にアイマスクを外された南は、再び歌音を前にして自分も『処分』されるのかと
+	PRINTFORML 絶望したかのような表情を浮かべている……
+	PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された南は困惑しながらも%CALLNAME:MASTER%に挨拶した……
+	PRINTW
+	PRINTFORML 歌音が改めてひと通りこれからしてもらうことを説明すると、『処分』されるわけで
+	PRINTFORML はないと理解した南は安堵のため息を吐き、契約書にサインをした……
+	PRINTFORMW
+	PRINTFORML 《春風 南が女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:春風南]])
+		FLAG:歌音紹介雇用 |= 4
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_MINAMI
+ENDIF
+
+MONEY -= C
+
+RETURN 0
+;
+
+;-------------------------------------------------
+;志乃加入
+;-------------------------------------------------
+@ADD_SHINO
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は一枚の紙を取り出した
+PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+PRINTFORML 言ってたのを思い出してね。
+PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+PRINTFORML だろう
+PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+DRAWLINE
+PRINTFORML 【二葉志乃】（ふたば・しの）
+PRINTFORML 豊かな金髪をツインテールにした中○生
+PRINTFORML かつてとある学園に通っており、学園内に数ある売春組織のうちひとつを運営し、同
+PRINTFORML 世代の少女たちを売春させていたが、ライバル団体に親友を人質にされ、自身が売春
+PRINTFORML するハメになりかかった
+PRINTFORML しかし隙を見て親友とライバル団体のアジトを脱走、『処分』を依頼していた桐生組
+PRINTFORML に転がり込み、保護を申し込んだ
+PRINTFORML 年若い少女たちへの『指導』の腕をよく知っていた歌音により保護は快諾され、ゆく
+PRINTFORML ゆくは%CALLNAME:MASTER%と同じように女優候補を育て、ＡＶに出演させる監督になってもらうつ
+PRINTFORML もりだったようだが、%CALLNAME:MASTER%の監督業が思いのほか順調だったため、監督としてでは
+PRINTFORML なく女優として起用することにしたようだ
+PRINTFORML 親友に友情以上の感情を抱いており、また売春で男の汚いところを見ていたせいか、
+PRINTFORML 若干男嫌いな面がある
+PRINTFORML
+;PRINTFORML 原作で言うと50万稼いだ後に南加入、その後個別ルートに入らず退部させたケース
+PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+PRINTFORML 年齢：14歳　難易度：SS　成長度：Ｃ　貢献度：Ｓ　売却値：SS
+DRAWLINE
+PRINTFORMW
+PRINTFORML 「で、この娘どうするかい？　紹介料は１００万Ｐだよ」
+PRINTFORML 
+$INPUT_LOOP_SHINO
+PRINTL  [0] - 紹介してもらう
+PRINTL  [1] - やっぱりやめる
+PRINTL ※CAUTION※
+PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 歌音から連絡を受けた志乃が座敷にやってきた……
+	PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された志乃は%CALLNAME:MASTER%に鋭い視線を向けている……
+	PRINTW
+	PRINTFORML 歌音が改めてひと通りこれからしてもらうことを説明すると、志乃は内容をきちん
+	PRINTFORML と確認しながらもスムーズに契約書にサインした……
+	PRINTFORMW
+	PRINTFORML 《二葉 志乃が女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:二葉志乃]])
+		FLAG:歌音紹介雇用 |= 8
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_SHINO
+ENDIF
+
+MONEY -= C
+
+RETURN 0
+;-------------------------------------------------
+;すみれ加入
+;-------------------------------------------------
+@ADD_SUMIRE
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は一枚の紙を取り出した
+PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+PRINTFORML 言ってたのを思い出してね。
+PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+PRINTFORML だろう
+PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+DRAWLINE
+PRINTFORML 【神園すみれ】（かみぞの・すみれ）
+PRINTFORML 豊かな胸を持つ元・地方議員の愛人
+PRINTFORML かつてとある学園に勤めていたが、その豊満な体ゆえ同僚の体育教師に処女を狙われ、
+PRINTFORML 体育教師の依頼を受けた学園内の売春組織によって拉致された
+PRINTFORML 体育教師に処女を奪われた後、生徒や他の教師、さらには政財界の重鎮たちと強制的に
+PRINTFORML 売春させられていたが、客としてやってきたとある地方議員が彼女に一目惚れする
+PRINTFORML 組織との交渉の末、例外的に「身請け」が認められ、愛人として囲われることになった
+PRINTFORML 彼女を機に学園内の売春に疑問を持った地方議員は一転して組織を潰す立場に回ったが
+PRINTFORML 逆に返り討ちに合う格好となり彼女だけでも守ろうと桐生組に保護を求めた
+PRINTFORML その類まれなルックスのみならず、性的な資質をも強く持つことを見抜いた歌音により
+PRINTFORML 利用価値が高いと判断され、今回の件の為に歌音の手元に置かれている
+PRINTFORML かつてその大きな胸ばかりが注目されていたため、やや男性不信のきらいがあるようだ
+PRINTFORML
+;PRINTFORML バババに処女をくれてやっても本人が感じているのであまりかわいそうに見えないｗ
+PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+PRINTFORML 年齢：24歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ｓ　売却値：SS
+DRAWLINE
+PRINTFORMW
+PRINTFORML 「で、この娘どうするかい？　紹介料は１００万Ｐだよ」
+PRINTFORML 
+$INPUT_LOOP_SUMIRE
+PRINTL  [0] - 紹介してもらう
+PRINTL  [1] - やっぱりやめる
+PRINTL ※CAUTION※
+PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+INPUT
+
+IF RESULT == 0
+	PRINTFORML 歌音から連絡を受けたすみれが座敷にやってきた……
+	PRINTFORML 歌音から%CALLNAME:MASTER%を紹介されたすみれは%CALLNAME:MASTER%に憐れむような視線を向けている……
+	PRINTW
+	PRINTFORM 歌音が改めてひと通りこれからしてもらうことを説明すると、すみれは今よりかはマシな待遇に納得したのか、
+	PRINTFORML 内容をきちんと確認しながらもスムーズに契約書にサインした……
+	PRINTFORMW
+	PRINTFORML 《神園すみれが女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:神園すみれ]])
+		FLAG:歌音紹介雇用 |= 16
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_SUMIRE
+ENDIF
+
+MONEY -= C
+
+RETURN 0
+;-------------------------------------------------
+;その他はるうられ勢加入
+;-------------------------------------------------
+@ADD_URARE
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+IF (FLAG:はるうられ雇用 & 1) == 0 || (FLAG:はるうられ雇用 & 2) == 0 || (FLAG:はるうられ雇用 & 4) == 0 || (FLAG:はるうられ雇用 & 8) == 0
+	PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+	PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は何枚か紙を取り出した
+	PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+	PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+	PRINTFORML 言ってたのを思い出してね。
+	PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+	PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+	PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+	PRINTFORML だろう
+	PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+	IF (FLAG:はるうられ雇用 & 1) == 0
+		DRAWLINE
+		PRINTFORML 【鎌瀬縫子】（かませ・ぬいこ）
+		PRINTFORML これといって特徴の無い、地味な女の子
+		PRINTFORML かつてとある学園に通っていたが、学園内の売春組織によって拉致されたものの、他人
+		PRINTFORML を勧誘するための布石だったためにすぐに『処分』されることになった
+		PRINTFORML しかしあまりにも特徴がなく地味な上、ソープに沈めるにも技量は足りないし、かとい
+		PRINTFORML ってむやみに『消す』のも拙いので、持て余し気味ながらもとりあえず歌音の手元に置
+		PRINTFORML かれている
+		PRINTFORML 地味ながらも普通の女子○生らしく恋愛への興味は尽きないようだ
+		PRINTFORML
+		;PRINTFORML ほぼ鎌瀬縫子専用素質の「地味」を作った
+		PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+		PRINTFORML 年齢：16歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ｃ　売却値：Ｂ
+		DRAWLINE
+		PRINTW
+	ENDIF
+	IF (FLAG:はるうられ雇用 & 2) == 0
+		DRAWLINE
+		PRINTFORML 【本庄のどか】（ほんじょう・のどか）
+		PRINTFORML おかっぱ頭の大人しい少女で、二葉志乃の親友
+		PRINTFORML かつてとある学園に通っており、何事もなく平穏に過ごしていたが、志乃を『勧誘』す
+		PRINTFORML るための人質として、学園内の売春組織に拉致されていた
+		PRINTFORML しかし隙を見て志乃とライバル団体のアジトを脱走、志乃の手引きで一緒に桐生組に転
+		PRINTFORML がり込み、保護を申し込んだ
+		PRINTFORML 志乃のついでとはいえ歌音により保護は快諾され、しばらく経った頃にあなたと契約し
+		PRINTFORML た志乃の経緯を聞き、また志乃が無理をしているのではないかと思った彼女は、歌音に
+		PRINTFORML 身代わりとばかりにＡＶ女優になることを申し出た
+		PRINTFORML ややレズっ気があるものの、異性への興味はちゃんとあるようだ
+		PRINTFORML
+		;PRINTFORML ゲーム内での評価は実は高くない。なのになぜ五十嵐くんはそこまで彼女にこだわるのか。
+		PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+		PRINTFORML 年齢：14歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ｃ　売却値：Ａ
+		DRAWLINE
+		PRINTW
+	ENDIF
+	IF (FLAG:はるうられ雇用 & 4) == 0
+		DRAWLINE
+		PRINTFORML 【海老原真与】
+		PRINTFORML 元は「どじっこ海老原ちゃん」と呼ばれ人気のあった女教師
+		PRINTFORML 学園内の売春組織でもある女子のいじめグループにより強制的に売春させられていた
+		PRINTFORML しかし元から心弱かったためすぐ「壊れ」てしまい、早々に「処分」されてしまった
+		PRINTFORML ルックスは良いので利用価値はあると判断され、しばらく処分を保留していたところ、
+		PRINTFORML なんとか精神的に持ち直したようだ
+		PRINTFORML 恋愛に関してはいつか白馬の王子が現れると信じていそうなタイプ
+		PRINTFORML
+		;PRINTFORML 多分固有の名前があるキャラでは最も精神的に弱いかと
+		PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+		PRINTFORML 年齢：24歳　難易度：Ｄ　成長度：Ｃ　貢献度：Ｃ　売却値：Ｂ
+		DRAWLINE
+		PRINTW
+	ENDIF
+	IF (FLAG:はるうられ雇用 & 8) == 0
+		DRAWLINE
+		PRINTFORML 【橘乙姫】（たちばな・おとひめ）
+		PRINTFORML 地元の名士の一人娘で、かつてはとある学園の副会長を務めていた
+		PRINTFORML ある日学園の裏で運営されている売春組織の存在と、自身がそれに狙われていることを
+		PRINTFORML 知った彼女は、その売春組織と繋がりがあるとはつゆ知らず、他校との交流会で知り合
+		PRINTFORML った歌音に、親にも『何かあったら頼るといいかもしれない』と言われたままに相談を
+		PRINTFORML もちかけた
+		PRINTFORML 何らかの形で利用価値があると踏んだ歌音は彼女の保護を約束し、監視つきではあるも
+		PRINTFORML のの、県内の他の学園に通っている
+		PRINTFORML そしてある日偶然、歌音があなたのＡＶレーベルでＡＶ女優候補として在籍しているこ
+		PRINTFORML とを知った彼女は、恩人である歌音にそんなことは辞めるようにと諭す
+		PRINTFORML だがしかしかなり話を盛ったあなたの境遇について歌音に聞かされた彼女は、悩んだ末
+		PRINTFORML に、一度守られたはずの貞操を捨てる覚悟であなたを諭すために一番シンプルに接触で
+		PRINTFORML きるようにと、ＡＶ女優候補へと自ら立候補した
+		PRINTFORML しかし実際会ってみると歌音に言われていた通りの人物ではないことと、またあなたが
+		PRINTFORML 女の子たちを食い物にしていることに多少なりとも罪悪感を覚えていることを知り、そ
+		PRINTFORML その考えを改めたようだ
+		PRINTFORML 恋愛についてはそれなりに興味があり、また言われたことを真に受けやすい
+		PRINTFORML
+		;PRINTFORML お前も副会長派の人間か？
+		PRINTFORML 元ネタ：アリスソフト - アリス2010内タイトル【はるうられ】
+		PRINTFORML 年齢：18歳　難易度：Ｃ　成長度：Ｃ　貢献度：Ｂ　売却値：Ｓ
+		DRAWLINE
+		PRINTW
+	ENDIF
+	PRINTFORML 「で、この娘たちとどうするかい？　紹介料は次のようになっているよ」
+	PRINTFORML 
+	$INPUT_LOOP_URARE
+	IF (FLAG:はるうられ雇用 & 1) == 0
+		PRINTL  [0] - 鎌瀬縫子を紹介してもらう  （ 100000ポイント）
+	ENDIF
+	IF (FLAG:はるうられ雇用 & 2) == 0
+		PRINTL  [1] - 本庄のどかを紹介してもらう（ 300000ポイント） 
+	ENDIF
+	IF (FLAG:はるうられ雇用 & 4) == 0
+		PRINTL  [2] - 海老原真与を紹介してもらう（ 500000ポイント） 
+	ENDIF
+	IF (FLAG:はるうられ雇用 & 8) == 0
+		PRINTL  [3] - 橘乙姫を紹介してもらう    （1000000ポイント） 
+	ENDIF
+	PRINTL  [4] - やっぱりやめる
+	PRINTL ※CAUTION※
+	PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+	INPUT
+	
+	IF RESULT == 0 && (FLAG:はるうられ雇用 & 1) == 0
+		PRINTFORML 歌音から連絡を受けた縫子が座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された縫子は%CALLNAME:MASTER%に好奇の視線を向けている……
+		PRINTW
+		PRINTFORM 歌音が改めてひと通りこれからしてもらうことを説明すると、縫子はその待遇に納得したのか、
+		PRINTFORML 内容をきちんと確認しながらもスムーズに契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《鎌瀬縫子が女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:鎌瀬縫子]])
+			FLAG:はるうられ雇用 |= 1
+			C = 100000
+	ELSEIF RESULT == 1 && (FLAG:はるうられ雇用 & 2) == 0
+		PRINTFORML 歌音から連絡を受けたのどかが座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介されたのどかは%CALLNAME:MASTER%に信頼のこもった視線を向けている……
+		PRINTW
+		PRINTFORM 歌音が改めてひと通りこれからしてもらうことを説明すると、のどかはその待遇に納得したのか、
+		PRINTFORML 内容をきちんと確認しながらもスムーズに契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《本庄のどかが女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:本庄のどか]])
+			FLAG:はるうられ雇用 |= 2
+			C = 300000
+	ELSEIF RESULT == 2 && (FLAG:はるうられ雇用 & 4) == 0
+		PRINTFORML 歌音から連絡を受けた真与が座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された真与は%CALLNAME:MASTER%に憐れむような視線を向けている……
+		PRINTW
+		PRINTFORM 歌音が改めてひと通りこれからしてもらうことを説明すると、真与はその待遇に納得したのか、
+		PRINTFORML 内容をきちんと確認しながらもスムーズに契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《海老原真与が女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:海老原真与]])
+			FLAG:はるうられ雇用 |= 4
+			C = 500000
+	ELSEIF RESULT == 3 && (FLAG:はるうられ雇用 & 8) == 0
+		PRINTFORML 歌音から連絡を受けた乙姫が座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された乙姫は%CALLNAME:MASTER%に憐れむような視線を向けている……
+		PRINTW
+		PRINTFORM 歌音が改めてひと通りこれからしてもらうことを説明すると、乙姫はその待遇に納得したのか、
+		PRINTFORML 内容をきちんと確認しながらもスムーズに契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《橘乙姫が女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:橘乙姫]])
+			FLAG:はるうられ雇用 |= 8
+			C = 1000000
+	ELSEIF RESULT == 4
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP_URARE
+	ENDIF
+
+	MONEY -= C
+ELSEIF (FLAG:はるうられ雇用 & (1 + 2 + 4 + 8))
+	PRINTFORMW 「今のところ紹介できそうな女はいないよ？」
+	RETURN 0
+ENDIF
+RETURN 0
+
+;-------------------------------------------------
+;その他教会勢加入
+;-------------------------------------------------
+@ADD_SHISETU
+C = 10000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+IF (FLAG:教会組雇用 & 1) == 0 || (FLAG:教会組雇用 & 2) == 0 || (FLAG:教会組雇用 & 4) == 0
+	PRINTFORML 「あー、ちょいとこいつを見てくれないかな」
+	PRINTFORML 桐生組の座敷、三毛猫の背を撫でながら歌音は何枚か紙を取り出した
+	PRINTFORML それは写真と簡単なプロフィールが添えられた、簡単な履歴書みたいなものだ
+	PRINTFORML 「ウチでガサを抑えてる女なんだけどさ、前にアンタがいい女優候補はいないかって
+	PRINTFORML 言ってたのを思い出してね。
+	PRINTFORML 多分まっとうな募集じゃ絶対応募してこないような上玉だよ――ま、そのぶん契約金
+	PRINTFORML ……いや、ウチへ払う『紹介料』はハンパじゃないけど」
+	PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、高い元手を払っても回収するのは容易
+	PRINTFORML だろう
+	PRINTFORMW 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+	IF (FLAG:教会組雇用 & 1) == 0
+		DRAWLINE
+		PRINTFORML 【桐島翔子】（きりしま・しょうこ）
+		PRINTFORML 教会系の施設出身で、某国立大学に通っている大学生
+		PRINTFORML 施設に金はないが学費は奨学金で出している
+		PRINTFORML ボーイッシュな美貌の持ち主で、動きやすいと言う理由から男装していることが多い
+		PRINTFORML 高校では空手をやっていて、文武両道を地で行く人物だが、料理をはじめ生活能力は絶望的
+		PRINTFORML 施設で世話になっている蒼井遙を姉のように慕っているせいか、恋愛については奥手である
+		PRINTL
+		PRINTFORML 年齢：19歳　難易度：Ｃ　成長度：Ｃ　貢献度：Ｃ　売却値：Ｃ
+		DRAWLINE
+		PRINTW
+		PRINTFORML %CALLNAME:MASTER%が資料に目を通したのを確認した歌音は口を開いた。
+		PRINTFORML 「この施設、本気で経営ヤバくてね……ま、ウチみたいな所から金借りてれば当然なんだけど
+		PRINTFORML 　このお姉さん、借金取り立てに行ったウチの人間とトラブル起こしちまったのさ
+		PRINTFORML 　ソイツはボコボコにされたんだけど、そのまま済ます訳にもいかないのは当然さね
+		PRINTFORML 　で、こうなったって訳さ
+		PRINTFORML 　どうだい？　あんたが要らないって言うならこっちで適当に『処理』しても良いんだが、ウ
+		PRINTFORML 　チの風呂に沈めるには勿体ないベッピンさんだからねぇ？」
+		PRINTW
+	ENDIF
+	IF (FLAG:教会組雇用 & 2) == 0
+		DRAWLINE
+		PRINTFORML 【雨草愛理】（あまくさ・えり）
+		PRINTFORML 高校に通いつつ、モデルのバイトをしているクォーターの少女
+		PRINTFORML 紫がかった髪をポニーテールにしており、人目を引く長身と美貌をもつ
+		PRINTFORML 親を事故で失ってから、教会系の施設で生活している
+		PRINTFORML それ以前の教育による物なのか、口のきき方や態度は上品
+		PRINTFORML 施設の経営が苦しい事に気が付いており、独立したい気持ちが強い
+		PRINTFORML とは言え大学は出る心算でおり、奨学金を取る為に勉強には力を入れている
+		PRINTFORML 同じ施設の先輩の桐島翔子を尊敬し、慕っている。
+		PRINTFORML 年頃の少女らしく恋愛には興味津々だが、モデルとしてのプライドからか、自分に釣り合う人
+		PRINTFORML 間を求めている
+		PRINTFORML
+		PRINTFORML 年齢：17歳　難易度：Ｃ　成長度：Ｃ　貢献度：Ｃ　売却値：Ａ
+		DRAWLINE
+		PRINTW
+		PRINTFORML %CALLNAME:MASTER%が資料に目を通したのを確認した歌音は口を開いた。
+		PRINTFORML 「この娘には気の毒したね。同じ学校の生徒だし、放っておいてあげても良かったんだけどさ
+		PRINTFORML 　施設の事で桐島さんとうちの者がトラブルを起こした時、その場に居合わせたのが不運だっ
+		PRINTFORML 　た
+		PRINTFORML 　みっともない話だけどさ、この娘を人質にして桐島さんの方を抑えたそうでね
+		PRINTFORML 　これで解放したら面倒な事になるのは……まあ想像に難くないだろうさ
+		PRINTFORML 　で、こうなったって訳だ……どうだい？　アンタが要らないって言うなら風呂にでも沈めて
+		PRINTFORML 　も良いんだけど」
+		PRINTW
+	ENDIF
+	IF (FLAG:教会組雇用 & 4) == 0
+		DRAWLINE
+		PRINTFORML 【西方　杏子】（にしかた・きょうこ）
+		PRINTFORML 某出版社に勤めるルポライター
+		PRINTFORML 細身の体に眼鏡と大人しげな風貌に似合わず、正義感と行動力は相当の物
+		PRINTFORML 蒼井遙の大学の先輩で、友人でもある
+		PRINTFORML 友人の様子がおかしいのに気がつき、ちょっと様子を調べ始めたのだが、短い時間で桐生組の
+		PRINTFORML 関与まで突き止めた
+		PRINTFORML また、どうやらこの世界が『何者か』たちによって動かされているのでは、というオカルトじ
+		PRINTFORML みた考えも持っている
+		PRINTFORML 昔付き合っていた男がいるらしいが現在フリーで、仕事に対する理解のある男性が理想らしい
+		PRINTFORML
+		PRINTFORML 年齢：24歳　難易度：Ｄ　成長度：Ｂ　貢献度：Ｂ　売却値：Ｄ
+		DRAWLINE
+		PRINTW
+		PRINTFORML %CALLNAME:MASTER%が資料に目を通したのを確認した歌音は口を開いた。
+		PRINTFORML 「優秀は優秀なんだろうね、この姉さん
+		PRINTFORML 　……だからこそ捨ててはおけない
+		PRINTFORML 　ウチだけじゃなくアンタ、それどころかヘタしたらパラディススの真相にまでたどり着くか
+		PRINTFORML 　れるかもしれない
+		PRINTFORML 　ひとりの正義気取りのバカのせいで後々にまで禍根が続くような外交問題に発生したら……
+		PRINTFORML 　ま、後々のことは今のこの国が証明しているね
+		PRINTFORML 　それに……パラディススどころかもっと上の連中にも気づきかけているのが、ね
+		PRINTFORML 　大多数はオカルトと笑って流すかもしれないけど、それでも知られちゃいけないんだよ、ア
+		PRINTFORML 　イツらの存在は
+		PRINTFORML 　……っと、忘れといてくれないかい？　ヘタに首突っ込むとどうなるかは分からないしね
+		PRINTFORML 　とにかくアンタがいらないって言うなら、それ相応の処分をするしかないかね」
+		PRINTW
+	ENDIF
+	PRINTFORML 「で、この娘たちとどうするかい？　紹介料は次のようになっているよ」
+	PRINTFORML 
+	$INPUT_LOOP_URARE
+	IF (FLAG:教会組雇用 & 1) == 0
+		PRINTL  [0] - 桐島翔子を紹介してもらう  （100000ポイント）
+	ENDIF
+	IF (FLAG:教会組雇用 & 2) == 0
+		PRINTL  [1] - 雨草愛理を紹介してもらう（100000ポイント） 
+	ENDIF
+	IF (FLAG:教会組雇用 & 4) == 0
+		PRINTL  [2] - 西方杏子を紹介してもらう（ 50000ポイント） 
+	ENDIF
+	PRINTL  [3] - やっぱりやめる
+	PRINTL ※CAUTION※
+	PRINTL 払い下げした場合、このキャラは今後の周回プレイ時に復活しません！
+
+	INPUT
+	
+	IF RESULT == 0 && MONEY >= 50000 && (FLAG:教会組雇用 & 1) == 0
+		PRINTFORML 歌音から連絡を受けた翔子が座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された翔子は%CALLNAME:MASTER%に軽蔑の視線を向けている……
+		PRINTFORML 「こんな態度は取っているが、下手な真似をすれば施設がどうなるかは理解させてあるから、
+		PRINTFORML バカな真似はしやしないさ……そうだろう？」
+		PRINTW
+		PRINTFORML 歌音がそう言うと、翔子は悔しそうに、渋々契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《桐島翔子が女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:桐島翔子]])
+			FLAG:教会組雇用 |= 1
+			C += 50000
+	ELSEIF RESULT == 1 && MONEY >= 50000 && (FLAG:教会組雇用 & 2) == 0
+		PRINTFORML 歌音から連絡を受けた愛理が座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された愛理は%CALLNAME:MASTER%に不安そうな視線を向けている……
+		PRINTFORML 「そんな顔するもんじゃないよ、ここに行くのが一番マシだってわかってるだろう？
+		PRINTFORML 　アンタを食い物にすることには変わりないけど、まだそれなりの自由が約束されているからね」
+		PRINTW
+		PRINTFORM 歌音がそういうと、愛理は目に涙を溜めながら、契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《雨草愛理が女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:雨草愛理]])
+			FLAG:教会組雇用 |= 2
+			C = 100000
+	ELSEIF RESULT == 2 && MONEY >= 10000 && (FLAG:教会組雇用 & 4) == 0
+		PRINTFORML 歌音から連絡を受けた杏子が座敷にやってきた……
+		PRINTFORML 歌音から%CALLNAME:MASTER%を紹介された杏子は開口一番%CALLNAME:MASTER%に罵声を浴びせようとして……
+		PRINTFORML 歌音の視線に射すくめられたように口を閉じた。
+		PRINTFORML 「そこまでにしときな。自分の立場が分からないって言うならこの話はなかった事にしても良いんだよ？
+		PRINTFORML 　それに……アンタが薄々感づいている連中からもウチに指示が出ている
+		PRINTFORML 『最初からいなかったことにされる』か、食い物にされても生きるか……ま、迷うことは無いと思うけどね？」
+		PRINTW
+		PRINTFORM 歌音が改めてひと通りこれからしてもらうことを説明すると、杏子は内容を何度か確認した上で、
+		PRINTFORML 不承不承、契約書にサインした……
+		PRINTFORMW
+		PRINTFORML 《西方杏子が女優候補になりました》
+		PRINTFORMW
+			CALL キャラ追加([[キャラ:西方杏子]])
+			FLAG:教会組雇用 |= 4
+			C = 50000
+	ELSEIF RESULT == 3
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP_URARE
+	ENDIF
+
+	MONEY -= C
+ELSEIF (FLAG:教会組雇用 & 1) && (FLAG:教会組雇用 & 2) && (FLAG:教会組雇用 & 4) == 0
+	PRINTFORMW 「今のところ紹介できそうな女はいないよ？」
+	RETURN 0
+ENDIF
+RETURN 0

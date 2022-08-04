@@ -1,0 +1,510 @@
+﻿;============================================================
+;強くてニューゲーム関連
+;============================================================
+;グッドエンド以上の場合、継続してEXTRAモードで遊ぶか強くてニューゲームを選択
+@GAME_CONTINUE
+
+DRAWLINE
+
+$INPUT_LOOP
+PRINTL 強くてニューゲームを行いますか？
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	$INPUT_LOOP2
+	PRINTL 
+	PRINTL 主人の能力および【恋心】or【淫乱】を付けた女優/女優候補を引き継いで、
+	PRINTL 最初からプレイし直します
+	WAIT
+	CALL START_NEWGAME
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN 1
+
+;-----------------------------------------------------------
+;強くてニューゲームの処理開始
+;-----------------------------------------------------------
+@START_NEWGAME
+
+$INPUT_LOOP_01
+
+X = 0
+
+;引継ぎキャラの「お願いする」フラグクリア
+REPEAT CHARANUM
+	CFLAG:COUNT:エステ通い判定 = 0
+	CFLAG:COUNT:ジム通い判定 = 0
+	CFLAG:COUNT:学習塾通い判定 = 0
+	CFLAG:COUNT:新作アニメチェック判定 = 0
+	CFLAG:COUNT:習い事判定 = 0
+	CFLAG:COUNT:朝フェラ係に任命 = 0
+	CFLAG:COUNT:合コン参加判定 = 0
+	CFLAG:COUNT:お弁当作成判定 = 0
+REND
+
+;それに伴い起こす人がいるフラグクリア
+;一応検索したけどほかのところでやってるようではないので。
+FLAG:朝起こしてもらう = 0
+
+FLAG:弁当 = 0
+FLAG:習い事人数 = 0
+
+;引継ぎ人数クリア
+J = 0
+
+;引継ぎキャラのフラグクリア
+REPEAT CHARANUM
+	CFLAG:COUNT:130 = 0
+REND
+
+;引継ぎキャラの選択
+CALL NEWGAME_SUCCEEDED
+
+$INPUT_LOOP_02
+IF J > 0
+	DRAWLINE
+	REPEAT CHARANUM
+		SIF COUNT == 0
+			CONTINUE
+		SIF CFLAG:COUNT:130 == 0
+			CONTINUE
+		TARGET = COUNT
+		PRINTFORML  %NAME:TARGET%
+	REND
+	DRAWLINE
+	PRINTL 以上の女優/女優候補を引き継いでニューゲームを開始しますか？
+ELSE
+	PRINTL 女優/女優候補の引継ぎなしでニューゲームを開始しますか？
+ENDIF
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+INPUT
+IF RESULT == 1
+	GOTO INPUT_LOOP_01
+ELSEIF RESULT != 0
+	GOTO INPUT_LOOP_02
+ENDIF
+
+;引き継ぐ奴隷以外を全削除する
+FLAG:神那悠喜仲間救出 = 0
+FLAG:歌音紹介雇用 = 0
+FLAG:エレン紹介雇用 = 0
+FLAG:教会組雇用 = 0
+FLAG:ミッション受領中 = 0
+FLAG:マルチナ加入イベント発生済み = 0
+IF CHARANUM > 1
+	J = CHARANUM - 1
+	REPEAT CHARANUM - 1
+		IF CFLAG:J:130 == 0
+			;芙美香
+			SIF NO:J == [[キャラ:加瀬芙美香]]
+				FLAG:加瀬芙美香雇用 = 0
+			;アンドロイド
+			SIF NO:J == [[キャラ:アンドロイド]]
+				FLAG:新型アンドロイド製作 = 0
+			;リーナ
+			SIF NO:J == [[キャラ:リーナ・レスピーチオ]]
+				FLAG:リーナ雇用 = 0
+			;アイーシャ,アスカ,あんず,美夜,透子,春海,紫苑,みちる,律花,美紅,乃衣瑠,ゆうひとひかる,智子,悠喜,愛衣子,アン,クリスティナとエルファリア,ニコル,奈留
+			SIF NO:J >= 200 && NO:J <= 218 && TALENT:J:ミッション
+				PBAND:((NO:J) - 199) = 0
+			;ゆうひとひかる
+			SIF NO:J == [[キャラ:リーナ・レスピーチオ]]
+				PBAND:12 = 0
+			;クリスティナとエルファリア
+			SIF NO:J == [[キャラ:エルファリア・ラーグラーデ]]
+				PBAND:17 = 0
+			;鈴花,桜月,未歩
+			SIF NO:J >= 190 && NO:J <= 192 && TALENT:J:ミッション
+				PBAND:20 = 0
+			;リーゼロッテ
+			SIF NO:J == [[キャラ:リーゼロッテ・パラディスス]]
+				PBAND:30 = 0
+			;エレン
+			SIF NO:J == [[キャラ:桐生エレン]]
+				FLAG:もっと姉ボーナス受け取り = 0
+			;アイリス
+			SIF NO:J == [[キャラ:アイリス]]
+				FLAG:とらぶるサッキュバスボーナス受け取り = 0
+			;まゆとユーニス
+			IF NO:J == [[キャラ:雛見まゆ]] || NO:J == [[キャラ:ユーニス・パラディスス]]
+				FLAG:処女厨ボーナス受け取り = 0
+				FLAG:HAERETICUSボーナス受け取り = 0
+			ENDIF
+			;みこと
+			SIF NO:J == [[キャラ:羽瀬川みこと]]
+				FLAG:第三の幼馴染ボーナス受け取り = 0
+			;美鈴
+			SIF NO:J == [[キャラ:李美鈴]]
+				FLAG:ＢＩＧ３ボーナス受け取り = 0
+			;かなで
+			SIF NO:J == [[キャラ:宮間かなで]]
+				PBAND:51 = 0
+				
+			DELCHARA J
+			
+		;みひろ引き継ぐ
+		ELSEIF NO:J == [[キャラ:新島みひろ]]
+			FLAG:歌音紹介雇用 |= 1
+		;結衣花引き継ぐ
+		ELSEIF NO:J == [[キャラ:佐倉結衣花]]
+			FLAG:歌音紹介雇用 |= 2
+		;南引き継ぐ
+		ELSEIF NO:J == [[キャラ:春風南]] || NO:J == [[キャラ:春風南_重複1]]
+			FLAG:歌音紹介雇用 |= 4
+		;志乃引き継ぐ
+		ELSEIF NO:J == [[キャラ:二葉志乃]]
+			FLAG:歌音紹介雇用 |= 8
+		;すみれ引き継ぐ
+		ELSEIF NO:J == [[キャラ:神園すみれ]] || NO:J == [[キャラ:神園すみれ_重複1]]
+			FLAG:歌音紹介雇用 |= 16
+		;鎌瀬縫子引き継ぐ
+		ELSEIF NO:J == [[キャラ:鎌瀬縫子]]
+			FLAG:はるうられ雇用 |= 1
+		;本庄のどか引き継ぐ
+		ELSEIF NO:J == [[キャラ:本庄のどか]]
+			FLAG:はるうられ雇用 |= 2
+		;海老原真与引き継ぐ
+		ELSEIF NO:J == [[キャラ:海老原真与]]
+			FLAG:はるうられ雇用 |= 4
+		;橘乙姫引き継ぐ
+		ELSEIF NO:J == [[キャラ:橘乙姫]]
+			FLAG:はるうられ雇用 |= 8
+		;翔子引き継ぐ
+		ELSEIF NO:J == [[キャラ:桐島翔子]]
+			FLAG:教会組雇用 |= 1
+		;愛理引き継ぐ
+		ELSEIF NO:J == [[キャラ:雨草愛理]]
+			FLAG:教会組雇用 |= 2
+		;杏子引き継ぐ
+		ELSEIF NO:J == [[キャラ:西方杏子]]
+			FLAG:教会組雇用 |= 4
+		;琴美引き継ぐ
+		ELSEIF NO:J == [[キャラ:伊原琴乃]]
+			FLAG:神那悠喜仲間救出 |= 1
+		;彩香引き継ぐ
+		ELSEIF NO:J == [[キャラ:後藤彩香]]
+			FLAG:神那悠喜仲間救出 |= 2
+		;凛佳引き継ぐ
+		ELSEIF NO:J == [[キャラ:柑野凛佳]]
+			FLAG:神那悠喜仲間救出 |= 4
+		;聖沙引き継ぐ
+		ELSEIF NO:J == [[キャラ:篠崎聖沙]]
+			FLAG:神那悠喜仲間救出 |= 8
+		;海静引き継ぐ
+		ELSEIF NO:J == [[キャラ:椎名海静]]
+			FLAG:神那悠喜仲間救出 |= 16
+		;由希引き継ぐ
+		ELSEIF NO:J == [[キャラ:佐倉由希]]
+			FLAG:エレン紹介雇用 |= 1
+		;乃絵美引き継ぐ
+		ELSEIF NO:J == [[キャラ:小鳥遊乃絵美]]
+			FLAG:エレン紹介雇用 |= 2
+		;あゆみ引き継ぐ
+		ELSEIF NO:J == [[キャラ:新堂あゆみ]]
+			FLAG:エレン紹介雇用 |= 4
+		;元カノ引き継ぐ
+		ELSEIF NO:J == [[キャラ:野々宮初佳]]
+			FLAG:エレン紹介雇用 |= 8
+		ELSEIF NO:J == [[キャラ:マルチナ・パラディスス]]
+			FLAG:マルチナ加入イベント発生済み = 1
+		ENDIF
+		J -= 1
+	REND
+ENDIF
+
+;奴隷の価格フラグクリア
+REPEAT 99
+	A = 1000 + COUNT
+	FLAG:A = 0
+REND
+
+;++++++++++++++++++++++++++++++++++++++++++++++
+;奴隷引き継ぎ処理
+;++++++++++++++++++++++++++++++++++++++++++++++
+REPEAT CHARANUM
+	SIF COUNT == 0
+		CONTINUE
+
+	;妊娠・育児中なら出産予定日をずらす
+	IF TALENT:COUNT:妊娠 || TALENT:COUNT:育児中
+		CFLAG:COUNT:出産日 -= DAY
+	;それ以外なら妊娠関連のフラグは消去
+	ELSE
+		CFLAG:COUNT:マスターによる膣内射精カウント = 0
+		CFLAG:COUNT:誰によって妊娠させられたか = 0
+		CFLAG:COUNT:助手から奴隷への膣内射精カウント = 0
+		CFLAG:COUNT:奴隷から助手への膣内射精ウント = 0
+		CFLAG:COUNT:娼館などの客から奴隷への中田氏カウント = 0
+		CFLAG:COUNT:ノラ犬からの中田氏カウント = 0
+		CFLAG:COUNT:排卵促進剤使用 = 0
+		CFLAG:COUNT:出産日 = 0
+		CFLAG:COUNT:父親のキャラ番号 = 0
+	ENDIF
+
+	;衣服が洗濯中なら戻ってくる
+	SIF CFLAG:COUNT:パンツの状態 > 0
+		CFLAG:COUNT:パンツの状態 = 0
+	SIF CFLAG:COUNT:ブラジャーの状態 > 0
+		CFLAG:COUNT:ブラジャーの状態 = 0
+	SIF CFLAG:COUNT:上着上の状態 > 0
+		CFLAG:COUNT:上着上の状態 = 0
+	SIF CFLAG:COUNT:上着下の状態 > 0
+		CFLAG:COUNT:上着下の状態 = 0
+	SIF CFLAG:COUNT:特別コスチュームの状態 > 0
+		CFLAG:COUNT:特別コスチュームの状態 = 0
+
+	;労役フラグ解除
+	CFLAG:COUNT:労役中のフラグ = 0
+	CFLAG:COUNT:労役でコンドーム使用 = 0
+		
+	;引き継ぎキャラに購入フラグを立てる
+	A = NO:COUNT + 999
+	FLAG:A = -1
+
+REND
+
+;奴隷の価格フラグの初期化
+CALL CHARA_PRICE
+
+;++++++++++++++++++++++++++++++++++++++++++++++
+;設定引き継ぎ処理
+;++++++++++++++++++++++++++++++++++++++++++++++
+;貢献度、娼館人気を０に
+
+;周回数を+1する
+FLAG:周回数 += 1
+
+PRINTL 所持アイテムをリセットしますか？
+PRINTL  [0] - はい
+PRINTL  [1] - いいえ
+
+INPUT
+
+IF RESULT == 0
+;所持アイテム及びアイテム購入履歴のリセット
+REPEAT 99
+	SIF COUNT == 60
+		CONTINUE
+	SIF COUNT == 61
+		CONTINUE
+	SIF COUNT == 62
+		CONTINUE
+	SIF COUNT == 63
+		CONTINUE
+	SIF COUNT == 90
+		CONTINUE
+	SIF COUNT == 22
+		CONTINUE
+	ITEM:COUNT = 0
+	ITEMSALES:COUNT = 1
+REND
+ENDIF
+
+;ビデオ撮影バリアントなので、開始時入手できるのと同じだけ残す(20120724望崎)
+	ITEM:ビデオカメラ = 1
+;	ITEM:ビデオテープ = 1
+
+;日付、時間、調教対象や助手のリセット
+DAY = 0
+TIME = 0
+TARGET = -1
+ASSI = -1
+FLAG:前回調教対象 = -1
+FLAG:前回助手 = -1
+
+;調教対象・助手を空に
+TARGET = -1
+ASSI = -1
+FLAG:前回調教対象 = -1
+FLAG:前回助手 = -1
+
+;引き継がれないフラグのクリア
+FLAG:休憩 = 0
+FLAG:前回調教対象 = 0
+FLAG:前回助手 = 0
+FLAG:期限日数 = 0
+FLAG:目標金額 = 0
+FLAG:難易度 = 0
+
+;娼館の拡張状況をクリア
+FLAG:警備員人数 = 0
+FLAG:娼館拡張 = 0
+
+;ロリコンフラグの引継ぎ
+IF FLAG:ロリコンなし == 0
+	PRINTL ロリコンフラグを引き継ぎますか？
+	PRINTL [0] 引き継ぐ
+	PRINTL [1] 引き継がない
+	PRINTL [9] ロリコンシステムを使わない
+	$INPUT_LOOP_LOLI
+	INPUT
+	IF RESULT == 1
+		FLAG:ロリコン = 0
+		TALENT:MASTER:ロリコン = 0
+	ELSEIF RESULT == 9
+		FLAG:ロリコン = 0
+		TALENT:MASTER:ロリコン = 0
+		FLAG:ロリコンなし = 1
+	ELSEIF RESULT != 0
+		GOTO INPUT_LOOP_LOLI
+	ENDIF
+ENDIF
+
+;++++++++++++++++++++++++++++++++++++++++++++++
+;ゲームモード選択
+;++++++++++++++++++++++++++++++++++++++++++++++
+PRINTL 
+PRINTL ★★モードを選択してください★★
+PRINTL [0] EASY     (120週期限、目標金額3000000pt)
+IF FLAG:EASYモードを経由したデータ
+	PRINTL [1] NORMAL   (100週期限、目標金額5000000Pt)
+ELSE
+	PRINTL [1] 実績チャレンジ   (100週期限、目標金額5000000Pt)
+ENDIF
+$INPUT_LOOP_0
+INPUT
+IF RESULT == 0
+	FLAG:期限日数 = 120
+	FLAG:目標金額 = 3000000
+		IF FLAG:565 == 1
+			FLAG:目標金額 *= 100
+		ELSEIF FLAG:566 == 1
+			FLAG:目標金額 = 0
+		ENDIF
+	FLAG:難易度 = GAME_MODE_EASY
+	FLAG:EASYモードを経由したデータ = 1
+	MONEY = 5000
+	IF GETCHARA([[キャラ:小鳥遊乃絵美]], 0) < 0
+		CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
+		PRINTFORMW 《桐生組より風俗嬢「小鳥遊乃絵美」が派遣されました》
+	ENDIF
+ELSEIF RESULT == 1
+	FLAG:期限日数 = 100
+	FLAG:目標金額 = 5000000
+		IF FLAG:565 == 1
+			FLAG:目標金額 *= 100
+		ELSEIF FLAG:566 == 1
+			FLAG:目標金額 = 0
+		ENDIF
+	FLAG:難易度 = GAME_MODE_ACHIEVEMENT_CHALLENGE
+	FLAG:瀕死時自動終了 = 1
+	MONEY = 2000
+ELSE
+	GOTO INPUT_LOOP_0
+ENDIF
+
+LOADGLOBAL
+IF GLOBAL:200 > 0
+	CALL CLEARBONUS
+ENDIF
+
+CALL START_SELECT_OPENING
+
+BEGIN SHOP
+
+RETURN 0
+
+;-------------------------------------------------
+;強くてニューゲーム引継ぎキャラ選択
+;-------------------------------------------------
+@NEWGAME_SUCCEEDED
+;大幅改変
+#DIM 人数
+;ここまで要らなかったと思うけどこのぐらい持っておく
+#DIM 候補リスト,500
+#DIM CNUM
+#DIM LINENUM
+
+;リストを構築する
+;変数のリセット
+VARSET 候補リスト
+人数 = 0
+
+;候補抽出
+REPEAT CHARANUM
+	;主人公は排除
+	SIF COUNT == 0
+		CONTINUE
+	;臨死中のキャラは排除
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+	SIF TALENT:COUNT:ミッション
+		CONTINUE
+	;【恋心】【淫乱】持ちでないキャラは排除
+	SIF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:淫乱 == 0
+		CONTINUE
+	候補リスト:人数 = COUNT
+	人数++
+REND
+
+;描画
+
+PRINTFORML 強くてニューゲームに引き継ぐコを選んでください
+DRAWLINE
+;セーブポイント
+$REFRESH_POINT
+;行数を覚えておく
+LINENUM = LINECOUNT
+
+FOR CNUM,0,人数
+	PRINTFORM [{候補リスト:CNUM}]  %NAME:(候補リスト:CNUM)%
+	SIF CFLAG:(候補リスト:CNUM):130 == 1
+	PRINT  (選択済)
+	PRINTL 
+NEXT
+PRINTFORML  [999] - 選択終了 / [1000] - 全員を選択/選択解除
+
+INPUT
+
+IF RESULT == 999
+	RETURN 1
+ELSEIF RESULT == 1000
+	J = 0
+	;最初の一人を見てそれに合わせる
+	IF CFLAG:(候補リスト:0):130 == 0
+		FOR CNUM,0,人数
+			CFLAG:(候補リスト:CNUM):130 = 1
+			J++
+		NEXT
+	ELSE
+		FOR CNUM,0,人数
+			CFLAG:(候補リスト:CNUM):130 = 0
+		NEXT
+	ENDIF
+	GOTO RESET_POINT
+ELSEIF RESULT == 0
+	PRINTW 不正な入力です
+	GOTO RESET_POINT
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	PRINTW 不正な入力です
+	GOTO RESET_POINT
+;【恋心】【淫乱】持ちでないキャラは排除
+ELSEIF TALENT:RESULT:恋心 == 0 && TALENT:RESULT:淫乱 == 0
+	PRINTW 不正な入力です
+	GOTO RESET_POINT
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	PRINTW 不正な入力です
+	GOTO RESET_POINT
+ENDIF
+
+IF CFLAG:RESULT:130 == 0
+	CFLAG:RESULT:130 = 1
+	J += 1
+ELSEIF CFLAG:RESULT:130 == 1
+	CFLAG:RESULT:130 = 0
+	J -= 1
+ENDIF
+
+$RESET_POINT
+;これで元のリストが消えてちょうどよく表示される予定
+CLEARLINE LINECOUNT-LINENUM
+GOTO REFRESH_POINT

@@ -1,0 +1,607 @@
+﻿;-------------------------------------------------
+;クリアボーナス：BF
+;-------------------------------------------------
+@CLEARBONUS_BOYFRIEND
+
+IF  TALENT:オトコ == 0 && TALENT:人妻 == 0 && TALENT:彼氏あり == 0
+	PRINTFORML %NAME:TARGET%が彼氏持ちのＩＦの世界に突入しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	$INPUT_LOOP_5
+	INPUT
+		IF RESULT == 0
+			CALL DEFOLT_GENITALCALL
+			CALL CLEARBONUS_BOYFRIEND_ADDEXP
+		ELSEIF RESULT == 1
+			CALL CALC_BEAUTY
+		ELSE
+			GOTO INPUT_LOOP_5
+		ENDIF
+ENDIF
+
+;-------------------------------------------------
+;クリアボーナス：BF　処理
+;-------------------------------------------------
+@CLEARBONUS_BOYFRIEND_ADDEXP
+
+REPEAT 30
+	LOCAL:COUNT = 0
+REND
+
+$INPUT_LOOP_000
+LOCAL = TARGET
+CFLAG:LOCAL:彼氏の有無 = 1
+
+IF FLAG:チャラ男固定 == 1
+	CFLAG:LOCAL:彼氏の種類 = 0
+ELSE
+	PRINTFORML %CALLNAME:LOCAL%のカレシは……
+	PRINTL  [0] - チャラ男
+	PRINTL  [1] - クラスメイト
+	PRINTL  [2] - 高校生
+	PRINTL  [3] - 中学生
+	PRINTL  [4] - 大学生
+	PRINTL  [5] - サラリーマン
+	PRINTL  [6] - ホスト
+	$INPUT_LOOP_00
+	INPUT
+	IF RESULT >= 0 && RESULT <= 6
+		CFLAG:LOCAL:彼氏の種類 = RESULT
+	ELSE
+		GOTO INPUT_LOOP_00
+	ENDIF
+ENDIF  	
+
+LOCAL:5 = 0
+IF CFLAG:LOCAL:彼氏の種類 == 0
+	LOCAL:5 = RAND:100
+		SIF NO:LOCAL == [[キャラ:宮間かなで]]
+			LOCAL:5 = 100
+		SIF NO:LOCAL == [[キャラ:佐々木美乃里]]
+			LOCAL:5 = 100
+		IF LOCAL:5 >= 85
+			TALENT:LOCAL:ギャル系 = 1
+			LOCAL:6 = 1
+			CSTR:LOCAL:男性器呼び方 = チンポ
+			CSTR:LOCAL:女性器呼び方 = オマンコ
+			CSTR:LOCAL:肛門呼び方 = アナル
+			IF RAND:2 == 0
+				CSTR:LOCAL:一人称 = アタシ
+			ELSE
+				CSTR:LOCAL:一人称 = ウチ
+			ENDIF
+			SIF NO:LOCAL == [[キャラ:宮間かなで]]
+				CSTR:LOCAL:一人称 = ウチ
+		ENDIF
+ENDIF
+
+LOCAL:7 = 0
+LOCAL:7 = RAND:100
+	IF LOCAL:7 >= 85
+		TALENT:LOCAL:影響されやすい = 1
+		LOCAL:8 = 1
+	ENDIF
+
+TALENT:LOCAL:彼氏あり = 1
+
+CALL DECIDE_BOYFRIEND,LOCAL
+
+IF CFLAG:LOCAL:ファーストキスの相手 == -1
+	PRINTFORML %CALLNAME:LOCAL%のファーストキスの相手は……
+	PRINTL  [0] - カレシ
+	PRINTL  [1] - まだ
+	$INPUT_LOOP_01
+	INPUT
+	IF RESULT == 1
+		PRINT
+	ELSEIF RESULT == 0
+		CFLAG:LOCAL:ファーストキスの相手 = RAND:3
+		SIF CFLAG:LOCAL:ファーストキスの相手 == 0
+			CFLAG:LOCAL:ファーストキスの相手 = 2
+		IF CFLAG:LOCAL:ファーストキスの相手 == 1
+			CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
+			BASE:LOCAL:魅力値 -= 5
+		ELSEIF CFLAG:LOCAL:ファーストキスの相手 == 2
+			CFLAG:LOCAL:ファーストキスの相手 = 3
+			IF TALENT:ギャル系 == 0
+				CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+				CFLAG:ファーストキス喪失シチュ = 1
+			ELSE
+				CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+				CFLAG:ファーストキス喪失シチュ = 1
+			ENDIF
+			BASE:LOCAL:魅力値 -= 10
+		ENDIF
+	ELSE
+		GOTO INPUT_LOOP_01
+	ENDIF	
+ENDIF
+
+IF CFLAG:LOCAL:初体験の相手 == 0 && TALENT:LOCAL:処女 == 1
+	PRINTFORML %CALLNAME:LOCAL%のロストヴァージンのお相手は……
+	PRINTL  [0] - カレシ
+	PRINTL  [1] - まだ処女のようです
+	$INPUT_LOOP_02
+	INPUT
+	IF RESULT == 1
+		PRINT
+	ELSEIF RESULT == 0
+		CSTR:LOCAL:処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
+		CFLAG:LOCAL:初体験の相手 = 20
+		TALENT:LOCAL:処女 = 0
+		BASE:魅力値 -= 10
+	ELSE
+		GOTO INPUT_LOOP_02
+	ENDIF		
+ENDIF
+
+IF TALENT:LOCAL:処女 == 0
+	PRINTFORML %CALLNAME:LOCAL%は……
+	PRINTL  [0] - カレシとヤりまくりで経験豊富
+	PRINTL  [1] - ＳＥＸに慣れてきたぐらい
+	PRINTL  [2] - 処女喪失したばかり
+	$INPUT_LOOP_03
+	INPUT
+	IF RESULT == 0
+		TCVAR:LOCAL:Ｖ経験 += 40 + RAND:31
+		TCVAR:LOCAL:性交経験 += 30 + RAND:31
+		TCVAR:LOCAL:精液経験 += TCVAR:LOCAL:性交経験 - RAND:11
+		TCVAR:LOCAL:絶頂経験 += TCVAR:LOCAL:性交経験 - RAND:11
+		ABL:LOCAL:Ｖ感覚 += 3 + RAND:3
+		ABL:LOCAL:欲望 += 2
+		ABL:LOCAL:性交技術 += 2
+		ABL:LOCAL:性交中毒 += 1
+		CFLAG:処女喪失年齢 = (BASE:実年齢 - RAND:4)
+		SIF CFLAG:処女喪失年齢 == BASE:実年齢
+			CFLAG:処女喪失年齢 = BASE:実年齢 - 1
+		CFLAG:処女喪失月 = (DAY:1 - RAND:4)
+		SIF CFLAG:処女喪失月 <= 0
+			CFLAG:処女喪失月 = 12
+		IF CFLAG:処女喪失年齢 >= BASE:実年齢
+			 SIF CFLAG:処女喪失月 <= BASE:誕生月
+				CFLAG:処女喪失年齢 -= 1
+		ENDIF	
+		SIF CFLAG:処女喪失月 == DAY:1 && CFLAG:処女喪失日 >= DAY:2
+			CFLAG:処女喪失月 = DAY:2
+		CFLAG:処女喪失日 = RAND:4
+		SIF CFLAG:処女喪失日 == 0
+			CFLAG:処女喪失日 = 1
+		CFLAG:処女喪失場所 = 3
+		CFLAG:処女喪失シチュ = 3
+	ELSEIF RESULT == 1
+		TCVAR:LOCAL:Ｖ経験 += 20 + RAND:11
+		TCVAR:LOCAL:性交経験 += 15 + RAND:11
+		TCVAR:LOCAL:精液経験 += TCVAR:LOCAL:性交経験 - RAND:6
+		TCVAR:LOCAL:絶頂経験 += TCVAR:LOCAL:性交経験 - RAND:6
+		ABL:LOCAL:Ｖ感覚 += 1 + RAND:3
+		ABL:LOCAL:欲望 += 1
+		ABL:LOCAL:性交技術 += 1
+		CFLAG:処女喪失年齢 = BASE:実年齢
+		CFLAG:処女喪失月 = (DAY:1 - RAND:4)
+		SIF CFLAG:処女喪失月 <= 0
+			CFLAG:処女喪失月 = 12
+		CFLAG:処女喪失日 = RAND:4
+		SIF CFLAG:処女喪失月 == DAY:1 && CFLAG:処女喪失日 >= DAY:2
+			CFLAG:処女喪失月 = DAY:2
+		CFLAG:処女喪失場所 = 3
+		CFLAG:処女喪失シチュ = 0
+	ELSEIF RESULT == 2
+		TCVAR:LOCAL:Ｖ経験 += 1 + RAND:5
+		TCVAR:LOCAL:性交経験 += TCVAR:LOCAL:Ｖ経験 - RAND:3
+		SIF TCVAR:LOCAL:性交経験 <= 0
+			TCVAR:LOCAL:性交経験 = 1
+		TCVAR:LOCAL:精液経験 += TCVAR:LOCAL:性交経験 - RAND:2
+		SIF TCVAR:LOCAL:性交経験 <= 0
+			TCVAR:LOCAL:精液経験 = 0
+		TCVAR:LOCAL:絶頂経験 += RAND:2
+		ABL:LOCAL:Ｖ感覚 +=  RAND:2
+		CFLAG:処女喪失年齢 = BASE:実年齢
+		CFLAG:処女喪失月 = (DAY:1 - RAND:2)
+		SIF CFLAG:処女喪失月 <= 0
+			CFLAG:処女喪失月 = 12
+		CFLAG:処女喪失日 = RAND:4
+		SIF CFLAG:処女喪失月 == DAY:1 && CFLAG:処女喪失日 >= DAY:2
+			CFLAG:処女喪失月 = DAY:2
+		CFLAG:処女喪失場所 = 3
+		CFLAG:処女喪失シチュ = 0
+	ELSE
+		GOTO INPUT_LOOP_03
+	ENDIF		
+ENDIF
+
+IF TALENT:LOCAL:アナル処女 == 1
+	PRINTFORML %CALLNAME:LOCAL%は……
+	IF CFLAG:LOCAL:初体験の相手 == 20
+		PRINTL  [0] - アナル処女もカレシに捧げました
+	ELSE
+		PRINTL  [0] - アナル処女をカレシに捧げました
+	ENDIF
+
+	IF TALENT:LOCAL:処女 == 0
+		PRINTL  [1] - まだアナルは処女のようです
+	ELSE
+		PRINTL  [1] - まだアナルも処女のようです
+	ENDIF
+	$INPUT_LOOP_04
+	INPUT
+
+	IF RESULT == 1
+		PRINT
+	ELSEIF RESULT == 0
+		CFLAG:LOCAL:アナル処女喪失の相手 = 8
+		CSTR:LOCAL:アナル処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
+		TALENT:LOCAL:アナル処女 = 0
+		BASE:魅力値 -= 5
+	ELSE
+		GOTO INPUT_LOOP_04
+	ENDIF		
+ENDIF
+
+IF TALENT:LOCAL:アナル処女 == 0
+	PRINTFORML %CALLNAME:LOCAL%は……
+	IF CFLAG:LOCAL:初体験の相手 == 20
+		PRINTL  [0] - カレシとアナルでもヤりまくりで経験豊富
+	ELSE
+		PRINTL  [0] - カレシとヤりまくりで経験豊富
+	ENDIF
+	IF CFLAG:LOCAL:初体験の相手 == 20
+		PRINTL  [1] - アナルＳＥＸにも慣れてきたぐらい
+	ELSE
+		PRINTL  [1] - アナルＳＥＸに慣れてきたぐらい
+	ENDIF
+	IF CFLAG:LOCAL:初体験の相手 == 20
+		PRINTL  [2] - アナル処女も喪失したばかり
+	ELSE
+		PRINTL  [2] - アナル処女喪失したばかり
+	ENDIF
+	$INPUT_LOOP_05
+	INPUT
+	IF RESULT == 0
+		TCVAR:LOCAL:Ａ経験 += 40 + RAND:31
+		TCVAR:LOCAL:性交経験 += 30 + RAND:31
+		TCVAR:LOCAL:精液経験 += TCVAR:LOCAL:性交経験 - RAND:11
+		ABL:LOCAL:Ａ感覚 += 3 + RAND:3
+		TCVAR:LOCAL:絶頂経験 += TCVAR:LOCAL:性交経験 - RAND:11
+		SIF ABL:LOCAL:Ａ感覚 >= 5
+			ABL:LOCAL:Ａ感覚 = 5
+		ABL:LOCAL:欲望 += 2
+		ABL:LOCAL:性交技術 += 2
+		ABL:LOCAL:性交中毒 += 1
+		CFLAG:LOCAL:アナル処女喪失年齢 = (BASE:実年齢 - RAND:4)
+		SIF CFLAG:LOCAL:アナル処女喪失年齢 == BASE:実年齢
+			CFLAG:LOCAL:アナル処女喪失年齢 = BASE:実年齢 - 1
+		CFLAG:LOCAL:アナル処女喪失月 = (DAY:1 - RAND:4)
+		SIF CFLAG:LOCAL:アナル処女喪失月 <= 0
+			CFLAG:LOCAL:アナル処女喪失月 = 12
+		IF CFLAG:LOCAL:アナル処女喪失年齢 >= BASE:実年齢
+			 SIF CFLAG:LOCAL:アナル処女喪失月 <= BASE:誕生月
+				CFLAG:LOCAL:アナル処女喪失年齢 -= 1
+		ENDIF	
+		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:1 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:2
+			CFLAG:LOCAL:アナル処女喪失月 = DAY:2
+		CFLAG:LOCAL:アナル処女喪失日 = RAND:4
+		SIF CFLAG:LOCAL:アナル処女喪失日 == 0
+			CFLAG:LOCAL:アナル処女喪失日 = 1
+		CFLAG:LOCAL:アナル処女喪失場所 = 3
+		CFLAG:LOCAL:アナル処女喪失シチュ = 3
+	ELSEIF RESULT == 1
+		TCVAR:LOCAL:Ａ経験 += 20 + RAND:11
+		TCVAR:LOCAL:性交経験 += 15 + RAND:11
+		TCVAR:LOCAL:精液経験 += TCVAR:LOCAL:性交経験 - RAND:6
+		TCVAR:LOCAL:絶頂経験 += TCVAR:LOCAL:性交経験 - RAND:6
+		ABL:LOCAL:Ａ感覚 += 1 + RAND:3
+		SIF ABL:LOCAL:Ａ感覚 >= 3
+			ABL:LOCAL:Ａ感覚 = 3
+		ABL:LOCAL:欲望 += 1
+		ABL:LOCAL:性交技術 += 1
+		CFLAG:アナル処女喪失年齢 = BASE:実年齢
+		CFLAG:LOCAL:アナル処女喪失年齢 = BASE:実年齢
+		CFLAG:LOCAL:アナル処女喪失月 = (DAY:1 - RAND:4)
+		SIF CFLAG:LOCAL:アナル処女喪失月 <= 0
+			CFLAG:LOCAL:アナル処女喪失月 = 12
+		CFLAG:LOCAL:アナル処女喪失日 = RAND:4
+		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:1 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:2
+			CFLAG:LOCAL:アナル処女喪失月 = DAY:2
+		CFLAG:LOCAL:アナル処女喪失場所 = 3
+		CFLAG:LOCAL:アナル処女喪失シチュ = 0
+	ELSEIF RESULT == 2
+		TCVAR:LOCAL:Ａ経験 += 1 + RAND:5
+		TCVAR:LOCAL:性交経験 += TCVAR:LOCAL:Ｖ経験 - RAND:3
+		SIF TCVAR:LOCAL:性交経験 <= 0
+			TCVAR:LOCAL:性交経験 = 1
+		TCVAR:LOCAL:精液経験 += TCVAR:LOCAL:性交経験 - RAND:2
+		SIF TCVAR:LOCAL:精液経験 <= 0
+			TCVAR:LOCAL:精液経験 = 0
+		ABL:LOCAL:Ａ感覚 += 3 + RAND:3
+		SIF ABL:LOCAL:Ａ感覚 >= 3
+			ABL:LOCAL:Ａ感覚 = 3
+		TCVAR:LOCAL:絶頂経験 += RAND:2
+		CFLAG:LOCAL:アナル処女喪失年齢 = BASE:実年齢
+		CFLAG:LOCAL:アナル処女喪失月 = (DAY:1 - RAND:2)
+		SIF CFLAG:LOCAL:アナル処女喪失月 <= 0
+			CFLAG:LOCAL:アナル処女喪失月 = 12
+		CFLAG:LOCAL:アナル処女喪失日 = RAND:4
+		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:1 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:2
+			CFLAG:LOCAL:アナル処女喪失月 = DAY:2
+		CFLAG:LOCAL:アナル処女喪失場所 = 3
+		CFLAG:LOCAL:アナル処女喪失シチュ = 0
+	ELSE
+		GOTO INPUT_LOOP_05
+	ENDIF		
+ENDIF
+
+CFLAG:LOCAL:631 = RAND:100
+SIF CFLAG:LOCAL:631 >= 75
+	CSTR:LOCAL:男性器呼び方 = おちんぽ
+	CSTR:LOCAL:女性器呼び方 = おまんこ
+	CSTR:LOCAL:肛門呼び方 = アナル
+	TALENT:LOCAL:淫乱 = 1
+CFLAG:LOCAL:631 = 0
+
+EXP:LOCAL:Ｖ経験 += TCVAR:LOCAL:Ｖ経験
+EXP:LOCAL:Ａ経験 += TCVAR:LOCAL:Ａ経験
+EXP:LOCAL:絶頂経験 += TCVAR:LOCAL:絶頂経験
+EXP:LOCAL:性交経験 += TCVAR:LOCAL:性交経験
+EXP:LOCAL:精液経験 += TCVAR:LOCAL:精液経験
+EXP:LOCAL:彼氏とのＳＥＸ回数 += TCVAR:LOCAL:性交経験 / 4
+
+
+SIF CFLAG:LOCAL:初体験の相手 == 20
+	CFLAG:LOCAL:初体験の相手 = 8
+SIF CFLAG:LOCAL:ファーストキスの相手
+	CFLAG:LOCAL:ファーストキスの相手 = 8
+
+SIF ABL:LOCAL:欲望 >= 5
+	ABL:LOCAL:欲望 = 5
+
+IF TALENT:LOCAL:淫乱 == 1
+	REPEAT 110
+		EXP:LOCAL:COUNT *= 2
+	REND
+
+	REPEAT 50
+		IF COUNT == 10
+			CONTINUE
+		ELSEIF COUNT == 12
+			CONTINUE
+		ELSEIF COUNT == 13
+			CONTINUE
+		ELSEIF COUNT == 15
+			CONTINUE
+		ELSEIF COUNT == 16
+			CONTINUE
+		ELSEIF COUNT == 20
+			CONTINUE
+		ELSEIF COUNT == 21
+			CONTINUE
+		ELSEIF COUNT == 22
+			CONTINUE
+		ELSEIF COUNT == 33
+			CONTINUE
+		ENDIF
+		ABL:LOCAL:COUNT *= 2
+		SIF ABL:LOCAL:COUNT >= 10
+			ABL:LOCAL:COUNT = 10
+	REND
+
+	IF ABL:LOCAL:Ｃ感覚 >= 6
+		TALENT:LOCAL:自慰狂い = 1
+		TALENT:LOCAL:Ｃ鈍感 = 0
+	ENDIF
+
+	IF ABL:LOCAL:Ｂ感覚 >= 6
+		TALENT:LOCAL:乳狂い = 1
+		TALENT:LOCAL:Ｂ鈍感 = 0
+	ENDIF
+
+	IF ABL:LOCAL:Ｖ感覚 >= 6
+		TALENT:LOCAL:セックス狂 = 1
+		TALENT:LOCAL:Ｖ鈍感 = 0
+	ENDIF
+
+	IF ABL:LOCAL:Ａ感覚 >= 6
+		TALENT:LOCAL:尻穴狂い = 1
+		TALENT:LOCAL:Ａ鈍感 = 0
+	ENDIF
+ENDIF
+
+IF ABL:LOCAL:欲望 >= 4
+	TALENT:LOCAL:貞操観念 = 0
+	TALENT:LOCAL:快感の否定 = 0
+	IF TALENT:LOCAL:男性不信 == 1
+		TALENT:LOCAL:男性不信 = 0
+		TALENT:LOCAL:両刀 = 1
+	ENDIF
+	EXP:LOCAL:異常経験 += RAND:3
+	EXP:LOCAL:異常経験 += RAND:5
+ENDIF
+
+
+IF EXP:LOCAL:Ｖ経験 >= 1 || EXP:LOCAL:Ａ経験 >= 1 || EXP:LOCAL:絶頂経験 >= 1 || EXP:LOCAL:性交経験 >= 1 || EXP:LOCAL:精液経験 >= 1 || EXP:LOCAL:異常経験 >= 1
+	PRINTFORML %CALLNAME:LOCAL%の契約時の経験が
+	SIF EXP:LOCAL:Ｖ経験 >= 1
+		PRINTFORML %EXPNAME:[[EXP:Ｖ経験]]%：{EXP:LOCAL:Ｖ経験}
+	SIF EXP:LOCAL:Ａ経験 >= 1
+		PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%：{EXP:LOCAL:Ａ経験}
+	SIF EXP:LOCAL:絶頂経験 >= 1
+		PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%：{EXP:LOCAL:絶頂経験}
+	SIF EXP:LOCAL:性交経験 >= 1
+		PRINTFORML %EXPNAME:[[EXP:性交経験]]%：{EXP:LOCAL:性交経験}
+	SIF EXP:LOCAL:精液経験 >= 1
+		PRINTFORML %EXPNAME:[[EXP:精液経験]]%：{EXP:LOCAL:精液経験}
+	SIF EXP:LOCAL:異常経験 >= 1
+		PRINTFORML %EXPNAME:[[EXP:異常経験]]%：{EXP:LOCAL:異常経験}
+	PRINTFORM に変更され
+	LOCAL:1 += 1
+ENDIF
+
+IF ABL:LOCAL:Ｃ感覚 >= 1 || ABL:LOCAL:Ｂ感覚 >= 1 || ABL:LOCAL:Ｖ感覚 >= 1 || ABL:LOCAL:Ａ感覚 >= 1 || ABL:LOCAL:欲望 >= 1 || ABL:LOCAL:性交中毒 >= 1
+	PRINTFORML %CALLNAME:LOCAL%の各技能が
+	SIF ABL:LOCAL:Ｃ感覚 >= 1
+		PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%：LV{ABL:LOCAL:Ｃ感覚}
+	SIF ABL:LOCAL:Ｂ感覚 >= 1
+		PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%：LV{ABL:LOCAL:Ｂ感覚}
+	SIF ABL:LOCAL:Ｖ感覚 >= 1
+		PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%：LV{ABL:LOCAL:Ｖ感覚}
+	SIF ABL:LOCAL:Ａ感覚 >= 1
+		PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%：LV{ABL:LOCAL:Ａ感覚}
+	SIF ABL:LOCAL:欲望 >= 1
+		PRINTFORML %ABLNAME:[[ABL:欲望]]%：LV{ABL:LOCAL:欲望}
+	SIF ABL:LOCAL:性交中毒 >= 1
+		PRINTFORML %ABLNAME:[[ABL:性交中毒]]%：LV{ABL:LOCAL:性交中毒}
+	PRINTFORM に変更され
+	LOCAL:1 += 1
+ENDIF
+
+IF TALENT:LOCAL:淫乱 == 1 || TALENT:LOCAL:露出狂 == 1
+	IF TALENT:LOCAL:淫乱 == 1
+		SETCOLOR 0xF58F98
+		PRINTFORM 【%TALENTNAME:[[TALENT:淫乱]]%】
+		RESETCOLOR
+	ENDIF
+	IF TALENT:LOCAL:露出狂 == 1
+		SETCOLOR 0xF58F98
+		PRINTFORM 【%TALENTNAME:[[TALENT:露出狂]]%】
+		RESETCOLOR
+	ENDIF
+	IF LOCAL:6 == 1
+		SETCOLOR 0xF58F98
+		PRINTFORM 【%TALENTNAME:[[TALENT:ギャル系]]%】
+		RESETCOLOR
+	ENDIF
+	IF LOCAL:7 == 1
+		SETCOLOR 0xF58F98
+		PRINTFORM 【%TALENTNAME:[[TALENT:影響されやすい]]%】
+		RESETCOLOR
+	ENDIF
+	PRINTFORM を所持した状態で開始され
+	LOCAL:1 += 1
+ENDIF
+IF LOCAL:1 >= 1
+	PRINTFORML ます
+	PRINTFORM なお、
+ENDIF
+PRINTFORM 身辺調査によると%CALLNAME:LOCAL%のカレシは%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%という名前の
+IF CFLAG:LOCAL == 0
+	PRINTFORM チャラ男
+ELSEIF CFLAG:LOCAL == 1
+	PRINTFORM クラスメイト
+ELSEIF CFLAG:LOCAL == 2
+	PRINTFORM 高校生
+ELSEIF CFLAG:LOCAL == 3
+	PRINTFORM 中学生
+ELSEIF CFLAG:LOCAL == 4
+	PRINTFORM 大学生
+ELSEIF CFLAG:LOCAL == 5
+	PRINTFORM サラリーマン
+ELSEIF CFLAG:LOCAL == 6
+	PRINTFORM ホスト
+ENDIF
+PRINTFORML らしい……
+
+PRINTFORML 《この状態で開始しますか？》
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+$INPUT_LOOP_DECIDE
+INPUT
+
+IF RESULT == 0
+	PRINTFORM
+ELSEIF RESULT == 1
+	LOCAL:2 = NO:LOCAL
+	SIF TALENT:LOCAL:淫乱 == 1
+		LOCAL:3 = 1
+	SIF TALENT:LOCAL:露出狂 == 1
+		LOCAL:4 = 1
+	CALL キャラ削除, LOCAL
+	CALL キャラ追加(LOCAL:2)
+	LOCAL = GETCHARA (LOCAL:2)
+	IF LOCAL:3 == 1
+		TALENT:LOCAL:淫乱 = 1
+			CSTR:LOCAL:男性器呼び方 = おちんぽ
+			CSTR:LOCAL:女性器呼び方 = おまんこ
+			CSTR:LOCAL:肛門呼び方 = アナル
+	ENDIF
+	SIF LOCAL:4 == 1
+		TALENT:LOCAL:露出狂 = 1
+	TARGET = LOCAL
+	CALL WEARING_CLOTH_ALL
+	CALL SETTING_UNDERHAIR
+	LOCAL = TARGET
+	GOTO INPUT_LOOP_000
+ELSEIF RESULT == 8826
+	PRINTFORML 《デバッグ用です》
+	ABL:LOCAL:Ｖ感覚 = 10
+	ABL:LOCAL:Ａ感覚 = 10
+	ABL:LOCAL:欲望 = 10
+	ABL:LOCAL:性交技術 = 10
+	ABL:LOCAL:性交中毒 = 10
+	ABL:LOCAL:自慰中毒 = 10
+	EXP:LOCAL:異常経験 = 5 + RAND:4
+	CALL DECIDE_BOYFRIEND,LOCAL	
+	PRINTFORML 《カレシの名前を再生成しました》
+	PRINTFORML カレシの名前：%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+	CSTR:LOCAL:男性器呼び方 = チンポ
+	CSTR:LOCAL:女性器呼び方 = 生ハメＳＥＸ大好きな淫乱ヌレヌレマンコ
+	CSTR:LOCAL:処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+	CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+	CSTR:LOCAL:アナル処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+	CFLAG:LOCAL:ファーストキス喪失シチュ = 1
+	GOTO INPUT_LOOP_DECIDE
+ELSE
+	GOTO INPUT_LOOP_DECIDE
+ENDIF
+
+IF CFLAG:LOCAL:ファーストキスの相手
+	IF CFLAG:LOCAL:処女喪失年齢 >= CFLAG:LOCAL:アナル処女喪失年齢 && CFLAG:LOCAL:処女喪失月 >= CFLAG:LOCAL:アナル処女喪失月
+		CFLAG:LOCAL:ファーストキス喪失年齢 = CFLAG:LOCAL:アナル処女喪失年齢
+		CFLAG:LOCAL:ファーストキス喪失月 = CFLAG:LOCAL:アナル処女喪失月
+		CFLAG:LOCAL:ファーストキス喪失日 = CFLAG:LOCAL:アナル処女喪失日
+		CFLAG:LOCAL:ファーストキス喪失場所 = CFLAG:LOCAL:アナル処女喪失場所
+	ELSEIF CFLAG:LOCAL:処女喪失年齢 <= CFLAG:LOCAL:アナル処女喪失年齢  && CFLAG:LOCAL:処女喪失月 <= CFLAG:LOCAL:アナル処女喪失月
+		CFLAG:LOCAL:ファーストキス喪失年齢 = CFLAG:LOCAL:処女喪失年齢
+		CFLAG:LOCAL:ファーストキス喪失月 = CFLAG:LOCAL:処女喪失月
+		CFLAG:LOCAL:ファーストキス喪失日 = CFLAG:LOCAL:処女喪失日
+		CFLAG:LOCAL:ファーストキス喪失場所 = CFLAG:LOCAL:処女喪失場所
+	ELSE
+		CFLAG:LOCAL:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:LOCAL:ファーストキス喪失月 = (DAY:1 - RAND:2)
+		SIF CFLAG:LOCAL:ファーストキス喪失月 <= 0
+			CFLAG:LOCAL:ファーストキス喪失月 = 12
+		CFLAG:LOCAL:ファーストキス喪失日 = RAND:4
+		SIF CFLAG:LOCAL:ファーストキス喪失月 == DAY:1 && CFLAG:LOCAL:ファーストキス喪失日 >= DAY:2
+			CFLAG:LOCAL:ファーストキス喪失月 = DAY:2
+		CFLAG:LOCAL:ファーストキス喪失場所 = 3
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;ＥＸキャラの紹介・まゆ
+;-------------------------------------------------
+@SETTING_UNDERHAIR
+IF FLAG:陰毛を生やす
+	;かなでは毛深いのがコンプレックスです
+	IF NO:TARGET == [[キャラ:宮間かなで]]
+		CFLAG:陰毛の状態 = 14
+	;郁美はひどいことになっています
+	ELSEIF NO:TARGET == [[キャラ:須野郁美]]
+		CFLAG:陰毛の状態 = 18
+	;外人さんは下の毛の処理は常識です
+	ELSEIF NO:TARGET == [[キャラ:レイチェル・パラディスス]]
+		CFLAG:陰毛の状態 = 1
+	ELSEIF NO:TARGET == [[キャラ:恋歌・ロックウェル]]
+		CFLAG:陰毛の状態 = 1
+	;美乃里は下の毛の発育が悪いのがコンプレックスです
+	ELSEIF NO:TARGET == [[キャラ:佐々木美乃里]]
+		CFLAG:陰毛の状態 = 7
+	;パイパンなら生えない
+	ELSEIF TALENT:パイパン
+		CFLAG:陰毛の状態 = -1
+	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
+	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
+		CFLAG:陰毛の状態 = 6 
+	;それ以外なら12に設定
+	ELSE
+		CFLAG:陰毛の状態 = 12
+	ENDIF
+ENDIF

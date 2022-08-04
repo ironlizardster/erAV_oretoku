@@ -1,0 +1,526 @@
+﻿@CALC_VIDEO_TITLE
+ビデオタイトル1 = 
+ビデオタイトル2 = 
+
+RESULT = SPECIAL_TITLE_CALC()
+IF RESULT > -1
+	CALL GET_SP_TITLE(RESULT)
+ELSE
+	CALL ACTRESS_ARTICLE
+	ビデオタイトル1 = %CSTR:称号1%%CSTR:称号2%・
+
+	タイトル4 = %NICKNAME:TARGET%と
+
+	IF TALENT:妊娠 == 1 && FLAG:撮影開始時状況 & 4
+		IF RAND:2 == 0
+			タイトル5 = 腹ボテコスプレ
+		ELSE
+			タイトル5 = コスプレ妊婦
+		ENDIF
+	ELSEIF TALENT:妊娠 == 1 
+		IF RAND:2 == 0
+			タイトル5 = 腹ボテ
+		ELSE
+			タイトル5 = 妊婦
+		ENDIF
+	ELSEIF FLAG:撮影開始時状況 & 4
+		タイトル5 = コスプレ
+	ENDIF
+
+	;△TFLAG:820は「サインペンで書いた」回数。これでいい気がこれっぽっちもしないがさて。
+	;→やっぱり別に作るまで封印封印
+	IF 撮影部位V >= 撮影部位C && 撮影部位V >= 撮影部位A && TFLAG:現在膣内射精回数
+		タイトル6 = 生ハメ膣内射精{TFLAG:現在膣内射精回数}連発
+	ELSEIF 撮影部位V >= 撮影部位C && 撮影部位V >= 撮影部位A && 撮影内容性交
+		タイトル6 = 生ハメＳＥＸ
+	ELSEIF 撮影部位A && 撮影内容性交
+		タイトル6 = アナルセックス
+	ELSEIF 撮影内容フィスト
+		タイトル6 = フィストファック
+	ELSEIF 撮影特殊乱交
+		タイトル6 = 大乱交
+	ELSEIF 撮影特殊搾乳
+		タイトル4 = %NICKNAME:TARGET%の
+		タイトル6 = 搾乳パーティー
+	ELSEIF 撮影特殊泡踊り
+		タイトル4 = %NICKNAME:TARGET%の
+		タイトル6 = ご奉仕ソーププレイ
+	ELSEIF 撮影内容フェラ && (撮影内容フェラ >= 撮影傾向奉仕/2)
+		タイトル4 = %NICKNAME:TARGET%の
+		タイトル6 = 春のフェラ祭り
+	ELSEIF 撮影傾向奉仕
+		タイトル4 = %NICKNAME:TARGET%の
+		タイトル6 = ご奉仕大作戦
+	ELSEIF 撮影傾向SM
+		タイトル6 = ＳＭ
+	ELSEIF 撮影傾向自慰
+		タイトル4 = %NICKNAME:TARGET%の
+		タイトル6 = 激エロオナニー見せてアゲル
+	ELSEIF 撮影部位C && 撮影内容性交
+		タイトル4 = %NICKNAME:TARGET%の
+		タイトル6 = 逆レイプ
+	ELSEIF 撮影特殊レズ
+		タイトル4 = %NICKNAME:TARGET%たちの
+		タイトル6 = レズＳＥＸ
+;△プレイ次第ではここ抜けることがあるのでelseを準備。
+;何で埋めるといいだろうか。
+;	ELSE
+;		PRINT
+;		タイトル6 =
+	ENDIF
+	
+	IF TFLAG:ビデオ撮影内容 & 1
+		タイトル4 = %NICKNAME:TARGET%が
+	ENDIF
+	ビデオタイトル1 = %ビデオタイトル1%%タイトル4%%タイトル5%%タイトル6%
+	
+	;△思うんですけどクラスメイトがセンパイ扱いしてくるのきつくないですか
+	;誕生日で区切ってるので補正を入れたい
+	;あと、だれが実際に奪ったのかも実は取れてない
+	IF TFLAG:ビデオ撮影内容 & 1
+		タイトル7 = で処女喪失
+		IF NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) 
+			タイトル8 =  ～お姉ちゃんにオトナの女にしてもらいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:PLAYER:オトコ == 0 && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
+			タイトル8 =  ～レズセフレのギャル友・%NICKNAME:ASSI%にオトナの女にされちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:PLAYER:オトコ == 0
+			タイトル8 =  ～\@ PLAYER ? %NICKNAME:PLAYER%chan # 監督 \@にオトナの女にしてもらいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+			タイトル8 =  ～お兄ちゃんにオトナの女にしてもらいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+			タイトル8 =  ～アニキのチンポでオトナの女にしてもらいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢 < BASE:MASTER:実年齢
+			タイトル8 =  ～センパイにオトナの女にしてもらいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  > BASE:MASTER:実年齢
+			タイトル8 =  ～年下にオトナの女にされちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  == BASE:MASTER:実年齢
+			タイトル8 =  ～男友達にオトナの女にされちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢 < BASE:MASTER:実年齢
+			タイトル8 =  ～センパイのチンポでオトナの女にしてもらいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  > BASE:MASTER:実年齢
+			タイトル8 =  ～年下のチンポでオトナの女にされちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  == BASE:MASTER:実年齢
+			タイトル8 =  ～セフレのチンポでオトナの女にされちゃいました%UNICODE(0x2665)%～
+		ENDIF
+	ELSEIF TFLAG:ビデオ撮影内容2 & 1
+		タイトル7 = でアナル処女喪失
+		IF NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) 
+			タイトル8 =  ～お姉ちゃんにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:PLAYER:オトコ == 0 && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
+			タイトル8 =  ～レズセフレのギャル友・%NICKNAME:ASSI%にアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:PLAYER:オトコ == 0
+			タイトル8 =  ～\@ PLAYER ? %NICKNAME:PLAYER%chan # 監督 \@にアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+			タイトル8 =  ～お兄ちゃんにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+			タイトル8 =  ～アニキのチンポにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢 < BASE:MASTER:実年齢
+			タイトル8 =  ～センパイにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  > BASE:MASTER:実年齢
+			タイトル8 =  ～年下にアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  == BASE:MASTER:実年齢
+			タイトル8 =  ～男友達にアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢 < BASE:MASTER:実年齢
+			タイトル8 =  ～センパイのチンポにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  > BASE:MASTER:実年齢
+			タイトル8 =  ～年下のチンポにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  == BASE:MASTER:実年齢
+			タイトル8 =  ～セフレのチンポにアナル処女捧げちゃいました%UNICODE(0x2665)%～
+		ENDIF
+	ELSEIF TFLAG:童貞喪失
+		IF TFLAG:童貞喪失 == 1
+			タイトル7 = で童貞喪失
+		ENDIF
+		IF TALENT:PLAYER:オトコ == 0 && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
+			タイトル8 =  ～レズセフレのギャル友・%NICKNAME:ASSI%のマンコに%CSTR:一人称%のチンポハメられちゃいました～
+		ELSEIF TALENT:PLAYER:オトコ == 0
+			タイトル8 =  ～\@ PLAYER ? %NICKNAME:PLAYER%chan # 監督 \@のオマ○コに%CSTR:一人称%のオチ○ポハメられちゃいました%UNICODE(0x2665)%～
+		ENDIF
+	ELSE
+		タイトル7 = %UNICODE(0x2665)%
+		タイトル8 =
+	ENDIF
+	ビデオタイトル1 = %ビデオタイトル1%%タイトル7%
+	ビデオタイトル2 = %タイトル8%
+ENDIF
+CALL PRINT_VIDEO_TITLE
+
+;===========================================================
+;タイトルの表示処理
+;===========================================================
+@PRINT_VIDEO_TITLE
+PRINTFORM %ビデオタイトル1%
+SIF STRLENSU(ビデオタイトル2) > 0
+	PRINTFORM  %ビデオタイトル2%
+
+;===========================================================
+;デビュータイトルの処理
+;===========================================================
+@VIDEO_TITLE_DEBUT
+CALL CALC_VIDEO_TITLE
+CSTR:デビュー作タイトル1 '= ビデオタイトル1
+CSTR:デビュー作タイトル2 '= ビデオタイトル2
+CSTR:新作タイトル1 '= CSTR:デビュー作タイトル1
+CSTR:新作タイトル2 '= CSTR:デビュー作タイトル2
+CSTR:代表作タイトル1 '= CSTR:新作タイトル1
+CSTR:代表作タイトル2 '= CSTR:新作タイトル2
+
+;===========================================================
+;デビュータイトルの表示処理
+;===========================================================
+@PRINT_VIDEO_TITLE_DEBUT
+PRINTFORML %CSTR:デビュー作タイトル1%
+PRINTFORML  %CSTR:デビュー作タイトル2%
+
+;===========================================================
+;新作タイトルの処理
+;===========================================================
+@VIDEO_TITLE_NEW
+CALL CALC_VIDEO_TITLE
+CSTR:新作タイトル1 '= ビデオタイトル1
+CSTR:新作タイトル2 '= ビデオタイトル2
+
+;===========================================================
+;新作タイトルの表示処理
+;===========================================================
+@PRINT_VIDEO_TITLE_NEW
+PRINTFORML %CSTR:新作タイトル1%
+PRINTFORML  %CSTR:新作タイトル2%
+
+;===========================================================
+;代表作タイトルの処理
+;===========================================================
+@CHANGE_VIDEOTITLE_REPRESENT
+CSTR:代表作タイトル1 '= CSTR:新作タイトル1
+CSTR:代表作タイトル2 '= CSTR:新作タイトル2
+
+;===========================================================
+;代表作タイトルの表示
+;===========================================================
+@PRINT_VIDEO_TITLE_REPRESENT
+PRINTFORML %CSTR:代表作タイトル1%
+PRINTFORML  %CSTR:代表作タイトル2%
+
+;===========================================================
+;称号の処理
+;===========================================================
+@ACTRESS_ARTICLE
+
+;素質による一括接頭語処理
+;かなでとアイドル組を抜く。個々の称号で処理されているため。
+IF NO:TARGET != [[キャラ:富士川りえ]] && NO:TARGET != [[キャラ:小鳥遊音羽]] && NO:TARGET != [[キャラ:新島みひろ]] && NO:TARGET != [[キャラ:佐倉由希]] && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && NO:TARGET != [[キャラ:ミーナ・クレイン]]
+	IF TALENT:淫乱 && TALENT:褐色肌 == 0
+		IF RAND:2 == 0
+			CSTR:称号1 = 淫乱
+		ELSE
+			CSTR:称号1 = ドスケベ
+		ENDIF
+	ELSEIF TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+		CSTR:称号1 = 黒ギャルビッチな
+	ELSEIF TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+		CSTR:称号1 = 黒ギャル
+	ENDIF
+ENDIF
+
+;△しまったこっちも直さないといけないんだった……レゲエダンサー？ 見なかったことにする
+IF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = 純情乙女
+ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = 清楚ロリビッチ
+ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = エロカワ系黒ギャル
+ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = 黒ギャルロリビッチ
+ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = エロカワ系ギャル
+ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:淫乱 == 1 && TALENT:褐色肌 == 0 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = ギャル系ロリビッチ
+ELSEIF NO:TARGET == [[キャラ:佐々木美乃里]]
+	CSTR:TARGET:称号2 = スポーツ少女
+ELSEIF NO:TARGET == [[キャラ:久留米紗英]]
+	CSTR:TARGET:称号2 = イマドキ少女
+ELSEIF NO:TARGET == [[キャラ:飯野美樹]]
+	CSTR:TARGET:称号2 = お嬢様
+ELSEIF NO:TARGET == [[キャラ:渡来桔梗]]
+	CSTR:TARGET:称号2 = ネットで人気のコスプレイヤー
+ELSEIF NO:TARGET == [[キャラ:神田ひより]]
+	CSTR:TARGET:称号2 = 人妻
+ELSEIF NO:TARGET == [[キャラ:多々良ひな]]
+	CSTR:TARGET:称号2 = 百合姉妹
+ELSEIF NO:TARGET == [[キャラ:多々良ゆな]]
+	CSTR:TARGET:称号2 = 百合姉妹
+ELSEIF NO:TARGET == [[キャラ:レイチェル・パラディスス]]
+	CSTR:TARGET:称号2 = お姫様
+ELSEIF NO:TARGET == [[キャラ:桐生歌音]]
+	CSTR:TARGET:称号2 = クオーター
+ELSEIF NO:TARGET == [[キャラ:須野郁美]]
+	CSTR:TARGET:称号2 = セレブニート
+ELSEIF NO:TARGET == [[キャラ:後藤光希]]
+	CSTR:TARGET:称号2 = 美人ナース
+ELSEIF NO:TARGET == [[キャラ:榊あゆむ]]
+	CSTR:TARGET:称号2 = \@ TALENT:ふたなり ? ふたなり # 男の娘 \@
+ELSEIF NO:TARGET == [[キャラ:御弦伊月]]
+	CSTR:TARGET:称号2 = サムライガール
+ELSEIF NO:TARGET == [[キャラ:雛見春乃]] && !TALENT:淫乱
+	CSTR:TARGET:称号2 = 美少女巫女
+ELSEIF NO:TARGET == [[キャラ:雛見春乃]]
+	CSTR:TARGET:称号2 = 美少女淫乱巫女
+ELSEIF NO:TARGET == [[キャラ:美咲エリカ]]
+	CSTR:TARGET:称号2 = ツンデレ少女
+ELSEIF NO:TARGET == [[キャラ:宮間未依]]
+	CSTR:TARGET:称号2 = メイドロイド
+ELSEIF NO:TARGET == [[キャラ:恋歌・ロックウェル]]
+	CSTR:TARGET:称号2 = 帰国子女
+ELSEIF NO:TARGET == [[キャラ:ヒトミちゃん]]
+	CSTR:TARGET:称号2 = ダッチワイフ
+ELSEIF NO:TARGET == [[キャラ:赤羽真理]]
+	CSTR:TARGET:称号2 = カリスマショップ店員
+ELSEIF NO:TARGET == [[キャラ:長谷川湊]]
+	CSTR:TARGET:称号2 = 女教師
+ELSEIF NO:TARGET == [[キャラ:織部真菜香]]
+	CSTR:TARGET:称号2 = 小悪魔ガール
+ELSEIF NO:TARGET == [[キャラ:天海瑠衣]] && TALENT:ILMATAR
+	CSTR:TARGET:称号2 = 欧米で大ブレイク中の○い激似美少女
+ELSEIF NO:TARGET == [[キャラ:天海瑠衣]]
+	CSTR:TARGET:称号2 = ミーハー少女
+ELSEIF NO:TARGET == [[キャラ:寺本祐香里]]
+	CSTR:TARGET:称号2 = 人気ＡＶ女優
+ELSEIF NO:TARGET == [[キャラ:三上聖佳]]
+	CSTR:TARGET:称号2 = シスター
+ELSEIF NO:TARGET == [[キャラ:清水桜子]]
+	CSTR:TARGET:称号2 = 合法ロリっ娘
+ELSEIF NO:TARGET == [[キャラ:知吉綾乃]]
+	CSTR:TARGET:称号2 = お嬢様
+ELSEIF NO:TARGET == [[キャラ:桜井プリシラ]]
+	CSTR:TARGET:称号2 = 萌え系ハーフ娘
+ELSEIF NO:TARGET == [[キャラ:蒼井遙]]
+	CSTR:TARGET:称号2 = 背徳の聖職者
+ELSEIF NO:TARGET == [[キャラ:文野柚香]]
+	CSTR:TARGET:称号2 = ロリキュート
+ELSEIF NO:TARGET == [[キャラ:白波縁]]
+	CSTR:TARGET:称号2 = ダウナー系ロリっ娘
+ELSEIF NO:TARGET == [[キャラ:相田エレナ]]
+	CSTR:TARGET:称号2 = 美人すぎる女医
+ELSEIF NO:TARGET == [[キャラ:相田アリサ]]
+	CSTR:TARGET:称号2 = ロリっ娘ナース
+ELSEIF NO:TARGET == [[キャラ:中島葉月]]
+	CSTR:TARGET:称号2 = 隠れコスプレイヤー
+ELSEIF NO:TARGET == [[キャラ:織部夏美]]
+	CSTR:TARGET:称号2 = クールな委員長系美少女
+ELSEIF NO:TARGET == [[キャラ:川岸あさひ]]
+	CSTR:TARGET:称号2 = 癒し系幼馴染みタイプ
+ELSEIF NO:TARGET == [[キャラ:秋名未澪]]
+	CSTR:TARGET:称号2 = 某人気ガールズバンドのベーシスト激似
+ELSEIF NO:TARGET == [[キャラ:闇崎燐子]]
+	CSTR:TARGET:称号2 = 堕天使系美少女
+ELSEIF NO:TARGET == [[キャラ:小日向詩織]]
+	CSTR:TARGET:称号2 = つるぺた毒舌娘
+ELSEIF NO:TARGET == [[キャラ:庄野そら]]
+	CSTR:TARGET:称号2 = 素直クールな爆乳優等生
+ELSEIF NO:TARGET == [[キャラ:羽生理沙]]
+	CSTR:TARGET:称号2 = ふんわり癒し系
+ELSEIF NO:TARGET == [[キャラ:富士川りえ]] && TALENT:AVALOKITESVARA
+	CSTR:TARGET:称号2 = 欧米で大ブレイク中の○え激似美少女
+ELSEIF NO:TARGET == [[キャラ:富士川りえ]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = 休業中アイドルの○え激似
+ELSEIF NO:TARGET == [[キャラ:富士川りえ]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = 休業中アイドルの○え激似な淫乱少女
+ELSEIF NO:TARGET == [[キャラ:富士川りえ]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = 休業中アイドルの○え激似な黒ギャル
+ELSEIF NO:TARGET == [[キャラ:富士川りえ]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = 休業中アイドルの○え激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:相葉瀬理奈]]
+	CSTR:TARGET:称号2 = ツンツン委員長系お嬢様
+ELSEIF NO:TARGET == [[キャラ:高城沙織]]
+	CSTR:TARGET:称号2 = 口下手モデル系長身美女
+ELSEIF NO:TARGET == [[キャラ:三好ゆか子]]
+	CSTR:TARGET:称号2 = ぽっちゃり系美少女
+ELSEIF NO:TARGET == [[キャラ:小鳥遊音羽]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = なつかしのアイドル・こ○り遊羽激似な美女
+ELSEIF NO:TARGET == [[キャラ:小鳥遊音羽]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = なつかしのアイドル・こ○り遊羽激似な淫乱美女
+ELSEIF NO:TARGET == [[キャラ:小鳥遊音羽]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = なつかしのアイドル・こ○り遊羽激似な黒ギャル美女
+ELSEIF NO:TARGET == [[キャラ:小鳥遊音羽]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = なつかしのアイドル・こ○り遊羽激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:水森優樹菜]]
+	CSTR:TARGET:称号2 = 清純令嬢
+ELSEIF NO:TARGET == [[キャラ:春風南]]
+	CSTR:TARGET:称号2 = 援交少女
+ELSEIF NO:TARGET == [[キャラ:神園すみれ]]
+	CSTR:TARGET:称号2 = 爆乳お姉さん
+ELSEIF NO:TARGET == [[キャラ:二葉志乃]]
+	CSTR:TARGET:称号2 = ガチレズ女子校生
+ELSEIF NO:TARGET == [[キャラ:鎌瀬縫子]]
+	CSTR:TARGET:称号2 = 地味っ娘
+ELSEIF NO:TARGET == [[キャラ:本庄のどか]]
+	CSTR:TARGET:称号2 = 薄幸ロリ
+ELSEIF NO:TARGET == [[キャラ:橘乙姫]]
+	CSTR:TARGET:称号2 = 令嬢
+ELSEIF NO:TARGET == [[キャラ:春風南_重複1]]
+	CSTR:TARGET:称号2 = 優等生
+ELSEIF NO:TARGET == [[キャラ:神園すみれ_重複1]]
+	CSTR:TARGET:称号2 = 爆乳教師
+ELSEIF NO:TARGET == [[キャラ:海老原真与]]
+	CSTR:TARGET:称号2 = 薄幸教師
+ELSEIF NO:TARGET == [[キャラ:キャバ嬢]]
+	CSTR:TARGET:称号2 = 現役キャバ嬢
+ELSEIF NO:TARGET == [[キャラ:新島みひろ]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○ろ激似
+ELSEIF NO:TARGET == [[キャラ:新島みひろ]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○ろ激似な淫乱少女
+ELSEIF NO:TARGET == [[キャラ:新島みひろ]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○ろ激似な黒ギャル
+ELSEIF NO:TARGET == [[キャラ:新島みひろ]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○ろ激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:エリス]]
+	CSTR:TARGET:称号2 = お嬢様
+ELSEIF NO:TARGET == [[キャラ:リリス]]
+	CSTR:TARGET:称号2 = リトルデビル
+ELSEIF NO:TARGET == [[キャラ:佐倉結衣花]]
+	CSTR:TARGET:称号2 = 元ジュニアアイドル
+ELSEIF NO:TARGET == [[キャラ:アイリス]]
+	CSTR:TARGET:称号2 = 美熟女
+ELSEIF NO:TARGET == [[キャラ:雛見まゆ]]
+	CSTR:TARGET:称号2 = 女神
+ELSEIF NO:TARGET == [[キャラ:ユーニス・パラディスス]]
+	CSTR:TARGET:称号2 = 天才少女
+ELSEIF NO:TARGET == [[キャラ:桐島翔子]]
+	CSTR:TARGET:称号2 = 男装美少女
+ELSEIF NO:TARGET == [[キャラ:雨草愛理]] && TALENT:カリスマ
+	CSTR:TARGET:称号2 = 某カリスマモデル激似
+ELSEIF NO:TARGET == [[キャラ:雨草愛理]]
+	CSTR:TARGET:称号2 = クール系人気読モ
+ELSEIF NO:TARGET == [[キャラ:西方杏子]]
+	CSTR:TARGET:称号2 = スレンダーメガネ美女
+ELSEIF NO:TARGET == [[キャラ:加瀬芙美香]]
+	CSTR:TARGET:称号2 = 弱気メイド
+ELSEIF NO:TARGET == [[キャラ:アンドロイド]]
+	CSTR:TARGET:称号2 = 最新型セクサロイド
+ELSEIF NO:TARGET == [[キャラ:李美鈴]]
+	CSTR:TARGET:称号2 = けもみみ中華小娘
+ELSEIF NO:TARGET == [[キャラ:羽瀬川みこと]]
+	CSTR:TARGET:称号2 = メガネっ娘
+ELSEIF NO:TARGET == [[キャラ:桐生エレン]]
+	CSTR:TARGET:称号2 = ロリＢＢＡ（！？）
+ELSEIF NO:TARGET == [[キャラ:リーナ・レスピーチオ]]
+	CSTR:TARGET:称号2 = クールビューティー
+ELSEIF NO:TARGET == [[キャラ:黒井都子]]
+	CSTR:TARGET:称号2 = 変態淑女
+ELSEIF NO:TARGET == [[キャラ:赤城ゆうひ]]
+	CSTR:TARGET:称号2 = お姉様系人気読モ
+ELSEIF NO:TARGET == [[キャラ:伊原琴乃]]
+	CSTR:TARGET:称号2 = 妹系病弱ツンデレ
+ELSEIF NO:TARGET == [[キャラ:後藤彩香]]
+	CSTR:TARGET:称号2 = 犬ちっく元気少女
+ELSEIF NO:TARGET == [[キャラ:柑野凛佳]]
+	CSTR:TARGET:称号2 = クールな剣道小町
+ELSEIF NO:TARGET == [[キャラ:篠崎聖沙]]
+	CSTR:TARGET:称号2 = 小悪魔系ハーフ娘
+ELSEIF NO:TARGET == [[キャラ:椎名海静]]
+	CSTR:TARGET:称号2 = おっとり系巨乳お嬢様
+ELSEIF NO:TARGET == [[キャラ:エルファリア・ラーグラーデ]]
+	CSTR:TARGET:称号2 = 錬金少女
+ELSEIF NO:TARGET == [[キャラ:ミーナ・クレイン]] && TALENT:淫乱
+	CSTR:TARGET:称号2 = 某有名歌姫激似な淫乱女
+ELSEIF NO:TARGET == [[キャラ:ミーナ・クレイン]]
+	CSTR:TARGET:称号2 = 某有名歌姫激似な美女
+ELSEIF NO:TARGET == [[キャラ:槇原さち]]
+	CSTR:TARGET:称号2 = ミニマムキュート系ロリ義妹
+ELSEIF NO:TARGET == [[キャラ:赤坂姫乃]]
+	CSTR:TARGET:称号2 = 全力熱血スポ根少女
+ELSEIF NO:TARGET == [[キャラ:桜野環]]
+	CSTR:TARGET:称号2 = お姫様系巨乳美少女
+ELSEIF NO:TARGET == [[キャラ:マルチナ・パラディスス]]
+	CSTR:TARGET:称号2 = 魔王系未亡人
+ELSEIF NO:TARGET == [[キャラ:春風美奈]]
+	CSTR:TARGET:称号2 = はるうられロリ妹
+ELSEIF NO:TARGET == [[キャラ:操辻蜂香]]
+	CSTR:TARGET:称号2 = 欧米で大ブレイク中の○○激似小悪魔ロリっ娘
+ELSEIF NO:TARGET == [[キャラ:ミスティ・ブラウン]]
+	CSTR:TARGET:称号2 = ミステリアス美女
+ELSEIF NO:TARGET == [[キャラ:ヘルメス・メルクリオス]]
+	CSTR:TARGET:称号2 = ロリBBA魔女っ娘
+ELSEIF NO:TARGET == [[キャラ:佐倉由希]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのゆ○激似
+ELSEIF NO:TARGET == [[キャラ:佐倉由希]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのゆ○激似な淫乱少女
+ELSEIF NO:TARGET == [[キャラ:佐倉由希]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのゆ○激似な黒ギャル
+ELSEIF NO:TARGET == [[キャラ:佐倉由希]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのゆ○激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:小鳥遊乃絵美]]
+	CSTR:TARGET:称号2 = フーゾク嬢
+ELSEIF NO:TARGET == [[キャラ:新堂あゆみ]]
+	CSTR:TARGET:称号2 = 美人お嬢様女子大生
+ELSEIF NO:TARGET == [[キャラ:野々宮初佳]]
+	CSTR:TARGET:称号2 = 美人幼馴染系美少女
+ELSEIF NO:TARGET == [[キャラ:涼本鈴花]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのす○か激似
+ELSEIF NO:TARGET == [[キャラ:涼本鈴花]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのす○か激似な淫乱少女
+ELSEIF NO:TARGET == [[キャラ:涼本鈴花]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのす○か激似な黒ギャル
+ELSEIF NO:TARGET == [[キャラ:涼本鈴花]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのす○か激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:永江桜月]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇの○つき激似
+ELSEIF NO:TARGET == [[キャラ:永江桜月]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇの○つき激似な淫乱少女
+ELSEIF NO:TARGET == [[キャラ:永江桜月]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇの○つき激似な黒ギャル
+ELSEIF NO:TARGET == [[キャラ:永江桜月]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇの○つき激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:宇野未歩]] && TALENT:淫乱 == 0 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○激似
+ELSEIF NO:TARGET == [[キャラ:宇野未歩]] && TALENT:淫乱 == 1 && (TALENT:褐色肌 == 0 || TALENT:ギャル系 == 0)
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○激似な淫乱少女
+ELSEIF NO:TARGET == [[キャラ:宇野未歩]] && TALENT:淫乱 == 0 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○激似な黒ギャル
+ELSEIF NO:TARGET == [[キャラ:宇野未歩]] && TALENT:淫乱 == 1 && TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
+	CSTR:TARGET:称号2 = Ｃ○Ｇのみ○激似な黒ギャルビッチ
+ELSEIF NO:TARGET == [[キャラ:アイーシャ・アルハズラッド]]
+	CSTR:TARGET:称号2 = ロリ系ベリーダンサー
+ELSEIF NO:TARGET == [[キャラ:アスカ]]
+	CSTR:TARGET:称号2 = 姫勇者（自称）
+ELSEIF NO:TARGET == [[キャラ:小野原あんず]]
+	CSTR:TARGET:称号2 = ギャルバン幼な妻
+ELSEIF NO:TARGET == [[キャラ:高階美夜]]
+	CSTR:TARGET:称号2 = 女優のタマゴ
+ELSEIF NO:TARGET == [[キャラ:和泉透子]]
+	CSTR:TARGET:称号2 = Ｓ級美少女
+ELSEIF NO:TARGET == [[キャラ:高屋敷春海]]
+	CSTR:TARGET:称号2 = ニンジャガール
+ELSEIF NO:TARGET == [[キャラ:鏑木紫苑]]
+	CSTR:TARGET:称号2 = 某令嬢そっくりの\@ TALENT:ふたなり ? ふたなり # 男の娘 \@
+ELSEIF NO:TARGET == [[キャラ:両島みちる]]
+	CSTR:TARGET:称号2 = 爆乳ヤンキー
+ELSEIF NO:TARGET == [[キャラ:春日律花]]
+	CSTR:TARGET:称号2 = キャリアウーマン系未亡人
+ELSEIF NO:TARGET == [[キャラ:上坂美紅]]
+	CSTR:TARGET:称号2 = 女王サマ系ドＭ娘
+ELSEIF NO:TARGET == [[キャラ:碧野乃衣瑠]]
+	CSTR:TARGET:称号2 = ドジっ娘お嬢様
+ELSEIF NO:TARGET == [[キャラ:赤城ひかる]]
+	CSTR:TARGET:称号2 = 目立ちたがりなロリっ子
+ELSEIF NO:TARGET == [[キャラ:浅神智子]]
+	CSTR:TARGET:称号2 = ヨゴレ系爆乳巫女
+ELSEIF NO:TARGET == [[キャラ:神那悠喜]]
+	CSTR:TARGET:称号2 = 純情素朴系天然美少女
+ELSEIF NO:TARGET == [[キャラ:本城愛衣子]]
+	CSTR:TARGET:称号2 = 天真爛漫なロリ系美少女
+ELSEIF NO:TARGET == [[キャラ:二見アン]]
+	CSTR:TARGET:称号2 = 自宅警備系新世代アイドル
+ELSEIF NO:TARGET == [[キャラ:クリスティナ・ラーグラーデ]]
+	CSTR:TARGET:称号2 = 錬金姫さま
+ELSEIF NO:TARGET == [[キャラ:ニコル・パトリナターリ]]
+	CSTR:TARGET:称号2 = ミニスカサンタさん
+ELSEIF NO:TARGET == [[キャラ:瑞穂坂奈留]]
+	CSTR:TARGET:称号2 = ふたなり美少女
+ELSEIF NO:TARGET == [[キャラ:リーゼロッテ・パラディスス]] && TALENT:淫魔
+	CSTR:TARGET:称号2 = サキュバスなお姫様
+ELSEIF NO:TARGET == [[キャラ:リーゼロッテ・パラディスス]]
+	CSTR:TARGET:称号2 = 可憐なお姫様
+ELSEIF NO:TARGET == [[キャラ:鉢堂陽菜]]
+	CSTR:TARGET:称号2 = 小悪魔メカ娘
+ENDIF

@@ -1,0 +1,319 @@
+﻿;========================================================
+;特殊営業時メッセージ
+;========================================================
+
+;--------------------------------------------------------
+;ストリップ・マナ板ショー
+;--------------------------------------------------------
+@WORK_MESSAGE_STRIP_02
+;調教テキスト省略設定の場合は戻る
+SIF (FLAG:指導テキスト設定 & 1)
+	RETURN 0
+
+;メンバー全員が淫乱かつ娼婦持ちかのチェック
+E = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF TALENT:COUNT:淫乱 == 0 || TALENT:COUNT:風俗嬢 == 0
+		E = 0
+REND
+;メンバー全員がＶ使用不可かのチェック
+F = 1
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+		CONTINUE
+	F = 0
+REND
+
+PRINT マットの上で
+IF E
+	PRINT 足を半開きにして誘っている
+ELSE
+	PRINT 緊張に身を硬くしている
+ENDIF
+CALL WORK_SUB_PRINT_MEMBER
+PRINTL を、
+PRINTFORML ステージに上がった{G/3}人の観客は順番に組み伏せて、
+PRINT その
+SIF F == 0
+	PRINT ヴァギナと
+PRINTFORML アヌスと口を思う存分味わった……
+
+RETURN 1
+
+;--------------------------------------------------------
+;乱交パーティー
+;--------------------------------------------------------
+@WORK_MESSAGE_ORGY_01
+;調教テキスト省略設定の場合は戻る
+SIF (FLAG:指導テキスト設定 & 1)
+	RETURN 0
+
+REPEAT CHARANUM
+	SIF CFLAG:COUNT:130 == 0
+		CONTINUE
+		IF TALENT:COUNT:淫乱 == 1
+			CHKFONT "あくびん"
+			IF RESULT
+				SETFONT "あくびん"
+			ENDIF
+			SETCOLOR 0xDDBBCC
+				IF TALENT:COUNT:処女 == 1
+					PRINTFORML 「%CALLNAME:COUNT%の処女膜、お客さんのぶっといオチンポで破ってぇｖ」
+				ENDIF
+			PRINTFORML  「%CALLNAME:COUNT%のオマンコでもアナルでもおクチでも、好きなトコにい～っぱい射精してね♪」
+			RESETCOLOR
+			SETFONT ""
+		ENDIF
+	PRINTFORM %CALLNAME:COUNT%は
+	IF CFLAG:COUNT:営業でＶ使用不能フラグ == 0
+		SIF TALENT:COUNT:処女
+			PRINT 汚れを知らない
+		PRINTFORM 膣と
+	ENDIF
+	PRINT アヌスを貫かれ
+	IF TALENT:COUNT:淫乱 || TALENT:COUNT:風俗嬢
+		PRINT ながら口にふくんだ肉棒をしゃぶり回し
+	ELSE
+		PRINT ながら口を犯され
+	ENDIF
+	PRINT 、両手に
+	IF TALENT:COUNT:淫乱 || TALENT:COUNT:風俗嬢
+		PRINTW 握り締めた肉棒をいやらしい手つきで扱き上げている……
+	ELSE
+		PRINTW 握らされた肉棒を扱き続けている……
+	ENDIF
+	PRINTW
+	IF TALENT:COUNT:童顔 == 1 && TALENT:COUNT:淫乱 == 1
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		SETCOLOR 0xDDBBCC
+		PRINTFORML  「やぁん、オチンポ抜いちゃダメぇ……ｖ」
+		PRINTFORML  「やだやだ、そこはおしっこの穴だよぉ……オチンポ入れる場所じゃないよぉ♪」
+		PRINTFORML  「もうダメっ、アナルにハメられながらおしっこしてるの見られてるぅ♪」
+		RESETCOLOR
+		SETFONT ""
+		PRINTFORM 幼さの残る、あどけない容姿の%CALLNAME:COUNT%が積極的に肉棒をしゃぶり、自ら腰を振る淫蕩な姿に
+		PRINTFORML 興奮した男たちは、無垢な肢体を汚さんとばかりに%CALLNAME:COUNT%の全身に白濁液をぶっかけた……
+		PRINTFORM アヌスに挿入されたまま背後から抱きかかえられ、強制的にＭ字のようなポーズを取らされた
+		PRINTFORML %CALLNAME:COUNT%は、尿道を執拗に弄ばれている
+		PRINTFORM その刺激とアヌスを貫かれる快感に尿意が限界を迎えた%CALLNAME:COUNT%は、
+		PRINTFORML 絨毯が敷かれた床に向かって噴水のように勢いよく放尿を始めた……
+		PRINTW
+	ELSEIF TALENT:COUNT:童顔 == 1 && TALENT:COUNT:淫乱 == 0
+		PRINTFORM 幼さの残る、あどけない容姿の%CALLNAME:COUNT%がぎこちなく肉棒をくわえ、両穴を貫かれる姿に
+		PRINTFORML 興奮した男たちは、無垢な肢体を汚さんとばかりに%CALLNAME:COUNT%の全身に白濁液をぶっかけた……
+		PRINTFORMW
+	ENDIF
+
+	IF TALENT:COUNT:ColorfulPureGirls == 1 && TALENT:COUNT:淫乱 == 1
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		SETCOLOR 0xDDBBCC
+		PRINTFORM  「ＣＰＧの衣装を着た%CALLNAME:COUNT%たんを犯したい、って……もうっ、セーエキまみれになったら
+		PRINTFORML クリーニングに出すの恥ずかしいんだよｖ」
+		PRINTFORML  「……え、着ないとオチンポ入れてくれないの……？」
+		PRINTFORML  「うぅ～……分かったから%CALLNAME:COUNT%の濡れ濡れマンコにオチンポ入れてよぉ……ｖ」
+		RESETCOLOR
+		SETFONT ""
+		PRINTFORM 国民的アイドルグループのメンバーの%CALLNAME:COUNT%が積極的に肉棒をしゃぶり、自ら腰を振る淫蕩な姿に
+		PRINTFORM 興奮した男たちは、本来なら手の届かない存在を汚さんとばかりに%CALLNAME:COUNT%の
+		PRINTFORML 子宮に次々と中出しした
+		PRINTFORML 結合部からは逆流した精液が滴り落ちている……
+		PRINTFORM 誰かが持ち込んだカメラが向けられると、%CALLNAME:COUNT%は両手でピースサインを作りながら
+		PRINTFORML だらしないアヘ顔を晒している
+		PRINTFORM シャッターが切られるたびに%CALLNAME:COUNT%の両穴は収縮し、挿入されたペニスはその締め付けに
+		PRINTFORML 耐え切れずザーメンを奥にぶちまけた……
+		PRINTW
+	ELSEIF TALENT:COUNT:ColorfulPureGirls == 1 && TALENT:COUNT:淫乱 == 0
+		PRINTFORM 国民的アイドルグループのメンバーの%CALLNAME:COUNT%がぎこちなく肉棒をくわえ、両穴を貫かれる姿に
+		PRINTFORM 興奮した男たちは、本来なら手の届かない存在を汚さんとばかりに%CALLNAME:COUNT%の
+		PRINTFORML 子宮に次々と中出しした……
+		PRINTFORML 結合部からは逆流した精液が滴り落ちている……
+		PRINTW
+	ENDIF
+
+	IF TALENT:COUNT:Triptych == 1
+		PRINTFORM 新進気鋭アイドルグループのメンバー、%CALLNAME:COUNT%の堕天使の名に恥じない淫らな姿に
+		PRINTFORM 興奮した男たちは、本来なら手の届かない存在を汚さんとばかりに%CALLNAME:COUNT%の
+		PRINTFORML 子宮に次々と中出しした……
+		PRINTFORML 結合部からは逆流した精液が滴り落ちている……
+		PRINTW
+	ENDIF
+
+	IF TALENT:COUNT:お姫様 == 1 && TALENT:COUNT:淫乱 == 1
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		SETCOLOR 0xDDBBCC
+		PRINTFORML  「そんなにアナルばっかりイジめないでぇ……バカになっちゃうぅんｖ」
+		PRINTFORML  「でもぉ……みんなに精液浣腸して欲しくって今日のために一週間ガマンしてきたの♪」
+		PRINTFORML  「だ・か・らｖ%CALLNAME:COUNT%のケツマンコにい～っぱいザーメン注いでねっ♪」
+		RESETCOLOR
+		SETFONT ""
+		PRINTFORM 高貴な存在の%CALLNAME:COUNT%が積極的に肉棒をしゃぶり、自ら腰を振る淫蕩な姿に
+		PRINTFORM 興奮した男たちは、本来なら手の届かない存在を汚さんとばかりに%CALLNAME:COUNT%の
+		PRINTFORML アヌスに次々と中出しした
+		PRINTFORM 腸液にまみれたペニスを抜き差しするたびに%CALLNAME:COUNT%の結合部では
+		PRINTFORML ぐぼぐぼと卑猥な音を立てている……
+		PRINTFORM 度重なる精液浣腸に堪えられなくなった%CALLNAME:COUNT%が便意を訴えると、客の一人が
+		PRINTFORML スカトロ鑑賞が趣味の客用に用意されたおまるを持って来た
+		PRINTFORM そこに排泄するように促された%CALLNAME:COUNT%は頭の上で腕を組み、
+		PRINTFORM すえた汗の臭いが漂う
+		IF CFLAG:COUNT:腋毛の有無 == 1
+			PRINTFORM 、汗で濡れ輝く腋毛の生えた
+		ENDIF
+		PRINTFORM 腋を見せつけるように
+		PRINTFORM しながら、下品なガニマタ姿で精液が混ざり合った、一国の姫のモノとは思えないような
+		PRINTFORML 鼻が曲がりそうなほど強烈な臭気を放つ下痢便を、ビチャビチャと音を立てながらひり出した
+		PRINTFORM 排泄行為と自らの汚物が衆目に晒されているというのに、%CALLNAME:COUNT%は
+		PRINTFORML 恥じるどころか恍惚の表情を浮かべている……
+		PRINTW
+	ELSEIF TALENT:COUNT:お姫様 == 1 && TALENT:COUNT:淫乱 == 0
+		PRINTFORM 高貴な存在の%CALLNAME:COUNT%がぎこちなく肉棒をくわえ、両穴を貫かれる姿に
+		PRINTFORM 興奮した男たちは、本来なら手の届かない存在を汚さんとばかりに%CALLNAME:COUNT%の
+		PRINTFORML アヌスに次々と中出しした
+		PRINTFORM 腸液にまみれたペニスを抜き差しするたびに%CALLNAME:COUNT%の結合部では
+		PRINTFORML ぐぼぐぼと卑猥な音を立てている……
+		PRINTW
+	ENDIF
+
+	IF TALENT:COUNT:小悪魔 == 1 && TALENT:COUNT:淫乱 == 1
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		SETCOLOR 0xDDBBCC
+		PRINTFORML  「ふふっｖお客さんのオチンポ、い～っぱいシコシコしてあげるからね♪」
+		PRINTFORML  「……え、%CALLNAME:COUNT%の髪をオチンポに巻きつけてどうしたの？」
+		PRINTFORM  「んもぅｖ%CALLNAME:COUNT%の髪とかワキにザーメンぶっかけたいだなんて……お客さんったらヘンタイさん
+		PRINTFORML なんだから♪」
+		RESETCOLOR
+		SETFONT ""
+		PRINTFORM わざとゆっくりとした舌使いで肉棒に奉仕している%CALLNAME:COUNT%にじれったさを覚えた
+		PRINTFORML 男性客は、%CALLNAME:COUNT%の頭を掴み、強引に喉奥までペニスを突き入れた
+		PRINTFORM 喉を犯されくぐもった声を漏らしながらも、%CALLNAME:COUNT%は細くしなやかな指であぶれた
+		PRINTFORML 客の肉棒を、親指と人差指で作った輪で時折締め付けながら、カリと裏筋に沿って扱いている……
+		PRINTFORM %CALLNAME:COUNT%の絹糸のようにさらさらの髪の匂いを嗅ぎながらペニスを扱き、順番を待っていた
+		PRINTFORM 客は待ちきれなくなったのか、%CALLNAME:COUNT%の
+		CALL PRINT_HAIRSTYLE_4COUNT
+		IF CFLAG:COUNT:髪型 == 5 || CFLAG:COUNT:髪型 == 1 || CFLAG:COUNT:髪型 == 2
+			PRINTFORM の髪
+		ELSEIF CFLAG:COUNT:髪型 == 4
+			PRINTFORM を一房手に取り、それ
+		ELSEIF CFLAG:COUNT:髪型 == 6
+			PRINTFORM にしている髪留めを外し、ほどかれた髪
+		ENDIF
+		PRINTFORM に硬く屹立する黒ずんだ肉棒にまとわりつかせ、
+		PRINTFORML オナホール代わりにして手淫を始めた
+		PRINTFORM 他のあぶれていた客もそれに同調して%CALLNAME:COUNT%の腋や太もも、瑞々しい肢体のあちこちに肉棒を
+		PRINTFORML 押し当て、次々と白濁液で染め上げていく
+		PRINTFORM そして最後にイラマチオを強要していた客が%CALLNAME:COUNT%の口内に射精すると、精液まみれのまま
+		PRINTFORM %CALLNAME:COUNT%は舌を出して射精されたてのザーメンを周囲に見せ、わざと音を立てるようにして
+		PRINTFORML 飲み干した……
+		PRINTW
+	ELSEIF TALENT:COUNT:小悪魔 == 1 && TALENT:COUNT:淫乱 == 0
+		PRINTFORM 懸命な舌使いで肉棒に奉仕している%CALLNAME:COUNT%にじれったさを覚えた
+		PRINTFORML 男性客は、%CALLNAME:COUNT%の頭を掴み、強引に喉奥までペニスを突き入れた
+		PRINTFORM 喉を犯されくぐもった声を漏らしながらも、%CALLNAME:COUNT%は細くしなやかな指であぶれた
+		PRINTFORML 客の肉棒を、客に指示されるまま必死に扱いている……
+		PRINTW
+	ENDIF
+
+	IF TALENT:COUNT:褐色肌 == 1 && TALENT:COUNT:ギャル系 == 1
+		CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF
+		SETCOLOR 0xDDBBCC
+		PRINTFORML  「やっぱキメセクじゃないと燃えないわｖオッサンのチンポもガッチガチにボッキしてるしｖ」
+		PRINTFORM  「キメてからチンポ抜かずに５回もナカダシするとか黒チンポのクセにマヂでソーローすぎ。
+		PRINTFORML ドーテーのくっせー包茎チンポでもそんなに早くねーよ♪ってアタシのテクがヤバいだけかｖ」
+		PRINTFORM  「生ハメだっつーのにこんなに出してガキできたらオッサンどーすんのよ♪
+		PRINTFORML ま、アタシがナマでチンポ入れていいっつったんだけどｖ」
+		PRINTFORM  「セーエキ出なくなるまでハメたいって？　なんだ、そんなにアタシのマンコ
+		PRINTFORML 気に入ったんならヒマな時に１０枚でヤらせてあげるよ♪」
+		PRINTFORM  「アハッ、そんなに必死にうなずいて……マヂウケるんですけどぉ♪　
+		PRINTFORML 自分のガキと同じぐらいの女にカネ出してまで中年チンポで生ハメキメセクしたいんだぁｖ」
+		PRINTFORM  「オッサンけっこーカネ持ってそうだしいいよｖその代わりラブホとメシ代オッサン持ち
+		PRINTFORML だかんね♪」
+		RESETCOLOR
+		SETFONT ""
+		PRINTFORM パーティーも終わりに近づいた頃、桐生組が裏でばら撒いている【プリンセスポイズン】という名前の
+		PRINTFORM 合法ドラッグを吸引した%CALLNAME:COUNT%がそれまでの客に従順な『演技』をやめ、
+		PRINTFORM 黒ギャル好きな中年の男性客の上に下品ながに股で跨りながら腰を激しく振り、白いグロスに縁取られ
+		PRINTFORML た口から先端でピアスが輝く舌を出しっぱなしにし、止めどなくよだれを零しながら快楽を貪っている
+		PRINTFORM 客も%CALLNAME:COUNT%をイかせようと、そのくびれた褐色の腰を掴みながら
+		PRINTFORM 熟練のテクで下から肉棒で突き上げているが、
+		PRINTFORML %CALLNAME:COUNT%の腰使いの前に、%CALLNAME:COUNT%が一度絶頂するまでに三度も中で果てている……
+		PRINTFORM 底なしの%CALLNAME:COUNT%の性欲の前に精魂尽き果てた客は、不満気な%CALLNAME:COUNT%に
+		PRINTFORML プライベートでの『遊び』をもちかけた
+		PRINTFORML しばらく%CALLNAME:COUNT%は舐めるように客を見回していたが、人差し指を一本立てた
+		PRINTFORML もちろん１枚ではなく、１０枚。この乱交パーティーの参加費用と同程度の額だ
+		PRINTFORM 客はしばらく考え込んでいたが、今回のようなアブノーマルなセックスに積極的に応じてくれる
+		PRINTFORM 自分の娘と同い年ぐらいの『遊び相手』……セックスフレンドはやはり魅力的なのか、
+		PRINTFORML バイブを逆手に持ってオナニーをしていた%CALLNAME:COUNT%に連絡先の書かれた名刺を手渡した……
+		PRINTW
+	ENDIF
+
+	IF TALENT:COUNT:ふたなり == 1
+		PRINTFORM %CALLNAME:COUNT%のはちきれんばかりに勃起したふたなりペニスは、背後から伸ばされた手で扱き続けられ、
+		PRINTFORML 止めどなく精液を吐き出している……
+		PRINTFORMW 恍惚の表情を浮かべながら、%CALLNAME:COUNT%は手コキの継続を哀願していた
+	ENDIF
+
+	PRINTL
+
+	;処女喪失
+	IF CFLAG:COUNT:営業でＶ使用不能フラグ == 0 && TALENT:COUNT:処女
+		PRINTFORML 犯される%CALLNAME:COUNT%の膣からは、白く泡立った愛液と精液に混じって破瓜の鮮血が流れ出していた
+		SETCOLOR 0xF58F98
+		PRINTFORMW 【処女喪失】
+		RESETCOLOR
+	ENDIF
+	IF TALENT:COUNT:アナル処女 == 1
+		PRINTFORM 初めて肉棒を受け入れ、肉棒の太さにぽっかりと口を開けていた%CALLNAME:COUNT%のアヌスは、
+		PRINTFORML 元に戻ろうとしながらも黄ばんだ腸液混じりの精液を垂れ流していた
+		SETCOLOR 0xF58F98
+		PRINTFORMW 【アナル処女喪失】
+		RESETCOLOR
+	ENDIF
+	IF TALENT:COUNT:童貞 == 1
+		PRINTFORM たっぷりと愛液を含んだ女性客の膣肉への挿入で、包皮が剥けたばかりの%CALLNAME:COUNT%の
+			IF TALENT:COUNT:ふたなり == 1
+				PRINTFORM ふたなりペニス
+			ELSEIF TALENT:COUNT:ふたなり == 1
+				PRINTFORM ペニス
+			ENDIF
+		PRINTFORM は生まれて初めて味わう、肉棒を絞り尽くそうとするような膣襞のうねりに堪えきれず、
+		PRINTFORML こぼれるほど大量のザーメンを女性客の膣内に射精した
+		PRINTFORML 生まれて初めての中出しする快感に、%CALLNAME:COUNT%は恍惚の表情を浮かべている……
+		SETCOLOR 0xF58F98
+		PRINTFORMW 【童貞喪失】
+		RESETCOLOR
+	ENDIF
+
+	IF TALENT:COUNT:淫乱 == 1
+			CHKFONT "あくびん"
+			IF RESULT
+				SETFONT "あくびん"
+			ENDIF
+			SETCOLOR 0xDDBBCC
+			PRINTFORML  「%CALLNAME:COUNT%のオマンコ、お客さんのオチンポの形になっちゃったかも……ｖ」
+			PRINTFORML  「また%CALLNAME:COUNT%とえっちしてね♪　約束だよっｖ」
+			RESETCOLOR
+			SETFONT ""
+	ENDIF
+	PRINTW
+REND
+
+RETURN 1
+

@@ -1,0 +1,375 @@
+﻿;=================================================
+;お願い
+;=================================================
+@PLEASE_MAIN
+
+$INPUT_LOOP_01
+
+DRAWLINE
+PRINTL お願いする
+PRINTL 《女優候補に色々なことをお願いします》
+DRAWLINE
+PRINTL 誰にお願いしますか？　
+DRAWLINE
+CALL LIFE_LIST_NEW,LL_MODE_お願い
+
+IF RESULT == COMMAND_GO_BACK
+	A = 0
+	C = 0
+	R = 0
+	RETURN 0
+ELSEIF RESULT < 1 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP_01
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP_01
+ELSEIF ABL:RESULT:信頼 < 3
+	PRINTFORMW 《もう少し仲良くなってからにしましょう》
+	GOTO INPUT_LOOP_01
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_02
+
+A = 0
+C = 0
+R = 0
+S = 0
+
+DRAWLINE
+
+PRINTFORML %CALLNAME:TARGET%にどんなことをお願いをしますか？
+DRAWLINE
+
+[IF_DEBUG]
+;ABL:美容感覚 = 10
+;ABL:運動能力 = 10
+;ABL:学力 = 10
+;ABL:オタク知識 = 10
+;CALL GET_PART_TIME_BONUS(TARGET)
+;CFLAG:新作アニメチェック判定 = 0
+;CFLAG:バイト就職 = 0
+[ENDIF]
+
+IF CFLAG:習い事判定 == 0
+	PRINT  [ 0] - エステに通ってもらう　　　（月額：10000ポイント）
+	CALL エステ通い有効
+	SIF !RESULT
+		PRINT （これ以上は効果がなさそうです）
+	PRINTL
+ENDIF
+IF CFLAG:習い事判定 == 0
+	PRINT  [ 1] - ジムに通ってもらう　　　　（月額：10000ポイント）
+	CALL ジム通い有効
+	SIF !RESULT
+		PRINT （これ以上は効果がなさそうです）
+	PRINTL
+ENDIF
+IF (BASE:実年齢 <= 18 && CFLAG:習い事判定 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1)
+	PRINT  [ 2] - 学習塾に通ってもらう　　　（月額：10000ポイント）
+	CALL 学習塾通い有効
+	SIF !RESULT
+		PRINT （これ以上は効果がなさそうです）
+	PRINTL
+ENDIF
+IF CFLAG:習い事判定
+	SIF CFLAG:エステ通い判定
+		CALL エステ通い有効
+	SIF CFLAG:ジム通い判定
+		CALL ジム通い有効
+	SIF CFLAG:学習塾通い判定
+		CALL 学習塾通い有効
+	PRINT  [ 3] - 習い事を辞めてもらう
+	IF !RESULT
+		PRINT （これ以上は効果がなさそうです）
+	ENDIF
+	PRINTL
+ENDIF
+IF FLAG:弁当 == 0 && CFLAG:お弁当作成判定 == 0
+	PRINTL  [ 4] - お弁当を作ってもらう
+ENDIF
+IF FLAG:弁当 == 1 && CFLAG:お弁当作成判定 == 1
+	PRINTL  [ 4] - お弁当を作るのをやめてもらう
+ENDIF
+IF CFLAG:腋毛の有無 == 0
+	PRINTL  [ 5] - ムダ毛の処理をやめてもらう（恭順の珠×5000）
+ENDIF
+IF CFLAG:合コン参加判定 == 0 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+	PRINTL  [ 6] - 合コンに参加してもらう
+ELSEIF CFLAG:合コン参加判定 == 1 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+	PRINTL  [ 6] - 合コンの参加を取りやめてもらう
+ENDIF
+IF CFLAG:新作アニメチェック判定 == 0
+	PRINTL  [ 7] - 新作アニメやマンガをチェックしてもらう
+ENDIF
+IF CFLAG:新作アニメチェック判定 == 1
+	PRINTL  [ 7] - 新作アニメやマンガをチェックするのをやめてもらう
+ENDIF
+IF CFLAG:朝フェラ係に任命 == 0 && FLAG:朝起こしてもらう == 0
+	PRINTL  [ 8] - 毎朝起こしてもらう
+ENDIF
+IF CFLAG:朝フェラ係に任命 == 1 && FLAG:朝起こしてもらう == 1
+	PRINTL  [ 8] - 毎朝起こすのをやめてもらう
+ENDIF
+IF TALENT:ＡＶ女優
+;女優にならないと表示されないように
+	PRINTL  [ 9] - 芸名を変えてもらう
+ENDIF
+						;****痴漢誘惑追加ここから****
+IF CFLAG:痴漢誘惑 == 0 && JUEL:欲情 >= 5000
+	PRINTL  [10] - 痴漢に襲われてもらう（欲情の珠×5000）
+ELSEIF CFLAG:痴漢誘惑 == 1
+	PRINTL  [10] - 痴漢の相手をやめてもらう
+ENDIF
+						;****痴漢誘惑追加ここまで****
+IF TALENT:アイドル == 0 && TALENT:ファッションモデル == 0 && TALENT:キャバ嬢 == 0
+	IF CFLAG:バイト就職 == 0
+		PRINTL  [11] - アルバイトをしてもらう
+	ELSE
+		CALLFORM ARBEIT_TITLE_{CFLAG:バイト就職}
+		LOCALS = %RESULTS%
+		PRINTFORML  [11] - 現在実行中のアルバイト『%LOCALS%』を変更する
+	ENDIF
+ENDIF
+
+IF CFLAG:セフレ容認 == 0 && ABL:欲望 >= 4 && TALENT:セフレあり == 0 && TALENT:恋心 == 0 && TALENT:淫乱 == 1
+	PRINTL  [12] - セフレを紹介してあげる
+ELSEIF CFLAG:セフレ容認 == 0 && ABL:欲望 >= 4 && TALENT:セフレあり == 0 && TALENT:恋心 == 0 && TALENT:淫乱 == 0
+	PRINTFORML  [12] - %CALLNAME:TARGET%を他の男に抱かせる
+ELSEIF CFLAG:セフレ容認 == 0 && ABL:欲望 >= 4 && TALENT:恋心 == 1 && TALENT:淫乱 == 0
+	PRINTFORML  [12] - %CALLNAME:TARGET%を他の男に抱かせる
+ELSEIF CFLAG:セフレ容認 == 0 && ABL:欲望 >= 4 && TALENT:恋心 == 1 && TALENT:淫乱 == 1
+	PRINTFORML  [12] - 浮気ＳＥＸを容認する
+ELSEIF CFLAG:セフレ容認 == 1
+	PRINTL  [12] - セフレと縁を切ってもらう
+ENDIF
+PRINTL  [13] - 一人称を変えてもらう
+
+DRAWLINE
+
+;/////2012/09/23改造部分ここから/////
+;TARGETをTに退避
+T = TARGET
+
+;前後のキャラボタンを用意する
+PRINTFORMLC \@(T <= 1) ? %" " * 16% # [1001] 前のキャラ\@
+PRINTLC [999] リストに戻る
+PRINTFORMLC \@(T >= CHARANUM - 1) ? %" " * 16% # [1003] 次のキャラ\@
+PRINTL
+PRINTFORMLC %" " * 24% [1000] メイン画面に戻る
+
+;/////2012/09/23改造部分ここまで/////
+
+INPUT
+
+IF RESULT == 0 && CFLAG:習い事判定 == 0
+	PRINTFORMW 《%CALLNAME:TARGET%にエステに通ってもらうようにお願いしました》
+	CFLAG:エステ通い判定 = 1
+	CFLAG:習い事判定 = 1
+	FLAG:習い事人数 += 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 1 && CFLAG:習い事判定 == 0
+	PRINTFORMW 《%CALLNAME:TARGET%にジムに通ってもらうようにお願いしました》
+	CFLAG:ジム通い判定 = 1
+	CFLAG:習い事判定 = 1
+	FLAG:習い事人数 += 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 2 && ((BASE:実年齢 <= 18 && CFLAG:習い事判定 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1))
+	PRINTFORMW 《%CALLNAME:TARGET%に学習塾に通ってもらうようにお願いしました》
+	CFLAG:学習塾通い判定 = 1
+	CFLAG:習い事判定 = 1
+	FLAG:習い事人数 += 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 3 && CFLAG:習い事判定 == 1
+	PRINTFORMW 《%CALLNAME:TARGET%に習い事を辞めてもらうようにお願いしました》
+	CFLAG:エステ通い判定 = 0
+	CFLAG:ジム通い判定 = 0
+	CFLAG:学習塾通い判定 = 0
+	CFLAG:習い事判定 = 0
+	FLAG:習い事人数 -= 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 4 && FLAG:弁当 == 0 && CFLAG:お弁当作成判定 == 0
+	PRINTFORMW %CALLNAME:MASTER%は%CALLNAME:TARGET%にお弁当を作ってもらうようにお願いした……
+	PRINTFORM %CALLNAME:TARGET%は
+	IF ABL:料理技能 <= 2
+		PRINTFORM 自信無さげな表情で
+	ELSEIF ABL:料理技能 >= 3
+		PRINTFORM %CALLNAME:MASTER%の食べたいものをメモを取りつつ
+	ENDIF
+	PRINTFORML 頷くと、明日からさっそく作ってくると言った
+	IF TALENT:恋心 == 1
+		PRINTFORML どうやら好きな人にお弁当を作ってあげられるのが嬉しいのか、頬をほころばせている
+	ENDIF
+	PRINTFORMW 《%CALLNAME:TARGET%にお弁当を作ってもらうようにお願いしました》
+	FLAG:弁当 = 1
+	CFLAG:お弁当作成判定 = 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 4 && FLAG:弁当 == 1 && CFLAG:お弁当作成判定 == 1
+	PRINTFORMW 《%CALLNAME:TARGET%にお弁当を作るのをやめてもらうようにお願いしました》
+	FLAG:弁当 = 0
+	CFLAG:お弁当作成判定 = 0
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 5 && CFLAG:腋毛の有無 == 0 && JUEL:恭順 > 4999
+	PRINTFORMW %CALLNAME:MASTER%は%CALLNAME:TARGET%に腋毛の処理を止めるようにお願いした……
+	PRINTFORM そんな突拍子もないお願いをする%CALLNAME:MASTER%を、%CALLNAME:TARGET%はジト目で見つめてきたものの
+	PRINTFORML 信頼している%CALLNAME:MASTER%からのお願いを無碍にするわけにもいかないのか、しぶしぶながらも頷いた
+	PRINTFORMW 《%CALLNAME:TARGET%は腋毛の処理をやめました》
+	CFLAG:腋毛の有無 = 1
+	JUEL:恭順 -= 5000
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 5 && (CFLAG:腋毛の有無 == 1 || JUEL:恭順 < 5000)
+	PRINTFORMW  あなたのお願いは断られました……
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 6 && CFLAG:合コン参加判定 == 0 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+	PRINTFORMW 《%CALLNAME:TARGET%に合コンに参加してもらうようにお願いしました》
+	CFLAG:合コン参加判定 = 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 6 && CFLAG:合コン参加判定 == 1 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+	PRINTFORMW 《%CALLNAME:TARGET%に合コンの参加を取りやめてもらうようにお願いしました》
+	CFLAG:合コン参加判定 = 0
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 7 && CFLAG:新作アニメチェック判定 == 0
+	PRINTFORMW 《%CALLNAME:TARGET%に新作アニメやマンガをチェックしてもらうようにお願いしました》
+	CFLAG:新作アニメチェック判定 = 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 7 && CFLAG:新作アニメチェック判定 == 1
+	PRINTFORMW 《%CALLNAME:TARGET%に新作アニメやマンガをチェックするのをやめてもらうようにお願いしました》
+	CFLAG:新作アニメチェック判定 = 0
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 8 && CFLAG:朝フェラ係に任命 == 0 && FLAG:朝起こしてもらう == 0
+	PRINTFORMW 《%CALLNAME:TARGET%に毎朝起こしてもらうようにお願いしました》
+	CFLAG:朝フェラ係に任命 = 1
+	FLAG:朝起こしてもらう = 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 8 && CFLAG:朝フェラ係に任命 == 1 && FLAG:朝起こしてもらう == 1
+	PRINTFORMW 《%CALLNAME:TARGET%に毎朝起こすのをやめてもらうようにお願いしました》
+	CFLAG:朝フェラ係に任命 = 0
+	FLAG:朝起こしてもらう = 0
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 9 && TALENT:ＡＶ女優
+	PRINTFORML %CALLNAME:TARGET%の現在の芸名は%NICKNAME:TARGET%です
+	PRINTFORML 変更する芸名を入力してください
+	$INPUTLOOP_NICKNAME
+	INPUTS
+	IF RESULTS == ""
+		PRINTW 変更しないことにします
+		GOTO INPUT_LOOP_02
+	ENDIF
+	NICKNAME:TARGET = %RESULTS%
+	PRINTFORML %CALLNAME:TARGET%の新しい芸名は%RESULTS%でよろしいですか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUTLOOP_NAMEDECIDE
+	INPUT
+	IF RESULT == 0
+		PRINTFORMW 《%CALLNAME:TARGET%の芸名を%NICKNAME:TARGET%に変更しました》
+	ELSEIF RESULT == 1
+		PRINTFORML 再入力してください
+		GOTO INPUTLOOP_NICKNAME
+	ELSE
+		GOTO INPUTLOOP_NAMEDECIDE
+	ENDIF
+	GOTO INPUT_LOOP_02
+						;****痴漢誘惑追加ここから****
+ELSEIF RESULT == 10 && CFLAG:痴漢誘惑 == 0 && JUEL:欲情 >= 5000
+	PRINTFORMW 《%CALLNAME:TARGET%に痴漢を誘惑するようにお願いしました》
+	CFLAG:痴漢誘惑 = 1
+	JUEL:欲情 -= 5000
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 10 && CFLAG:痴漢誘惑 == 1
+	PRINTFORMW 《%CALLNAME:TARGET%に痴漢の誘惑を止めるようにお願いしました》
+	CFLAG:痴漢誘惑 = 0
+	GOTO INPUT_LOOP_02
+						;****痴漢誘惑追加ここまで****
+ELSEIF RESULT == 11 && TALENT:アイドル == 0 && TALENT:ファッションモデル == 0 && TALENT:キャバ嬢 == 0
+	CALL ARBEIT_MAIN
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 12 && CFLAG:セフレ容認 == 0 && ABL:欲望 >= 4 && TALENT:セフレあり == 0
+	PRINTFORM %CALLNAME:MASTER%は%CALLNAME:TARGET%
+	IF TALENT:恋心 == 0 && TALENT:淫乱 == 1
+		PRINTFORM にセフレを紹介してあげる
+	ELSEIF TALENT:恋心 == 01 && TALENT:淫乱 == 0
+		PRINTFORM を他の男に抱かせる
+	ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1
+		PRINTFORM の浮気ＳＥＸを容認してあげる
+	ELSE
+		PRINTFORM を他の男に抱かせる
+	ENDIF
+	PRINTFORMW ことにした……
+	PRINTFORM そんな突拍子もないお願いをする%CALLNAME:MASTER%を、%CALLNAME:TARGET%はジト目で見つめてきたものの
+	PRINTFORML 信頼している%CALLNAME:MASTER%からのお願いを無碍にするわけにもいかないのか、しぶしぶながらも頷いた
+	PRINTFORMW 《%CALLNAME:TARGET%は桐生組の運営する出会い系サイトに登録した》
+	CFLAG:セフレ容認 = 1
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 12 && TALENT:セフレあり == 1
+	PRINTFORMW 《%CALLNAME:TARGET%はセフレと縁を切った》
+	CFLAG:セフレ容認 = 0
+	TALENT:セフレあり = 0 
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 12 && CFLAG:セフレ容認 == 1
+	PRINTFORMW 《%CALLNAME:TARGET%は出会い系サイトを脱会した》
+	CFLAG:セフレ容認 = 0
+	TALENT:セフレあり = 0 
+	GOTO INPUT_LOOP_02
+ELSEIF RESULT == 13
+	PRINTFORML %CALLNAME:TARGET%の現在の一人称は%CSTR:一人称%です
+	PRINTFORML 変更する一人称を入力してください
+	$INPUTLOOP_CALLME
+	INPUTS
+	IF RESULTS == ""
+		PRINTW 変更しないことにします
+		GOTO INPUT_LOOP_02
+	ENDIF
+	PRINTFORML %CALLNAME:TARGET%の一人称は%RESULTS%でよろしいですか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	$INPUTLOOP_CALLMENAMEDECIDE
+	INPUT
+	IF RESULT == 0
+		CSTR:一人称 = %RESULTS%
+		PRINTFORMW 《%CALLNAME:TARGET%の一人称を%CSTR:一人称%に変更しました》
+	ELSEIF RESULT == 1
+		PRINTFORML 再入力してください
+		GOTO INPUTLOOP_CALLME
+	ELSE
+		GOTO INPUTLOOP_CALLMENAMEDECIDE
+	ENDIF
+ELSEIF RESULT == 999
+	GOTO INPUT_LOOP_01
+;/////2012/09/23改造部分ここから/////
+ELSEIF RESULT == 1000
+	RETURN 0
+
+ELSEIF RESULT == 1001 && T > 1
+	LOCAL = T-1
+	WHILE LOCAL > 0 && ABL:LOCAL:信頼 < 3
+		LOCAL = LOCAL-1
+	WEND
+	IF LOCAL <= 0 || ABL:LOCAL:信頼 < 3
+		PRINTFORMW 《もう少し仲良くなってからにしましょう》
+		GOTO INPUT_LOOP_02
+	ENDIF
+	PRINTFORM %CALLNAME:TARGET%ではなく、
+	TARGET = LOCAL
+	PRINTFORMW %NAME:TARGET%にお願いすることにしました
+	GOTO INPUT_LOOP_02
+
+ELSEIF RESULT == 1003 && T < CHARANUM - 1
+	LOCAL = T+1
+	WHILE LOCAL < CHARANUM && ABL:LOCAL:信頼 < 3
+		LOCAL = LOCAL+1
+	WEND
+	IF LOCAL >= CHARANUM || ABL:LOCAL:信頼 < 3
+		PRINTFORMW 《もう少し仲良くなってからにしましょう》
+		GOTO INPUT_LOOP_02
+	ENDIF
+	PRINTFORM %CALLNAME:TARGET%ではなく、
+	TARGET = LOCAL
+	PRINTFORMW %NAME:TARGET%にお願いすることにしました
+	GOTO INPUT_LOOP_02
+ELSE
+	GOTO INPUT_LOOP_02
+ENDIF
+;/////2012/09/23改造部分ここまで/////
+

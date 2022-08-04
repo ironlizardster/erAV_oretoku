@@ -1,0 +1,937 @@
+﻿;=========================================================
+;コンフィグ設定
+;=========================================================
+@SYSTEM_CONFIGURATION
+DRAWLINE
+PRINTL どの設定を変更しますか？
+DRAWLINE
+PRINT  [0] - 口上の表示頻度　　　　　　　　　　　　　　　　　　　　
+IF FLAG:口上使用 == 2
+	PRINTL 　　常に表示
+ELSEIF FLAG:口上使用 == 1
+	PRINTL 最初のみ表示
+ELSEIF FLAG:口上使用 == 0 - 2 || FLAG:口上使用 == 0
+	PRINTL 　　　非表示
+ENDIF
+PRINT  [1] - 調教時テキストの省略　　　　　　　　　　　　　　　　　
+IF (FLAG:指導テキスト設定 & 1)
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [2] - 営業結果の簡略化　　　　　　　　　　　　　　　　　　　
+IF (FLAG:指導テキスト設定 & 2)
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [3] - 消耗アイテムの自動購入　　　　　　　　　　　　　　　　
+IF FLAG:アイテム自動購入
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [4] - 瀕死時に調教を自動終了　　　　　　　　　　　　　　　　
+IF FLAG:瀕死時自動終了
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [5] - キャラに陰毛を生やす　　　　　　　　　　　　　　　　　
+IF FLAG:陰毛を生やす
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [6] - 着衣システムの使用　　　　　　　　　　　　　　　　　　
+IF FLAG:着衣使用
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [7] - 妊娠システムの使用　　　　　　　　　　　　　　　　　　
+IF FLAG:妊娠なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [8] - ＩＷＳ（このアイドルはわしが育てた）システムの使用　　
+IF FLAG:ＩＷＳなし > 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [9] - 失神システムの使用　　　　　　　　　　　　　　　　　　
+IF FLAG:失神なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [10] - 追加コマンドの使用　　　　　　　　　　　　　　　　　 
+IF FLAG:追加コマンドなし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [11] - 精飲絶頂システムの使用　　　　　　　　　　　　　　　 
+IF FLAG:精飲絶頂なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [12] - 素質強化　　　　　　　　　　　　　　　　　　　　　　 
+IF FLAG:強化素質なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [13] - 加齢システムの使用・誕生日などの読み込み　　　　　　 
+IF FLAG:加齢なしフラグ == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [14] - ロリコンシステムの使用　　　　　　　　　　　　　　　 
+IF FLAG:ロリコンなし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [15] - 常時発情システムの使用　　　　　　　　　　　　　　　 
+IF FLAG:常時発情なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+
+PRINT  [16] - 寝取られシステムの使用　　　　　　　　　　　　　　　 
+IF FLAG:寝取られなし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+
+PRINT  [17] - 貞操帯の自動着脱システムの使用　　　　　　　　　　　 
+IF FLAG:貞操帯自動着脱 == 1
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+
+PRINT  [18] - 薬品系アイテムの自動投与 　　　　　　　　　　　　　　
+IF FLAG:薬品自動投与
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+
+PRINT  [19] - 性器形状変化システムの使用　　 　　　　　　　　　　　
+IF FLAG:性器形状変化なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+
+PRINT  [20] - 淫語システムの使用　　　　　　 　　　　　　　　　　　
+IF FLAG:淫語なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+
+PRINTL  [21] - 初体験フィルタ
+PRINT  [22] - ギャル化イベントの使用　　　　　　　　　　　　　　　 
+IF FLAG:85 == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	CALL CONFIG_KOJO
+ELSEIF RESULT == 1
+	CALL CONFIG_TRAINTEXT
+ELSEIF RESULT == 2
+	CALL CONFIG_WORKING
+ELSEIF RESULT == 3
+	CALL CONFIG_AUTOBUYING
+ELSEIF RESULT == 4
+	FLAG:瀕死時自動終了 = 1 - FLAG:瀕死時自動終了
+ELSEIF RESULT == 5
+	CALL CONFIG_PUBLICHAIR
+ELSEIF RESULT == 6
+	CALL CONFIG_CLOTHING
+ELSEIF RESULT == 7
+	CALL CONFIG_V_F
+ELSEIF RESULT == 8
+	CALL CONFIG_IWS
+ELSEIF RESULT == 9
+	CALL CONFIG_PASSOUT
+ELSEIF RESULT == 10
+	CALL CONFIG_EX_COM
+ELSEIF RESULT == 11
+	CALL CONFIG_SEIIN
+ELSEIF RESULT == 12
+	CALL CONFIG_TALENT_EX	
+ELSEIF RESULT == 13
+	CALL CONFIG_BIRTHDAY	
+ELSEIF RESULT == 14
+	CALL CONFIG_LOLI
+ELSEIF RESULT == 15
+	CALL CONFIG_HATSUJO
+ELSEIF RESULT == 16
+	CALL CONFIG_NTR
+ELSEIF RESULT == 17
+	CALL CONFIG_AUTOEQUIP
+ELSEIF RESULT == 18
+	CALL CONFIG_ITEMUSE
+ELSEIF RESULT == 19
+	CALL CONFIG_GENITALFORM
+ELSEIF RESULT == 20
+	CALL CONFIG_SLUNG
+ELSEIF RESULT == 21
+	CALL CONFIG_FIRSTPLAY
+ELSEIF RESULT == 22
+	CALL CONFIG_INFECTION
+ELSEIF RESULT == 999
+	;決定後の消耗アイテム自動購入はここで行う
+	CALL AUTO_BUYING
+	RETURN 0
+ENDIF
+
+RESTART
+
+;---------------------------------------------------------
+;口上の表示頻度 FLAG:7使用
+;---------------------------------------------------------
+@CONFIG_KOJO
+DRAWLINE
+IF FLAG:口上使用 == 0
+	PRINTL ※口上イベント管理ファイルが見つかりません
+	WAIT
+	RETURN 0
+ENDIF
+
+
+PRINTL 口上の表示頻度を設定します
+IF FLAG:口上使用 == 2
+	PRINTL 現在の設定は《常に表示》です
+ELSEIF FLAG:口上使用 == 1
+	PRINTL 現在の設定は《最初のみ表示》です
+ELSEIF FLAG:口上使用 == -2
+	PRINTL 現在の設定は《非表示》です
+ENDIF
+
+PRINTL  [0] - 常に表示
+PRINTL  [1] - 非表示
+PRINTL  [2] - 最初のみ表示
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	FLAG:口上使用 = 2
+ELSEIF RESULT == 1
+	FLAG:口上使用 = -2
+ELSEIF RESULT == 2
+	FLAG:口上使用 = 1
+ELSEIF RESULT != 999
+	RESTART
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;調教時テキストの表示 FLAG:6使用
+;---------------------------------------------------------
+@CONFIG_TRAINTEXT
+IF (FLAG:指導テキスト設定 & 1)
+	FLAG:指導テキスト設定 -= 1
+ELSE
+	FLAG:指導テキスト設定 |= 1
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;営業結果の簡略化 FLAG:6使用
+;---------------------------------------------------------
+@CONFIG_WORKING
+IF (FLAG:指導テキスト設定 & 2)
+	FLAG:指導テキスト設定 -= 2
+ELSE
+	FLAG:指導テキスト設定 |= 2
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;消耗アイテムの自動購入 FLAG:34使用
+;---------------------------------------------------------
+@CONFIG_AUTOBUYING
+DRAWLINE
+PRINTL 消費アイテムの自動購入を設定します
+DRAWLINE
+PRINT  [0] - ローション　　　　　　　　　　　　　　　　　　　　　　
+IF (FLAG:アイテム自動購入 & 1)
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [1] - サインペン　　　　　　　　　　　　　　　　　　　　　
+IF (FLAG:アイテム自動購入 & 2)
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+PRINT  [2] - コンドーム　　　　　　　　　　　　　　　　　　　　　　
+IF (FLAG:アイテム自動購入 & 8)
+	PRINTL 10個ずつ購入
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	IF (FLAG:アイテム自動購入 & 1)
+		FLAG:アイテム自動購入 -= 1
+	ELSE
+		FLAG:アイテム自動購入 |= 1
+	ENDIF
+	RESTART
+ELSEIF RESULT == 1
+	IF (FLAG:アイテム自動購入 & 2)
+		FLAG:アイテム自動購入 -= 2
+	ELSE
+		FLAG:アイテム自動購入 |= 2
+	ENDIF
+	RESTART
+ELSEIF RESULT == 2
+	IF (FLAG:アイテム自動購入 & 8)
+		FLAG:アイテム自動購入 -= 8
+	ELSE
+		FLAG:アイテム自動購入 |= 8
+	ENDIF
+	RESTART
+ELSEIF RESULT != 999
+	RESTART
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;キャラに陰毛を生やす FLAG:36使用
+;---------------------------------------------------------
+@CONFIG_PUBLICHAIR
+IF FLAG:陰毛を生やす
+	FLAG:陰毛を生やす = 0
+ELSE
+	FLAG:陰毛を生やす = 1
+
+	;初期状態のキャラがいたら陰毛を設定する
+	REPEAT CHARANUM
+		;既に生えてるならそのまま
+		SIF CFLAG:COUNT:陰毛の状態 != 0
+			CONTINUE
+		
+
+		;パイパンなら-1に設定
+		IF TALENT:COUNT:パイパン
+			CFLAG:COUNT:陰毛の状態 = -1
+		;幼稚・未熟なら7に設定
+		ELSEIF TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+			CFLAG:COUNT:陰毛の状態 = 7
+		;中学生なら7に設定
+		ELSEIF TALENT:COUNT:中学生
+			CFLAG:COUNT:陰毛の状態 = 7
+		;高校生なら9に設定
+		ELSEIF TALENT:COUNT:高校生
+			CFLAG:COUNT:陰毛の状態 = 9
+		;それ以外なら12に設定
+		ELSE
+			CFLAG:COUNT:陰毛の状態 = 12
+		ENDIF
+	REND
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;着衣システムの使用 FLAG:37使用
+;---------------------------------------------------------
+@CONFIG_CLOTHING
+IF FLAG:着衣使用 == 0
+	FLAG:着衣使用 = 1
+ELSE
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTFORML 着衣システムをオフにすると、全キャラの着衣フラグが消去されます
+	PRINTFORML 消去された着衣フラグは、着衣システムをオンにしても復活しません
+	PRINTL 
+	PRINTFORML 着衣システムをオフにしますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 1
+		RETURN 0
+	ELSEIF RESULT != 0
+		GOTO INPUT_LOOP
+	ENDIF
+
+	;着衣フラグ初期化
+	REPEAT CHARANUM
+		CFLAG:COUNT:着衣状態 = 0
+		CFLAG:COUNT:上着のタイプ = 0
+		CFLAG:COUNT:特別コスチュームのタイプ = 0
+		CFLAG:COUNT:パンツの状態 = 0
+		CFLAG:COUNT:ブラジャーの状態 = 0
+		CFLAG:COUNT:上着上の状態 = 0
+		CFLAG:COUNT:上着下の状態 = 0
+		CFLAG:COUNT:特別コスチュームの状態 = 0
+	REND
+	
+	FLAG:着衣使用 = 0
+
+	DRAWLINE
+	PRINTL 全キャラの着衣フラグを消去しました
+	DRAWLINE
+
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;妊娠設定の使用 FLAG:60使用
+;---------------------------------------------------------
+@CONFIG_V_F
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTFORML 妊娠設定がオンの状態だと、女優（候補）が妊娠する可能性があります
+	PRINTL 
+	PRINTFORML 妊娠設定を使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 1
+		FLAG:妊娠なし = 1
+		RETURN 0
+	ELSEIF RESULT != 0
+		GOTO INPUT_LOOP
+	ELSE
+		FLAG:妊娠なし = 0
+		RETURN 0
+	ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;IWSシステムの使用 FLAG:38及びFLAG:58使用
+;---------------------------------------------------------
+@CONFIG_IWS
+
+$INPUT_LOOP
+DRAWLINE
+PRINT 実行レベルを選択して下さい（現在Lv
+PRINTV FLAG:ＩＷＳなし
+PRINTL で実行中）
+PRINTL [1] - Lv1＊ふつう　　　　　　　　　＝普通に成長します
+PRINTL [2] - Lv2＊すばやく　　　　　　　　＝素早く成長します
+PRINTL [3] - Lv3＊いじょうに　　　　　　　＝異常に成長します
+PRINTL [4] - Lv4＊やばいくらい　　　　　　＝やばいほど成長します
+PRINTL [5] - Lv5＊とんでもねーぞ　　　　　＝もう人間じゃなくなります
+PRINTL [99] - IWSを使用しない
+PRINTL [200] - スリーサイズの手動設定
+PRINTL [300] - CSVファイルの読み込み
+DRAWLINE
+PRINTL [999] - 戻る
+
+INPUT
+
+IF RESULT > 0 && RESULT < 99
+	FLAG:ＩＷＳなし = RESULT
+	PRINTFORMW IWSシステムをONにしました（Lv{FLAG:ＩＷＳなし})
+	PRINTW 絶頂の際に、調教対象の体型が変化します
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 99
+	FLAG:ＩＷＳなし = 0
+	PRINTW IWSシステムをOFFにしました
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 200
+	CALL MANUAL_SET_3SIZE
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 300
+	CALL READ_CSV_IWS
+	GOTO INPUT_LOOP
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;失神パッチの適応 FLAG:70使用
+;---------------------------------------------------------
+@CONFIG_PASSOUT
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTFORML 失神システムをオンにすると、対象が一定以上の快楽、恐怖、苦痛で失神するようになります
+	PRINTL 
+	PRINTFORML 失神システムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:失神なし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:失神なし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+;---------------------------------------------------------
+;追加コマンドの使用 FLAG:71使用
+;---------------------------------------------------------
+@CONFIG_EX_COM
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTFORML 追加コマンドをオンにすると調教時のコマンドが増えます
+	PRINTL 
+	PRINTFORML 追加コマンドを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:追加コマンドなし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:追加コマンドなし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+;---------------------------------------------------------
+;精飲絶頂パッチの適応 FLAG:72使用
+;---------------------------------------------------------
+@CONFIG_SEIIN
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTFORML 精飲絶頂システムをオンにすると、対象が精液を飲んだ時に絶頂するようになります
+	PRINTL 
+	PRINTFORML 精飲絶頂システムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:精飲絶頂なし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:精飲絶頂なし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+;---------------------------------------------------------
+;素質強化の適応 FLAG:73使用
+;---------------------------------------------------------
+@CONFIG_TALENT_EX
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTFORML 素質強化をオンにすると、各感度が大幅に上昇する素質を習得できるようになります
+	PRINTL 
+	PRINTFORML 素質強化を使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:強化素質なし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:強化素質なし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+;---------------------------------------------------------
+;加齢システムの使用 FLAG:74使用
+;---------------------------------------------------------
+@CONFIG_BIRTHDAY
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL 加齢システムをオンにすると、誕生日ごとに年齢が増えます(一部のキャラを除く)
+	PRINTL ※誕生日告知のメッセージ自体は、オフのままでも表示されます。
+	PRINTL
+	PRINTL 加齢システムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	PRINTL  [200] - 年齢・誕生日・血液型の手動設定
+	PRINTL  [300] - CSVファイルの読み込み（年齢・誕生日・血液型を読み込みます)
+	PRINTL  [400] - 精神と時の部屋に行く （今日の日付を手動で設定します)
+	DRAWLINE
+	PRINTL  [999] - 戻る
+	INPUT
+	IF RESULT == 0
+		FLAG:加齢なしフラグ = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:加齢なしフラグ = 1
+		RETURN 0
+	ELSEIF RESULT == 200
+		CALL MANUAL_SET_BIRTHDAY
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 300
+		CALL READ_CSV_BIRTHDAY
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 400
+		CALL MANUAL_SET_DATE
+		GOTO INPUT_LOOP
+	ELSEIF RESULT == 999
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+;---------------------------------------------------------
+;ロリコンシステム FLAG:39使用
+;---------------------------------------------------------
+@CONFIG_LOLI
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL ロリコンシステムを使用すると、中学生以下に対する調教効果が上がります。
+	PRINTL ただし、中学生でも高校生でもない場合、調教効果は下がります。
+	PRINTL 
+	PRINTL ロリコンシステムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:ロリコンなし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:ロリコンなし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;常時発情システム FLAG:75使用
+;---------------------------------------------------------
+@CONFIG_HATSUJO
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL 常時発情システムを使用すると、調教が進むとエロくなります。
+	PRINTL 
+	PRINTL 常時発情システムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:常時発情なし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:常時発情なし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;寝取られシステム FLAG:540使用
+;---------------------------------------------------------
+@CONFIG_NTR
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL 寝取られシステムを使用すると女の子たちが寝取られるようになります
+	PRINTL 
+	PRINTL 寝取られシステムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:寝取られなし = 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:寝取られなし = 1
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;貞操帯の自動着脱システム FLAG:549使用
+;---------------------------------------------------------
+@CONFIG_AUTOEQUIP
+	$INPUT_LOOP
+	DRAWLINE
+	PRINTL 貞操帯の自動着脱をＯＮにすると指導開始時に貞操帯を外し、終了時に装備するようになります
+	PRINTL 
+	PRINTL 貞操帯の自動着脱システムを使用しますか？
+	PRINTL  [0] - はい
+	PRINTL  [1] - いいえ
+	INPUT
+	IF RESULT == 0
+		FLAG:貞操帯自動着脱 = 1
+		RETURN 0
+	ELSEIF RESULT == 1
+		FLAG:貞操帯自動着脱 = 0
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+RETURN 0
+
+
+;---------------------------------------------------------
+;消耗アイテムの自動購入 FLAG:76使用
+;---------------------------------------------------------
+@CONFIG_ITEMUSE
+DRAWLINE
+PRINTL ターン末に薬品系アイテムを自動で投与できます
+PRINTL （所持数は減少せず、ポイントから引き落とされます）
+PRINTL ただし、MASTERが【調合知識】を持つ必要があります
+DRAWLINE
+IF TALENT:MASTER:調合知識
+	PRINT  [0] - 栄養剤　　　　　　　　　　　　　　　　　　　　　　　　
+	IF (FLAG:薬品自動投与 & 1)
+		PRINTL 　　　　　ON
+	ELSE
+		PRINTL 　　　　 OFF
+	ENDIF
+	PRINT  [1] - 排卵誘発剤　　　　　　　　　　　　　　　　　　　　　　
+	IF (FLAG:薬品自動投与 & 2)
+		PRINTL 　　　　　ON
+	ELSE
+		PRINTL 　　　　 OFF
+	ENDIF
+	PRINT  [2] - 排卵抑制剤　　　　　　　　　　　　　　　　　　　　　　
+	IF (FLAG:薬品自動投与 & 4)
+		PRINTL 　　　　　ON
+	ELSE
+		PRINTL 　　　　 OFF
+	ENDIF
+	PRINT  [3] - お香　　　　　　　　　　　　　　　　　　　　　　　　　
+	IF (FLAG:薬品自動投与 & 8)
+		PRINTL 　　　　　ON
+	ELSE
+		PRINTL 　　　　 OFF
+	ENDIF
+ENDIF
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	IF (FLAG:薬品自動投与 & 1)
+		FLAG:薬品自動投与 -= 1
+	ELSE
+		FLAG:薬品自動投与 |= 1
+	ENDIF
+	RESTART
+ELSEIF RESULT == 1 && ITEM:ビデオカメラ
+	IF (FLAG:薬品自動投与 & 2)
+		FLAG:薬品自動投与 -= 2
+	ELSE
+		FLAG:薬品自動投与 |= 2
+	ENDIF
+	RESTART
+ELSEIF RESULT == 2
+	IF (FLAG:薬品自動投与 & 4)
+		FLAG:薬品自動投与 -= 4
+	ELSE
+		FLAG:薬品自動投与 |= 4
+	ENDIF
+	RESTART
+ELSEIF RESULT == 3
+	IF (FLAG:薬品自動投与 & 8)
+		FLAG:薬品自動投与 -= 8
+	ELSE
+		FLAG:薬品自動投与 |= 8
+	ENDIF
+	RESTART
+ELSEIF RESULT != 999
+	RESTART
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;淫語生成システム FLAG:160使用
+;でも実際にFLAG:160で見てるのって仕込むかどうかで。
+;---------------------------------------------------------
+@CONFIG_SLUNG
+DRAWLINE
+PRINTL 淫語生成システムの使用を設定します
+PRINT [0] - 淫語生成システムの使用
+IF FLAG:淫語なし == 0
+	PRINTL 　　　　　ON
+ELSE
+	PRINTL 　　　　 OFF
+ENDIF	
+PRINTL [1] - 淫語の一括設定
+PRINTL [2] - 淫語設定の初期化
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0 && FLAG:淫語なし == 0
+	FLAG:淫語なし = 1
+ELSEIF RESULT == 0 && FLAG:淫語なし == 1
+	FLAG:淫語なし = 0
+ELSEIF RESULT == 1
+	PRINTL 《男性器の呼称を決定してください》
+	$INPUT_LOOP_00
+	INPUTS
+	IF RESULTS == ""
+		GOTO INPUT_LOOP_00
+	ELSE
+		CSTR:MASTER:男性器呼び方 = %RESULTS%
+	ENDIF
+	PRINTL 《女性器の呼称を決定してください》
+	$INPUT_LOOP_01
+	INPUTS
+	IF RESULTS == ""
+		GOTO INPUT_LOOP_01
+	ELSE
+		CSTR:MASTER:女性器呼び方 = %RESULTS%
+	ENDIF
+	PRINTL 《肛門の呼称を決定してください》
+	$INPUT_LOOP_02
+	INPUTS
+	IF RESULTS == ""
+		GOTO INPUT_LOOP_02
+	ELSE
+		CSTR:MASTER:肛門呼び方 = %RESULTS%
+	ENDIF
+	PRINTFORMW 《男性器を%CSTR:MASTER:男性器呼び方%、女性器を%CSTR:MASTER:女性器呼び方%、肛門を%CSTR:MASTER:肛門呼び方%と呼ばせるように設定しました》
+	REPEAT CHARANUM
+		IF NO:COUNT == [[キャラ:あなた]]
+			CONTINUE
+		ELSE
+			CSTR:COUNT:男性器呼び方 = %CSTR:MASTER:男性器呼び方%
+			CSTR:COUNT:女性器呼び方 = %CSTR:MASTER:女性器呼び方%
+			CSTR:COUNT:肛門呼び方 = %CSTR:MASTER:肛門呼び方%
+		ENDIF
+	REND
+ELSEIF RESULT == 2
+	PRINTFORML 各キャラクターに現在設定中の淫語を初期化します
+	PRINTFORML ※ただし現在の素質に影響されます
+	PRINTFORML よろしいですか？
+	PRINTL [0] - はい
+	PRINTL [1] - いいえ
+	INPUT
+	$INPUTLOOP
+	IF RESULT == 0
+		PRINTFORMW 《淫語設定を初期化しました》
+		REPEAT CHARANUM
+			IF NO:COUNT == [[キャラ:あなた]]
+				CONTINUE
+			ELSE
+				TARGET = COUNT
+				CALL DEFOLT_GENITALCALL
+			ENDIF
+		REND
+	ELSEIF RESULT == 1
+		PRINTFORMW 《淫語設定を初期化しました》
+		CALL CONFIG_SLUNG
+	ELSE
+		GOTO INPUTLOOP
+	ENDIF
+ELSEIF RESULT == 3
+	REPEAT CHARANUM
+		IF NO:COUNT == [[キャラ:あなた]]
+			CONTINUE
+		ELSE
+			CSTR:COUNT:男性器呼び方 = チンポ
+			CSTR:COUNT:女性器呼び方 = 濡れ濡れ淫乱マンコ
+			CSTR:COUNT:肛門呼び方 = ケツ穴
+		ENDIF
+	REND
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;---------------------------------------------------------
+;形状変化 FLAG:140使用
+;---------------------------------------------------------
+@CONFIG_GENITALFORM
+IF FLAG:性器形状変化なし == 0
+	FLAG:性器形状変化なし = 1
+ELSE
+	FLAG:性器形状変化なし = 0
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;初体験フィルタ系 FLAG:80-82 設定なしなら全フィルタonからにする
+;---------------------------------------------------------
+@CONFIG_FIRSTPLAY
+DRAWLINE
+PRINTL 初体験が記録されるコマンドの実行前に確認を挟むかどうかを設定します
+PRINT  [0] 処女フィルタ
+IF !FLAG:80
+	PRINTL - ON
+ELSE
+	PRINTL - OFF
+ENDIF
+PRINT  [1] Ａ処女フィルタ
+IF !FLAG:81
+	PRINTL - ON
+ELSE
+	PRINTL - OFF
+ENDIF
+PRINT  [2] ファーストキスフィルタ
+IF !FLAG:82
+	PRINTL - ON
+ELSE
+	PRINTL - OFF
+ENDIF
+PRINTL [999] 戻る
+INPUT
+IF RESULT == 0
+	FLAG:80 = ~FLAG:80
+	RESTART
+ELSEIF RESULT == 1
+	FLAG:81 = ~FLAG:81
+	RESTART
+ELSEIF RESULT == 2
+	FLAG:82 = ~FLAG:82
+	RESTART
+ELSEIF RESULT != 999
+	RESTART
+ENDIF
+
+RETURN 0
+
+;---------------------------------------------------------
+;ギャル化阻止 FLAG:85で。最初はオフから
+;---------------------------------------------------------
+@CONFIG_INFECTION
+FLAG:85 = ~FLAG:85
+RETURN 0

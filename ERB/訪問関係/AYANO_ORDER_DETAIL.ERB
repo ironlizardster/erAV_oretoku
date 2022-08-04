@@ -1,0 +1,118 @@
+﻿;-------------------------------------------------
+;治安強化
+;-------------------------------------------------
+@SECURITY_UP
+C = 10000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORMW 《綾乃に裏から圧力をかけさせ、巡回の強化をするようにお願いしました》
+FLAG:治安悪化 = -10
+;ここで立てないと立てる機会がなさそう
+FLAG:治安巡回 = 1
+
+SIF FLAG:治安悪化 <= 0
+	FLAG:治安悪化 = 0
+
+IF FLAG:治安悪化 <= 24
+	FLAG:治安悪化レベル = 0
+ELSEIF FLAG:治安悪化 <= 49
+	FLAG:治安悪化レベル = 1
+ELSEIF FLAG:治安悪化 <= 75
+	FLAG:治安悪化レベル = 2
+ELSE
+	FLAG:治安悪化レベル = 3
+ENDIF
+
+MONEY -= C
+WAIT
+
+RETURN 1
+;-------------------------------------------------
+;治安弱化
+;-------------------------------------------------
+@SECURITY_DOWN
+C = 10000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+$INPUT_LOOP
+
+PRINTFORMW 《綾乃に裏から圧力をかけさせ、巡回をあまりしないようにお願いしました》
+;治安マイナスが仕込まれていないがまあいいか
+FLAG:治安巡回 = 0
+MONEY -= C
+WAIT
+
+RETURN 1
+;-------------------------------------------------
+;ＥＸキャラ：加瀬芙美香
+;-------------------------------------------------
+@ADD_FUMIKA
+
+C = 100000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+PRINTFORML 「では、こちらを御覧くださいませ」
+PRINTFORML 知吉邸の応接間にて、綾乃はメイドに一枚の紙を持ってこさせた
+PRINTFORML それは写真と簡単なプロフィールが添えられた、履歴書のようなものだった
+PRINTFORML 「彼女はわたくしに仕えるメイドなのですが、以前貴方がいい女優候補はいないかと
+PRINTFORML 仰られていたのを思い出しまして……
+PRINTFORML わたくしが選んだメイドですから資質については保証いたしますわ。
+PRINTFORML ――さすがにタダでお譲りするというわけにはまいりませんが……」
+PRINTFORML 確かに写真を見るかぎりではかなりの逸材で、言い値に見合った価値はあるだろう
+PRINTFORML 興味を持った%CALLNAME:MASTER%はプロフィールを熟読することにした……
+PRINTW
+DRAWLINE
+PRINTFORML 【加瀬芙美香】（かせ・ふみか）
+PRINTFORML 知吉家に仕えるメイド
+PRINTFORML 知吉家の使用人のほとんどは様々な分野のエキスパートで、そんな中で特に取り柄の
+PRINTFORML ない自身の存在を疑問に思っている
+PRINTFORML 彼女は実は綾乃が性的なイタズラをするためだけに採用した言わば性奴隷候補である
+PRINTFORML 無論彼女はそんなこととは露知らず、仕事で失敗をしては落ち込む毎日を送っている
+PRINTFORML あなた（＝監督）の実力を認めた綾乃は彼女をあなたに託すつもりになったようだ
+PRINTFORML 弱気な性格ではあるが、恋愛に関しては保守的で身持ちは固いようだ
+PRINTFORML 年齢：19歳　難易度：Ｄ　成長度：Ｂ　貢献度：Ｂ　売却値：Ｂ
+DRAWLINE
+PRINTW 
+
+$INPUT_LOOP_FUMIKA
+PRINTFORML 「いかがいたしましょう？　10万ポイントでこの娘を……名残惜しいですが、あなたにお預けしますが？」
+PRINTL [0] - 身請けする
+PRINTL [1] - やっぱりやめる
+INPUT
+
+;なぜか教会勢雇用判定を見ていた
+IF RESULT == 0
+	PRINTFORML 綾乃が手を鳴らすと、慌てた様子で芙美香が応接間に入ってきた
+	PRINTFORM 綾乃から%CALLNAME:MASTER%を紹介された芙美香は、
+	PRINTFORML 綾乃の突然の言葉に泣きそうな顔をしながら目を丸くしている……
+	PRINTW
+	PRINTFORM 綾乃がひと通り、これから%CALLNAME:MASTER%に奉公することと、そこでしてもらうことを説明すると、芙美香は
+	PRINTFORML 涙に震える手で契約書にサインをした……
+	PRINTFORMW
+	PRINTFORML 《加瀬芙美香が女優候補になりました》
+	PRINTFORMW
+		CALL キャラ追加([[キャラ:加瀬芙美香]])
+		FLAG:加瀬芙美香雇用 = 1
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_FUMIKA
+ENDIF
+
+MONEY -= C
+
+RETURN 0

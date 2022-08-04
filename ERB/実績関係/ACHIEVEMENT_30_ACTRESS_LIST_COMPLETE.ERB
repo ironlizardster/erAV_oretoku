@@ -1,0 +1,43 @@
+﻿;===========================================================
+;実績・ACTRESS LIST COMPLETED!!
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_30
+RESULTS = ACTRESS LIST COMPLETED!!
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_30
+; 条件を満たす人数の計算
+VARSET LOCAL, 0
+FOR LOCAL, 0, CURRENT_MAX_CHARA_ID
+	;CSVが存在しない場合ははじく
+	SIF !EXISTCSV(LOCAL, 0)
+		CONTINUE
+	SIF LOCAL == MASTER
+		CONTINUE
+	;条件満たした番号をリストに登録
+	LOCAL:1++
+	SIF GLOBAL:(200 + LOCAL)
+		LOCAL:2++
+NEXT
+
+
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:30 == 0 && DIFFICULTY_CHECK() && LOCAL:2 == LOCAL:1
+	GLOBAL:30 = 1
+	SAVEGLOBAL
+ENDIF
+
+RETURN GLOBAL:30
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_30
+; 解説文
+PRINTFORML 幾度にも渡ってこの世界を繰り返し、ついには全ての女優候補と知り合うことができました
+PRINTFORML 中には知り合うことすら稀な者もいましたが、そんな困難すらあなたは乗り越えました
+PRINTFORM 世界を繰り返していくうちに、なぜかまだ知り合ったことのない者のプロフィールすら記載されている
+PRINTFORML 奇妙な『女優名鑑』
+PRINTFORML これがあれば女優候補たちの指導もラクになるかもしれません
+PRINTW
+PRINTFORMW 《実績解除のボーナスとして実績『偉大なる処女厨』の使用制限が解除されます》

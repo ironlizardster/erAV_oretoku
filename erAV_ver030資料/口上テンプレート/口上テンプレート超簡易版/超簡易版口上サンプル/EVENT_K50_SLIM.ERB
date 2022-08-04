@@ -1,0 +1,912 @@
+﻿;-------------------------------------------------
+;星影ヒヨリ口上
+;作成者：pawapokya-
+;内容：
+;やや鬱系かも。まだ作りかけ。
+;元ネタはジェイムズ・ティプトリー・ジュニアの小説。
+;パクリじゃないんだ！　オマージュだよ！　こう言っときゃ大丈夫だからな。
+;ビデオ撮影中の自慰とかバイブコマンドの口上を充実させるのが当面の目標
+;だって、ヒヨリンはビデオクイーンだから……
+;
+;ファイル内のテキストの著作権は一切主張しません。
+;再配布、編集、流用はご自由にどうぞ。
+;というか、加筆や流用してくれたら泣いて喜びます。
+;-------------------------------------------------
+
+;==================================================
+;EVENTTRAIN関係（50をキャラ番号に置換）
+;調教開始時のセリフ CFLAG 201～210を使用
+;==================================================
+@EVENTTRAIN
+SIF FLAG:口上使用 <= 0
+	RETURN 0
+SIF NO:TARGET != 50
+	RETURN 0
+
+;-------------------------------------------------
+;初調教時 CFLAG:201
+;-------------------------------------------------
+IF CFLAG:201 == 0
+	DRAWLINE
+	PRINTFORML 「……ややややめなさい、それ以上ヘンなことをしたら、
+	PRINTFORML 　ヒヨリンコズミックインパクトで、あなたの体は粉々だよぉ！」
+	PRINTFORMW 　
+	PRINTFORML 服を剥ぎ取られながら、必死にそう叫び続けていたヒヨリは、
+	PRINTFORML ついに頭にくっ付けたボンボン以外は丸裸にされてしまうと、
+	PRINTFORML 手で体を覆い隠して、悲しげに天を仰いだ。
+	PRINTFORMW 　
+	PRINTFORML 「……ああ、いかにもギャスビゴー星人らしい卑劣なやり口！
+	PRINTFORML 　ヒヨリが人間には手を出せないのを知っていて、
+	PRINTFORMW 　心の弱い人間の肉体に乗り移って、悪事を働いているなんて！
+	PRINTFORML 　あなたは自分で気付いていないようだけど、
+	PRINTFORML 　ヒヨリにはちゃぁんとわかっています。
+	PRINTFORMW 　あなたも、ギャスビゴー星人に脳汚染された者の一人なの！
+	PRINTFORML 　もちろん、ヒヨリン星人のミラクルパワーを使えば
+	PRINTFORML 　こんな惑星なんてわたし一人でイチコロだけど、
+	PRINTFORML 　銀河ミラクルパトロールの一員として、
+	PRINTFORML 　ヒヨリは決して一般人に手は出せません」
+	PRINTFORMW 　
+	PRINTFORML ほっとくといつまでも喋り続けてそうだったので、
+	PRINTFORML 早々と調教に入ることにした。
+	PRINTFORMW 　
+	CFLAG:201 = 1
+	RETURN 1
+
+;-------------------------------------------------
+;屈服刻印（各Lv一回のみ） CFLAG:201
+;-------------------------------------------------
+;屈服刻印Lv1
+ELSEIF CFLAG:201 < 2 && MARK:屈服刻印 == 1
+	DRAWLINE
+	PRINTFORML 「ヒ、ヒヨリは、悪のエナジーに負けないもん！
+	PRINTFORML 　この星は、すでに宇宙ミラクルパトロールに包囲されてるんだから。
+	PRINTFORML 　あなた達には億にひとつも勝ち目はないの！
+	PRINTFORMW 　降参するなら、今のうちだよぉ？」
+	CFLAG:201 = 2
+	RETURN 1
+
+;屈服刻印Lv2
+ELSEIF CFLAG:201 < 3 && MARK:屈服刻印 == 2
+	DRAWLINE
+	PRINTFORMW 「ヒヨリにはわかってる、本当の%CALLNAME:MASTER%さんはとても優しい人だって。
+	PRINTFORMW 　悪のバイブレーションが%CALLNAME:MASTER%さんを苦しめているんだね。
+	PRINTFORMW 　%CALLNAME:MASTER%さんも、心の底ではこんな事をやめたいと思っているんだね？
+	PRINTFORMW 　……ヒヨリには聞こえているよ、助けを求める%CALLNAME:MASTER%さんの心の声が！
+	PRINTFORMW 　%CALLNAME:MASTER%さんの悪を浄化するまでヒヨリはゼッタイ逃げたりしない。
+	PRINTFORMW 　今日も一生懸命、%CALLNAME:MASTER%さんの悪のエナジーと戦うよ！」
+	CFLAG:201 = 3
+	RETURN 1
+
+;屈服刻印Lv3＋愛無し
+ELSEIF CFLAG:201 < 4 && MARK:屈服刻印 == 3 && TALENT:恋心 == 0
+	DRAWLINE
+	PRINTFORML 「最近、%CALLNAME:MASTER%さんの放つ悪のエナジーが、
+	PRINTFORML 　薄れつつあるような気がするよ。なんでだろ？
+	PRINTFORMW 　
+	PRINTFORML 　……そうか！
+	PRINTFORMW 　
+	PRINTFORML 　きっと、%CALLNAME:MASTER%さんから放出された悪のエナジーが
+	PRINTFORML 　ヒヨリの体内に蓄積されたことで、
+	PRINTFORMW 　%CALLNAME:MASTER%さんを支配していた悪の心が薄れてるのです。
+	PRINTFORML 　その証拠に、以前は%CALLNAME:MASTER%さんの心にあったのと同じ悪のエナジーが、
+	PRINTFORMW 　最近はヒヨリの体と心に溜まってきた気がします。
+	PRINTFORML 　――ヒヨリなら大丈夫、これがミラクルパトロールの使命だから。
+	PRINTFORMW 　
+	PRINTFORML 　さあ、%CALLNAME:MASTER%さん。
+	PRINTFORML 　今日も、ヒヨリと一緒に悪の波動と戦おうね！」
+	PRINTFORMW 　
+	PRINTFORMW そう言うと、ヒヨリはいそいそと自分から服を脱ぎ始めた。
+	CFLAG:201 = 4
+	RETURN 1
+
+;愛
+ELSEIF CFLAG:201 < 5 && TALENT:恋心
+	DRAWLINE
+	PRINTFORML その日の調教前に、ヒヨリが手作りらしき一枚のカードを差し出してきた。
+	PRINTFORMW 　
+	PRINTFORMW 「これが全宇宙の憧れの的、ヒヨリン星の住民票だよ。
+	PRINTFORML 　この星の通貨に換算して一千億兆京ペラ……
+	PRINTFORML 　まあ、それぐらいはするんだけど、%CALLNAME:MASTER%さんには、
+	PRINTFORMW 　特別にタダであげちゃいます」
+	PRINTFORMW ヒヨリン星とはどんな場所かと聞くと、ヒヨリは夢みるような目で答えた。
+	PRINTFORML 「とても素晴らしい星……
+	PRINTFORML 　ヒヨリン星雲に輝く赤いハート型の星で、
+	PRINTFORMW 　全宇宙から愛と光のエナジーが集う星なの。
+	PRINTFORML 　住民はみんないい人ばかりで、誰かが誰かを見下したりとか、
+	PRINTFORML 　誰かが誰かを苦しめたりとか、誰かが誰かを支配したりとか、
+	PRINTFORMW 　もう、そんな事とは、ゼンゼン無縁の星なの。
+	PRINTFORML 　それから、ヒヨリン星では誰も病気にならないし、死なないし、
+	PRINTFORML 　たとえそれまでに死んだ人とも、いつでも好きなだけ会える星なの」
+	PRINTFORMW 　
+	PRINTFORML ヒヨリの目には、涙がうっすらと浮かんでいた。
+	PRINTFORMW 　
+	PRINTFORML 「――それが、ヒヨリの故郷の星。
+	PRINTFORMW 　
+	PRINTFORML 　今は宇宙ミラクルパトロールの仕事があるからこの地上にいるけど、
+	PRINTFORMW 　この星での任務が終わったら、ヒヨリもヒヨリン星へ帰るんだ。
+	PRINTFORML 　
+	PRINTFORML 　――あ、でも、その時は%CALLNAME:MASTER%も一緒だよ。
+	PRINTFORMW 　
+	PRINTFORMW 　この星が浄化されたら、一緒にヒヨリン星へ帰って、永久に楽しく暮らそうね」
+	CFLAG:201 = 5
+	RETURN 1
+
+;助手の有無をチェック（いない場合は二回目以降へ飛ぶ）
+ELSEIF ASSI < 0 
+	CALL K50_KOJO2
+
+;-------------------------------------------------
+;簡易助手口上 CFLAG:202～210
+;Ynを調教対象50との会話が発生する助手のキャラ番号に変更する
+;会話が発生する助手を2人以上に増やす場合は、
+;コピー＆ペーストをしてCFLAGの数を203、204と増やす（210が上限）
+;-------------------------------------------------
+;助手○○（○○にY1のキャラ名を入れる）
+;ELSEIF NO:ASSI == Y1
+;	DRAWLINE
+;	;初めて
+;	IF CFLAG:202 == 0
+;		PRINTFORMW 
+;		CFLAG:202 = 1
+;		RETURN 1
+;	;二回目以降
+;	ELSE CFLAG:202 == 1 && FLAG:口上使用 ==2
+;		PRINTFORMW 
+;		RETURN 1
+;	ENDIF
+;助手○○（○○にY2のキャラ名を入れる）
+;ELSEIF NO:ASSI == Y2
+;	DRAWLINE
+;	;初めて
+;	IF CFLAG:203 == 0
+;		PRINTFORMW 
+;		CFLAG:203 = 1
+;		RETURN 1
+;	;二回目以降
+;	ELSE CFLAG:203 == 1 && FLAG:口上使用 ==2
+;		PRINTFORMW 
+;		RETURN 1
+;	ENDIF
+;口上のある助手が居ない場合は、通常の二回目以降の口上へ飛ぶ
+ELSE
+	CALL K50_KOJO2
+ENDIF
+
+;==================================================
+;調教開始時（2回目以降、50をキャラ番号に変更する） CFLAGなし 
+;==================================================
+@K50_KOJO2
+;反発刻印Lv3
+IF MARK:反発刻印 == 3 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORMW 「……もう、いい加減にして……」
+	RETURN 1
+
+;屈服刻印Lv0
+ELSEIF MARK:屈服刻印 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「なんて卑怯なの、ギャスビゴー星人！」
+	PRINTFORMW （↑まだ言ってます）
+	RETURN 1
+
+;屈服刻印Lv1
+ELSEIF MARK:屈服刻印 == 1 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORMW 「なかなか手強いです……しかし、ヒヨリンは負けないのです」
+	RETURN 1
+
+;屈服刻印Lv2
+ELSEIF MARK:屈服刻印 == 2 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「今日は、かなり悪のエナジーが強いようです……
+	PRINTFORMW 　でも、ヒヨリにかかれば瞬殺です」
+	RETURN 1
+
+;屈服刻印Lv3＋愛無し
+ELSEIF MARK:屈服刻印 == 3 && TALENT:恋心 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORMW 「さぁ、今日もミラクルパワーで悪のエナジーを撃退です！」
+	RETURN 1
+
+;愛
+ELSEIF TALENT:恋心 && FLAG:口上使用 == 2
+	DRAWLINE
+	;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+	IF RAND:3 == 0
+		PRINTFORML 　戯れに、ヒヨリに宇宙ミラクルパトロールの事を尋ねてみた。
+		PRINTFORML 「全宇宙の平和を守っている宇宙のおまわりさんです。
+		PRINTFORML 　ヒヨリンも宇宙の平和を守るために志願したんだよ。
+		PRINTFORML 　ううん、ゼンゼンつらくなんかないよぉ。
+		PRINTFORML 　だって、この星の平和はヒヨリが守ってるんだから♪」
+		PRINTFORMW 　
+	ELSEIF RAND:2 == 0
+		PRINTFORML 　戯れに、ヒヨリにギャスビゴー星人の事を尋ねてみた。
+		PRINTFORML 「宇宙のみんなから嫌われてるどうしようもなく悪い宇宙人だよ。
+		PRINTFORML 　自分たちに悪の心のエネルギーが必要だから、
+		PRINTFORML 　人間をそそのかして、わざと悪いことをさせてるんだ。
+		PRINTFORML 　悪い人たちは、みんなギャスビゴー星人に操られてるだけなの。
+		PRINTFORML 　この星も、%CALLNAME:MASTER%さんに悪いことをさせようと、
+		PRINTFORML 　ギャスビゴー星人が作ったものなんだよ」
+		PRINTFORMW 　
+	ELSE
+		PRINTFORML 　戯れに、ヒヨリにヒヨリ自身の事について尋ねてみた。
+		PRINTFORML 「ヒヨリン星のヒヨリン星人だよ。年齢は地球と同じくらい。
+		PRINTFORML 　でもヒヨリン星人は年取らないし、絶対に死なないから。
+		PRINTFORML 　%CALLNAME:MASTER%さんもヒヨリン星にくれば不老不死になれるし、
+		PRINTFORML 　４７億才の歳の差なんて、ナッシングも同然です♪」
+		PRINTFORMW 　
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 0
+
+;==================================================
+;EVENTEND関係（50をキャラ番号に置換） CFLAG 211～219を使用
+;調教終了時のセリフ
+;==================================================
+@EVENTEND
+SIF FLAG:口上使用 <= 0
+	RETURN 0
+SIF NO:TARGET != 50
+	RETURN 0
+
+;キャラ死亡or瀕死時は口上をスキップ
+SIF BASE:体力 < 500
+	RETURN 0
+
+;--------------------------------------------------
+;調教終了時のセリフ
+;--------------------------------------------------
+;反発刻印Lv3+愛なし
+IF MARK:反発刻印 == 3 && TALENT:恋心 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORMW 「うう……つらいよう……苦しいよう……
+	PRINTFORMW 　お姉ちゃん……」
+	DRAWLINE
+	RETURN 1
+
+;屈服刻印Lv1以下+愛なし
+ELSEIF MARK:屈服刻印 <= 1 && TALENT:恋心 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「ふぅ……今日はこの程度でカンベンしてあげます」
+	PRINTFORMW 　（↑強がってます）
+	DRAWLINE
+	RETURN 1
+
+;屈服刻印Lv2+愛なし
+ELSEIF MARK:屈服刻印 == 2 && TALENT:恋心 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「ふぅ……今日はこの程度でカンベンしてあげます」
+	PRINTFORMW 　（↑強がってます）
+	DRAWLINE
+	RETURN 1
+
+;屈服刻印Lv3+愛なし
+ELSEIF MARK:屈服刻印 == 3 && TALENT:恋心 == 0 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「ふぅ……今日はこの程度でカンベンしてあげます」
+	PRINTFORMW 　（↑強がってます）
+	DRAWLINE
+	RETURN 1
+
+;愛
+ELSEIF TALENT:恋心 && FLAG:口上使用 == 2
+	DRAWLINE
+	PRINTFORML 「もうすぐ、ヒヨリの任務も終わるよ。
+	PRINTFORMW 　早く一緒にヒヨリン星へ帰れる日が来るといいね」
+	DRAWLINE
+	RETURN 1
+ENDIF
+RETURN 0
+
+;==================================================
+;@KOJO_MESSAGE_COM関係（50をキャラ番号に置換）
+;コマンド実行時に出力されます
+;==================================================
+@KOJO_MESSAGE_COM_50
+;助手が調教した時に口上をスキップする（好みに応じて使う、行頭の;を消すとスキップするようになる）
+;SIF ASSI > 0 && ASSIPLAY
+;	RETURN 0 
+;ボールギャグ着用時には口上をスキップする
+SIF TEQUIP:ボールギャグ && SELECTCOM != 45
+	RETURN 0
+
+;-------------------------------------------------
+;コマンド実行時のセリフ CFLAG 301～500を使用
+;-------------------------------------------------
+;CSVフォルダ内のTrain.csvに記述されている調教コマンド番号を
+;下の汎用調教コマンドテンプレートに記述されているxxとzzに入れ
+;調教コマンド番号に+1した数字をyyに入れる
+;・ただし、yyに入れる数字が１桁の場合は01や02のように最初に0を付ける
+;　例:愛撫の場合 xx → 0, yy → 01
+;　　 正常位の場合 xx → 20, yy → 21
+;・ただし、触手調教の場合のみはzzの値を100にする
+;
+;～・～・～・～・～・～・～・～・～・～・～・～・～
+;汎用調教コマンドテンプレート
+;～・～・～・～・～・～・～・～・～・～・～・～・～
+;-------------------------------------------------
+;調教コマンド名 CFLAG:3yy 
+;-------------------------------------------------
+;IF SELECTCOM == xx
+;	;初めて
+;	IF CFLAG:3yy == 0
+;		PRINTFORMW 
+;		CFLAG:TARGET:3yy = 1
+;		RETURN 0
+;	;二回目以降
+;	ELSE
+;		PRINTFORMW 
+;		CFLAG:3yy = 2
+;		RETURN 0
+;	ENDIF
+;ENDIF
+;～・～・～・～・～・～・～・～・～・～・～・～・～
+;開始時と終了時で口上を変える必要のあるコマンド
+;対象となるコマンド
+;バイブ、アナルバイブ、クリキャップ、ニプルキャップ、搾乳器、オナホール
+;アイマスク、縄、ボールギャグ、浣腸器＋プラグ、アナル電極、
+;ビデオ撮影、野外プレイ、羞恥プレイ、お風呂場プレイ、新妻プレイ、
+;獣姦プレイ、触手調教（触手調教の場合 zz には100を入れる）
+;～・～・～・～・～・～・～・～・～・～・～・～・～
+;-------------------------------------------------
+;調教コマンド名 CFLAG:3yy 　CFLAG:4yy
+;-------------------------------------------------
+;開始時
+;IF SELECTCOM == xx && TEQUIP:zz
+;	;初めて
+;	IF CFLAG:3yy == 0
+;		PRINTFORMW 
+;		CFLAG:3yy = 1
+;		RETURN 0
+;	;二回目以降
+;	ELSEIF CFLAG:3yy == 1 || FLAG:口上使用 == 2
+;		PRINTFORMW 
+;		CFLAG:3yy = 2
+;		RETURN 0
+;	ENDIF
+;終了時
+;ELSEIF SELECTCOM == xx && TEQUIP:zz == 0
+;	;初めて
+;	IF CFLAG:4yy == 0
+;		PRINTFORMW 
+;		CFLAG:4yy = 1
+;		RETURN 0
+;	;二回目以降
+;	ELSEIF CFLAG:4yy == 1 || FLAG:口上使用 == 2
+;		PRINTFORMW 
+;		CFLAG:4yy = 2
+;		RETURN 0
+;	ENDIF
+;ENDIF
+;～・～・～・～・～・～・～・～・～・～・～・～・～
+
+;-------------------------------------------------
+;キスする CFLAG:307
+;-------------------------------------------------
+IF SELECTCOM == 6
+	;ファーストキスで愛かつ主人
+	IF CFLAG:307 == 0 && TFLAG:ファーストキス && TALENT:恋心 && ASSIPLAY == 0
+		PRINTFORMW 
+	ENDIF
+	CFLAG:307 = 1
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;会話する CFLAG:357
+;-------------------------------------------------
+IF SELECTCOM == 56
+	;初めて
+	IF CFLAG:357 == 0
+		PRINTFORMW 
+		CFLAG:357 = 1
+	;二回目以降
+	ELSEIF CFLAG:357 == 1
+		;ランダムで口上が変化する（使わない場合はすべて同じにすればよい）
+		IF RAND:3 == 0
+			PRINTFORMW 
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;野外プレイ CFLAG:355(開始時)
+;			CFLAG:455(終了時)
+;-------------------------------------------------
+;開始時
+IF SELECTCOM == 54 && TEQUIP:野外プレイ
+	;初めて
+	IF CFLAG:355 == 0
+		;愛、淫乱、露出狂
+		IF TALENT:恋心 || TALENT:淫乱 || TALENT:露出狂
+			PRINTFORMW ヒヨリを、街の大通りまで連れ出した。
+			PRINTFORMW 　
+			PRINTFORMW サイズの合わないぶかぶかのコートを身にまとったヒヨリは、
+			PRINTFORMW 前をしっかり抑えながらも、本番前の緊張をみなぎらせた瞳で
+			PRINTFORMW あたりを見回している。
+			PRINTFORMW 中央広場まで来たところで、事前に教えた通りのセリフを大声で喋らせる。
+			PRINTFORMW 　
+			PRINTFORMW 「みんな、はじめまして、ヒヨリンだよぉ。
+			PRINTFORMW 　今日は、みんなにヒヨリンの歌声のエナジーを配りに、
+			PRINTFORMW 　ヒヨリン星からやって来たの♪」
+			PRINTFORMW 　
+			PRINTFORMW 通行人が何事かと立ち止まり、ヒヨリに周囲の視線が集まったところで、
+			PRINTFORMW これも事前の命令通り、ヒヨリにぱっとコートを脱ぎ捨てさせる。
+			PRINTFORMW コートの下には今日の初野外露出コンサートのために誂えさせた
+			PRINTFORMW 特製のコスチュームを着せてある。
+			PRINTFORMW 基本的なデザインは、ヒヨリが地球で使っていたコスチュームとそっくりだ。
+			PRINTFORMW しかし、ブラウスはスケスケの素材で作ってあり、
+			PRINTFORMW その下にはブラジャーも何も付けさせていない。
+			PRINTFORMW 胸に付けた大きなリボンの隙間からは、乳首の色や形まではっきりと分かる。
+			PRINTFORMW ミニスカートは股下すれすれの長さで、少しでも体を動かせば、
+			PRINTFORMW こちらもまたパンツも何もはいていない、陰部やお尻が丸見えになる。
+			PRINTFORMW 　
+			PRINTFORMW いっそ全裸でいた方がまだ恥ずかしくないような衣装を身にまといながらも、
+			PRINTFORMW ヒヨリは衣装のことなど気にもしていないような大胆な動きで
+			PRINTFORMW 振り付けを取りながら、天使のような声で歌い始めた。
+			PRINTFORMW 　
+			PRINTFORMW 「♪あなたのことが待ちきれない夜♪
+			PRINTFORMW 　♪ドキドキしてる　ハート♪」
+			PRINTFORMW 　
+			PRINTFORMW 体を揺すれば、ノーブラの乳房がぷるんと揺れるのがはっきり見える。
+			PRINTFORMW くるりと一回転すれば、スカートがまくれてお尻が丸見えになる。
+			PRINTFORMW もちろん、恥ずかしがっていないわけではない。
+			PRINTFORMW だが、羞恥に頬を染めながらも、しっかりと歌い上げているその様子が、
+			PRINTFORMW 逆に何とも言えない魅力になっている
+			PRINTFORMW 　
+			PRINTFORMW 「……♪この宇宙だって食べちゃうの♪」
+			PRINTFORMW 歌いおわったヒヨリがポーズを決めると、一斉に拍手と歓声が起こった。
+		;それ以外
+		ELSE
+			PRINTFORMW ヒヨリを、街の大通りまで連れ出した。
+			PRINTFORMW 　
+			PRINTFORMW サイズの合わないぶかぶかのコートを身にまとったヒヨリは、
+			PRINTFORMW 前をしっかり抑えながら、いつに似合わず不安そうにきょときょとと
+			PRINTFORMW あたりを見回している。
+			PRINTFORMW 中央広場まで来たところで、事前に教えた通りのセリフを大声で喋らせる。
+			PRINTFORMW 　
+			PRINTFORMW 「み、み、みんな、はじめまして、ヒヨリンだよぉ。
+			PRINTFORMW 　きょ、今日は、みんなにヒヨリンの歌声のエナジーを配りに、
+			PRINTFORMW 　ヒヨリン星からやって来たのっ！」
+			PRINTFORMW 　
+			PRINTFORMW 通行人が何事かと立ち止まり、ヒヨリに周囲の視線が集まったところで、
+			PRINTFORMW これも事前の命令通り、ヒヨリにぱっとコートを脱ぎ捨てさせる。
+			PRINTFORMW コートの下には今日の初野外露出コンサートのために誂えさせた
+			PRINTFORMW 特製のコスチュームを着せてある。
+			PRINTFORMW 基本的なデザインは、ヒヨリが地球で使っていたコスチュームとそっくりだ。
+			PRINTFORMW しかし、ブラウスはスケスケの素材で作ってあり、
+			PRINTFORMW その下にはブラジャーも何も付けさせていない。
+			PRINTFORMW 胸に付けた大きなリボンの隙間からは、乳首の色や形まではっきりと分かる。
+			PRINTFORMW ミニスカートは股下すれすれの長さで、少しでも体を動かせば、
+			PRINTFORMW こちらもまたパンツも何もはいていない、陰部やお尻が丸見えになる。
+			PRINTFORMW 　
+			PRINTFORMW いっそ全裸でいた方がまだ恥ずかしくないような衣装を身にまとい、
+			PRINTFORMW 必死でせめて胸や陰部だけでみられまいとするぎくしゃくした動きで、
+			PRINTFORMW ヒヨリはマイクも何もなしに歌い始めた。
+			PRINTFORMW 　
+			PRINTFORMW 「♪あなたのことが待ちきれない夜、
+			PRINTFORMW 　♪ド、ド、ドキドキしてる、ハート……」
+			PRINTFORMW 　
+			PRINTFORMW 通行人は、明らかに頭のおかしい人間を見る目付きでヒヨリを見ている。
+			PRINTFORMW 
+			PRINTFORMW 辛うじて最初の数フレーズを歌い終えたものの、
+			PRINTFORMW 突然にもうこれ以上耐え切れなくなったのか、
+			PRINTFORMW ヒヨリは地面にうずくまり、大声を上げて泣き出した――
+		ENDIF
+		CFLAG:355 = 1
+		RETURN 0
+	;二回目以降
+	ELSE
+		;愛＋露出癖Lv3以上
+		IF TALENT:TARGET:恋心 == 1 && ABL:露出癖 >= 3 && (CFLAG:355 <= 3 || FLAG:口上使用 == 2)
+			PRINTFORML 「この星でもヒヨリのファンがいっぱいできたし、
+			PRINTFORML 　これも%CALLNAME:MASTER%さんのお蔭です♪
+			PRINTFORML 　……ところでこの衣装、もっと露出度あげませんか？
+			PRINTFORMW 　スカートは足の付け根ぐらいまででいいと、ヒヨリ思うんだ」
+			CFLAG:355 = 4
+		;露出癖Lv3以上
+		ELSEIF ABL:露出癖 >= 3 && (CFLAG:355 <= 2 || FLAG:口上使用 == 2)
+			PRINTFORML 露出狂の痴女アイドルとして、ヒヨリは結構知られつつある。
+			PRINTFORML ヒヨリのファンクラブまで出来ているらしい。
+			PRINTFORMW 最近はヒヨリも開き直ったのか、ノリノリで露出ライブをやっている。
+			CFLAG:355 = 3
+		;それ以外
+		ELSEIF CFLAG:355 <= 1 || FLAG:口上使用 == 2
+			PRINTFORML 例のスケスケの服で野外露出コンサートをやらせる。
+			PRINTFORML 大勢の通行人の蔑みの視線を浴びて、
+			PRINTFORMW ヒヨリは何度も声を途切らせながら、何とか全歌詞を歌い終えた。
+			CFLAG:355 = 2
+		ENDIF
+		RETURN 0
+	ENDIF
+;終了時
+ELSEIF SELECTCOM == 54 && TEQUIP:野外プレイ == 0
+	;初めて
+	IF CFLAG:455 == 0
+		PRINTFORMW 
+		CFLAG:455 = 1
+		RETURN 0
+	;二回目以降
+	ELSEIF CFLAG:455 == 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:455 = 2
+		RETURN 0
+	ENDIF
+ENDIF
+
+;==================================================
+;@KOJO_MESSAGE_PALAMCNG関係（50をキャラ番号に置換）
+;パラメータ変動をトリガーにした口上
+;パラメータ変動後に口上を発動します
+;==================================================
+@KOJO_MESSAGE_PALAMCNG_50
+;助手が調教した時に口上をスキップする（好みに応じて使う、行頭の;を消すとスキップするようになる）
+;SIF ASSI > 0 && ASSIPLAY
+;	RETURN 0 
+;ボールギャグ着用時には口上をスキップする
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;-------------------------------------------------
+;パラメータ変動時のセリフ CFLAG 221～260を使用
+;-------------------------------------------------
+;-------------------------------------------------
+;処女喪失(処女のみ) CFLAG:229
+;-------------------------------------------------
+A = UP:11 + UP:12
+IF TFLAG:処女喪失 == 1 && CFLAG:229 == 0
+	;【愛持ちで】主人による処女喪失・かつ反発刻印取得せず
+	IF TFLAG:主人による処女喪失 == 1 && TALENT:恋心 == 1 && (A < 500 || TFLAG:反発刻印の回避 == 1)
+		PRINTFORMW 
+	;それ以外の処女喪失
+	ELSE
+		PRINTFORML 「この体は……地上でのかりそめの体なの……
+		PRINTFORML 　だから、別にこんなことされたって、
+		PRINTFORMW 　ヒヨリは、ぜんぜん平気なんだよぉ……」
+		PRINTFORML そう言いながら、ヒヨリはぽろぽろと涙を流していた。
+		PRINTFORMW 　
+	ENDIF
+	CFLAG:TARGET:229 = 1
+ENDIF
+
+;-------------------------------------------------
+;@KOJO_MESSAGE_MARKCNG関係（50をキャラ番号に置換）
+;刻印変動をトリガーにした口上
+;刻印変動後に口上を発動します
+;-------------------------------------------------
+@KOJO_MESSAGE_MARKCNG_50
+;助手が調教した時に口上をスキップする（好みに応じて使う、行頭の;を消すとスキップするようになる）
+;SIF ASSI > 0 && ASSIPLAY
+;	RETURN 0 
+;ボールギャグ着用時には口上をスキップする（OFFだと口を塞いでるのに喋りまくる）
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+
+;-------------------------------------------------
+;苦痛刻印Lv3取得 CFLAG:297
+;-------------------------------------------------
+IF TFLAG:苦痛刻印 == 3 && CFLAG:297 == 0
+	PRINTFORML 「うう……いでぇよぉ……母ちゃぁん……
+	PRINTFORML 　こんなの我慢できるわけねえべ……
+	PRINTFORMW 
+	PRINTFORML 　　　　　　　………………
+	PRINTFORMW 
+	PRINTFORML 　……すいませぇん♪
+	PRINTFORMW 　ヒヨリ、ちょっと、バグっちゃいましたぁ♪」
+	CFLAG:297 = 1
+ENDIF
+
+;-------------------------------------------------
+;快楽刻印Lv3取得 CFLAG:298
+;-------------------------------------------------
+IF TFLAG:快楽刻印 == 3 && CFLAG:298 == 0
+	DRAWLINE
+	PRINTFORML 「くふぅ……悪のエナジーって気持ちいいですぅ……
+	PRINTFORML 　人間が悪の心に負けちゃうわけが
+	PRINTFORMW 　ヒヨリにも、ちょっとわかっちゃいました」
+	CFLAG:298 = 1
+ENDIF
+
+;-------------------------------------------------
+;屈服刻印Lv3取得 CFLAG:299
+;-------------------------------------------------
+IF TFLAG:屈服刻印 == 3 && CFLAG:299 == 0
+	PRINTFORMW 
+	CFLAG:299 = 1
+ENDIF
+
+;-------------------------------------------------
+;反発刻印Lv3取得 CFLAG:300
+;-------------------------------------------------
+IF TFLAG:反発刻印 == 3 && CFLAG:300 == 0
+		PRINTFORMW ――突然、ヒヨリじわっと瞳をうるませたかと思うと、
+		PRINTFORMW みるみる内に目から涙を溢れさせ、子供のように泣きじゃくり始めた。
+		PRINTFORML 「母ちゃん……わだすがみんな悪かっだよぉ……
+		PRINTFORML 　母ちゃんの言うごどちゃんど聞いで田舎さ帰っでえれば、
+		PRINTFORMW 　こげな目さ遭わねですんだのによ……
+		PRINTFORML 　田舎に帰れたらよ、わだす、もう二度とわがまま言って
+		PRINTFORML 　母ちゃんを困らせたりすね。
+		PRINTFORMW 　母ちゃんの言うごどなら、何でも聞ぐよ。
+		PRINTFORML 　だから、母ちゃん……母ちゃん……わだすを助けでけろ。
+		PRINTFORMW 　わだす……もうこれ以上、こんなごどは無理だべ……」
+	CFLAG:300 = 1
+ENDIF
+
+
+;==================================================
+;イベント口上集（50、50をキャラ番号に置換する） CFLAG 261～296
+;==================================================
+@SELF_KOJO_K50
+;-------------------------------------------------
+;調教後自慰 CFLAG:261
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 1
+	IF CFLAG:261 < 1 || FLAG:口上使用 == 2
+		PRINTFORML 「ああ……ついにヒヨリの体にもエビルの侵食が……
+		PRINTFORMW 　ここは、自力浄化を行いまぁふ……」
+		CFLAG:261 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;特定の相手との調教後レズプレイ発生 CFLAG:262
+;Ynを調教対象50との会話が発生する助手のキャラ番号に変更する
+;-------------------------------------------------
+;IF TFLAG:ファーストキス == 2 && ASSI > 0
+;	;助手○○（○○にY1のキャラ名を入れる）
+;	IF NO:ASSI == Y1 && (CFLAG:262 < 1 || FLAG:口上使用 == 2)
+;		PRINTFORMW 
+;		CFLAG:262 = 1
+;	;助手○○（○○にY2のキャラ名を入れる）
+;	ELSEIF NO:ASSI == Y2 && (CFLAG:262 < 1 || FLAG:口上使用 == 2)
+;		PRINTFORMW 
+;		CFLAG:262 = 1
+;	ENDIF
+;ENDIF
+
+;-------------------------------------------------
+;朝フェラ CFLAG:263
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 3
+	IF CFLAG:263 < 1 || FLAG:口上使用 == 2
+		PRINTFORML 「悪のエナジーが、こんなにたまってたよぉ……」
+		PRINTFORMW 　こういう時は、ヒヨリにおまかせ♪」
+		CFLAG:263 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;主人との調教後セックス CFLAG:264
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 4
+	IF CFLAG:264 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 「今日はまだエナジーの補給が足りないようですね……
+		PRINTFORMW 　しかたないなあ、ヒヨリが%CALLNAME:MASTER%さんに
+		PRINTFORMW 　エナジーを与えてさしあげます」
+		CFLAG:264 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;夜這い CFLAG:265
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 5
+	IF CFLAG:265 < 1 || FLAG:口上使用 == 2
+		PRINTFORMW 
+		CFLAG:265 = 1
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;売却
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 6
+	;愛+反発刻印Lv3未満
+	IF TALENT:恋心 && MARK:反発刻印 < 3
+		DRAWLINE
+		PRINTFORMW  『……』
+		PRINTFORMW  『……』
+		PRINTFORMW  『……ール員』
+		PRINTFORMW  『……パトロール員……パトロール員、起きるっちゃ』
+		PRINTFORML  　
+		PRINTFORML  暗闇の中から、わたしを呼ぶ声がする。
+		PRINTFORMW  　
+		PRINTFORML  『地上の調査は、終わりだっちゃよ？』
+		PRINTFORMW  　
+		PRINTFORML  そして目覚めると、わたしは宇宙ミラクルパトロールの母船の中にいた。
+		PRINTFORML  周囲には、わたしと寸分違わぬ姿をした、ヒヨリン星の同胞達がいる。
+		PRINTFORMW  　
+		PRINTFORML  わたしには、既に新しい肉体が与えられていた。
+		PRINTFORMW  あの星で受けた体の傷や肉体の変化は、どこにも残されていない。
+		SIF TALENT:処女 == 0
+			PRINTFORMW  処女膜すら、再生されているようだった。
+		PRINTFORML  地上での思い出がもはや記憶の中にしか残されていないことが、
+		PRINTFORML  なぜか、無性に寂しかった。
+		PRINTFORMW 　
+		PRINTFORML  『……地上の状況に関する、ヒヨリの脳波レポートは受け取ったっちゃ』
+		PRINTFORMW  パトロール隊隊長であるわたしの姉が、なめらかな宇宙標準語で言った。
+		PRINTFORMW  『おまえは、あの星に更なる調査を行うべきだと言うのけ？』
+		PRINTFORMW  「うん、少なくとも、現時点で星に帰るべきじゃないよ」
+		PRINTFORMW  『では、どれだけの調査を追加すべきとの意見なのけ？』
+		PRINTFORML  「あと――」
+		PRINTFORMW  わたしは慎重に答えた。
+		PRINTFORMW  「少なくとも、五分間は再調査すべき。それぐらいは必要だよぉ」
+		PRINTFORMW  『宇宙時間の五分間……つまり地上時間の五十年っちゃね？』
+		PRINTFORMW  「そう」
+		PRINTFORML  『わかったっちゃ。お姉ちゃんは実地に地上で調査を行った
+		PRINTFORML  　ヒヨリの意見を尊重するっちゃよ。急ぐ必要はないっちゃ。
+		PRINTFORML  　最終決定は、五分間の再調査の後に行うことにするっちゃ』
+		PRINTFORMW  　
+		PRINTFORML  姉がクルーに指示を出すと、地上の人間の目には決して見えない
+		PRINTFORML  宇宙パトロールの母船は、再び星をめぐる軌道を静かにまわり始めた。
+		PRINTFORMW  　
+		PRINTFORML  遥か下には、わたしが%CALLNAME:MASTER%との時間を過ごした地上がある。
+		PRINTFORMW  　
+		PRINTFORML  　
+		PRINTFORML  　
+		PRINTFORMW  　　　　　　　 %CALLNAME:MASTER%、わたしの地上での役目は終わったよ
+		PRINTFORMW  　　　　　　　　　けれども、これはお別れなんかじゃない
+		PRINTFORMW  　　　　　　　　　 五分間の宇宙での任務が終わった後
+		PRINTFORMW  　　　　　　　　　　　　　地上時間での五十年後に
+		PRINTFORMW  　　　　　　　　わたしは、地上のあなたを迎えにいくからね
+		PRINTFORML  　
+		PRINTFORML  　
+		PRINTFORMW  　
+		DRAWLINE
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;ガンダーロボ戦に参加
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 9
+	DRAWLINE
+	PRINTFORMW 
+	DRAWLINE
+ENDIF
+
+;-------------------------------------------------
+;ガンダーロボ戦に参加して勝利
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 10
+	DRAWLINE
+	PRINTFORMW 
+	DRAWLINE
+ENDIF
+
+;-------------------------------------------------
+;妊娠発覚 CFLAG:271
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 11
+	SIF CFLAG:271 >= 1
+		RETURN 0
+	;※崩壊してしまった場合は非表示
+	IF TALENT:崩壊 == 1
+		RETURN 0
+	;父親が主人で母親が愛持ち
+	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+		PRINTFORMW 
+	ENDIF
+	CFLAG:271 = 1
+ENDIF
+
+;-------------------------------------------------
+;出産 CFLAG:272
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 12
+	SIF CFLAG:272 >= 1
+		RETURN 0
+	;※崩壊してしまった場合は非表示
+	IF TALENT:崩壊 == 1
+		RETURN 0 
+	;父親が主人で母親が愛持ち
+	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+		PRINTFORMW 
+	ENDIF
+	CFLAG:272 = 1
+ENDIF
+
+;-------------------------------------------------
+;死亡
+;-------------------------------------------------
+IF TFLAG:ファーストキス == 999
+	;愛
+	IF TALENT:恋心
+		DRAWLINE
+		PRINTFORMW  『……』
+		PRINTFORMW  『……』
+		PRINTFORMW  『……ール員』
+		PRINTFORMW  『……パトロール員……パトロール員、起きるっちゃ』
+		PRINTFORML  　
+		PRINTFORML  暗闇の中から、わたしを呼ぶ声がする。
+		PRINTFORMW  　
+		PRINTFORML  『地上の調査は、終わりだっちゃよ？』
+		PRINTFORMW  　
+		PRINTFORML  そして目覚めると、わたしは宇宙ミラクルパトロールの母船の中にいた。
+		PRINTFORML  周囲には、わたしと寸分違わぬ姿をした、ヒヨリン星の同胞達がいる。
+		PRINTFORMW  　
+		PRINTFORML  わたしには、既に新しい肉体が与えられていた。
+		PRINTFORMW  あの星で受けた体の傷や肉体の変化は、どこにも残されていない。
+		SIF TALENT:処女 == 0
+			PRINTFORMW  処女膜すら、再生されているようだった。
+		PRINTFORML  地上での思い出がもはや記憶の中にしか残されていないことが、
+		PRINTFORML  なぜか、無性に寂しかった。
+		PRINTFORMW 　
+		PRINTFORML  『……地上の状況に関する、ヒヨリの脳波レポートは受け取ったっちゃ』
+		PRINTFORMW  パトロール隊隊長であるわたしの姉が、なめらかな宇宙標準語で言った。
+		PRINTFORMW  『おまえは、あの星に更なる調査を行うべきだと言うのけ？』
+		PRINTFORMW  「うん、少なくとも、現時点で星に帰るべきじゃないよ」
+		PRINTFORMW  『では、どれだけの調査を追加すべきとの意見なのけ？』
+		PRINTFORML  「あと――」
+		PRINTFORMW  わたしは慎重に答えた。
+		PRINTFORMW  「少なくとも、五分間は再調査すべき。それぐらいは必要だよぉ」
+		PRINTFORMW  『宇宙時間の五分間……つまり地上時間の五十年っちゃね？』
+		PRINTFORMW  「そう」
+		PRINTFORML  『わかったっちゃ。お姉ちゃんは実地に地上で調査を行った
+		PRINTFORML  　ヒヨリの意見を尊重するっちゃよ。急ぐ必要はないっちゃ。
+		PRINTFORML  　最終決定は、五分間の再調査の後に行うことにするっちゃ』
+		PRINTFORMW  　
+		PRINTFORML  姉がクルーに指示を出すと、地上の人間の目には決して見えない
+		PRINTFORML  宇宙パトロールの母船は、再び星をめぐる軌道を静かにまわり始めた。
+		PRINTFORMW  　
+		PRINTFORML  遥か下には、わたしが%CALLNAME:MASTER%との時間を過ごした地上がある。
+		PRINTFORMW  　
+		PRINTFORML  　
+		PRINTFORML  　
+		PRINTFORMW  　　　　　　　 %CALLNAME:MASTER%、わたしの地上での役目は終わったよ
+		PRINTFORMW  　　　　　　　　　けれども、これはお別れなんかじゃない
+		PRINTFORMW  　　　　　　　　　 五分間の宇宙での任務が終わった後
+		PRINTFORMW  　　　　　　　　　　　　　地上時間での五十年後に
+		PRINTFORMW  　　　　　　　　わたしは、地上のあなたを迎えにいくからね
+		PRINTFORML  　
+		PRINTFORML  　
+		PRINTFORMW  　
+		DRAWLINE
+	ENDIF
+ENDIF
+
+;--------------------------------------------------
+;フラグ初期化
+;--------------------------------------------------
+TFLAG:ファーストキス = 0
+
+RETURN 0
+
+
+;==================================================
+;@単体エンディング関係(50、50をキャラ番号に置換する)
+;まだ未実装です
+;==================================================
+;@SINGLE_ENDING_K50
+;DRAWLINE
+;PRINTFORMW ―――単体エンド条件達成―――
+;PRINTFORMW …………
+;PRINTFORMW ………
+;PRINTFORMW ……
+;PRINTFORMW 
+
+
+;PRINTFORMW 
+;PRINTFORMW 　　　　　　　　―― Ending No.150 (○○エンド)
+
+;CALL GAME_CONTINUE
+;RETURN 0
+
+
+;==================================================
+;口上ファイルの存在判定（50をキャラ番号に置換）
+;==================================================
+@EVENTTRAIN
+#PRI
+FLAG:150 = 1
+SIF FLAG:口上使用 == 0
+	FLAG:口上使用 = 2
+
+@EVENTEND
+#LATER
+FLAG:150 = 0
+

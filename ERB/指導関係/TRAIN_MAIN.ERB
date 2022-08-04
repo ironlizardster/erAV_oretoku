@@ -1,0 +1,789 @@
+﻿;=================================================
+;調教処理及び珠計算に関する関数群
+;=================================================
+;
+;調教後の死亡判定を追加(2009/11/14 byPawapokya-
+;能力値の上昇はメイン画面で行うよう変更(2009/11/25 byPawapokya-
+;
+;=================================================
+;BEGIN TRAIN後最初に呼び出される関数
+;=================================================
+@EVENTTRAIN
+#PRI
+;主人公の射精を0に
+BASE:MASTER:射精ゲージ = 0
+;いちおう調教対象と助手も
+BASE:TARGET:射精ゲージ = 0
+SIF ASSI >= 0
+	BASE:ASSI:射精ゲージ = 0
+BASE:TARGET:噴乳ゲージ = 0
+BASE:MASTER:異種射精ゲージ = 0
+SIF ASSI >= 0
+	BASE:ASSI:異種射精ゲージ = 0
+
+;射精フラグ、処女喪失フラグなどをリセット
+REPEAT 1000
+	TFLAG:COUNT = 0
+REND
+
+;前回の調教テキストを空に
+SAVESTR:0 = 　
+
+;調教者は誰か
+IF ASSIPLAY == 0
+	PLAYER = MASTER
+ELSE
+	PLAYER = ASSI
+ENDIF
+
+;常時発情ボーナス：潤滑と欲情が3000からスタート
+IF TALENT:TARGET:常時発情
+	PALAM:TARGET:潤滑 = 3000
+	PALAM:TARGET:欲情 = 3000
+ENDIF
+
+CALL PRITRAIN_MESSAGE
+
+;=================================================
+;EVENTTRAINの後に毎ターン呼び出される関数
+;=================================================
+@SHOW_STATUS
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL (前半)
+ELSE
+	PRINTL (後半)
+ENDIF
+PRINTFORM %NAME:TARGET% 調教中   調教者:
+IF ASSIPLAY
+	PRINTS NAME:ASSI
+	PRINT (助手)
+ELSE
+	PRINTS NAME:MASTER
+ENDIF
+SIF ASSI  > 0 && ASSIPLAY == 0
+	PRINTFORM   助手:%NAME:ASSI%
+PRINT   
+
+CALL SHOW_EQUIP_2
+CALL LIFE_BAR
+CALL VITAL_BAR
+
+;元はPRINT_PALAM TARGET
+CALL NEW_PRINT_PALAM
+
+
+;絶頂回数
+SIF EX:0 || EX:1 || EX:2 || EX:3 || EX:4 || EX:5
+	PRINT 　 
+SIF EX:0
+	PRINTFORM C絶頂:{EX:0}回 
+SIF EX:1
+	PRINTFORM V絶頂:{EX:1}回 
+SIF EX:2
+	PRINTFORM A絶頂:{EX:2}回 
+SIF EX:3
+	PRINTFORM B絶頂:{EX:3}回 
+SIF EX:4
+	PRINTFORM 噴乳:{EX:4}回 
+SIF EX:5
+	PRINTFORM 射精:{EX:5}回
+SIF EX:0 || EX:1 || EX:2 || EX:3 || EX:4 || EX:5
+	PRINTL 
+
+SIF MAXBASE:射精ゲージ == 0
+	MAXBASE:射精ゲージ = 10000
+SIF MAXBASE:射精ゲージ != 5000 && TALENT:早漏
+	MAXBASE:射精ゲージ = 5000
+SIF MAXBASE:MASTER:射精ゲージ == 0
+	MAXBASE:MASTER:射精ゲージ = 10000
+SIF MAXBASE:MASTER:射精ゲージ != 5000 && TALENT:MASTER:早漏
+	MAXBASE:MASTER:射精ゲージ = 5000
+IF ASSI >= 0
+	IF MAXBASE:ASSI:射精ゲージ == 0
+		MAXBASE:ASSI:射精ゲージ = 10000
+	ELSEIF MAXBASE:ASSI:射精ゲージ != 0 && TALENT:ASSI:早漏
+		MAXBASE:ASSI:射精ゲージ = 5000
+	ENDIF
+ENDIF
+
+IF (TALENT:MASTER:ぽっちゃり || TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ) && TALENT:MASTER:未熟 == 0
+	PRINT 射精
+	BAR BASE:MASTER:射精ゲージ,MAXBASE:MASTER:射精ゲージ,32
+	PRINTFORM ({BASE:MASTER:射精ゲージ}/{MAXBASE:MASTER:射精ゲージ})
+	SIF TEQUIP:主人コンドーム
+		PRINT コンドーム装着
+	PRINTL 
+ENDIF
+
+IF ASSIPLAY
+	IF (TALENT:ASSI:ぽっちゃり || TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ) && TALENT:ASSI:未熟 == 0
+		PRINT 射精（助手）
+		BAR BASE:ASSI:射精ゲージ,MAXBASE:ASSI:射精ゲージ,32
+		PRINTFORM ({BASE:ASSI:射精ゲージ}/{MAXBASE:ASSI:射精ゲージ})
+		SIF TEQUIP:助手コンドーム
+			PRINT コンドーム装着
+		PRINTL 
+	ENDIF
+ENDIF
+
+IF (TALENT:TARGET:ぽっちゃり || TALENT:TARGET:ふたなり || TALENT:TARGET:オトコ) && TALENT:TARGET:未熟 == 0
+	PRINT 射精（
+	PRINTS NAME:TARGET
+	PRINT ）
+	BAR BASE:射精ゲージ,MAXBASE:射精ゲージ,32
+	PRINTFORM ({BASE:射精ゲージ}/{MAXBASE:射精ゲージ})
+	SIF TEQUIP:調教対象コンドーム
+		PRINT コンドーム装着
+	PRINTL 
+ENDIF
+
+IF TALENT:TARGET:母乳体質
+	SIF MAXBASE:噴乳ゲージ == 0
+		MAXBASE:噴乳ゲージ = 10000
+	PRINT 母乳（
+	PRINTS NAME:TARGET
+	PRINT ）
+	BAR BASE:噴乳ゲージ,MAXBASE:噴乳ゲージ,32
+	PRINTFORML ({BASE:噴乳ゲージ}/{MAXBASE:噴乳ゲージ})
+ENDIF
+
+IF TEQUIP:獣姦プレイ
+	SIF MAXBASE:MASTER:異種射精ゲージ < 10000
+		MAXBASE:MASTER:異種射精ゲージ = 10000
+	PRINT 射精（犬）
+	BAR BASE:MASTER:異種射精ゲージ,MAXBASE:MASTER:異種射精ゲージ,32
+	PRINTFORML ({BASE:MASTER:異種射精ゲージ}/{MAXBASE:MASTER:異種射精ゲージ})
+ENDIF
+
+IF TEQUIP:触手召喚
+	SIF MAXBASE:MASTER:異種射精ゲージ < 10000
+		MAXBASE:MASTER:異種射精ゲージ = 10000
+	PRINT 射精（触手）
+	BAR BASE:MASTER:異種射精ゲージ,MAXBASE:MASTER:異種射精ゲージ,32
+	PRINTFORML ({BASE:MASTER:異種射精ゲージ}/{MAXBASE:MASTER:異種射精ゲージ})
+ENDIF
+
+						;****スライムパッチ追加ここから****
+IF TEQUIP:スライム生成
+	SIF MAXBASE:PLAYER:異種射精ゲージ < 10000
+		MAXBASE:PLAYER:異種射精ゲージ = 10000
+	PRINT 快感（スライム）
+	BAR BASE:PLAYER:異種射精ゲージ,MAXBASE:PLAYER:異種射精ゲージ,32
+	PRINTFORML ({BASE:PLAYER:異種射精ゲージ}/{MAXBASE:PLAYER:異種射精ゲージ})
+ENDIF
+						;****スライムパッチ追加ここまで****
+
+CALL SHOW_EQUIP_1
+
+;=================================================
+;TRAINでコマンド選択時最初に呼び出されるイベント関数
+;=================================================
+@EVENTCOM
+#PRI
+;TFLAG:口で射精～30はコマンドを選択する度に空にする
+REPEAT 30
+	TFLAG:COUNT = 0
+REND
+TFLAG:快楽経験 = 0
+
+;=================================================
+;TRAINでコマンド選択終了後に呼び出される関数
+;=================================================
+@EVENTCOMEND
+#PRI
+[IF_DEBUG]
+;SIF BASE:体力 <= 500
+;	BASE:体力 = 500
+[ENDIF]
+;調教キャラの死亡・衰弱判定
+IF BASE:体力 <= 0
+	DRAWLINE
+	;死亡時にビデオを使用していた？
+	SIF TEQUIP:撮影中
+		TFLAG:撮影中死亡 = 1
+	PRINTFORML %CALLNAME:TARGET%がぴくりとも動かなくなった
+	PRINTFORML 何をやっても反応がない……
+	WAIT
+	BEGIN AFTERTRAIN
+;瀕死時に調教を自動終了設定
+ELSEIF BASE:体力 < 500 && FLAG:瀕死時自動終了
+	DRAWLINE
+	PRINTL （体力が限界に来ています。調教を終了します）
+	WAIT
+	BEGIN AFTERTRAIN
+ENDIF
+;連続コマンド実行時の呼び出し
+IF TFLAG:901
+	CALL COMSEQ_REGISTER_TRAIN
+ENDIF
+
+;=================================================
+;BEGIN AFTERTRAIN後最初に呼び出される関数
+;=================================================
+@EVENTEND
+#LATER
+PRINTL 調教を終了しました。
+WAIT
+
+;失神時の口上非表示の回復
+IF TFLAG:失神回復 == 1
+	FLAG:口上使用 = 1
+	TFLAG:失神回復 = 0
+ELSEIF TFLAG:失神回復 == 2
+	FLAG:口上使用 = 2
+	TFLAG:失神回復 = 0
+ENDIF
+
+;今回の調教対象と助手を記録
+FLAG:前回調教対象 = TARGET
+FLAG:前回助手 = ASSI
+
+;調教後に死んでいる可能性をチェック
+CALL CHARADEAD_CHECK
+
+;生きていれば調教後行為のチェック
+IF RESULT == 0
+	CALL SELF_CHECK
+	DRAWLINE
+ENDIF
+
+;搾乳した母乳の売却
+CALL SELL_MILK
+
+;調教時に録画したビデオを売却
+CALL SELL_VIDEO
+
+;生きていて着衣モードなら調教後の衣類の処理
+IF FLAG:着衣使用 && BASE:体力 > 0
+	CALL AFTERTRAIN_CLOTH
+	;衣類の再着衣
+	CALL RE_CLOTHED
+ENDIF
+
+;調教後に死ぬか臨死状態なら珠を獲得せずに、ターゲットを空にしてターン終了
+IF BASE:体力 < 1
+	TARGET = -1
+	FLAG:前回調教対象 = -1
+	BEGIN TURNEND
+ENDIF
+
+;常時発情
+IF FLAG:常時発情なし == 0 && TALENT:常時発情 == 0
+	;潤滑の10000分の1を蓄積　潤滑が10000を下回る場合はリセット
+	IF PALAM:潤滑 >= 10000
+		CFLAG:常時発情システム使用時潤滑蓄積量 += PALAM:潤滑 / 10000
+	ELSE
+		CFLAG:常時発情システム使用時潤滑蓄積量 = 0
+	ENDIF
+	;欲情の10000分の1を蓄積　欲情が10000を下回る場合はリセット
+	IF PALAM:欲情 >= 10000
+		CFLAG:常時発情システム使用時欲情蓄積量 += PALAM:欲情 / 10000
+	ELSE
+		CFLAG:常時発情システム使用時欲情蓄積量 = 0
+	ENDIF
+ENDIF
+
+;何の珠を得られたか
+CALL JUEL_CHECK
+
+;能力値の上昇はメイン画面で行わせる
+CALL CALC_B_TRAINEND
+BEGIN TURNEND
+;BEGIN ABLUP
+;
+;=================================================
+;獲得した珠の計数と表示
+;=================================================
+@JUEL_CHECK
+
+IF PALAMLV:10 == 0
+	PALAMLV:10 = 500000
+	PALAMLV:11 = 1000000
+	PALAMLV:12 = 5000000
+	PALAMLV:13 = 10000000
+ENDIF
+
+REPEAT 15
+	IF PALAM:COUNT < PALAMLV:1
+		G = 0
+	ELSEIF PALAM:COUNT < PALAMLV:1*3
+		G = 1
+	ELSEIF PALAM:COUNT < PALAMLV:2
+		G = 2
+	ELSEIF PALAM:COUNT < PALAMLV:2*3
+		G = 10
+	ELSEIF PALAM:COUNT < PALAMLV:3
+		G = 20
+	ELSEIF PALAM:COUNT < PALAMLV:3*2
+		G = 100
+	ELSEIF PALAM:COUNT < PALAMLV:4
+		G = 200
+	ELSEIF PALAM:COUNT < PALAMLV:5
+		G = 1000
+	ELSEIF PALAM:COUNT < PALAMLV:6
+		G = 2000
+	ELSEIF PALAM:COUNT < PALAMLV:7
+		G = 3000
+	ELSEIF PALAM:COUNT < PALAMLV:8
+		G = 5000
+	ELSEIF PALAM:COUNT < PALAMLV:9
+		G = 8000
+	ELSEIF PALAM:COUNT < PALAMLV:10
+		G = 12000
+	ELSEIF PALAM:COUNT < PALAMLV:11
+		G = 18000
+	ELSEIF PALAM:COUNT < PALAMLV:12
+		G = 25000
+	ELSEIF PALAM:COUNT < PALAMLV:13
+		G = 40000
+	ELSE
+		G = 75000
+	ENDIF
+
+	IF COUNT == 0
+		GOTJUEL:COUNT = G + EX:0 * 1000
+	ELSEIF COUNT == 1
+		GOTJUEL:COUNT = G + EX:1 * 1000
+	ELSEIF COUNT == 2
+		GOTJUEL:COUNT = G + EX:2 * 1000
+	ELSEIF COUNT == 14
+		GOTJUEL:COUNT = G + EX:3 * 1000
+	ELSEIF COUNT < 11 && COUNT != 14
+		GOTJUEL:COUNT = G
+	ELSE
+		GOTJUEL:100 += G
+	ENDIF
+REND
+
+
+						;****追加ここから****
+	IF TALENT:性魔術
+		G = (EX:10 * 100000 + (PALAM:快Ｃ + PALAM:快Ｖ + PALAM:快Ａ + PALAM:快Ｂ))*(10 + TALENT:アナル処女 * 2 + TALENT:処女 * 3 - TALENT:妊娠 * 5) / 10000
+	ENDIF
+						;****追加ここまで****
+
+;現在保有する珠に今回獲得した珠を加算
+;3潤滑,11反感,12不快,13抑鬱は保有する珠として計算されないパラメータ
+REPEAT 11
+	SIF COUNT == 3
+		CONTINUE
+	JUEL:COUNT += GOTJUEL:COUNT
+REND
+JUEL:快Ｂ += GOTJUEL:14
+JUEL:否定 += GOTJUEL:100
+
+;否定の珠による相殺を計算
+;TFLAG:51～58に相殺前の（変動する可能性のある）珠を記録
+REPEAT 7
+	SIF COUNT == 3
+		CONTINUE
+	E = COUNT + 51
+	F = COUNT + 4
+	TFLAG:E = JUEL:F
+REND
+TFLAG:58 = JUEL:否定
+
+$LABEL_1
+A = RAND:3 + 4
+B = JUEL:否定 / 2
+SIF B == 0 && JUEL:否定 > 0
+	B = 1
+SIF JUEL:A < B
+	B = JUEL:A
+JUEL:A -= B
+JUEL:否定 -= B
+
+SIF JUEL:否定 > 0 && (JUEL:恭順 + JUEL:欲情 + JUEL:屈服) > 0
+	GOTO LABEL_1
+
+$LABEL_2
+A = RAND:3 + 8
+B = JUEL:否定 / 2
+SIF B == 0 && JUEL:否定 > 0
+	B = 1
+SIF JUEL:A < B
+	B = JUEL:A
+JUEL:A -= B
+JUEL:否定 -= B
+SIF JUEL:否定 > 0 && (JUEL:恥情 + JUEL:苦痛 + JUEL:恐怖) > 0
+	GOTO LABEL_2
+
+DRAWLINE
+PRINTFORM 調教の結果、
+SIF TFLAG:58 > 0
+	PRINTFORM 否定の珠{TFLAG:58}個との打消しも含めて、
+PRINTL 
+DRAWLINE
+REPEAT 12
+	IF COUNT <= 3 || COUNT == 7
+		IF COUNT == 3
+			D = 14
+		ELSE
+			D = COUNT
+		ENDIF
+		PRINTFORM %PALAMNAME:D%の珠：(
+		N = JUEL:D - GOTJUEL:D
+		CALL FIGURE_INDENT
+		PRINTV JUEL:D - GOTJUEL:D
+		PRINT  + 
+		N = GOTJUEL:D
+		CALL FIGURE_INDENT
+		PRINTV GOTJUEL:D
+		PRINT )            = 
+		N = JUEL:D
+		CALL FIGURE_INDENT
+		PRINTVL JUEL:D
+	ELSE
+		IF COUNT == 11
+			E = 58
+			F = 100
+		ELSE
+			E = COUNT + 47
+			F = COUNT
+		ENDIF
+		PRINTFORM %PALAMNAME:F%の珠：(
+		N = TFLAG:E - GOTJUEL:F
+		CALL FIGURE_INDENT
+		PRINTV TFLAG:E - GOTJUEL:F
+		PRINT  + 
+		N = GOTJUEL:F
+		CALL FIGURE_INDENT
+		PRINTV GOTJUEL:F
+		PRINT ) - 
+		N = TFLAG:E - JUEL:F
+		CALL FIGURE_INDENT
+		PRINTV TFLAG:E - JUEL:F
+		PRINT  = 
+		N = JUEL:F
+		CALL FIGURE_INDENT
+		PRINTVL JUEL:F
+	ENDIF
+REND
+
+						;****追加ここから****
+	IF TALENT:性魔術
+		IF BASE:体力 >= 500
+			PRINTFORML 魔力 {BASE:魔力} + {G} = {BASE:魔力 + G}
+			BASE:魔力 += G
+			SIF BASE:魔力 >= MAXBASE:魔力
+				BASE:魔力 = MAXBASE:魔力
+		ELSE
+			PRINTFORML 魔力 {BASE:魔力} - {G} = {BASE:魔力 - G}
+			BASE:魔力 -= G
+			SIF BASE:魔力 <= 0
+				BASE:魔力 = 0
+		ENDIF
+	ENDIF
+						;****追加ここまで****
+
+DRAWLINE
+PRINTL 以上のように珠が変化しました。
+WAIT
+;
+@FIGURE_INDENT
+SIF N < 10000000
+	PRINT  
+SIF N < 1000000
+	PRINT  
+SIF N < 100000
+	PRINT  
+SIF N < 10000
+	PRINT  
+SIF N < 1000
+	PRINT  
+SIF N < 100
+	PRINT  
+SIF N < 10
+	PRINT  
+RETURN 1
+;
+@FIGURE_INDENT_SLASH
+N = O
+CALL FIGURE_INDENT
+PRINTFORM {O}/
+N = P
+CALL FIGURE_INDENT
+PRINTFORM {P} 
+;
+;
+;
+;↓↓↓新パラメータ表示↓↓↓
+;-------------------------------------------------
+@NEW_PRINT_PALAM
+;-------------------------------------------------
+REPEAT 15
+
+;パラメータを表示する順番を並べ替える
+
+IF COUNT == 0
+;快Ｃ
+	A = 0
+ELSEIF COUNT == 1
+;快Ｖ
+	A = 1
+ELSEIF COUNT == 2
+;快Ａ
+	A = 2
+ELSEIF COUNT == 3
+;快Ｂ
+	A = 14
+ELSEIF COUNT == 4
+;潤滑
+	A = 3
+ELSEIF COUNT == 5
+;恭順
+	A = 4
+ELSEIF COUNT == 6
+;欲情
+	A = 5
+ELSEIF COUNT == 7
+;屈服
+	A = 6
+ELSEIF COUNT == 8
+;習得
+	A = 7
+ELSEIF COUNT == 9
+;恥情
+	A = 8
+ELSEIF COUNT == 10
+;苦痛
+	A = 9
+ELSEIF COUNT == 11
+;恐怖
+	A = 10
+ELSEIF COUNT == 12
+;反感
+	A = 11
+ELSEIF COUNT == 13
+;不快
+	A = 12
+ELSEIF COUNT == 14
+;抑鬱
+	A = 13
+ENDIF
+
+;PALAMLEVELによる取得珠数
+IF PALAMLV:10 == 0
+	PALAMLV:10 = 500000
+	PALAMLV:11 = 1000000
+	PALAMLV:12 = 5000000
+	PALAMLV:13 = 10000000
+ENDIF
+
+;現在のパラメータレベルをBに代入
+IF PALAM:A < PALAMLV:1
+	B = 0
+ELSEIF PALAM:A < PALAMLV:2
+	B = 1
+ELSEIF PALAM:A < PALAMLV:3
+	B = 2
+ELSEIF PALAM:A < PALAMLV:4
+	B = 3
+ELSEIF PALAM:A < PALAMLV:5
+	B = 4
+ELSEIF PALAM:A < PALAMLV:6
+	B = 5
+ELSEIF PALAM:A < PALAMLV:7
+	B = 6
+ELSEIF PALAM:A < PALAMLV:8
+	B = 7
+ELSEIF PALAM:A < PALAMLV:9
+	B = 8
+ELSEIF PALAM:A < PALAMLV:10
+	B = 9
+ELSEIF PALAM:A < PALAMLV:11
+	B = 10
+ELSEIF PALAM:A < PALAMLV:12
+	B = 11
+ELSEIF PALAM:A < PALAMLV:13
+	B = 12
+ELSE
+	B = 13
+ENDIF
+
+;パラメータの名前・パラメータレベル・ゲージを表示
+IF B < 10
+	PRINTFORM 　%PALAMNAME:A%Lv{B}[
+ELSE
+	PRINTFORM 　%PALAMNAME:A%L{B}[
+ENDIF
+
+;これだけ特殊
+IF A == 3 && PALAM:A >= 20000
+	PRINT !!!!!!!!]摩擦 0
+	GOTO NEW_PRINT_PALAM_NUM_END
+ENDIF
+
+;パラメータレベルが13以上なら余計な処理は飛ばす
+IF B >= 13
+	PRINT !!!!!!!!
+	GOTO NEW_PRINT_PALAM_END
+ENDIF
+
+;パラメータレベルごとの閾値の8分の1を1メモリとする
+E = B+1
+C = 8*(PALAM:A-PALAMLV:B)/(PALAMLV:E-PALAMLV:B)
+
+D = 8-C
+
+;パラメータレベルに応じて溜まっている部分に記号を表示
+$NEW_PRINT_PALAM_C
+SIF C == 0
+	GOTO NEW_PRINT_PALAM_D
+SIF B == 0
+	PRINT -
+SIF B == 1
+	PRINT =
+SIF B == 2
+	PRINT >
+SIF B == 3
+	PRINT *
+SIF B == 4
+	PRINT #
+SIF B == 5
+	PRINT /
+SIF B == 6
+	PRINT )
+SIF B == 7
+	PRINT %
+SIF B == 8
+	PRINT }
+SIF B == 9
+	PRINT ~
+SIF B == 10
+	PRINT $
+SIF B == 11
+	PRINT ?
+SIF B == 12
+	PRINT !
+C -= 1
+GOTO NEW_PRINT_PALAM_C
+
+;溜まっていない部分に1Lv下の記号を表示
+$NEW_PRINT_PALAM_D
+SIF D == 0
+	GOTO NEW_PRINT_PALAM_END
+SIF B == 0
+	PRINT .
+SIF B == 1
+	PRINT -
+SIF B == 2
+	PRINT =
+SIF B == 3
+	PRINT >
+SIF B == 4
+	PRINT *
+SIF B == 5
+	PRINT #
+SIF B == 6
+	PRINT /
+SIF B == 7
+	PRINT )
+SIF B == 8
+	PRINT %
+SIF B == 9
+	PRINT }
+SIF B == 10
+	PRINT ~
+SIF B == 11
+	PRINT $
+SIF B == 12
+	PRINT ?
+D -= 1
+GOTO NEW_PRINT_PALAM_D
+
+$NEW_PRINT_PALAM_END
+PRINT ]
+
+;↓↓↓↓kMGT表示↓↓↓↓
+A = PALAM:A
+B = 0
+;6桁までノーマル
+IF A > 999999
+	;kキロ(1000)
+	A /= 1000
+	B += 1
+	IF A > 99999
+		;Mメガ(百万)
+		A /= 1000
+		B += 1
+		;2^31 ≒ 21億 = 2100M = 2.1G
+		;eramakerの32ビット整数ならメガまでで十分
+		IF A > 99999
+			;Gギガ(十億)
+			A /= 1000
+			B += 1
+			IF A > 99999
+				;Tテラ(兆)
+				A /= 1000
+				B += 1
+				IF A > 99999
+					;Pペタ(千兆)
+					A /= 1000
+					B += 1
+					;2^63 ≒ 920京 = 9200P = 9.2E
+					;Emueraの64ビット整数でもペタまでで十分
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+;数値の桁数に応じて間隔を調整
+SIF A < 10
+	PRINT  
+SIF A < 100
+	PRINT  
+SIF A < 1000
+	PRINT  
+SIF A < 10000
+	PRINT  
+;接尾語が入るなら1つ減らす
+SIF A < 100000 && B == 0
+	PRINT  
+
+PRINTFORM {A}
+IF B == 1
+	PRINT k
+ELSEIF B == 2
+	PRINT M
+ELSEIF B == 3
+	PRINT G
+ELSEIF B == 4
+	PRINT T
+ELSEIF B == 5
+	PRINT P
+ENDIF
+;↑↑↑↑kMGT表示↑↑↑↑
+
+;↓↓↓↓通常表示↓↓↓↓
+;	;数値の桁数に応じて間隔を調整
+;	SIF PALAM:A < 10
+;		PRINT  
+;	SIF PALAM:A < 100
+;		PRINT  
+;	SIF PALAM:A < 1000
+;		PRINT  
+;	SIF PALAM:A < 10000
+;		PRINT  
+;	SIF PALAM:A < 100000
+;		PRINT  
+;	;数値を表示・999999を超えたら999999
+;	IF PALAM:A > 999999
+;		PRINT 999999
+;	ELSE
+;		PRINTFORM {PALAM:A}
+;	ENDIF
+;↑↑↑↑通常表示↑↑↑↑
+
+$NEW_PRINT_PALAM_NUM_END
+
+;3回ごとに改行
+SIF COUNT%3 == 2
+	PRINTL 
+
+REND
+;↑↑↑新パラメータ表示↑↑↑

@@ -1,0 +1,457 @@
+﻿@COM100
+;触手召喚
+
+PRINTL 触手召喚
+SAVESTR:0 = 触手召喚
+CALL TRAIN_MESSAGE_B
+
+IF TEQUIP:触手召喚
+	TEQUIP:触手召喚 = 0
+
+	;触手挿入(バイブ)
+	TEQUIP:バイブ = 0
+	;アナル触手(アナルバイブ)
+	TEQUIP:アナルバイブ = 0
+	;触手クリ責め(クリキャップ)
+	TEQUIP:クリキャップ = 0
+	;触手乳首責め(ニプルキャップ)
+	TEQUIP:ニプルキャップ = 0
+	;触手搾乳(搾乳器)
+	TEQUIP:搾乳機 = 0
+	;触手ペニス責め(オナホ)
+	TEQUIP:オナホール = 0
+	;触手緊縛(縄)
+	TEQUIP:縄 = 0
+	;触手浣腸(浣腸器)
+	TEQUIP:[[TEQUIP:浣腸器＋プラグ]] = 0
+	;触手口辱
+	TEQUIP:触手口辱 = 0
+
+ELSE
+	TEQUIP:触手召喚 = 1
+
+	A = 100
+	IF EXP:触手経験 < EXPLV:1
+		TIMES A , 3.00
+	ELSEIF EXP:触手経験 < EXPLV:2 / 2
+		TIMES A , 2.50
+	ELSEIF EXP:触手経験 < EXPLV:3 / 2
+		TIMES A , 2.00
+	ELSEIF EXP:触手経験 < EXPLV:4 / 2
+		TIMES A , 1.00
+	ELSEIF EXP:触手経験 < EXPLV:5 / 2
+		TIMES A , 0.80
+	ELSE
+		TIMES A , 0.60
+	ENDIF
+
+	;臆病
+	SIF TALENT:臆病
+		TIMES A , 2.00
+	;感情乏しい
+	SIF TALENT:感情乏しい
+		TIMES A , 0.60
+
+	LOSEBASE:体力 += A
+	LOSEBASE:気力 += A * 2
+
+	UP:10 += A * 20
+	SOURCE:14 += A * 5
+ENDIF
+T = 0
+RETURN 1
+
+
+@EQUIP_COM100
+;触手調教中
+PRINTL ＜触手調教中＞
+
+A = 100
+IF EXP:触手経験 < EXPLV:1
+	TIMES A , 3.00
+ELSEIF EXP:触手経験 < EXPLV:2
+	TIMES A , 2.50
+ELSEIF EXP:触手経験 < EXPLV:3
+	TIMES A , 2.00
+ELSEIF EXP:触手経験 < EXPLV:4
+	TIMES A , 1.00
+ELSEIF EXP:触手経験 < EXPLV:5
+	TIMES A , 0.80
+ELSE
+	TIMES A , 0.60
+ENDIF
+
+;臆病
+SIF TALENT:臆病
+	TIMES A , 2.00
+
+;感情乏しい
+SIF TALENT:感情乏しい
+	TIMES A , 0.60
+
+;淫乱
+SIF TALENT:淫乱
+	TIMES A , 0.50
+
+;苗床なら効果増大
+IF TALENT:苗床
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:7 , 2.00
+	TIMES SOURCE:10 , 3.00
+ENDIF
+
+IF ABL:触手中毒 <= 1
+	TIMES A , 1.00
+ELSEIF ABL:触手中毒 <= 2
+	TIMES A , 0.90
+ELSEIF ABL:触手中毒 <= 3
+	TIMES A , 0.80
+ELSEIF ABL:触手中毒 <= 4
+	TIMES A , 0.70
+ELSEIF ABL:触手中毒 <= 5
+	TIMES A , 0.60
+ELSE
+	TIMES A , 0.50
+ENDIF
+
+LOSEBASE:体力 += A
+LOSEBASE:気力 += A * 2
+
+UP:10 += A * 20
+SOURCE:8 += A * 10
+SOURCE:14 += A * 5
+
+;触手のぬめりと判断
+SOURCE:9 += 2000
+
+TIMES SOURCE:0 , 2.00
+TIMES SOURCE:1 , 2.00
+TIMES SOURCE:2 , 2.00
+TIMES SOURCE:17 , 2.00
+TIMES SOURCE:13 , 1.80
+
+;-------------------------------------------------
+;射精チェック
+;-------------------------------------------------
+IF MAXBASE:PLAYER:異種射精ゲージ != 0
+
+	B = 0
+	;ABL:技巧をみる
+	IF ABL:技巧 == 0
+		B = 500
+	ELSEIF ABL:技巧 == 1
+		B = 600
+	ELSEIF ABL:技巧 == 2
+		B = 800
+	ELSEIF ABL:技巧 == 3
+		B = 1000
+	ELSEIF ABL:技巧 == 4
+		B = 1400
+	ELSE
+		B = 2000
+	ENDIF
+
+	;ABL:従順をみる
+	IF ABL:信頼 == 0
+		TIMES B , 0.80
+	ELSEIF ABL:信頼 == 1
+		TIMES B , 0.90
+	ELSEIF ABL:信頼 == 2
+		TIMES B , 1.00
+	ELSEIF ABL:信頼 == 3
+		TIMES B , 1.10
+	ELSEIF ABL:信頼 == 4
+		TIMES B , 1.20
+	ELSE
+		TIMES B , 1.30
+	ENDIF
+
+	;PALAM:欲情をみる
+	IF PALAM:欲情 < PALAMLV:1
+		TIMES B , 1.00
+	ELSEIF PALAM:欲情 < PALAMLV:2
+		TIMES B , 1.10
+	ELSEIF PALAM:欲情 < PALAMLV:3
+		TIMES B , 1.20
+	ELSEIF PALAM:欲情 < PALAMLV:4
+		TIMES B , 1.30
+	ELSEIF PALAM:欲情 < PALAMLV:5
+		TIMES B , 1.40
+	ELSE
+		TIMES B , 1.50
+	ENDIF
+	;【苗床】だとイかせやすくなる
+	SIF TALENT:苗床
+		TIMES B , 2.50
+	
+	
+	;触手挿入
+	SIF TEQUIP:バイブ
+		TIMES B , 1.50
+	;アナル触手
+	SIF TEQUIP:アナルバイブ
+		TIMES B , 1.50
+	;触手クリ責め
+	SIF TEQUIP:クリキャップ
+		TIMES B , 1.20
+	;触手乳首責め
+	SIF TEQUIP:ニプルキャップ
+		TIMES B , 1.20
+	;触手搾乳
+	SIF TEQUIP:搾乳機
+		TIMES B , 1.30
+	;触手ペニス責め
+	SIF TEQUIP:オナホール
+		TIMES B , 1.10
+	;触手緊縛
+	SIF TEQUIP:縄
+		TIMES B , 1.20
+	;触手浣腸
+	SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+		TIMES B , 1.30
+	;触手口辱
+	SIF TEQUIP:触手口辱
+		TIMES B , 1.50
+
+	BASE:PLAYER:異種射精ゲージ += B
+
+	S = BASE:PLAYER:異種射精ゲージ
+	EJAC = MAXBASE:PLAYER:異種射精ゲージ
+
+	IF  S > EJAC * 2
+		E = 2
+	ELSEIF S > EJAC
+		E = 1
+	ELSE
+		E = 0
+	ENDIF
+
+
+	;大量射精
+	IF E == 2
+		EXP:精液経験 += 3
+						;****追加ここから****
+		SIF TEQUIP:バイブ
+			CFLAG:触手からの中田氏カウント += 3
+						;****追加ここまで****
+		PRINTL 触手大量射精
+		PRINTL 精液経験＋３
+		T += 1
+
+		BASE:PLAYER:異種射精ゲージ -= EJAC*2
+		SIF BASE:PLAYER:異種射精ゲージ >= EJAC
+			BASE:PLAYER:異種射精ゲージ = EJAC-1
+
+	;通常の射精
+	ELSEIF E == 1
+		EXP:精液経験 += 1
+						;****追加ここから****
+		SIF TEQUIP:バイブ
+			CFLAG:触手からの中田氏カウント += 1
+						;****追加ここまで****
+		PRINTL 触手射精
+		PRINTL 精液経験＋１
+		T += 1
+
+		BASE:PLAYER:異種射精ゲージ -= EJAC
+		SIF BASE:PLAYER:異種射精ゲージ >= EJAC
+			BASE:PLAYER:異種射精ゲージ = EJAC-1
+	ENDIF
+
+
+ENDIF
+
+IF EXP:触手経験 == 0
+	EXP:異常経験 += 1
+	PRINTL 異常経験＋1
+ENDIF
+
+T += 1
+PRINT 触手経験＋
+PRINTVL T
+EXP:触手経験 += T
+T = 0
+RETURN 1
+
+
+@COM101
+;触手バイブ
+JUMP COM11
+RETURN 1
+
+@COM102
+;アナル触手
+JUMP COM13
+RETURN 1
+
+@COM103
+;触手クリ責め
+JUMP COM14
+RETURN 1
+
+@COM104
+;触手乳首責め
+JUMP COM15
+RETURN 1
+
+@COM105
+;触手搾乳
+JUMP COM16
+RETURN 1
+
+@COM106
+;触手緊縛
+JUMP COM44
+RETURN 1
+
+@COM107
+;触手浣腸
+JUMP COM46
+RETURN 1
+
+@COM108
+;触手口辱
+PRINTL 触手口辱
+SAVESTR:0 = 触手口辱
+CALL TRAIN_MESSAGE_B
+
+LOSEBASE:体力 += 80
+LOSEBASE:気力 += 100
+
+;ファーストキス
+IF CFLAG:ファーストキスの相手 == -1
+	CFLAG:ファーストキスの相手 = 1
+	SETCOLOR 0xDDBBCC
+	PRINTFORML ファーストキス
+	RESETCOLOR
+	CSTR:ファーストキスの相手 = 触手生物
+	TFLAG:ファーストキス口以外 = 1	
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:4 += 200
+	 A = 100
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:4 += 300
+	A = 200
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:4 += 400
+	A = 400
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:4 += 500
+	A = 600
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:4 += 600
+	A = 800
+ELSE
+	SOURCE:4 += 800
+	A = 1100
+ENDIF
+
+;ABL:技巧をみる
+IF ABL:技巧 == 0
+	TIMES SOURCE:4 , 0.50
+ELSEIF ABL:技巧 == 1
+	TIMES SOURCE:4 , 0.80
+ELSEIF ABL:技巧 == 2
+	TIMES SOURCE:4 , 1.00
+ELSEIF ABL:技巧 == 3
+	TIMES SOURCE:4 , 1.20
+ELSEIF ABL:技巧 == 4
+	TIMES SOURCE:4 , 1.50
+ELSE
+	TIMES SOURCE:4 , 2.00
+ENDIF
+
+SOURCE:13 += A
+SOURCE:16 += A
+
+;触手の抜き挿し
+IF TEQUIP:触手口辱
+	TEQUIP:触手口辱 = 0
+ELSE
+	TEQUIP:触手口辱 = 1
+	STAIN:0 |= 2
+	STAIN:0 |= 4
+ENDIF
+T = 0
+
+EXP:フェラ経験 += 1
+PRINTL フェラ経験＋１
+RETURN 1
+
+
+@EQUIP_COM108
+;触手口辱中
+PRINTL ＜触手口辱中＞
+IF TALENT:精愛味覚
+	LOSEBASE:体力 += 40
+	LOSEBASE:気力 += 60
+ELSE
+	LOSEBASE:体力 += 80
+	LOSEBASE:気力 += 100
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:4 += 200
+	 A = 100
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:4 += 300
+	A = 200
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:4 += 400
+	A = 400
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:4 += 500
+	A = 600
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:4 += 600
+	A = 800
+ELSE
+	SOURCE:4 += 800
+	A = 1100
+ENDIF
+
+;ABL:技巧をみる
+IF ABL:技巧 == 0
+	TIMES SOURCE:4 , 0.50
+ELSEIF ABL:技巧 == 1
+	TIMES SOURCE:4 , 0.80
+ELSEIF ABL:技巧 == 2
+	TIMES SOURCE:4 , 1.00
+ELSEIF ABL:技巧 == 3
+	TIMES SOURCE:4 , 1.20
+ELSEIF ABL:技巧 == 4
+	TIMES SOURCE:4 , 1.50
+ELSE
+	TIMES SOURCE:4 , 2.00
+ENDIF
+
+SOURCE:13 += A
+SOURCE:16 += A
+
+EXP:フェラ経験 += 1
+PRINTL フェラ経験＋１
+T += 1
+RETURN 1
+
+@COM109
+;触手ペニス責め
+JUMP COM17
+RETURN 1
+;
+@SYOKUSYU_MILK
+;［Ｂ感度］３以上、［母乳体質］無しかつ［貧乳］[絶壁]［オトコ］無し
+IF ABL:TARGET:Ｂ感覚 >= 3 && TALENT:母乳体質 == 0 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0 && TALENT:オトコ == 0 
+	PRINTFORML 触手搾乳により%NAME:TARGET%は母乳が出るようになった
+	TALENT:母乳体質 = 1
+ENDIF
+
+RETURN 1
+;
+;
+;

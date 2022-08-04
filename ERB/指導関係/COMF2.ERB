@@ -1,0 +1,185 @@
+﻿;-------------------------------------------------
+;アナル愛撫
+;愛撫系コマンド：調教者が調教対象のアナルを手で刺激
+;-------------------------------------------------
+@COM2
+
+PRINTL アナル愛撫
+SAVESTR:0 = アナル愛撫
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 20
+LOSEBASE:気力 += 100
+
+SOURCE:12 = 850
+SOURCE:14 = 200
+
+;ABL:Ａ感覚をみる
+IF ABL:Ａ感覚 == 0
+	SOURCE:2 = 20
+	SOURCE:13 = 300
+ELSEIF ABL:Ａ感覚 == 1
+	SOURCE:2 = 75
+	SOURCE:13 = 350
+ELSEIF ABL:Ａ感覚 == 2
+	SOURCE:2 = 300
+	SOURCE:13 = 400
+ELSEIF ABL:Ａ感覚 == 3
+	SOURCE:2 = 700
+	SOURCE:13 = 650
+ELSEIF ABL:Ａ感覚 == 4
+	SOURCE:2 = 1100
+	SOURCE:13 = 1000
+ELSE
+	SOURCE:2 = 1500
+	SOURCE:13 = 1500
+ENDIF
+
+;EXP:Ａ経験をみる
+IF EXP:Ａ経験 < EXPLV:1
+	TIMES SOURCE:2 , 0.20
+	TIMES SOURCE:13, 0.20
+	SOURCE:6 = 500
+	SOURCE:14 += 200
+ELSEIF EXP:Ａ経験 < EXPLV:2
+	TIMES SOURCE:2 , 0.50
+	TIMES SOURCE:13, 0.50
+	SOURCE:6 = 400
+	SOURCE:14 += 100
+ELSEIF EXP:Ａ経験 < EXPLV:3
+	TIMES SOURCE:2 , 1.00
+	TIMES SOURCE:13, 1.00
+	SOURCE:6 = 300
+	SOURCE:14 += 50
+ELSEIF EXP:Ａ経験 < EXPLV:4
+	TIMES SOURCE:2 , 1.20
+	TIMES SOURCE:13, 1.20
+	SOURCE:6 = 200
+ELSEIF EXP:Ａ経験 < EXPLV:5
+	TIMES SOURCE:2 , 1.60
+	TIMES SOURCE:13, 1.60
+	SOURCE:6 = 100
+ELSE
+	TIMES SOURCE:2 , 1.80
+	TIMES SOURCE:13, 1.80
+	SOURCE:6 = 50
+ENDIF
+
+;PALAM:潤滑をみる
+IF PALAM:潤滑 < PALAMLV:1
+	TIMES SOURCE:2 , 0.10
+	TIMES SOURCE:13, 0.10
+	TIMES SOURCE:6 , 3.00
+ELSEIF PALAM:潤滑 < PALAMLV:2
+	TIMES SOURCE:2 , 0.20
+	TIMES SOURCE:13, 0.20
+	TIMES SOURCE:6 , 2.00
+ELSEIF PALAM:潤滑 < PALAMLV:3
+	TIMES SOURCE:2 , 0.60
+	TIMES SOURCE:13, 0.60
+	TIMES SOURCE:6 , 1.00
+ELSEIF PALAM:潤滑 < PALAMLV:4
+	TIMES SOURCE:2 , 1.00
+	TIMES SOURCE:13, 1.00
+	TIMES SOURCE:6 , 0.50
+ELSEIF PALAM:潤滑 >= PALAMLV:4
+	TIMES SOURCE:2 , 2.00
+	TIMES SOURCE:13, 2.00
+	TIMES SOURCE:6 , 0.10
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES SOURCE:2 , 0.30
+	TIMES SOURCE:13, 0.30
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES SOURCE:2 , 0.60
+	TIMES SOURCE:13, 0.60
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES SOURCE:2 , 1.00
+	TIMES SOURCE:13, 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES SOURCE:2 , 1.30
+	TIMES SOURCE:13, 1.30
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES SOURCE:2 , 1.60
+	TIMES SOURCE:13, 1.60
+ENDIF
+
+
+;Ａ敏感、鈍感をみる
+;快Ａ自体のチェックは後でまとめてやる
+IF TALENT:Ａ鈍感
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:14 , 1.50
+ELSEIF TALENT:Ａ敏感
+	TIMES SOURCE:6 , 0.60
+	TIMES SOURCE:13 , 0.60
+	TIMES SOURCE:14 , 0.60
+ENDIF
+
+;処女で貞操観念
+IF TALENT:処女 && TALENT:貞操観念
+	TIMES SOURCE:13 , 0.80
+	TIMES SOURCE:14 , 0.50
+ENDIF
+
+;未熟
+SIF TALENT:未熟
+	TIMES SOURCE:6 , 2.00
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+IF TEQUIP:触手召喚
+	;奴隷のＡに触手の汚れがつく
+	STAIN:4 |= 2
+	STAIN:4 |= 4
+ELSE
+	;奴隷のＡ⇔調教者の指の汚れが移動
+	STAIN:4 |= STAIN:PLAYER:1
+	STAIN:PLAYER:1 |= STAIN:4
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+S = 0
+;Ａ感覚が高いほどＡ経験が入る
+IF ABL:Ａ感覚 <= 1
+	S = 1
+ELSEIF ABL:Ａ感覚 <= 4
+	S = 2
+ELSEIF ABL:Ａ感覚 <= 7
+	S = 3
+ELSE
+	S = 4
+ENDIF
+EXP:Ａ経験 += S
+PRINTFORML Ａ経験+{S}
+S = 0
+
+;レズ経験・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +2
+	EXP:レズ経験 += 2
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +5
+	EXP:ＢＬ経験 += 5
+ENDIF
+
+;愛情経験
+E = 1
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+RETURN 1

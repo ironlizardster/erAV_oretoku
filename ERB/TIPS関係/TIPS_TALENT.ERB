@@ -1,0 +1,113 @@
+﻿;===========================================================
+;TIPS 特殊素質解放
+;===========================================================
+@TIPS_TALENT
+PRINTFORML 《ＴＩＰＳ》
+PRINTFORML 特殊な素質の獲得方法
+DRAWLINE
+PRINTL  [0] - 感覚強化素質
+PRINTL  [1] - 感覚強化終了素質
+PRINTL  [2] - 倒錯系素質
+PRINTL  [3] - その他の素質
+DRAWLINE
+PRINTL [999] - 戻る
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL TIPS_TALENT_CVAB
+ELSEIF RESULT == 1
+	CALL TIPS_TALENT_CVAB_END
+ELSEIF RESULT == 2
+	CALL TIPS_TALENT_SM
+ELSEIF RESULT == 3
+	CALL TIPS_TALENT_OTHERS
+ELSEIF RESULT == 999
+	CALL TIPS_MAIN
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+
+;===========================================================
+;感覚強化素質
+;===========================================================
+@TIPS_TALENT_CVAB
+
+DRAWLINE
+PRINTFORML ◆感覚強化素質◆
+PRINTFORML 通常LV5までしか上昇できないＣ・Ｖ・Ａ・Ｂ感覚の上限をLV10まで開放する
+PRINTFORML 各感覚強化素質の取得条件は以下の通り
+PRINTFORML 
+PRINTFORML Ｃ感覚強化素質：【自慰狂い】
+PRINTFORML Ｃ感覚がLV4以上で自慰経験が100以上
+PRINTFORML 
+PRINTFORML Ｂ感覚強化素質：【乳狂い】
+PRINTFORML Ｂ感覚がLV4以上でＢ開発経験が150以上
+PRINTFORML 
+PRINTFORML Ｖ感覚強化素質：【セックス狂】
+PRINTFORML Ｖ感覚がLV4以上でＶ経験が150以上
+PRINTFORML 
+PRINTFORML Ａ感覚強化素質：【尻穴狂い】
+PRINTFORML Ａ感覚がLV4以上でＡ快楽経験が300以上
+DRAWLINE
+WAIT
+CALL TIPS_TALENT
+
+;===========================================================
+;感覚強化終了素質
+;===========================================================
+@TIPS_TALENT_CVAB_END
+
+DRAWLINE
+PRINTFORML ◆感覚強化終了素質◆
+PRINTFORML 感覚強化素質と【絶倫】または【淫魔】を取得しており、各種感覚をLV10まで上昇させると取得できる
+PRINTFORML 各感覚強化終了素質は以下の通り
+PRINTFORML 
+PRINTFORML Ｃ感覚強化終了素質：【淫核】
+PRINTFORML Ｂ感覚強化終了素質：【淫乳】
+PRINTFORML Ｖ感覚強化終了素質：【淫壺】
+PRINTFORML Ａ感覚強化終了素質：【淫肛】
+PRINTFORML 
+PRINTFORML 感覚強化終了素質すべてを取得した場合【性豪】を取得し、各感覚が【○敏感】へと変更される
+DRAWLINE
+WAIT
+CALL TIPS_TALENT
+
+;===========================================================
+;倒錯系素質
+;===========================================================
+@TIPS_TALENT_SM
+
+DRAWLINE
+PRINTFORML ◆倒錯系素質◆
+PRINTFORML 通常LV5までしか上昇できない各能力の上限をLV10まで開放する
+PRINTFORML 各倒錯系素質の取得条件はは以下の通り
+PRINTFORML 
+PRINTFORML 【サド】：サドっ気LV4以上、嗜虐快楽経験300以上
+PRINTFORML 【マゾ】：マゾっ気LV4以上、被虐快楽経験300以上
+PRINTFORML 
+PRINTFORML 倒錯系素質は【淫魔】【天使】のいずれかを取得していない場合、どちらか一方のみとなる
+DRAWLINE
+WAIT
+CALL TIPS_TALENT
+
+;===========================================================
+;その他の素質
+;===========================================================
+@TIPS_TALENT_OTHERS
+
+DRAWLINE
+PRINTFORML ◆その他の素質◆
+PRINTFORML このほかに特定条件を達成した場合、以下の素質を取得できる
+PRINTFORML 
+PRINTFORML 　　　【両刀】：レズっ気LV4以上、レズ中毒LV3以上、好感度150以上、レズ経験2000以上
+PRINTFORML 　　【露出狂】：露出癖LV4以上、野外露出経験100以上、自慰経験200以上
+PRINTFORML 　【ギャル系】：【影響されやすい】を取得しているキャラクターが
+PRINTFORML 　　　　　　　　【ギャル系】を取得しているキャラクターとの相性が１２０以上の場合、ランダムで取得
+PRINTFORML 　【彼氏あり】：週末処理時にランダムで加算される数値がキャラクターごとに異なる達成値を上回った
+PRINTFORML 　　　　　　　　または合コンに参加させることによってランダムで取得
+PRINTFORML 【セフレあり】：【ギャル系】を取得しており、【貞操観念】【一線超えない】を取得していない
+DRAWLINE
+WAIT
+CALL TIPS_TALENT

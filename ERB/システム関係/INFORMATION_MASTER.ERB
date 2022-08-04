@@ -1,0 +1,56 @@
+﻿;===========================================================
+;マスターの情報
+;===========================================================
+
+@PRINT_INFORMATION
+
+A = 0
+B = 0
+C = 0
+D = 0
+E = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+		IF TALENT:COUNT:彼氏あり
+			A += 1
+		ELSEIF TALENT:COUNT:恋心 == 1
+			B += 1
+		ELSEIF CFLAG:COUNT:ファーストキスの相手 == 2 || CFLAG:COUNT:ファーストキスの相手 == 3 || CFLAG:COUNT:ファーストキスの相手 == 6
+			C += 1
+		ELSEIF EXP:COUNT:痴漢経験 > 0
+			D += 1
+		ELSEIF EXP:COUNT:痴漢経験 > 0
+			E += EXP:COUNT:痴漢経験
+		ENDIF
+	ENDIF
+REND
+
+DRAWLINE
+
+PRINTFORM  今月の売れ筋ジャンル、または売れ筋の女優の傾向は
+CALL VIDEOSALE_PRINT
+						;****都子ラボ追加ここから****
+IF FLAG:売れ筋 == -1
+	PRINTFORML ですの
+ELSE
+	PRINTFORML です
+ENDIF
+						;****都子ラボ追加ここまで****
+PRINTFORML  %CALLNAME:MASTER%がこれまでにリリースしたＡＶの総売上は{MONEY:2}ポイントです
+
+IF B > 0
+	PRINTFORML  現在、{B}人が%CALLNAME:MASTER%に恋心を抱いています
+ENDIF
+IF C > 0
+	PRINTFORML  現在、{C}人が売春で処女喪失しました
+ENDIF
+IF A > 0
+	PRINTFORML  現在、{A}人の女優候補に彼氏がいます
+ENDIF
+IF D > 0
+	PRINTFORML  現在、{D}人が痴漢に遭って、延べ回数は{E}回です
+ENDIF
+DRAWLINE
+WAIT

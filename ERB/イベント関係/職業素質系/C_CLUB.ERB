@@ -1,0 +1,169 @@
+﻿;===========================================================
+;キャバクラ絡みのイベント
+;===========================================================
+@C_CLUB_EVENT
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:キャバ嬢 == 1
+		CALL START_C_CLUBEVENT
+	ENDIF
+REND
+;===========================================================
+;イベント開始
+;===========================================================
+@START_C_CLUBEVENT
+TEMP_NUM = RAND:8
+
+;1/4でキャバクラ訪問
+IF TEMP_NUM <= 1 && MONEY > 10000
+	CALL EVENT_C_CLUBHALL
+	DRAWLINE
+;1/8でアフター
+ELSEIF TEMP_NUM <= 2
+	CALL EVENT_C_CLUBAFTER
+	DRAWLINE
+ENDIF
+
+;===========================================================
+;キャバクラ訪問
+;===========================================================
+@EVENT_C_CLUBHALL
+
+PRINTFORML 休日を利用して、%NAME:COUNT%の勤めているキャバクラを訪れた……
+PRINTFORM あいにく%CALLNAME:COUNT%は指名を受けているらしく、%CALLNAME:COUNT%が空くまではとりあえず
+IF EXP:MASTER:交際人数 == 0 || FLAG:キャバ嬢契約
+	PRINTFORM 他のキャスト
+ELSEIF FLAG:キャバ嬢契約 < 0
+	PRINTFORM %CSTR:MASTER:キャバ嬢名%
+ENDIF
+PRINTFORML が%CALLNAME:MASTER%の相手をしてくれるという
+IF EXP:MASTER:交際人数 == 0
+	PRINTFORM 同席してくれたキャストが差し出した名刺に書かれた
+	CALL C_CLUBGIRL_NAMEDECIDE
+	PRINTFORML %CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%という名前は源氏名ではなく本名らしい
+	PRINTFORML なんでも特別会員にのみ渡している名刺だという
+ENDIF
+PRINTFORM ゲストに酌をしたりタバコに火をつけたりする、露出度の高いドレスを身にまとった%CALLNAME:COUNT%を横目に見ながら
+PRINTFORM %CALLNAME:MASTER%は
+IF FLAG:キャバ嬢契約 < 0
+	PRINTFORM %CSTR:MASTER:キャバ嬢名%に
+ELSE
+	PRINTFORM キャストに
+ENDIF
+PRINTFORML %CALLNAME:COUNT%の評判を聞いてみることにした……
+PRINTFORM なんでも他のキャストの誰よりも
+IF TALENT:COUNT:献身的 == 1
+	PRINTFORM 甲斐甲斐しくゲストに接する
+ELSEIF TALENT:COUNT:令嬢 == 1
+	PRINTFORM ただ華があるだけではなく気品も備えた
+ELSEIF TALENT:COUNT:小悪魔 == 1
+	PRINTFORM 男心をくすぐるような小悪魔的な魅力のある
+ELSEIF TALENT:COUNT:治療
+	PRINTFORM 癒し系な雰囲気の
+ELSEIF TALENT:COUNT:鼓舞
+	PRINTFORM ゲストの愚痴を聞いて励ましてくれる
+ELSE
+	PRINTFORM 真摯にゲストに接する
+ENDIF
+PRINTFORML %CALLNAME:COUNT%は、店だけではなくゲストからの評判もいいらしい……
+
+PRINTL
+PRINTL 会話経験＋5
+PRINTL 指名経験＋1
+EXP:COUNT:会話経験 += 5
+EXP:COUNT:指名経験 += 1
+IF RAND:100 >= 60 && MONEY >= 500000 && FLAG:キャバ嬢契約 < 0
+	CALL EVENT_ADD_C_GIRL
+ENDIF
+SIF FLAG:キャバ嬢契約 == 0
+	FLAG:キャバ嬢契約 = -1
+
+;===========================================================
+;キャバ嬢と契約する？
+;===========================================================
+@EVENT_ADD_C_GIRL
+
+PRINTW
+	CHKFONT "あくびん"
+		IF RESULT
+			SETFONT "あくびん"
+		ENDIF	
+	SETCOLOR 0xDDBBCC
+PRINTFORML 「オーナーから聞きましたけど……お客さん、オーナーの関係者なんですよね？」
+PRINTFORML 「それでオーナーに『借金を早く返したかったらアイツに相談してみるといいよ』って言われたんですけど……」
+PRINTL
+	RESETCOLOR
+	SETFONT ""
+PRINTFORML そろそろ帰ろうかと思った%CALLNAME:MASTER%に、相手をしてくれていた%CSTR:MASTER:キャバ嬢名%が話があるという……
+PRINTFORML なんでも彼女も桐生組に莫大な借金があるらしく、それでオーナー、つまり歌音に%CALLNAME:MASTER%を紹介されたらしい
+PRINTFORML この店に勤めてそれなりになるにしては未だに垢抜けてはいないが、確かに歌音の目利き通りなかなかの素材であると言える
+PRINTFORML 事務所の経営も安定してきたし、ひとりぐらいは女優を増やしても問題はないはずだ……
+PRINTL
+$INPUT_LOOP_C_GIRL
+PRINTFORML %CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%と契約しますか？
+PRINTL [0] - はい
+PRINTL [1] - いいえ
+INPUT
+IF RESULT == 0
+	PRINTFORML 契約することにした%CALLNAME:MASTER%は、%CSTR:MASTER:キャバ嬢名%に指定した日に事務所に来るように告げた
+	PRINTFORM 嬉しそうな、それでいてどことなくほっとしたような表情で%CSTR:MASTER:キャバ嬢名%は、%CALLNAME:MASTER%に頭を下げながら感謝の言葉を
+	PRINTFORML 述べ続けていた……
+	PRINTL
+	PRINTFORML 《%CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%と契約しました》
+	CALL キャラ追加([[キャラ:キャバ嬢]])
+	FLAG:キャバ嬢契約 = 1
+	NAME:TARGET = %CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%
+	CALLNAME:TARGET = %CSTR:MASTER:キャバ嬢名%
+	BASE:実年齢 += RAND:5
+	CFLAG:髪の色 = RAND:10
+	CFLAG:地毛の色 = RAND:10
+	CFLAG:染髪の有無 = RAND:1
+	CFLAG:髪型 = RAND:8
+ELSEIF RESULT == 1
+	PRINTFORM しばし考え込んでいた%CALLNAME:MASTER%だったが、諸事情から今のところ専属女優を増やす予定はないと%CSTR:MASTER:キャバ嬢名%に告げると、
+	PRINTFORML %CSTR:MASTER:キャバ嬢名%は残念そうにしながらも、%CALLNAME:MASTER%に笑顔を浮かべて営業トークを始めた……
+ELSE
+	GOTO INPUT_LOOP_C_GIRL
+ENDIF
+
+;=========================================================
+;キャバクラ仕事後イベント
+;文章はロダ1509をほぼそのまま導入。諸々控えめに
+;=========================================================
+@EVENT_C_CLUBAFTER
+LOCAL = RAND:3
+
+PRINTFORM %NAME:COUNT%はキャバクラの仕事を終え、指名客とアフターで出かけた……
+;カラオケ	
+IF LOCAL == 0
+	PRINTFORM カラオケに連れて行ってもらった%CALLNAME:COUNT%
+	;歌唱レベル５以上で
+	IF ABL:COUNT:歌唱技能 >= 5
+		PRINTFORML が１曲歌うと、
+		PRINTFORML 客は歌の上手さに聞き入ってしまった。
+		PRINTFORML 結局、%CALLNAME:COUNT%がひとりで時間の大部分を使ってしまったが、
+		PRINTFORML %CALLNAME:COUNT%の歌声を独り占めできた、と客は十分に満足した。
+		PRINTFORML 歌唱経験＋{ABL:COUNT:歌唱技能}
+		EXP:COUNT:歌唱経験 += ABL:COUNT:歌唱技能 + 2
+	ELSE
+		PRINTFORML はデュエット曲を中心に選曲し、
+		PRINTFORML 客と一緒にたくさんの曲を歌った。
+		PRINTFORML 歌唱経験＋4
+		EXP:COUNT:歌唱経験 += 4
+	ENDIF
+;食事
+ELSEIF LOCAL == 1
+	PRINTFORML 食事処へ連れて行ってもらった%CALLNAME:COUNT%は料理の美味しさに満面の笑みを浮かべ、
+	PRINTFORML その様子を見ていた客は得意げな表情をしていた。
+	PRINTFORML 会話経験＋4
+	EXP:COUNT:会話経験 += 4
+;ゲームセンター
+ELSEIF LOCAL == 2
+	PRINTFORML ふたりはゲームセンターに遊びに行き、いっしょにプリクラを撮ったりダンスゲームをしたりした。
+	PRINTFORML %CALLNAME:COUNT%とツーショットのプリクラを手にした客は、とても嬉しそうだった。
+	PRINTFORML 被写経験＋2
+	PRINTFORML 舞踊経験＋2
+	EXP:COUNT:被写経験 += 2
+	EXP:COUNT:舞踊経験 += 2
+ENDIF

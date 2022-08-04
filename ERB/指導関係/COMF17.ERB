@@ -1,0 +1,171 @@
+﻿;-------------------------------------------------
+;オナホール
+;道具使用コマンド：調教対象のペニスをオナホールで刺激
+;-------------------------------------------------
+@COM17
+
+IF TEQUIP:触手召喚
+	PRINTL 触手ペニス責め
+	SAVESTR:0 = 触手ペニス責め
+ELSE
+	PRINTL オナホール
+	SAVESTR:0 = オナホール
+ENDIF
+CALL TRAIN_MESSAGE_B
+
+LOSEBASE:体力 += 10
+LOSEBASE:気力 += 80
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:12 = 120
+SOURCE:14 = 70
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 200
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 400
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 900
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 1600
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 2400
+ELSE
+	SOURCE:0 = 3000
+ENDIF
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式オナホール >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:12 , 1.20
+	TIMES SOURCE:14 , 0.80
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;オナホールの着脱
+;-------------------------------------------------
+TEQUIP:オナホール = 1 - TEQUIP:オナホール
+SIF TEQUIP:触手召喚
+	T = 0
+
+;-------------------------------------------------
+;汚れ（触手）
+;-------------------------------------------------
+IF TEQUIP:触手召喚 && TEQUIP:オナホール
+	STAIN:3 |= 2
+	STAIN:3 |= 4
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;オナホール装備中
+;-------------------------------------------------
+@EQUIP_COM17
+
+IF TEQUIP:触手召喚
+	PRINTL ＜触手ペニス責め中＞
+ELSE
+	PRINTL ＜オナホール装備中＞
+ENDIF
+
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 20
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	A = 40
+ELSEIF ABL:Ｃ感覚 == 1
+	A = 120
+ELSEIF ABL:Ｃ感覚 == 2
+	A = 250
+ELSEIF ABL:Ｃ感覚 == 3
+	A = 450
+ELSEIF ABL:Ｃ感覚 == 4
+	A = 600
+ELSE
+	A = 750
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES A , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES A , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES A , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES A , 1.20
+ELSE
+	TIMES A , 1.30
+ENDIF
+
+SOURCE:0 += A
+SOURCE:11 += 50
+SOURCE:12 += 50
+
+						;****スライムパッチ追加ここから****
+IF ITEM:魔術式オナホール >= 1 && TEQUIP:触手召喚 == 0
+	TIMES LOSEBASE:体力 , 0.80
+	TIMES LOSEBASE:気力 , 0.80
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:10 , 1.20
+	TIMES SOURCE:11 , 1.20
+	TIMES SOURCE:12 , 1.20
+ENDIF
+						;****スライムパッチ追加ここまで****
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+SIF TEQUIP:触手召喚
+	T += 1
+
+RETURN 1
+;

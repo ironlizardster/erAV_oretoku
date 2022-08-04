@@ -1,0 +1,133 @@
+﻿@EGG_ITEM
+PRINTFORM %NAME:C%の産んだ卵が割れてその中には
+IF ITEM:蒼の魔術書 == 0
+	PRINTFORML %ITEMNAME:[[ITEM:蒼の魔術書]]%が入っていた
+	ITEM:蒼の魔術書 = 1
+ELSE
+	;非消費アイテム入手判定、既に持っていれば消費アイテム入手判定へ
+	SELECTCASE RAND:16
+	CASE 0
+		IF ITEM:魔術式ローター == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式ローター]]%が入っていた
+			ITEM:魔術式ローター = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 1
+		IF ITEM:魔術式バイブ == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式バイブ]]%が入っていた
+			ITEM:魔術式バイブ = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 2
+		IF ITEM:魔術式Ｅマッサージャ == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式Ｅマッサージャ]]%が入っていた
+			ITEM:魔術式Ｅマッサージャ = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 3
+		IF ITEM:魔術式アナルバイブ == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式アナルバイブ]]%が入っていた
+			ITEM:魔術式アナルバイブ = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 4
+		IF ITEM:魔術式クリキャップ == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式クリキャップ]]%が入っていた
+			ITEM:魔術式クリキャップ = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 5
+		IF ITEM:魔術式ニプルキャップ == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式ニプルキャップ]]%が入っていた
+			ITEM:魔術式ニプルキャップ = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 6
+		IF ITEM:高性能鞭 == 0
+			PRINTFORML %ITEMNAME:[[ITEM:高性能鞭]]%が入っていた
+			ITEM:高性能鞭 = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 7
+		IF ITEM:高性能針 == 0
+			PRINTFORML %ITEMNAME:[[ITEM:高性能針]]%が入っていた
+			ITEM:高性能針 = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 8
+		IF ITEM:疲労回復用入浴剤 == 0
+			PRINTFORML %ITEMNAME:[[ITEM:疲労回復用入浴剤]]%が入っていた
+			ITEM:疲労回復用入浴剤 = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 9
+		IF ITEM:生きている縄 == 0
+			PRINTFORML %ITEMNAME:[[ITEM:生きている縄]]%が入っていた
+			ITEM:生きている縄 = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 10
+		IF ITEM:魔術式搾乳器 == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式搾乳器]]%が入っていた
+			ITEM:魔術式搾乳器 = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 11
+		IF ITEM:エプロン == 0
+			PRINTFORML %ITEMNAME:[[ITEM:エプロン]]%が入っていた
+			ITEM:エプロン = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 12
+		IF ITEM:魔術式アナルビーズ == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式アナルビーズ]]%が入っていた
+			ITEM:魔術式アナルビーズ = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 13
+		IF ITEM:魔術式三角木馬 == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式三角木馬]]%が入っていた
+			ITEM:魔術式三角木馬 = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASE 14
+		IF ITEM:魔術式オナホール == 0
+			PRINTFORML %ITEMNAME:[[ITEM:魔術式オナホール]]%が入っていた
+			ITEM:魔術式オナホール = 1
+		ELSE
+			CALL EGG_ITEM_USE
+		ENDIF
+	CASEELSE
+		CALL EGG_ITEM_USE
+	ENDSELECT
+ENDIF
+
+;消費アイテム入手判定
+@EGG_ITEM_USE
+SELECTCASE RAND:2
+CASE 0
+	IF ITEM:コンドーム >= 99
+		PRINTFORML %ITEMNAME:[[ITEM:コンドーム]]%が入っていた
+		ITEM:コンドーム += 1
+	ELSE
+		PRINTFORML 小さな宝石が入っていた
+		MONEY += 500
+	ENDIF
+CASEELSE
+	PRINTFORML 小さな宝石が入っていた
+	MONEY += 500
+ENDSELECT

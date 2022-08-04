@@ -1,0 +1,106 @@
+﻿;=================================================
+;ユーニスラボ
+;=================================================
+@EUNICE_LABO
+
+Y = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:処女 == 1
+		Y += 1
+	ENDIF
+REND
+	
+
+B = 0
+
+DRAWLINE
+PRINTL アーカーシャ本部・ユーニスの研究室
+PRINTL 《ユーニスの恩恵を受けることができます》
+
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 0] - 人格破壊：【プライド高い】の取得    　　（ 2000000ポイント）
+PRINTL  [ 1] - 人格破壊：ニュートラル　　　　　　　　　（ 1000000ポイント）
+PRINTL  [ 2] - 人格破壊：【プライド低い】の取得    　　（ 2000000ポイント）
+PRINTL  [ 3] - 人格破壊：【快感に素直】の取得    　　　（ 3000000ポイント）
+PRINTL  [ 4] - 人格破壊：ニュートラル    　　　　　　　（ 1500000ポイント）
+PRINTL  [ 5] - 人格破壊：【快感の否定】の取得    　　　（ 3000000ポイント）
+PRINTL  [ 6] - 人格破壊：【サド】の取得    　　　　　　（ 3000000ポイント）
+PRINTL  [ 7] - 人格破壊：ニュートラル    　　　　　　　（ 1500000ポイント）
+PRINTL  [ 8] - 人格破壊：【マゾ】の取得　　　    　　　（ 3000000ポイント）
+PRINTL  [ 9] - 事象改変：【アイドル】の取得    　　　　（ 2000000ポイント）
+PRINTL  [10] - 事象改変：【ファッションモデル】の取得　（ 2000000ポイント）
+PRINTL  [11] - 事象改変：【キャバ嬢】の取得    　　　　（ 2000000ポイント）
+PRINTL  [12] - 事象改変：ニュートラル　　　　　　　　　（ 1000000ポイント）
+IF PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1
+	PRINTL  [13] - 事象改変：処女喪失　　　　　　　　　　　（80000000ポイント）
+	PRINTL  [14] - 事象改変：アナル処女喪失　　　　　　　　（80000000ポイント）
+	PRINTL  [15] - 事象改変：ファーストキス　　　　　　　　（80000000ポイント）
+ENDIF
+SIF FLAG:FALLENANGELSボーナス受け取り == 1; && Y >= 2
+	PRINTL  [99] - 事象改変：【堕天使】の取得と転生    　　（30000000ポイント）
+DRAWLINE
+PRINTL [999] - 戻る
+
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 0
+	CALL BREAK_PRIDE_HIGH
+ELSEIF RESULT == 1
+	CALL BREAK_PRIDE_NEUTRAL
+ELSEIF RESULT == 2
+	CALL BREAK_PRIDE_LOW
+ELSEIF RESULT == 3
+	CALL BREAK_XTC_POSITIVE
+ELSEIF RESULT == 4
+	CALL BREAK_XTC_NEUTRAL
+ELSEIF RESULT == 5
+	CALL BREAK_XTC_NEGATIVE
+ELSEIF RESULT == 6
+	CALL BREAK_SM_SADIST
+ELSEIF RESULT == 7
+	CALL BREAK_SM_NEUTRAL
+ELSEIF RESULT == 8
+	CALL BREAK_SM_MASOCHIST
+ELSEIF RESULT == 9
+	B = [[TALENT:アイドル]]
+	CALL CHANGE_WORK
+ELSEIF RESULT == 10
+	B = [[TALENT:ファッションモデル]]
+	CALL CHANGE_WORK
+ELSEIF RESULT == 11
+	B = [[TALENT:キャバ嬢]]
+	CALL CHANGE_WORK
+ELSEIF RESULT == 12
+	B = 999
+	CALL CHANGE_WORK
+ELSEIF RESULT == 13 && (PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
+	B = 100
+	CALL CHANGE_VIRGINITY
+ELSEIF RESULT == 14 && (PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
+	B = 150
+	CALL CHANGE_VIRGINITY
+ELSEIF RESULT == 15 && (PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
+	B = 200
+	CALL CHANGE_VIRGINITY
+ELSEIF RESULT == 99 && FLAG:FALLENANGELSボーナス受け取り == 1; && Y >= 2
+	CALL CHANGE_FALLEN
+ELSEIF RESULT == 999
+	RETURN 
+ELSE
+	GOTO INPUT_LOOP
+ENDIF

@@ -1,0 +1,637 @@
+﻿;-------------------------------------------------
+;二本フェラ
+;助手系コマンド:奴隷に助手と調教者の%CSTR:男性器呼び方%を同時に舐めさせる
+;-------------------------------------------------
+@COM66
+
+;ファーストキスを奪うかどうかの確認
+CALL CONFIRM_FIRSTKISS
+SIF RESULT == 0
+	RETURN 0
+
+PRINTL ニ本フェラ
+
+;-------------------------------------------------
+;実行できるかの判定
+;-------------------------------------------------
+A = 0
+S = 0
+
+;すべての命令に共通の要素を考慮
+;(従順が高いと命令に従いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 1
+	PRINTS ABLNAME:[[ABL:欲望]]
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 1,')
+	S = 1
+ENDIF
+;ABL:奉仕精神
+IF ABL:奉仕精神
+	SIF S
+		PRINT  + 
+	A += ABL:奉仕精神 * 4
+	PRINTS ABLNAME:[[ABL:奉仕精神]]
+	PRINTV 'LV,ABL:奉仕精神,'(,ABL:奉仕精神 * 4,')
+	S = 1
+ENDIF
+;ABL:精液中毒
+IF ABL:精液中毒
+	SIF S
+		PRINT  + 
+	A += ABL:精液中毒 * 3
+	PRINTS ABLNAME:[[ABL:精液中毒]]
+	PRINTV 'LV,ABL:精液中毒,'(,ABL:精液中毒 * 3,')
+	S = 1
+ENDIF
+
+IF MARK:快楽刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快楽刻印 * 1
+	PRINTS MARKNAME:[[MARK:快楽刻印]]
+	PRINTV 'LV,MARK:快楽刻印,'(,MARK:快楽刻印 * 1,')
+	S = 1
+ENDIF
+
+
+;PALAM:欲情
+IF PALAM:欲情 < PALAMLV:1
+	L = 0
+ELSEIF PALAM:欲情 < PALAMLV:2
+	L = 1
+ELSEIF PALAM:欲情 < PALAMLV:3
+	L = 2
+ELSEIF PALAM:欲情 < PALAMLV:4
+	L = 3
+ELSEIF PALAM:欲情 < PALAMLV:5
+	L = 4
+ELSE
+	L = 5
+ENDIF
+IF L
+	SIF S
+		PRINT  + 
+	A += L * 1
+	PRINTS PALAMNAME:[[PALAM:欲情]]
+	PRINTV 'LV,L,'(,L * 1,')
+	S = 1
+ENDIF
+
+;恥じらい
+IF TALENT:恥じらい
+	PRINT  - 
+	A -= 1
+	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;汚臭鈍感
+IF TALENT:汚臭鈍感
+	SIF S
+		PRINT  + 
+	A += 1
+	PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;汚臭敏感
+IF TALENT:汚臭敏感
+	PRINT  - 
+	A -= 3
+	PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;献身的
+IF TALENT:献身的
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINTS TALENTNAME:[[TALENT:献身的]]
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+;快感の否定
+IF TALENT:快感の否定
+	PRINT  - 
+	A -= 1
+	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;愛
+IF TALENT:恋心 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINTS TALENTNAME:[[TALENT:恋心]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;調教者がふたなり
+IF TALENT:PLAYER:ふたなり
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINTS TALENTNAME:[[TALENT:ふたなり]]
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+Y = 0
+;愛液の汚れ
+SIF STAIN:PLAYER:2 & 1
+	Y += 1
+;精液の汚れ
+SIF STAIN:PLAYER:2 & 4
+	Y += 3
+;アナルの汚れ
+SIF STAIN:PLAYER:2 & 8
+	Y += 7
+SIF STAIN:PLAYER:2 & 16
+	Y += 15
+
+SIF TALENT:汚臭鈍感
+	Y /= 3
+SIF TALENT:汚臭敏感
+	Y *= 2
+
+
+
+;汚れあり
+IF Y
+	PRINT  - 
+	A -= Y
+	;汚臭鈍感
+	IF TALENT:汚臭鈍感
+		PRINT 汚れあり、
+		PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
+	ELSEIF TALENT:汚臭敏感
+		PRINT 汚れあり、
+		PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+	ELSE
+		PRINT 汚れあり
+	ENDIF
+	PRINTV '(,Y,')
+	S = 1
+ENDIF
+
+;合計を表示(32以上で実行)
+PRINT  = 
+PRINTV A
+
+V = 32
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 実行値
+PRINTV V
+
+WAIT
+
+;実行できない
+SIF A < V
+	RETURN 0
+
+SAVESTR:0 = ニ本フェラ
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;実行決定
+;-------------------------------------------------
+;-------------------------------------------------
+;射精ゲージチェック
+;-------------------------------------------------
+B = 0
+
+;ABL:技巧をみる
+IF ABL:技巧 == 0
+	B = 1200
+ELSEIF ABL:技巧 == 1
+	B = 1700
+ELSEIF ABL:技巧 == 2
+	B = 2300
+ELSEIF ABL:技巧 == 3
+	B = 3000
+ELSEIF ABL:技巧 == 4
+	B = 3600
+ELSE
+	B = 4200
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES B , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES B , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES B , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES B , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES B , 1.20
+ELSE
+	TIMES B , 1.30
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	TIMES B , 0.50
+ELSEIF ABL:奉仕精神 == 1
+	TIMES B , 0.80
+ELSEIF ABL:奉仕精神 == 2
+	TIMES B , 1.20
+ELSEIF ABL:奉仕精神 == 3
+	TIMES B , 1.50
+ELSEIF ABL:奉仕精神 == 4
+	TIMES B , 1.80
+ELSE
+	TIMES B , 2.40
+ENDIF
+
+;ABL:精液中毒をみる
+IF ABL:精液中毒 == 0
+	TIMES B , 1.00
+ELSEIF ABL:精液中毒 == 1
+	TIMES B , 1.20
+ELSEIF ABL:精液中毒 == 2
+	TIMES B , 1.30
+ELSEIF ABL:精液中毒 == 3
+	TIMES B , 1.50
+ELSEIF ABL:精液中毒 == 4
+	TIMES B , 1.70
+ELSE
+	TIMES B , 2.00
+ENDIF
+
+;TALENT:舌使いをみる
+SIF TALENT:舌使い
+	TIMES B , 2.00
+
+;プレイヤーのABL:Ｃ感覚をみる
+IF ABL:MASTER:Ｃ感覚 == 0
+	TIMES B , 1.00
+ELSEIF ABL:MASTER:Ｃ感覚 == 1
+	TIMES B , 1.50
+ELSEIF ABL:MASTER:Ｃ感覚 == 2
+	TIMES B , 2.00
+ELSEIF ABL:MASTER:Ｃ感覚 == 3
+	TIMES B , 2.50
+ELSEIF ABL:MASTER:Ｃ感覚 == 4
+	TIMES B , 3.50
+ELSE
+	TIMES B , 5.00
+ENDIF
+
+SIF TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ
+	BASE:MASTER:射精ゲージ += B
+
+;-------------------------------------------------
+;射精ゲージチェック２（助手）
+;-------------------------------------------------
+B = 0
+
+;ABL:技巧をみる
+IF ABL:技巧 == 0
+	B = 1200
+ELSEIF ABL:技巧 == 1
+	B = 1700
+ELSEIF ABL:技巧 == 2
+	B = 2300
+ELSEIF ABL:技巧 == 3
+	B = 3000
+ELSEIF ABL:技巧 == 4
+	B = 3600
+ELSE
+	B = 4200
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES B , 0.80
+ELSEIF ABL:信頼 == 1
+	TIMES B , 0.90
+ELSEIF ABL:信頼 == 2
+	TIMES B , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES B , 1.10
+ELSEIF ABL:信頼 == 4
+	TIMES B , 1.20
+ELSE
+	TIMES B , 1.30
+ENDIF
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	TIMES B , 0.50
+ELSEIF ABL:奉仕精神 == 1
+	TIMES B , 0.80
+ELSEIF ABL:奉仕精神 == 2
+	TIMES B , 1.20
+ELSEIF ABL:奉仕精神 == 3
+	TIMES B , 1.50
+ELSEIF ABL:奉仕精神 == 4
+	TIMES B , 1.80
+ELSE
+	TIMES B , 2.40
+ENDIF
+
+;ABL:精液中毒をみる
+IF ABL:精液中毒 == 0
+	TIMES B , 1.00
+ELSEIF ABL:精液中毒 == 1
+	TIMES B , 1.20
+ELSEIF ABL:精液中毒 == 2
+	TIMES B , 1.30
+ELSEIF ABL:精液中毒 == 3
+	TIMES B , 1.50
+ELSEIF ABL:精液中毒 == 4
+	TIMES B , 1.70
+ELSE
+	TIMES B , 2.00
+ENDIF
+
+;TALENT:舌使いをみる
+SIF TALENT:舌使い
+	TIMES B , 2.00
+
+;助手のABL:Ｃ感覚をみる
+IF ABL:ASSI:Ｃ感覚 == 0
+	TIMES B , 1.00
+ELSEIF ABL:ASSI:Ｃ感覚 == 1
+	TIMES B , 1.50
+ELSEIF ABL:ASSI:Ｃ感覚 == 2
+	TIMES B , 2.00
+ELSEIF ABL:ASSI:Ｃ感覚 == 3
+	TIMES B , 2.50
+ELSEIF ABL:ASSI:Ｃ感覚 == 4
+	TIMES B , 3.50
+ELSE
+	TIMES B , 5.00
+ENDIF
+
+SIF TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ
+	BASE:ASSI:射精ゲージ += B
+
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 80
+LOSEBASE:気力 += 250
+
+SOURCE:13 = 6000
+SOURCE:14 = 600
+
+;上のほうで計算した汚れデータ
+SOURCE:8 = Y*40 + 100
+
+;ABL:奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:4 = 800
+	SOURCE:5 = 600
+	TIMES SOURCE:8 , 4.00
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:4 = 1200
+	SOURCE:5 = 900
+	TIMES SOURCE:8 , 2.50
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:4 = 1400
+	SOURCE:5 = 1000
+	TIMES SOURCE:8 , 1.50
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:4 = 1600
+	SOURCE:5 = 1200
+	TIMES SOURCE:8 , 1.00
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:4 = 740
+	SOURCE:5 = 1500
+	TIMES SOURCE:8 , 0.50
+ELSE
+	SOURCE:4 = 2000
+	SOURCE:5 = 2200
+	TIMES SOURCE:8 , 0.10
+ENDIF
+
+
+;ABL:技巧をみる
+IF ABL:技巧 == 0
+	TIMES SOURCE:4 , 0.80
+	TIMES SOURCE:5 , 0.80
+ELSEIF ABL:技巧 == 1
+	TIMES SOURCE:4 , 1.00
+	TIMES SOURCE:5 , 1.00
+ELSEIF ABL:技巧 == 2
+	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:5 , 1.20
+ELSEIF ABL:技巧 == 3
+	TIMES SOURCE:4 , 1.50
+	TIMES SOURCE:5 , 1.50
+ELSEIF ABL:技巧 == 4
+	TIMES SOURCE:4 , 2.00
+	TIMES SOURCE:5 , 2.00
+ELSE
+	TIMES SOURCE:4 , 2.20
+	TIMES SOURCE:5 , 2.20
+ENDIF
+
+;-------------------------------------------------
+;射精チェック
+;-------------------------------------------------
+S = BASE:MASTER:射精ゲージ
+EJAC = MAXBASE:MASTER:射精ゲージ
+
+IF  S > EJAC * 2
+	E = 2
+ELSEIF S > EJAC
+	E = 1
+ELSE
+	E = 0
+ENDIF
+
+IF E
+;射精している
+	TIMES SOURCE:4 , 3.00
+
+	;ABL:精液中毒をみる
+	IF ABL:精液中毒 == 0
+		SOURCE:7 = 0
+		TIMES SOURCE:5 , 2.00
+		TIMES SOURCE:13, 4.00
+	ELSEIF ABL:精液中毒 == 1
+		SOURCE:7 = 500
+		TIMES SOURCE:5 , 3.00
+		TIMES SOURCE:13, 3.00
+	ELSEIF ABL:精液中毒 == 2
+		SOURCE:7 = 1200
+		TIMES SOURCE:5 , 4.00
+		TIMES SOURCE:13, 2.50
+	ELSEIF ABL:精液中毒 == 3
+		SOURCE:7 = 3000
+		TIMES SOURCE:5 , 6.00
+		TIMES SOURCE:13, 2.00
+	ELSEIF ABL:精液中毒 == 4
+		SOURCE:7 = 6000
+		TIMES SOURCE:5 , 9.00
+		TIMES SOURCE:13, 1.50
+	ELSE
+		SOURCE:7 = 12000
+		TIMES SOURCE:5 , 15.00
+		TIMES SOURCE:13, 1.00
+	ENDIF
+ENDIF
+
+;大量射精
+IF E == 2
+	TIMES SOURCE:7 , 2.00
+	TIMES SOURCE:5 , 1.50
+
+	EXP:MASTER:射精経験 += 2
+	EXP:精液経験 += 9
+	PRINTL 大量射精
+	PRINTL 精液経験＋９
+	;精液汚れ
+	STAIN:MASTER:2 |= 4
+
+	BASE:MASTER:射精ゲージ -= EJAC*2
+	SIF BASE:MASTER:射精ゲージ >= EJAC
+		BASE:MASTER:射精ゲージ = EJAC-1
+
+	;口で射精させたフラグ
+	TFLAG:口で射精 = 2
+;通常の射精
+ELSEIF E == 1
+	EXP:MASTER:射精経験 += 1
+	EXP:精液経験 += 3
+	PRINTL 射精
+	PRINTL 精液経験＋３
+	;精液汚れ
+	STAIN:MASTER:2 |= 4
+
+	BASE:MASTER:射精ゲージ -= EJAC
+	SIF BASE:MASTER:射精ゲージ >= EJAC
+		BASE:MASTER:射精ゲージ = EJAC-1
+
+	;口で射精させたフラグ
+	TFLAG:口で射精 = 1
+ENDIF
+
+PRINTFORML %EXPNAME:[[EXP:フェラ経験]]%＋２
+
+EXP:フェラ経験 += 2
+
+;奴隷の口⇔調教者のＰの汚れが移動
+STAIN:0 |= STAIN:MASTER:2
+STAIN:MASTER:2 |= STAIN:0
+
+;奉仕精神ＬＶ２以上、技巧ＬＶ２以上なら汚れをなめ取る
+IF ABL:奉仕精神 >= 2 && ABL:技巧 >= 2
+	STAIN:MASTER:2 = 2
+	SIF E >= 1
+		TFLAG:フェラで射精後 = 1
+ENDIF
+
+IF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +7
+	EXP:レズ経験 += 7
+ELSEIF TALENT:オトコ == 1 && TALENT:MASTER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +7
+	EXP:ＢＬ経験 += 7
+ENDIF
+
+;調教者がふたなり
+IF TALENT:MASTER:ふたなり
+	SOURCE:13 /= 2
+ENDIF
+;-------------------------------------------------
+;射精チェック２
+;-------------------------------------------------
+S = BASE:ASSI:射精ゲージ
+EJAC = MAXBASE:ASSI:射精ゲージ
+
+IF  S > EJAC * 2
+	E = 2
+ELSEIF S > EJAC
+	E = 1
+ELSE
+	E = 0
+ENDIF
+
+;大量射精
+IF E == 2
+	EXP:精液経験 += 3
+	PRINTL 大量射精（助手）
+	PRINTL 精液経験＋３
+	;Ｐに精液汚れ
+	STAIN:ASSI:2 |= 4
+
+	BASE:ASSI:射精ゲージ -= EJAC*2
+	SIF BASE:ASSI:射精ゲージ >= EJAC
+		BASE:ASSI:射精ゲージ = EJAC-1
+	;助手が射精フラグ
+	TFLAG:助手が射精 = 2
+;通常の射精
+ELSEIF E == 1
+	EXP:ASSI:射精経験 += 1
+	EXP:精液経験 += 1
+	PRINTL 射精（助手）
+	PRINTL 精液経験＋１
+	;Ｐに精液汚れ
+
+	STAIN:ASSI:2 |= 4
+
+	BASE:ASSI:射精ゲージ -= EJAC
+	SIF BASE:ASSI:射精ゲージ >= EJAC
+		BASE:ASSI:射精ゲージ = EJAC-1
+	;助手が射精フラグ
+	TFLAG:助手が射精 = 2
+ENDIF
+
+;奴隷の口⇔主人のＰの汚れが移動
+IF TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ
+	STAIN:0 |= STAIN:MASTER:2
+	STAIN:MASTER:2 |= STAIN:0
+ENDIF
+
+;奴隷の口⇔助手のＰの汚れが移動
+IF TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ
+	STAIN:0 |= STAIN:ASSI:2
+	STAIN:ASSI:2 |= STAIN:0
+ENDIF
+
+;奉仕精神ＬＶ２以上、技巧ＬＶ２以上なら汚れをなめ取る
+IF ABL:奉仕精神 >= 2 && ABL:技巧 >= 2
+	STAIN:ASSI:2 = 2
+	SIF E >= 1
+		TFLAG:フェラで射精後 = 1
+ENDIF
+
+;ファーストキス
+;とりあえずマスターの方を優先
+TFLAG:621 |= 1
+TFLAG:621 |= 2
+
+IF TALENT:オトコ == 0 && TALENT:ASSI:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +10
+	EXP:レズ経験 += 10
+ENDIF
+
+RETURN 1
+
+TFLAG:快楽経験 = 1
+
+;屈服刻印２に相当
+TFLAG:屈服刻印2 = 2
+
+RETURN 1

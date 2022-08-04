@@ -1,0 +1,257 @@
+﻿;奉仕技術のLvUP処理とその可否判定
+;eraIm@s_ver.0.17βdのスクリプトをベースに処理を簡略化
+
+;-------------------------------------------------
+;奉仕技術のLvUP
+;-------------------------------------------------
+@ABLUP13
+DRAWLINE
+;PRINTL 奴隷の奉仕技術をUPします
+;PRINTL 奉仕技術が高いと、奉仕の際に相手をイかせやすくなります
+;DRAWLINE
+;奉仕精神がLv5以上ある場合はLv10まで解放
+IF (ABL:奉仕技術 >= 5 && ABL:奉仕精神 < 5) || ABL:奉仕技術 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な習得の珠
+A = 0
+
+;条件別にＯＫかダメかを記録する
+;習得の珠による可否（I=0:可、I&1:珠不足、I&2:経験不足）
+I = 0
+
+CALL CAN_ABLUP13
+
+;Lv5までは技巧が奉仕技術+1Lvでないといけない
+SIF ABL:奉仕技術 < 5
+	PRINTFORML %ABLNAME:[[ABL:技巧]]%{ABL:奉仕技術 + 1}LV以上(現在{ABL:技巧}LV)かつ
+;Lv5からは奉仕精神が奉仕技術+1Lvでないといけない
+SIF ABL:奉仕技術 >= 5
+	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%{ABL:奉仕技術 + 1}LV以上(現在{ABL:奉仕精神}LV)かつ
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:習得]]%の珠×{JUEL:習得}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 能力不足 
+ENDIF
+PRINTL 
+PRINTL [100] - やめる
+
+INPUT
+IF (RESULT < 0 || RESULT > 0) && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:奉仕技術 += 1
+SIF RESULT == 0
+	JUEL:習得 -= A
+
+PRINTFORML %ABLNAME:[[ABL:奉仕技術]]%のレベルが{ABL:奉仕技術}になりました
+
+RETURN 0
+
+;--------------------------------------------------
+;奉仕技術のLvUP可否判定
+;--------------------------------------------------
+@CAN_ABLUP13
+;奉仕精神Lv5以上ある場合はLv10まで解放
+IF ABL:奉仕技術 >= 5 && ABL:奉仕精神 < 5
+	RETURN 0
+ENDIF
+
+;判定変数を空に
+A = 0
+I = 0
+
+IF ABL:奉仕技術 == 0
+	A = 5
+ELSEIF ABL:奉仕技術 == 1
+	A = 400
+ELSEIF ABL:奉仕技術 == 2
+	A = 1000
+ELSEIF ABL:奉仕技術 == 3
+	A = 3000
+ELSEIF ABL:奉仕技術 == 4
+	A = 6000
+ELSEIF ABL:奉仕技術 == 5
+	A = 9000
+ELSEIF ABL:奉仕技術 == 6
+	A = 12000
+ELSEIF ABL:奉仕技術 == 7
+	A = 16000
+ELSEIF ABL:奉仕技術 == 8
+	A = 20000
+ELSEIF ABL:奉仕技術 == 9
+	A = 25000
+ENDIF
+
+;一線越えない
+IF TALENT:一線越えない
+	SIF ABL:奉仕技術 == 3
+		TIMES A , 1.50
+	SIF ABL:奉仕技術 == 4
+		TIMES A , 2.00
+	SIF ABL:奉仕技術 == 5
+		TIMES A , 2.50
+	SIF ABL:奉仕技術 >= 6
+		TIMES A , 3.00
+ENDIF
+
+;反抗的
+IF TALENT:ナマイキ
+	TIMES A , 1.20
+ENDIF
+;素直
+IF TALENT:素直
+	TIMES A , 0.95
+ENDIF
+;生意気
+IF TALENT:活発
+	TIMES A , 1.20
+ENDIF
+
+;プライド高い
+IF TALENT:プライド高い
+	TIMES A , 1.20
+;プライド低い
+ELSEIF TALENT:プライド低い
+	TIMES A , 0.95
+ENDIF
+
+;無関心
+IF TALENT:クール
+	TIMES A , 1.05
+ENDIF
+;感情乏しい
+IF TALENT:感情乏しい
+	TIMES A , 1.05
+ENDIF
+;好奇心
+IF TALENT:好奇心
+	TIMES A , 0.95
+ENDIF
+;保守的
+IF TALENT:保守的
+	TIMES A , 1.10
+ENDIF
+
+;抑圧
+IF TALENT:抑圧
+	TIMES A , 1.10
+;解放
+ELSEIF TALENT:解放
+	TIMES A , 0.90
+ENDIF
+
+;抵抗
+IF TALENT:抵抗
+	TIMES A , 1.20
+ENDIF
+
+;恥じらい
+IF TALENT:恥じらい
+	TIMES A , 1.05
+;恥薄い
+ELSEIF TALENT:恥薄い
+	TIMES A , 0.95
+ENDIF
+
+;弱味
+IF TALENT:弱味
+	TIMES A , 0.90
+ENDIF
+
+;習得早い
+IF TALENT:素質
+	TIMES A , 0.80
+;習得遅い
+ELSEIF TALENT:習得遅い
+	TIMES A , 1.50
+ENDIF
+
+;舌使い
+IF TALENT:舌使い
+	TIMES A , 0.90
+ENDIF
+;献身的
+IF TALENT:献身的
+	TIMES A , 0.90
+ENDIF
+;永遠の愛
+IF TALENT:永遠の愛
+	TIMES A , 0.40
+ENDIF
+;汚れ無視
+IF TALENT:汚れ無視
+	TIMES A , 0.90
+ENDIF
+;即落ち
+IF TALENT:即落ち
+	TIMES A , 0.90
+ENDIF
+
+;大和撫子
+SIF TALENT:大和撫子
+	TIMES B , 0.90
+SIF TALENT:アンドロイド
+	TIMES B , 0.10
+;倒錯的
+IF TALENT:倒錯的
+	TIMES A , 0.95
+ENDIF
+;サド
+IF TALENT:サド
+	TIMES A , 1.10
+ENDIF
+
+;奉仕精神
+IF ABL:奉仕精神 < 3
+	TIMES A , 1.00
+ELSEIF ABL:奉仕精神 < 6
+	TIMES A , 0.95
+ELSEIF ABL:奉仕精神 < 8
+	TIMES A , 0.90
+ELSEIF ABL:奉仕精神 < 10
+	TIMES A , 0.85
+ELSE
+	TIMES A , 0.80
+ENDIF
+
+IF TALENT:淫魔
+	TIMES A , 2.00
+ENDIF
+
+;最低でも1個は必要
+SIF A < 1
+	A = 1
+
+;習得の珠は足りている？
+SIF JUEL:習得 < A
+	I |= 1
+
+;Lv5までは技巧が奉仕技術+1Lvでないといけない
+SIF ABL:奉仕技術 < 5 && ABL:技巧 < ABL:奉仕技術 + 1
+	I |= 2
+;Lv5からは奉仕精神が奉仕技術+1Lvでないといけない
+SIF ABL:奉仕技術 >= 5 && ABL:奉仕精神 < ABL:奉仕技術 + 1
+	I |= 2
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+;
+;
+;

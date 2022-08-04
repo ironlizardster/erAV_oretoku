@@ -1,0 +1,23 @@
+﻿;===========================================================
+;危険日判定
+;===========================================================
+@SYSTEM_KIKENBI
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF TALENT:COUNT:オトコ || TALENT:COUNT:妊娠 || TALENT:COUNT:育児中
+		CFLAG:COUNT:安全日 = 0 
+		CONTINUE
+	ELSE
+		TARGET = COUNT
+		IF CFLAG:安全日 == 4
+			CFLAG:危険日 = 1
+			CFLAG:安全日 = 0 
+		ELSE
+			CFLAG:危険日 = 0
+			CFLAG:安全日 ++
+		ENDIF
+	ENDIF
+REND
+

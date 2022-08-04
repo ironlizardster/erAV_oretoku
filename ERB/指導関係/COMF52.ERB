@@ -1,0 +1,69 @@
+﻿;-------------------------------------------------
+;利尿剤
+;-------------------------------------------------
+@COM52
+
+PRINTL 利尿剤
+SAVESTR:0 = 利尿剤
+CALL TRAIN_MESSAGE_B
+
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 120
+LOSEBASE:気力 += 120
+;主人か助手に[調合知識]があれば体力・気力消費を抑える
+IF TALENT:MASTER:調合知識
+	LOSEBASE:体力 -= 50
+	LOSEBASE:気力 -= 50
+ELSEIF ASSI >= 0
+	IF TALENT:ASSI:調合知識
+		LOSEBASE:体力 -= 50
+		LOSEBASE:気力 -= 50
+	ENDIF
+ENDIF
+;薬物経験が多いほど消費体力は減っていく
+IF EXP:薬物経験 < EXPLV:1
+	LOSEBASE:体力 += 120
+ELSEIF EXP:薬物経験 < EXPLV:2
+	LOSEBASE:体力 += 30
+ELSEIF EXP:薬物経験 < EXPLV:3
+	LOSEBASE:体力 += 0
+ELSEIF EXP:薬物経験 < EXPLV:5
+	LOSEBASE:体力 -= 30
+ELSE
+	LOSEBASE:体力 -= 40
+ENDIF
+
+SOURCE:14 = 2000
+;利尿剤効果で軽く変動
+SOURCE:15 = 150
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+;薬物経験
+PRINTFORML %EXPNAME:[[EXP:薬物経験]]%+1
+EXP:薬物経験 += 1
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+;利尿剤使用フラグ
+TEQUIP:利尿剤効果 = 1
+
+;アイテム消費
+SIF TEQUIP:触手召喚 == 0
+	ITEM:利尿剤 -= 1
+
+RETURN 1

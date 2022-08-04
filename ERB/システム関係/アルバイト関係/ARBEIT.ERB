@@ -1,0 +1,280 @@
+﻿;=================================================
+; アルバイトメイン画面
+;=================================================
+@ARBEIT_MAIN
+CALL ARBEIT_LIST(TARGET)
+
+;=================================================
+; アルバイトリストの表示
+;--------------------------------------------
+; 引数
+;  ARG キャラクター番号
+;=================================================
+@ARBEIT_LIST(ARG)
+; LOCAL		一時変数(要素数2)
+; LOCALS	アルバイト名保持用の文字列変数(要素数2)
+; LIST		存在するアルバイト番号を格納する変数(要素数100)
+; PAGE		現在の表示ページ番号を格納する変数 (要素数1)
+; PAGE_END	ページ番号の最大値を格納する変数 (要素数1)
+#LOCALSIZE 2
+#LOCALSSIZE 2
+#DIM LIST, 100
+#DIM PAGE
+#DIM PAGE_END
+#DIM CONST QUIT_PART_TIME = 900
+VARSET LIST, 0
+VARSET LOCALS, ""
+PAGE = 0
+PAGE_END = 0
+; 存在するアルバイトのリストを生成
+LOCAL:1 = 0
+FOR LOCAL, 1, 100
+	TRYCCALLFORM ARBEIT_TITLE_{LOCAL}
+		DEBUGPRINTFORML リスト番号{LOCAL:1}にアルバイト番号{LOCAL} %RESULTS%を登録します
+		LIST:(LOCAL:1) = LOCAL
+		LOCAL:1++
+	CATCH
+		LIST:LOCAL = 0
+	ENDCATCH
+NEXT
+; ページ数算出処理
+PAGE_END = (LOCAL:1 - 1 < 0 ? 0 # LOCAL:1 - 1) / 10
+
+; 描画処理
+$ARBEIT_LIST
+CUSTOMDRAWLINE =
+CALL ARBEIT_HEADER_INFO(ARG)
+PRINTL アルバイト
+PRINTL 《様々なアルバイトを請け負ってもらい、経験を積んでもらいます》
+CUSTOMDRAWLINE =
+; リスト本体の表示
+FOR LOCAL, PAGE * 10, PAGE * 10 + 10
+	; リスト終端ならループ終了
+	SIF LIST:LOCAL < 1
+		BREAK
+	; リスト描画
+	; 選択が可能かどうかの取得
+	CALLFORM ARBEIT_PERMISSION_{LIST:LOCAL}(ARG)
+	TEMP_NUM = RESULT
+	; アルバイトタイトルの取得
+	CALLFORM ARBEIT_TITLE_{LIST:LOCAL}
+	TEMP_STR = %@"[%RESULTS%]", SHOWLENGTH / 2, LEFT%
+	CALL PRINT_BUTTON(TEMP_STR,TEMP_NUM && CFLAG:ARG:バイト就職 != LIST:LOCAL,LOCAL)
+	CALLFORM ARBEIT_GET_TALENT_{LIST:LOCAL}
+	PRINTFORML  \@ CFLAG:ARG:バイト就職 == LIST:LOCAL ? ○ 実行中 # \@ %RESULTS%
+NEXT
+
+DRAWLINE
+CALL PRINT_BUTTON("[現在のアルバイトを辞めてもらう]",CFLAG:ARG:バイト就職 > 0,QUIT_PART_TIME,1)
+CUSTOMDRAWLINE =
+
+; リストフッターの表示
+CALL PRINT_PAGE_NAVI(PAGE > 0,PAGE < PAGE_END)
+
+$INPUT_LOOP
+INPUT
+IF RESULT == COMMAND_PREV_PAGE && PAGE > 0
+	PAGE--
+	GOTO ARBEIT_LIST
+ELSEIF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT == COMMAND_NEXT_PAGE && PAGE < PAGE_END
+	PAGE++
+	GOTO ARBEIT_LIST
+ELSEIF RESULT == QUIT_PART_TIME && CFLAG:ARG:バイト就職 > 0
+	CALLFORM ARBEIT_TITLE_{CFLAG:ARG:バイト就職}
+	LOCALS = %RESULTS%
+	PRINTFORML 現在実行中のアルバイト『%LOCALS%』を辞めてもらいますか？
+	CALL PRINT_BUTTON("[はい]",1,1)
+	PRINTFORM %" " * 10%
+	CALL PRINT_BUTTON("[いいえ]",1,0,1)
+	$INPUT_LOOP_RESIGN_00
+	INPUT
+	IF RESULT == 1
+		CALL ARBEIT_RESIGN(ARG)
+		PRINTFORML %CALLNAME:ARG%に%LOCALS%を辞めてもらいました
+	ELSEIF RESULT == 0
+		PRINTFORML %CALLNAME:ARG%に%LOCALS%を続けてもらいます
+	ELSE
+		CLEARLINE 1
+		REUSELASTLINE 無効な数値の入力です
+		GOTO INPUT_LOOP_RESIGN_00
+	ENDIF
+	GOTO ARBEIT_LIST
+ELSEIF RESULT >= 0 && RESULT < 100 && CFLAG:ARG:バイト就職 != LIST:RESULT
+	; アルバイト選択処理
+	; タイトルの取得
+	LOCAL = LIST:RESULT
+	CALLFORM ARBEIT_TITLE_{LOCAL}
+	IF STRLENS(RESULTS) < 1
+		DEBUGPRINTFORML ERROR: 異常のある可能性のある関数が呼ばれたため処理を中断します({LOCAL}番)
+		RETURN 0
+	ENDIF
+	LOCALS:1 = %RESULTS%
+	PRINTFORML %LOCALS:1%
+	TRYCALLFORM ARBEIT_INFO_{LOCAL}
+	PRINTL  
+	PRINTFORML %CALLNAME:ARG%にこのアルバイトをやってもらいますか？
+	CALL PRINT_BUTTON("[はい]",1,1)
+	PRINTFORM %" " * 10%
+	CALL PRINT_BUTTON("[いいえ]",1,0,1)
+	$INPUT_LOOP_SIGNUP
+	INPUT
+	IF RESULT == 1
+		; 既に実行中のアルバイトがある時は変更の確認をする
+		IF CFLAG:ARG:バイト就職 > 0
+			CALLFORM ARBEIT_TITLE_{CFLAG:ARG:バイト就職}
+			LOCALS = %RESULTS%
+			PRINTFORML 現在実行中のアルバイト『%LOCALS%』を辞めてもらいますか？
+			CALL PRINT_BUTTON("[はい]",1,1)
+			PRINTFORM %" " * 10%
+			CALL PRINT_BUTTON("[いいえ]",1,0,1)
+			$INPUT_LOOP_RESIGN_01
+			INPUT
+			IF RESULT == 1
+				CALL ARBEIT_RESIGN(ARG)
+				PRINTFORML %LOCALS:1%へ変更するために%LOCALS%を辞めてもらいました
+			ELSEIF RESULT == 0
+				PRINTFORML %LOCALS:1%への変更は中止し、%LOCALS%を続けてもらいます
+				GOTO ARBEIT_LIST
+			ELSE
+				CLEARLINE 1
+				REUSELASTLINE 無効な数値の入力です
+				GOTO INPUT_LOOP_SIGNUP
+			ENDIF
+		ENDIF
+		; アルバイト就職処理
+		CALL ARBEIT_SIGNUP(ARG, LOCAL)
+		PRINTFORML %CALLNAME:ARG%に%LOCALS:1%をやってもらいます
+		GOTO ARBEIT_LIST
+	ELSEIF RESULT == 0
+		PRINTFORML %CALLNAME:ARG%のアルバイトの変更をやめました
+		GOTO ARBEIT_LIST
+	ELSE
+		CLEARLINE 1
+		REUSELASTLINE 無効な数値の入力です
+		GOTO INPUT_LOOP_SIGNUP
+	ENDIF
+ELSE
+	CLEARLINE 1
+	REUSELASTLINE 無効な数値の入力です
+	GOTO INPUT_LOOP
+ENDIF
+
+;=================================================
+; 日付, 所持金, (存在するなら)現在のアルバイトの表示
+;--------------------------------------------
+; 引数
+;  ARG キャラ番号
+;=================================================
+@ARBEIT_HEADER_INFO(ARG)
+#LOCALSSIZE 1
+DRAWLINE
+TRYCCALLFORM ARBEIT_TITLE_{CFLAG:ARG:バイト就職}
+	LOCALS = %RESULTS%
+CATCH
+	LOCALS = 
+ENDCATCH
+PRINTFORML {DAY + 1}週目\@ TIME == 0 ? 前半 # 後半 \@ 所持金：{MONEY}ポイント
+PRINTFORML %NAME:ARG% \@ STRLENS(LOCALS) > 0 ? 『%LOCALS%』実行中 # \@
+CUSTOMDRAWLINE =
+
+;=================================================
+; アルバイト就職処理
+;--------------------------------------------
+; 引数
+;  ARG   キャラ番号
+;  ARG:1 アルバイト番号
+;=================================================
+@ARBEIT_SIGNUP(ARG, ARG:1)
+TRYCALLFORM ARBEIT_SIGNUP_{ARG:1}(ARG)
+CFLAG:ARG:バイト就職 = ARG:1
+
+;=================================================
+; アルバイト辞職処理
+;--------------------------------------------
+; 引数
+;  ARG   キャラ番号
+;  ARG:1 解雇されたか？(1 = true, 0 = false)
+;=================================================
+@ARBEIT_RESIGN(ARG, ARG:1 = 0)
+TRYCALLFORM ARBEIT_RESIGN_{CFLAG:ARG:バイト就職}(ARG, ARG:1)
+CFLAG:ARG:バイト就職 = 0
+
+;=================================================
+; ターン終了時のアルバイト実行処理
+;=================================================
+@ARBEIT_EXEC
+FOR LOCAL, 0, CHARANUM
+	SIF LOCAL == MASTER
+		CONTINUE
+	SIF CFLAG:LOCAL:バイト就職 == 0
+		CONTINUE
+	; 体力が無ければ休む
+	IF BASE:LOCAL:体力 < 500
+		PRINTFORML 体調の優れない%CALLNAME:LOCAL%は仕事を休んだようだ
+		TRYCALLFORM ARBEIT_ABSENCE_{CFLAG:LOCAL:バイト就職}(LOCAL)
+		DRAWLINE
+	ELSE
+		CALLFORM ARBEIT_EXEC_{CFLAG:LOCAL:バイト就職}(LOCAL)
+		DRAWLINE
+	ENDIF
+	DRAWLINE
+NEXT
+
+
+;=================================================
+; アルバイトの継続が可能か判定を行う処理
+;=================================================
+@ARBEIT_CHECK_RENEW
+#LOCALSIZE 2
+FOR LOCAL, 0, CHARANUM
+	SIF LOCAL == MASTER
+		CONTINUE
+	SIF CFLAG:LOCAL:バイト就職 == 0
+		CONTINUE
+	CALLFORM ARBEIT_PERMISSION_{CFLAG:LOCAL:バイト就職}(LOCAL)
+	IF RESULT != 1
+		TRYCCALLFORM ARBEIT_RENEW_{CFLAG:LOCAL:バイト就職}
+			LOCAL:1 = RESULT
+		CATCH
+			LOCAL:1 = 0
+		ENDCATCH
+		IF LOCAL:1
+			DRAWLINE
+			CALL ARBEIT_RESIGN(LOCAL, 1)
+			PRINTFORML %CALLNAME:LOCAL%のアルバイト雇用期間が終了した
+		ENDIF
+	ENDIF
+NEXT
+
+;=================================================
+; アルバイト用経験増加処理
+;--------------------------------------------
+; 引数
+;  ARG   増加処理を行うキャラ登録番号
+;  ARG:1 メッセージマスクフラグ(1の場合メッセージ非表示)
+;--------------------------------------------
+; 備考
+;  増加する経験は呼び出し前にTCVARに格納しておくこと
+;  TCVARの要素番号はEXPのものに合わせる
+;=================================================
+@ARBEIT_ADD_EXP(ARG, ARG:1 = 0)
+; 経験増加処理
+PRINTFORML %NAME:ARG%
+FOR LOCAL, 0, VARSIZE("EXP")
+	IF TCVAR:ARG:LOCAL
+		; 経験値の加算処理
+		; 経験名が定義されているのみ加算処理を行う
+		SIF TALENT:ARG:優等生 == 1
+			TCVAR:ARG:LOCAL *= 2
+		IF STRLENS(EXPNAME:LOCAL) > 0
+			EXP:ARG:LOCAL += TCVAR:ARG:LOCAL
+		ELSE
+			DEBUGPRINTFORML NOTICE: EXP:{LOCAL}は定義されていないため加算処理をスキップします
+		ENDIF
+		SIF ARG:1 == 0
+			PRINTFORML 　%EXPNAME:LOCAL% + {TCVAR:ARG:LOCAL}
+	ENDIF
+NEXT
+VARSET TCVAR:ARG, 0

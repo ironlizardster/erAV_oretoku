@@ -1,0 +1,152 @@
+﻿;舞踏技能のLvUP処理とその可否判定
+;eratohoA ver1.204及びeraIm@s ver.0.17βdのスクリプトをベースに作成
+
+;-------------------------------------------------
+;舞踏技能のLvUP
+;-------------------------------------------------
+@ABLUP72
+DRAWLINE
+;PRINTL 奴隷のダンスの技術を高めます
+;PRINTL 舞踏技能が高くなるとコンサートやストリップでより大きな収益が見込めます
+;DRAWLINE
+;舞踏技能はLv5が上限
+;[愛][淫乱]が付いている場合はLv10まで解放
+IF ABL:舞踊技能 >= 5 && (TALENT:淫乱 == 0 && TALENT:恋心 == 0)
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:舞踊技能 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+;歌唱技能＋舞踏技能＋料理技能は15以上にならない
+;ELSEIF ABL:歌唱技能 + ABL:舞踊技能 + ABL:料理技能 >= 15 && TALENT:[[TALENT:ONLY ONE IDOL]] == 0
+;	PRINTFORMW 歌唱技能({ABL:歌唱技能})＋舞踏技能({ABL:舞踊技能})＋料理技能({ABL:料理技能})の上限は15です
+;	RETURN 0
+ENDIF
+
+;必要な習得の珠
+A = 0
+;必要な舞踏経験
+B = 0
+
+CALL CAN_ABLUP72
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:習得]]%の珠×{JUEL:習得}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+ENDIF
+PRINTL 
+PRINTFORML 　　　%EXPNAME:[[EXP:舞踊経験]]%　{EXP:舞踊経験}/{B}
+PRINTL [100] - やめる
+
+INPUT
+IF RESULT != 0 && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:舞踊技能 += 1
+JUEL:習得 -= A
+
+PRINTFORML %ABLNAME:[[ABL:舞踊技能]]%のレベルが{ABL:舞踊技能}になりました
+
+RETURN 0
+
+;--------------------------------------------------
+;レベルアップに必要な珠計算、レベルアップ予告処理
+;--------------------------------------------------
+@CAN_ABLUP72
+;歌唱技能はLv5が上限
+;[淫乱]が付いている場合はLv10まで解放
+SIF ABL:舞踊技能 >= 10
+	RETURN 0
+SIF ABL:舞踊技能 >= 5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0
+	RETURN 0
+;歌唱技能＋舞踏技能＋料理技能は上限15
+;SIF ABL:歌唱技能 + ABL:舞踊技能 + ABL:料理技能 >= 15 && TALENT:[[TALENT:ONLY ONE IDOL]] == 0
+;	RETURN 0
+
+A = 0
+B = 0
+
+;条件別にＯＫかダメかを記録する
+I = 0
+
+IF ABL:舞踊技能 == 0
+	A = 75
+	B = 5
+ELSEIF ABL:舞踊技能 == 1
+	A = 500
+	B = 15
+ELSEIF ABL:舞踊技能 == 2
+	A = 3000
+	B = 30
+ELSEIF ABL:舞踊技能 == 3
+	A = 9000
+	B = 75
+ELSEIF ABL:舞踊技能 == 4
+	A = 24000
+	B = 120
+ELSEIF ABL:舞踊技能 == 5
+	A = 30000
+	B = 180
+ELSEIF ABL:舞踊技能 == 6
+	A = 35000
+	B = 400
+ELSEIF ABL:舞踊技能 == 7
+	A = 40000
+	B = 600
+ELSEIF ABL:舞踊技能 == 8
+	A = 45000
+	B = 800
+ELSEIF ABL:舞踊技能 == 9
+	A = 50000
+	B = 1500
+ENDIF
+
+;習得早い
+IF TALENT:素質
+	TIMES A , 0.80
+	TIMES B , 0.80
+;習得遅い
+ELSEIF TALENT:習得遅い
+	TIMES A , 1.20
+	TIMES B , 1.20
+ENDIF
+;ONLY ONE IDOL
+IF TALENT:[[TALENT:ONLY ONE IDOL]]
+	TIMES A , 0.40
+	TIMES B , 0.40
+ENDIF
+
+;最低でも１回・１個は必要
+SIF A < 1
+	A = 1
+SIF B < 1
+	B = 1
+
+;習得の珠は足りている？
+SIF JUEL:習得 < A
+	I |= 1
+
+;舞踏経験は足りている？
+SIF EXP:舞踊経験 < B
+	I |= 2
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;
+;
+;

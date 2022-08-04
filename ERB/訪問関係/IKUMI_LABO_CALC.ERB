@@ -1,0 +1,331 @@
+﻿;===========================================================
+;実績の計算
+;===========================================================
+@IKUMI_LABO_CALC
+A = 0
+B = 0
+
+IF !FLAG:淫魔化判定 && GETCHARA([[キャラ:須野郁美]]) > 0 && CFLAG:GETCHARA([[キャラ:須野郁美]]):売却助手可能 == 2
+	REPEAT CHARANUM
+		SIF COUNT == 0
+			CONTINUE
+		SIF TALENT:COUNT:異界知識 == 1 && CFLAG:COUNT:売却助手可能 == 2
+			A = 1
+		SIF TALENT:COUNT:淫魔 == 1 && CFLAG:COUNT:売却助手可能 == 2 && TALENT:COUNT:最先端科学 == 0
+			B = 1
+
+		IF A && B
+			FLAG:淫魔化判定 = 1
+			BREAK
+		ENDIF
+	REND
+
+ENDIF
+
+;===========================================================
+;アンドロイドのパタメータ決定の処理
+;===========================================================
+@ADD_IKUMI_ANDROID
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:アンドロイド]]
+		PRINTFORML 名前を決めてください
+		INPUTS
+		IF STRLENSU(RESULTS) > 0
+			NAME:COUNT = %RESULTS%
+		ELSE
+			NAME:COUNT = 須野茶々
+		ENDIF
+		PRINTFORML %NAME:COUNT%をどのように呼びますか？
+		INPUTS
+		IF STRLENSU(RESULTS) > 0
+			CALLNAME:COUNT = %RESULTS%
+		ELSE
+			CALLNAME:COUNT = 茶々
+		ENDIF
+		$INPUT_LOOP_SEX
+		PRINTFORML %CALLNAME:COUNT%の性別は……
+		PRINTL [0] - 女
+		PRINTL [1] - 男
+		PRINTL [2] - ふたなり
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:オトコ = 0
+				TALENT:COUNT:ふたなり = 0
+				CFLAG:COUNT:ペニスのサイズ = 0
+				CFLAG:COUNT:包皮の状態 = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:処女 = 0
+				TALENT:COUNT:オトコ = 1
+				TALENT:COUNT:ふたなり = 0
+				TALENT:COUNT:童貞 = 1
+				CFLAG:COUNT:ペニスのサイズ = 2
+				CFLAG:COUNT:包皮の状態 = 2
+			ELSEIF RESULT == 2
+				TALENT:COUNT:オトコ = 0
+				TALENT:COUNT:ふたなり = 1
+				TALENT:COUNT:童貞 = 1
+				CFLAG:COUNT:ペニスのサイズ = 2
+				CFLAG:COUNT:包皮の状態 = 2
+			ELSE
+				GOTO INPUT_LOOP_SEX
+			ENDIF
+		PRINTFORMW %CALLNAME:COUNT%の性格を決定します
+		$INPUT_LOOP_PERSONALITY_1
+		PRINTFORML %CALLNAME:COUNT%は……
+		PRINTL [0] - ナマイキ
+		PRINTL [1] - 素直
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:ナマイキ = 1
+				TALENT:COUNT:素直 = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:ナマイキ = 0
+				TALENT:COUNT:素直 = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:ナマイキ = 0
+				TALENT:COUNT:素直 = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_1
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_2
+		PRINTFORML そして……
+		PRINTL [0] - 大人しい
+		PRINTL [1] - 活発
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:大人しい = 1
+				TALENT:COUNT:活発 = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:大人しい = 0
+				TALENT:COUNT:活発 = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:大人しい = 0
+				TALENT:COUNT:活発 = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_2
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_3
+		PRINTFORML プライドは……
+		PRINTL [0] - 高い
+		PRINTL [1] - 低い
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:プライド高い = 1
+				TALENT:COUNT:プライド低い = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:プライド高い = 0
+				TALENT:COUNT:プライド低い = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:プライド高い = 0
+				TALENT:COUNT:プライド低い = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_3
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_4
+		PRINTFORML 性への興味は……
+		PRINTL [0] - ある
+		PRINTL [1] - 保守的
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:好奇心 = 1
+				TALENT:COUNT:保守的 = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:好奇心 = 0
+				TALENT:COUNT:保守的 = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:好奇心 = 0
+				TALENT:COUNT:保守的 = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_4
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_5
+		PRINTFORML 思考パターンは……
+		PRINTL [0] - ポジティブ
+		PRINTL [1] - ネガティブ
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:ポジティブ = 1
+				TALENT:COUNT:ネガティブ = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:ポジティブ = 0
+				TALENT:COUNT:ネガティブ = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:ポジティブ = 0
+				TALENT:COUNT:ネガティブ = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_5
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_6
+		PRINTFORML 貞操観念は……
+		PRINTL [0] - 強い
+		PRINTL [1] - ゆるい
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:貞操観念 = 1
+				TALENT:COUNT:貞操無頓着 = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:貞操観念 = 0
+				TALENT:COUNT:貞操無頓着 = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:貞操観念 = 0
+				TALENT:COUNT:貞操無頓着 = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_6
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_7
+		PRINTFORML 羞恥心は……
+		PRINTL [0] - ある
+		PRINTL [1] - ない
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:恥じらい = 1
+				TALENT:COUNT:恥薄い = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:恥じらい = 0
+				TALENT:COUNT:恥薄い = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:恥じらい = 0
+				TALENT:COUNT:恥薄い = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_7
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_8
+		PRINTFORML 痛みには……
+		PRINTL [0] - 弱い
+		PRINTL [1] - 強い
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:痛みに弱い = 1
+				TALENT:COUNT:痛みに強い = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:痛みに弱い = 0
+				TALENT:COUNT:痛みに強い = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:痛みに弱い = 0
+				TALENT:COUNT:痛みに強い = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_8
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_9
+		PRINTFORML 物覚えは……
+		PRINTL [0] - いい
+		PRINTL [1] - 悪い
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:素質 = 1
+				TALENT:COUNT:習得遅い = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:素質 = 0
+				TALENT:COUNT:習得遅い = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:素質 = 0
+				TALENT:COUNT:習得遅い = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_9
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_10
+		PRINTFORML 臭いには……
+		PRINTL [0] - 鈍感
+		PRINTL [1] - 敏感
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:汚臭鈍感 = 1
+				TALENT:COUNT:汚臭敏感 = 0
+			ELSEIF RESULT == 1
+				TALENT:COUNT:汚臭鈍感 = 0
+				TALENT:COUNT:汚臭敏感 = 1
+			ELSEIF RESULT == 2
+				TALENT:COUNT:汚臭鈍感 = 0
+				TALENT:COUNT:汚臭敏感 = 0
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_10
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_11
+		PRINTFORML 体型は……
+		PRINTL [0] - 大柄
+		PRINTL [1] - 小柄
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:大柄 = 1
+				TALENT:COUNT:小柄体型 = 0
+				BASE:COUNT:身長 = 167
+			ELSEIF RESULT == 1
+				TALENT:COUNT:大柄 = 0
+				TALENT:COUNT:小柄体型 = 1
+				BASE:COUNT:身長 = 147
+			ELSEIF RESULT == 2
+				TALENT:COUNT:大柄 = 0
+				TALENT:COUNT:小柄体型 = 0
+				BASE:COUNT:身長 = 157
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_11
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_12
+		PRINTFORML おっぱいは……
+		PRINTL [0] - ちっぱい
+		PRINTL [1] - おおきい
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				TALENT:COUNT:貧乳 = 1
+				TALENT:COUNT:巨乳 = 0
+				BASE:COUNT:バスト = 74
+			ELSEIF RESULT == 1
+				TALENT:COUNT:貧乳 = 0
+				TALENT:COUNT:巨乳 = 1
+				BASE:COUNT:身長 = 94
+			ELSEIF RESULT == 2
+				TALENT:COUNT:貧乳 = 0
+				TALENT:COUNT:巨乳 = 0
+				BASE:COUNT:身長 = 84
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_12
+			ENDIF
+		$INPUT_LOOP_PERSONALITY_13
+		PRINTFORML 消費電力は……
+		PRINTL [0] - 小さい
+		PRINTL [1] - 大きい
+		PRINTL [2] - ふつう
+		INPUT
+			IF RESULT == 0
+				MAXBASE:COUNT:体力 = 3000
+				MAXBASE:COUNT:気力 = 3000
+				BASE:COUNT:ギャラ = 1500
+			ELSEIF RESULT == 1
+				MAXBASE:COUNT:体力 = 5000
+				MAXBASE:COUNT:気力 = 5000
+				BASE:COUNT:ギャラ = 8000
+			ELSEIF RESULT == 2
+				MAXBASE:COUNT:体力 = 4000
+				MAXBASE:COUNT:気力 = 4000
+				BASE:COUNT:ギャラ = 5000
+			ELSE
+				GOTO INPUT_LOOP_PERSONALITY_13
+			ENDIF
+		PRINTFORML 最後に、%CALLNAME:COUNT%の芸名を決めてください
+		INPUTS
+		IF STRLENSU(RESULTS) > 0
+			NICKNAME:COUNT = %RESULTS%
+		ELSE
+			NICKNAME:COUNT = CHACHAMARU
+		ENDIF
+		PRINTFORML 以上で新型アンドロイド%NAME:COUNT%のセットアップを終わります。お疲れ様でした
+		PRINTFORML 髪型や服などはスタイリストで決めてあげてください
+		BASE:COUNT:体力 = MAXBASE:COUNT:体力
+		BASE:COUNT:気力 = MAXBASE:COUNT:気力
+		PRINTW
+	ENDIF
+REND

@@ -1,0 +1,65 @@
+﻿;=================================================
+;郁美ラボ
+;=================================================
+@IKUMI_LABO
+
+CALL IKUMI_LABO_CALC
+
+$INPUT_LOOP
+DRAWLINE
+PRINTL 郁美のラボ
+PRINTL 《超☆最先端技術の恩恵を受けることができます》
+DRAWLINE
+PRINTV DAY+1
+PRINT 週目
+IF TIME == 0
+	PRINTL  前半
+ELSE
+	PRINTL  後半
+ENDIF
+
+PRINTFORML 所持金：{MONEY}ポイント
+DRAWLINE
+
+PRINTL  [ 0] - 避妊治療をする　　　　　　（      0ポイント）
+;PRINTL  [ 1] - 事務所に監視カメラを設置する　（300000ポイント）
+IF GETCHARA([[キャラ:アンドロイド]]) < 0 && GETCHARA([[キャラ:宮間未依]]) > 0 && CFLAG:GETCHARA([[キャラ:宮間未依]]):売却助手可能 == 2 && !FLAG:新型アンドロイド製作
+	PRINTL  [ 2] - 新型アンドロイドの製作　　（5000000ポイント）
+ENDIF
+IF FLAG:淫魔化判定 == 1
+	PRINTL  [ 3] - 遺伝子改造：淫魔化　　　　（5000000ポイント）
+ENDIF
+IF PBAND:303 != 3 && ITEM:触手生物 == 1
+;例によって値段は暫定。でもそれなりに高くないとという気はする
+	PRINTL  [ 4] - 薬品改良：排卵誘発剤強化　（ 500000ポイント）
+ENDIF
+IF PBAND:67 >= 3
+	PRINTL  [ 5] - 肉体改造：ふたなり　　　　　（技術料： 500000ポイント）
+	PRINTL  [ 6] - 肉体改造：ふたなりの消去　　（技術料： 100000ポイント）
+ENDIF
+DRAWLINE
+PRINTL  [999] - 戻る
+
+INPUT
+
+IF RESULT == 0
+	CALL KILL_PREGNANCY
+ELSEIF RESULT == 1
+;	CALL CAMERA_SET
+ELSEIF RESULT == 2 && D >= 1 && !FLAG:新型アンドロイド製作
+	CALL ADD_ANDROID
+ELSEIF RESULT == 3 && FLAG:淫魔化判定 == 1
+	CALL SUCCUBUS_CHANGE
+ELSEIF RESULT == 4 && PBAND:303 != 3 && ITEM:触手生物
+	CALL BOOST_ITEM40
+ELSEIF RESULT == 5 && PBAND:67 >= 3
+	CALL MODIFY_FUTANARI
+ELSEIF RESULT == 6 && PBAND:67 >= 3
+	CALL MODIFY_FUTANARI_ERASE
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+GOTO INPUT_LOOP

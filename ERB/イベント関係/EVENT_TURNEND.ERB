@@ -1,0 +1,583 @@
+﻿;>売却と助手化の処理を削除(SHOPでまとめて行う)
+
+;=================================================
+;BEGIN TURNEND後最初に呼び出される関数
+;=================================================
+@EVENTTURNEND
+#PRI
+IF TARGET > 0
+	;売却可・助手可判定の処理
+	CALL CHECK_SELLASSIABLE
+
+	;特殊素質獲得判定の処理
+	CALL CHECK_SPECIALSKILL
+
+	;妊娠判定の処理
+	CALL IN_VAGINA_ALL
+	
+	;妊娠確定時の処理
+	CALL CONCEPTION_CHECK_ALL
+ENDIF
+;キャラクリのチェック
+CALL CHARACLEAR_CALC
+
+;休息処理
+CALL RESTTIME
+
+;危険日の算出
+CALL OVULATION_CALC
+
+;ヴァギナ形状の処理
+CALL VAGINAFORM_CHANGE
+
+;陰毛処理
+CALL PUBLIC_HAIR
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF NO:COUNT == [[キャラ:須野郁美]]
+		IF CFLAG:COUNT:売却助手可能 == 2
+			LOADGLOBAL
+			GLOBAL:51 = 1
+			SAVEGLOBAL
+		ENDIF
+	ENDIF
+REND
+
+
+;完全に死んだキャラがいたら削除
+REPEAT CHARANUM
+	;主人公は除外
+	SIF COUNT == 0
+		CONTINUE
+	;キャラ人数がCOUNT以下になっていたらREPEAT抜ける
+	SIF COUNT >= CHARANUM
+		BREAK
+
+	IF BASE:COUNT:体力 <= -1
+		T = -1
+		SIF TARGET != COUNT
+			T = TARGET
+		TARGET = COUNT
+		C = COUNT
+		CALL KILL_TARGET
+		COUNT = C - 1
+		SIF T != -1
+			TARGET = T
+	ENDIF
+REND
+
+;魅力値が0以下なら0にする
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		SIF BASE:COUNT:魅力値 <= 0
+			BASE:COUNT:魅力値 = 0
+	ENDIF
+REND
+
+;休憩フラグ外す
+FLAG:休憩 = 0
+
+;午後なら次の日、午前なら午後にする
+IF TIME == 1
+	;娼館営業結果のイベントの呼び出し
+	CALL YUUKAKU_RESULT
+
+	;売春による妊娠判定
+	CALL IN_VAGINA_EXTRA
+	CALL CONCEPTION_CHECK_EXTRA
+
+	;日付変更時のイベント呼び出し
+	CALL EVENT_LESPLAY_NEW
+	CALL EVENT_NEXTDAY
+	;スカウト周りの処理
+	CALL EVENT_SCOUT
+
+	IF FLAG:アイドルユニット結成 == 0
+		CALL IDOL_PRODUCE_CALC
+	ENDIF
+	IF FLAG:アイドルユニット結成 == 1 && MONEY > 500000
+		CALL IDOL_PRODUCE_ADD
+	ENDIF
+
+	;不良によるレイプの判定
+	IF FLAG:寝取られなし == 0
+		CALL BADBOY_RAPE_CALC
+	ENDIF
+
+	;痴漢の判定
+	IF FLAG:寝取られなし == 0
+		CALL EVENT_MOLESTER
+	ENDIF
+
+	IF FLAG:寝取られなし == 0
+		CALL COMPA_START
+	ENDIF
+
+	;恋愛度の判定
+	IF FLAG:寝取られなし == 0
+		REPEAT CHARANUM
+			IF COUNT == 0
+				CONTINUE
+			ELSEIF CFLAG:COUNT:入寮中 == 1 && (FLAG:女子寮拡張 & 128)
+				CONTINUE
+			ELSEIF TALENT:COUNT:オトコ == 0
+				CFLAG:COUNT:寝取られ進行ポイント += RAND:5
+					IF TALENT:COUNT:惚れっぽい
+						CFLAG:COUNT:寝取られ進行ポイント += RAND:5
+					ENDIF
+					IF TALENT:COUNT:ギャル系
+						CFLAG:COUNT:寝取られ進行ポイント += RAND:5
+					ENDIF
+				SIF CFLAG:COUNT:寝取られ進行ポイント > CFLAG:COUNT:寝取られ完了値
+				CALL EVENT_BOYFRIEND
+			ENDIF
+		REND
+	ENDIF
+	;外見変更の判定
+	IF FLAG:寝取られなし == 0
+		REPEAT CHARANUM
+			IF COUNT == 0
+				CONTINUE
+			ELSEIF CFLAG:COUNT:入寮中 == 1 && (FLAG:女子寮拡張 & 128)
+				CONTINUE
+			ELSE
+				CALL EVENT_LOOKSCHANGE
+			ENDIF
+		REND
+	ENDIF
+	;彼氏とのセックスチェック
+	IF FLAG:寝取られなし == 0
+		REPEAT CHARANUM
+			IF COUNT == 0
+				CONTINUE
+			ELSEIF CFLAG:COUNT:彼氏の有無 == 1
+				CALL EVENT_BOYFRIEND2
+			ENDIF
+		REND
+	ENDIF
+
+;	IF FLAG:寝取られなし == 0
+;		CALL EVENT_BFMARRIED
+;	ENDIF
+
+	IF !FLAG:寝取られなし
+		CALL NTR_STAFF_BEGIN
+	ENDIF
+	IF !FLAG:寝取られなし && !FLAG:リーナスタッフ動向調査 == 0
+		CALL BASE_NTR_STAFF
+	ENDIF
+
+	;黒ギャル周りの処理
+	;△見直し対象
+	IF FLAG:黒ギャルプライベート抑制 == 0
+		CALL BLACKGIRL_EVENT
+	ENDIF
+	
+	;ここまで
+
+	CALL IDOL_EVENT
+	CALL MODEL_EVENT_CALL
+	CALL C_CLUB_EVENT
+
+	CALL GETTALENT_GAL
+	CALL CHECK_SPECIALSKILL
+
+	CALL ADD_EXABL
+	CALL EXABL_B
+	CALL EXABL_P
+	CALL EXABL_S
+	CALL EXABL_O
+	CALL SUNBURN_AFTER
+
+	CALL ARBEIT_EXEC
+	CALL JOB_EXEC
+	CALL MISSION_DAY
+
+	SIF PBAND:145 >= 3 && CHARANUM < FLAG:事務所規模 && FLAG:さち加入イベント発生済み == 0
+		CALL SACHI_APPROACHING_CALC
+
+	IF PBAND:52 == 4 && CHARANUM < FLAG:事務所規模 && FLAG:姫乃加入イベント発生済み == 0
+		IF GETCHARA([[キャラ:佐々木美乃里]]) != -1
+			LOCAL = GETCHARA([[キャラ:佐々木美乃里]])
+			SIF TALENT:LOCAL:ＡＶ女優 == 1
+					CALL HIMENO_APPROACHING_CALC
+		ENDIF
+	ENDIF
+	SIF PBAND:65 >= 3 && CHARANUM < FLAG:事務所規模 && FLAG:環加入イベント発生済み == 0
+		CALL TAMAKI_APPROACHING_CALC
+	SIF PBAND:308 == 4 && CHARANUM < FLAG:事務所規模 && FLAG:マルチナ加入イベント != 0 && FLAG:マルチナ加入イベント発生済み == 0
+		CALL MARTINA_APPROACHING_CALC
+	SIF FLAG:女子寮建設
+		CALL LYCEE_EVENT_WEEKEND
+	DAY = DAY+1
+	PRINTW 一週間が終わった……
+
+	;排卵誘発剤の効果終了処理
+	REPEAT CHARANUM
+		IF CFLAG:COUNT:排卵促進剤使用 >= 1
+			PRINTFORML %NAME:COUNT%の排卵誘発剤の効果が切れたようだ
+			DRAWLINE
+			CFLAG:COUNT:排卵促進剤使用 = 0
+		ELSEIF CFLAG:COUNT:排卵促進剤使用 == -1
+			PRINTFORML %NAME:COUNT%の排卵抑制剤の効果が切れたようだ
+			DRAWLINE
+			CFLAG:COUNT:排卵促進剤使用 = 0
+		ENDIF
+	REND
+	;育毛剤の効果終了処理
+	REPEAT CHARANUM
+		IF CFLAG:COUNT:剛毛剤使用フラグ
+			PRINTFORML %NAME:COUNT%の育毛剤の効果が切れたようだ
+			CFLAG:COUNT:剛毛剤使用フラグ = 0
+		ENDIF
+	REND
+
+	DAY:2 = DAY:2 + 1
+	;先週が月末だったら月替わり処理
+	SIF END_OF_MONTH
+		CALL EVENT_NEXTMONTH
+	
+	TIME = 0
+
+	;翌朝に起こる出来事
+	CALL EVENT_NEWDAY
+
+ELSE
+	TIME = 1
+ENDIF
+
+;エンディングチェック
+CALL ENDING_CHECK
+
+;アイテムの自動購入
+CALL AUTO_BUYING
+
+;薬品自動投与
+SIF FLAG:薬品自動投与 
+	CALL AUTO_ITEMUSE
+
+
+;調教対象と助手を空に
+TARGET = -1
+ASSI = -1
+
+SIF FLAG:朝起こしてもらう == 1
+	CALL EVENT_MORNING_PICKUP
+
+;実績判定
+CALL CHECK_ACHIEVEMENT
+
+BEGIN SHOP
+
+;-------------------------------------------------
+;休息処理
+;-------------------------------------------------
+@RESTTIME
+;嫉妬と狂気持ちのチェック
+;嫉妬か狂気持ちのキャラの人数（調教対象だったなら除外）
+J = 0
+REPEAT CHARANUM
+	SIF COUNT != TARGET && TALENT:COUNT:嫉妬
+		J += 1
+	SIF COUNT != TARGET && TALENT:COUNT:狂気
+		J += 2
+REND
+
+H = 0
+;助手全体から【治療】を持つ人数を検索
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSEIF ISASSI:COUNT && TALENT:COUNT:治療
+		H += 1
+	ENDIF
+REND
+;助手全体から【治療】を持つ人数を検索
+
+REPEAT CHARANUM
+	;死んでるか臨死中なら回復しない
+	SIF BASE:COUNT:体力 < 1
+		CONTINUE
+
+	;体力の回復
+	IF TIME == 0
+		A = MAXBASE:COUNT:体力 / 20
+	;午後の調教後は夜の休みが入るので回復大きい
+	ELSE
+		A = MAXBASE:COUNT:体力 / 4
+	ENDIF
+	
+	;今回の調教対象でなく営業中でなければ回復量増加
+	SIF COUNT != TARGET && CFLAG:COUNT:労役中のフラグ == 0
+		A += 100
+	
+	;回復早い、回復遅い、アンドロイド、淫魔、天使
+	SIF TALENT:COUNT:異常回復
+		A += 3000
+	SIF TALENT:COUNT:最先端科学
+		A += 3000
+	SIF TALENT:COUNT:淫魔
+		A += 3000
+	SIF TALENT:COUNT:天使
+		A += 3000
+	SIF TALENT:COUNT:アンドロイド
+		A += 3000
+
+	A += ABL:COUNT:運動能力 * 30
+
+	;瀕死状態では体力回復が遅れる
+	SIF BASE:COUNT:体力 < 500
+		A /= 5
+
+	;主人か助手に治療があれば、全調教対象の回復量上昇
+	;ただし自分自身が唯一の治療持ちの場合は上昇しない
+	;（自分で自分は治療できないため）
+	IF TALENT:MASTER:治療
+		A += 100
+	ELSEIF H >= 2
+		A += 100
+	ELSEIF H == 1 && TALENT:COUNT:治療 == 100
+		A += 100
+	ENDIF
+
+	;営業中なら体力回復が遅れる
+	SIF CFLAG:COUNT:労役中のフラグ
+		A /= 5
+
+	;嫉妬
+	IF TALENT:COUNT:嫉妬 && EXP:COUNT:自慰経験
+		;自慰経験が増える(主人には知らせない)
+		TIMES A , 0.80
+		EXP:COUNT:自慰経験 += ABL:COUNT:欲望 * 2
+	ENDIF
+	;嫉妬or狂気がいると他の調教対象の体力回復が遅れる
+;	IF TALENT:COUNT:狂気 && J > 2
+;		A -= (J - 2) * 100
+;	ELSEIF TALENT:COUNT:嫉妬 && J > 1
+;		A -= (J - 1) * 100
+;	ELSEIF J > 0
+;		A -= J * 100
+;	ENDIF
+
+	;休息によって体力が減ってしまうということはない
+	SIF A < 0
+		A = 0
+	;午後の調教後は最低でも必ず10回復
+	SIF TIME == 1 && A < 10
+		A = 10
+
+	IF TALENT:COUNT:回復早い
+		A *= 2
+	ELSEIF TALENT:COUNT:回復遅い
+		A /= 2
+	ENDIF
+
+	;体力の回復
+	BASE:COUNT:体力 += A
+	SIF BASE:COUNT:体力 > MAXBASE:COUNT:体力
+		BASE:COUNT:体力 = MAXBASE:COUNT:体力
+
+	;気力の回復
+	BASE:COUNT:気力 = MAXBASE:COUNT:気力
+REND
+
+RETURN 0
+
+;-------------------------------------------------
+;陰毛処理
+;-------------------------------------------------
+@PUBLIC_HAIR
+;陰毛を生やさない設定ならそのまま帰る
+SIF FLAG:陰毛を生やす == 0
+	RETURN 0
+
+REPEAT CHARANUM
+	;剛毛剤使用中か剛毛体質
+	SIF (CFLAG:COUNT:剛毛剤使用フラグ || TALENT:COUNT:剛毛) && CFLAG:COUNT:陰毛の状態 <= 25
+		CFLAG:COUNT:陰毛の状態 += 1
+
+	;【パイパン】消失
+	IF TALENT:COUNT:パイパン && CFLAG:COUNT:陰毛の状態 > 5
+		PRINTFORMW %NAME:COUNT%の性器にうっすらと毛が生え始めている……
+		PRINTFORMW %NAME:COUNT%は【%TALENTNAME:[[TALENT:パイパン]]%】でなくなった。	
+		TALENT:COUNT:パイパン = 0
+	ENDIF
+	;【剛毛体質】獲得
+	IF TALENT:COUNT:剛毛 == 0 && CFLAG:COUNT:陰毛の状態 > 18
+		PRINTFORML %NAME:COUNT%の下腹部は恥丘からアナルまで、
+		PRINTFORMW 密生した陰毛に覆われている……
+		PRINTFORMW %NAME:COUNT%は【%TALENTNAME:[[TALENT:剛毛]]%】になった。	
+		TALENT:COUNT:剛毛 = 1
+	ENDIF
+
+	;パイパンならそのまま
+	SIF TALENT:COUNT:パイパン
+		CONTINUE
+	;永久脱毛してるならそのまま
+	SIF CFLAG:COUNT:陰毛の状態 < 0
+		CONTINUE
+	;幼稚か中学生なら7までしか伸びない
+	SIF CFLAG:COUNT:陰毛の状態 >= 9 && (TALENT:COUNT:幼稚 || TALENT:COUNT:中学生)
+		CONTINUE
+	SIF CFLAG:COUNT:陰毛の状態 >= 9 && TALENT:COUNT:褐色肌
+		CONTINUE
+	;高校生なら9までしか伸びない
+	SIF CFLAG:COUNT:陰毛の状態 >= 12 && TALENT:COUNT:高校生
+		CONTINUE
+	;通常の場合の上限は12
+	SIF CFLAG:COUNT:陰毛の状態 >= 12
+		CONTINUE
+	
+	CFLAG:COUNT:陰毛の状態 += 1
+
+REND
+
+;-------------------------------------------------
+;アイテムの自動購入処理
+;-------------------------------------------------
+@AUTO_BUYING
+;ローション
+IF (FLAG:アイテム自動購入 & 1) && MONEY >= 200 && ITEM:ローション == 0
+	ITEM:ローション += 1
+	MONEY -= 200
+ENDIF
+;サインペン
+IF (FLAG:アイテム自動購入 & 2)
+	REPEAT 99
+		IF MONEY >= 200 && ITEM:サインペン < 99
+			ITEM:サインペン += 1
+			MONEY -= 100
+		ENDIF
+	REND
+ENDIF
+;コンドーム
+IF (FLAG:アイテム自動購入 & 8)
+	REPEAT 10
+		IF MONEY >= 100 && ITEM:コンドーム < 10
+			ITEM:コンドーム += 1
+			MONEY -= 100
+		ENDIF
+	REND
+ENDIF
+
+;-------------------------------------------------
+;アイテムの自動購入処理
+;-------------------------------------------------
+@AUTO_ITEMUSE
+;ローション
+SIF TALENT:MASTER:調合知識 == 0
+	RETURN
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		LOCAL += COUNT
+	ENDIF
+REND
+
+;栄養剤
+IF (FLAG:薬品自動投与 & 1)
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF BASE:COUNT:体力 == MAXBASE:COUNT:体力
+			CONTINUE
+		ELSE
+			LOCAL:1 = MAXBASE:COUNT:体力 - BASE:COUNT:体力
+			IF LOCAL:1 <= 499
+				LOCAL:1 = 500
+			ELSEIF LOCAL:1 <= 1000 && LOCAL:1 >= 500
+				LOCAL:1 = 1000
+			ELSEIF LOCAL:1 <= 1500 && LOCAL:1 >= 999
+				LOCAL:1 = 1500
+			ELSEIF LOCAL:1 <= 2000 && LOCAL:1 >= 1499
+				LOCAL:1 = 2000
+			ELSEIF LOCAL:1 <= 2500 && LOCAL:1 >= 1999
+				LOCAL:1 = 2500
+			ELSEIF LOCAL:1 <= 3000 && LOCAL:1 >= 2499
+				LOCAL:1 = 3000
+			ELSEIF LOCAL:1 <= 3500 && LOCAL:1 >= 2999
+				LOCAL:1 = 3500
+			ELSEIF LOCAL:1 <= 4000 && LOCAL:1 >= 3499
+				LOCAL:1 = 4000
+			ELSEIF LOCAL:1 <= 4500 && LOCAL:1 >= 3999
+				LOCAL:1 = 4500
+			ELSEIF LOCAL:1 <= 5000 && LOCAL:1 >= 4499
+				LOCAL:1 = 5000
+			ENDIF
+			LOCAL:2 = LOCAL:1 / 500
+			SIF MONEY < 1000 * LOCAL:2
+				BREAK
+			PRINTFORML 《%NAME:COUNT%に{LOCAL:2}回栄養剤を飲ませました》
+			BASE:COUNT:体力 = MAXBASE:COUNT:体力
+			MONEY -= LOCAL:2 * 1000
+			LOCAL:1 = 0
+			LOCAL:2 = 0
+		ENDIF
+	REND
+ENDIF
+
+VARSET LOCAL, 0
+IF (FLAG:薬品自動投与 & 8)
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF JUEL:COUNT:否定 <= 0
+			CONTINUE
+		ELSE
+			LOCAL:1 = JUEL:COUNT:否定
+			$REPEAT_OKOU
+			LOCAL:1 /= 2
+			LOCAL:2 += 1
+			SIF LOCAL:1 > 100
+				GOTO REPEAT_OKOU
+			SIF MONEY < 3000 * LOCAL:2
+				BREAK
+			PRINTFORML 《%NAME:COUNT%に{LOCAL:2}回お香を与えました》
+			JUEL:COUNT:否定 = 0
+			MONEY -= LOCAL:2 * 3000
+			LOCAL:1 = 0
+			LOCAL:2 = 0
+		ENDIF
+	REND
+ENDIF
+	
+;排卵誘発剤
+IF (FLAG:薬品自動投与 & 2) && MONEY >= 2000 * LOCAL
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF TALENT:COUNT:オトコ == 1
+			CONTINUE
+		ELSEIF CFLAG:COUNT:排卵促進剤使用 >= 1
+			CONTINUE
+		ELSE
+			CFLAG:COUNT:排卵促進剤使用 = 1
+			SIF PBAND:303 >= 3
+				CFLAG:COUNT:排卵促進剤使用 += RAND:2
+			MONEY -= 2000
+			PRINTFORML 《%NAME:COUNT%に排卵誘発剤を飲ませました》
+		ENDIF
+	REND
+ENDIF
+;排卵抑制剤
+IF (FLAG:薬品自動投与 & 4) && MONEY >= 50000 * LOCAL
+	REPEAT CHARANUM
+		IF COUNT == 0
+			CONTINUE
+		ELSEIF TALENT:COUNT:オトコ == 1
+			CONTINUE
+		ELSEIF CFLAG:COUNT:排卵促進剤使用 == -1
+			CONTINUE
+		ELSE
+			CFLAG:COUNT:排卵促進剤使用 = -1
+			MONEY -= 50000
+			PRINTFORML 《%NAME:COUNT%に排卵抑制剤を飲ませました》
+		ENDIF
+	REND
+ENDIF

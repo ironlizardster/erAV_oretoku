@@ -1,0 +1,348 @@
+﻿;-------------------------------------------------
+;剃毛
+;過激なコマンド：調教対象の陰毛を剃り上げる
+;-------------------------------------------------
+@COM88
+
+PRINTL 剃毛
+
+;-------------------------------------------------
+;実行できるかの判定
+;-------------------------------------------------
+;縄使用中なら自動成功
+SIF TEQUIP:縄
+	GOTO SUCCESS_LOOP
+
+A = 0
+S = 0
+
+;すべての命令に共通の要素を考慮
+;(従順が高いと命令に従いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 3
+	PRINTS ABLNAME:[[ABL:欲望]]
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 3,')
+	S = 1
+ENDIF
+;ABL:露出癖
+IF ABL:露出癖
+	SIF S
+		PRINT  + 
+	A += ABL:露出癖 * 4
+	PRINTS ABLNAME:[[ABL:露出癖]]
+	PRINTV 'LV,ABL:露出癖,'(,ABL:露出癖 * 4,')
+	S = 1
+ENDIF
+;MARK:快楽刻印
+IF MARK:快楽刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快楽刻印 * 3
+	PRINTS MARKNAME:[[MARK:快楽刻印]]
+	PRINTV 'LV,MARK:快楽刻印,'(,MARK:快楽刻印 * 3,')
+	S = 1
+ENDIF
+
+;PALAM:欲情
+IF PALAM:欲情 < PALAMLV:1
+	L = 0
+ELSEIF PALAM:欲情 < PALAMLV:2
+	L = 1
+ELSEIF PALAM:欲情 < PALAMLV:3
+	L = 2
+ELSEIF PALAM:欲情 < PALAMLV:4
+	L = 3
+ELSEIF PALAM:欲情 < PALAMLV:5
+	L = 4
+ELSE
+	L = 5
+ENDIF
+IF L
+	SIF S
+		PRINT  + 
+	A += L * 3
+	PRINTS PALAMNAME:[[PALAM:欲情]]
+	PRINTV 'LV,L,'(,L * 3,')
+	S = 1
+ENDIF
+
+;自制心
+IF TALENT:自制心
+	PRINT  - 
+	A -= 5
+	PRINTS TALENTNAME:[[TALENT:自制心]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;恥じらい
+IF TALENT:恥じらい
+	PRINT  - 
+	A -= 5
+	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;恥薄い
+IF TALENT:恥薄い
+	SIF S
+		PRINT  + 
+	A += 2
+	PRINTS TALENTNAME:[[TALENT:恥薄い]]
+	PRINTV '(,2,')
+	S = 1
+ENDIF
+;露出狂
+IF TALENT:露出狂
+	SIF S
+		PRINT  + 
+	A += 10
+	PRINTS TALENTNAME:[[TALENT:露出狂]]
+	PRINTV '(,10,')
+	S = 1
+ENDIF
+
+;合計を表示(40以上で実行)
+PRINT  = 
+PRINTV A
+
+;難易度上昇
+;公開で+10
+V = 36
+SIF TEQUIP:撮影中 || TEQUIP:野外プレイ
+	V += 10
+
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 実行値
+PRINTV V
+
+WAIT
+
+;実行できない
+SIF A < V
+	RETURN 0
+
+$SUCCESS_LOOP
+
+SAVESTR:0 = 剃毛
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;実行決定
+;-------------------------------------------------
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 100
+
+SOURCE:14 = 1000
+
+;縄使用中
+SIF TEQUIP:撮影中
+	SOURCE:14 += 3000
+
+;ビデオ撮影中
+IF TEQUIP:撮影中
+	SOURCE:10 = 50
+	SOURCE:11 = 100
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	SOURCE:12 = 3600
+ELSEIF PALAM:欲情 < PALAMLV:2
+	SOURCE:12 = 3900
+ELSEIF PALAM:欲情 < PALAMLV:3
+	SOURCE:12 = 4200
+ELSEIF PALAM:欲情 < PALAMLV:4
+	SOURCE:12 = 4500
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	SOURCE:12 = 5000
+ENDIF
+
+;露出癖をみる
+;露出癖が高くなるにつれ剃毛への恥じらいが減っていく
+IF ABL:露出癖 == 0
+	SOURCE:7 = 0
+	SOURCE:13 = 7000
+ELSEIF ABL:露出癖 == 1
+	SOURCE:7 = 60
+	SOURCE:13 = 6000
+ELSEIF ABL:露出癖 == 2
+	SOURCE:7 = 200
+	SOURCE:13 = 5000
+ELSEIF ABL:露出癖 == 3
+	SOURCE:7 = 600
+	SOURCE:13 = 4000
+ELSEIF ABL:露出癖 == 4
+	SOURCE:7 = 1000
+	SOURCE:13 = 3000
+ELSE
+	SOURCE:7 = 2000
+	SOURCE:13 = 2000
+ENDIF
+
+;ABL:マゾっ気をみる
+IF ABL:マゾっ気 == 0
+	TIMES SOURCE:7 , 0.80
+	TIMES SOURCE:12 , 1.00
+	SOURCE:10 = 100
+	SOURCE:11 = 100
+ELSEIF ABL:マゾっ気 == 1
+	TIMES SOURCE:7 , 1.00
+	TIMES SOURCE:12 , 1.20
+	SOURCE:10 = 200
+	SOURCE:11 = 300
+ELSEIF ABL:マゾっ気 == 2
+	TIMES SOURCE:7 , 1.30
+	TIMES SOURCE:12 , 1.40
+	SOURCE:10 = 400
+	SOURCE:11 = 700
+ELSEIF ABL:マゾっ気 == 3
+	TIMES SOURCE:7 , 1.40
+	TIMES SOURCE:12 , 1.50
+	SOURCE:10 = 700
+	SOURCE:11 = 1200
+ELSEIF ABL:マゾっ気 == 4
+	TIMES SOURCE:7 , 1.70
+	TIMES SOURCE:12 , 1.70
+	SOURCE:10 = 1100
+	SOURCE:11 = 1800
+ELSE
+	TIMES SOURCE:7 , 2.00
+	TIMES SOURCE:12 , 2.00
+	SOURCE:10 = 1500
+	SOURCE:11 = 2500
+ENDIF
+
+;場所をみる
+;公開
+IF TEQUIP:撮影中 || TEQUIP:野外プレイ
+	TIMES SOURCE:12 , 2.50
+	TIMES SOURCE:14 , 2.50
+;大鏡の前
+ELSEIF TEQUIP:羞恥大鏡プレイ
+	TIMES SOURCE:12 , 1.50
+	TIMES SOURCE:14 , 1.50
+;風呂場
+ELSEIF TEQUIP:お風呂場プレイ
+	TIMES SOURCE:12 , 0.50
+	TIMES SOURCE:14 , 0.50
+ENDIF
+
+A = 100
+IF EXP:放尿経験 < EXPLV:1
+	TIMES A , 3.00
+ELSEIF EXP:放尿経験 < EXPLV:2
+	TIMES A , 2.50
+ELSEIF EXP:放尿経験 < EXPLV:3
+	TIMES A , 2.00
+ELSEIF EXP:放尿経験 < EXPLV:4
+	TIMES A , 1.00
+ELSEIF EXP:放尿経験 < EXPLV:5
+	TIMES A , 0.80
+ELSE
+	TIMES A , 0.60
+ENDIF
+
+;臆病
+SIF TALENT:臆病
+	TIMES A , 1.20
+
+;反抗的
+SIF TALENT:ナマイキ
+	TIMES A , 2.00
+
+;プライド高い
+SIF TALENT:プライド高い
+	TIMES A , 2.00
+
+;プライド低い
+SIF TALENT:プライド低い
+	TIMES A , 0.80
+
+;自制心
+SIF TALENT:自制心
+	TIMES A , 1.50
+
+;感情乏しい
+SIF TALENT:感情乏しい
+	TIMES A , 0.60
+
+;目立ちたがり
+SIF TALENT:目立ちたがり
+	TIMES A , 0.80
+
+;抑圧
+SIF TALENT:抑圧
+	TIMES A , 3.00
+
+;抵抗
+SIF TALENT:抵抗
+	TIMES A , 3.00
+
+;恥じらい
+SIF TALENT:恥じらい
+	TIMES A , 3.50
+
+;恥薄い
+SIF TALENT:恥薄い
+	TIMES A , 0.50
+
+;露出狂
+IF TALENT:露出狂
+	SOURCE:7 += 500
+	TIMES SOURCE:12 , 1.50
+ENDIF
+
+SOURCE:14 += A * 5
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+;奴隷のＶ⇔調教者の指の汚れが移動
+STAIN:3 |= STAIN:PLAYER:1
+STAIN:PLAYER:1 |= STAIN:3
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +2
+	EXP:レズ経験 += 2
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +2
+	EXP:ＢＬ経験 += 2
+ENDIF
+
+;愛情経験
+E = 2
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+;剃毛を実行
+CFLAG:陰毛の状態 = 1
+
+;屈服刻印３に相当
+TFLAG:屈服刻印2 = 3
+
+RETURN 1
+;

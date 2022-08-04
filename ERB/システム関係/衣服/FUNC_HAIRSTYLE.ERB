@@ -1,0 +1,227 @@
+﻿;===========================================================
+;ヘアスタイルの処理
+;===========================================================
+@PRINT_HAIRSTYLE
+IF CFLAG:髪の色 == 0
+	PRINT 黒
+ELSEIF CFLAG:髪の色 == 1
+	PRINT 茶
+ELSEIF CFLAG:髪の色 == 2
+	PRINT 金
+ELSEIF CFLAG:髪の色 == 3
+	PRINT 銀
+ELSEIF CFLAG:髪の色 == 4
+	PRINT 赤
+ELSEIF CFLAG:髪の色 == 5
+	PRINT 青
+ELSEIF CFLAG:髪の色 == 6
+	PRINT 緑
+ELSEIF CFLAG:髪の色 == 7
+	PRINT ピンク
+ELSEIF CFLAG:髪の色 == 8
+	PRINT 紫
+ELSEIF CFLAG:髪の色 == 9 && CFLAG:染髪の有無 == 0
+	PRINT 白
+ELSEIF CFLAG:髪の色 == 10
+	PRINT 栗
+;特定キャラ専用髪色
+ELSEIF CFLAG:髪の色 == 11
+	PRINT 薄紫
+ELSEIF CFLAG:髪の色 == 12
+	PRINT 真珠
+ELSEIF CFLAG:髪の色 == 13
+	PRINT 赤紫
+ELSEIF CFLAG:髪の色 == 14
+	PRINT アッシュブラウン
+ENDIF
+
+IF CFLAG:髪の色 != 7 || CFLAG:髪の色 != 14 || (CFLAG:髪の色 != 9 && CFLAG:染髪の有無 != 1)
+	PRINT 色
+ENDIF
+IF CFLAG:染髪の有無 == 1 && CFLAG:髪の色 != 9
+	PRINT に染めた
+ELSEIF CFLAG:染髪の有無 == 1 && CFLAG:髪の色 == 9
+	PRINT 脱色した
+ELSE
+	PRINT の
+ENDIF
+IF NO:TARGET == [[キャラ:新島みひろ]] || NO:TARGET == [[キャラ:碧野乃衣瑠]] || NO:TARGET == [[キャラ:浅神智子]] || NO:TARGET == [[キャラ:後藤彩香]]
+	PRINT くせっ毛を
+ELSE
+	PRINT 髪を
+ENDIF
+	IF CFLAG:髪型 == 0
+		PRINT ショートヘア
+	ELSEIF CFLAG:髪型 == 1
+		PRINT セミロング
+	ELSEIF CFLAG:髪型 == 2
+		PRINT ショートボブ
+	ELSEIF CFLAG:髪型 == 3
+		PRINT ポニーテール
+	ELSEIF CFLAG:髪型 == 4
+		PRINT ツインテール
+	ELSEIF CFLAG:髪型 == 5
+		PRINT ストレートロング
+	ELSEIF CFLAG:髪型 == 6
+		PRINT アップ
+	ELSEIF CFLAG:髪型 == 7
+		PRINT ゆるふわパーマ
+	ELSEIF CFLAG:髪型 == 8
+		PRINT ロングウェーブ
+	ELSEIF CFLAG:髪型 == 9
+		PRINT 三つ編み
+	ELSEIF CFLAG:髪型 == 10
+		PRINT ツーサイドアップ
+	ELSEIF CFLAG:髪型 == 11
+		PRINT ツインドリルテール
+	ELSEIF CFLAG:髪型 == 12
+		PRINT お団子ヘア
+	ELSEIF CFLAG:髪型 == 99
+		PRINT 昇天ペガサスＭＩＸ盛り
+	ENDIF
+PRINT にしています
+;===========================================================
+;髪型の処理
+;===========================================================
+@PRINT_HAIRSTYLE_4COUNT
+IF CFLAG:COUNT:髪の色 == 0
+	PRINT 黒
+ELSEIF CFLAG:COUNT:髪の色 == 1
+	PRINT 茶
+ELSEIF CFLAG:COUNT:髪の色 == 2
+	PRINT 金
+ELSEIF CFLAG:COUNT:髪の色 == 3
+	PRINT 銀
+ELSEIF CFLAG:COUNT:髪の色 == 4
+	PRINT 赤
+ELSEIF CFLAG:COUNT:髪の色 == 5
+	PRINT 青
+ELSEIF CFLAG:COUNT:髪の色 == 6
+	PRINT 緑
+ELSEIF CFLAG:COUNT:髪の色 == 7
+	PRINT ピンク
+ELSEIF CFLAG:COUNT:髪の色 == 8
+	PRINT 紫
+ELSEIF CFLAG:COUNT:髪の色 == 9 && CFLAG:COUNT:染髪の有無 == 0
+	PRINT 白
+ELSEIF CFLAG:COUNT:髪の色 == 10
+	PRINT 栗
+;特定キャラ専用髪色
+ELSEIF CFLAG:COUNT:髪の色 == 11
+	PRINT 薄紫
+ELSEIF CFLAG:COUNT:髪の色 == 12
+	PRINT 真珠
+ENDIF
+IF CFLAG:COUNT:髪の色 != 7 || (CFLAG:COUNT:髪の色 != 9 && CFLAG:COUNT:染髪の有無 == 0)
+	PRINT 色
+ENDIF
+IF CFLAG:COUNT:染髪の有無 == 1 && CFLAG:COUNT:髪の色 != 9
+	PRINT に染めた
+ELSEIF CFLAG:COUNT:染髪の有無 == 1 && CFLAG:COUNT:髪の色 == 9
+	PRINT 脱色した
+ELSE
+	PRINT の
+ENDIF
+IF NO:COUNT == [[キャラ:新島みひろ]] || NO:COUNT == [[キャラ:碧野乃衣瑠]] || NO:COUNT == [[キャラ:浅神智子]] || NO:COUNT == [[キャラ:後藤彩香]]
+	PRINT くせっ毛を
+ELSEIF CFLAG:COUNT:髪型 == 6 && TALENT:COUNT:ColorfulPureGirls == 0
+	PRINT 髪を
+ENDIF
+IF CFLAG:COUNT:髪型 == 0
+	PRINT ショートヘア
+ELSEIF CFLAG:COUNT:髪型 == 1
+	PRINT セミロング
+ELSEIF CFLAG:COUNT:髪型 == 2
+	PRINT ショートボブ
+ELSEIF CFLAG:COUNT:髪型 == 3
+	PRINT ポニーテール
+ELSEIF CFLAG:COUNT:髪型 == 4
+	PRINT ツインテール
+ELSEIF CFLAG:COUNT:髪型 == 5
+	PRINT ストレートロング
+ELSEIF CFLAG:COUNT:髪型 == 6
+	PRINT アップ
+ELSEIF CFLAG:COUNT:髪型 == 7
+	PRINT ゆるふわパーマ
+ELSEIF CFLAG:COUNT:髪型 == 8
+	PRINT ロングウェーブ
+ELSEIF CFLAG:COUNT:髪型 == 9
+	PRINT 三つ編み
+ELSEIF CFLAG:COUNT:髪型 == 10
+	PRINT ツーサイドアップ
+ELSEIF CFLAG:COUNT:髪型 == 11
+	PRINT ツインドリルテール
+ELSEIF CFLAG:COUNT:髪型 == 12
+	PRINT お団子ヘア
+ELSEIF CFLAG:COUNT:髪型 == 99
+	PRINT 昇天ペガサスＭＩＸ盛り
+ENDIF
+
+;===========================================================
+;髪型の処理
+;===========================================================
+@PRINT_HAIRSTYLE_TAILOR
+
+IF CFLAG:髪型 == 0
+	PRINT ショートヘア
+ELSEIF CFLAG:髪型 == 1
+	PRINT セミロング
+ELSEIF CFLAG:髪型 == 2
+	PRINT ショートボブ
+ELSEIF CFLAG:髪型 == 3
+	PRINT ポニーテール
+ELSEIF CFLAG:髪型 == 4
+	PRINT ツインテール
+ELSEIF CFLAG:髪型 == 5
+	PRINT ストレートロング
+ELSEIF CFLAG:髪型 == 6
+	PRINT アップ
+ELSEIF CFLAG:髪型 == 7
+	PRINT ゆるふわパーマ
+ELSEIF CFLAG:髪型 == 8
+	PRINT ロングウェーブ
+ELSEIF CFLAG:髪型 == 9
+	PRINT 三つ編み
+ELSEIF CFLAG:髪型 == 10
+	PRINT ツーサイドアップ
+ELSEIF CFLAG:髪型 == 11
+	PRINT ツインドリルテール
+ELSEIF CFLAG:髪型 == 12
+	PRINT お団子ヘア
+ELSEIF CFLAG:髪型 == 99
+	PRINT 昇天ペガサスＭＩＸ盛り
+ENDIF
+
+;===========================================================
+;髪色の処理
+;===========================================================
+@PRINT_HAIRCOLOR_TAILOR
+
+IF CFLAG:髪の色 == 0
+	PRINT 黒
+ELSEIF CFLAG:髪の色 == 1
+	PRINT 茶
+ELSEIF CFLAG:髪の色 == 2
+	PRINT 金
+ELSEIF CFLAG:髪の色 == 3
+	PRINT 銀
+ELSEIF CFLAG:髪の色 == 4
+	PRINT 赤
+ELSEIF CFLAG:髪の色 == 5
+	PRINT 青
+ELSEIF CFLAG:髪の色 == 6
+	PRINT 緑
+ELSEIF CFLAG:髪の色 == 7
+	PRINT ピンク
+ELSEIF CFLAG:髪の色 == 8
+	PRINT 紫
+ELSEIF CFLAG:髪の色 == 9 && CFLAG:染髪の有無 == 0
+	PRINT 白
+ELSEIF CFLAG:髪の色 == 10
+	PRINT 栗
+;特定キャラ専用髪色
+ELSEIF CFLAG:髪の色 == 11
+	PRINT 薄紫
+ELSEIF CFLAG:髪の色 == 12
+	PRINT 真珠
+ENDIF

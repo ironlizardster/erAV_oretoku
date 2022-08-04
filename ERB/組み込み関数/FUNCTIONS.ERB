@@ -1,0 +1,207 @@
+﻿;=======================================
+;あちこちから呼ばれる可能性のある関数群。
+;=======================================
+
+;=================================================
+;NOTHING
+;空関数。
+;主にCALL NOTHINGをGREPすることにより何が追加待ちかを調べる用途。
+;=================================================
+@NOTHING
+RETURN 0
+
+;=================================================
+;INCEST
+;親族関係の判定
+;-------------------------------------------------
+;現在のTARGETから見てPLAYERが何にあたるかの判定をTFLAG:14に代入
+;（0:親族関係なし. 1:父か母, 2:息子か娘, 3:兄か姉, 4:弟か妹, 5:従姉,6:従弟）
+;親族判定は、@SOURCE_CHECK以外にもあっちこっちの関数で使ってるので注意！
+;あっちこっちの関数で使うものをSOURCE_SUBに置いとくのもなあということで移動。
+;AV_Hoではキャラ数の関係上一桁増やすことにしている。せっかくの姉妹設定は活用したい。
+;erAVにおいては25はミッション期限で使用のためコメントアウト。最下段からも外してある。
+;=================================================
+@INCEST
+
+TFLAG:近親相姦 = 0
+
+;関数の汎用性を考えて、敢えてREPEAT文の使用は避ける
+SIF CFLAG:21 && CFLAG:21 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:21 / 1000) + 1
+SIF CFLAG:22 && CFLAG:22 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:22 / 1000) + 1
+SIF CFLAG:23 && CFLAG:23 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:23 / 1000) + 1
+SIF CFLAG:24 && CFLAG:24 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:24 / 1000) + 1
+;SIF CFLAG:ミッション期間 && CFLAG:ミッション期間 % 1000 == NO:PLAYER
+;	TFLAG:近親相姦 = (CFLAG:ミッション期間 / 1000) + 1
+
+;主人が父親か母親である場合の処理
+IF PLAYER == MASTER && (CFLAG:21 == -1 || CFLAG:22 == -1 || CFLAG:23 == -1 || CFLAG:24 == -1)
+	TFLAG:近親相姦 = 1
+ENDIF
+
+RETURN
+;
+;================================================
+;SERIHU
+;台詞用関数
+;もっといい関数名はないのか
+;-------------------------------------------------
+;引数に喋らせたい台詞を入れるとピンクかつあくびんかつ鍵括弧つきで表示してくれる関数
+;フォントと色を戻す機能完備。問題は一行用というところである
+;------------------------------------------------
+@SERIHU,ARGS
+SETCOLOR 0xDDBBCC
+CHKFONT "あくびん"
+IF RESULT
+	SETFONT "あくびん"
+ENDIF
+PRINTFORML 「%ARGS%」
+SETFONT ""
+RESETCOLOR
+
+;================================================
+;SERIHU_FULLCOLOR
+;台詞用関数の色変更可能版
+;-------------------------------------------------
+;第一引数に台詞、第二引数に色を入れると以下略。
+;第二引数は16進数0xRRGGBBである
+;------------------------------------------------
+@SERIHU_FULLCOLOR,ARGS,ARG
+
+SETCOLOR ARG
+CHKFONT "あくびん"
+IF RESULT
+	SETFONT "あくびん"
+ENDIF
+PRINTFORML 「%ARGS%」
+SETFONT ""
+RESETCOLOR
+
+;================================================
+;HINT_CHARA
+;ヒントの色変え用。
+;CHARAはキャラクターではなくキャラクタである。
+;-------------------------------------------------
+;第一引数に台詞、第二引数に色を入れると以下略。
+;第二引数は16進数0xRRGGBBである
+;------------------------------------------------
+@HINT_CHARA,ARGS,ARG=0xCCCCFF
+
+SETCOLOR ARG
+PRINTFORM %ARGS%
+SETFONT ""
+RESETCOLOR
+
+;===============================================
+;DIGIT
+;桁数の算出
+;-----------------------------------------------
+;車輪の再発明
+;===============================================
+@DIGIT(ARG)
+#FUNCTION
+#DIM LOOPCOUNT
+
+LOOPCOUNT = 0
+
+WHILE ARG
+	ARG /= 10
+	LOOPCOUNT ++
+WEND
+
+RETURNF LOOPCOUNT
+
+;===============================================
+;HAVE_PENIS
+;P持ちかどうかを見る
+;-----------------------------------------------
+;つまりありがちなあれ
+;===============================================
+@HAVE_PENIS(ARG)
+#FUNCTION
+
+IF TALENT:ARG:オトコ || TALENT:ARG:ふたなり
+	RETURNF 1
+ELSE
+	RETURNF 0
+ENDIF
+
+;---------------------------------------------------------
+;ハート表示用
+;---------------------------------------------------------
+@HEART_CODE
+CHKFONT "あくびん"
+IF RESULT
+	SETFONT "あくびん"
+ENDIF
+PRINTFORM %UNICODE(0x2665)%
+
+
+@PRINT_BUTTON(STRING,ENABLE=0,VALUE=0,LINE_END=0)
+#DIMS STRING
+#DIM ENABLE
+#DIM VALUE
+#DIM LINE_END
+
+TEMP_STR = %STRING%
+IF ENABLE
+	PRINTBUTTON TEMP_STR,VALUE
+ELSE
+	SETCOLOR GET_COLOR_CODE("灰")
+	PRINTPLAINFORM %TEMP_STR%
+	RESETCOLOR
+ENDIF
+SIF LINE_END
+	PRINTL
+
+@PRINT_BUTTON_STRING_VALUE(STRING,ENABLE=0,VALUE="",LINE_END=0)
+#DIMS STRING
+#DIM ENABLE
+#DIMS VALUE
+#DIM LINE_END
+
+TEMP_STR = %STRING%
+IF ENABLE
+	PRINTBUTTON TEMP_STR,VALUE
+ELSE
+	SETCOLOR GET_COLOR_CODE("灰")
+	PRINTPLAINFORM %TEMP_STR%
+	RESETCOLOR
+ENDIF
+SIF LINE_END
+	PRINTL
+
+@PRINT_PAGE_NAVI(CAN_NAVI_PREV,CAN_NAVI_NEXT)
+#DIM CAN_NAVI_PREV
+#DIM CAN_NAVI_NEXT
+TEMP_STR '= "[前のページ]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / 3 - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / 3 - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,CAN_NAVI_PREV,COMMAND_PREV_PAGE)
+
+TEMP_STR '= "[戻る]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / 3 - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / 3 - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_GO_BACK)
+
+TEMP_STR '= "[次のページ]"
+STRLENS TEMP_STR
+TEMP_STR '= " " * ((SHOWLENGTH / 3 - RESULT)/2) + TEMP_STR + " " * ((SHOWLENGTH / 3 - RESULT)/2)
+CALL PRINT_BUTTON(TEMP_STR,CAN_NAVI_NEXT,COMMAND_NEXT_PAGE)
+
+@GET_はいいいえ()
+TEMP_STR '= "[はい]"
+STRLENS TEMP_STR
+TEMP_STR '= TEMP_STR + " " * (SHOWLENGTH / 3 - RESULT)
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_はい)
+TEMP_STR '= "[いいえ]"
+STRLENS TEMP_STR
+TEMP_STR '= TEMP_STR + " " * (SHOWLENGTH / 3 - RESULT)
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_いいえ)
+
+INPUT
+
+RETURN RESULT

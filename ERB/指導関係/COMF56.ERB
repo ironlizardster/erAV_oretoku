@@ -1,0 +1,194 @@
+﻿;-------------------------------------------------
+;会話する
+;-------------------------------------------------
+@COM56
+
+;ビデオ撮影中なら自己紹介に
+IF TEQUIP:撮影中
+	PRINTL 自己紹介
+ELSE
+	PRINTL 会話する
+ENDIF
+SAVESTR:0 = 会話する
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+;愛の有無と従順のLvによって変化
+IF TALENT:恋心 == 1 && ABL:信頼 >= 5
+	LOSEBASE:体力 += 10
+	LOSEBASE:気力 += 50
+ELSEIF TALENT:恋心 == 1
+	LOSEBASE:体力 += 10
+	LOSEBASE:気力 += 50
+ELSEIF ABL:信頼 >= 3
+	LOSEBASE:体力 += 50
+	LOSEBASE:気力 += 100
+ELSE
+	LOSEBASE:体力 += 100
+	LOSEBASE:気力 += 200
+ENDIF
+
+;愛の有無と従順のLvによって上昇するソースが変化
+IF TALENT:恋心
+	SOURCE:16 = 60
+ELSEIF ABL:信頼 >= 5
+	SOURCE:15 = 10
+	SOURCE:16 = 50
+ELSEIF ABL:信頼 >= 4
+	SOURCE:15 = 20
+	SOURCE:16 = 40
+ELSEIF ABL:信頼 >= 3
+	SOURCE:15 = 30
+	SOURCE:16 = 30
+ELSEIF ABL:信頼 >= 2
+	SOURCE:15 = 40
+	SOURCE:16 = 20
+ELSE
+	SOURCE:15 = 50
+	SOURCE:16 = 10
+ENDIF
+
+;PALAM:恭順をみる
+IF PALAM:恭順 < PALAMLV:1
+	SOURCE:16 += 10
+ELSEIF PALAM:恭順 < PALAMLV:2
+	SOURCE:16 += 30
+ELSEIF PALAM:恭順 < PALAMLV:3
+	SOURCE:16 += 60
+ELSEIF PALAM:恭順 < PALAMLV:4
+	SOURCE:16 += 100
+ELSEIF PALAM:恭順 >= PALAMLV:4
+	SOURCE:16 += 150
+ENDIF
+
+;奉仕精神をみる
+IF ABL:奉仕精神 == 0
+	SOURCE:16 += 0
+ELSEIF ABL:奉仕精神 == 1
+	SOURCE:16 += 20
+ELSEIF ABL:奉仕精神 == 2
+	SOURCE:16 += 40
+ELSEIF ABL:奉仕精神 == 3
+	SOURCE:16 += 70
+ELSEIF ABL:奉仕精神 == 4
+	SOURCE:16 += 110
+ELSE
+	SOURCE:16 += 150
+ENDIF
+
+;話術をみる
+IF ABL:話術 == 0
+	TIMES SOURCE:16 , 0.90
+ELSEIF ABL:話術 == 1
+	TIMES SOURCE:16 , 1.00
+ELSEIF ABL:話術 == 2
+	TIMES SOURCE:16 , 1.10
+ELSEIF ABL:話術 == 3
+	TIMES SOURCE:16 , 1.20
+ELSEIF ABL:話術 == 4
+	TIMES SOURCE:16 , 1.30
+ELSE
+	TIMES SOURCE:16 , 1.40
+ENDIF
+
+;ビデオ撮影中だと自己紹介に
+IF TEQUIP:撮影中
+	SOURCE:12 = 1000
+
+	;露出癖をみる
+	IF ABL:露出癖 == 0
+		SOURCE:4 = 0
+	ELSEIF ABL:露出癖 == 1
+		SOURCE:4 = 10
+	ELSEIF ABL:露出癖 == 2
+		SOURCE:4 = 50
+	ELSEIF ABL:露出癖 == 3
+		SOURCE:4 = 100
+	ELSEIF ABL:露出癖 == 4
+		SOURCE:4 = 200
+		SOURCE:10 += 50
+	ELSEIF ABL:露出癖 >= 5
+		SOURCE:4 = 400
+		SOURCE:10 += 100
+	ENDIF
+
+	;目立ちたがり
+	IF TALENT:目立ちたがり
+		TIMES SOURCE:4 , 1.20
+		TIMES SOURCE:12 , 1.20
+	ENDIF
+
+	;露出狂
+	IF TALENT:露出狂
+		TIMES SOURCE:4 , 1.60
+		TIMES SOURCE:12 , 1.60
+		TIMES SOURCE:10 , 1.60
+	ENDIF
+
+	;自己紹介成功フラグを立てる
+	SIF TALENT:露出狂 || TALENT:恋心 || ABL:信頼 >= 3 || ABL:欲望 >= 4 || ABL:露出癖 >= 2
+		TFLAG:ビデオ撮影内容 |= 2
+
+ENDIF
+
+;-------------------------------------------------
+;経験の処理
+;-------------------------------------------------
+;調教会話経験
+;PALAM:恭順をみる
+IF PALAM:恭順 < PALAMLV:1
+	E = 1
+ELSEIF PALAM:恭順 < PALAMLV:2
+	E = 1
+ELSEIF PALAM:恭順 < PALAMLV:3
+	E = 1
+ELSEIF PALAM:恭順 < PALAMLV:4
+	E = 1
+ELSE
+	E = 1
+ENDIF
+
+;愛
+SIF TALENT:恋心 && ASSIPLAY == 0
+	E *= 2
+
+;話し手の話術をみる
+IF ABL:PLAYER:話術 == 0
+	E += 0
+ELSEIF ABL:PLAYER:話術 == 1
+	E += 1
+ELSEIF ABL:PLAYER:話術 == 2
+	E += 1
+ELSEIF ABL:PLAYER:話術 == 3
+	E += 1
+ELSEIF ABL:PLAYER:話術 == 4
+	E += 1
+ELSEIF ABL:PLAYER:話術 >= 5
+	E += 1
+ENDIF
+
+PRINTFORML %EXPNAME:[[EXP:会話経験]]%＋{E}
+EXP:会話経験 += E
+
+;歌唱技術を見る
+IF ABL:歌唱技能 > 1 && E > 2
+	PRINTFORML %EXPNAME:[[EXP:歌唱経験]]%+{E+ABL:歌唱技能-2}
+	EXP:歌唱経験 += (E + ABL:歌唱技能 - 3)
+ENDIF
+;舞踏技術を見る
+IF ABL:舞踊技能 > 1 && TEQUIP:野外プレイ && E > 2
+	PRINTFORML %EXPNAME:[[EXP:舞踊経験]]%+{E+ABL:舞踊技能-2}
+	EXP:舞踊経験 += (E + ABL:舞踊技能 - 3)
+ENDIF
+
+;愛情経験
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+
+E = 0
+
+RETURN 1

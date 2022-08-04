@@ -1,0 +1,1230 @@
+﻿;=================================================
+;プライド高い
+;=================================================
+@BREAK_PRIDE_HIGH
+C = 2000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘にプライドの高さを植え付ければいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;プライド高い・低いは排除
+ELSEIF TALENT:RESULT:プライド高い || TALENT:RESULT:プライド低い
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:プライド高い]]%】になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:プライド高い = 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;プライド低い
+;=================================================
+@BREAK_PRIDE_LOW
+C = 2000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘にプライドの低さを植え付ければいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;プライド高い・低いは排除
+ELSEIF TALENT:RESULT:プライド高い || TALENT:RESULT:プライド低い
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:プライド低い]]%】になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:プライド低い = 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;プライド・ニュートラル
+;=================================================
+@BREAK_PRIDE_NEUTRAL
+C = 1000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘のプライドを常人並みにすればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;プライド高い・低いなしは排除
+ELSEIF TALENT:RESULT:プライド高い == 0 && TALENT:RESULT:プライド低い  == 0
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は常人並のプライドの持ち主になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:プライド高い = 0
+	TALENT:プライド低い = 0
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;快感に素直
+;=================================================
+@BREAK_XTC_POSITIVE
+C = 3000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘を快感に素直にさせればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;快感に素直・否定は排除
+ELSEIF TALENT:RESULT:快感に素直 || TALENT:RESULT:快感の否定
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:快感に素直]]%】になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:快感に素直 = 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;快感・否定
+;=================================================
+@BREAK_XTC_NEGATIVE
+C = 3000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘を快感に否定的にさせればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;快感に素直・否定は排除
+ELSEIF TALENT:RESULT:快感に素直 || TALENT:RESULT:快感の否定
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:快感の否定 = 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;快感・ニュートラル
+;=================================================
+@BREAK_XTC_NEUTRAL
+C = 1500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘の快感への考え方を常人並みにすればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;快感に素直・否定を持たないキャラは排除
+ELSEIF TALENT:RESULT:快感に素直 == 0 && TALENT:RESULT:快感の否定  == 0
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は常人並の快感への考え方になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:快感に素直 = 0
+	TALENT:快感の否定 = 0
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;サド
+;=================================================
+@BREAK_SM_SADIST
+C = 3000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘をサディストに覚醒させればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;いったんニュートラルにもどさないとだめ
+ELSEIF TALENT:RESULT:サド || TALENT:RESULT:マゾ
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:サド]]%】になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:サド = 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;マゾ
+;=================================================
+@BREAK_SM_MASOCHIST
+C = 3000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘をマゾヒストに覚醒させればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;いったんニュートラルに戻さないとだめ
+ELSEIF TALENT:RESULT:サド || TALENT:RESULT:マゾ
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:マゾ]]%】になった》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:マゾ = 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;ＳＭ・ニュートラル
+;=================================================
+@BREAK_SM_NEUTRAL
+C = 1500000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘の性的嗜好を常人並みにすればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;すでにニュートラル
+ELSEIF TALENT:RESULT:サド == 0 && TALENT:RESULT:マゾ  == 0
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
+	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
+	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は常人並の性的嗜好になった》
+	PRINTFORML
+	PRINTFORMW   %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	TALENT:サド = 0
+	TALENT:マゾ = 0
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;事象改変
+;=================================================
+@CHANGE_WORK
+IF B != 999
+	C = 2000000
+ELSEIF B == 999
+	C = 1000000
+ENDIF
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘の現在を改変すればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除 ニコルは特別扱い。なんでや（ほかに手段がないからです）
+ELSEIF TALENT:RESULT:ミッション && NO:RESULT != [[キャラ:ニコル・パトリナターリ]]
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;変化ない場合を排除
+ELSEIF (TALENT:RESULT:アイドル == 1 || TALENT:RESULT:ファッションモデル == 1 || TALENT:RESULT:キャバ嬢 == 1) && B != 999
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ELSEIF B == 999 && TALENT:RESULT:アイドル == 0 && TALENT:RESULT:ファッションモデル == 0 && TALENT:RESULT:キャバ嬢 == 0
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスはそう言うと指を一度だけ鳴らすと、%CALLNAME:MASTER%にネットで%CALLNAME:TARGET%の名前を調べてみるように言った
+	PRINTFORM  検索の結果、
+		IF B != 999
+			PRINTFORM 出てきた%CALLNAME:TARGET%についてのプロフィールは【%TALENTNAME:B%】としてのものだった……
+		ELSE
+			PRINTFORM %CALLNAME:TARGET%についてのプロフィールは今までのものではなくなっている……
+		ENDIF
+	PRINTL
+	PRINTFORM 《ユーニスによって事象が改変され、
+		IF B != 999
+			PRINTFORM %CALLNAME:TARGET%は【%TALENTNAME:B%】になった
+		ELSEIF TALENT:ＡＶ女優 == 1 && B == 999
+			PRINTFORM %CALLNAME:TARGET%はただのＡＶ女優になった
+		ELSEIF TALENT:ＡＶ女優 == 0 && B == 999
+			PRINTFORM %CALLNAME:TARGET%はただのＡＶ女優候補になった
+		ENDIF
+	PRINTL 》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+	IF B != 999
+		TALENT:B = 1
+		IF B == [[TALENT:アイドル]]
+			MAXBASE:魅力値 += 30
+			BASE:魅力値 += 30
+		ELSEIF B == [[TALENT:ファッションモデル]]
+			MAXBASE:魅力値 += 20
+			BASE:魅力値 += 20
+		ELSEIF B == [[TALENT:キャバ嬢]]
+			MAXBASE:魅力値 += 10
+			BASE:魅力値 += 10
+		ENDIF
+		;バイト外す
+		CFLAG:バイト就職 = 0
+	ELSE
+		IF TALENT:アイドル == 1
+			MAXBASE:魅力値 -= 30
+			BASE:魅力値 -= 30
+			IF TALENT:オリジナルユニット == 1
+				MAXBASE:魅力値 -= 30
+				BASE:魅力値 -= 30
+			ENDIF
+		ELSEIF TALENT:ファッションモデル == 1
+			MAXBASE:魅力値 -= 20
+			BASE:魅力値 -= 20
+		ELSEIF TALENT:キャバ嬢 == 1
+			MAXBASE:魅力値 -= 10
+			BASE:魅力値 -= 10
+		ENDIF
+		TALENT:アイドル = 0
+		TALENT:ファッションモデル = 0
+		TALENT:キャバ嬢 = 0
+		TALENT:オリジナルユニット = 0
+	ENDIF
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;事象改変
+;=================================================
+@CHANGE_VIRGINITY
+
+C = 80000000
+
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘の性経験を改変すればいいのね？
+PRINTL 　……え？　素のあたしの方が可愛いですって？
+PRINTL 『あなた』ったら本当に……でも嬉しいです『あなた』ｖ」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+ELSEIF B == 100 && TALENT:RESULT:処女 == 1 && CFLAG:RESULT:初体験の相手 == 0
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ELSEIF B == 150 && TALENT:RESULT:アナル処女 == 1
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ELSEIF B == 200 && CFLAG:RESULT:ファーストキスの相手 == -1
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML ユーニスはそう言って指を一度だけ鳴らすと、%CALLNAME:TARGET%に簡単な問診を行った……
+	PRINTFORM 問診の過程でこれまでとは違い、%CALLNAME:TARGET%は一度たりとも
+		IF B == 100
+			PRINTFORM 膣に何かを挿れた
+		ELSEIF B == 150
+			PRINTFORM アナルに何かを挿れた
+		ELSEIF B == 200
+			PRINTFORM 何かに口付けた
+		ENDIF
+	PRINTFORM ことがないのが、突如振られた性的な話題に
+	IF TALENT:恥薄い
+		PRINTFORM も恥じる様子も無く
+	ELSE
+		PRINTFORM 頬を赤らめながら
+	ENDIF
+	PRINTFORM %CALLNAME:TARGET%の口から語られた……
+	PRINTL
+	PRINTFORM 《ユーニスによって事象が改変され、
+		IF B == 100
+			PRINTFORM %CALLNAME:TARGET%は純粋な【処女】になった
+			TALENT:処女 = 1
+			EXP:Ｖ経験 = 0
+			ABL:Ｖ感覚 = 0
+			CFLAG:初体験の相手 = 0
+			JUEL:快Ｖ = 0
+		ELSEIF B == 150
+			PRINTFORM %CALLNAME:TARGET%は【アナル処女】になった
+			TALENT:アナル処女 = 1
+			EXP:Ａ経験 = 0
+			ABL:Ａ感覚 = 0
+			JUEL:快Ａ = 0
+		ELSEIF B == 200
+			PRINTFORM %CALLNAME:TARGET%はキス未経験になった
+			CFLAG:ファーストキスの相手 = -1
+		ENDIF
+	PRINTL 》
+	PRINTFORML
+	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
+	EXP:異常経験 += 1
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+
+;=================================================
+;事象改変：堕天使化
+;=================================================
+@CHANGE_FALLEN
+
+
+
+C = 30000000
+
+IF MONEY < C
+	PRINTW お金が足りません
+	RETURN 0
+ENDIF
+
+CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+SETCOLOR 0xDDBBCC
+PRINTL 「ああ、この娘を堕天使に生まれ変わらせればいいのね？」
+RESETCOLOR
+SETFONT ""
+$INPUT_LOOP
+DRAWLINE
+
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+IF RESULT == COMMAND_GO_BACK
+	RETURN 0
+ELSEIF RESULT < 0 || RESULT >= CHARANUM
+	GOTO INPUT_LOOP
+;臨死中のキャラは排除
+ELSEIF BASE:RESULT:体力 < 1
+	GOTO INPUT_LOOP
+;ミッションは排除
+ELSEIF TALENT:RESULT:ミッション
+	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
+	GOTO INPUT_LOOP
+;すでにち○こ生えてるのは排除＝ユーニスの趣味は女にち○こ生やして射精の快楽に戸惑うのを見ること
+ELSEIF TALENT:RESULT:ふたなり || TALENT:RESULT:オトコ
+	PRINTFORMW  ユーニスは自分の趣味の邪魔をされたことを理由に拒否しています
+	GOTO INPUT_LOOP
+;ユーニスは排除
+ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;すでに堕天使
+ELSEIF TALENT:RESULT:天使 && TALENT:RESULT:淫魔
+	PRINTFORMW  %CALLNAME:RESULT%はすでに堕天使です
+	GOTO INPUT_LOOP
+;MASTERに永遠の愛を誓ってないものは堕天使にできないユーニスさんまじユーニスさん。
+ELSEIF !TALENT:RESULT:永遠の愛
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+;勲章特典：人間に戻す
+ELSEIF CFLAG:RESULT:900 == 1
+	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
+	GOTO INPUT_LOOP
+ENDIF
+
+TARGET = RESULT
+
+$INPUT_LOOP_2
+PRINTFORML  %CALLNAME:TARGET%をユーニスに会わせますか？
+PRINTL  [0] - はい
+PRINTL  [1] - やめる
+
+INPUT
+
+IF RESULT == 1
+	RETURN 0
+ELSEIF RESULT == 0
+	PRINTFORML  ユーニスはそう言うと、あの時と同じように%CALLNAME:TARGET%を%CALLNAME:MASTER%に犯させるように言った……
+	PRINTFORM  ユーニスの狂気とありとあらゆる異常な経験に、穢れを知らなかった%CALLNAME:TARGET%は心も身体も侵し犯され、
+	PRINTFORML 【淫魔】の淫蕩さと【天使】の純粋さという、矛盾するふたつの要素を併せ持った高次の存在へと変貌した
+	PRINTFORML 《ユーニスの狂気と異常な経験に心も身体も侵し犯された%CALLNAME:TARGET%は【堕天使】になった》	
+	PRINTFORMW
+	CALL CHANGE_FALLEN_TALENT
+	CALL RESULT_EXP
+	C = 30000000
+	WAIT
+ELSE
+	GOTO INPUT_LOOP_2
+ENDIF
+
+MONEY -= C
+
+RETURN 1
+;
+;=================================================
+;事象改変：堕天使化
+;=================================================
+@CHANGE_FALLEN_TALENT
+
+;達成値
+X = 0
+;成否判定
+Y = 0
+;失敗時マイナスされるポイント
+M = 0
+;成功時プラスされるポイント
+P = 0
+;貢献度
+B = 0
+;延長期間
+E = 0
+;絶頂経験
+Z = 0
+;V経験
+V = 0
+;A経験
+A = 0
+;性交経験
+O = 0
+;フェラ経験
+F = 0
+;精液経験
+S = 0
+;異常経験
+I = 0
+;触手経験
+T = 0
+;緊縛経験
+K = 0
+;放尿経験
+N = 0
+;乳姦経験
+C = 0
+;噴乳経験
+G = 0
+;レズ経験
+L = 0
+;BL経験
+H = 0
+;薬物経験
+D = 0
+;獣姦経験
+J = 0
+;被写経験
+Q = 0
+;射精経験
+R = 0
+;複数人を対象とした素質などの追加用
+A:1 = 0
+;複数人を対象とした素質などの追加用
+B:1 = 0
+
+
+SIF TALENT:淫魔 == 0
+	MAXBASE:魅力値 -= 50
+CALL SUCCUBUS_STATUS_ACH(TARGET)
+
+TALENT:童貞 = 1
+TALENT:ふたなり = 1
+TALENT:淫乱 = 1
+TALENT:狂気 = 1
+TALENT:淫魔 = 1
+TALENT:天使 = 1
+TALENT:永遠の愛 = 0
+TALENT:ギャル系 = 0
+
+Z += 250 + RAND:51
+V += 150 + RAND:21
+A += 150 + RAND:21
+C += 40 + RAND:21
+O += 200 + RAND:51
+G += Z / 3 + RAND:11
+L += Z / 3 + RAND:11
+D += 1 + RAND:51
+S += 500 + RAND:101
+F += 200 + RAND:26
+J += 1 + RAND:50
+I = 666
+T +=  Z / 3 + RAND:11
+K += T
+R += Z /3 - RAND:26
+
+IF TALENT:淫乱 == 1
+	Z *= 2
+	V *= 2
+	A *= 2
+	O *= 2
+	F *= 2
+	S *= 2
+	K *= 2
+	G *= 2
+	N *= 2
+	C *= 2
+	L *= 2
+	H *= 2
+	J *= 2
+	R *= 2
+ENDIF
+
+IF TALENT:処女 == 1
+	CSTR:処女喪失の相手 = %CALLNAME:MASTER%
+	TALENT:処女 = 0
+	CFLAG:初体験の相手 = 16
+	CFLAG:処女喪失年齢 = BASE:実年齢
+	CFLAG:処女喪失月 = DAY:1
+	CFLAG:処女喪失日 = DAY:2
+	SETCOLOR 0xF58F98
+	PRINTL 【処女喪失】
+	RESETCOLOR
+ENDIF
+
+IF TALENT:MASTER:童貞 == 1
+	CSTR:MASTER:童貞喪失の相手 = %NAME:TARGET%
+	TALENT:MASTER:童貞 = 0
+ENDIF
+
+IF CFLAG:ファーストキスの相手 == -1
+	CFLAG:ファーストキスの相手 = 1
+	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+	CFLAG:ファーストキス喪失月 = DAY:1
+	CFLAG:ファーストキス喪失日 = DAY:2
+	CSTR:ファーストキスの相手 = ユーニス・パラディススのカリ高極太ふたなりチンポ
+	SETCOLOR 0xF58F98
+	PRINTL 【ファーストキス】
+	RESETCOLOR
+ENDIF
+
+IF TALENT:童貞 == 1
+	TALENT:童貞 = 0
+	CSTR:童貞喪失の相手 = 知らない女のコの処女マンコ
+	SETCOLOR 0xF58F98
+	PRINTL 【童貞喪失】
+	RESETCOLOR
+ENDIF
+
+IF TALENT:アナル処女 == 1
+	TALENT:アナル処女 = 0
+	CFLAG:アナル処女喪失の相手 = 14
+	CFLAG:アナル処女喪失年齢 = BASE:実年齢
+	CFLAG:アナル処女喪失月 = DAY:1
+	CFLAG:アナル処女喪失日 = DAY:2
+	CSTR:アナル処女喪失の相手 = 触手生物
+	SETCOLOR 0xF58F98
+	PRINTL 【アナル処女喪失】
+	RESETCOLOR
+ENDIF
+
+CFLAG:ペニスのサイズ = 2
+CFLAG:包皮の状態 = 3
+BASE:ペニスサイズ = 18 + RAND:6
+MAXBASE:魅力値 += 50
+BASE:魅力値 = MAXBASE:魅力値
+
+;=================================================
+;ミッション結果測定・経験表示
+;=================================================
+@RESULT_EXP
+
+;絶頂経験
+IF Z > 0
+	PRINTFORML  %EXPNAME:[[EXP:絶頂経験]]%＋{Z}
+	EXP:絶頂経験 += Z
+ENDIF
+;V経験
+IF V > 0
+	PRINTFORML  %EXPNAME:[[EXP:Ｖ経験]]%＋{V}
+	EXP:Ｖ経験 += V
+ENDIF
+;A経験
+IF A > 0
+	PRINTFORML  %EXPNAME:[[EXP:Ａ経験]]%＋{A}
+	EXP:Ａ経験 += A
+ENDIF
+;性交経験
+IF O > 0 
+	PRINTFORML  %EXPNAME:[[EXP:性交経験]]%＋{O}
+	EXP:性交経験 += O
+ENDIF
+;精液経験
+IF S > 0
+	PRINTFORML  %EXPNAME:[[EXP:精液経験]]%＋{S}
+	EXP:精液経験 += S
+ENDIF
+;フェラ経験
+IF F > 0
+	PRINTFORML  %EXPNAME:[[EXP:フェラ経験]]%＋{F}
+	EXP:フェラ経験 += F
+ENDIF
+;レズ経験
+IF L > 0
+	PRINTFORML  %EXPNAME:[[EXP:レズ経験]]%＋{L}
+	EXP:レズ経験 += L
+ENDIF
+;BL経験
+IF H > 0
+	PRINTFORML  %EXPNAME:[[EXP:ＢＬ経験]]%＋{H}
+	EXP:ＢＬ経験 += F
+ENDIF
+;被写経験
+IF Q > 0
+	PRINTFORML  %EXPNAME:[[EXP:被写経験]]%＋{Q}
+	EXP:被写経験 += Q
+ENDIF
+;異常経験
+IF I > 0
+	PRINTFORML  %EXPNAME:[[EXP:異常経験]]%＋{I}
+	EXP:異常経験 += I
+ENDIF
+;射精経験
+IF R > 0
+	PRINTFORML  %EXPNAME:[[EXP:射精経験]]%＋{R}
+	EXP:射精経験 += R
+ENDIF
+;放尿経験
+IF N > 0
+	PRINTFORML  %EXPNAME:[[EXP:放尿経験]]%＋{N}
+	EXP:放尿経験 += N
+ENDIF
+;緊縛経験
+IF K > 0
+	PRINTFORML  %EXPNAME:[[EXP:緊縛経験]]%＋{K}
+	EXP:緊縛経験 += K
+ENDIF
+;噴乳経験
+IF G > 0
+	PRINTFORML  %EXPNAME:[[EXP:噴乳経験]]%＋{G}
+	EXP:噴乳経験 += G
+ENDIF
+;触手経験
+IF T > 0
+	PRINTFORML  %EXPNAME:[[EXP:触手経験]]%＋{T}
+	EXP:触手経験 += T
+ENDIF
+;獣姦経験
+IF J > 0
+	PRINTFORML  %EXPNAME:[[EXP:獣姦経験]]%＋{J}
+	EXP:獣姦経験 += J
+ENDIF
+;薬物経験
+IF D > 0
+	PRINTFORML  %EXPNAME:[[EXP:薬物経験]]%＋{D}
+	EXP:薬物経験 += D
+ENDIF
+;乳姦経験
+IF C > 0
+	PRINTFORML  %EXPNAME:[[EXP:乳姦経験]]%＋{C}
+	EXP:乳姦経験 += C
+ENDIF

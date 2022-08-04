@@ -1,0 +1,91 @@
+﻿;===========================================================
+;実績・BLACK IMPACT
+;===========================================================
+
+; 実績のタイトル
+@ACHIEVEMENT_TITLE_7
+RESULTS = BLACK IMPACT
+
+; 実績の達成条件
+@ACHIEVEMENT_CALC_7
+; 条件を満たす人数の計算
+LOCAL = 0
+FOR COUNT, 0, CHARANUM
+	SIF COUNT == MASTER
+		CONTINUE
+	SIF TALENT:COUNT:褐色肌 == 1 && TALENT:COUNT:ギャル系 == 1
+		LOCAL++
+NEXT
+; 条件を達成している場合は実績番号のグローバルを1にする
+IF GLOBAL:7 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	GLOBAL:7 = 1
+	SAVEGLOBAL
+ENDIF
+RETURN GLOBAL:7
+
+; 実績の説明および諸々の処理
+@ACHIEVEMENT_MAIN_7
+; 解説文
+PRINTFORML 大勢の黒ギャルビッチたちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
+PRINTFORMW これからもエッチなことに貪欲な彼女たちと織りなす『衝撃』をお楽しみください
+; ボーナスなどの処理はここ以降に記述する
+PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
+PRINTFORMW 以下のボーナスの中からお好みのものを選んで下さい
+$INPUT_LOOP_3
+DRAWLINE
+PRINTFORML  [0] - 女の子たちを寝取る彼氏を黒ギャル好きな【チャラ男】で固定し、合コンで確実に彼氏になるようにする
+PRINTFORML  [1] - 女の子たちを寝取る彼氏を従来通りランダムにする
+PRINTFORML  [2] - 黒ギャルたちのプライベートの行動を抑制する
+PRINTFORML  [3] - 黒ギャルたちのプライベートの行動を従来通りランダムにする
+PRINTFORML  [4] - 愛を誓った黒ギャルの遊びを許す
+PRINTFORML  [5] - 愛を誓った黒ギャルの遊びを許さない
+DRAWLINE
+PRINTL [999] - 戻る
+INPUT
+IF RESULT == 0 && FLAG:チャラ男固定 == 0
+	PRINTFORMW  彼氏を【チャラ男】で固定し、合コンで確実に彼氏になるようにしました
+	FLAG:チャラ男固定 = 1
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 0 && FLAG:チャラ男固定 == 1
+	PRINTFORMW 既に彼氏は【チャラ男】で固定されています
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 1 && FLAG:チャラ男固定 == 1
+	PRINTFORMW 従来通りランダムで彼氏が決定されます
+	FLAG:チャラ男固定 = 0
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 1 && FLAG:チャラ男固定 == 0
+	PRINTFORMW 彼氏はランダムで決定されるようになっています
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 2 && FLAG:黒ギャルプライベート抑制 == 0
+	PRINTFORMW  黒ギャルたちのプライベートの行動を抑制しました
+	FLAG:黒ギャルプライベート抑制 = 1
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 2 && FLAG:チャラ男固定 == 1
+	PRINTFORMW 黒ギャルたちのプライベートの行動は抑制されています
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 3 && FLAG:黒ギャルプライベート抑制 == 1
+	PRINTFORMW 従来通りランダムで黒ギャルたちのプライベートの行動が決定されます
+	FLAG:黒ギャルプライベート抑制 = 0
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 3 && FLAG:黒ギャルプライベート抑制 == 0
+	PRINTFORMW 黒ギャルたちのプライベートの行動はランダムで決定されるようになっています
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 4 && FLAG:愛を誓った黒ギャルの遊びを許す == 0
+	PRINTFORMW 愛を誓った黒ギャルの遊びを許します（ただし彼氏はできません）
+	FLAG:愛を誓った黒ギャルの遊びを許す = 1
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 4 && FLAG:愛を誓った黒ギャルの遊びを許す == 1
+	PRINTFORMW 現在、愛を誓った黒ギャルの遊びを許していません
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 5 && FLAG:愛を誓った黒ギャルの遊びを許す == 1
+	PRINTFORMW 愛を誓った黒ギャルの遊びを許しません
+	FLAG:愛を誓った黒ギャルの遊びを許す = 0
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 5 && FLAG:愛を誓った黒ギャルの遊びを許す == 0
+	PRINTFORMW 現在、愛を誓った黒ギャルの遊びを許しています（ただし彼氏はできません）
+	GOTO INPUT_LOOP_3
+ELSEIF RESULT == 999
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP_3
+ENDIF

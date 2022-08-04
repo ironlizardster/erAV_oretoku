@@ -1,0 +1,6 @@
+﻿;とりあえずCHARASALES
+
+;CHARASALES
+;つまりITEMSALESを使わないで購入処理したい
+;CHARABUY関数で毎回リセットされるのでセーブされる必要はない
+#DIM CHARASALES,150

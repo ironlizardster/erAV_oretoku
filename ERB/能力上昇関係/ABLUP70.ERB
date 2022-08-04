@@ -1,0 +1,147 @@
+﻿;被写技能のLvUP処理とその可否判定
+;eratohoA ver1.204およびeraIm@s0.17βdのスクリプトをベースに作成
+
+;-------------------------------------------------
+;被写技能のLvUP
+;-------------------------------------------------
+@ABLUP70
+DRAWLINE
+;PRINTL 奴隷の被写体となる技術を高めます
+;PRINTL 被写技能が高くなるとビデオ撮影でより大きな収益が見込めます
+;DRAWLINE
+;被写技能はLv5が上限
+;[淫乱]か[露出狂]が付いている場合はLv10まで解放
+IF ABL:被写技能 >= 5 && (TALENT:淫乱 == 0 && TALENT:露出狂 == 0)
+	PRINTW これ以上UPするには素質が必要です
+	RETURN 0
+ELSEIF ABL:被写技能 >= 10
+	PRINTW 既にMAXです
+	RETURN 0
+ENDIF
+
+;必要な習得の珠
+A = 0
+;必要な被写経験
+B = 0
+
+CALL CAN_ABLUP70
+
+PRINTFORM [0] - %PALAMNAME:[[PALAM:習得]]%の珠×{JUEL:習得}/{A} ……
+IF I == 0
+	PRINT ＯＫ
+ELSE
+	SIF I & 1
+		PRINT 珠不足 
+	SIF I & 2
+		PRINT 経験不足 
+ENDIF
+PRINTL 
+PRINTFORML 　　　%EXPNAME:[[EXP:被写経験]]%　{EXP:被写経験}/{B}
+PRINTL [100] - やめる
+
+INPUT
+IF RESULT != 0 && RESULT != 100
+	RESTART
+ELSEIF I != 0 && RESULT == 0
+	PRINTL 条件を満たしていません
+	RESTART
+ELSEIF RESULT == 100
+	RETURN 0
+ENDIF
+
+ABL:被写技能 += 1
+JUEL:習得 -= A
+
+PRINTFORML %ABLNAME:[[ABL:被写技能]]%のレベルが{ABL:被写技能}になりました
+
+RETURN 0
+
+;--------------------------------------------------
+;レベルアップに必要な珠計算、レベルアップ予告処理
+;--------------------------------------------------
+@CAN_ABLUP70
+;被写技能はLv5が上限
+;[淫乱]か[露出狂]が付いている場合はLv10まで解放
+SIF ABL:被写技能 >= 10
+	RETURN 0
+SIF ABL:被写技能 >= 5 && (TALENT:淫乱 == 0 && TALENT:露出狂 == 0)
+	RETURN 0
+
+A = 0
+B = 0
+
+;条件別にＯＫかダメかを記録する
+I = 0
+
+IF ABL:被写技能 == 0
+	A = 100
+	B = 10
+ELSEIF ABL:被写技能 == 1
+	A = 300
+	B = 30
+ELSEIF ABL:被写技能 == 2
+	A = 500
+	B = 60
+ELSEIF ABL:被写技能 == 3
+	A = 2000
+	B = 100
+ELSEIF ABL:被写技能 == 4
+	A = 6000
+	B = 200
+ELSEIF ABL:被写技能 == 5
+	A = 12000
+	B = 500
+ELSEIF ABL:被写技能 == 6
+	A = 16000
+	B = 1000
+ELSEIF ABL:被写技能 == 7
+	A = 22000
+	B = 1800
+ELSEIF ABL:被写技能 == 8
+	A = 30000
+	B = 4000
+ELSEIF ABL:被写技能 == 9
+	A = 35000
+	B = 10000
+ENDIF
+
+;習得早い
+IF TALENT:素質
+	TIMES A , 0.80
+	TIMES B , 0.80
+;習得遅い
+ELSEIF TALENT:習得遅い
+	TIMES A , 1.20
+	TIMES B , 1.20
+ENDIF
+IF TALENT:露出狂
+	TIMES A , 0.01
+	TIMES B , 0.01
+ENDIF
+IF TALENT:淫魔
+	TIMES A , 0.10
+	TIMES B , 0.10
+ENDIF
+;最低でも１回・１個は必要
+SIF A < 1
+	A = 1
+SIF B < 1
+	B = 1
+
+;習得の珠は足りている？
+SIF JUEL:習得 < A
+	I |= 1
+
+;被写経験は足りている？
+SIF EXP:被写経験 < B
+	I |= 2
+
+IF I == 0
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;
+;
+;

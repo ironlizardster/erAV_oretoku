@@ -1,0 +1,195 @@
+﻿;===========================================================
+;朝起こしてもらうキャラのピックアップ
+;===========================================================
+@EVENT_MORNING_PICKUP
+
+FINDCHARA CFLAG:朝フェラ係に任命, 1
+IF RESULT > 0 
+	TARGET = RESULT
+	CALL EVENT_MORNING_DECIDE
+ENDIF
+
+;===========================================================
+;朝起こしてもらうイベントの決定
+;===========================================================
+@EVENT_MORNING_DECIDE
+
+;△割合制にしたい。
+IF ABL:精液中毒 > RAND:11 && HAVE_PENIS(MASTER)
+	CALL EVENT_MORNING_FELLATIO
+ELSE
+	CALL EVENT_MORNING_NORMAL
+ENDIF
+
+;===========================================================
+;朝起こしてもらうイベント・通常
+;===========================================================
+@EVENT_MORNING_NORMAL
+
+X = 1 + RAND:5
+SIF TALENT:恋心 == 1
+	X *= 2
+SIF TIME == 1
+	X *= 2
+
+;瀕死、あるいは死んでしまった
+SIF BASE:体力 <= 500
+	RETURN
+;育児中
+SIF TALENT:育児中
+	RETURN
+;臨月
+SIF CFLAG:出産日 - 2 <= DAY && TALENT:妊娠
+	RETURN
+;奉仕しない
+SIF TALENT:奉仕しない
+	RETURN
+;反発刻印
+SIF MARK:反発刻印 > 0
+	RETURN
+
+DRAWLINE
+PRINTFORMW 誰かが%CALLNAME:MASTER%を呼ぶ声がする……
+PRINTFORML 同時にどうやら揺すぶられているらしく、%CALLNAME:MASTER%が目を覚ますと、お願いした通り%NAME:TARGET%が起こしに来てくれたようだ
+PRINTFORM %CALLNAME:MASTER%が寝ぼけ眼をこすりながら感謝の言葉を述べると、%CALLNAME:TARGET%は
+IF CFLAG:ファーストキスの相手 == -1
+	PRINTFORM 照れたようにはにかんで
+ELSE
+	PRINTFORM 軽く頬にキスをして微笑んで
+ENDIF
+PRINTFORML いる
+
+IF TALENT:小悪魔 == 1 && CFLAG:ファーストキスの相手 != -1
+	PRINTFORML どうやらちょっとしたイタズラらしい……
+ELSEIF TALENT:恋心 == 1 && TALENT:小悪魔 == 0 && CFLAG:ファーストキスの相手 != -1
+	PRINTFORML どうやら愛情表現のつもりらしい……
+ENDIF
+PRINTL
+PRINTFORML 恭順の珠＋{X*100}
+PRINTFORML 習得の珠＋{X*50}
+SIF TALENT:恋心 == 1
+	PRINTFORML 愛情経験＋{X}
+
+WAIT
+
+JUEL:恭順 += X*100
+JUEL:習得 += X*50
+
+SIF TALENT:恋心 == 1
+	EXP:愛情経験 += X
+
+;===========================================================
+;朝起こしてもらうイベント・朝フェラ
+;===========================================================
+@EVENT_MORNING_FELLATIO
+
+X = 3 + RAND:4
+SIF ABL:精液中毒 >= 3
+	X *= ABL:精液中毒
+SIF X >= 13
+	X = 12
+SIF TIME == 1
+	X *= 2
+
+Y = X - RAND:4
+SIF Y >= 25
+	Y = 24
+;"すでに0回も"防止で高めに 
+SIF Y <= 2
+	Y = 3
+
+
+;瀕死、あるいは死んでしまった
+SIF BASE:体力 <= 500
+	RETURN
+;育児中
+SIF TALENT:育児中
+	RETURN
+;臨月
+SIF CFLAG:出産日 - 2 <= DAY && TALENT:妊娠
+	RETURN
+;奉仕しない
+SIF TALENT:奉仕しない
+	RETURN
+;反発刻印
+SIF MARK:反発刻印 > 0
+	RETURN
+
+DRAWLINE
+PRINTFORMW %CALLNAME:MASTER%は股間に生暖かさを覚えて目を覚ました……
+PRINTFORM 妙にこんもりと盛り上がった布団をめくってみると、%CALLNAME:MASTER%の朝起ちした肉棒を%NAME:TARGET%が
+IF TALENT:精愛味覚
+	PRINTFORM 精液を吸い出そうとばかりに一心不乱にむしゃぶりついて
+ELSEIF ABL:奉仕技術 >= 3
+	PRINTFORM カリや裏筋に沿って舌を這わせ、口腔内で包み込むように丹念に奉仕して
+ELSE
+	PRINTFORM ぎこちないながらも一生懸命に口にペニスを頬張ってフェラチオして
+ENDIF
+PRINTFORML いる
+PRINTFORM %CALLNAME:TARGET%のフェラで既に{Y-1}回も射精してしまったらしく、朝日を浴びて自身の唾液と%CALLNAME:MASTER%の精液で妖しく照り光る%CALLNAME:TARGET%の唇
+IF X >= 7
+	PRINTFORM だけではなく、顔全体までもが吐き出された精液で白濁に染まって
+ELSE
+	PRINTFORM の端を吐き出された精液が伝って
+ENDIF
+PRINTFORML いた
+PRINTFORM そんな艶やかな%CALLNAME:TARGET%の表情に射精感が限界まで高まった%CALLNAME:MASTER%は、
+IF TALENT:マゾ
+	PRINTFORM %CALLNAME:TARGET%の頭を掴んで喉奥にペニスを突き入れ
+ELSE
+	PRINTFORM %CALLNAME:TARGET%のフェラをたっぷりと堪能し
+ENDIF
+PRINTFORML ながら欲望をぶちまけた……
+
+PRINTFORM そして%CALLNAME:TARGET%は口腔内に溜まった精液を
+IF ABL:精液中毒 >= 3
+	PRINTFORM 舌を出して見せつけるようにすると、わざと音をたてて
+ELSE
+	PRINTFORM まだ精液の味に慣れない様子でゆっくりと
+ENDIF
+PRINTFORML 嚥下しはじめた……
+PRINTL
+
+EXP:フェラ経験 += X
+PRINTFORML %EXPNAME:[[EXP:フェラ経験]]%＋{X}
+EXP:精液経験 += X
+PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{Y}
+PRINTFORML %PALAMNAME:[[PALAM:恭順]]%の珠＋{X*50}
+PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{X*30}
+PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{X*40}
+
+;△SLANGとの整合性
+IF CFLAG:ファーストキスの相手 == -1
+	IF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+		CSTR:ファーストキスの相手 = アニキのチンポ
+	ELSEIF TALENT:淫乱 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+		CSTR:ファーストキスの相手 = お兄ちゃんのオチ○ポ
+	ELSEIF TALENT:淫乱 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
+		CSTR:ファーストキスの相手 = お兄ちゃんのおちん○ん
+	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:ギャル系 == 1
+		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のチンポ
+	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:淫乱 == 1
+		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のオチ○ポ
+	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:淫乱 == 0
+		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のおちん○ん
+	;ここに来るのはどんなとき？
+	ELSE
+		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のオチンポ様ｖ
+	ENDIF
+	;△CFLAG諸々未設定　→　とりあえず日付まわりとか設定してしまおう
+	;できれば場所にあなたの部屋と入れたり自分からとか入れたりしたい
+	CFLAG:ファーストキスの相手 = 1
+	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+	CFLAG:ファーストキス喪失月 = DAY:1
+	CFLAG:ファーストキス喪失日 = DAY:2
+	SETCOLOR 0xF58F98
+	PRINTL 【ファーストキス】
+	RESETCOLOR
+	BASE:魅力値 -= 5
+ENDIF
+
+WAIT
+
+JUEL:恭順 += X*50
+JUEL:屈服 += X*30
+JUEL:習得 += X*40

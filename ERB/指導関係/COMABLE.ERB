@@ -1,0 +1,5284 @@
+﻿;-------------------------------------------------
+;0-9 愛撫系コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;愛撫実行判定
+;-------------------------------------------------
+@COM_ABLE0
+RETURN 1
+;-------------------------------------------------
+;クンニ実行判定
+;-------------------------------------------------
+@COM_ABLE1
+;対象がオトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;性器が精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合クンニはできない（調教者が汚れ無視ならＯＫ）
+IF (STAIN:2 & 4 || STAIN:2 & 8 || STAIN:2 & 32) && ASSIPLAY
+	SIF ABL:ASSI:Ｃ感覚 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;アナル愛撫実行判定
+;-------------------------------------------------
+@COM_ABLE2
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;主人プレイなら自動成功
+IF ASSIPLAY == 0
+	RETURN 1
+;助手プレイの場合
+ELSE
+	;潤滑不足の場合はダメ
+	IF  PALAM:潤滑 < PALAMLV:2
+		;助手がサドならOK
+		IF TALENT:ASSI:サド
+			RETURN 1
+		;助手が従順4以上かつレズっ気4以上の場合はOK
+		ELSEIF ABL:ASSI:信頼 <= 3 && ABL:ASSI:レズっ気 <= 3
+			RETURN 1
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;自慰実行判定
+;-------------------------------------------------
+@COM_ABLE3
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順3以下・レズっ気3以下のASSIの場合自慰はできない（小悪魔ならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:小悪魔 == 0
+		RETURN 0
+ENDIF
+;自慰しないがあるとダメ
+SIF TALENT:自慰しない
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;フェラする実行判定
+;-------------------------------------------------
+@COM_ABLE4
+;性器が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合フェラはできない（調教者が汚れ無視ならＯＫ）
+IF (STAIN:2 & 1 || STAIN:2 & 4 || STAIN:2 & 8 || STAIN:0 & 32) && ASSIPLAY
+	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;対象がオトコかふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 16)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;胸愛撫実行判定
+;-------------------------------------------------
+@COM_ABLE5
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;キスする実行判定
+;-------------------------------------------------
+@COM_ABLE6
+;口が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合キスはできない（調教者が汚れ無視ならＯＫ）
+IF (STAIN:0 & 1 || STAIN:0 & 4 || STAIN:0 & 8 || STAIN:0 & 32) && ASSIPLAY
+	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;秘貝開帳実行判定
+;-------------------------------------------------
+@COM_ABLE7
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;従順が2未満だとダメ
+SIF ABL:信頼 < 2
+	RETURN 0
+;処女の場合、従順3以上または露出癖3以上ないとダメ
+SIF TALENT:処女 && ABL:信頼 < 3 && ABL:露出癖 < 3
+	RETURN 0
+;バイブ使用中は不可
+SIF TEQUIP:バイブ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;指挿入れ実行判定
+;-------------------------------------------------
+@COM_ABLE8
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合指挿入れはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;アナル舐め実行判定
+;-------------------------------------------------
+@COM_ABLE9
+;汚臭敏感で従順3以下のASSIの場合アナル舐めはできない（調教者が汚れ無視ならＯＫ）
+IF ASSIPLAY
+	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;アナルバイブ使用中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;10-19 道具使用コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;ローター実行判定
+;-------------------------------------------------
+@COM_ABLE10
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ローター == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;バイブ実行判定
+;-------------------------------------------------
+@COM_ABLE11
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:バイブ
+	RETURN 1
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:バイブ == 0 && NOITEM == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合バイブはできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合バイブはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;Ｅマッサージャ実行判定
+;-------------------------------------------------
+@COM_ABLE12
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:Ｅマッサージャ == 0 && NOITEM == 0
+	RETURN 0
+;ASSIの場合、技巧3以上かサドじゃないと使えない。
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3 && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;アナルバイブ実行判定
+;-------------------------------------------------
+@COM_ABLE13
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:アナルバイブ
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:アナルバイブ == 0 && NOITEM == 0
+	RETURN 0
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合アナルバイブはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;浣腸＋アナルプラグ使用中はダメ
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;電動クリキャップ実行判定
+;-------------------------------------------------
+@COM_ABLE14
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:クリキャップ
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:クリキャップ == 0 && NOITEM == 0
+	RETURN 0
+;オトコやふたなりはダメ
+SIF TALENT:ふたなり == 1 || TALENT:オトコ == 1
+	RETURN 0
+;ASSIの場合、技巧3以上じゃないと使えない。
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3
+		RETURN 0
+ENDIF
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;クリップローター実行判定
+;-------------------------------------------------
+@COM_ABLE15
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:ニプルキャップ
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ニプルキャップ == 0 && NOITEM == 0
+	RETURN 0
+;搾乳器使用中は不可
+SIF TEQUIP:搾乳機
+	RETURN 0
+;ASSIの場合、技巧3以上じゃないと使えない。
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3
+		RETURN 0
+ENDIF
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;搾乳器実行判定
+;-------------------------------------------------
+@COM_ABLE16
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:搾乳機
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:搾乳器 == 0 && NOITEM == 0
+	RETURN 0
+;母乳体質でないと使えない
+SIF TALENT:母乳体質 == 0
+	RETURN 0
+;クリップローター使用中は不可
+SIF TEQUIP:ニプルキャップ
+	RETURN 0
+;Ｂ感度2以下はダメ
+SIF ABL:TARGET:Ｂ感覚 <= 2 
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;ASSIの場合、技巧3以上じゃないと使えない。
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3
+		RETURN 0
+ENDIF
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;オナホール実行判定
+;-------------------------------------------------
+@COM_ABLE17
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:オナホール
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:オナホール == 0 && NOITEM == 0
+	RETURN 0
+;オトコやふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+;ASSIの場合、技巧3以上じゃないと使えない。
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3
+		RETURN 0
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;シャワー実行判定
+;-------------------------------------------------
+@COM_ABLE18
+;解除はいつでも可能
+SIF TEQUIP:シャワー
+	RETURN 1
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;お風呂中じゃないとダメ
+SIF TEQUIP:お風呂場プレイ == 0
+	RETURN 0
+;クリキャップ使用中は不可
+SIF TEQUIP:クリキャップ
+	RETURN 0
+;クリップローター使用中は不可
+SIF TEQUIP:ニプルキャップ
+	RETURN 0
+;搾乳器使用中は不可
+SIF TEQUIP:搾乳機
+	RETURN 0
+;ASSIの場合動物耳には従順４がないと使用不可（サドならＯＫ）
+IF TALENT:動物耳 && ABL:信頼 <= 4 && ASSIPLAY
+	SIF TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;全裸じゃないとダメ
+IF CFLAG:着衣状態
+	;ただし一部の特殊装備品のみなら可
+	SIF CFLAG:着衣状態 != 64 || CFLAG:特別コスチュームのタイプ <= 70 || CFLAG:上着のタイプ <= 240 && CFLAG:上着のタイプ >= 250 && CFLAG:上着のタイプ != 191
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;アナルビーズ実行判定
+;-------------------------------------------------
+@COM_ABLE19
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:アナルビーズ
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:アナルビーズ == 0 && NOITEM == 0
+	RETURN 0
+;アナルバイブ使用中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+RETURN 1
+
+
+;-------------------------------------------------
+;20-29 セックス系コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;正常位実行判定
+;-------------------------------------------------
+@COM_ABLE20
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;後背位実行判定
+;-------------------------------------------------
+@COM_ABLE21
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合後背位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;対面座位実行判定
+;-------------------------------------------------
+@COM_ABLE22
+;処女はダメ
+SIF EXP:Ｖ経験 == 0
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合対面座位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合対面座位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;背面座位実行判定
+;-------------------------------------------------
+@COM_ABLE23
+;処女はダメ
+SIF EXP:Ｖ経験 == 0
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合背面座位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合背面座位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+
+;=================================================
+;逆レイプ実行判定
+;=================================================
+@COM_ABLE24
+;対象がオトコかふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+;調教者がオトコだとダメ
+SIF TALENT:PLAYER:オトコ
+	RETURN 0
+;調教者が未熟だとダメ
+SIF TALENT:PLAYER:未熟
+	RETURN 0
+;助手による逆レイプの場合、処女で従順5以下だと逆レイプはできない（淫乱ならＯＫ）
+IF ASSIPLAY
+	SIF ABL:ASSI:信頼 <= 3
+		RETURN 0
+ENDIF
+;調教者が女で対象がオトコの場合、調教者の体格が対象の体格を上回ってないとダメ（縄使用中or従順３以上ならＯＫ）
+IF TALENT:オトコ && TALENT:PLAYER:オトコ == 0 && TEQUIP:縄 == 0 && ABL:信頼 < 3
+	SIF TALENT:大柄
+		RETURN 0
+	SIF TALENT:小柄体型 == 0 && TALENT:PLAYER:大柄 == 0
+		RETURN 0
+	SIF TALENT:PLAYER:小柄体型
+		RETURN 0
+ENDIF
+;対象の欲情がある程度高まってないとダメ
+SIF PALAM:欲情 < PALAMLV:2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+
+;着衣関連
+IF FLAG:着衣使用 == 1
+	;パンツか上着下・ズボンタイプを着てるとダメ
+	SIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 16)
+		RETURN 0
+	;黒ストッキングだとダメ
+	SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+	;オムツをはいているとダメ
+	SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+		RETURN 0
+	;ズーコの着ぐるみを着てるとダメ
+;	SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+;		RETURN 0
+ENDIF
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;=================================================
+;逆レイプ実行判定
+;=================================================
+@COM_ABLE25
+;対象がオトコかふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+;調教者が未熟だとダメ
+SIF TALENT:PLAYER:未熟
+	RETURN 0
+;助手による逆レイプの場合、処女で従順5以下だと逆レイプはできない（淫乱ならＯＫ）
+IF ASSIPLAY
+	SIF ABL:ASSI:信頼 <= 3
+		RETURN 0
+ENDIF
+;調教者が女で対象がオトコの場合、調教者の体格が対象の体格を上回ってないとダメ（縄使用中or従順３以上ならＯＫ）
+IF TALENT:オトコ && TALENT:PLAYER:オトコ == 0 && TEQUIP:縄 == 0 && ABL:信頼 < 3
+	SIF TALENT:大柄
+		RETURN 0
+	SIF TALENT:小柄体型 == 0 && TALENT:PLAYER:大柄 == 0
+		RETURN 0
+	SIF TALENT:PLAYER:小柄体型
+		RETURN 0
+ENDIF
+;対象の欲情がある程度高まってないとダメ
+SIF PALAM:欲情 < PALAMLV:2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+
+;着衣関連
+IF FLAG:着衣使用 == 1
+	;パンツか上着下・ズボンタイプを着てるとダメ
+	SIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 16)
+		RETURN 0
+	;黒ストッキングだとダメ
+	SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+	;オムツをはいているとダメ
+	SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+		RETURN 0
+	;ズーコの着ぐるみを着てるとダメ
+;	SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+;		RETURN 0
+ENDIF
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;正常位アナル実行判定
+;-------------------------------------------------
+@COM_ABLE26
+;アナルバイブ挿入中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 10
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位アナルはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;後背位アナル実行判定
+;-------------------------------------------------
+@COM_ABLE27
+;アナルバイブ挿入中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;浣腸＋アナルプラグ使用中はダメ
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;潤滑不足で、従順4以下・レズっ気4以下のASSIの場合アナルセックスはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 10
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;対面座位アナル実行判定
+;-------------------------------------------------
+@COM_ABLE28
+;アナルバイブ挿入中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 10
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合対面座位アナルはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;背面座位アナル実行判定
+;-------------------------------------------------
+@COM_ABLE29
+;アナルバイブ挿入中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 10
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合背面座位アナルはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;30-39 奉仕系コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;手淫実行判定
+;-------------------------------------------------
+@COM_ABLE30
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv1必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 1
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;フェラチオ実行判定
+;-------------------------------------------------
+@COM_ABLE31
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv1必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 1
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;パイズリ実行判定
+;-------------------------------------------------
+@COM_ABLE32
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;[絶壁]だとダメ
+SIF TALENT:絶壁
+	RETURN 0
+;[爆乳]か[巨乳]でなければ技巧3以上、
+SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && ABL:技巧 < 3 
+	RETURN 0
+;[貧乳]だと技巧4以上必要
+SIF TALENT:貧乳 && ABL:技巧 < 4
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;素股実行判定
+;-------------------------------------------------
+@COM_ABLE33
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;潤滑が高くないとダメ
+SIF PALAM:潤滑 < 2000
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;騎乗位実行判定
+;-------------------------------------------------
+@COM_ABLE34
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;未熟だとダメ
+SIF TALENT:未熟
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv2必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;泡踊り実行判定
+;-------------------------------------------------
+@COM_ABLE35
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;お風呂場プレイ中でプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ == 0
+	RETURN 0
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;アナルバイブ挿入中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;クリキャップ使用中は不可
+SIF TEQUIP:クリキャップ
+	RETURN 0
+;クリップローター使用中は不可
+SIF TEQUIP:ニプルキャップ
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:アイマスク
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;アイマスク使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;全裸じゃないとダメ
+IF CFLAG:着衣状態
+	;ただし一部の特殊装備品のみなら可
+	SIF CFLAG:特別コスチュームのタイプ <= 70
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;騎乗位アナル実行判定
+;-------------------------------------------------
+@COM_ABLE36
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;アナルバイブ挿入中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv2必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 2
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 10
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;アナル奉仕実行判定
+;-------------------------------------------------
+@COM_ABLE37
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv1必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 1
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;足コキ実行判定
+;-------------------------------------------------
+@COM_ABLE38
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;足コキ実行判定
+;-------------------------------------------------
+@COM_ABLE39
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+SIF ITEM:オナホール == 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+
+;-------------------------------------------------
+;40-49 SM系コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;スパンキング実行判定
+;-------------------------------------------------
+@COM_ABLE40
+;従順4以下・レズっ気4以下のASSIの場合スパンキングはできない（サドならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && (TALENT:ASSI:サド == 0 && ABL:ASSI:サドっ気 < 2)
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;鞭実行判定
+;-------------------------------------------------
+@COM_ABLE41
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:鞭 == 0 && NOITEM == 0
+	RETURN 0
+;従順4以下・レズっ気4以下のASSIの場合鞭はできない（サドならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && (TALENT:ASSI:サド == 0 && ABL:ASSI:サドっ気 < 3)
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;針実行判定
+;-------------------------------------------------
+@COM_ABLE42
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:針 == 0 && NOITEM == 0
+	RETURN 0
+;従順4以下・レズっ気4以下のASSIの場合針はできない（サドならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && (TALENT:ASSI:サド == 0 && ABL:ASSI:サドっ気 < 3)
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;アイマスク実行判定
+;-------------------------------------------------
+@COM_ABLE43
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:アイマスク
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:アイマスク == 0 && NOITEM == 0
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;縄実行判定
+;-------------------------------------------------
+@COM_ABLE44
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;三角木馬騎乗中は解除不可
+SIF TEQUIP:縄 && TEQUIP:三角木馬騎乗 == 0
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定で無いとダメ
+SIF ITEM:縄 == 0 && NOITEM == 0
+	RETURN 0
+;調教者の技巧が3無いとできない
+SIF ABL:PLAYER:技巧 <= 2
+	RETURN 0
+;助手は技巧5でないとダメ
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 <= 4
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;ボールギャグ実行判定
+;-------------------------------------------------
+@COM_ABLE45
+;触手口辱中だとダメ
+SIF TEQUIP:触手口辱
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:ボールギャグ
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ボールギャグ == 0 && NOITEM == 0
+	RETURN 0
+;ASSIの場合、技巧3以上じゃないと使えない。
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3
+		RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;浣腸実行判定
+;-------------------------------------------------
+@COM_ABLE46
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:[[ITEM:浣腸器＋プラグ]] == 0 && NOITEM == 0
+	RETURN 0
+;アナルバイブ使用中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;Ａ経験が25未満じゃできない
+SIF EXP:Ａ経験 <= 25
+	RETURN 0
+;従順、欲望、露出癖の合計が10ないとできない
+SIF ABL:信頼 + ABL:欲望 + ABL:露出癖 < 10
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;ボンデージ装着実行判定
+;-------------------------------------------------
+@COM_ABLE47
+;解除はいつでも可能
+SIF TEQUIP:助手ボンデージ
+	RETURN 1
+;アイテム｢ボンデージスーツ｣を持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ボンデージ == 0 && NOITEM == 0
+	RETURN 0
+;助手じゃなきゃダメ
+SIF ASSIPLAY == 0 || ASSI < 1
+	RETURN 0
+;助手のサドっ気が2以上ないとダメ
+SIF ABL:ASSI:サドっ気 < 2 && TALENT:ASSI:[[TALENT:ONLY ONE EMPRESS]] == 0
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;足コキする実行判定
+;-------------------------------------------------
+@COM_ABLE48
+;対象がオトコかふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+;従順4以下・レズっ気4以下のASSIの場合足コキはできない（サドならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && (TALENT:ASSI:サド == 0 && ABL:ASSI:サドっ気 < 2)
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;アナル電極実行判定
+;-------------------------------------------------
+@COM_ABLE49
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:アナル電極
+	RETURN 1
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:電極プラグ == 0 && NOITEM == 0
+	RETURN 0
+;アナルバイブ使用中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;普通の浣腸使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;50-59 特殊コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;ローション実行判定
+;-------------------------------------------------
+@COM_ABLE50
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ローション == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;媚薬実行判定
+;-------------------------------------------------
+@COM_ABLE51
+;アイテムを持っているか、アイテムなし設定か触手調教中でないとダメ
+SIF ITEM:プリンセスポイズン == 0 && NOITEM == 0 && TEQUIP:触手召喚 == 0
+	RETURN 0
+;薬毒耐性だとダメ
+SIF TALENT:薬毒耐性
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;利尿剤実行判定
+;-------------------------------------------------
+@COM_ABLE52
+;アイテムを持っているか、アイテムなし設定か触手調教中でないとダメ
+SIF ITEM:利尿剤 == 0 && NOITEM == 0 && TEQUIP:触手召喚 == 0
+	RETURN 0
+;薬毒耐性だとダメ
+SIF TALENT:薬毒耐性 && TEQUIP:触手召喚 == 0
+	RETURN 0
+;連続投与はダメ
+SIF TEQUIP:利尿剤効果
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;ビデオ撮影実行判定
+;-------------------------------------------------
+@COM_ABLE53
+;解除はいつでも可能
+SIF TEQUIP:撮影中
+	RETURN 1
+;カメラとテープのアイテムを持っているか、アイテムなし設定でないとダメ
+;SIF ( ITEM:ビデオカメラ == 0 || ITEM:ビデオテープ == 0 ) && NOITEM == 0
+;テープという概念の抹消
+SIF ITEM:ビデオカメラ == 0 && NOITEM == 0
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;野外プレイ実行判定
+;-------------------------------------------------
+@COM_ABLE54
+;解除はいつでも可能
+SIF TEQUIP:野外プレイ
+	RETURN 1
+;アイテム｢首輪｣を持っているか、アイテムなし設定でないとダメ
+SIF ITEM:[[ITEM:撮影セット・基礎]] == 0 && NOITEM == 0
+	RETURN 0
+;従順かマゾっ気が3以上ないとダメ
+SIF ABL:信頼 <= 2 && ABL:マゾっ気 <= 2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;何もしない実行判定
+;-------------------------------------------------
+@COM_ABLE55
+RETURN 1
+;-------------------------------------------------
+;会話する実行判定
+;-------------------------------------------------
+@COM_ABLE56
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;羞恥プレイ実行判定
+;-------------------------------------------------
+@COM_ABLE57
+;解除はいつでも可能
+SIF TEQUIP:羞恥大鏡プレイ
+	RETURN 1
+;アイテム｢大鏡｣を持っているか、アイテムなし設定でないとダメ
+SIF ITEM:大鏡 == 0 && NOITEM == 0
+	RETURN 0
+;従順が1以上ないとダメ
+SIF ABL:信頼 <= 1
+	RETURN 0
+;野外プレイ中はダメ
+SIF TEQUIP:野外プレイ
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;お風呂場プレイ実行判定
+;-------------------------------------------------
+@COM_ABLE58
+;解除はいつでも可能
+SIF TEQUIP:お風呂場プレイ
+	RETURN 1
+;従順が1以上ないとダメ
+SIF ABL:信頼 <= 1
+	RETURN 0
+;対象か助手が動物耳なら、従順が3以下だとダメ
+SIF TALENT:動物耳 && ABL:信頼 <= 2
+	RETURN 0
+IF ASSI > 0
+	SIF TALENT:ASSI:動物耳 && ABL:ASSI:信頼 <= 2
+		RETURN 0
+ENDIF
+;野外プレイ中はダメ
+SIF TEQUIP:野外プレイ
+	RETURN 0
+;羞恥プレイ中はダメ
+SIF TEQUIP:羞恥大鏡プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;全裸じゃないとダメ
+IF CFLAG:着衣状態
+	;ただし一部の特殊装備品のみなら可
+	SIF CFLAG:着衣状態 != 64 || CFLAG:特別コスチュームのタイプ <= 70 || CFLAG:上着のタイプ <= 240 && CFLAG:上着のタイプ >= 250 && CFLAG:上着のタイプ != 191
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;新妻プレイ^H^H^H^H^Hコスプレ実行判定
+;-------------------------------------------------
+@COM_ABLE59
+;↓にはいつでも解除可能とあるが撮影中は脱ぎ着できないように
+;撮影システムで途中での脱ぎ着を想定していないと思われるため
+SIF TEQUIP:撮影中
+	RETURN 0
+;解除はいつでも可能
+SIF TEQUIP:コスプレ
+	RETURN 1
+;アイテム｢エプロン｣を持っているか、アイテムなし設定でないとダメ
+SIF ITEM:コスプレ衣装 == 0 && NOITEM == 0
+	RETURN 0
+;助手じゃダメ
+SIF ASSIPLAY
+	RETURN 0
+;野外プレイ中はダメ
+SIF TEQUIP:野外プレイ
+	RETURN 0
+;羞恥プレイ中はダメ
+SIF TEQUIP:羞恥大鏡プレイ
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;SIF TALENT:ミッション
+;	RETURN 0
+SIF MARK:屈服刻印 <= 1
+	RETURN 0
+;全裸じゃないとダメ
+IF CFLAG:着衣状態 >= 4
+	SIF CFLAG :40 <= 63
+		RETURN 0
+	SIF CFLAG :40 >= 68
+		RETURN 0
+	SIF CFLAG :42 <= 69
+		RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;60-69 助手によるコマンド、及びレズプレイ
+;-------------------------------------------------
+;-------------------------------------------------
+;助手にキス実行判定
+;-------------------------------------------------
+@COM_ABLE60
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手じゃないとダメ
+SIF PLAYER != ASSI
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;クンニ強制実行判定
+;-------------------------------------------------
+@COM_ABLE61
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;調教者がオトコだとダメ
+SIF TALENT:PLAYER:オトコ
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;助手を犯す実行判定
+;-------------------------------------------------
+@COM_ABLE62
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手がいないとダメ
+SIF ASSI < 1
+	RETURN 0
+;主人じゃないとダメ
+SIF ASSIPLAY
+	RETURN 0
+;助手がオトコだとダメ
+SIF TALENT:ASSI:オトコ
+	RETURN 0
+;助手が未熟だとダメ（主人がサドならＯＫ）
+SIF TALENT:ASSI:未熟 && TALENT:MASTER:サド ==0
+	RETURN 0
+;主人がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;縄使用中か従順が3以上ないとダメ
+SIF TEQUIP:縄 == 0 && ABL:信頼 < 3
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;助手が貞操帯を付けているとダメ
+SIF CFLAG:ASSI:特別コスチュームのタイプ == 79 && (CFLAG:ASSI:着衣状態 & 64)
+	RETURN 0
+;対象から助手への相性が良くないとダメ
+R = NO:ASSI
+SIF RELATION:R <= 100
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;貝あわせ実行判定
+;-------------------------------------------------
+@COM_ABLE63
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;オトコかふたなりだとダメ
+SIF TALENT:ふたなり || TALENT:オトコ
+	RETURN 0
+;調教者がオトコかふたなりだとダメ
+SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+	RETURN 0
+;欲望3以下の場合貝あわせはできない（小悪魔、相性良好ならＯＫ）
+R = NO:PLAYER
+IF ASSIPLAY
+	SIF ABL:ASSI:欲望 <= 3 && TALENT:ASSI:小悪魔 == 0 && RELATION:R < 150
+		RETURN 0
+ENDIF
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;3P実行判定
+;-------------------------------------------------
+@COM_ABLE64
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手がいないとダメ
+SIF ASSI < 1
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ
+SIF TALENT:未熟
+	RETURN 0
+;バイブ装着中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;アナルバイブ装着中はダメ
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+A = 0
+;MASTERがオトコかふたなり
+SIF TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ
+	A += 1
+;ASSIがオトコかふたなり
+SIF TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ
+	A += 1
+;ペニスバンドとあわせて二本ないとだめ
+SIF A + ITEM:ペニスバンド < 2
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合二本刺しはできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合二本刺しはできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 10
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;助手を犯させる実行判定
+;-------------------------------------------------
+@COM_ABLE65
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手じゃないとダメ
+SIF PLAYER != ASSI
+	RETURN 0
+;助手がオトコだとダメ
+SIF TALENT:PLAYER:オトコ
+	RETURN 0
+;助手が未熟だとダメ
+SIF TALENT:PLAYER:未熟
+	RETURN 0
+;オトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;助手が貞操帯を付けているとダメ
+SIF CFLAG:PLAYER:特別コスチュームのタイプ == 79 && (CFLAG:PLAYER:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;二本フェラ実行判定
+;-------------------------------------------------
+@COM_ABLE66
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手じゃないとダメ
+SIF PLAYER != ASSI
+	RETURN 0
+;主人がオトコかふたなりじゃないとダメ
+SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+	RETURN 0
+;助手がオトコかふたなりじゃないとダメ
+SIF TALENT:ASSI:ふたなり == 0 && TALENT:ASSI:オトコ == 0
+	RETURN 0
+;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
+IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
+	SIF (TALENT:恋心 == 0 && TALENT:淫乱 == 0) || (TALENT:ASSI:恋心 == 0 && TALENT:ASSI:淫乱 == 0)
+		RETURN 0
+ENDIF
+;助手と対象のどちらかに奉仕しないがあるとダメ
+SIF TALENT:奉仕しない || TALENT:ASSI:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;Ｗフェラ実行判定
+;-------------------------------------------------
+@COM_ABLE68
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手じゃないとダメ
+SIF PLAYER != ASSI
+	RETURN 0
+;主人がオトコかふたなりじゃないとダメ
+SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+	RETURN 0
+;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
+IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
+	SIF (TALENT:恋心 == 0 && TALENT:淫乱 == 0) || (TALENT:ASSI:恋心 == 0 && TALENT:ASSI:淫乱 == 0)
+		RETURN 0
+ENDIF
+;助手と対象のどちらかに奉仕しないがあるとダメ
+SIF TALENT:奉仕しない || TALENT:ASSI:奉仕しない 
+	RETURN 0
+;助手が奉仕精神ＬＶ３以上、技巧ＬＶ３以上じゃないとダメ
+SIF ABL:ASSI:技巧 < 3 || ABL:ASSI:奉仕精神 < 3
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;シックスナイン実行判定
+;-------------------------------------------------
+@COM_ABLE69
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;欲望3以下・レズっ気3以下のASSIの場合シックスナインはできない（小悪魔、相性良好ならＯＫ）
+R = NO:PLAYER
+IF ASSI > 0 && ASSIPLAY
+	SIF (ABL:ASSI:欲望 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:小悪魔 == 0 && RELATION:R < 150
+		RETURN 0
+ELSE
+;調教者が助手でないなら従順3以上、奉仕精神3以上必要
+	SIF ABL:信頼 < 3 || ABL:奉仕精神 < 3
+		RETURN 0
+ENDIF
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;ダブル素股実行判定
+;-------------------------------------------------
+@COM_ABLE70
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;主人じゃないとダメ
+SIF ASSIPLAY
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
+IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
+	SIF (TALENT:恋心 == 0 && TALENT:淫乱 == 0) || (TALENT:ASSI:恋心 == 0 && TALENT:ASSI:淫乱 == 0)
+		RETURN 0
+ENDIF
+;対象か助手のどちらかに奉仕しないがあるとダメ
+SIF TALENT:奉仕しない || TALENT:ASSI:奉仕しない
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;調教対象がパンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;ダブルパイズリ実行判定
+;-------------------------------------------------
+@COM_ABLE71
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;助手じゃないとダメ
+SIF PLAYER != ASSI
+	RETURN 0
+;調教対象と助手のどちらかがオトコだとダメ
+SIF TALENT:オトコ || TALENT:ASSI:オトコ
+	RETURN 0
+;調教対象と助手のどちらかが[絶壁]だとダメ
+SIF TALENT:絶壁 || TALENT:ASSI:絶壁
+	RETURN 0
+;主人がオトコかふたなりじゃないとダメ
+SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+	RETURN 0
+;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
+IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
+	SIF (TALENT:恋心 == 0 && TALENT:淫乱 == 0) || (TALENT:ASSI:恋心 == 0 && TALENT:ASSI:淫乱 == 0)
+		RETURN 0
+ENDIF
+;助手が技巧4以上、奉仕精神3以上じゃないとダメ
+SIF ABL:ASSI:技巧 < 4 || ABL:ASSI:奉仕精神 < 3
+	RETURN 0
+;調教対象と助手のどちらかが[爆乳]か[巨乳]でなければ技巧3以上、
+SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && TALENT:ASSI:爆乳 == 0 && TALENT:ASSI:巨乳 == 0 && ABL:技巧 < 3 
+	RETURN 0
+;調教対象と助手が両方とも[貧乳]だと技巧4以上必要
+SIF TALENT:貧乳 && TALENT:ASSI:貧乳 && ABL:技巧 < 4
+	RETURN 0
+;対象か助手のどちらかに奉仕しないがあるとダメ
+SIF TALENT:奉仕しない || TALENT:ASSI:奉仕しない
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;調教対象がブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;80-89 ハードな調教コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;イラマチオ実行判定
+;-------------------------------------------------
+@COM_ABLE80
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;従順、欲望の合計が6以上ないとダメ
+SIF ABL:信頼 + ABL:欲望 < 6
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;フィストファック
+;-------------------------------------------------
+@COM_ABLE81
+;一定のＶ経験が必要
+SIF EXP:Ｖ経験 < 75
+	RETURN 0
+;バイブ使用中は不可
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;ASSIの場合、従順4以上かサドじゃないとできない。
+IF ASSIPLAY
+	SIF ABL:ASSI:信頼 < 4 && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;小柄体型なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
+SIF TALENT:小柄体型 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
+		RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;アナルフィスト
+;-------------------------------------------------
+@COM_ABLE82
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;アナルバイブ使用中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;一定のＡ経験が必要
+SIF EXP:Ａ経験 < 75
+	RETURN 0
+;浣腸＋アナルプラグ使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;ASSIの場合、従順3以上かサドじゃないとできない。
+IF ASSIPLAY
+	SIF ABL:ASSI:信頼 < 4 && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;小柄体型なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
+SIF TALENT:小柄体型 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;アナルビーズ使用中は不可
+SIF TEQUIP:アナルビーズ
+	RETURN 0
+;電極使用中は不可
+SIF TEQUIP:アナル電極
+	RETURN 0
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;両穴フィスト
+;-------------------------------------------------
+@COM_ABLE83
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;バイブ使用中は不可
+SIF TEQUIP:バイブ
+	RETURN 0
+;アナルバイブ使用中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+;浣腸＋アナルプラグ使用中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0	
+;一定のＶ・Ａ経験が必要
+SIF EXP:Ｖ経験 < 150 || EXP:Ａ経験 < 150
+	RETURN 0
+;ASSIの場合、従順4以上かサドじゃないとできない。
+IF ASSIPLAY
+	SIF ABL:ASSI:信頼 < 4 && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;小柄体型なら従順が4以上かつマゾっ気が4以上かつ拡張経験5以上じゃないと実行できない
+SIF TALENT:小柄体型 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3 || EXP:Ａ拡張経験 < 5)
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;シャワー中はダメ
+SIF TEQUIP:シャワー
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;放尿実行判定
+;-------------------------------------------------
+@COM_ABLE85
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;利尿剤使用中かおもらし癖でないとダメ
+SIF TEQUIP:利尿剤効果 == 0 && TALENT:おもらし癖 == 0
+	RETURN 0
+;従順３以上でないとダメ（お風呂場ならＯＫ）
+SIF TEQUIP:お風呂場プレイ == 0 && ABL:信頼 <= 2
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;飲尿実行判定
+;-------------------------------------------------
+@COM_ABLE86
+RETURN 0
+;調教者がおもらし癖でないとダメ
+SIF TALENT:PLAYER:おもらし癖 == 0
+	RETURN 0
+;従順４以上でないとダメ
+SIF ABL:信頼 <= 3
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;ピアシング実行判定
+;-------------------------------------------------
+@COM_ABLE87
+;対象がピアシングされているかアイテムにピアスがないとダメ
+SIF  ITEM:ピアスリング == 0 && ((CFLAG:ピアスの装着状況 & 1) == 0 && (CFLAG:ピアスの装着状況 & 2) == 0 && (CFLAG:ピアスの装着状況 & 4) == 0 && (CFLAG:ピアスの装着状況 & 8) == 0 && (CFLAG:ピアスの装着状況 & 16) == 0)
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;従順が3未満だとダメ
+SIF ABL:信頼 < 3
+	RETURN 0
+;バイブ使用中は不可
+SIF TEQUIP:バイブ
+	RETURN 0
+;クリキャップ使用中は不可
+SIF TEQUIP:クリキャップ
+	RETURN 0
+;ニプルキャップ使用中は不可
+SIF TEQUIP:ニプルキャップ
+	RETURN 0
+;搾乳器使用中は不可
+SIF TEQUIP:搾乳機
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;剃毛実行判定
+;-------------------------------------------------
+@COM_ABLE88
+;陰毛を生やす設定でないとダメ
+SIF FLAG:陰毛を生やす == 0
+	RETURN 0
+;ある程度生え揃ってないとダメ
+SIF CFLAG:陰毛の状態 < 6
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;従順が2未満だとダメ
+SIF ABL:信頼 < 2
+	RETURN 0
+;バイブ使用中は不可
+SIF TEQUIP:バイブ
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;獣姦プレイ実行判定
+;-------------------------------------------------
+@COM_ABLE89
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:犬 == 0 && NOITEM == 0
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;道具使用中はダメ（野外プレイのみ可）
+SIF TEQUIP:獣姦プレイ == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]]|| TEQUIP:アナル電極 || TEQUIP:触手召喚)
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;新妻プレイ中はダメ
+SIF TEQUIP:コスプレ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+						;****追加ここから****
+;-------------------------------------------------
+;90-99 アイテム派生系コマンド
+;-------------------------------------------------
+;ローター自慰実行判定
+;-------------------------------------------------
+@COM_ABLE90
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順3以下・レズっ気3以下のASSIの場合自慰はできない（小悪魔ならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:小悪魔 == 0
+		RETURN 0
+ENDIF
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ローター == 0 && NOITEM == 0
+	RETURN 0
+;自慰しないがあるとダメ
+SIF TALENT:自慰しない
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;電マ自慰実行判定
+;-------------------------------------------------
+@COM_ABLE91
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順3以下・レズっ気3以下のASSIの場合自慰はできない（小悪魔ならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:小悪魔 == 0
+		RETURN 0
+ENDIF
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:Ｅマッサージャ == 0 && NOITEM == 0
+	RETURN 0
+;自慰しないがあるとダメ
+SIF TALENT:自慰しない
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;乳首ローター実行判定
+;-------------------------------------------------
+@COM_ABLE92
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:ローター == 0 && NOITEM == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+						;****追加ここまで****
+;-------------------------------------------------
+;100-109 触手系コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;触手生物使用判定
+;-------------------------------------------------
+@COM_ABLE100
+;調教者が秘密知識を持ってないとダメ
+SIF TALENT:PLAYER:秘密知識 == 0
+	RETURN 0
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF ITEM:触手生物 == 0 && NOITEM == 0
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;道具使用中はダメ
+SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]]|| TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:獣姦プレイ)
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;新妻プレイ中はダメ
+SIF TEQUIP:コスプレ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+
+@COM_ABLE101
+;触手挿入
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+@COM_ABLE102
+;アナル触手
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;触手浣腸中は不可
+SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	RETURN 0
+RETURN 1
+
+@COM_ABLE103
+;触手クリ責め
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+RETURN 1
+
+@COM_ABLE104
+;触手乳首責め
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;触手搾乳中は不可
+SIF TEQUIP:搾乳機
+	RETURN 0
+RETURN 1
+
+@COM_ABLE105
+;触手搾乳
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;触手乳首責め中は不可
+SIF TEQUIP:ニプルキャップ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+RETURN 1
+
+@COM_ABLE106
+;触手緊縛
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+RETURN 1
+
+@COM_ABLE107
+;触手浣腸
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;アナル触手中は不可
+SIF TEQUIP:アナルバイブ
+	RETURN 0
+RETURN 1
+
+@COM_ABLE108
+;触手口辱
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+RETURN 1
+
+@COM_ABLE109
+;触手ペニス責め
+SIF TEQUIP:触手召喚 == 0
+	RETURN 0
+;オトコかふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;服の着脱実行判定
+;-------------------------------------------------
+@COM_ABLE110
+;着衣設定を使ってない場合はダメ
+SIF FLAG:着衣使用 == 0
+	RETURN 0
+;着衣フラグが存在しないとダメ
+SIF CFLAG:上着のタイプ == 0 && CFLAG:特別コスチュームのタイプ == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;新妻プレイ中はダメ
+SIF TEQUIP:コスプレ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;服を破る実行判定
+;-------------------------------------------------
+@COM_ABLE111
+;着衣設定を使ってない場合はダメ
+SIF FLAG:着衣使用 == 0
+	RETURN 0
+;着衣フラグが存在しないとダメ
+SIF CFLAG:上着のタイプ == 0 && CFLAG:特別コスチュームのタイプ == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;新妻プレイ中はダメ
+SIF TEQUIP:コスプレ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;全裸だとダメ
+SIF CFLAG:着衣状態 == 0
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;120-追加コマンド実行判定
+;-------------------------------------------------
+;-------------------------------------------------
+;挿入Ｇスポ責め実行判定
+;-------------------------------------------------
+@COM_ABLE120
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;挿入子宮口責め実行判定
+;-------------------------------------------------
+@COM_ABLE121
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;兜あわせ実行判定
+;-------------------------------------------------
+@COM_ABLE122
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;対象がオトコかふたなりじゃないとダメ
+SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;パイズリフェラ実行判定
+;-------------------------------------------------
+@COM_ABLE123
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順と奉仕技術と技巧が3以上必要
+SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕技術 < 3
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;[絶壁]だとダメ
+SIF TALENT:絶壁
+	RETURN 0
+;[爆乳]か[巨乳]でなければ技巧3以上、
+SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && ABL:技巧 < 3 
+	RETURN 0
+;[貧乳]だと技巧4以上必要
+SIF TALENT:貧乳 && ABL:技巧 < 4
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+	
+RETURN 1
+
+;-------------------------------------------------
+;ディープスロート実行判定
+;-------------------------------------------------
+@COM_ABLE124
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順と技巧と奉仕精神が3以上必要
+SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv2必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+
+;-------------------------------------------------
+;フェラ自慰実行判定
+;-------------------------------------------------
+@COM_ABLE125
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順と奉仕技術と技巧が3以上必要
+SIF ABL:信頼 < 3 &&  ABL:技巧 < 3 &&  ABL:奉仕技術 < 3
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;従順3以下・レズっ気3以下のASSIの場合自慰はできない（小悪魔ならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:小悪魔 == 0
+		RETURN 0
+ENDIF
+;自慰しないがあるとダメ
+SIF TALENT:自慰しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;テコキフェラ実行判定
+;-------------------------------------------------
+@COM_ABLE126
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順と技巧と奉仕精神が3以上必要
+SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv2必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;バキュームフェラ実行判定
+;-------------------------------------------------
+@COM_ABLE127
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順と技巧と奉仕精神が3以上必要
+SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv2必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;正常位・キス実行判定
+;-------------------------------------------------
+@COM_ABLE128
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が3以上、対象の性交技術が2以上必要
+SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;正常位・胸愛撫実行判定
+;-------------------------------------------------
+@COM_ABLE129
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が3以上、対象の性交技術が2以上必要
+SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;正常位ＳＰ実行判定
+;-------------------------------------------------
+@COM_ABLE130
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が5以上、対象の性交技術が3以上必要
+SIF ABL:PLAYER:技巧 < 5 && ABL:性交技術 < 3
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;後背位・胸愛撫実行判定
+;-------------------------------------------------
+@COM_ABLE131
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が3以上、対象の性交技術が2以上必要
+SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合後背位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;後背位・スパンキング実行判定
+;-------------------------------------------------
+@COM_ABLE132
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が3以上、対象の性交技術が2以上必要
+SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合後背位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;立ちバック実行判定
+;-------------------------------------------------
+@COM_ABLE133
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が4以上、対象の性交技術が3以上必要
+SIF ABL:PLAYER:技巧 < 4 && ABL:性交技術 < 3
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合後背位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;後背位ＳＰ実行判定
+;-------------------------------------------------
+@COM_ABLE134
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者の技巧が5以上、対象の性交技術が3以上必要
+SIF ABL:PLAYER:技巧 < 5 && ABL:性交技術 < 3
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;未熟だとダメ（調教者がサドなら可）
+SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
+	RETURN 0
+;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+	RETURN 0
+;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
+IF EXP:Ｖ経験 == 0 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合後背位はできない（サドならＯＫ）
+IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 3 || ABL:ASSI:レズっ気 <= 3) && TALENT:ASSI:サド == 0
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はプレイマットが無いとダメ
+SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+
+RETURN 1
+;-------------------------------------------------
+;顔面騎乗プレイ実行判定
+;-------------------------------------------------
+@COM_ABLE135
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;調教者がサド持ちかサドっ気３以上
+SIF TALENT:TARGET:サド == 0 && ABL:TARGET:サドっ気 <= 3
+	RETURN 0
+;バイブ挿入中はダメ
+SIF TEQUIP:バイブ
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;野外プレイ中はダメ
+SIF TEQUIP:野外プレイ
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+;-------------------------------------------------
+;褒める実行判定
+;-------------------------------------------------
+@COM_ABLE136
+RETURN 1
+
+;-------------------------------------------------
+;三角木馬実行判定
+;-------------------------------------------------
+@COM_ABLE137
+IF ASSIPLAY
+	;調教者がサド持ちかサドっ気３以上
+	SIF TALENT:PLAYER:サド == 0 && ABL:PLAYER:サドっ気 <= 3
+		RETURN 0
+ENDIF
+;道具使用中はダメ(縄、アイマスク、ボールギャグ、コスプレ以外)
+SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:[[TEQUIP:浣腸器＋プラグ]]|| TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:羞恥大鏡プレイ || TEQUIP:お風呂場プレイ || TEQUIP:獣姦プレイ || TEQUIP:触手召喚)
+	RETURN 0
+;縄使用中でないと不可
+SIF TEQUIP:縄 == 0
+	RETURN 0
+;撮影セット・基礎を持っているか、アイテムなし設定でないとダメ
+SIF ITEM:[[ITEM:撮影セット・基礎]] == 0 && NOITEM == 0
+	RETURN 0
+RETURN 1
+
+
+;-------------------------------------------------
+;ナイズリ実行判定
+;-------------------------------------------------
+@COM_ABLE140
+SIF TFLAG:900 == 0
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;技巧が4以上必要
+SIF ABL:信頼 < 3
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;ナイズリ実行判定
+;-------------------------------------------------
+@COM_ABLE141
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;技巧が4以上必要
+SIF ABL:技巧 < 4
+	RETURN 0
+;[絶壁][オトコ][男の娘]以外だとダメ
+SIF TALENT:絶壁 == 0 && TALENT:オトコ == 0 && TALENT:オトコの娘 == 0
+	RETURN 0
+;[オトコ]だと従順4以上必要
+SIF TALENT:オトコ && ABL:信頼 < 4
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;縦パイズリ実行判定
+;-------------------------------------------------
+@COM_ABLE142
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;[爆乳]か[巨乳]でなければダメ、
+SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;縦パイズリ実行判定
+;-------------------------------------------------
+@COM_ABLE143
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;[爆乳]か[巨乳]でなければダメ、
+SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;従順、欲望の合計が6以上ないとダメ
+SIF ABL:信頼 + ABL:欲望 < 6
+	RETURN 0
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ブラジャーか上着上を着てるとダメ
+SIF (CFLAG:着衣状態 & 6)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;腹パン実行判定
+;-------------------------------------------------
+@COM_ABLE144
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF TALENT:PLAYER:サド == 0
+	RETURN 0
+;従順4以下・レズっ気4以下のASSIの場合針はできない（サドならＯＫ）
+IF ASSIPLAY
+	SIF (ABL:ASSI:信頼 <= 4 || ABL:ASSI:レズっ気 <= 4) && (TALENT:ASSI:サド == 0 && ABL:ASSI:サドっ気 < 3)
+		RETURN 0
+ENDIF
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+						;****スライムパッチ追加ここから****
+;スライム調教中はダメ
+SIF TEQUIP:スライム生成
+	RETURN 0
+						;****スライムパッチ追加ここまで****
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+RETURN 1
+
+						;****スライムパッチ追加ここから****
+;-------------------------------------------------
+;150-159 スライム系コマンド
+;-------------------------------------------------
+;-------------------------------------------------
+;スライム使用判定
+;-------------------------------------------------
+@COM_ABLE150
+;アイテムを持っているか、アイテムなし設定もしくはエリアでないとだめ
+SIF ITEM:蒼の魔術書 == 0 && NOITEM == 0 && NO:PLAYER != [[キャラ:エルファリア・ラーグラーデ]]
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;道具使用中はダメ
+SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]] || TEQUIP:ボールギャグ || TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:獣姦プレイ)
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+;新妻プレイ中はダメ
+SIF TEQUIP:コスプレ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+
+
+RETURN 1
+
+@COM_ABLE151
+;スライム膣内進入
+SIF TEQUIP:スライム生成 == 0
+	RETURN 0
+;オトコだとダメ
+SIF TALENT:オトコ
+	RETURN 0
+;貞操帯を付けているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+@COM_ABLE152
+;スライム肛門進入
+SIF TEQUIP:スライム生成 == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+@COM_ABLE153
+;スライムオナニー
+SIF TEQUIP:スライム生成 == 0
+	RETURN 0
+;パンツか上着下・ズボンタイプを着てるとダメ
+SIF (CFLAG:着衣状態 & 17)
+	RETURN 0
+;黒ストッキングだとダメ
+SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	RETURN 0
+;オムツをはいているとダメ
+SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+
+@COM_ABLE154
+;スライム口辱
+SIF TEQUIP:スライム生成 == 0
+	RETURN 0
+RETURN 1
+
+						;****スライムパッチ追加ここまで****
+
+;-------------------------------------------------
+;腹パン実行判定
+;-------------------------------------------------
+@COM_ABLE180
+;アイテムを持っているか、アイテムなし設定でないとダメ
+SIF TALENT:具現 == 0
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+;獣姦プレイ中はダメ
+SIF TEQUIP:獣姦プレイ
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;お風呂場プレイ中はダメ
+SIF TEQUIP:お風呂場プレイ
+	RETURN 0
+RETURN 1
+
+;-------------------------------------------------
+;テコキフェラ実行判定
+;-------------------------------------------------
+@COM_ABLE138
+;追加コマンドを許可していなければダメ
+SIF FLAG:追加コマンドなし == 1
+	RETURN 0
+;失神中はダメ
+SIF TFLAG:失神中終了 > 0
+	RETURN 0
+;従順と技巧と奉仕精神が3以上必要
+SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
+	RETURN 0
+;調教者がオトコかふたなりじゃないとダメ
+SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+	RETURN 0
+;奉仕しないがあるとダメ
+SIF TALENT:奉仕しない
+	RETURN 0
+;調教者の%CSTR:男性器呼び方%が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
+IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+		RETURN 0
+ENDIF
+;ボールギャグ使用中は不可
+SIF TEQUIP:ボールギャグ
+	RETURN 0
+;縄使用中は不可
+SIF TEQUIP:縄
+	RETURN 0
+;獣姦プレイ中なら獣姦中毒Lv2必要
+SIF TEQUIP:獣姦プレイ && ABL:噴乳中毒 < 2
+	RETURN 0
+;触手調教中はダメ
+SIF TEQUIP:触手召喚
+	RETURN 0
+;三角木馬騎乗中はダメ
+SIF TEQUIP:三角木馬騎乗
+	RETURN 0
+;顔面騎乗プレイ中はダメ
+SIF TEQUIP:顔面騎乗
+	RETURN 0
+;ズーコの着ぐるみを着てるとダメ
+SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	RETURN 0
+RETURN 1
+

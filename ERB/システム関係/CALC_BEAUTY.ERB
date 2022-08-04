@@ -1,0 +1,87 @@
+﻿;===========================================================
+;キャラ契約時の処理
+;===========================================================
+@CALC_BEAUTY
+IF TALENT:処女 == 0
+	BASE:魅力値 -= 10
+ELSEIF TALENT:アナル処女 == 0
+	BASE:魅力値 -= 5
+ELSEIF TALENT:精愛味覚 == 1
+	BASE:魅力値 -= 5
+ELSEIF TALENT:汚れ無視 == 1
+	BASE:魅力値 -= 5
+ELSEIF TALENT:肥満 == 1
+	BASE:魅力値 -= 20
+ELSEIF TALENT:剛毛 == 1
+	BASE:魅力値 -= 5
+ELSEIF TALENT:風俗嬢 == 1
+	BASE:魅力値 -= 5
+ELSEIF TALENT:高級娼婦 == 1
+	BASE:魅力値 -= 10
+ELSEIF TALENT:彼氏あり == 1
+	BASE:魅力値 -= 5
+ELSEIF TALENT:整形美人 == 1
+	BASE:魅力値 -= 5
+ELSEIF TALENT:喫煙者 == 1
+	BASE:魅力値 -= 10
+ELSEIF CFLAG:ファーストキスの相手 == 1
+	BASE:魅力値 -= 5
+ENDIF
+
+;===========================================================
+;魅力値の減少
+;===========================================================
+@CALC_B_TRAINEND
+
+X = 0
+
+X += 5
+
+IF TFLAG:処女喪失 == 1
+	X += 10
+ENDIF
+IF TFLAG:アナル処女喪失 == 1
+	X += 5
+ENDIF
+IF TFLAG:ファーストキス == 1
+	X += 5
+ENDIF
+IF TFLAG:ファーストキス口以外 == 1
+	X += 10
+ENDIF
+IF TFLAG:ビデオ配信 == 1
+	X += 5
+ENDIF
+IF BASE:体力 < 500
+	X += RAND:6
+ENDIF
+
+BASE:魅力値 -= X
+IF BASE:魅力値 <= 0
+	BASE:魅力値 = 0
+ENDIF
+
+CALL AUT_LVUPPER
+
+;===========================================================
+;翌月処理
+;===========================================================
+@CALC_B_NEXTMONTH
+
+X = 0
+
+REPEAT CHARANUM
+	IF COUNT == 0
+		CONTINUE
+	ELSE
+		X += RAND:6
+		SIF TALENT:COUNT:おしゃれ == 1
+			X += RAND:6
+		X += ABL:COUNT:美容感覚
+		BASE:COUNT:魅力値 += X
+		IF BASE:COUNT:魅力値 >= MAXBASE:COUNT:魅力値
+			BASE:COUNT:魅力値 = MAXBASE:COUNT:魅力値
+		ENDIF
+		X = 0
+	ENDIF
+REND

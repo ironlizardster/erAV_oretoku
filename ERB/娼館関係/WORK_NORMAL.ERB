@@ -1,0 +1,729 @@
+﻿;;各種通常営業の内容と結果を計算します
+;;客の数、満足度の決定、営業結果による経験の増加、お金の入手、体力の減少はYUUKAKU_Rにある関数を使って一括で計算しています
+;;計算順は客の数→満足度→営業結果の良し悪し→お金、経験、否定の珠、体力の減少、の順のはずです……
+;eraIm@s_ver.0.17βdより流用して改造(pawapokya-)
+
+;===========================================================
+;会話営業
+;===========================================================
+@WORK_1ST
+
+CALL WORK_PERSON_A
+
+;客の欲望(0～2)をチェック
+;キャラの欲望が客の欲望を上回れば欲望の二倍、下回れば等倍を客の満足度に加算
+A = RAND:3
+IF A <= ABL:欲望
+	D += ABL:欲望 * 2
+ELSE
+	D += ABL:欲望
+ENDIF
+
+;奉仕精神と露出癖は等倍加算
+D += ABL:奉仕精神
+D += ABL:露出癖
+
+E = 0
+
+;従順が2以下なら満足度は半減
+IF ABL:信頼 <= 2
+	D /= 2
+ENDIF
+
+;話術が2以下なら満足度は半減
+IF ABL:話術 <= 2
+	D /= 2
+ENDIF
+
+;普通の会話
+IF RAND:2 == 0
+	SIF (FLAG:指導テキスト設定 & 2) == 0
+		PRINTFORML %CALLNAME:TARGET%は客とお酒を飲みながら、他愛も無いお喋りをした
+	TFLAG:口上番号 = 100
+	;欲望と奉仕精神は等倍、技巧は二倍を加算。話術が技巧を上回っていた場合、代わりに話術の三倍を加算
+	B += ABL:欲望
+	B += ABL:奉仕精神
+	IF ABL:技巧 > ABL:話術
+		B += ABL:技巧 * 2
+	ELSE
+		B += ABL:話術 * 3
+	ENDIF
+
+	D += B
+
+	CALL WORK_HAPPY
+
+	IF (FLAG:指導テキスト設定 & 2) == 0
+		IF A >= 2
+			PRINTFORML %CALLNAME:TARGET%との楽しい会話に客は満足したようだ
+		ELSEIF A <= 1
+			PRINTL 客との会話は弾まず、満足させることは出来なかったようだ
+		ENDIF
+	ENDIF
+
+;紳士な会話
+ELSE
+	SIF (FLAG:指導テキスト設定 & 2) == 0
+		PRINTFORML %CALLNAME:TARGET%は顧客とお酒を飲みながら、エッチな言葉を織り交ぜたお喋りをした
+	TFLAG:口上番号 = 101
+	;従順と技巧は等倍、露出癖はニ倍を加算。話術が技巧を上回っていた場合、代わりに話術の三倍を加算
+	B += ABL:信頼
+	B += ABL:露出癖 * 2
+	IF ABL:技巧 > ABL:話術
+		B += ABL:技巧
+	ELSE
+		B += ABL:話術 * 3
+	ENDIF
+	;解放か恥薄いがあればボーナス+2
+	SIF TALENT:解放 || TALENT:恥薄い
+		B += 2
+
+	D += B
+	
+	CALL WORK_HAPPY
+
+	IF (FLAG:指導テキスト設定 & 2) == 0
+		IF A >= 2
+			PRINTFORML %CALLNAME:TARGET%の挑発的な言葉と魅力的な仕草に、客は満足したようだ
+		ELSEIF A <= 1
+			PRINTL かえって場は白け、客を満足させることは出来なかったようだ
+		ENDIF
+	ENDIF
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2)
+	PRINT 会話営業
+
+;獲得額補正
+TCVAR:人気 = 1
+TCVAR:会話経験 = A + 1
+
+;体力減少量補正
+F = 1
+
+;===========================================================
+;奉仕営業
+;===========================================================
+@WORK_2ND
+
+CALL WORK_PERSON_A
+
+;客の欲望(0～3)をチェック
+;キャラの欲望が客の欲望を上回れば欲望の二倍、下回れば等倍を客の満足度に加算
+A = RAND:4
+IF A <= ABL:欲望
+	D += ABL:欲望 * 2
+ELSE
+	D += ABL:欲望
+ENDIF
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	IF CFLAG:労役中のフラグ == 2
+		PRINTFORML %CALLNAME:TARGET%は客の前に跪き、その性器に奉仕を行なった
+	ELSEIF CFLAG:労役中のフラグ == 7
+		PRINTFORML %CALLNAME:TARGET%は体中を泡で包み、全身で客の体を洗いあげた
+	ENDIF
+ENDIF
+
+TFLAG:口上番号 = 102
+;奉仕精神、精液中毒は等倍、技巧、奉仕技術は二倍を加算
+D += ABL:奉仕精神
+D += ABL:精液中毒
+D += ABL:技巧 * 2
+D += ABL:奉仕技術 * 2
+
+;従順が3以下なら満足度は半減
+SIF ABL:信頼 <= 3
+	D /= 2
+
+;オトコの場合ホモっ気が1以下なら満足度は半減
+SIF TALENT:オトコ && ABL:ＢＬっ気 <= 1
+	D /= 2
+
+;献身的ならボーナス+2
+SIF TALENT:献身的
+	D += 2
+
+CALL WORK_HAPPY
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	IF A >= 3
+		IF ABL:技巧 >= 3
+			PRINTFORML %CALLNAME:TARGET%は、その巧みな技巧で客を虜にした
+		ELSEIF ABL:奉仕精神 >= 4
+			PRINTFORML %CALLNAME:TARGET%の熱のこもった奉仕に、客は大変スッキリとした
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%の奉仕に、客は大変に満足したようだ
+		ENDIF
+	ELSEIF A == 2
+		PRINTFORML %CALLNAME:TARGET%の奉仕で客はスッキリしたようだ
+	ELSEIF A < 2
+		PRINTFORML しかしながら、%CALLNAME:TARGET%の奉仕では客を満足させられなかった
+	ENDIF
+ENDIF
+
+;ファーストキス
+IF CFLAG:ファーストキスの相手 == -1
+	PRINTFORML %CALLNAME:TARGET%は見知らぬ男のペニスにファーストキスを捧げた……
+		CFLAG:ファーストキスの相手 = 2
+			IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0
+				CSTR:ファーストキスの相手 = 知らないおじさんの%CSTR:男性器呼び方%
+			ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1
+				CSTR:ファーストキスの相手 = 知らないおじさんの%CSTR:男性器呼び方%
+			ENDIF
+		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
+		CFLAG:ファーストキス喪失月 = DAY:1
+		CFLAG:ファーストキス喪失日 = DAY:2
+		CFLAG:ファーストキス喪失場所 = 7
+		CFLAG:ファーストキス喪失シチュ = 1
+	;異常体験に＋１
+	EXP:異常経験 += 1
+ENDIF
+
+TCVAR:精液経験 = G
+TCVAR:フェラ経験 = G
+TCVAR:売春経験 = G
+SIF TALENT:オトコ
+	TCVAR:ＢＬ経験 = G
+
+;常連客がいれば営業愛情経験増加
+SIF TALENT:常連客 == 1
+	TCVAR:営業愛情経験 = 2
+
+;通常愛情経験が少なければ、得られる営業愛情経験増加
+IF EXP:愛情経験 <= 30
+	TCVAR:営業愛情経験 *= 5
+ELSEIF  EXP:愛情経験 <= 50
+	TCVAR:営業愛情経験 *= 4
+ELSEIF EXP:愛情経験 <= 100
+	TCVAR:営業愛情経験 *= 3
+ELSEIF EXP:愛情経験 >= 200
+	TCVAR:営業愛情経験 /= 2
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2)
+	PRINT 奉仕営業
+
+;獲得額補正
+TCVAR:人気 = 2
+
+;体力減少量補正
+F = 3
+
+;===========================================================
+;Ａ営業
+;===========================================================
+@WORK_3RD
+
+CALL WORK_PERSON_A
+
+;客の欲望(0～4)をチェック
+;キャラの欲望が客の欲望を上回れば欲望の二倍、下回れば等倍を客の満足度に加算
+A = RAND:5
+IF A <= ABL:欲望
+	D += ABL:欲望 * 2
+ELSE
+	D += ABL:欲望
+ENDIF
+
+E = 0
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	PRINTFORM %CALLNAME:TARGET%は客に何度もアナルを犯され
+	IF CFLAG:労役でコンドーム使用
+		PRINTFORML た
+	ELSE
+		PRINTFORML 、腸内に精液を注ぎ込まれた
+	ENDIF
+ENDIF
+
+TFLAG:口上番号 = 103
+;Ａ感覚は三倍、技巧は二倍、奉仕精神と性交技術と性交中毒は等倍を加算
+D += ABL:Ａ感覚 * 3
+D += ABL:技巧 * 2
+D += ABL:奉仕精神
+D += ABL:性交技術
+D += ABL:性交中毒
+
+;Ａ経験が少ないと満足度は少し減少
+SIF EXP:Ａ経験 <= EXPLV:4
+	D -= 3
+
+;従順が4以下なら満足度は半減
+SIF ABL:信頼 <= 4
+	D /= 2
+
+;オトコの場合ホモっ気が2以下なら満足度は半減
+SIF TALENT:オトコ && ABL:ＢＬっ気 <= 2
+	D /= 2
+
+;尻穴狂いならボーナス+5
+SIF TALENT:尻穴狂い
+	D += 5
+
+CALL WORK_HAPPY
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	IF A >= 3
+		IF ABL:技巧 >= 3
+			PRINTFORML %CALLNAME:TARGET%はその技巧で客たちを虜にした
+		ELSEIF ABL:Ａ感覚 >= 4
+			PRINTFORML 客たちは%CALLNAME:TARGET%のアナルの具合の良さに満足した
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%のアナルは、客たちを大変に満足させた
+		ENDIF
+	ELSEIF A == 2
+		PRINTFORML %CALLNAME:TARGET%のアナルに、客たちはそれなりに満足はしたらしい
+	ELSEIF A < 2
+		PRINTFORML しかしながら、%CALLNAME:TARGET%のアナルでは客たちの欲求を満たす事は出来なかった
+	ENDIF
+ENDIF
+IF TALENT:アナル処女 == 1 && CFLAG:アナル処女喪失の相手 == 0
+	PRINTFORMW 【売春でアナル処女喪失】
+	TALENT:アナル処女 = 0
+	CFLAG:アナル処女喪失の相手 = 2
+	CSTR:アナル処女喪失の相手 = 知らないオトコの人
+	;異常体験に＋１
+	EXP:異常経験 += 1
+	CFLAG:アナル処女喪失年齢 = BASE:実年齢
+	CFLAG:アナル処女喪失月 = DAY:1
+	CFLAG:アナル処女喪失日 = DAY:2
+	CFLAG:アナル処女喪失場所 = 7
+	CFLAG:アナル処女喪失シチュ = 0
+ENDIF
+
+;Ａ経験が少ないと、体力の減少量と否定の珠の取得量が増加するフラグを点灯
+SIF EXP:Ａ経験 <= 200
+	CFLAG:Ａ売春で否定の珠増加フラグ = 1
+
+TCVAR:Ａ経験 = G
+TCVAR:性交経験 = G
+TCVAR:精液経験 = G
+TCVAR:売春経験 = G
+SIF TALENT:オトコ
+	TCVAR:ＢＬ経験 = G * 2
+
+;常連客がいれば営業愛情経験増加
+SIF TALENT:常連客 == 1
+		TCVAR:営業愛情経験 = 4
+
+;通常愛情経験が少なければ、得られる営業愛情経験増加
+IF EXP:愛情経験 <= 30
+	TCVAR:営業愛情経験 *= 5
+ELSEIF  EXP:愛情経験 <= 50
+	TCVAR:営業愛情経験 *= 4
+ELSEIF EXP:愛情経験 <= 100
+	TCVAR:営業愛情経験 *= 3
+ELSEIF EXP:愛情経験 >= 200
+	TCVAR:営業愛情経験 /= 2
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2)
+	PRINT Ａ営業
+
+;獲得額補正
+;コンドームあり
+IF CFLAG:労役でコンドーム使用
+	TCVAR:人気 = 3
+;コンドームなし
+ELSE
+	TCVAR:人気 = 5
+ENDIF
+
+;オトコの場合Ａ営業の獲得額増加
+SIF TALENT:オトコ
+	TCVAR:人気 += 1
+
+;体力減少量補正
+F = 6
+
+;===========================================================
+;Ｖ営業
+;===========================================================
+@WORK_4TH
+
+CALL WORK_PERSON_A
+
+;客の欲望(0～4)をチェック
+;キャラの欲望が客の欲望を上回れば欲望の二倍、下回れば等倍を客の満足度に加算
+A = RAND:5
+IF A <= ABL:欲望
+	D += ABL:欲望 * 2
+ELSE
+	D += ABL:欲望
+ENDIF
+
+E = 0
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	PRINTFORM %CALLNAME:TARGET%は客に何度も膣を犯され
+	IF CFLAG:労役でコンドーム使用
+		PRINTFORML た
+	ELSE
+		PRINTFORML 、膣内に精液を注ぎ込まれた
+	ENDIF
+ENDIF
+
+TFLAG:口上番号 = 104
+;Ｖ感覚は三倍、技巧は二倍、奉仕精神と性交技術と性交中毒は等倍を加算
+D += ABL:Ｖ感覚 * 3
+D += ABL:技巧 * 2
+D += ABL:奉仕精神
+D += ABL:性交技術
+D += ABL:性交中毒
+
+;Ｖ経験が少ないと満足度は少し減少
+SIF EXP:Ｖ経験 <= EXPLV:4
+	D -= 3
+
+;従順が4以下だと満足度半減
+SIF ABL:信頼 <= 4
+	D /= 2
+
+;セックス狂いならボーナス+5
+SIF TALENT:セックス狂
+	D += 5
+
+CALL WORK_HAPPY
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	IF A >= 3
+		IF ABL:技巧 >= 3
+			PRINTFORML %CALLNAME:TARGET%は、その技巧で客たちを虜にした
+		ELSEIF ABL:Ｖ感覚 >= 4
+			PRINTFORML 客たちは、%CALLNAME:TARGET%の膣の具合に満足したようだ
+		ELSE
+			PRINTFORML %CALLNAME:TARGET%の膣に、客たちは大変に満足したようだ
+		ENDIF
+	ELSEIF A == 2
+		PRINTFORML %CALLNAME:TARGET%の膣の具合に、とりあえず客は満足したようだ
+	ELSEIF A < 2
+		PRINTFORML しかしながら、%CALLNAME:TARGET%の性器は客たちの欲求を満たす事は出来なかった
+	ENDIF
+ENDIF
+
+;処女だった場合、処女喪失フラグを点灯
+IF TALENT:処女
+	PRINTFORMW 【売春で処女喪失】
+	CFLAG:Ｖ売春で処女喪失フラグ = 2
+	TALENT:処女 = 0
+	;初体験の相手を記録
+	IF CFLAG:初体験の相手 == 0
+		CFLAG:初体験の相手 = 2
+		CSTR:処女喪失の相手 = 知らないオトコの人
+		CFLAG:処女喪失年齢 = BASE:実年齢
+		CFLAG:処女喪失月 = DAY:1
+		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失場所 = 7
+		CFLAG:処女喪失シチュ = 0
+	ENDIF
+	;異常経験に＋２
+	TCVAR:異常経験 += 2
+ENDIF
+
+
+TCVAR:Ｖ経験 = G
+TCVAR:性交経験 = G
+TCVAR:精液経験 = G
+TCVAR:売春経験 = G
+
+;常連客がいれば営業愛情経験増加
+SIF TALENT:常連客 == 1
+	TCVAR:営業愛情経験 = 4
+
+;通常愛情経験が少なければ、得られる営業愛情経験増加
+IF EXP:愛情経験 <= 30
+	TCVAR:営業愛情経験 *= 5
+ELSEIF  EXP:愛情経験 <= 50
+	TCVAR:営業愛情経験 *= 4
+ELSEIF EXP:愛情経験 <= 100
+	TCVAR:営業愛情経験 *= 3
+ELSEIF EXP:愛情経験 >= 200
+	TCVAR:営業愛情経験 /= 2
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2)
+	PRINT Ｖ営業
+
+;獲得額補正
+;コンドームあり
+IF CFLAG:労役でコンドーム使用
+	TCVAR:人気 = 4
+;コンドームなし
+ELSE
+	TCVAR:人気 = 7
+ENDIF
+
+;消費体力補正
+F = 6
+
+;===========================================================
+;ＳＭ営業
+;===========================================================
+@WORK_5TH
+
+CALL WORK_PERSON_A
+
+;客の欲望(0～5)をチェック
+;キャラの欲望が客の欲望を上回れば欲望の二倍、下回れば等倍を客の満足度に加算
+A = RAND:6
+IF A <= ABL:欲望
+	D += ABL:欲望 * 2
+ELSE
+	D += ABL:欲望
+ENDIF
+
+;技巧は等倍を加算。サドっ気とマゾっ気のうち高い方の等倍を加算（[サド][マゾ]は5LV分の効果）
+D += ABL:技巧
+IF ABL:サドっ気 + TALENT:サド * 5 >= ABL:マゾっ気 + TALENT:マゾ * 5
+	D += ABL:サドっ気 + TALENT:サド * 5
+ELSE
+	D += ABL:マゾっ気 + TALENT:マゾ * 5
+ENDIF
+
+E = 0
+
+;従順が4以下だった場合、満足度は半減
+IF ABL:信頼 <= 4
+	D /= 2
+ENDIF
+
+;サドっ気＋[サド]がマゾっ気＋[マゾ]以上
+IF ABL:サドっ気 + TALENT:サド * 5 >= ABL:マゾっ気 + TALENT:マゾ * 5
+	SIF (FLAG:指導テキスト設定 & 2) == 0
+		PRINTFORML %CALLNAME:TARGET%は縄で縛られた客の上で嗜虐的な微笑を浮かべながら腰を振り、精を搾り取った……
+	TFLAG:口上番号 = 105
+	;技巧とサドっ気のそれぞれ二倍を加算（[サド]は5LV分の効果）
+	D += ABL:技巧 * 2
+	D += ABL:サドっ気 * 2
+	D += TALENT:サド * 5
+
+	CALL WORK_HAPPY
+
+	IF (FLAG:指導テキスト設定 & 2) == 0
+		IF A >= 3
+			IF ABL:技巧 >= 3
+				PRINTL その技巧で客たちを虜にしたようだ
+			ELSEIF ABL:サドっ気 >= 4
+				PRINTFORML 客たちは%CALLNAME:TARGET%に嬲られるのを十分に堪能したようだ
+			ELSE
+				PRINTL 客たちは大変に満足したようだ
+			ENDIF
+		ELSEIF A == 2
+			PRINTFORML %CALLNAME:TARGET%とのＳＭプレイに、とりあえずは満足したようだ
+		ELSEIF A < 2
+			PRINTL しかし残念ながら、客たちの欲求を満たす事は出来なかったようだ
+		ENDIF
+	ENDIF
+	
+	;Ｖ経験が少ないと、体力の減少量と否定の珠の取得量が増加するフラグを点灯
+	SIF EXP:Ｖ経験 <= 200
+		CFLAG:Ｖ売春で否定の珠増加フラグ = 1
+
+	TCVAR:Ｖ経験 = G
+	TCVAR:性交経験 = G
+	TCVAR:精液経験 = G
+	TCVAR:嗜虐快楽経験 = G
+	TCVAR:売春経験 = G
+
+;マゾっ気＋[マゾ]がサドっ気＋[サド]より高い
+ELSE
+	SIF (FLAG:指導テキスト設定 & 2) == 0
+		PRINTFORML %CALLNAME:TARGET%は客に身動きが取れないように縛られ、そのままその膣を犯された……
+	TFLAG:口上番号 = 106
+	;技巧とマゾっ気のそれぞれ二倍を加算（[マゾ]は5LV分の効果）
+	D += ABL:技巧 * 2
+	D += ABL:マゾっ気 * 2
+	D += TALENT:マゾ * 5
+
+	CALL WORK_HAPPY
+
+	IF (FLAG:指導テキスト設定 & 2) == 0
+		IF A >= 3
+			IF ABL:技巧 >= 3
+				PRINTL その技巧で客たちを虜にしたようだ
+			ELSEIF ABL:マゾっ気 >= 4
+				PRINTFORML 客たちは泣いて懇願する%CALLNAME:TARGET%に嗜虐心を十分満足させたようだ
+			ELSE
+				PRINTL 客たちは大変に満足したようだ
+			ENDIF
+		ELSEIF A == 2
+			PRINTFORML %CALLNAME:TARGET%とのＳＭプレイに、とりあえずは満足したようだ
+		ELSEIF A < 2
+			PRINTL しかし残念ながら、客たちの欲求を満たす事は出来なかったようだ
+		ENDIF
+	ENDIF
+	
+	;Ｖ経験が少ないと、体力の減少量と否定の珠の取得量が増加するフラグを点灯
+	SIF EXP:Ｖ経験 <= 200
+		CFLAG:Ｖ売春で否定の珠増加フラグ = 1
+		
+	TCVAR:Ｖ経験 = G
+	TCVAR:性交経験 = G
+	TCVAR:精液経験 = G
+	TCVAR:被虐快楽経験 = G
+	TCVAR:売春経験 = G
+
+ENDIF
+
+;常連客がいれば営業愛情経験増加
+SIF TALENT:常連客 == 1
+	TCVAR:営業愛情経験 = 4
+;通常愛情経験が少なければ、得られる営業愛情経験増加
+IF EXP:愛情経験 <= 30
+	TCVAR:営業愛情経験 *= 5
+ELSEIF EXP:愛情経験 <= 50
+	TCVAR:営業愛情経験 *= 4
+ELSEIF EXP:愛情経験 <= 100
+	TCVAR:営業愛情経験 *= 3
+ELSEIF EXP:愛情経験 >= 200
+	TCVAR:営業愛情経験 /= 2
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2)
+	PRINT ＳＭ営業
+
+;獲得額補正
+;コンドームあり
+IF CFLAG:労役でコンドーム使用
+	TCVAR:人気 = 5
+;コンドームなし
+ELSE
+	TCVAR:人気 = 10
+ENDIF
+
+;消費体力補正
+F = 8
+
+;処女だった場合、処女喪失フラグを点灯
+IF TALENT:処女
+	PRINTFORML 【売春で処女喪失】
+	CFLAG:Ｖ売春で処女喪失フラグ = 2
+	TALENT:処女 = 0
+	;初体験の相手を記録
+	SIF CFLAG:初体験の相手 == 0
+		CFLAG:初体験の相手 = 2
+		CSTR:アナル処女喪失の相手 = 知らないオトコの人
+	;異常経験に＋２
+	TCVAR:異常経験 += 2
+ENDIF
+
+;===========================================================
+;出張営業
+;===========================================================
+@WORK_6TH
+
+CALL WORK_PERSON_A
+
+;客の家に行くので強制的に人数は一人に
+G = 1
+
+;客の欲望(0～4)をチェック
+;キャラの欲望が客の欲望を上回れば欲望の二倍、下回れば等倍を客の満足度に加算
+A = RAND:5
+IF A <= ABL:欲望
+	D += ABL:欲望 * 2
+ELSE
+	D += ABL:欲望
+ENDIF
+
+;話術と奉仕精神の等倍を加算
+D += ABL:話術
+D += ABL:奉仕精神
+
+E = 0
+
+;従順が4以下だった場合、満足度は半減
+IF ABL:信頼 <= 4
+	D /= 2
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2) == 0
+	PRINTFORML %CALLNAME:TARGET%は客の家まで出向き、濃厚なサービスを行った……
+TFLAG:口上番号 = 107
+
+;技巧と奉仕精神のそれぞれ二倍を加算
+D += ABL:技巧 * 2
+D += ABL:奉仕精神 * 2
+
+CALL WORK_HAPPY
+
+IF (FLAG:指導テキスト設定 & 2) == 0
+	IF A >= 3
+		PRINTFORML 客は%CALLNAME:TARGET%と非常に充実した時間を送ったようだ
+	ELSEIF A == 2
+		PRINTFORML 客は%CALLNAME:TARGET%と楽しい一時を過ごしたようだ
+	ELSEIF A < 2
+		PRINTL どうやら客はあまり楽しめなかったようだ
+	ENDIF
+ENDIF
+
+;処女だった場合、処女喪失フラグを点灯
+IF TALENT:処女
+	PRINTFORML 【売春で処女喪失】
+	CFLAG:Ｖ売春で処女喪失フラグ = 2
+	TALENT:処女 = 0
+	;初体験の相手を記録
+	SIF CFLAG:初体験の相手 == 0
+		CFLAG:初体験の相手 = 2
+		CSTR:処女喪失の相手 = 常連のお客さん
+	;異常経験に＋２
+	TCVAR:異常経験 += 2
+ENDIF
+;ファーストキス
+IF CFLAG:ファーストキスの相手 == -1
+	PRINTFORML ファーストキス
+		CFLAG:ファーストキスの相手 = 4
+			IF TALENT:ギャル系 == 0
+				CSTR:ファーストキスの相手 = 常連のお客さん
+			ELSEIF TALENT:ギャル系 == 1
+				CSTR:ファーストキスの相手 = 常連のお客さんのチンポ
+			ENDIF
+ENDIF
+
+;Ｖ経験が少ないと、体力の減少量と否定の珠の取得量が増加するフラグを点灯
+SIF EXP:Ｖ経験 <= 200
+	CFLAG:Ｖ売春で否定の珠増加フラグ = 1
+
+;素質『求愛』がついていた場合はCFLAG:50とCFLAG:51を消す(これらは体力の減少量と否定の珠の取得量の増加にのみ関わるため)
+IF TALENT:常連客 == 1
+	CFLAG:Ｖ売春で処女喪失フラグ = 0
+	CFLAG:Ｖ売春で否定の珠増加フラグ = 0
+ENDIF
+
+TCVAR:Ｖ経験 = G
+TCVAR:性交経験 = G
+TCVAR:精液経験 = G
+TCVAR:フェラ経験 = G
+TCVAR:売春経験 = G
+
+
+;常連客がいれば営業愛情経験増加
+SIF TALENT:常連客 == 1
+	TCVAR:営業愛情経験 = 8
+;通常愛情経験が少なければ、得られる営業愛情経験増加
+IF EXP:愛情経験 <= 30
+	TCVAR:営業愛情経験 *= 5
+ELSEIF EXP:愛情経験 <= 50
+	TCVAR:営業愛情経験 *= 4
+ELSEIF EXP:愛情経験 <= 100
+	TCVAR:営業愛情経験 *= 3
+ELSEIF EXP:愛情経験 >= 200
+	TCVAR:営業愛情経験 /= 2
+ENDIF
+
+SIF (FLAG:指導テキスト設定 & 2)
+	PRINT 出張営業
+
+;獲得額補正
+;コンドームあり
+IF CFLAG:労役でコンドーム使用
+	TCVAR:人気 = 10
+;コンドームなし
+ELSE
+	TCVAR:人気 = 30
+ENDIF
+
+;消費体力補正
+F = 6
+
