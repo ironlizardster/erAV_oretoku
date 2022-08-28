@@ -1109,7 +1109,7 @@ REPEAT CHARANUM
 	LOSEBASE:体力 = G * 30
 
 	;小柄だと疲労増加
-	SIF TALENT:小柄体型
+	SIF TALENT:小柄
 		TIMES LOSEBASE:体力 , 1.20
 	;露出狂だと疲労半減
 	SIF TALENT:露出狂

@@ -1117,9 +1117,9 @@ ENDIF
 IF TALENT:オトコ && TALENT:PLAYER:オトコ == 0 && TEQUIP:縄 == 0 && ABL:信頼 < 3
 	SIF TALENT:大柄
 		RETURN 0
-	SIF TALENT:小柄体型 == 0 && TALENT:PLAYER:大柄 == 0
+	SIF TALENT:小柄 == 0 && TALENT:PLAYER:大柄 == 0
 		RETURN 0
-	SIF TALENT:PLAYER:小柄体型
+	SIF TALENT:PLAYER:小柄
 		RETURN 0
 ENDIF
 ;対象の欲情がある程度高まってないとダメ
@@ -1183,9 +1183,9 @@ ENDIF
 IF TALENT:オトコ && TALENT:PLAYER:オトコ == 0 && TEQUIP:縄 == 0 && ABL:信頼 < 3
 	SIF TALENT:大柄
 		RETURN 0
-	SIF TALENT:小柄体型 == 0 && TALENT:PLAYER:大柄 == 0
+	SIF TALENT:小柄 == 0 && TALENT:PLAYER:大柄 == 0
 		RETURN 0
-	SIF TALENT:PLAYER:小柄体型
+	SIF TALENT:PLAYER:小柄
 		RETURN 0
 ENDIF
 ;対象の欲情がある程度高まってないとダメ
@@ -3231,8 +3231,8 @@ IF ASSIPLAY
 	SIF ABL:ASSI:信頼 < 4 && TALENT:ASSI:サド == 0
 		RETURN 0
 ENDIF
-;小柄体型なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
-SIF TALENT:小柄体型 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
+;小柄なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
+SIF TALENT:小柄 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
 		RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -3295,8 +3295,8 @@ IF ASSIPLAY
 	SIF ABL:ASSI:信頼 < 4 && TALENT:ASSI:サド == 0
 		RETURN 0
 ENDIF
-;小柄体型なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
-SIF TALENT:小柄体型 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
+;小柄なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
+SIF TALENT:小柄 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -3368,8 +3368,8 @@ IF ASSIPLAY
 	SIF ABL:ASSI:信頼 < 4 && TALENT:ASSI:サド == 0
 		RETURN 0
 ENDIF
-;小柄体型なら従順が4以上かつマゾっ気が4以上かつ拡張経験5以上じゃないと実行できない
-SIF TALENT:小柄体型 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3 || EXP:Ａ拡張経験 < 5)
+;小柄なら従順が4以上かつマゾっ気が4以上かつ拡張経験5以上じゃないと実行できない
+SIF TALENT:小柄 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3 || EXP:Ａ拡張経験 < 5)
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚

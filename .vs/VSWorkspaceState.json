@@ -1,7 +1,13 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\CSV",
+    "\\ERB",
+    "\\ERB\\キャラ関数",
+    "\\ERB\\システム関係",
+    "\\ERB\\組み込み関数",
+    "\\ERB\\組み込み関数\\汎用関数",
+    "\\ERB\\組み込み関数\\汎用関数\\RANDCHOOSE"
   ],
-  "SelectedNode": "\\はじめに読んでね.txt",
   "PreviewInSolutionExplorer": false
 }

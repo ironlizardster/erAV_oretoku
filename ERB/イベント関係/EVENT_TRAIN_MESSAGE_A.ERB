@@ -1154,9 +1154,9 @@ ELSEIF SELECTCOM == 3
 			PRINT 涙を浮かべて
 	SIF TALENT:大柄
 		PRINT 大きな身体を折り曲げて
-	SIF TALENT:小柄体型
+	SIF TALENT:小柄
 		PRINT 小さな身体で
-	SIF TALENT:小柄体型 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ)
+	SIF TALENT:小柄 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ)
 		PRINT 自らの中に
 	IF TEQUIP:バイブ && TEQUIP:アナルバイブ
 		PRINT ２本のバイブをくわえ込んでいる卑猥な様を見せつつ、
@@ -1272,7 +1272,7 @@ ELSEIF SELECTCOM == 11 && TFLAG:失神中終了 <= 1
 			PRINTL ヴァギナにバイブを突っ込んでやるとすぐに快楽に蕩けた表情になった。
 		ELSEIF A < 10000
 			PRINTFORM %CALLNAME:TARGET%は
-			SIF TALENT:小柄体型
+			SIF TALENT:小柄
 				PRINT その小さな体で
 			PRINTL 極太のバイブをくわえ込んで、激しい振動による刺激と快楽にその裸身を若鮎のように跳ねさせている。
 		ELSE
@@ -1345,7 +1345,7 @@ ELSEIF SELECTCOM == 13 && TFLAG:失神中終了 <= 1
 			PRINTFORM %CALLNAME:TARGET%はアナルへの刺激に激しく感じまくって
 			IF TALENT:大柄
 				PRINT その長身を
-			ELSEIF TALENT:小柄体型
+			ELSEIF TALENT:小柄
 				PRINT その小さな身体を
 			ELSE
 				PRINT その汗まみれの全身を
@@ -1430,7 +1430,7 @@ ELSEIF SELECTCOM == 34
 		PRINTFORM %CALLNAME:TARGET%は
 		IF TALENT:大柄
 			PRINTFORM その長身でのしかかり、
-		ELSEIF TALENT:小柄体型
+		ELSEIF TALENT:小柄
  			PRINTFORM その小さな身体で
 		ENDIF
 		IF (TALENT:抑圧 || TALENT:快感の否定) && !TALENT:ギャル系

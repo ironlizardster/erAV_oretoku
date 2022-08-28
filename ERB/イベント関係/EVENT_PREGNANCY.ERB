@@ -274,22 +274,22 @@ SIF C < 0
 	C = 1
 
 IF CFLAG:T:F >= 30
-	SIF RAND:((1 + TALENT:T:小柄体型 * 2) * C) == 0
+	SIF RAND:((1 + TALENT:T:小柄 * 2) * C) == 0
 		CFLAG:T:誰によって妊娠させられたか = P
 ELSEIF CFLAG:T:F >= 20
-	SIF RAND:((2 + TALENT:T:小柄体型 * 2) * C) == 0
+	SIF RAND:((2 + TALENT:T:小柄 * 2) * C) == 0
 		CFLAG:T:誰によって妊娠させられたか = P
 ELSEIF CFLAG:T:F >= 15
-	SIF RAND:((3 + TALENT:T:小柄体型 * 2) * C) == 0
+	SIF RAND:((3 + TALENT:T:小柄 * 2) * C) == 0
 		CFLAG:T:誰によって妊娠させられたか = P
 ELSEIF CFLAG:T:F >= 10
-	SIF RAND:((4 + TALENT:T:小柄体型 * 2) * C) == 0
+	SIF RAND:((4 + TALENT:T:小柄 * 2) * C) == 0
 		CFLAG:T:誰によって妊娠させられたか = P
 ELSEIF CFLAG:T:F >= 5
-	SIF RAND:((5 + TALENT:T:小柄体型 * 2) * C) == 0
+	SIF RAND:((5 + TALENT:T:小柄 * 2) * C) == 0
 		CFLAG:T:誰によって妊娠させられたか = P
 ELSEIF CFLAG:T:F >= 1
-	SIF RAND:((6 + TALENT:T:小柄体型 * 2) * C) == 0
+	SIF RAND:((6 + TALENT:T:小柄 * 2) * C) == 0
 		CFLAG:T:誰によって妊娠させられたか = P
 ENDIF
 

@@ -49,6 +49,8 @@ SIF LOCAL:7 && !FLAG:歌姫の騎士団
 SIF LOCAL:7 && FLAG:歌姫の騎士団
 	PRINTL [17] - 歌姫の騎士団支部に行く
 						;****都子ラボ追加ここまで****
+SIF GETCHARA([[キャラ:マルチナ・パラディスス]]) > 0 && CFLAG:GETCHARA([[キャラ:マルチナ・パラディスス]]):売却助手可能 == 2
+	PRINTL [18] - マルチナの別荘
 DRAWLINE
 PRINTL  [999] - 戻る
 
@@ -74,6 +76,8 @@ ELSEIF RESULT == 17 && LOCAL:7 && !FLAG:歌姫の騎士団
 ELSEIF RESULT == 17 && LOCAL:7 && FLAG:歌姫の騎士団
 	CALL MIYAKO_LABO
 						;****都子ラボ追加ここまで****
+ELSEIF RESULT == 18
+	CALL MARTINA_LABO
 ELSEIF RESULT == 999
 	RETURN 0
 ELSE

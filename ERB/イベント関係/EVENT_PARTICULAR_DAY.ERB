@@ -205,12 +205,12 @@ REPEAT CHARANUM
 
 			PRINTFORM %CALLNAME:MASTER%がそれを受け取ると、%CALLNAME:COUNT%は
 
-			;素質ごとに描写（好感度1500未満／好感度2000未満／小柄体型／無関心／臆病）
+			;素質ごとに描写（好感度1500未満／好感度2000未満／小柄／無関心／臆病）
 			IF CFLAG:COUNT:好感度 < 1500
 				PRINT にっこりと微笑み、
 			ELSEIF CFLAG:COUNT:好感度 < 2000
 				PRINTFORM %CALLNAME:MASTER%をぎゅっと抱きしめ
-			ELSEIF TALENT:COUNT:小柄体型
+			ELSEIF TALENT:COUNT:小柄
 				PRINTFORM 背伸びして%CALLNAME:MASTER%に口づけし、
 			ELSE
 				PRINTFORM 微笑んで%CALLNAME:MASTER%に口づけし、

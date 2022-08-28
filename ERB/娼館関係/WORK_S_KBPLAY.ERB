@@ -376,9 +376,9 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:巨乳
 		B += 2
 	;貧乳をみる
-	;小柄体型・幼稚・未熟があれば逆にボーナス
+	;小柄・幼稚・未熟があれば逆にボーナス
 	IF TALENT:COUNT:貧乳
-		IF TALENT:COUNT:小柄体型 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+		IF TALENT:COUNT:小柄 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
 			B += 2
 		ELSE
 			B -= 2

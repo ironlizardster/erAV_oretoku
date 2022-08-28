@@ -1970,9 +1970,9 @@ ELSEIF TFLAG:408 == 4
 ENDIF
 
 ;体型の素質を登録
-;身長が150cm未満で[小柄体型]、170cm以上で[大柄]に
+;身長が150cm未満で[小柄]、170cm以上で[大柄]に
 IF BASE:(LOCAL:4):身長 < 150
-	TALENT:(LOCAL:4):小柄体型 = 1
+	TALENT:(LOCAL:4):小柄 = 1
 ELSEIF BASE:(LOCAL:4):身長 >= 170
 	TALENT:(LOCAL:4):大柄 = 1
 ENDIF

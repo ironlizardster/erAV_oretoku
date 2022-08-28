@@ -483,9 +483,9 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:巨乳
 		B += 2
 	;貧乳をみる
-	;小柄体型・幼稚・未熟があれば逆にボーナス
+	;小柄・幼稚・未熟があれば逆にボーナス
 	IF TALENT:COUNT:貧乳
-		IF TALENT:COUNT:小柄体型 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+		IF TALENT:COUNT:小柄 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
 			B += 2
 		ELSE
 			B -= 2
@@ -1156,7 +1156,7 @@ Z = 0
 
 PRINTFORM 床の上に両手両足を突いた%CALLNAME:Y%の背中に、
 PRINTFORMW %CALLNAME:MASTER%が体重をかけて跨った
-IF (TALENT:Y:小柄体型 && TALENT:MASTER:小柄体型 == 0) || (TALENT:Y:大柄 == 0 && TALENT:MASTER:大柄)
+IF (TALENT:Y:小柄 && TALENT:MASTER:小柄 == 0) || (TALENT:Y:大柄 == 0 && TALENT:MASTER:大柄)
 	PRINTFORML %CALLNAME:Y%は%CALLNAME:MASTER%の体重にほとんど押し潰されそうになり、
 	PRINTFORMW 顔を真っ赤にして両腕を突っ張り、辛うじて胴体を浮かせているのがやっとだ
 	PRINTFORM 正直、この騎手と
@@ -1166,7 +1166,7 @@ IF (TALENT:Y:小柄体型 && TALENT:MASTER:小柄体型 == 0) || (TALENT:Y:大�
 		PRINT 牝
 	ENDIF
 	PRINTFORML 馬の組み合わせは無理があったかもしれない――
-ELSEIF (TALENT:Y:大柄 && TALENT:MASTER:大柄 == 0) || (TALENT:Y:小柄体型 == 0 && TALENT:MASTER:小柄体型)
+ELSEIF (TALENT:Y:大柄 && TALENT:MASTER:大柄 == 0) || (TALENT:Y:小柄 == 0 && TALENT:MASTER:小柄)
 	PRINTFORMW %CALLNAME:Y%の背中は、%CALLNAME:MASTER%の体重にもしっかりと持ち堪えている
 	PRINTFORM これは、なかなか頼りがいのある
 	IF TALENT:Y:オトコ
@@ -1223,14 +1223,14 @@ REPEAT CHARANUM
 	;大柄
 	SIF TALENT:大柄
 		E += 5
-	;小柄体型
-	SIF TALENT:小柄体型
+	;小柄
+	SIF TALENT:小柄
 		E -= 5
 	;未熟
 	SIF TALENT:未熟
 		E -= 5
-	;主人と組んで主人が小柄体型
-	SIF TARGET == Y && TALENT:MASTER:小柄体型
+	;主人と組んで主人が小柄
+	SIF TARGET == Y && TALENT:MASTER:小柄
 		E += 5
 	;主人と組んで主人が大柄
 	SIF TARGET == Y && TALENT:MASTER:大柄
@@ -1273,11 +1273,11 @@ REPEAT CHARANUM
 	;大柄
 	SIF TALENT:大柄
 		CFLAG:55 -= 5
-	;小柄体型
-	SIF TALENT:小柄体型
+	;小柄
+	SIF TALENT:小柄
 		CFLAG:55 += 10
-	;主人と組んで主人が小柄体型
-	SIF TARGET == Y && TALENT:MASTER:小柄体型
+	;主人と組んで主人が小柄
+	SIF TARGET == Y && TALENT:MASTER:小柄
 		CFLAG:55 -= 5
 	;主人と組んで主人が大柄
 	SIF TARGET == Y && TALENT:MASTER:大柄
