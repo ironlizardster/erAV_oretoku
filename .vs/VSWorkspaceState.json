@@ -1,13 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\CSV",
     "\\ERB",
-    "\\ERB\\キャラ関数",
-    "\\ERB\\システム関係",
-    "\\ERB\\組み込み関数",
-    "\\ERB\\組み込み関数\\汎用関数",
-    "\\ERB\\組み込み関数\\汎用関数\\RANDCHOOSE"
+    "\\ERB\\システム関係"
   ],
+  "SelectedNode": "\\ERB\\システム関係\\GENITAL_SLANG.ERB",
   "PreviewInSolutionExplorer": false
 }

@@ -2,7 +2,7 @@
 #DIM 対象
 LOCAL:1 = 0
 FOR LOCAL, 0, VARSIZE("TALENT")
-	SIF CHARACTER_EDIT_IGNORE_TALENT(LOCAL)
+	SIF CHARACTER_EDIT_IGNORE_TALENT(対象, LOCAL)
 		CONTINUE
 	SIF TALENTNAME:LOCAL == ""
 		CONTINUE
@@ -19,7 +19,7 @@ PRINTL
 #DIM 対象
 #DIM 入力値
 ;ガード節
-SIF CHARACTER_EDIT_IGNORE_TALENT(入力値) || TALENTNAME:入力値 == ""
+SIF CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値) || TALENTNAME:入力値 == ""
 	RETURN 0
 
 TALENT:対象:入力値 = !TALENT:対象:入力値
@@ -242,8 +242,10 @@ SELECTCASE 入力値
 			TALENT:対象:両刀 = 0
 ENDSELECT
 
-@CHARACTER_EDIT_IGNORE_TALENT(ARG:0)
+@CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値)
 #FUNCTION
+#DIM 対象
+#DIM 入力値
 {
-RETURNF GROUPMATCH(ARG:0, [[TALENT:身体特徴素質]], [[TALENT:陥落素質]], [[TALENT:性格素質]], [[TALENT:性的関心素質]], [[TALENT:技能素質]], [[TALENT:職業素質]], [[TALENT:特技素質]], [[TALENT:秘密素質]], [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (TALENT:対象:オトコ && GROUPMATCH(ARG:0, [[TALENT:ギャル系]])) || (!TALENT:対象:オトコ && GROUPMATCH(ARG:0, [[TALENT:チャラ男]]))
+RETURNF GROUPMATCH(入力値, [[TALENT:身体特徴素質]], [[TALENT:陥落素質]], [[TALENT:性格素質]], [[TALENT:性的関心素質]], [[TALENT:技能素質]], [[TALENT:職業素質]], [[TALENT:特技素質]], [[TALENT:秘密素質]], [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:ギャル系]])) || (!TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:チャラ男]]))
 }

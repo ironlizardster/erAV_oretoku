@@ -61,8 +61,6 @@ TARGET = CHARANUM - 1
 NO = FLAG:汎用女優カウント + MIN_NO_RANDOM_CHARA
 FLAG:汎用女優カウント ++
 
-CALL CHARACTER_EDIT(TARGET)
-
 ;名前の決定(※素質決定後に行う)
 PRINTL 名前を入力してください
 INPUTS
@@ -121,7 +119,7 @@ PRINTFORML %NAME:TARGET%の新たな芸名は%RESULTS%でよろしいですか�
 PRINTFORML 名前を《%NAME:TARGET%》、呼び方を《%CALLNAME:TARGET%》、芸名を《%NICKNAME:TARGET%》に変更しました
 
 ;素質と能力の決定
-CALL RANDOM_CHARA_SETTING(ARG:0, ARG:1, ARG:2)
+CALL RANDOM_CHARA_SETTING()
 
 ;初期設定(※素質決定後に行う)
 ;CALL INIT_NEWCHARA(TARGET)
@@ -132,6 +130,8 @@ CALL RANDOM_CHARA_SETTING(ARG:0, ARG:1, ARG:2)
 ;衣装の設定
 ;CALL RANDOM_CHARA_CLOTH_SETTING()
 
+CALL CHARACTER_EDIT(TARGET)
+
 ;ターゲットの再設定
 TARGET = LOCAL:0
 
@@ -141,28 +141,22 @@ RETURN CHARANUM - 1
 ;汎用武将の素質と能力を決定する
 ;ARG:0=ケモ率、ARG:1=能力傾向、ARG:2=性別
 ;-------------------------
-@RANDOM_CHARA_SETTING(ARG:0, ARG:1, ARG:2)
-IF ARG:2 > 5
-	THROW @"RANDOM_CHARA_SETTING 関数に設定された性別が不正です(ARG:2 = {ARG:2})"
-ENDIF
+@RANDOM_CHARA_SETTING(ARG:0)
 
 ;性別を指定の通りに設定、指定がない場合は設定された男性率に応じて性別をランダムに決定
-LOCAL:0 = ARG:2
-IF LOCAL:0 <= -1
-	IF RAND:100 < 5
-		IF RAND:30 == 0
-			LOCAL:0 = 4
-		ELSEIF RAND:30 == 0
-			LOCAL:0 = 3
-		ELSE
-			LOCAL:0 = 0
-		ENDIF
+IF RAND:100 < 5
+	IF RAND:30 == 0
+		LOCAL:0 = 4
+	ELSEIF RAND:30 == 0
+		LOCAL:0 = 3
 	ELSE
-		IF RAND:20 == 0
-			LOCAL:0 = 2
-		ELSE
-			LOCAL:0 = 1
-		ENDIF
+		LOCAL:0 = 0
+	ENDIF
+ELSE
+	IF RAND:20 == 0
+		LOCAL:0 = 2
+	ELSE
+		LOCAL:0 = 1
 	ENDIF
 ENDIF
 
@@ -172,21 +166,34 @@ SELECTCASE LOCAL:0
 		TALENT:オトコ = 1
 		TALENT:オトコの娘 = 0
 		TALENT:童貞 = 1
-		TALENT:処女 = 1
 		TALENT:アナル処女 = 1
 	CASE 1
 		;女性
 		TALENT:オトコ = 0
 		TALENT:オトコの娘 = 0
-		TALENT:童貞 = 1
 		TALENT:処女 = 1
 		TALENT:アナル処女 = 1
 	CASE 2
-		;男の娘
+		;女性ふたなり
+		TALENT:オトコ = 0
+		TALENT:オトコの娘 = 0
+		TALENT:童貞 = 1
+		TALENT:処女 = 1
+		TALENT:アナル処女 = 1
+		TALENT:ふたなり = 1
+	CASE 3
+		;男の娘ふたなり
 		TALENT:オトコ = 1
 		TALENT:オトコの娘 = 1
 		TALENT:童貞 = 1
 		TALENT:処女 = 1
+		TALENT:アナル処女 = 1
+		TALENT:ふたなり = 1
+	CASE 4
+		;男の娘
+		TALENT:オトコ = 1
+		TALENT:オトコの娘 = 1
+		TALENT:童貞 = 1
 		TALENT:アナル処女 = 1
 ENDSELECT
 
@@ -599,164 +606,6 @@ IF ARG:0 == 0
 ELSE
 	TALENT:(101 + LOCAL:7 * 2) = 1
 ENDIF
-
-;-------------------------
-;奴隷を買う
-;-------------------------
-@RECRUIT_RANDOM_CHARA
-#DIM hold = -1
-#DIM showingHold = 0
-#DIM FIRST_LINE
-LOCAL:10 = 0
-LOCAL:11 = 0
-hold = -1
-showingHold = 0
-
-DRAWLINE
-PRINTL 新たな奴隷を募集します
-PRINTL 求める人材を設定して下さい
-DRAWLINE
-PRINTL ～募集要項～
-
-FIRST_LINE = LINECOUNT
-$SHOW_LOOP
-
-PRINTL ◆性別は
-PRINT    
-;CALL PRINT_SELECT_BUTTON(" 20{問わない}", 20, LOCAL:11 == 0)
-;CALL PRINT_SELECT_BUTTON(" 21{男    性}", 21, LOCAL:11 == 1)
-;CALL PRINT_SELECT_BUTTON(" 22{女    性}", 22, LOCAL:11 == 2)
-;CALL PRINT_SELECT_BUTTON(" 23{女    双}", 23, LOCAL:11 == 3)
-;CALL PRINT_SELECT_BUTTON(" 23{男    双}", 24, LOCAL:11 == 4)
-;CALL PRINT_SELECT_BUTTON(" 24{男 の 娘}", 25, LOCAL:11 == 5)
-;CALL PRINT_SELECT_BUTTON(" 24{男 娘 双}", 26, LOCAL:11 == 6)
-
-PRINTL 
-PRINTL
-PRINTL ◆名前は
-PRINT    
-;CALL PRINT_SELECT_BUTTON(" 30{和    名}", 30, LOCAL:13 == 0)
-;CALL PRINT_SELECT_BUTTON(" 31{洋    風}", 31, LOCAL:13 == 1)
-;CALL PRINT_SELECT_BUTTON(" 32{中    華}", 32, LOCAL:13 == 2)
-PRINTL
-DRAWLINE
-PRINTBUTTON "  0[この条件で募集]", 0
-PRINTL 
-PRINTBUTTON "  1[キャンセル]", 1
-PRINTL 
-
-REDRAW 0
-
-$INPUT_LOOP
-INPUT
-
-IF RESULT == 1
-	REDRAW 1
-	RETURN 0
-ELSEIF RESULT >= 10 && RESULT <= 15 && LOCAL:10 != RESULT - 10
-	LOCAL:10 = RESULT - 10
-	CLEARLINE LINECOUNT - FIRST_LINE
-	GOTO SHOW_LOOP
-ELSEIF RESULT >= 20 && RESULT <= 26 && LOCAL:11 != RESULT - 20
-	LOCAL:11 = RESULT - 20
-	CLEARLINE LINECOUNT - FIRST_LINE
-	GOTO SHOW_LOOP
-ELSEIF RESULT >= 30 && RESULT <= 32 && LOCAL:13 != RESULT - 30
-	LOCAL:13 = RESULT - 30
-	CLEARLINE LINECOUNT - FIRST_LINE
-	GOTO SHOW_LOOP
-ELSEIF RESULT != 0
-	CLEARLINE 1
-	GOTO INPUT_LOOP
-ENDIF
-
-REDRAW 1
-
-$INPUT_LOOP_NEWCHARA
-
-;指定の条件でランダムキャラを作成
-CALL CREATE_CHARA(LOCAL:5, LOCAL:10, LOCAL:11 - 1, LOCAL:13)
-LOCAL:2 = RESULT
-
-;奴隷の作成に失敗した場合
-IF LOCAL:2 < 0
-	PRINTW 残念ながら目ぼしい奴隷は見つかりませんでした…
-
-;成功
-ELSE
-	DRAWLINE
-	PRINTFORML 「この奴隷などいかがでしょうか？」
-
-	$INPUT_LOOP_SELECT
-
-	;キャラの情報を表示
-	DRAWLINE
-	CALL SHOW_INFO(LOCAL:2)
-	DRAWLINE
-
-	PRINTBUTTON "[この奴隷を買う]", 0
-	PRINT    
-	PRINTBUTTON "[別の奴隷を探す]", 1
-	PRINT    
-	IF hold == -1
-	ELSEIF showingHold
-		PRINTBUTTON "[進む]", 2
-	ELSE
-		PRINTBUTTON "[戻る]", 2
-	ENDIF
-
-	PRINT    
-	PRINTBUTTON "[中止]", 9
-	PRINTL 
-	PRINTFORML 購入費用: {1000 + GET_FILTER_COST()}
-
-
-	$INPUT_LOOP_TREAT
-	INPUT
-
-	IF RESULT == 0 && (1000 + GET_FILTER_COST()) < MONEY
-		PRINTFORMW %NAME:(LOCAL:2)%を購入しました
-		IF hold != -1
-			DELCHARA hold
-		ENDIF
-		MONEY -= (1000 + GET_FILTER_COST())
-		RETURN 1
-	ELSEIF RESULT == 0
-		PRINTW 所持金が足りません
-		;作成したキャラを削除
-		DELCHARA CHARANUM - 1
-	ELSEIF RESULT == 1
-		IF hold != -1
-			;いらないキャラを削除
-			DELCHARA hold
-		ENDIF
-		hold = CHARANUM - 1
-		showingHold = 0
-		GOTO INPUT_LOOP_NEWCHARA
-	ELSEIF RESULT == 2
-		IF showingHold
-			showingHold = 0
-		ELSE
-			showingHold = 1
-		ENDIF
-			;スワップ
-		LOCAL:21 = hold
-		hold    = LOCAL:2
-		LOCAL:2 = LOCAL:21
-		GOTO INPUT_LOOP_SELECT
-	ELSEIF RESULT == 9
-		;PRINTW 今回は購入を見送ることにしました
-		;作成したキャラを削除
-		DELCHARA CHARANUM - 1
-		IF hold != -1
-			DELCHARA CHARANUM - 1
-		ENDIF
-	ELSE
-		GOTO INPUT_LOOP_TREAT
-	ENDIF
-ENDIF
-
-RETURN 0
 
 ;-------------------------
 ;ランダムフィルタにかけた値段を引っ張ってくる
