@@ -1,7 +1,7 @@
 ﻿これはerAV_ver030人柱版を元にバグを直したり俺得システムを追加したり自作アプリEraCsvManagerのバグ取りのいけにえにしたりするために改造したものです。
 海外在住なのでしたらば掲示板とか書き込めないし原作者WAGSさんには特に許可をとったりしていません。
 なにかバグか要望のある方はDiscordまでお越しください
-https://discord.gg/RBcFrGvd
+https://discord.gg/mhxYq9qx
 開発に参加してやるぜという奇特な方はこちらにお願いします。
 https://github.com/ironlizardster/erAV_oretoku
 どちらかというとストーリー重視のバリアントなのに物語書くのが絶滅的なので誰かオナシャス。
