@@ -1,0 +1,1 @@
+.\Emuera1824+v15+EMv13fix+EEv22.exe -Debug
