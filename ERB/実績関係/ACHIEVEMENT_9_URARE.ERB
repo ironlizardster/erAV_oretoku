@@ -15,6 +15,8 @@ FOR COUNT, 0, CHARANUM
 		CONTINUE
 	SIF TALENT:COUNT:はるうられ == 1 && CFLAG:COUNT:売却助手可能 >= 1
 		LOCAL++
+	SIF LOCAL >= 3
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:9 == 0 && DIFFICULTY_CHECK() && LOCAL >= 3
@@ -25,29 +27,34 @@ RETURN GLOBAL:9
 
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_9
+#DIM 春風南解放
+#DIM 神園すみれ解放
+
 ; 解説文
 PRINTFORML とある売春組織から解放された「春風南」「神園すみれ」「二葉志乃」……
 PRINTFORML しかしそんな彼女たちはやはり、性を売り物にする運命から逃れられなかったようです
 PRINTFORMW ですが、とある売春組織にいた頃よりは自由も保障されている分、幸せなのかもしれません
+
 ; ボーナスなどの処理はここ以降に記述する
-IF GETCHARA([[キャラ:春風南_重複1]],0) < 0 || GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0 || !FLAG:はるうられ解放
+春風南解放 = GETCHARA([[キャラ:春風南_重複1]],0) < 0 && GETCHARA([[キャラ:春風南]],0) > 0
+神園すみれ解放 = GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0 && GETCHARA([[キャラ:神園すみれ]],0) > 0
+IF FLAG:難易度 > 0 && (春風南解放 || 神園すみれ解放 || !FLAG:はるうられ解放)
 	PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
 	PRINTFORMW 以下のボーナスの中からお好みのものを選んで下さい
 	$INPUT_LOOP_7
 	DRAWLINE
-	SIF GETCHARA([[キャラ:春風南_重複1]],0) < 0
+	SIF 春風南解放
 		PRINTFORML  [0] - 春風南が「かわいそうなこと」になっていないＩＦ
-	SIF GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0
+	SIF 神園すみれ解放
 		PRINTFORML  [1] - 神園すみれが「かわいそうなこと」になっていないＩＦ
 	SIF !FLAG:はるうられ解放
 		PRINTFORML  [2] - 他の「かわいそうなこと」になった女の子たちの解放
 	DRAWLINE
 	PRINTFORML  [999] - 戻る
 	INPUT
-	IF RESULT == 0 && GETCHARA([[キャラ:春風南_重複1]],0) < 0
+	IF RESULT == 0 && 春風南解放
 		PRINTFORML 春風南が「かわいそうなこと」になっていない「もしも」を実現します
 		PRINTFORML 能力が全て初期化され、最初から育成し直しになりますがよろしいですか？
-		PRINTFORML また、このボーナスは全てのセーブデータで一度しか受けられません！
 		$INPUT_LOOP_MINAMI
 		PRINTL [0] - はい
 		PRINTL [1] - いいえ
@@ -65,10 +72,9 @@ IF GETCHARA([[キャラ:春風南_重複1]],0) < 0 || GETCHARA([[キャラ:神�
 	ELSEIF RESULT == 0 && GETCHARA([[キャラ:春風南_重複1]],0) > 0
 		PRINTFORMW 春風南が「かわいそうなこと」になっていなかったＩＦを既に実現しています
 		GOTO INPUT_LOOP_7
-	ELSEIF RESULT == 1 && GETCHARA([[キャラ:神園すみれ_重複1]],0) < 0
+	ELSEIF RESULT == 1 && 神園すみれ解放
 		PRINTFORML 神園すみれが「かわいそうなこと」になっていない「もしも」を実現します
 		PRINTFORML 能力が全て初期化され、最初から育成し直しになりますがよろしいですか？
-		PRINTFORML また、このボーナスは全てのセーブデータで一度しか受けられません！
 		$INPUT_LOOP_SUMIRE
 		PRINTL [0] - はい
 		PRINTL [1] - いいえ

@@ -197,19 +197,19 @@ IF TIME == 1
 	CALL JOB_EXEC
 	CALL MISSION_DAY
 
-	SIF PBAND:145 >= 3 && CHARANUM < FLAG:事務所規模 && FLAG:さち加入イベント発生済み == 0
+	SIF ミッション結果:145 >= 3 && CHARANUM < FLAG:事務所規模 && FLAG:さち加入イベント発生済み == 0
 		CALL SACHI_APPROACHING_CALC
 
-	IF PBAND:52 == 4 && CHARANUM < FLAG:事務所規模 && FLAG:姫乃加入イベント発生済み == 0
+	IF ミッション結果:52 == 4 && CHARANUM < FLAG:事務所規模 && FLAG:姫乃加入イベント発生済み == 0
 		IF GETCHARA([[キャラ:佐々木美乃里]]) != -1
 			LOCAL = GETCHARA([[キャラ:佐々木美乃里]])
 			SIF TALENT:LOCAL:ＡＶ女優 == 1
 					CALL HIMENO_APPROACHING_CALC
 		ENDIF
 	ENDIF
-	SIF PBAND:65 >= 3 && CHARANUM < FLAG:事務所規模 && FLAG:環加入イベント発生済み == 0
+	SIF ミッション結果:65 >= 3 && CHARANUM < FLAG:事務所規模 && FLAG:環加入イベント発生済み == 0
 		CALL TAMAKI_APPROACHING_CALC
-	SIF PBAND:308 == 4 && CHARANUM < FLAG:事務所規模 && FLAG:マルチナ加入イベント != 0 && FLAG:マルチナ加入イベント発生済み == 0
+	SIF ミッション結果:308 == 4 && CHARANUM < FLAG:事務所規模 && FLAG:マルチナ加入イベント != 0 && FLAG:マルチナ加入イベント発生済み == 0
 		CALL MARTINA_APPROACHING_CALC
 	SIF FLAG:女子寮建設
 		CALL LYCEE_EVENT_WEEKEND
@@ -558,7 +558,7 @@ IF (FLAG:薬品自動投与 & 2) && MONEY >= 2000 * LOCAL
 			CONTINUE
 		ELSE
 			CFLAG:COUNT:排卵促進剤使用 = 1
-			SIF PBAND:303 >= 3
+			SIF ミッション結果:303 >= 3
 				CFLAG:COUNT:排卵促進剤使用 += RAND:2
 			MONEY -= 2000
 			PRINTFORML 《%NAME:COUNT%に排卵誘発剤を飲ませました》

@@ -15,6 +15,8 @@ FOR COUNT, 0, CHARANUM
 		CONTINUE
 	SIF TALENT:COUNT:処女 == 1 && CFLAG:COUNT:初体験の相手 == 0 && TALENT:COUNT:アナル処女 == 1 && TALENT:COUNT:永遠の愛 == 1 && TALENT:COUNT:淫魔 == 0 && TALENT:COUNT:アンドロイド == 0
 		LOCAL++
+	SIF LOCAL >= 5
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:5 == 0 && DIFFICULTY_CHECK() && MONEY >= 5000000 && EXP:MASTER:[[EXP:キャラ売却経験（MASTER）]] == 0 && FLAG:報奨金受け取り == 0 && LOCAL >= 5
@@ -26,13 +28,15 @@ RETURN GLOBAL:5
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_5
 ; 解説文
-PRINTFORM 大勢の女の子たちとキャッキャウフフしながらも、女の子たちを決して汚すことはなかった
-PRINTFORML %CALLNAME:MASTER%にぴったりの実績ですね
-PRINTFORML そんな%CALLNAME:MASTER%のことを『処女厨』と呼ぶ人がいるかもしれません
-PRINTFORMW ですが、これからもその姿勢を貫けばきっと尊敬の念を抱いてくれる人がいるはずでしょう
+TEMP_STR = 大勢の女の子たちとキャッキャウフフしながらも、女の子たちを決して汚すことはなかった
+TEMP_STR += @"%CALLNAME:MASTER%にぴったりの実績ですね<br>"
+TEMP_STR += @"そんな%CALLNAME:MASTER%のことを『処女厨』と呼ぶ人がいるかもしれません<br>"
+TEMP_STR += "ですが、これからもその姿勢を貫けばきっと尊敬の念を抱いてくれる人がいるはずでしょう"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
 ;空いてたので仮にFLAG:553を使用
-IF FLAG:処女厨ボーナス受け取り == 0 || (GLOBAL:30 == 1)
+IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:30
 	DRAWLINE
 	PRINTFORML %CALLNAME:MASTER%はかなり過酷な実績を解除しました
 	PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります

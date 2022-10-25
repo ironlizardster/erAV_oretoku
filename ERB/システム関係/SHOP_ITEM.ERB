@@ -474,7 +474,7 @@ ELSEIF BOUGHT == 40
 	PRINTFORML 《%NAME:RESULT%は妊娠しやすくなりました》
 	CFLAG:RESULT:排卵促進剤使用 = 1
 	CFLAG:RESULT:危険日 = 1
-	SIF PBAND:303 >= 3
+	SIF ミッション結果:303 >= 3
 		CFLAG:RESULT:排卵促進剤使用 += RAND:2
 	WAIT
 						;****使用アイテム連続購入改造ここから****

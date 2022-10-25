@@ -14,6 +14,8 @@ FOR COUNT, 0, CHARANUM
 		CONTINUE
 	SIF (TALENT:COUNT:童顔 || BASE:COUNT:実年齢 <= 15) && TALENT:COUNT:淫魔 == 0 && TALENT:COUNT:アンドロイド == 0 && TALENT:COUNT:天使 == 0 && CFLAG:COUNT:売却助手可能 == 2
 		LOCAL++
+	SIF LOCAL >= 4
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:1 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
@@ -25,16 +27,17 @@ RETURN GLOBAL:1
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_1
 ; 解説文
-PRINTFORML 大勢の高○生未満の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
-PRINTFORM とある偉大な
-FONTSTYLE 4
-PRINTFORM ロリコン
-FONTSTYLE 0
-PRINTFORML 先人は言いました
-PRINTFORML 「まったく、小○生は最高だぜ!!」
-PRINTFORMW ……と
+TEMP_STR = %@"大勢の高○生未満の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね<br>"%
+TEMP_STR += "とある偉大な<font color='red'><s><b>ロリコン</b></s></font>先人は言いました<br>"
+TEMP_STR += "「まったく、小○生は最高だぜ!!」<br>"
+TEMP_STR += "……と<br>"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
-IF TALENT:MASTER:ロリコン == 0
-	PRINTFORMW そんな%CALLNAME:MASTER%には【ロリコン】の称号を授けましょう
+IF FLAG:難易度 > 0 && TALENT:MASTER:ロリコン == 0
+	TEMP_STR = %@"そんな%CALLNAME:MASTER%には【ロリコン】の称号を授けましょう<br>"%
+	CALL HTML_PRINT_P(TEMP_STR)
+;WAIT
+;CLEARLINE 1
 	TALENT:MASTER:ロリコン = 1
 ENDIF

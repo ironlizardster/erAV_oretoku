@@ -15,6 +15,8 @@ FOR COUNT, 0, CHARANUM
 		CONTINUE
 	SIF TALENT:COUNT:淫魔 && TALENT:COUNT:恋心 == 1
 		LOCAL++
+	SIF LOCAL >= 4
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:4 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
@@ -26,42 +28,54 @@ RETURN GLOBAL:4
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_4
 ; 解説文
-PRINTFORML 大勢の淫魔の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
-PRINTFORM とあるエロゲーのタイトルのようなシチュエーションがお好みのようなので
-PRINTFORMW これからも『サキュバス』たちとのトラブルをお楽しみください
+TEMP_STR = %@"大勢の淫魔の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね<br>"%
+TEMP_STR += "とあるエロゲーのタイトルのようなシチュエーションがお好みのようなので"
+TEMP_STR += "これからも『サキュバス』たちとのトラブルをお楽しみください"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
-IF FLAG:とらぶるサッキュバスボーナス受け取り == 0
+IF FLAG:難易度 > 0 && FLAG:とらぶるサッキュバスボーナス受け取り == 0
 	PRINTL
-	PRINTFORML 「ふふ、そこのボウヤ……わたくしとイイコトしない？」
-	PRINTFORML ある日、%CALLNAME:MASTER%が街を歩いていると露出度の高い、妖艶な美女が突然声をかけてきた
-	PRINTFORM 風俗嬢にしては所作のひとつひとつに気品があり、
-	PRINTFORML ただそこにいるだけで誘蛾灯のようにオトコを引き寄せる魔性の魅力がある
-	PRINTFORML これまでに何人もの淫魔と接してきた%CALLNAME:MASTER%には、彼女の正体が淫魔であることは明確だった
-	PRINTFORMW 今日もこってりと絞られたばかりなので、あまり相手にしたくはないのだが……
-	PRINTFORML 「あら残念
-	PRINTFORML 　せっかく人間の女では味わえない極上の快楽をボウヤに味あわせてあげれたのに……って何ですって？
-	PRINTFORM 　ボウヤ、
+
+	TEMP_STR = 「ふふ、そこのボウヤ……わたくしとイイコトしない？」<br><p align='LEFT'>
+	TEMP_STR += @"ある日、%CALLNAME:MASTER%が街を歩いていると露出度の高い、妖艶な美女が突然声をかけてきた<br>"
+	TEMP_STR += "風俗嬢にしては所作のひとつひとつに気品があり、"
+	TEMP_STR += "ただそこにいるだけで誘蛾灯のようにオトコを引き寄せる魔性の魅力がある<br>"
+	TEMP_STR += @"これまでに何人もの淫魔と接してきた%CALLNAME:MASTER%には、彼女の正体が淫魔であることは明確だった<br>"
+	TEMP_STR += "今日もこってりと絞られたばかりなので、あまり相手にしたくはないのだが……"
+	CALL HTML_PRINT_P(TEMP_STR,"CENTER")
+
+	TEMP_STR = 「あら残念<br>
+	TEMP_STR += "せっかく人間の女では味わえない極上の快楽をボウヤに味あわせてあげれたのに……って何ですって？<br>"
 	IF GETCHARA([[キャラ:エリス]]) > 0
-		PRINTFORM エリス
+		TEMP_STR += "エリス"
 	ELSEIF GETCHARA([[キャラ:リリス]]) > 0
-		PRINTFORM リリス
+		TEMP_STR += "リリス"
 	ELSE
-		PRINTFORM 淫魔の存在
+		TEMP_STR += "淫魔の存在"
 	ENDIF
-	PRINTFORML を知っているというの！？
-	PRINTFORML 　……そう、それなら話が早いわ
-	PRINTFORMW 　わたくしはアイリス、同胞を探しにこの世界にやってきた淫魔よ」
-	PRINTFORM アイリスと名乗った淫魔の女性が言うには、異なる世界……つまりこの世界で淫魔の存在が観測されたらしく、
-	PRINTFORML 同胞を迎え入れるために彼女はやってきたらしい
-	PRINTFORML 「なるほど……つまりボウヤの知っている淫魔は効率良くオトコの精を吸い取れるのね？
-	PRINTFORML 　そしてボウヤには淫魔に対する抗体……とでも言うべきものがある、と
-	PRINTFORML 　ついでに、抗体持ちのボウヤの精は淫魔にとって極上の味でもある……
-	PRINTFORML 　それをもってボウヤが何人もの淫魔を飼いならしている……なるほど
-	PRINTFORML 　ふふ、おもしろいわ……ボウヤ、わたくしを他の淫魔と同じように飼い慣らしてみない？
-	PRINTFORMW 　まあ、ボウヤがダメと言っても勝手について行くけどね♪」
-	PRINTFORML ……どうやら妙なところで気に入られたようだった
-	PRINTFORM 細かい事情などは後ほど説明すればいいか、と思いながら、%CALLNAME:MASTER%は予定を変更して報告の
-	PRINTFORML 為に歌音のもとへと赴くことにした……
+	TEMP_STR += "を知っているというの！？」"
+	CALL HTML_PRINT_P(TEMP_STR,"CENTER")
+
+	TEMP_STR = 「……そう、それなら話が早いわ<br>
+	TEMP_STR += "わたくしはアイリス、同胞を探しにこの世界にやってきた淫魔よ」"
+	CALL HTML_PRINT_P(TEMP_STR,"CENTER")
+
+	TEMP_STR = アイリスと名乗った淫魔の女性が言うには、異なる世界……つまりこの世界で淫魔の存在が観測されたらしく、
+	TEMP_STR += "同胞を迎え入れるために彼女はやってきたらしい<p align='CENTER'>"
+	TEMP_STR += "「なるほど……つまりボウヤの知っている淫魔は効率良くオトコの精を吸い取れるのね？<br>"
+	TEMP_STR += "そしてボウヤには淫魔に対する抗体……とでも言うべきものがある、と<br>"
+	TEMP_STR += "ついでに、抗体持ちのボウヤの精は淫魔にとって極上の味でもある……<br>"
+	TEMP_STR += "それをもってボウヤが何人もの淫魔を飼いならしている……なるほど<br>"
+	TEMP_STR += "ふふ、おもしろいわ……ボウヤ、わたくしを他の淫魔と同じように飼い慣らしてみない？<br>"
+	TEMP_STR += "まあ、ボウヤがダメと言っても勝手について行くけどね♪」"
+	CALL HTML_PRINT_P(TEMP_STR)
+
+	TEMP_STR = ……どうやら妙なところで気に入られたようだった<br>
+	TEMP_STR += @"細かい事情などは後ほど説明すればいいか、と思いながら、%CALLNAME:MASTER%は予定を変更して報告の"
+	TEMP_STR += "為に歌音のもとへと赴くことにした……"
+	CALL HTML_PRINT_P(TEMP_STR)
+
 	PRINTL
 	PRINTFORML 《アイリスが女優候補になりました》
 	PRINTW

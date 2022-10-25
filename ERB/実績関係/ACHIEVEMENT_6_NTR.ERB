@@ -15,6 +15,8 @@ FOR COUNT, 0, CHARANUM
 		CONTINUE
 	SIF TALENT:COUNT:彼氏あり == 1 && EXP:COUNT:彼氏とのＳＥＸ回数 >= 1
 		LOCAL++
+	SIF LOCAL >= 4
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:6 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
@@ -26,13 +28,16 @@ RETURN GLOBAL:6
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_6
 ; 解説文
-PRINTFORM 大勢の女の子とそれなりにいい関係になっていたものの、そんな彼女たちの身も心も
-PRINTFORML 他の男に寝取られてしまったあなたにぴったりの実績ですね
-PRINTFORML 英語では『寝取られ』を『CUCKOLD』と言うそうです。
-PRINTFORMW 今度は寝取られないようにあなたのテクニックで女の子たちを骨抜きにしてみるといいでしょう
+TEMP_STR = 大勢の女の子とそれなりにいい関係になっていたものの、そんな彼女たちの身も心も
+TEMP_STR += @"他の男に寝取られてしまった%CALLNAME:MASTER%にぴったりの実績ですね<br>"
+TEMP_STR += "英語では『寝取られ』を『CUCKOLD』と言うそうです。<br>"
+TEMP_STR += @"今度は寝取られないように%CALLNAME:MASTER%のテクニックで女の子たちを骨抜きにしてみるといいでしょう"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
-PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
-PRINTFORM 引き継ぎプレイではなく、新規ゲーム開始後にこの実績を選択していただくと主人の技量が4
-PRINTFORMW 以下の場合、主人の技量が５となります
-SIF ABL:MASTER:技巧 <= 4
+TEMP_STR = %@"そんな%CALLNAME:MASTER%にはボーナスを贈ります<br>"%
+TEMP_STR += "引き継ぎプレイではなく、新規ゲーム開始後にこの実績を選択していただくと主人の技量が4"
+TEMP_STR += "以下の場合、主人の技量が５となります"
+CALL HTML_PRINT_P(TEMP_STR)
+SIF FLAG:難易度 > 0 && ABL:MASTER:技巧 <= 4
 	ABL:MASTER:技巧 = 5

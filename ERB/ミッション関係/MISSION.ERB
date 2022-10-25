@@ -15,7 +15,7 @@ SIF ASSI >= 0
 ;ミッション受領中かチェック
 LOCAL:1 = 0
 FOR LOCAL, 1, 350
-	SIF PBAND:LOCAL == 1
+	SIF ミッション結果:LOCAL == 1
 		LOCAL:1 = LOCAL
 NEXT
 ; 描画処理
@@ -123,8 +123,8 @@ DRAWLINE
 ; ミッション達成率の表示
 ;--------------------------------------------
 ; 引数
-;  ARG:0 走査を始めるPBANDの値
-;  ARG:1 走査を終えるPBANDの値
+;  ARG:0 走査を始めるミッション結果の値
+;  ARG:1 走査を終えるミッション結果の値
 ;  ARG:2 存在するミッションの数
 ;=================================================
 @MISSION_HEADER_PER(ARG:0, ARG:1, ARG:2)
@@ -132,7 +132,7 @@ DRAWLINE
 ; 達成したミッションの集計
 LOCAL:1 = 0
 FOR LOCAL, ARG:0, ARG:1 + 1
-	SIF PBAND:LOCAL > 2
+	SIF ミッション結果:LOCAL > 2
 		LOCAL:1++
 NEXT
 PRINTFORML ミッション消化率 {LOCAL:1 * 100 / ARG:2, 3}％
@@ -142,8 +142,8 @@ DRAWLINE
 ; ミッションリストの表示
 ;--------------------------------------------
 ; 引数
-;  ARG:0 走査を始めるPBANDの値
-;  ARG:1 走査を終えるPBANDの値
+;  ARG:0 走査を始めるミッション結果の値
+;  ARG:1 走査を終えるミッション結果の値
 ;=================================================
 @MISSION_LIST(ARG:0, ARG:1)
 ; 変数の定義と初期化
@@ -186,18 +186,18 @@ FOR LOCAL, PAGE * 10, PAGE * 10 + 10
 		BREAK
 	; リスト描画
 	CALLFORM MISSION_VISIBLE_{LIST:LOCAL}
-	IF PBAND:(LIST:LOCAL) == 0 && RESULT == 1
+	IF ミッション結果:(LIST:LOCAL) == 0 && RESULT == 1
 		; ミッションタイトルの取得
 		CALLFORM MISSION_TITLE_{LIST:LOCAL}
 		PRINTFORML [{LOCAL, 3}] - %RESULTS%
-	ELSEIF PBAND:(LIST:LOCAL) == 1
+	ELSEIF ミッション結果:(LIST:LOCAL) == 1
 		; ミッションタイトルの取得
 		CALLFORM MISSION_TITLE_{LIST:LOCAL}
 		PRINTFORML [{LOCAL, 3}] - %RESULTS% ○ 受領中ミッション
-	ELSEIF PBAND:(LIST:LOCAL) >= 2
-		IF PBAND:(LIST:LOCAL) == 2
+	ELSEIF ミッション結果:(LIST:LOCAL) >= 2
+		IF ミッション結果:(LIST:LOCAL) == 2
 			LOCALS = ★ 失敗
-		ELSEIF PBAND:(LIST:LOCAL) == 3
+		ELSEIF ミッション結果:(LIST:LOCAL) == 3
 			LOCALS = ☆ 成功
 		ELSE
 			LOCALS = ☆ 大成功
@@ -216,14 +216,14 @@ $INPUT_LOOP
 INPUT
 ; 既にミッションを請け負っていて、
 ; なおかつ請け負っているミッションではない場合は弾く
-IF RESULT >= 0 && RESULT < 250 && LIST:RESULT > 0 && LIST:RESULT < 50 && PBAND:(LIST:RESULT) == 0 && FLAG:ミッション受領中 > 0
+IF RESULT >= 0 && RESULT < 250 && LIST:RESULT > 0 && LIST:RESULT < 50 && ミッション結果:(LIST:RESULT) == 0 && FLAG:ミッション受領中 > 0
 	CLEARLINE 1
 	REUSELASTLINE 通常ミッションは一つしか請け負えません
 	GOTO INPUT_LOOP
-ELSEIF RESULT >= 0 && RESULT < LOCAL:1 && PBAND:(LIST:RESULT) < 2
+ELSEIF RESULT >= 0 && RESULT < LOCAL:1 && ミッション結果:(LIST:RESULT) < 2
 	LOCAL = LIST:RESULT
 	CALLFORM MISSION_INFO_{LIST:RESULT}
-	IF PBAND:LOCAL == 0
+	IF ミッション結果:LOCAL == 0
 		$INPUT_LOOP_RECEIVE
 		PRINTFORML このミッションを受領しますか？
 		PRINT [  1] - はい
@@ -231,7 +231,7 @@ ELSEIF RESULT >= 0 && RESULT < LOCAL:1 && PBAND:(LIST:RESULT) < 2
 		PRINTL [999] - ミッションの達成条件を表示する
 		INPUT
 		IF RESULT == 1
-			PBAND:LOCAL = 1
+			ミッション結果:LOCAL = 1
 			FLAG:ミッション受領中++
 			PRINTFORML ミッションを受領しました
 			CALLFORM MISSION_RECEIVE_{LOCAL}
@@ -247,7 +247,7 @@ ELSEIF RESULT >= 0 && RESULT < LOCAL:1 && PBAND:(LIST:RESULT) < 2
 		ELSE
 			GOTO MISSION_LIST
 		ENDIF
-	ELSEIF PBAND:LOCAL == 1
+	ELSEIF ミッション結果:LOCAL == 1
 		LOCAL = LIST:RESULT
 		PRINTFORML このミッションを報告しますか？
 		PRINT [1] はい
@@ -290,7 +290,7 @@ PRINTFORMW …………
 PRINTFORMW ……
 CALLFORM MISSION_CALC_{ARG}
 LOCAL = RESULT
-; PBANDに成否を格納する
+; ミッション結果に成否を格納する
 
 IF LOCAL <= 1 && BASE:MASTER:メダル > 0 
 	PRINTFORML 現在の達成度は\@ LOCAL ? 成功  # 失敗 \@です
@@ -303,11 +303,11 @@ IF LOCAL <= 1 && BASE:MASTER:メダル > 0
 ENDIF
 
 IF LOCAL == 1
-	PBAND:ARG = 3
+	ミッション結果:ARG = 3
 ELSEIF LOCAL == 2
-	PBAND:ARG = 4
+	ミッション結果:ARG = 4
 ELSE
-	PBAND:ARG = 2
+	ミッション結果:ARG = 2
 ENDIF
 ; 報酬の処理
 VARSET P, 0
@@ -434,7 +434,7 @@ FOR LOCAL, 0, CHARANUM
 			PRINTFORML ミッションの期日を迎えたキャラがいます
 			; ミッションを複数受けられるようになるとしたら考え直さないとなあ
 			FOR LOCAL:1, 1, 350
-				SIF PBAND:(LOCAL:1) == 1
+				SIF ミッション結果:(LOCAL:1) == 1
 					LOCAL:2 = LOCAL:1
 			NEXT
 			CALL MISSION_EXEC_REPORT(LOCAL:2)

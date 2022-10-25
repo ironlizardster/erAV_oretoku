@@ -240,7 +240,7 @@ IF !CAN_GET_PREGNANT(T)
 ENDIF
 
 ;獣姦で対象が動物耳じゃないなら関数終了
-IF (P == 5 && TALENT:T:動物耳 == 0) && (CFLAG:T:排卵促進剤使用 == 0 || PBAND:303 < 3)
+IF (P == 5 && TALENT:T:動物耳 == 0) && (CFLAG:T:排卵促進剤使用 == 0 || ミッション結果:303 < 3)
 	CFLAG:T:F = 0
 	RETURN 0
 ENDIF
@@ -298,7 +298,7 @@ CFLAG:T:F = 0
 
 @CAN_GET_PREGNANT(ARG)
 #FUNCTION
-RETURNF !TALENT:ARG:妊娠 && !TALENT:ARG:抱卵 && !TALENT:ARG:育児中 && CFLAG:ARG:危険日 == 1 && CFLAG:ARG:排卵促進剤使用 != -1 && (!(TALENT:ARG:アンドロイド || TALENT:ARG:淫魔 || TALENT:ARG:避妊治療済 || TALENT:ARG:性魔術 || TALENT:ARG:異界知識 || TALENT:ARG:最先端科学 || TALENT:ARG:天使 || TALENT:ARG:幽霊) || (CFLAG:ARG:排卵促進剤使用 > 0 && PBAND:303 >= 3))
+RETURNF !TALENT:ARG:妊娠 && !TALENT:ARG:抱卵 && !TALENT:ARG:育児中 && CFLAG:ARG:危険日 == 1 && CFLAG:ARG:排卵促進剤使用 != -1 && (!(TALENT:ARG:アンドロイド || TALENT:ARG:淫魔 || TALENT:ARG:避妊治療済 || TALENT:ARG:性魔術 || TALENT:ARG:異界知識 || TALENT:ARG:最先端科学 || TALENT:ARG:天使 || TALENT:ARG:幽霊) || (CFLAG:ARG:排卵促進剤使用 > 0 && ミッション結果:303 >= 3))
 
 ;---------------------------------------------------------
 ;妊娠判定関数郡

@@ -18,15 +18,16 @@ RETURN GLOBAL:0
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_0
 ; 解説文
-PRINTFORML 大勢の女の子たちを口説き落としたことのある%CALLNAME:MASTER%にぴったりの実績ですね
-PRINTFORM とある偉大な
-FONTSTYLE 4
-PRINTFORM 誠死ね
-FONTSTYLE 0
-PRINTFORMW 先人のように刺されたりしないように気をつけてください
+TEMP_STR = %@"大勢の女の子たちを口説き落としたことのある%CALLNAME:MASTER%にぴったりの実績ですね<br>"%
+TEMP_STR += "とある偉大な<font color='red'><s><b>誠死ね</b></s></font>先人のように刺されたりしないように気をつけてください<br>"
+CALL HTML_PRINT_P(TEMP_STR)
+
+;WAIT
+;CLEARLINE 1
 ; ボーナスなどの処理はここ以降に記述する
-IF TALENT:MASTER:カリスマ == 0
-	PRINTFORML そんな%CALLNAME:MASTER%は巷では『落とし神』と呼ばれていたりするそうです
-	PRINTFORMW ボーナスとして素質【カリスマ】をあなたに贈ります
+IF FLAG:難易度 > 0 && TALENT:MASTER:カリスマ == 0
+	TEMP_STR = %@"そんな%CALLNAME:MASTER%は巷では『落とし神』と呼ばれていたりするそうです<br>"%
+	TEMP_STR += "ボーナスとして素質【カリスマ】をあなたに贈ります<br>"
+	CALL HTML_PRINT_P(TEMP_STR)
 	TALENT:MASTER:カリスマ = 1
 ENDIF

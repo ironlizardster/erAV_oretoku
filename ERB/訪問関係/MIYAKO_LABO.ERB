@@ -68,7 +68,7 @@ PRINTL
 ;かつ歌音が処女でエメクイの場合のみ『歌音―超時空アイドルルート()』へ
 IF GETCHARA([[キャラ:ユーニス・パラディスス]], 0) > 0
 	PRINTL  [ -] 
-ELSEIF TALENT:(LOCAL:0):処女 && TALENT:(LOCAL:0):[[TALENT:Emerald Queen]] && TALENT:(LOCAL:1):恋心 && !FLAG:歌音超時空アイドルルート && PBAND:145 < 3
+ELSEIF TALENT:(LOCAL:0):処女 && TALENT:(LOCAL:0):[[TALENT:Emerald Queen]] && TALENT:(LOCAL:1):恋心 && !FLAG:歌音超時空アイドルルート && ミッション結果:145 < 3
 	PRINTL  [ 1] - ソウル・バイブレーション・システムを開発する        （技術料：1000000ポイント）
 ENDIF
 PRINTL 

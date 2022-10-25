@@ -10,17 +10,13 @@ RESULTS = ONLY ONE EMPRESS
 @ACHIEVEMENT_CALC_19
 ; 条件を満たす人数の計算
 LOCAL = 0
-FOR COUNT, 0, CHARANUM
-	SIF COUNT == MASTER
-		CONTINUE
-	IF TALENT:COUNT:[[TALENT:ONLY ONE EMPRESS]]
-		IF TALENT:COUNT:高級娼婦 == 1
-			LOCAL++
-		ENDIF
-	ENDIF
-NEXT
+
+LOCAL = FINDCHARA(TALENT:[[TALENT:ONLY ONE EMPRESS]], 1)
+
+DEBUGPRINTFORML FINDCHARA(TALENT:[[TALENT:ONLY ONE EMPRESS]], 1)={LOCAL}
+
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:19 == 0 && DIFFICULTY_CHECK() && LOCAL == 1
+IF GLOBAL:19 == 0 && DIFFICULTY_CHECK() && LOCAL > 0 && TALENT:LOCAL:高級娼婦
 	GLOBAL:19 = 1
 	SAVEGLOBAL
 ENDIF
@@ -29,20 +25,19 @@ RETURN GLOBAL:19
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_19
 ; 解説文
-PRINTFORML 大人しく純情可憐な優等生と評判だった宮間かなで……
-PRINTFORML しかしそんな彼女は潜在的にあるどす黒い素質を秘めていました
-PRINTFORM そして度重なる指導によってその素質が覚醒した彼女は普段はいつも通りを装いながらも、
-PRINTFORML 他の誰よりも嗜虐的に男を責め立てるようになりました
-PRINTFORMW そんな彼女が務める娼館へ、今日も彼女を「かなで様」と呼ぶ多数のＭ男たちが通っています
 
-IF GETCHARA([[キャラ:宮間かなで]], 0) >= 1
+TEMP_STR = 大人しく純情可憐な優等生と評判だった宮間かなで……<br>
+TEMP_STR += "しかしそんな彼女は潜在的にあるどす黒い素質を秘めていました<br>"
+TEMP_STR += "そして度重なる指導によってその素質が覚醒した彼女は普段はいつも通りを装いながらも、"
+TEMP_STR += "他の誰よりも嗜虐的に男を責め立てるようになりました<br>"
+TEMP_STR += "そんな彼女が務める娼館へ、今日も彼女を「かなで様」と呼ぶ多数のＭ男たちが通っています"
+CALL HTML_PRINT_P(TEMP_STR)
+
+IF FLAG:難易度 > 0 && GETCHARA([[キャラ:宮間かなで]], 0) >= 1
 	LOCAL = GETCHARA([[キャラ:宮間かなで]])
-	IF TALENT:LOCAL:[[TALENT:ONLY ONE EMPRESS]] == 0 && PBAND:51 == 0
+	IF !TALENT:LOCAL:[[TALENT:ONLY ONE EMPRESS]] && ミッション結果:51 == 0
 		PRINTFORML 《宮間かなでを【ONLY ONE EMPRESS】として覚醒させますか？》
-		PRINTL [0] - はい
-		PRINTL [1] - いいえ
-		$INPUTLOOP
-		INPUT
+		CALL GET_はいいいえ()
 		
 		IF RESULT == 0
 			PRINTFORMW 《宮間かなでが【ONLY ONE EMPRESS】として覚醒しました》
@@ -61,11 +56,9 @@ IF GETCHARA([[キャラ:宮間かなで]], 0) >= 1
 			BASE:LOCAL:魅力値 += 30
 			MAXBASE:LOCAL:気力 += 500
 			BASE:LOCAL:気力 += 500
-			PBAND:51 = 3
+			ミッション結果:51 = 3
 		ELSEIF RESULT == 1
 			PRINTFORMW 《宮間かなでの素質はそのままにします》
-		ELSE
-			GOTO INPUTLOOP
 		ENDIF
 	ENDIF
 ENDIF

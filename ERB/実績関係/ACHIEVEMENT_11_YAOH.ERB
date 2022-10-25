@@ -22,7 +22,7 @@ PRINTFORML 数多くの要人の接待をこなした%CALLNAME:MASTER%にぴっ�
 PRINTFORML そんな%CALLNAME:MASTER%はいつしか裏社会で『夜王』とまで呼ばれるようになっているとか……
 PRINTFORMW これからも定期的に要人の接待を欠かさずにいるといいことがあるかもしれません
 ; ボーナスなどの処理はここ以降に記述する
-IF FLAG:特殊営業解禁 == 0
+IF FLAG:難易度 > 0 && FLAG:特殊営業解禁 == 0
 	PRINTFORML そんな%CALLNAME:MASTER%の運営する娼館に、特殊営業が追加されました
 	PRINTFORMW ボーナスとして特殊営業【乱交パーティー】が解禁され、常時特殊営業が行えるようになります
 	FLAG:特殊営業解禁 = 1

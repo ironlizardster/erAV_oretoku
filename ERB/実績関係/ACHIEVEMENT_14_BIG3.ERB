@@ -10,12 +10,19 @@ RESULTS = ＢＩＧ３
 @ACHIEVEMENT_CALC_14
 ; 条件を満たす人数の計算
 LOCAL = 0
-FOR COUNT, 0, CHARANUM
-	SIF COUNT == MASTER
-		CONTINUE
-	SIF (NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:桐生歌音]] || NO:COUNT == [[キャラ:須野郁美]]) && TALENT:COUNT:永遠の愛 == 1
-		LOCAL++
-NEXT
+
+LOCAL:1 = GETCHARA([[キャラ:レイチェル・パラディスス]] ,0)
+SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
+	LOCAL++
+
+LOCAL:1 = GETCHARA([[キャラ:桐生歌音]] ,0)
+SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
+	LOCAL++
+
+LOCAL:1 = GETCHARA([[キャラ:須野郁美]] ,0)
+SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
+	LOCAL++
+
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:14 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
 	GLOBAL:14 = 1
@@ -26,17 +33,21 @@ RETURN GLOBAL:14
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_14
 ; 解説文
-PRINTFORML 裏社会に根深く関与している「桐生歌音」「レイチェル・パラディスス」「須野郁美」……
-PRINTFORML 彼女たちを味方に付けられたのは、%CALLNAME:MASTER%のこれからにとって大きな利益となりそうです
-PRINTFORMW しかしそれと同時に、そんな%CALLNAME:MASTER%の存在を危険視する者が出てきてもおかしくはないでしょう
+TEMP_STR = 裏社会に根深く関与している「桐生歌音」「レイチェル・パラディスス」「須野郁美」……<br>
+TEMP_STR += @"彼女たちを味方に付けられたのは、%CALLNAME:MASTER%のこれからにとって大きな利益となりそうです<br>"
+TEMP_STR += @"しかしそれと同時に、そんな%CALLNAME:MASTER%の存在を危険視する者が出てきてもおかしくはないでしょう"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
-IF FLAG:ＢＩＧ３ボーナス受け取り == 0
-	PRINTFORML ……そして今、上海の裏社会を牛耳る組織の長があなたに興味を持ったそうです
-	PRINTFORML 表向きはただの留学生としてやってきた少女、李美鈴
-	PRINTFORML レイチェルいわく、かつてある王朝を没落させた伝説上の妖狐の生まれ変わりとも噂される『九尾会』の長であるそうです
-	PRINTFORM 彼女は%CALLNAME:MASTER%を危険視すると同時に、パラディスス王家と稀代の天才科学者を口説き落としたその人柄に
-	PRINTFORML 興味を抱き、彼女自ら接触してきました 
-	PRINTFORMW 一見臆病で大人しい少女にしか見えない、しかし歌音やレイチェルですら警戒する彼女をどうするかは、全て%CALLNAME:MASTER%次第です
+IF FLAG:難易度 > 0 && FLAG:ＢＩＧ３ボーナス受け取り == 0
+	TEMP_STR = ……そして今、上海の裏社会を牛耳る組織の長があなたに興味を持ったそうです<br>
+	TEMP_STR += "表向きはただの留学生としてやってきた少女、李美鈴<br>"
+	TEMP_STR += "レイチェルいわく、かつてある王朝を没落させた伝説上の妖狐の生まれ変わりとも噂される『九尾会』の長であるそうです<br>"
+	TEMP_STR += @"彼女は%CALLNAME:MASTER%を危険視すると同時に、パラディスス王家と稀代の天才科学者を口説き落としたその人柄に"
+	TEMP_STR += "興味を抱き、彼女自ら接触してきました <br>"
+	TEMP_STR += @"一見臆病で大人しい少女にしか見えない、しかし歌音やレイチェルですら警戒する彼女をどうするかは、全て%CALLNAME:MASTER%次第です"
+	CALL HTML_PRINT_P(TEMP_STR)
+
 	PRINTL
 	PRINTFORMW 《李美鈴と契約しました》
 	CALL キャラ追加([[キャラ:李美鈴]])

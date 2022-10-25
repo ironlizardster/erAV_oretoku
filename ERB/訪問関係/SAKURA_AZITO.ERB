@@ -32,11 +32,11 @@ PRINTL  [ 8] - 性格改革：大人しい      　 （参加費： 500000ポイ
 PRINTL  [ 9] - 性格改革：活発　　      　 （参加費： 500000ポイント）
 PRINTL  [10] - 性格改革：ニュートラル  　 （参加費： 100000ポイント）
 PRINTL  [11] - 妨害工作：キッキングホース （依頼料： 100000ポイント）
-SIF PBAND:76 >= 3
+SIF ミッション結果:76 >= 3
 	PRINTL  [12] - 個性改革：ギャル系 　　　　（参加費：3000000ポイント）
-SIF PBAND:76 >= 3
+SIF ミッション結果:76 >= 3
 	PRINTL  [13] - 個性改革：ニュートラル     （参加費：3000000ポイント）
-SIF PBAND:65 == 4
+SIF ミッション結果:65 == 4
 	PRINTL  [14] - 個性改革：大和撫子　　　　 （参加費：3000000ポイント）
 DRAWLINE
 PRINTL  [999] - 戻る
@@ -67,9 +67,9 @@ ELSEIF RESULT == 10
 	CALL PERSONALITY_NEUTRAL
 ELSEIF RESULT == 11
 	CALL KICKINGHORSE
-ELSEIF RESULT == 12 && PBAND:76 >= 3
+ELSEIF RESULT == 12 && ミッション結果:76 >= 3
 	CALL PERSONALITY_GAL
-ELSEIF RESULT == 13 && PBAND:76 >= 3
+ELSEIF RESULT == 13 && ミッション結果:76 >= 3
 	CALL GAL_NEUTRAL
 ;ELSEIF RESULT == 14
 ;	CALL INTEREST_UP

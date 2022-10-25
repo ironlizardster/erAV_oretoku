@@ -29,11 +29,11 @@ ENDIF
 IF FLAG:淫魔化判定 == 1
 	PRINTL  [ 3] - 遺伝子改造：淫魔化　　　　（5000000ポイント）
 ENDIF
-IF PBAND:303 != 3 && ITEM:触手生物 == 1
+IF ミッション結果:303 != 3 && ITEM:触手生物 == 1
 ;例によって値段は暫定。でもそれなりに高くないとという気はする
 	PRINTL  [ 4] - 薬品改良：排卵誘発剤強化　（ 500000ポイント）
 ENDIF
-IF PBAND:67 >= 3
+IF ミッション結果:67 >= 3
 	PRINTL  [ 5] - 肉体改造：ふたなり　　　　　（技術料： 500000ポイント）
 	PRINTL  [ 6] - 肉体改造：ふたなりの消去　　（技術料： 100000ポイント）
 ENDIF
@@ -50,11 +50,11 @@ ELSEIF RESULT == 2 && D >= 1 && !FLAG:新型アンドロイド製作
 	CALL ADD_ANDROID
 ELSEIF RESULT == 3 && FLAG:淫魔化判定 == 1
 	CALL SUCCUBUS_CHANGE
-ELSEIF RESULT == 4 && PBAND:303 != 3 && ITEM:触手生物
+ELSEIF RESULT == 4 && ミッション結果:303 != 3 && ITEM:触手生物
 	CALL BOOST_ITEM40
-ELSEIF RESULT == 5 && PBAND:67 >= 3
+ELSEIF RESULT == 5 && ミッション結果:67 >= 3
 	CALL MODIFY_FUTANARI
-ELSEIF RESULT == 6 && PBAND:67 >= 3
+ELSEIF RESULT == 6 && ミッション結果:67 >= 3
 	CALL MODIFY_FUTANARI_ERASE
 ELSEIF RESULT == 999
 	RETURN 0

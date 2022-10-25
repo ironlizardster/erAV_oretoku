@@ -2,9 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\ERB",
-    "\\ERB\\システム関係",
-    "\\ERB\\ヘッダーファイル"
+    "\\ERB\\イベント関係",
+    "\\ERB\\キャラ関数",
+    "\\ERB\\ミッション関係",
+    "\\ERB\\ミッション関係\\EXキャラ",
+    "\\ERB\\ミッション関係\\EXタイプ",
+    "\\ERB\\ミッション関係\\キャラ",
+    "\\ERB\\実績関係",
+    "\\ERB\\組み込み関数",
+    "\\ERB\\組み込み関数\\汎用関数"
   ],
-  "SelectedNode": "\\ERB\\ヘッダーファイル",
   "PreviewInSolutionExplorer": false
 }

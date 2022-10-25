@@ -9,13 +9,23 @@ RESULTS = FALLEN ANGELS
 ; 実績の達成条件
 @ACHIEVEMENT_CALC_17
 ; 条件を満たす人数の計算
+SIF ミッション結果:135 < 3 || ミッション結果:144 < 3
+	RETURN GLOBAL:17
+
 LOCAL = 0
-FOR COUNT, 0, CHARANUM
-	SIF COUNT == MASTER
-		CONTINUE
-	SIF (NO:COUNT == [[キャラ:雛見春乃]] || NO:COUNT == [[キャラ:雛見まゆ]] || NO:COUNT == [[キャラ:羽瀬川みこと]]) && TALENT:COUNT:処女 == 0 && TALENT:COUNT:アナル処女 == 0 && TALENT:COUNT:絶倫 == 1 && PBAND:135 >= 3 && PBAND:144 >= 3 			
-		LOCAL++
-NEXT
+
+LOCAL:1 = GETCHARA([[キャラ:雛見春乃]] ,0)
+SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女 && TALENT:(LOCAL:1):絶倫
+	LOCAL++
+
+LOCAL:1 = GETCHARA([[キャラ:雛見まゆ]] ,0)
+SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女 && TALENT:(LOCAL:1):絶倫
+	LOCAL++
+
+LOCAL:1 = GETCHARA([[キャラ:羽瀬川みこと]] ,0)
+SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女 && TALENT:(LOCAL:1):絶倫
+	LOCAL++
+
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:17 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
 	GLOBAL:17 = 1
@@ -26,14 +36,15 @@ RETURN GLOBAL:17
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_17
 ; 解説文
-PRINTFORML まさに大和撫子といった雛見春乃、穢れを知らない天使の雛見まゆ、人工的に天使を生み出す計画により天使となった羽瀬川みこと……
-PRINTFORML しかしそんなかつての清らかな面影はなく、今や淫蕩に両穴で快楽に耽るほどにまで堕ちてしまった彼女たち
-PRINTFORML もし%CALLNAME:MASTER%と出逢うことがなかったとしても、いずれ彼女たちはこの『本当の自分』に気づいてしまったのかもしれません
-PRINTFORML 逆に、淫欲に堕ちた彼女たちにとって唯一の救いとも言えるのはきっと、%CALLNAME:MASTER%と出逢えたことでしょう
-PRINTFORMW ……今日も彼女たちは情欲に身を焦がし、%CALLNAME:MASTER%に与えられる快楽を待っています
-IF FLAG:FALLENANGELSボーナス受け取り == 0
-	IF GETCHARA([[キャラ:ユーニス・パラディスス]], 0) >= 0
-		PRINTFORML 《実績解除のボーナスとしてユーニス・パラディススの個人ラボに【事象改変：堕天使化】が追加されました》
-		FLAG:FALLENANGELSボーナス受け取り = 1
-	ENDIF
+TEMP_STR = まさに大和撫子といった雛見春乃、穢れを知らない天使の雛見まゆ、人工的に天使を生み出す計画により天使となった羽瀬川みこと……<br>
+TEMP_STR += "しかしそんなかつての清らかな面影はなく、今や淫蕩に両穴で快楽に耽るほどにまで堕ちてしまった彼女たち<br>"
+TEMP_STR += @"もし%CALLNAME:MASTER%と出逢うことがなかったとしても、いずれ彼女たちはこの『本当の自分』に気づいてしまったのかもしれません<br>"
+TEMP_STR += @"逆に、淫欲に堕ちた彼女たちにとって唯一の救いとも言えるのはきっと、%CALLNAME:MASTER%と出逢えたことでしょう<br>"
+TEMP_STR += @"……今日も彼女たちは情欲に身を焦がし、%CALLNAME:MASTER%に与えられる快楽を待っています"
+CALL HTML_PRINT_P(TEMP_STR)
+
+IF FLAG:難易度 > 0 && !FLAG:FALLENANGELSボーナス受け取り && GETCHARA([[キャラ:ユーニス・パラディスス]], 0) >= 0
+	TEMP_STR = 《実績解除のボーナスとしてユーニス・パラディススの個人ラボに【事象改変：堕天使化】が追加されました》
+	CALL HTML_PRINT_P(TEMP_STR)
+	FLAG:FALLENANGELSボーナス受け取り = 1
 ENDIF

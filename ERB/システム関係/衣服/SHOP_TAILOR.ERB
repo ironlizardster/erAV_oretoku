@@ -83,7 +83,7 @@ SIF TALENT:褐色肌 == 0
 PRINTL  [10] - ヘアサロン
 PRINTL  [11] - 靴下
 PRINTL  [12] - 靴
-SIF PBAND:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
+SIF ミッション結果:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
 	PRINTL  [13] - スペシャルエステ（3000000ポイント）
 SIF CFLAG:上着のタイプ
 	DRAWLINE
@@ -153,7 +153,7 @@ ELSEIF RESULT == 11
 	CALL TAILOR_SOCKS
 ELSEIF RESULT == 12
 	CALL TAILOR_SHOES
-ELSEIF RESULT == 13 && PBAND:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
+ELSEIF RESULT == 13 && ミッション結果:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
 	CALL TAILOR_ESTHETIC
 ELSEIF RESULT == 20 && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
 	PRINTFORM %CALLNAME:TARGET%の着ていた
@@ -760,19 +760,19 @@ PRINTL  [21] - レオタード
 PRINTL  [22] - ゴシックロリータ
 PRINTL  [23] - 女陰陽師の衣装
 PRINTL  [24] - チアリーダーの衣装
-SIF PBAND:141 >= 3
+SIF ミッション結果:141 >= 3
 	PRINTL  [25] - ウェディングドレス
-SIF PBAND:51 >= 3
+SIF ミッション結果:51 >= 3
 	PRINTL  [26] - ベリーダンスの衣装
-SIF PBAND:54 >= 3
+SIF ミッション結果:54 >= 3
 	PRINTL  [27] - ハロウィン魔女っ子
-SIF PBAND:84 >= 3
+SIF ミッション結果:84 >= 3
 	PRINTL  [28] - テニスウェア
-SIF PBAND:68 >= 3
+SIF ミッション結果:68 >= 3
 	PRINTL  [29] - スリングショット
-SIF PBAND:146 >= 3
+SIF ミッション結果:146 >= 3
 	PRINTL  [28] - ラバーボディスーツ
-SIF PBAND:304 >= 3
+SIF ミッション結果:304 >= 3
 	PRINTL  [99] - ガラスのメイド服
 DRAWLINE
 PRINTL  [999] - 戻る
@@ -878,28 +878,28 @@ ELSEIF RESULT == 23
 ELSEIF RESULT == 24
 	R = 54
 	S = 2
-ELSEIF RESULT == 25 && PBAND:141 >= 3
+ELSEIF RESULT == 25 && ミッション結果:141 >= 3
 	R = 240
 	S = 3
-ELSEIF RESULT == 26 && PBAND:51 >= 3
+ELSEIF RESULT == 26 && ミッション結果:51 >= 3
 	R = 243
 	S = 3
-ELSEIF RESULT == 27 && PBAND:54 >= 3
+ELSEIF RESULT == 27 && ミッション結果:54 >= 3
 	R = 56
 	S = 3
-ELSEIF RESULT == 27 && PBAND:54 >= 3
+ELSEIF RESULT == 27 && ミッション結果:54 >= 3
 	R = 56
 	S = 3
-ELSEIF RESULT == 28 && PBAND:84 >= 3
+ELSEIF RESULT == 28 && ミッション結果:84 >= 3
 	R = 55
 	S = 3
-ELSEIF RESULT == 29 && PBAND:68 >= 3
+ELSEIF RESULT == 29 && ミッション結果:68 >= 3
 	R = 246
 	S = 3
-ELSEIF RESULT == 30 && PBAND:84 >= 3
+ELSEIF RESULT == 30 && ミッション結果:84 >= 3
 	R = 245
 	S = 3
-ELSEIF RESULT == 99 && PBAND:304 >= 3
+ELSEIF RESULT == 99 && ミッション結果:304 >= 3
 	R = 99
 	S = 0
 ELSEIF RESULT == 999
@@ -953,11 +953,11 @@ PRINTL  [22] - 猫耳＆尻尾（10000ポイント）
 PRINTL  [23] - チアボンボン（1000ポイント）
 PRINTL  [24] - レースパーティグローブ（1000ポイント）
 PRINTL  [25] - エナメルロンググローブ（10000ポイント）
-SIF PBAND:83 >= 3
+SIF ミッション結果:83 >= 3
 	PRINTL  [26] - しっぽ付きアナルプラグ（50000ポイント）
-SIF PBAND:304 == 4
+SIF ミッション結果:304 == 4
 	PRINTL  [27] - ガラスのねこみみ（100000ポイント）
-SIF PBAND:56 >= 3
+SIF ミッション結果:56 >= 3
 	PRINTL  [28] - フリルエプロン（10000ポイント）
 DRAWLINE
 PRINTL  [999] - 戻る
@@ -1083,17 +1083,17 @@ ELSEIF RESULT == 25
 	R = 85
 	C = 10000
 	S = 1
-ELSEIF RESULT == 26 && PBAND:83 >= 3
+ELSEIF RESULT == 26 && ミッション結果:83 >= 3
 	R = 82
 	C = 50000
 	S = 1
 	SIF TALENT:アナル処女 == 1
 		S = 11
-ELSEIF RESULT == 27 && PBAND:304 == 4
+ELSEIF RESULT == 27 && ミッション結果:304 == 4
 	R = 99
 	C = 100000
 	S = 1
-ELSEIF RESULT == 28 && PBAND:56 >= 3
+ELSEIF RESULT == 28 && ミッション結果:56 >= 3
 	R = 50
 	C = 10000
 	S = 1
@@ -1708,7 +1708,7 @@ PRINTL  [ 5] - ニーソックス（30ポイント）
 PRINTL  [ 6] - 黒ストッキング（40ポイント）
 PRINTL  [ 7] - ガーターストッキング（50ポイント）
 PRINTL  [ 8] - ニーハイネットストッキング（100ポイント）
-SIF PBAND:304 == 4
+SIF ミッション結果:304 == 4
 	PRINTL  [99] - ガラスのニーソックス（100000ポイント）
 DRAWLINE
 PRINTL  [999] - 戻る
@@ -1763,7 +1763,7 @@ ELSEIF RESULT == 8
 	S = 0
 	CFLAG:靴下の種類 = 8
 	CFLAG:靴下の着用状態 = 0
-ELSEIF RESULT == 99 && PBAND:304 == 4
+ELSEIF RESULT == 99 && ミッション結果:304 == 4
 	PRINTFORMW 《%CALLNAME:TARGET%にガラスのニーソックスを買ってあげました》
 	C = 20
 	S = 0

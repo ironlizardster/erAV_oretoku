@@ -344,7 +344,7 @@ PRINTFORMW %NAME:TARGET%と海に遊びに行きます。
 
 DRAWLINE
 ;露出癖のLvに応じて文章が変わります
-IF PBAND:68 >= 3 && ABL:露出癖 >= 5
+IF ミッション結果:68 >= 3 && ABL:露出癖 >= 5
 	PRINTFORM ほとんど紐にしか見えないエロティックなスリングショット
 ELSEIF ABL:露出癖 >= 5
 	PRINTFORM 露出の多いマイクロビキニ

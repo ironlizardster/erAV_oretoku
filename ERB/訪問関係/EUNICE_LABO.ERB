@@ -45,7 +45,7 @@ PRINTL  [ 9] - 事象改変：【アイドル】の取得    　　　　（ 200
 PRINTL  [10] - 事象改変：【ファッションモデル】の取得　（ 2000000ポイント）
 PRINTL  [11] - 事象改変：【キャバ嬢】の取得    　　　　（ 2000000ポイント）
 PRINTL  [12] - 事象改変：ニュートラル　　　　　　　　　（ 1000000ポイント）
-IF PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1
+IF ミッション結果:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1
 	PRINTL  [13] - 事象改変：処女喪失　　　　　　　　　　　（80000000ポイント）
 	PRINTL  [14] - 事象改変：アナル処女喪失　　　　　　　　（80000000ポイント）
 	PRINTL  [15] - 事象改変：ファーストキス　　　　　　　　（80000000ポイント）
@@ -88,13 +88,13 @@ ELSEIF RESULT == 11
 ELSEIF RESULT == 12
 	B = 999
 	CALL CHANGE_WORK
-ELSEIF RESULT == 13 && (PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
+ELSEIF RESULT == 13 && (ミッション結果:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
 	B = 100
 	CALL CHANGE_VIRGINITY
-ELSEIF RESULT == 14 && (PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
+ELSEIF RESULT == 14 && (ミッション結果:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
 	B = 150
 	CALL CHANGE_VIRGINITY
-ELSEIF RESULT == 15 && (PBAND:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
+ELSEIF RESULT == 15 && (ミッション結果:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1)
 	B = 200
 	CALL CHANGE_VIRGINITY
 ELSEIF RESULT == 99 && FLAG:FALLENANGELSボーナス受け取り == 1; && Y >= 2

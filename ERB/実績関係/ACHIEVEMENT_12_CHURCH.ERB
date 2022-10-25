@@ -10,12 +10,23 @@ RESULTS = 借金完済！
 @ACHIEVEMENT_CALC_12
 ; 条件を満たす人数の計算
 LOCAL = 0
-FOR COUNT, 0, CHARANUM
-	SIF COUNT == MASTER
-		CONTINUE
-	SIF (NO:COUNT == [[キャラ:三上聖佳]] || NO:COUNT == [[キャラ:蒼井遙]] || NO:COUNT == [[キャラ:桐島翔子]] || NO:COUNT == [[キャラ:雨草愛理]]) && CFLAG:COUNT:売却助手可能 == 2
-		LOCAL += CFLAG:COUNT:総売上
-NEXT
+
+LOCAL:1 = GETCHARA([[キャラ:三上聖佳]] ,0)
+SIF LOCAL:1 > 0 && CFLAG:(LOCAL:1):売却助手可能 >= 2
+	LOCAL += CFLAG:(LOCAL:1):総売上
+
+LOCAL:1 = GETCHARA([[キャラ:蒼井遙]] ,0)
+SIF LOCAL:1 > 0 && CFLAG:(LOCAL:1):売却助手可能 >= 2
+	LOCAL += CFLAG:(LOCAL:1):総売上
+
+LOCAL:1 = GETCHARA([[キャラ:桐島翔子]] ,0)
+SIF LOCAL:1 > 0 && CFLAG:(LOCAL:1):売却助手可能 >= 2
+	LOCAL += CFLAG:(LOCAL:1):総売上
+
+LOCAL:1 = GETCHARA([[キャラ:雨草愛理]] ,0)
+SIF LOCAL:1 > 0 && CFLAG:(LOCAL:1):売却助手可能 >= 2
+	LOCAL += CFLAG:(LOCAL:1):総売上
+
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:12 == 0 && DIFFICULTY_CHECK() && LOCAL >= 2000000
 	GLOBAL:12 = 1
@@ -26,45 +37,53 @@ RETURN GLOBAL:12
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_12
 ; 解説文
-PRINTFORML 借金の為に身体を売らざるを得なかった「三上聖佳」「蒼井遙」「桐島翔子」「雨草愛理」……
-PRINTFORML 桐生組への借金も完済し、彼女たちの頑張りがついに報われる日が来ました
-PRINTFORML そしてそれが教えに背くことだとは理解していても、彼女たちは教会とは別の『自分たちの居場所』を見つけたようです
-PRINTFORMW ……それが果たして本当の幸せかどうかは本人たちにしかわかりませんが
+TEMP_STR = 借金の為に身体を売らざるを得なかった「三上聖佳」「蒼井遙」「桐島翔子」「雨草愛理」……<br>
+TEMP_STR += "桐生組への借金も完済し、彼女たちの頑張りがついに報われる日が来ました<br>"
+TEMP_STR += "そしてそれが教えに背くことだとは理解していても、彼女たちは教会とは別の『自分たちの居場所』を見つけたようです<br>"
+TEMP_STR += "……それが果たして本当の幸せかどうかは本人たちにしかわかりませんが"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
 ; △全員揃ってなくて後から乗っけたときにかわいそうなことになる
-IF FLAG:借金完済ボーナス受け取り == 0 && GETCHARA([[キャラ:三上聖佳]]) > 0 && GETCHARA([[キャラ:蒼井遙]]) > 0 && GETCHARA([[キャラ:桐島翔子]]) > 0 && GETCHARA([[キャラ:雨草愛理]]) > 0
+IF FLAG:難易度 > 0 && (FLAG:借金完済ボーナス受け取り == 0 && GETCHARA([[キャラ:三上聖佳]]) > 0 && GETCHARA([[キャラ:蒼井遙]]) > 0 && GETCHARA([[キャラ:桐島翔子]]) > 0 && GETCHARA([[キャラ:雨草愛理]]) > 0)
 	LOCAL:1 = 0
-	FOR LOCAL, 0, CHARANUM
-		IF LOCAL == MASTER
-			CONTINUE
-		ELSEIF CFLAG:LOCAL:売却助手可能 == 2
-			IF NO:LOCAL == [[キャラ:三上聖佳]]
-				TALENT:LOCAL:貧乏 = 0
-				TALENT:LOCAL:交渉上手 = 1
-				TALENT:LOCAL:人気者 = 1
-				PRINTFORMW 《三上聖佳は【貧乏】を失い【交渉上手】【人気者】を得た》
-				LOCAL:1 += 1
-			ELSEIF NO:LOCAL == [[キャラ:蒼井遙]]
-				TALENT:LOCAL:貧乏 = 0
-				TALENT:LOCAL:魅力 = 1
-				TALENT:LOCAL:鼓舞 = 1
-				PRINTFORMW 《蒼井遙は【貧乏】を失い【魅力】【鼓舞】を得た》
-				LOCAL:1 += 1
-			ELSEIF NO:LOCAL == [[キャラ:桐島翔子]]
-				TALENT:LOCAL:逆襲 = 0
-				TALENT:LOCAL:素直 = 1
-				TALENT:LOCAL:献身的 = 1
-				PRINTFORMW 《桐島翔子は【逆襲】を失い【素直】【献身的】を得た》
-				LOCAL:1 += 1
-			ELSEIF NO:LOCAL == [[キャラ:雨草愛理]]
-				TALENT:LOCAL:プライド高い = 0
-				TALENT:LOCAL:素直 = 1
-				TALENT:LOCAL:カリスマ = 1
-				PRINTFORMW 《雨草愛理は【プライド高い】を失い【素直】【カリスマ】を得た》
-				LOCAL:1 += 1
-			ENDIF
-		ENDIF
-	NEXT
+
+	LOCAL = GETCHARA([[キャラ:三上聖佳]] ,0)
+	IF LOCAL > 0 && CFLAG:LOCAL:売却助手可能 >= 2
+		TALENT:LOCAL:貧乏 = 0
+		TALENT:LOCAL:交渉上手 = 1
+		TALENT:LOCAL:人気者 = 1
+		PRINTFORMW 《三上聖佳は【貧乏】を失い【交渉上手】【人気者】を得た》
+		LOCAL:1 += 1
+	ENDIF
+
+	LOCAL = GETCHARA([[キャラ:蒼井遙]] ,0)
+	IF LOCAL > 0 && CFLAG:LOCAL:売却助手可能 >= 2
+		TALENT:LOCAL:貧乏 = 0
+		TALENT:LOCAL:魅力 = 1
+		TALENT:LOCAL:鼓舞 = 1
+		PRINTFORMW 《蒼井遙は【貧乏】を失い【魅力】【鼓舞】を得た》
+		LOCAL:1 += 1
+	ENDIF
+
+	LOCAL = GETCHARA([[キャラ:桐島翔子]] ,0)
+	IF LOCAL > 0 && CFLAG:LOCAL:売却助手可能 >= 2
+		TALENT:LOCAL:逆襲 = 0
+		TALENT:LOCAL:素直 = 1
+		TALENT:LOCAL:献身的 = 1
+		PRINTFORMW 《桐島翔子は【逆襲】を失い【素直】【献身的】を得た》
+		LOCAL:1 += 1
+	ENDIF
+
+	LOCAL = GETCHARA([[キャラ:雨草愛理]] ,0)
+	IF LOCAL > 0 && CFLAG:LOCAL:売却助手可能 >= 2
+		TALENT:LOCAL:プライド高い = 0
+		TALENT:LOCAL:素直 = 1
+		TALENT:LOCAL:カリスマ = 1
+		PRINTFORMW 《雨草愛理は【プライド高い】を失い【素直】【カリスマ】を得た》
+		LOCAL:1 += 1
+	ENDIF
+
 	SIF LOCAL:1 == 4
 		FLAG:借金完済ボーナス受け取り = 1
 ENDIF

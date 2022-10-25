@@ -15,6 +15,8 @@ FOR COUNT, 0, CHARANUM
 		CONTINUE
 	SIF TALENT:COUNT:妹 && TALENT:COUNT:恋心 == 1
 		LOCAL++
+	SIF LOCAL >= 4
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:3 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
@@ -26,12 +28,15 @@ RETURN GLOBAL:3
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_3
 ; 解説文
-PRINTFORML 大勢の妹属性の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね
-PRINTFORM とある名作エロゲーのタイトルのようなシチュエーションがお好みのようなので
-PRINTFORMW これからも『妹』たちとのパラダイスをお楽しみください
+TEMP_STR = %@"大勢の妹属性の女の子たちとキャッキャウフフしたことのある%CALLNAME:MASTER%にぴったりの実績ですね<br>"%
+TEMP_STR += "とある名作エロゲーのタイトルのようなシチュエーションがお好みのようなので"
+TEMP_STR += "これからも『妹』たちとのパラダイスをお楽しみください"
+CALL HTML_PRINT_P(TEMP_STR)
+
 ; ボーナスなどの処理はここ以降に記述する
-IF TALENT:MASTER:妹想い == 0
-	PRINTFORML 血が繋がっていなくてもあなたが『妹』たちに注いだ愛情は本物のようですね
-	PRINTFORML そんな%CALLNAME:MASTER%には【妹想い】の称号を授けましょう
+IF FLAG:難易度 > 0 && TALENT:MASTER:妹想い == 0
+	TEMP_STR = 血が繋がっていなくてもあなたが『妹』たちに注いだ愛情は本物のようですね<br>
+	TEMP_STR += @"そんな%CALLNAME:MASTER%には【妹想い】の称号を授けましょう"
+	CALL HTML_PRINT_P(TEMP_STR)
 	TALENT:MASTER:妹想い = 1
 ENDIF

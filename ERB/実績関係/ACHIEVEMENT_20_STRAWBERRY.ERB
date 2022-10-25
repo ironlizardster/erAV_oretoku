@@ -16,6 +16,8 @@ FOR COUNT, 0, CHARANUM
 	IF ABL:COUNT:レズっ気 == 10
 		LOCAL++
 	ENDIF
+	SIF LOCAL >= 7
+		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
 IF GLOBAL:20 == 0 && DIFFICULTY_CHECK() && LOCAL >= 7
@@ -27,13 +29,14 @@ RETURN GLOBAL:20
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_20
 ; 解説文
-PRINTFORML 指導や撮影の過程で同性との様々の行為を経験するようになった彼女たち
-PRINTFORM 女性同士だからこそ分かる、お互いの『気持ちいいところ』を知り尽くした行為に、いつしか
-PRINTFORML 彼女たちは耽溺していきました
-PRINTFORM それはただの友情ではなく、肉欲を秘めた同性への愛情と言っても差し支えないモノへと変わり、
-PRINTFORMW 今ではすっかり同性と肌を重ねることに抵抗がなくなっているようです
+TEMP_STR = 指導や撮影の過程で同性との様々の行為を経験するようになった彼女たち<br>
+TEMP_STR += "女性同士だからこそ分かる、お互いの『気持ちいいところ』を知り尽くした行為に、いつしか"
+TEMP_STR += "彼女たちは耽溺していきました<br>"
+TEMP_STR += "それはただの友情ではなく、肉欲を秘めた同性への愛情と言っても差し支えないモノへと変わり、"
+TEMP_STR += "今ではすっかり同性と肌を重ねることに抵抗がなくなっているようです"
+CALL HTML_PRINT_P(TEMP_STR)
 
-IF FLAG:恋心レズ経験無視 == 0
+IF FLAG:難易度 > 0 && FLAG:恋心レズ経験無視 == 0
 	PRINTFORMW 《実績解除のボーナスとして【恋心】取得条件のレズ経験が無視されるようになります》
 	FLAG:恋心レズ経験無視 = 1
 ENDIF

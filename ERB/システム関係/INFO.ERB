@@ -342,7 +342,7 @@ IF MAKE_ABLUP_BUTTON
 	PRINTFORM %MARKNAME:3, 10, LEFT%
 	RESULT = 0
 	TRYCALLFORM CAN_ABLUP99
-	CALL PRINT_BUTTON(@"[{MARK:反発刻印, 2}LV]" + \@ RESULT ? %" * "% # %" " * 3% \@,MARK:反発刻印,99,1)
+	CALL PRINT_BUTTON(@"[{MARK:反発刻印, 2}LV]" + \@ RESULT ? %" * "% # %" " * 3% \@,MARK:反発刻印,99,-1,1)
 ENDIF
 
 ;-------------------------------------------------
