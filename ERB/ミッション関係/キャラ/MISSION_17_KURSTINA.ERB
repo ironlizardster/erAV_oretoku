@@ -138,7 +138,7 @@ ELSE
 	LOCAL = GETCHARA([[キャラ:クリスティナ・ラーグラーデ]])
 	LOCAL:20 = GETCHARA([[キャラ:エルファリア・ラーグラーデ]])
 	WAIT
-	IF LOCAL != -1 && LOCAL:20 != -1 && (CFLAG:(LOCAL:10):父親のキャラ番号 != 0 || !TALENT:LOCAL:永遠の愛)
+	IF !GLOBAL:30 || (LOCAL != -1 && LOCAL:20 != -1 && (CFLAG:(LOCAL:10):父親のキャラ番号 != 0 || !TALENT:LOCAL:永遠の愛))
 		CALL キャラ削除, LOCAL
 	ELSE
 		TALENT:LOCAL:ミッション = 0

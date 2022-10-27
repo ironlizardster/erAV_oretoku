@@ -669,16 +669,8 @@ IF TFLAG:セックスで射精 > 0
 			PRINTFORM の顔
 		ELSEIF CFLAG:33 == 7
 			PRINTFORM の
-			SIF CFLAG:髪の色 != 9 && CFLAG:染髪の有無 != 1
-				CALL PRINT_HAIRCOLOR_TAILOR
-			IF CFLAG:髪の色 == 7
-				PRINT の
-			ELSEIF CFLAG:髪の色 == 9 && CFLAG:染髪の有無 == 1
-				PRINT 脱色した
-			ELSE
-				PRINT 色の
-			ENDIF
-			PRINTFORM 髪
+			PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%
+			PRINT の髪
 		ELSEIF CFLAG:33 == 8
 			IF CFLAG:特別コスチュームのタイプ == 80
 				PRINT 眼鏡

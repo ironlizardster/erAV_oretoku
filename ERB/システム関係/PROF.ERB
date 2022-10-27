@@ -20,7 +20,7 @@ IF TALENT:彼氏あり
 	CALL PRINT_BOYFRIEND
 	PRINTL と付き合っています。  
 ENDIF
-IF EXP:彼氏とのＳＥＸ回数 >= 1
+IF EXP:彼氏性経験 >= 1
 	PRINT  
 	IF CFLAG:彼氏の有無 == 1
 		PRINTFORM 彼氏と
@@ -29,7 +29,7 @@ IF EXP:彼氏とのＳＥＸ回数 >= 1
 	ELSE
 		PRINTFORM 元カレと
 	ENDIF
-	PRINTFORM {EXP:彼氏とのＳＥＸ回数}回セックスしたことがあり
+	PRINTFORM {EXP:彼氏性経験}回セックスしたことがあり
 			IF CFLAG:初体験の相手 == 8 && CFLAG:167 == 1
 				PRINTFORM 、元カレが処女喪失の相手です
 			ELSEIF CFLAG:初体験の相手 == 8 && CFLAG:彼氏の有無 == 1
@@ -52,8 +52,8 @@ IF EXP:彼氏とのＳＥＸ回数 >= 1
 	ENDIF
 	PRINTL 。
 ENDIF
-IF EXP:セフレとのSEX回数 >= 1
-	PRINTFORM  セフレと{EXP:セフレとのSEX回数}回ゴム無しでセックスしたことがあり
+IF EXP:セフレ性経験 >= 1
+	PRINTFORM  セフレと{EXP:セフレ性経験}回ゴム無しでセックスしたことがあり
 	IF CFLAG:初体験の相手 == 9
 		PRINT 、
 		PRINT セフレの

@@ -41,10 +41,10 @@ ENDIF
 @MOTOKANO_SETUPSTART
 
 LOADGLOBAL
-FOR LOCAL, 0, 300
+FOR LOCAL, 0, CURRENT_MAX_CHARA_ID
 	SIF LOCAL == 0
 		CONTINUE
-	SIF GLOBAL:(200 + LOCAL) == 1
+	SIF 女優名鑑:LOCAL == 1
 		LOCAL:1 = 1
 NEXT
 
@@ -691,11 +691,11 @@ ELSEIF FLAG:元カノ処女喪失相手 == 2
 						;****カノ設定改造追加ここまで****
 	CFLAG:初体験の相手 = 8
 	IF FLAG:元カノ性経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノ性経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノ性経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 	CFLAG:167 = 1
 						;****カノ設定改造追加ここから****
@@ -704,11 +704,11 @@ ELSEIF FLAG:元カノ処女喪失相手 == 3
 	CFLAG:彼氏の種類 += RAND:7
 	CFLAG:初体験の相手 = 8
 	IF FLAG:元カノ性経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノ性経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノ性経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 						;****カノ設定改造追加ここまで****
 ENDIF
@@ -799,11 +799,11 @@ ELSEIF CFLAG:MASTER:240 == 2
 	ENDIF
 	CFLAG:アナル処女喪失の相手 = 8
 	IF FLAG:元カノアナル経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノアナル経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノアナル経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 	CFLAG:837 = 1
 ELSEIF CFLAG:MASTER:240 == 3
@@ -811,11 +811,11 @@ ELSEIF CFLAG:MASTER:240 == 3
 	CFLAG:彼氏の種類 += RAND:7
 	CFLAG:アナル処女喪失の相手 = 8
 	IF FLAG:元カノアナル経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノアナル経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノアナル経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 ENDIF
 IF FLAG:元カノアナル経験 == 1
@@ -1293,11 +1293,11 @@ ELSEIF FLAG:元カノ処女喪失相手 == 2
 	ENDIF
 	CFLAG:初体験の相手 = 8
 	IF FLAG:元カノ性経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノ性経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノ性経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 	CFLAG:167 = 1
 ELSEIF FLAG:元カノ処女喪失相手 == 3
@@ -1305,11 +1305,11 @@ ELSEIF FLAG:元カノ処女喪失相手 == 3
 	CFLAG:彼氏の種類 += RAND:7
 	CFLAG:初体験の相手 = 8
 	IF FLAG:元カノ性経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノ性経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノ性経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 ENDIF
 						;****カノ設定改造追加ここまで****
@@ -1432,11 +1432,11 @@ ELSEIF CFLAG:MASTER:240 == 2
 	ENDIF
 	CFLAG:アナル処女喪失の相手 = 8
 	IF FLAG:元カノアナル経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノアナル経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノアナル経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 	CFLAG:837 = 1
 ELSEIF CFLAG:MASTER:240 == 3
@@ -1444,11 +1444,11 @@ ELSEIF CFLAG:MASTER:240 == 3
 	CFLAG:彼氏の種類 += RAND:7
 	CFLAG:アナル処女喪失の相手 = 8
 	IF FLAG:元カノアナル経験 == 1
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:30
+		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノアナル経験 == 2
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:15
+		EXP:彼氏性経験 += 1 + RAND:15
 	ELSEIF FLAG:元カノアナル経験 == 3
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:5
+		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
 ENDIF
 IF FLAG:元カノアナル経験 == 1

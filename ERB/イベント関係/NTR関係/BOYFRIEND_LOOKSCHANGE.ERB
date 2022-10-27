@@ -75,34 +75,32 @@ DRAWLINE
 ;TRYCCALLFORMだなあ……
 ;===========================================================
 @PARSONAL_CHANGE
-IF EXP:イメチェン回数 == 0 && CFLAG:髪の色 != 1 && CFLAG:髪の色 != 10
-	CALL PRINT_HAIRCOLOR_TAILOR
-	PRINTFORM 色だった髪が茶髪に染められているの
-	CFLAG:髪の色 = 1
-	CFLAG:染髪の有無 = 1
-ELSEIF EXP:イメチェン回数 == 0 && CFLAG:髪の色 == 1
-	CALL PRINT_HAIRCOLOR_TAILOR
-	PRINTFORM 色だった髪がより明るい栗色に染められているの
-	CFLAG:髪の色 = 10
-	CFLAG:染髪の有無 = 1
-ELSEIF EXP:イメチェン回数 == 0 && CFLAG:髪の色 == 10
-	PRINTFORM
-	CALL PRINT_HAIRCOLOR_TAILOR
-	PRINTFORM 色の髪を脱色したのか人工的なプラチナブラウンに変わっていたの
-	CFLAG:髪の色 = 9
-	CFLAG:染髪の有無 = 1
+IF EXP:イメチェン回数 == 0 
+	IF CFLAG:髪色 != 1 && CFLAG:髪色 != 10
+		PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%だった髪が茶髪に染められているの
+		CFLAG:髪色 = 1
+		CFLAG:染髪済 = 1
+	ELSEIF CFLAG:髪色 == 1
+		PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%だった髪がより明るい栗色に染められているの
+		CFLAG:髪色 = 10
+		CFLAG:染髪済 = 1
+	ELSEIF CFLAG:髪色 == 10
+		PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%の髪を脱色したのか人工的なプラチナブラウンに変わっていたの
+		CFLAG:髪色 = 9
+		CFLAG:染髪済 = 1
+	ENDIF
 ENDIF
 IF EXP:イメチェン回数 == 1 && CFLAG:髪型 != 1 && CFLAG:髪型 != 8 && CFLAG:髪型 != 5
-	CALL PRINT_HAIRSTYLE_TAILOR
+	PRINTFORM %CHARA_HAIRSTYLE_STRING(TARGET)%
 	PRINTFORM だった髪型が肩のあたりで切りそろえたセミロングに変わっているの
 	CFLAG:髪型 = 1
 ELSEIF EXP:イメチェン回数 == 1 && (CFLAG:髪型 == 1 || CFLAG:髪型 == 5) && CFLAG:髪型 != 8 
-	CALL PRINT_HAIRSTYLE_TAILOR
+	PRINTFORM %CHARA_HAIRSTYLE_STRING(TARGET)%
 	PRINTFORM だった髪型にふんわりと緩やかなパーマがかかっているの
 	CFLAG:髪型 = 7
 ELSEIF EXP:イメチェン回数 == 1 && CFLAG:髪型 == 8
 	PRINTFORM 腰に届きそうなほどの
-	CALL PRINT_HAIRSTYLE_TAILOR
+	PRINTFORM %CHARA_HAIRSTYLE_STRING(TARGET)%
 	PRINTFORM の髪をカットし背中の中ほどまでの、ふんわりと緩やかなパーマがかかった長さに変わっているの
 	CFLAG:髪型 = 7
 ENDIF
@@ -117,23 +115,22 @@ ELSEIF EXP:イメチェン回数 == 2 && CFLAG:上着のタイプ == 30
 	PRINTFORM だった服装が肌の露出の多いキャミとデニムミニという服装になっているの
 	CFLAG:上着のタイプ = 40
 ENDIF
-	IF EXP:イメチェン回数 == 3 && CFLAG:髪の色 != 9
-	CALL PRINT_HAIRCOLOR_TAILOR
-	PRINTFORM 色に染めたはずの髪を脱色したのか、人工的なプラチナブラウンに変わった
-	PRINTFORM 毛先をつまんでいじっているの
-	CFLAG:髪の色 = 9
-	CFLAG:染髪の有無 = 1
-ELSEIF EXP:イメチェン回数 == 3 && CFLAG:髪の色 == 9
-	PRINTFORM 脱色した髪にうっすらと明るいピンクでメッシュを入れた毛先をつまんでいじっているの
-ENDIF
+	IF EXP:イメチェン回数 == 3 && CFLAG:髪色 != 9
+		PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%色に染めたはずの髪を脱色したのか、人工的なプラチナブラウンに変わった
+		PRINTFORM 毛先をつまんでいじっているの
+		CFLAG:髪色 = 9
+		CFLAG:染髪済 = 1
+	ELSEIF EXP:イメチェン回数 == 3 && CFLAG:髪色 == 9
+		PRINTFORM 脱色した髪にうっすらと明るいピンクでメッシュを入れた毛先をつまんでいじっているの
+	ENDIF
 	IF EXP:イメチェン回数 == 4 && (CFLAG:ピアスの装着状況 & 2) == 0
-	CALL PRINT_CLOTHTYPE_MAIN2
-	PRINTFORM から覗くへそに淡いピンク色のジュエリーが嵌めこまれたピアスが、鈍い輝きを放っているの
-	CFLAG:ピアスの装着状況 |= 2
-ELSEIF EXP:イメチェン回数 == 4 && (CFLAG:ピアスの装着状況 & 2)
-	CALL PRINT_CLOTHTYPE_MAIN2
-	PRINTFORM から覗くへそを貫くピアスをぐるりと一周するようにクロムメッキのベリーチェーンが追加されていたの
-ENDIF
+		CALL PRINT_CLOTHTYPE_MAIN2
+		PRINTFORM から覗くへそに淡いピンク色のジュエリーが嵌めこまれたピアスが、鈍い輝きを放っているの
+		CFLAG:ピアスの装着状況 |= 2
+	ELSEIF EXP:イメチェン回数 == 4 && (CFLAG:ピアスの装着状況 & 2)
+		CALL PRINT_CLOTHTYPE_MAIN2
+		PRINTFORM から覗くへそを貫くピアスをぐるりと一周するようにクロムメッキのベリーチェーンが追加されていたの
+	ENDIF
 
 IF EXP:イメチェン回数 == 5 && CFLAG:タトゥーの有無 != 15
 	CALL PRINT_CLOTHTYPE_MAIN2

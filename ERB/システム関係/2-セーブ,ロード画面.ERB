@@ -41,10 +41,8 @@ DO
 			SELECTCASE CHKDATA(データ番号)
 				CASE 0, 2, 3, 4
 					PRINTL 既にセーブデータが存在します。上書きしますか？
-					PRINTL [0] はい
-					PRINTL [1] いいえ
-					CALL INPUTF, 0, 1
-					SIF RESULT == 1
+					CALL GET_はいいいえ()
+					SIF RESULT == COMMAND_いいえ
 						RESTART
 					BREAK
 				CASE 1

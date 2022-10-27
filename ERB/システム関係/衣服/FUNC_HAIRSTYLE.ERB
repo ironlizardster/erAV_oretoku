@@ -1,227 +1,115 @@
 ﻿;===========================================================
 ;ヘアスタイルの処理
 ;===========================================================
-@PRINT_HAIRSTYLE
-IF CFLAG:髪の色 == 0
-	PRINT 黒
-ELSEIF CFLAG:髪の色 == 1
-	PRINT 茶
-ELSEIF CFLAG:髪の色 == 2
-	PRINT 金
-ELSEIF CFLAG:髪の色 == 3
-	PRINT 銀
-ELSEIF CFLAG:髪の色 == 4
-	PRINT 赤
-ELSEIF CFLAG:髪の色 == 5
-	PRINT 青
-ELSEIF CFLAG:髪の色 == 6
-	PRINT 緑
-ELSEIF CFLAG:髪の色 == 7
-	PRINT ピンク
-ELSEIF CFLAG:髪の色 == 8
-	PRINT 紫
-ELSEIF CFLAG:髪の色 == 9 && CFLAG:染髪の有無 == 0
-	PRINT 白
-ELSEIF CFLAG:髪の色 == 10
-	PRINT 栗
-;特定キャラ専用髪色
-ELSEIF CFLAG:髪の色 == 11
-	PRINT 薄紫
-ELSEIF CFLAG:髪の色 == 12
-	PRINT 真珠
-ELSEIF CFLAG:髪の色 == 13
-	PRINT 赤紫
-ELSEIF CFLAG:髪の色 == 14
-	PRINT アッシュブラウン
-ENDIF
-
-IF CFLAG:髪の色 != 7 || CFLAG:髪の色 != 14 || (CFLAG:髪の色 != 9 && CFLAG:染髪の有無 != 1)
-	PRINT 色
-ENDIF
-IF CFLAG:染髪の有無 == 1 && CFLAG:髪の色 != 9
-	PRINT に染めた
-ELSEIF CFLAG:染髪の有無 == 1 && CFLAG:髪の色 == 9
-	PRINT 脱色した
-ELSE
-	PRINT の
-ENDIF
-IF NO:TARGET == [[キャラ:新島みひろ]] || NO:TARGET == [[キャラ:碧野乃衣瑠]] || NO:TARGET == [[キャラ:浅神智子]] || NO:TARGET == [[キャラ:後藤彩香]]
-	PRINT くせっ毛を
-ELSE
-	PRINT 髪を
-ENDIF
-	IF CFLAG:髪型 == 0
-		PRINT ショートヘア
-	ELSEIF CFLAG:髪型 == 1
-		PRINT セミロング
-	ELSEIF CFLAG:髪型 == 2
-		PRINT ショートボブ
-	ELSEIF CFLAG:髪型 == 3
-		PRINT ポニーテール
-	ELSEIF CFLAG:髪型 == 4
-		PRINT ツインテール
-	ELSEIF CFLAG:髪型 == 5
-		PRINT ストレートロング
-	ELSEIF CFLAG:髪型 == 6
-		PRINT アップ
-	ELSEIF CFLAG:髪型 == 7
-		PRINT ゆるふわパーマ
-	ELSEIF CFLAG:髪型 == 8
-		PRINT ロングウェーブ
-	ELSEIF CFLAG:髪型 == 9
-		PRINT 三つ編み
-	ELSEIF CFLAG:髪型 == 10
-		PRINT ツーサイドアップ
-	ELSEIF CFLAG:髪型 == 11
-		PRINT ツインドリルテール
-	ELSEIF CFLAG:髪型 == 12
-		PRINT お団子ヘア
-	ELSEIF CFLAG:髪型 == 99
-		PRINT 昇天ペガサスＭＩＸ盛り
-	ENDIF
+@PRINT_HAIRSTYLE_TARGET
+CALL PRINT_HAIRSTYLE(TARGET)
 PRINT にしています
+
 ;===========================================================
 ;髪型の処理
 ;===========================================================
-@PRINT_HAIRSTYLE_4COUNT
-IF CFLAG:COUNT:髪の色 == 0
-	PRINT 黒
-ELSEIF CFLAG:COUNT:髪の色 == 1
-	PRINT 茶
-ELSEIF CFLAG:COUNT:髪の色 == 2
-	PRINT 金
-ELSEIF CFLAG:COUNT:髪の色 == 3
-	PRINT 銀
-ELSEIF CFLAG:COUNT:髪の色 == 4
-	PRINT 赤
-ELSEIF CFLAG:COUNT:髪の色 == 5
-	PRINT 青
-ELSEIF CFLAG:COUNT:髪の色 == 6
-	PRINT 緑
-ELSEIF CFLAG:COUNT:髪の色 == 7
-	PRINT ピンク
-ELSEIF CFLAG:COUNT:髪の色 == 8
-	PRINT 紫
-ELSEIF CFLAG:COUNT:髪の色 == 9 && CFLAG:COUNT:染髪の有無 == 0
-	PRINT 白
-ELSEIF CFLAG:COUNT:髪の色 == 10
-	PRINT 栗
-;特定キャラ専用髪色
-ELSEIF CFLAG:COUNT:髪の色 == 11
-	PRINT 薄紫
-ELSEIF CFLAG:COUNT:髪の色 == 12
-	PRINT 真珠
-ENDIF
-IF CFLAG:COUNT:髪の色 != 7 || (CFLAG:COUNT:髪の色 != 9 && CFLAG:COUNT:染髪の有無 == 0)
-	PRINT 色
-ENDIF
-IF CFLAG:COUNT:染髪の有無 == 1 && CFLAG:COUNT:髪の色 != 9
+@PRINT_HAIRSTYLE(CHARA_NO)
+#DIM CHARA_NO
+PRINTFORM %HAIRCOLOR_STRING(CFLAG:CHARA_NO:髪色,CFLAG:CHARA_NO:染髪済)%
+IF CFLAG:CHARA_NO:染髪済 == 1 && CFLAG:CHARA_NO:髪色 != 9
 	PRINT に染めた
-ELSEIF CFLAG:COUNT:染髪の有無 == 1 && CFLAG:COUNT:髪の色 == 9
-	PRINT 脱色した
 ELSE
 	PRINT の
 ENDIF
-IF NO:COUNT == [[キャラ:新島みひろ]] || NO:COUNT == [[キャラ:碧野乃衣瑠]] || NO:COUNT == [[キャラ:浅神智子]] || NO:COUNT == [[キャラ:後藤彩香]]
+IF NO:CHARA_NO == [[キャラ:新島みひろ]] || NO:CHARA_NO == [[キャラ:碧野乃衣瑠]] || NO:CHARA_NO == [[キャラ:浅神智子]] || NO:CHARA_NO == [[キャラ:後藤彩香]]
 	PRINT くせっ毛を
-ELSEIF CFLAG:COUNT:髪型 == 6 && TALENT:COUNT:ColorfulPureGirls == 0
+ELSEIF CFLAG:CHARA_NO:髪型 == 6 && TALENT:CHARA_NO:ColorfulPureGirls == 0
 	PRINT 髪を
 ENDIF
-IF CFLAG:COUNT:髪型 == 0
-	PRINT ショートヘア
-ELSEIF CFLAG:COUNT:髪型 == 1
-	PRINT セミロング
-ELSEIF CFLAG:COUNT:髪型 == 2
-	PRINT ショートボブ
-ELSEIF CFLAG:COUNT:髪型 == 3
-	PRINT ポニーテール
-ELSEIF CFLAG:COUNT:髪型 == 4
-	PRINT ツインテール
-ELSEIF CFLAG:COUNT:髪型 == 5
-	PRINT ストレートロング
-ELSEIF CFLAG:COUNT:髪型 == 6
-	PRINT アップ
-ELSEIF CFLAG:COUNT:髪型 == 7
-	PRINT ゆるふわパーマ
-ELSEIF CFLAG:COUNT:髪型 == 8
-	PRINT ロングウェーブ
-ELSEIF CFLAG:COUNT:髪型 == 9
-	PRINT 三つ編み
-ELSEIF CFLAG:COUNT:髪型 == 10
-	PRINT ツーサイドアップ
-ELSEIF CFLAG:COUNT:髪型 == 11
-	PRINT ツインドリルテール
-ELSEIF CFLAG:COUNT:髪型 == 12
-	PRINT お団子ヘア
-ELSEIF CFLAG:COUNT:髪型 == 99
-	PRINT 昇天ペガサスＭＩＸ盛り
-ENDIF
+PRINTFORM %CHARA_HAIRSTYLE_STRING(CHARA_NO)%
+
+
+@CHARA_HAIRSTYLE_STRING(INDEX)
+#FUNCTIONS
+#DIM INDEX
+
+RETURNF HAIRSTYLE_STRING(CFLAG:INDEX:髪型)
+
 
 ;===========================================================
 ;髪型の処理
 ;===========================================================
-@PRINT_HAIRSTYLE_TAILOR
+@HAIRSTYLE_STRING(髪型)
+#FUNCTIONS
+#DIM 髪型
 
-IF CFLAG:髪型 == 0
-	PRINT ショートヘア
-ELSEIF CFLAG:髪型 == 1
-	PRINT セミロング
-ELSEIF CFLAG:髪型 == 2
-	PRINT ショートボブ
-ELSEIF CFLAG:髪型 == 3
-	PRINT ポニーテール
-ELSEIF CFLAG:髪型 == 4
-	PRINT ツインテール
-ELSEIF CFLAG:髪型 == 5
-	PRINT ストレートロング
-ELSEIF CFLAG:髪型 == 6
-	PRINT アップ
-ELSEIF CFLAG:髪型 == 7
-	PRINT ゆるふわパーマ
-ELSEIF CFLAG:髪型 == 8
-	PRINT ロングウェーブ
-ELSEIF CFLAG:髪型 == 9
-	PRINT 三つ編み
-ELSEIF CFLAG:髪型 == 10
-	PRINT ツーサイドアップ
-ELSEIF CFLAG:髪型 == 11
-	PRINT ツインドリルテール
-ELSEIF CFLAG:髪型 == 12
-	PRINT お団子ヘア
-ELSEIF CFLAG:髪型 == 99
-	PRINT 昇天ペガサスＭＩＸ盛り
-ENDIF
+SIF 髪型 == 0
+	RETURNF "ショートヘア"
+SIF 髪型 == 1
+	RETURNF "セミロング"
+SIF 髪型 == 2
+	RETURNF "ショートボブ"
+SIF 髪型 == 3
+	RETURNF "ポニーテール"
+SIF 髪型 == 4
+	RETURNF "ツインテール"
+SIF 髪型 == 5
+	RETURNF "ストレートロング"
+SIF 髪型 == 6
+	RETURNF "アップ"
+SIF 髪型 == 7
+	RETURNF "ゆるふわパーマ"
+SIF 髪型 == 8
+	RETURNF "ロングウェーブ"
+SIF 髪型 == 9
+	RETURNF "三つ編み"
+SIF 髪型 == 10
+	RETURNF "ツーサイドアップ"
+SIF 髪型 == 11
+	RETURNF "ツインドリルテール"
+SIF 髪型 == 12
+	RETURNF "お団子ヘア"
+SIF 髪型 == 99
+	RETURNF "昇天ペガサスＭＩＸ盛り"
+
+RETURNF "ショートヘア"
 
 ;===========================================================
 ;髪色の処理
 ;===========================================================
-@PRINT_HAIRCOLOR_TAILOR
+@HAIRCOLOR_STRING(色,染髪済)
+#FUNCTIONS
+#DIM 色
+#DIM 染髪済
 
-IF CFLAG:髪の色 == 0
-	PRINT 黒
-ELSEIF CFLAG:髪の色 == 1
-	PRINT 茶
-ELSEIF CFLAG:髪の色 == 2
-	PRINT 金
-ELSEIF CFLAG:髪の色 == 3
-	PRINT 銀
-ELSEIF CFLAG:髪の色 == 4
-	PRINT 赤
-ELSEIF CFLAG:髪の色 == 5
-	PRINT 青
-ELSEIF CFLAG:髪の色 == 6
-	PRINT 緑
-ELSEIF CFLAG:髪の色 == 7
-	PRINT ピンク
-ELSEIF CFLAG:髪の色 == 8
-	PRINT 紫
-ELSEIF CFLAG:髪の色 == 9 && CFLAG:染髪の有無 == 0
-	PRINT 白
-ELSEIF CFLAG:髪の色 == 10
-	PRINT 栗
+SIF 色 == 0
+	RETURNF "黒色"
+SIF 色 == 1
+	RETURNF "茶色"
+SIF 色 == 2
+	RETURNF "金色"
+SIF 色 == 3
+	RETURNF "銀色"
+SIF 色 == 4
+	RETURNF "赤色"
+SIF 色 == 5
+	RETURNF "青色"
+SIF 色 == 6
+	RETURNF "緑色"
+SIF 色 == 7
+	RETURNF "ピンク色"
+SIF 色 == 8
+	RETURNF "紫色"
+SIF 色 == 9 && !染髪済
+	RETURNF "白色"
+SIF 色 == 9 && 染髪済
+	RETURNF "プラチナブラウン色"
+SIF 色 == 10
+	RETURNF "栗色"
 ;特定キャラ専用髪色
-ELSEIF CFLAG:髪の色 == 11
-	PRINT 薄紫
-ELSEIF CFLAG:髪の色 == 12
-	PRINT 真珠
-ENDIF
+SIF 色 == 11
+	RETURNF "薄紫色"
+SIF 色 == 12
+	RETURNF "真珠色"
+SIF CFLAG:髪色 == 13
+	RETURNF "赤紫色"
+SIF CFLAG:髪色 == 14
+	RETURNF "アッシュブラウン色"
+
+RETURNF "黒"
+

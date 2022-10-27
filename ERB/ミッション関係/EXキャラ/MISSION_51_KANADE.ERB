@@ -189,9 +189,9 @@ IF A:2 == 0
 		LOCAL:1++
 	SIF CFLAG:処女膜再生回数 == 0
 		LOCAL:1++
-	SIF CFLAG:髪の色 == 0
+	SIF CFLAG:髪色 == 0
 		LOCAL:1++
-	SIF CFLAG:染髪の有無 == 0
+	SIF CFLAG:染髪済 == 0
 		LOCAL:1++
 	SIF ABL:学力 >= 8
 		LOCAL:1++
@@ -217,9 +217,9 @@ ELSE
 		LOCAL:1++
 	SIF CFLAG:処女膜再生回数 == 0
 		LOCAL:1++
-	SIF CFLAG:髪の色 == 0
+	SIF CFLAG:髪色 == 0
 		LOCAL:1++
-	SIF CFLAG:染髪の有無 == 0
+	SIF CFLAG:染髪済 == 0
 		LOCAL:1++
 	SIF CFLAG:髪型 == 5
 		LOCAL:1++
@@ -357,7 +357,7 @@ IF A:2 == 0
 	CALL MISSION_ADD_EXP(TARGET)
 	IF LOCAL == 3
 		PRINTFORMW  そして%CALLNAME:TARGET%は肉体関係を持ったことで脅され、やむなく小野寺恭司と付き合うことになった……
-		EXP:彼氏とのＳＥＸ回数 += 1 + RAND:3
+		EXP:彼氏性経験 += 1 + RAND:3
 	ENDIF
 ELSE
 	TCVAR:絶頂経験 += 10 + RAND:11

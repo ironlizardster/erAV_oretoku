@@ -34,6 +34,9 @@ IF GLOBAL:16 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
 ENDIF
 RETURN GLOBAL:16
 
+@ACHIEVEMENT_HINT_16
+RESULTS = 「宮間かなで」「宮間未依」「宮間カナ」が【永遠の愛】
+
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_16
 ; 解説文
@@ -45,7 +48,7 @@ TEMP_STR += "これからも皆を幸せにしてあげてください"
 CALL HTML_PRINT_P(TEMP_STR)
 
 ; 宮間カナもう一体追加ってボーナスになってない気がする
-IF FLAG:難易度 > 0 && FLAG:みやまけボーナス受け取り == 0 && GLOBAL:51 == 1
+IF FLAG:難易度 > 0 && FLAG:みやまけボーナス受け取り == 0
 	IF GETCHARA([[キャラ:宮間カナ]], 0) >= 0
 		TEMP_STR = 《実績解除のボーナスとして実績「俺の妹がこんなにビッチなわけがない」のボーナス使用フラグがリセットされました》
 		CALL HTML_PRINT_P(TEMP_STR)

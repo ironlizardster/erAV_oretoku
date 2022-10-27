@@ -1006,7 +1006,7 @@ IF ビデオ売上 > 0
 	PRINTFORML 監督経験+1 （%CALLNAME:MASTER%）
 	EXP:MASTER:監督経験 += 1
 	CFLAG:TARGET:総売上 += ビデオ売上
-	MONEY:2 += ビデオ売上
+	MONEY:累計ビデオ売上 += ビデオ売上
 		IF TALENT:TARGET:ＡＶ女優 == 0
 			DRAWLINE
 			PRINTFORML %CALLNAME:TARGET%が【%TALENTNAME:[[TALENT:ＡＶ女優]]%】としてデビューした

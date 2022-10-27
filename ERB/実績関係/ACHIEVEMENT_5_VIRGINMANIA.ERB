@@ -19,11 +19,14 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:5 == 0 && DIFFICULTY_CHECK() && MONEY >= 5000000 && EXP:MASTER:[[EXP:キャラ売却経験（MASTER）]] == 0 && FLAG:報奨金受け取り == 0 && LOCAL >= 5
+IF GLOBAL:5 == 0 && DIFFICULTY_CHECK() && MONEY >= 5000000 && EXP:MASTER:キャラ売却経験 == 0 && FLAG:報奨金受け取り == 0 && LOCAL >= 5
 	GLOBAL:5 = 1
 	SAVEGLOBAL
 ENDIF
 RETURN GLOBAL:5
+
+@ACHIEVEMENT_HINT_5
+RESULTS = 初体験の相手なしで【処女】、【アナル処女】、【永遠の愛】の女優が5人以上いる(淫魔、アンドロイドを除く)
 
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_5
@@ -106,7 +109,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:3
 		FLAG:処女厨ボーナス受け取り = 1
 		SAVEGLOBAL
 	ELSEIF RESULT == 2 && GETCHARA([[キャラ:雛見まゆ]], 0) < 0
-		CALL EXCHARA_MANUAL_1
+		CALL CHARA_MANUAL([[キャラ:雛見まゆ]])
 		DRAWLINE
 		PRINTL 雛見まゆと契約しますか？
 		$INPUT_LOOP_MAYU
@@ -127,7 +130,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:3
 			CALL CLEARBONUS_CALL
 		ENDIF
 	ELSEIF RESULT == 3 && GETCHARA([[キャラ:ユーニス・パラディスス]], 0) < 0
-		CALL EXCHARA_MANUAL_2
+		CALL CHARA_MANUAL([[キャラ:ユーニス・パラディスス]])
 		DRAWLINE
 		PRINTL ユーニス・パラディススと契約しますか？
 		$INPUT_LOOP_YOUNIS

@@ -170,10 +170,10 @@ SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタ�
 SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 99 && CFLAG:特別コスチュームのタイプ == 99 && CFLAG:靴下の種類 == 99 && TALENT:小悪魔
 	RETURNF 501
 
-SIF (ASSI > 0 && CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 52 && CFLAG:髪の色 == 2 && CFLAG:髪型 == 4 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:髪の色 == 3 && CFLAG:ASSI:髪型 == 5) || (ASSI > 0 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:髪の色 == 2 && CFLAG:ASSI:髪型 == 4 && CFLAG:着衣状態 >= 12 && CFLAG:上着のタイプ == 52 && CFLAG:着衣状態 != 64 && CFLAG:髪の色 == 3 && CFLAG:髪型 == 5)
+SIF (ASSI > 0 && CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 52 && CFLAG:髪色 == 2 && CFLAG:髪型 == 4 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:髪色 == 3 && CFLAG:ASSI:髪型 == 5) || (ASSI > 0 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:髪色 == 2 && CFLAG:ASSI:髪型 == 4 && CFLAG:着衣状態 >= 12 && CFLAG:上着のタイプ == 52 && CFLAG:着衣状態 != 64 && CFLAG:髪色 == 3 && CFLAG:髪型 == 5)
 	RETURNF 502
 
-SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 51 && CFLAG:髪の色 == 2 && CFLAG:髪型 == 8 && TALENT:アイドル && TALENT:カリスマ
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 51 && CFLAG:髪色 == 2 && CFLAG:髪型 == 8 && TALENT:アイドル && TALENT:カリスマ
 	RETURNF 503
 
 SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 40 && CFLAG:特別コスチュームのタイプ == 74 && (TALENT:小悪魔 || TALENT:ギャル系)
@@ -188,16 +188,16 @@ SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタ�
 SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 244
 	RETURNF 507
 
-SIF TFLAG:コスプレ衣装 == 1 && CFLAG:髪の色 == 6 && CFLAG:髪型 == 4
+SIF TFLAG:コスプレ衣装 == 1 && CFLAG:髪色 == 6 && CFLAG:髪型 == 4
 	RETURNF 508
 
-SIF TFLAG:コスプレ衣装 == 16 && CFLAG:髪の色 == 11 && CFLAG:髪型 == 5
+SIF TFLAG:コスプレ衣装 == 16 && CFLAG:髪色 == 11 && CFLAG:髪型 == 5
 	RETURNF 509
 
 SIF TFLAG:コスプレ衣装 == 20 && TFLAG:ビデオ撮影内容 & 1 && TALENT:妹
 	RETURNF 510
 
-SIF TFLAG:コスプレ衣装 == 8 && A:3 && CFLAG:髪の色 == 10 && CFLAG:髪型 == 5 && BASE:実年齢 <= 22
+SIF TFLAG:コスプレ衣装 == 8 && A:3 && CFLAG:髪色 == 10 && CFLAG:髪型 == 5 && BASE:実年齢 <= 22
 	RETURNF 511
 
 SIF ASSI > 0 && TALENT:ファッションモデル && TALENT:カリスマ && TALENT:ASSI:ファッションモデル && TALENT:ASSI:カリスマ

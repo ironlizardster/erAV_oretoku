@@ -61,8 +61,9 @@ DO
 	CALL PRINT_BUTTON("[最初からはじめる]", 1, COMMAND_最初からはじめる, 最大文字数, 1)
 	CALL PRINT_BUTTON("[ロードしてはじめる]", 1, COMMAND_ロードしてはじめる, 最大文字数, 1)
 	CALL PRINT_BUTTON("[実績を確認する]", 1, COMMAND_実績を確認する, 最大文字数, 1)
+	CALL PRINT_BUTTON("[女優名鑑]", 1, COMMAND_女優名鑑, 最大文字数, 1)
 
-	CALL INPUTF, COMMAND_最初からはじめる, COMMAND_ロードしてはじめる, COMMAND_実績を確認する
+	CALL INPUTF, COMMAND_最初からはじめる, COMMAND_ロードしてはじめる, COMMAND_実績を確認する, COMMAND_女優名鑑
 
 	SELECTCASE RESULT
 		CASE COMMAND_最初からはじめる
@@ -77,6 +78,9 @@ DO
 			ADDCHARA 0
 			CALL PRINT_ACHIEVEMENT
 			DELCHARA 0
+		CASE COMMAND_女優名鑑
+			ALIGNMENT LEFT
+			CALL ACTRESS_LIST()
 		CASEELSE
 			CONTINUE
 	ENDSELECT

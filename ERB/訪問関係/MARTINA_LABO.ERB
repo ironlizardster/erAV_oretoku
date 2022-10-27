@@ -52,14 +52,7 @@ ENDIF
 LOCAL:0 = TARGET
 
 ;キャラを追加
-ADDVOIDCHARA
-
-;作成したキャラをターゲットにする
-TARGET = CHARANUM - 1
-
-;NOの設定
-NO = FLAG:汎用女優カウント + MIN_NO_RANDOM_CHARA
-FLAG:汎用女優カウント ++
+CALL キャラパラメータ決定(0)
 
 ;名前の決定(※素質決定後に行う)
 PRINTL 名前を入力してください
@@ -119,7 +112,7 @@ PRINTFORML %NAME:TARGET%の新たな芸名は%RESULTS%でよろしいですか�
 PRINTFORML 名前を《%NAME:TARGET%》、呼び方を《%CALLNAME:TARGET%》、芸名を《%NICKNAME:TARGET%》に変更しました
 
 ;素質と能力の決定
-CALL RANDOM_CHARA_SETTING()
+;CALL RANDOM_CHARA_SETTING()
 
 ;初期設定(※素質決定後に行う)
 ;CALL INIT_NEWCHARA(TARGET)

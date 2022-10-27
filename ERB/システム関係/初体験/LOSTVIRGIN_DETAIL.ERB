@@ -98,7 +98,7 @@ IF CFLAG:処女喪失場所 == 0 || CFLAG:処女喪失場所 >= 15
 ELSE
 	IF CFLAG:処女喪失場所 == 1
 		PRINTFORM %CALLNAME:TARGET%の部屋
-	ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:初体験の相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏とのＳＥＸ回数 >= 1
+	ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:初体験の相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏性経験 >= 1
 		IF CSTR:処女喪失の相手 == ""
 			PRINTFORM 元カレの部屋
 		ELSE

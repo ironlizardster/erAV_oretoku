@@ -17,12 +17,15 @@ IF GLOBAL:8 == 0 && DIFFICULTY_CHECK() && LOCAL > 0 && TALENT:LOCAL:セフレあ
 ENDIF
 RETURN GLOBAL:8
 
+@ACHIEVEMENT_HINT_8
+RESULTS = 「宮間かなで」が【セフレあり】、【絶倫】、【彼氏あり】で【処女】、【恋心】なし
+
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_8
 ; 解説文
-TEMP_STR = 最愛の妹である『宮間かなで』が頭も股もゆるい【黒ギャル】になってしまいました<br>
+TEMP_STR = 最愛の妹である「宮間かなで」が頭も股もゆるい【黒ギャル】になってしまいました<br>
 TEMP_STR += @"そんな%CALLNAME:MASTER%の心の叫びはきっと、この実績の名前と一緒でしょう<br>"
-TEMP_STR += "純情だった『宮間かなで』にもう一度逢いたい、と願ってもまた一からやり直すしかありません……"
+TEMP_STR += "純情だった「宮間かなで」にもう一度逢いたい、と願ってもまた一からやり直すしかありません……"
 CALL HTML_PRINT_P(TEMP_STR)
 
 ; ボーナスなどの処理はここ以降に記述する
@@ -30,7 +33,7 @@ IF FLAG:難易度 > 0 && !FLAG:俺妹ビッチボーナス受け取り && GETCHA
 	DRAWLINE
 
 	TEMP_STR = 須野郁美が助手可能になったので、ボーナスが解禁されました！<br>
-	TEMP_STR += "須野郁美の持つ最先端科学の知識により黒ギャルとなった『宮間かなで』の"
+	TEMP_STR += "須野郁美の持つ最先端科学の知識により黒ギャルとなった「宮間かなで」の"
 	TEMP_STR += "クローンを生み出すことができます<br>"
 	TEMP_STR += "※クローンのため、全ての経験はリセットされます。"
 	HTML_PRINT TEMP_STR
@@ -38,7 +41,7 @@ IF FLAG:難易度 > 0 && !FLAG:俺妹ビッチボーナス受け取り && GETCHA
 	PRINTFORML 《宮間かなでのクローンを作りますか？》
 	CALL GET_はいいいえ
 	IF RESULT == 0
-		PRINTFORMW 『宮間かなで』のクローンを生み出しました
+		PRINTFORMW 「宮間かなで」のクローンを生み出しました
 		CALL キャラ追加([[キャラ:宮間カナ]])
 		FLAG:俺妹ビッチボーナス受け取り = 1
 	ELSEIF RESULT == 1

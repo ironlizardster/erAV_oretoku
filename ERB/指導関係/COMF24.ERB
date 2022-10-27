@@ -416,7 +416,7 @@ SIF TEQUIP:触手召喚 || TEQUIP:獣姦プレイ
 SIF RELATION:TARGET:A < 150
 	RETURN 0
 PRINTL
-SIF TALENT:PLAYER:淫壺 && (EXP:PLAYER:彼氏とのＳＥＸ回数 >= 1 || EXP:PLAYER:セフレとのSEX回数 >= 1)
+SIF TALENT:PLAYER:淫壺 && (EXP:PLAYER:彼氏性経験 >= 1 || EXP:PLAYER:セフレ性経験 >= 1)
 	PRINTFORM 何人ものオトコの肉棒から精液を搾り取ってきた、
 PRINTFORM %NAME:PLAYER%の
 

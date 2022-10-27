@@ -198,7 +198,7 @@ IF TALENT:永遠の愛 == 0
 	CFLAG:彼氏の種類 = 0
 	TALENT:恋心 = 0
 	TALENT:ギャル系 = 1
-	EXP:彼氏とのＳＥＸ回数 += TCVAR:性交経験 / 2 + 2 + RAND(2)
+	EXP:彼氏性経験 += TCVAR:性交経験 / 2 + 2 + RAND(2)
 	ABL:信頼 = 0
 	PRINTFORM  清水桜子は研究を続けていくうちにギャルの世界にのめり込んでしまい、
 	PRINTFORML 神崎京一と付き合うことになったようだ……
@@ -222,7 +222,7 @@ ELSE
 		PRINTL 【ファーストキス】
 		RESETCOLOR
 	ENDIF
-	EXP:セフレとのSEX回数 += TCVAR:性交経験 / (2 + RAND(2))
+	EXP:セフレ性経験 += TCVAR:性交経験 / (2 + RAND(2))
 ENDIF
 ; 経験増加処理の呼び出し
 ; 対象のキャラのTCVARに代入された値を使って、

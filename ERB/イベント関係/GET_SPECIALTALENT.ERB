@@ -534,7 +534,7 @@ IF TALENT:両刀 == 0 && CFLAG:好感度 >= 1500 && EXP:レズ経験 >= 2000 && 
 ENDIF
 
 ;EXP:104はセフレとの経験
-IF EXP:セフレとのSEX回数 >= 20 && TALENT:貞操観念
+IF EXP:セフレ性経験 >= 20 && TALENT:貞操観念
 	PRINTFORMW %NAME:TARGET%の様子がおかしい……
 	PRINTFORM 以前は性的な行為にも抵抗があったようだが、何人ものセフレに抱かれていくうちに
 	PRINTFORML 性行為にも抵抗がなくなってきたようだ
@@ -543,7 +543,7 @@ IF EXP:セフレとのSEX回数 >= 20 && TALENT:貞操観念
 ENDIF
 
 ;TALENT:432なしでEXP:104は現状稼げないはず。死に分岐
-IF EXP:セフレとのSEX回数 >= 30 && TALENT:影響されやすい && TALENT:恋心 == 0 && TALENT:ギャル系 == 0
+IF EXP:セフレ性経験 >= 30 && TALENT:影響されやすい && TALENT:恋心 == 0 && TALENT:ギャル系 == 0
 	PRINTFORMW %NAME:TARGET%の様子がおかしい……
 	PRINTFORM %CALLNAME:TARGET%の『お気に入り』のセフレである%CSTR:セフレ姓%にだいぶ感化されたのか、
 	PRINTFORML 趣味嗜好がいわゆる【ギャル系】のそれに変わっていったようだ……
@@ -551,7 +551,7 @@ IF EXP:セフレとのSEX回数 >= 30 && TALENT:影響されやすい && TALENT:
 	TALENT:ギャル系 = 1
 ENDIF
 
-IF EXP:セフレとのSEX回数 >= 50 && TALENT:貞操無頓着 == 0 && TALENT:淫乱 == 1
+IF EXP:セフレ性経験 >= 50 && TALENT:貞操無頓着 == 0 && TALENT:淫乱 == 1
 	;△現状EXP:104の増加には要黒ギャル。
 	;どうもそれっぽいテクストじゃないような
 	;（あと前口上に移動予定）

@@ -207,7 +207,7 @@ CFLAG:COUNT:処女喪失シチュ = 3
 ;-------------------------------------------------
 @CHANGECLOTH_NTR_STAFF
 PRINTFORMW %NAME:COUNT%の様子がおかしい……
-	IF CFLAG:COUNT:髪の色 != 2
+	IF CFLAG:COUNT:髪色 != 2
 		PRINTFORM 髪の毛を急に染めたり、
 	ENDIF
 PRINTFORML 露出度の高い服装を好んで着るようになっている
@@ -222,9 +222,9 @@ CFLAG:COUNT:着衣状態 = 13
 CFLAG:COUNT:上着のタイプ = 205
 CFLAG:COUNT:靴下の種類 = 8
 CFLAG:COUNT:靴の種類 = 8
-IF CFLAG:COUNT:髪の色 != 2
-	CFLAG:COUNT:髪の色 = 2
-	CFLAG:COUNT:染髪の有無 = 1
+IF CFLAG:COUNT:髪色 != 2
+	CFLAG:COUNT:髪色 = 2
+	CFLAG:COUNT:染髪済 = 1
 ENDIF
 CFLAG:COUNT:髪型 = 7
 IF TALENT:COUNT:影響されやすい == 1
@@ -361,7 +361,7 @@ IF CFLAG:COUNT:初体験の相手 == 10
 	PRINTFORML 《%NAME:COUNT%の初体験の相手の名前がオープンされました》
 		CSTR:COUNT:処女喪失の相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
 		CFLAG:COUNT:初体験の相手 = 8
-		EXP:COUNT:彼氏とのＳＥＸ回数 += 10
+		EXP:COUNT:彼氏性経験 += 10
 ENDIF
 IF CFLAG:COUNT:ファーストキスの相手 == 10
 	PRINTFORML 《%NAME:COUNT%のファーストキスの相手の名前がオープンされました》

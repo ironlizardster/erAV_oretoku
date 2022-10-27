@@ -18,7 +18,7 @@ FOR LOCAL, 0, CURRENT_MAX_CHARA_ID
 		CONTINUE
 	;条件満たした番号をリストに登録
 	LOCAL:1++
-	SIF GLOBAL:(200 + LOCAL)
+	SIF 女優名鑑:LOCAL
 		LOCAL:2++
 NEXT
 
@@ -31,6 +31,9 @@ ENDIF
 
 RETURN GLOBAL:30
 
+@ACHIEVEMENT_HINT_30
+RESULTS = すべての固有女優(七色あかり含む)を手に入れたことがある
+
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_30
 ; 解説文
@@ -41,4 +44,6 @@ TEMP_STR += "奇妙な『女優名鑑』<br>"
 TEMP_STR += "これがあれば女優候補たちの指導もラクになるかもしれません"
 CALL HTML_PRINT_P(TEMP_STR)
 
-PRINTFORMW 《実績解除のボーナスとして実績『偉大なる処女厨』の使用制限が無限解除されます。また、マルチナ出現イベントの条件が緩和されます。》
+PRINTFORMW 《実績解除のボーナスとして実績『偉大なる処女厨』の使用制限が無限解除されます》
+PRINTFORMW 《実績解除のボーナスとしてマルチナ関連イベントの条件が緩和されます》
+PRINTFORMW 《実績解除のボーナスとしてミッション『お姫様は特訓中』で【永遠の愛】を持つクリスティナを孕ませた場合離脱しなくなります》

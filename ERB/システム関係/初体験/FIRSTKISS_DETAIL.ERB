@@ -97,7 +97,7 @@ IF CFLAG:ファーストキス喪失場所 == 0 || CFLAG:ファーストキス�
 ELSE
 	IF CFLAG:ファーストキス喪失場所 == 1
 		PRINTFORM %CALLNAME:TARGET%の部屋
-	ELSEIF CFLAG:ファーストキス喪失場所 == 2 && CFLAG:ファーストキスの相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏とのＳＥＸ回数 >= 1
+	ELSEIF CFLAG:ファーストキス喪失場所 == 2 && CFLAG:ファーストキスの相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏性経験 >= 1
 		IF CSTR:ファーストキスの相手 == ""
 			PRINTFORM 元カレの部屋
 		ELSE

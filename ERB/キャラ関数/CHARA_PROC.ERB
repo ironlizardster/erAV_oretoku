@@ -3,7 +3,7 @@ ADDCHARA ARG
 
 ;名鑑用の処理
 LOADGLOBAL
-GLOBAL:(200 + ARG) += 1
+女優名鑑:ARG += 1
 SAVEGLOBAL
 IF GETCHARA(ARG) != -1
 	TARGET = GETCHARA(ARG)
@@ -77,7 +77,7 @@ SIF CFLAG:ARG:朝フェラ係に任命 == 1
 
 ; CFLAGをクリア
 FOR LOCAL, 0, 999
-	SIF LOCAL == [[CFLAG:着衣状態]] || LOCAL == [[CFLAG:上着のタイプ]] || LOCAL == [[CFLAG:特別コスチュームのタイプ]] || LOCAL == [[CFLAG:靴下の種類]] || LOCAL == [[CFLAG:靴の種類]] || LOCAL == [[CFLAG:靴下の着用状態]] || LOCAL == [[CFLAG:ブラの色]] || LOCAL == [[CFLAG:ブラの種類]] || LOCAL == [[CFLAG:パンツの色]] || LOCAL == [[CFLAG:パンツの種類]] || LOCAL == [[CFLAG:予備の衣装]] || LOCAL == [[CFLAG:髪の色]] || LOCAL == [[CFLAG:染髪の有無]] || LOCAL == [[CFLAG:髪型]] || LOCAL == [[CFLAG:地毛の色]] || ((LOCAL == [[CFLAG:ペニスのサイズ]] || LOCAL == [[CFLAG:ペニスアクセサリの有無]] || LOCAL == [[CFLAG:包皮の状態]]) && (TALENT:ARG:ふたなり || TALENT:ARG:オトコ))
+	SIF LOCAL == [[CFLAG:着衣状態]] || LOCAL == [[CFLAG:上着のタイプ]] || LOCAL == [[CFLAG:特別コスチュームのタイプ]] || LOCAL == [[CFLAG:靴下の種類]] || LOCAL == [[CFLAG:靴の種類]] || LOCAL == [[CFLAG:靴下の着用状態]] || LOCAL == [[CFLAG:ブラの色]] || LOCAL == [[CFLAG:ブラの種類]] || LOCAL == [[CFLAG:パンツの色]] || LOCAL == [[CFLAG:パンツの種類]] || LOCAL == [[CFLAG:予備の衣装]] || LOCAL == [[CFLAG:髪色]] || LOCAL == [[CFLAG:染髪済]] || LOCAL == [[CFLAG:髪型]] || LOCAL == [[CFLAG:地毛の色]] || ((LOCAL == [[CFLAG:ペニスのサイズ]] || LOCAL == [[CFLAG:ペニスアクセサリの有無]] || LOCAL == [[CFLAG:包皮の状態]]) && (TALENT:ARG:ふたなり || TALENT:ARG:オトコ))
 		CONTINUE
 	CFLAG:ARG:LOCAL = 0
 NEXT
