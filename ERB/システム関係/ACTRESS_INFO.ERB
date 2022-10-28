@@ -63,7 +63,7 @@ ENDIF
 #DIM CHARA_NO
 #DIMS PROFILE_TEXT
 
-IF CHARA_NO == [[キャラ:ヒトミちゃん]] && !ヒトミちゃんミッション
+IF CHARA_NO == [[キャラ:ヒトミちゃん]] && !ミッション達成_ヒトミちゃん
 	PROFILE_TEXT '= CSVCSTR(CHARA_NO,[[CSTR:購入紹介テキスト]])
 ELSEIF CHARA_NO == [[キャラ:本城愛衣子]] && 女優名鑑:[[キャラ:レイチェル・パラディスス]] < 1
 	PROFILE_TEXT '= CSVCSTR(CHARA_NO,[[CSTR:購入紹介テキスト]])

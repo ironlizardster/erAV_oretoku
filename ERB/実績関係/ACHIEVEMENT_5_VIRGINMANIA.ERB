@@ -19,11 +19,11 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:5 == 0 && DIFFICULTY_CHECK() && MONEY >= 5000000 && EXP:MASTER:キャラ売却経験 == 0 && FLAG:報奨金受け取り == 0 && LOCAL >= 5
-	GLOBAL:5 = 1
+IF 実績達成:5 == 0 && DIFFICULTY_CHECK() && MONEY >= 5000000 && EXP:MASTER:キャラ売却経験 == 0 && FLAG:報奨金受け取り == 0 && LOCAL >= 5
+	実績達成:5 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:5
+RETURN 実績達成:5
 
 @ACHIEVEMENT_HINT_5
 RESULTS = 処女喪失相手なしで【処女】、【アナル処女】、【永遠の愛】の女優が5人以上いる(淫魔、アンドロイドを除く)
@@ -39,7 +39,7 @@ CALL HTML_PRINT_P(TEMP_STR)
 
 ; ボーナスなどの処理はここ以降に記述する
 ;空いてたので仮にFLAG:553を使用
-IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:30
+IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || 実績達成:30
 	DRAWLINE
 	PRINTFORML %CALLNAME:MASTER%はかなり過酷な実績を解除しました
 	PRINTFORML そんな%CALLNAME:MASTER%にはボーナスを贈ります
@@ -125,7 +125,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:3
 		ELSE
 			GOTO INPUT_LOOP_MAYU
 		ENDIF
-		IF GLOBAL:200 >= 0
+		IF 所持クリアポイント >= 0
 			TARGET = GETCHARA([[キャラ:雛見まゆ]])
 			CALL CLEARBONUS_CALL
 		ENDIF
@@ -146,7 +146,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:3
 		ELSE
 			GOTO INPUT_LOOP_YOUNIS
 		ENDIF
-		IF GLOBAL:200 >= 0
+		IF 所持クリアポイント >= 0
 			TARGET = GETCHARA([[キャラ:ユーニス・パラディスス]])
 			CALL CLEARBONUS_CALL
 		ENDIF

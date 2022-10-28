@@ -11,11 +11,11 @@ RESULTS = 俺の妹がこんなにビッチなわけがない
 ; 条件を満たす人数の計算 (※ これは例文です)
 LOCAL = GETCHARA([[キャラ:宮間かなで]] ,0)
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:8 == 0 && DIFFICULTY_CHECK() && LOCAL > 0 && TALENT:LOCAL:セフレあり && TALENT:LOCAL:絶倫 && TALENT:LOCAL:彼氏あり && !TALENT:LOCAL:処女 && !TALENT:LOCAL:恋心
-	GLOBAL:8 = 1
+IF 実績達成:8 == 0 && DIFFICULTY_CHECK() && LOCAL > 0 && TALENT:LOCAL:セフレあり && TALENT:LOCAL:絶倫 && TALENT:LOCAL:彼氏あり && !TALENT:LOCAL:処女 && !TALENT:LOCAL:恋心
+	実績達成:8 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:8
+RETURN 実績達成:8
 
 @ACHIEVEMENT_HINT_8
 RESULTS = 「宮間かなで」が【セフレあり】、【絶倫】、【彼氏あり】で【処女】、【恋心】なし

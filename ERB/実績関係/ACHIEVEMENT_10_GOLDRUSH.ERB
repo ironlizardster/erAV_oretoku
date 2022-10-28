@@ -9,11 +9,11 @@ RESULTS = GOLD RUSH
 ; 実績の達成条件
 @ACHIEVEMENT_CALC_10
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:10 == 0 && DIFFICULTY_CHECK() && MONEY:累計ビデオ売上 >= 5000000
-	GLOBAL:10 = 1
+IF 実績達成:10 == 0 && DIFFICULTY_CHECK() && MONEY:累計ビデオ売上 >= 5000000
+	実績達成:10 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:10
+RETURN 実績達成:10
 
 @ACHIEVEMENT_HINT_10
 RESULTS = 累計ビデオ売上が500万以上

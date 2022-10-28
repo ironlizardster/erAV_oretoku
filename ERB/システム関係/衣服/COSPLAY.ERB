@@ -51,7 +51,7 @@ ELSEIF TFLAG:コスプレ衣装 == 23
 ;ELSEIF TFLAG:コスプレ衣装 == 28
 ;△裸エプロンコスプレ中、だとなんか違うので保留。
 ELSEIF TFLAG:コスプレ衣装 == 31
-	PRINTFORM %CSTR:MASTER:アイドルユニット名%の
+	PRINTFORM %STR:アイドルユニット名%の
 ELSE
 	PRINT 
 ENDIF
@@ -104,7 +104,7 @@ IF ITEM:エプロン == 1
 	PRINTFORML [27] - 裸エプロン
 ENDIF
 IF FLAG:アイドルユニット結成
-	PRINTFORML [30] - %CSTR:MASTER:アイドルユニット名%の制服
+	PRINTFORML [30] - %STR:アイドルユニット名%の制服
 ENDIF
 DRAWLINE
 INPUT
@@ -184,7 +184,7 @@ ELSEIF RESULT == 27 && ITEM:エプロン == 1
 	TFLAG:コスプレ衣装 = 28
 						;****スライムパッチ追加ここまで****
 ELSEIF RESULT == 30 && FLAG:アイドルユニット結成
-	PRINTFORMW %CALLNAME:TARGET%に%CSTR:MASTER:アイドルユニット名%の制服を着せた
+	PRINTFORMW %CALLNAME:TARGET%に%STR:アイドルユニット名%の制服を着せた
 	TFLAG:コスプレ衣装 = 31
 ELSE
 	PRINTFORMW 着用を拒否されました

@@ -5,7 +5,7 @@
 #DIM POINT
 
 LOADGLOBAL
-POINT = GLOBAL:200
+POINT = 所持クリアポイント
 
 $INPUT_LOOP
 PRINTL □キャラクリボーナス□
@@ -46,7 +46,7 @@ IF LOCAL:6 == 0
 ELSE
 	PRINTL [ -] - －－－－－－－－－－
 ENDIF
-IF LOCAL:7 == 0 && GLOBAL:60 == 1
+IF LOCAL:7 == 0 && ミッション達成_エレン
 	PRINTL [ 7] - 借金が一切ない状態で開始　　　　　　　　　　　　 　　　  　 （100ポイント）
 ELSE
 	PRINTL [ -] - －－－－－－－－－－
@@ -86,7 +86,7 @@ IF LOCAL:2 == 0 && LOCAL:9 == 0 && LOCAL:11 == 0 && LOCAL:13 == 0
 ELSE
 	PRINTL [ -] - －－－－－－－－－－
 ENDIF
-IF LOCAL:15 == 0 && GLOBAL:30
+IF LOCAL:15 == 0 && 実績達成:30
 	PRINTL [15] - 全ての女優候補のうち一名が最初から所属している状態で開始する （300ポイント）
 ELSE
 	PRINTL [ -] - －－－－－－－－－－
@@ -273,7 +273,7 @@ ELSEIF RESULT == 6 && LOCAL:6 == 0 && POINT >= 50
 ELSEIF RESULT == 6 && LOCAL:6 == 0 && POINT < 50
 	PRINTL 《ボーナスポイントが不足しています》
 	GOTO INPUT_LOOP
-ELSEIF RESULT == 7 && LOCAL:7 == 0 && GLOBAL:60 == 1 && POINT >= 100
+ELSEIF RESULT == 7 && LOCAL:7 == 0 && ミッション達成_エレン && POINT >= 100
 	PRINTL ゲームクリアに必要な借金が無い状態でゲームを開始します
 	PRINTL このボーナスを使用したことによるペナルティはありません
 	$INPUT_LOOP_NOCHARGE2
@@ -559,18 +559,3 @@ ELSE
 ENDIF
 
 RETURN
-
-;===========================================================
-;クリアボーナスの計算
-;===========================================================
-@CHARACLEAR_CALC
-REPEAT CHARANUM
-	IF COUNT == 0
-		CONTINUE
-	ELSEIF TALENT:COUNT:永遠の愛 == 1 && CFLAG:COUNT:850 == 0
-		LOADGLOBAL
-		CFLAG:COUNT:850 = 1
-		GLOBAL:200 += 1
-		SAVEGLOBAL
-	ENDIF
-REND

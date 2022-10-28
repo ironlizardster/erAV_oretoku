@@ -260,6 +260,15 @@ LOOP LOOPRES(数値:0, 数値:1, 数値:2, 数値:3, 数値:4, 数値:5, 数値:
 
 RETURN RESULT
 
+@HTML_HINT(STRING)
+#FUNCTIONS
+#DIMS STRING
+
+RETURNF @"<font color='#0xCCCCFF'>%STRING%</font>"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;パラグラフを出力してWAITする
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 @HTML_PRINT_P(STRING,ALIGN="LEFT")
 #DIMS STRING
 #DIMS ALIGN
@@ -291,6 +300,10 @@ IF RESULT
 	FOR LOCAL, 0, PART_COUNT
 		IF LOCALS:LOCAL == "<font color='#0xDDBBCC' face='あくびん'>"
 			REPLACE_STRING '= LOCALS:(LOCAL + 1)
+[IF_DEBUG]
+DEBUGPRINTFORML %REPLACE_STRING%
+DEBUGPRINTFORML %"<font color='#0xDDBBCC' face='" + 萌フォント + "'><b>" + REPLACE_STRING + "</b></font>"%
+[ENDIF]
 			STRING '= REPLACE(STRING, REPLACE_STRING, "<font color='#0xDDBBCC' face='" + 萌フォント + "'><b>" + REPLACE_STRING + "</b></font>")
 		ENDIF
 	NEXT

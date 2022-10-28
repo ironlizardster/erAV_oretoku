@@ -519,6 +519,9 @@ RETURN
 ;ヘアスタイルの処理
 ;===========================================================
 @MOTOKANO_SETUPFINISH
+#DIMS TMP_彼氏姓
+#DIMS TMP_彼氏名
+
 FLAG:陥落人数 += 1
 
 CALL キャラ追加([[キャラ:野々宮初佳]])
@@ -589,8 +592,8 @@ ENDIF
 						;****カノ設定改造追加ここから****
 IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
 	IF (元カノ初キス相手 == 2) || (元カノ処女喪失相手 == 2)
-		CSTR:アイドルユニット名 = %CSTR:彼氏姓%
-		CSTR:レーベル名 = %CSTR:彼氏名%
+		TMP_彼氏姓 = %CSTR:彼氏姓%
+		TMP_彼氏名 = %CSTR:彼氏名%
 	ENDIF
 	CFLAG:彼氏有 = 1
 	TALENT:彼氏あり = 1
@@ -664,7 +667,7 @@ ELSEIF FLAG:元カノ初キス相手 == 2
 	CFLAG:初キス相手 = 8
 						;****カノ設定改造追加ここから****
 	IF (元カノ処女喪失相手 == 3) || (CFLAG:MASTER:240 == 3)
-		CSTR:初キス相手 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:初キス相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -684,7 +687,7 @@ IF FLAG:元カノ処女喪失相手 == 1
 ELSEIF FLAG:元カノ処女喪失相手 == 2
 						;****カノ設定改造追加ここから****
 	IF (元カノ初キス相手 == 3) || (CFLAG:MASTER:240 == 3)
-		CSTR:初キス相手 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:初キス相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -793,7 +796,7 @@ IF CFLAG:MASTER:240 == 1
 		CSTR:MASTER:童貞喪失の相手 = %CSTR:MASTER:元カノ名%
 ELSEIF CFLAG:MASTER:240 == 2
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
-		CSTR:アナル処女喪失相手 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:アナル処女喪失相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:アナル処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -942,7 +945,7 @@ ELSEIF CFLAG:MASTER:236 == 2
 	CFLAG:出産日 = 10 + RAND:3
 	CFLAG:妊娠精子キャラ番号 = -5
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
-		CSTR:妊娠精液 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:妊娠精液 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:妊娠精液 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -980,6 +983,8 @@ ENDIF
 ;ヘアスタイルの処理
 ;===========================================================
 @MOTOKANO_EXTRASETUP
+#DIMS TMP_彼氏姓
+#DIMS TMP_彼氏名
 
 						;****カノ設定改造追加ここから****
 IF ((FLAG:元カノ存在 & 2) == 0 && FLAG:今カノ存在 == 0)|| (FLAG:今カノ存在 & 2) == 0
@@ -1190,8 +1195,8 @@ ENDIF
 						;****カノ設定改造追加ここから****
 IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
 	IF (元カノ初キス相手 == 2) || (元カノ処女喪失相手 == 2)
-		CSTR:アイドルユニット名 = %CSTR:彼氏姓%
-		CSTR:レーベル名 = %CSTR:彼氏名%
+		TMP_彼氏姓 = %CSTR:彼氏姓%
+		TMP_彼氏名 = %CSTR:彼氏名%
 	ENDIF
 	CFLAG:彼氏有 = 1
 	TALENT:彼氏あり = 1
@@ -1268,7 +1273,7 @@ IF FLAG:元カノ初キス相手 == 1
 		CSTR:MASTER:初キス相手 = %CALLNAME:TARGET%
 ELSEIF FLAG:元カノ初キス相手 == 2
 	IF (元カノ処女喪失相手 == 3) || (CFLAG:MASTER:240 == 3)
-		CSTR:初キス相手 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:初キス相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -1287,7 +1292,7 @@ IF FLAG:元カノ処女喪失相手 == 1
 		CSTR:MASTER:童貞喪失の相手 = %CALLNAME:TARGET%
 ELSEIF FLAG:元カノ処女喪失相手 == 2
 	IF (元カノ初キス相手 == 3) || (CFLAG:MASTER:240 == 3)
-		CSTR:処女喪失の相手 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:処女喪失の相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:処女喪失の相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -1426,7 +1431,7 @@ IF CFLAG:MASTER:240 == 1
 		CSTR:MASTER:童貞喪失の相手 = %CALLNAME:TARGET%
 ELSEIF CFLAG:MASTER:240 == 2
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
-		CSTR:アナル処女喪失相手 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:アナル処女喪失相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:アナル処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
@@ -1578,7 +1583,7 @@ ELSEIF CFLAG:MASTER:236 == 2
 	CFLAG:出産日 = 10 + RAND:3
 	CFLAG:妊娠精子キャラ番号 = -5
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
-		CSTR:妊娠精液 = %CSTR:アイドルユニット名%%CSTR:レーベル名%
+		CSTR:妊娠精液 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:妊娠精液 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF

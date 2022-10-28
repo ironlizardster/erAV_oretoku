@@ -208,17 +208,17 @@ CALL MISSION_ADD_EXP(TARGET)
 CALL MISSION_ADD_EXP(ASSI)
 
 IF ARG == 0
-	FLAG:565 = 1
-	FLAG:566 = 0
+	FLAG:エレンミッション失敗 = 1
+	FLAG:借金チャラ = 0
 	FLAG:目標金額 *= 100
 	CALL ADD_CATASTROPH(TARGET)
 	CALL ADD_CATASTROPH(ASSI)
 ELSEIF ARG >= 1
 	FLAG:目標金額 = 0
-	FLAG:565 = 0
-	FLAG:566 = 1
+	FLAG:エレンミッション失敗 = 0
+	FLAG:借金チャラ = 1
 	LOADGLOBAL
-		GLOBAL:60 = 1
+		ミッション達成_エレン = 1
 	SAVEGLOBAL
 	PRINTL
 	PRINTFORML 　※ここから先の内容は能力変化に関係ありません

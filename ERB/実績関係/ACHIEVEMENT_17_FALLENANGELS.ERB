@@ -10,7 +10,7 @@ RESULTS = FALLEN ANGELS
 @ACHIEVEMENT_CALC_17
 ; 条件を満たす人数の計算
 SIF ミッション結果:135 < 3 || ミッション結果:144 < 3
-	RETURN GLOBAL:17
+	RETURN 実績達成:17
 
 LOCAL = 0
 
@@ -27,11 +27,11 @@ SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女
 	LOCAL++
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:17 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
-	GLOBAL:17 = 1
+IF 実績達成:17 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
+	実績達成:17 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:17
+RETURN 実績達成:17
 
 @ACHIEVEMENT_HINT_17
 RESULTS = 「雛見春乃」「雛見まゆ」「羽瀬川みこと」が【絶倫】で【処女】なし、【アナル処女】なし

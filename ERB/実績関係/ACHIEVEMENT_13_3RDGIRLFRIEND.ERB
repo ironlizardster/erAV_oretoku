@@ -24,11 +24,11 @@ SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
 	LOCAL++
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:13 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
-	GLOBAL:13 = 1
+IF 実績達成:13 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
+	実績達成:13 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:13
+RETURN 実績達成:13
 
 @ACHIEVEMENT_HINT_13
 RESULTS = 「宮間かなで」「佐々木美乃里」「新島みひろ」が【永遠の愛】

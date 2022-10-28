@@ -9,11 +9,11 @@ RESULTS = 夜王
 ; 実績の達成条件
 @ACHIEVEMENT_CALC_11
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:11 == 0 && DIFFICULTY_CHECK() && EXP:MASTER:貢献度 >= 500
-	GLOBAL:11 = 1
+IF 実績達成:11 == 0 && DIFFICULTY_CHECK() && EXP:MASTER:貢献度 >= 500
+	実績達成:11 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:11
+RETURN 実績達成:11
 
 @ACHIEVEMENT_HINT_11
 RESULTS = 貢献度が500以上

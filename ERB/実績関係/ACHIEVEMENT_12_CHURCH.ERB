@@ -28,11 +28,11 @@ SIF LOCAL:1 > 0 && CFLAG:(LOCAL:1):売却助手可能 >= 2
 	LOCAL += CFLAG:(LOCAL:1):総売上
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:12 == 0 && DIFFICULTY_CHECK() && LOCAL >= 2000000
-	GLOBAL:12 = 1
+IF 実績達成:12 == 0 && DIFFICULTY_CHECK() && LOCAL >= 2000000
+	実績達成:12 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:12
+RETURN 実績達成:12
 
 @ACHIEVEMENT_HINT_12
 RESULTS = 「三上聖佳」「蒼井遙」「桐島翔子」「雨草愛理」のビデオ売上が200万以上

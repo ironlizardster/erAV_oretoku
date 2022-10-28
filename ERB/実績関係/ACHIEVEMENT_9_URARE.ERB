@@ -19,11 +19,11 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:9 == 0 && DIFFICULTY_CHECK() && LOCAL >= 3
-	GLOBAL:9 = 1
+IF 実績達成:9 == 0 && DIFFICULTY_CHECK() && LOCAL >= 3
+	実績達成:9 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:9
+RETURN 実績達成:9
 
 @ACHIEVEMENT_HINT_9
 RESULTS = 【はるうられ】で売却可能な女優が3人以上いる

@@ -18,11 +18,11 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:1 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
-	GLOBAL:1 = 1
+IF 実績達成:1 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	実績達成:1 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:1
+RETURN 実績達成:1
 
 @ACHIEVEMENT_HINT_1
 RESULTS = 助手候補の中に童顔または実年齢が15歳以下の女優が4人以上いる(淫魔、アンドロイド、天使を除く)

@@ -19,11 +19,11 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:3 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
-	GLOBAL:3 = 1
+IF 実績達成:3 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	実績達成:3 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:3
+RETURN 実績達成:3
 
 @ACHIEVEMENT_HINT_3
 RESULTS = 【妹】で【恋心】の女優が4人以上いる

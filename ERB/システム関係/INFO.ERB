@@ -193,7 +193,7 @@ IF TALENT:ColorfulPureGirls
 ENDIF
 IF TALENT:オリジナルユニット && TALENT:アイドル
 	SETCOLOR 0xFFD700
-	CALL PRINT_TALENTNAME(CSTR:MASTER:アイドルユニット名,COLUMN,SHOWCOLUMN)
+	CALL PRINT_TALENTNAME(STR:アイドルユニット名,COLUMN,SHOWCOLUMN)
 ENDIF
 SIF COLUMN > 0
 	PRINTL
@@ -895,40 +895,6 @@ SIF TFLAG:失神中終了 >= 1
 ;ココより↑にTEQUIPに登録したものを書き込む
 PRINTL  
 ENDIF
-
-;========================================================
-;セーブ時のテキストの設定
-;;========================================================
-@SAVEINFO
-
-IF FLAG:難易度 == 1
-	PUTFORM EASY/
-ELSEIF FLAG:難易度 == 2
-	IF FLAG:EASY経由
-		PUTFORM NORMAL/
-	ELSE
-		PUTFORM 実績チャレンジ/
-	ENDIF
-ELSEIF FLAG:難易度 == 3
-	PUTFORM HARD/
-ELSEIF FLAG:難易度 == 4
-	PUTFORM POWERFUL/
-ELSEIF FLAG:難易度 == 9
-	PUTFORM EXTRA/
-ENDIF
-
-CALL PRINT_DAY_TIME
-
-SIF FLAG:前回調教対象 >= 0
-	TARGET = FLAG:前回調教対象
-SIF FLAG:前回助手 >= 0
-	ASSI = FLAG:前回助手
-
-SIF TARGET >= 1
-	PUTFORM  前回:%NAME:TARGET%指導
-;
-;
-;
 
 ;****追加ここから****
 

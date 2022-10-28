@@ -10,7 +10,7 @@ RESULTS = みやまけ
 @ACHIEVEMENT_CALC_16
 ; 条件を満たす人数の計算
 SIF NO:MASTER != [[キャラ:あなた]] || ミッション結果:141 < 3
-	RETURN GLOBAL:16
+	RETURN 実績達成:16
 
 LOCAL = 0
 
@@ -28,11 +28,11 @@ SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
 
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:16 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
-	GLOBAL:16 = 1
+IF 実績達成:16 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
+	実績達成:16 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:16
+RETURN 実績達成:16
 
 @ACHIEVEMENT_HINT_16
 RESULTS = 「宮間かなで」「宮間未依」「宮間カナ」が【永遠の愛】

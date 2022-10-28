@@ -586,9 +586,6 @@ IF RESULT == 0 && (FLAG:エレン紹介雇用 & 1) == 0 && MONEY >= 1000000 && (
 	PRINTL
 	PRINTFORML 《佐倉由希と契約しました》
 	FLAG:エレン紹介雇用 |= 1
-	LOADGLOBAL
-		GLOBAL:350 += 1
-	SAVEGLOBAL
 	CALL キャラ追加([[キャラ:佐倉由希]])
 ELSEIF RESULT == 0 && (FLAG:エレン紹介雇用 & 1) == 0 && MONEY < 1000000
 	PRINTFORMW 《所持金が足りません》
@@ -610,9 +607,6 @@ ELSEIF RESULT == 1 && (FLAG:エレン紹介雇用 & 2) == 0 && MONEY >= 1000000
 	PRINTL
 	PRINTFORML 《小鳥遊乃絵美と契約しました》
 	FLAG:エレン紹介雇用 |= 2
-	LOADGLOBAL
-		GLOBAL:351 += 1
-	SAVEGLOBAL
 	CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
 ELSEIF RESULT == 1 && (FLAG:エレン紹介雇用 & 2) == 0 && MONEY < 1000000
 	PRINTFORMW 《所持金が足りません》
@@ -637,9 +631,6 @@ ELSEIF RESULT == 2 && (FLAG:エレン紹介雇用 & 4) == 0 && MONEY >= 1000000
 	PRINTL
 	PRINTFORML 《新堂あゆみと契約しました》
 	FLAG:エレン紹介雇用 |= 4
-	LOADGLOBAL
-		GLOBAL:352 += 1
-	SAVEGLOBAL
 	CALL キャラ追加([[キャラ:新堂あゆみ]])
 ELSEIF RESULT == 3 && (FLAG:エレン紹介雇用 & 8) == 0 && MONEY >= 10000 && CFLAG:MASTER:238 == 2
 	PRINTFORML %CALLNAME:MASTER%は%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%を紹介してもらうことにした……
@@ -653,10 +644,7 @@ ELSEIF RESULT == 3 && (FLAG:エレン紹介雇用 & 8) == 0 && MONEY >= 10000 &&
 	PRINTL
 	PRINTFORML 《%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%と契約しました》
 	FLAG:エレン紹介雇用 |= 8
-	LOADGLOBAL
-		GLOBAL:380 += 1
-	SAVEGLOBAL
-	IF GLOBAL:200 >= 0 && FLAG:寝取られなし == 0
+	IF 所持クリアポイント >= 0 && FLAG:寝取られなし == 0
 		IF GETCHARA([[キャラ:野々宮初佳]], 0) >= 0
 			TARGET = GETCHARA([[キャラ:野々宮初佳]])
 			CALL CLEARBONUS_CALL

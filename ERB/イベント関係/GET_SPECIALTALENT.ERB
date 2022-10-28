@@ -442,6 +442,11 @@ IF ((!TALENT:ルーンマスター && ABL:信頼 >= 7 && ABL:奉仕精神 >= 7 &
 	PRINTFORM %CALLNAME:MASTER%に結婚してもらえなくてもいい、それでもそばにいさせてほしい
 	PRINTFORMW ……と、%CALLNAME:MASTER%に【%TALENTNAME:[[TALENT:永遠の愛]]%】を誓った
 	TALENT:永遠の愛 = 1
+
+	LOADGLOBAL
+	所持クリアポイント += 1
+	SAVEGLOBAL
+
 	IF CFLAG:スタッフNTR進行度
 		CFLAG:スタッフNTR進行度 = 0
 		CFLAG:彼氏有 = 0

@@ -6,28 +6,28 @@ LOCAL = RAND:7
 
 IF LOCAL == 0
 	PRINTFORM メディタレーニアン・コム
-	CSTR:MASTER:レーベル名 = メディタレーニアン・コム
+	STR:レーベル名 = メディタレーニアン・コム
 ELSEIF LOCAL == 1
 	PRINTFORM SkyPrincess Ent.
-	CSTR:MASTER:レーベル名 = SkyPrincess Ent
+	STR:レーベル名 = SkyPrincess Ent
 ELSEIF LOCAL == 2
 	PRINTFORM アジアンドリーム
-	CSTR:MASTER:レーベル名 = アジアンドリーム
+	STR:レーベル名 = アジアンドリーム
 ELSEIF LOCAL == 3
 	PRINTFORM Infinite Ent.
-	CSTR:MASTER:レーベル名 = Infinite Ent
+	STR:レーベル名 = Infinite Ent
 ELSEIF LOCAL == 4
 	PRINTFORM 日本熱
-	CSTR:MASTER:レーベル名 = 日本熱
+	STR:レーベル名 = 日本熱
 ELSEIF LOCAL == 5
 	PRINTFORM BlueCold Ent.
-	CSTR:MASTER:レーベル名 = BlueCold Ent.
+	STR:レーベル名 = BlueCold Ent.
 ELSEIF LOCAL == 6
 	PRINTFORM S-1 Pictures
-	CSTR:MASTER:レーベル名 = S-1 Pictures
+	STR:レーベル名 = S-1 Pictures
 ELSE
 	PRINTFORM ニンジャポルノ
-	CSTR:MASTER:レーベル名 = ニンジャポルノ
+	STR:レーベル名 = ニンジャポルノ
 ENDIF
 ;===========================================================
 ;レーベル名の処理
@@ -47,7 +47,7 @@ IF EXP:MASTER:監督経験 == 0
 	PRINTL [2] - 相談しなおす
 	INPUT
 	IF RESULT == 0
-		PRINTFORML レーベル名を【%CSTR:MASTER:レーベル名%】に決定しました
+		PRINTFORML レーベル名を【%STR:レーベル名%】に決定しました
 	ELSEIF RESULT == 1
 		PRINTFORML レーベル名を入力してください
 		INPUTS
@@ -56,7 +56,7 @@ IF EXP:MASTER:監督経験 == 0
 				GOTO INPUT_LOOP_1
 			ENDIF
 			PRINTFORML レーベル名を【%RESULTS%】に決定しました
-			CSTR:MASTER:レーベル名 = %RESULTS%
+			STR:レーベル名 = %RESULTS%
 	ELSE
 		GOTO INPUT_LOOP_1
 	ENDIF

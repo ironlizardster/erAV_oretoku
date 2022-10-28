@@ -61,7 +61,7 @@ INPUT
 				IF RESULT == 0
 					PRINTFORML %CALLNAME:B%たちを%RESULTS%として売り出すことにしました
 					DRAWLINE
-					CSTR:MASTER:アイドルユニット名 = %RESULTS%
+					STR:アイドルユニット名 = %RESULTS%
 					FLAG:アイドルユニット結成 = 1
 					REPEAT CHARANUM
 						IF COUNT == 0
@@ -99,13 +99,13 @@ REPEAT CHARANUM
 		CONTINUE
 	ELSE
 		$INPUT_LOOP_DECIDE3
-		PRINTFORML ソロ活動中の%NAME:COUNT%を%CSTR:MASTER:アイドルユニット名%に加入させますか？
+		PRINTFORML ソロ活動中の%NAME:COUNT%を%STR:アイドルユニット名%に加入させますか？
 		PRINTFORML （%CALLNAME:COUNT%のレッスン料として500000ポイントかかります）
 			PRINTL [0] - はい
 			PRINTL [1] - いいえ
 			INPUT
 				IF RESULT == 0
-					PRINTFORML %CALLNAME:COUNT%を%CSTR:MASTER:アイドルユニット名%に加入させました
+					PRINTFORML %CALLNAME:COUNT%を%STR:アイドルユニット名%に加入させました
 					DRAWLINE
 					CALL IDOL_PRODUCE_ADD_ORIGINAL(COUNT)
 					MONEY -= 500000

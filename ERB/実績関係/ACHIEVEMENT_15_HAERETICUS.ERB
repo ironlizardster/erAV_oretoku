@@ -28,11 +28,11 @@ SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
 	LOCAL++
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:15 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
-	GLOBAL:15 = 1
+IF 実績達成:15 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	実績達成:15 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:15
+RETURN 実績達成:15
 
 @ACHIEVEMENT_HINT_15
 RESULTS = 「レイチェル・Ｐ」「リーナ・レスピーチオ」「上坂美紅」「ユーニス・パラディスス」が【永遠の愛】

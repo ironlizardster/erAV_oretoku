@@ -19,11 +19,11 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:6 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
-	GLOBAL:6 = 1
+IF 実績達成:6 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	実績達成:6 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:6
+RETURN 実績達成:6
 
 @ACHIEVEMENT_HINT_6
 RESULTS = 【彼氏あり】で彼氏性経験がある女優が4人以上いる

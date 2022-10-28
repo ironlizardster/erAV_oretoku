@@ -24,12 +24,12 @@ NEXT
 
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF !GLOBAL:30 && DIFFICULTY_CHECK() && LOCAL:2 == LOCAL:1
-	GLOBAL:30 = 1
+IF !実績達成:30 && DIFFICULTY_CHECK() && LOCAL:2 == LOCAL:1
+	実績達成:30 = 1
 	SAVEGLOBAL
 ENDIF
 
-RETURN GLOBAL:30
+RETURN 実績達成:30
 
 @ACHIEVEMENT_HINT_30
 RESULTS = すべての固有女優(七色あかり含む)を手に入れたことがある

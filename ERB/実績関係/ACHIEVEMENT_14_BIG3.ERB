@@ -24,11 +24,11 @@ SIF LOCAL:1 > 0 && TALENT:(LOCAL:1):永遠の愛
 	LOCAL++
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:14 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
-	GLOBAL:14 = 1
+IF 実績達成:14 == 0 && DIFFICULTY_CHECK() && LOCAL == 3
+	実績達成:14 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:14
+RETURN 実績達成:14
 
 @ACHIEVEMENT_HINT_14
 RESULTS = 「レイチェル・パラディスス」「桐生歌音」「須野郁美」が【永遠の愛】

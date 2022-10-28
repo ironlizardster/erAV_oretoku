@@ -4,7 +4,7 @@
 @CLEARBONUS_CALL_CHARA
 TRYCALLFORM CLEARBONUS_CHARA_{(NO:TARGET)}
 LOADGLOBAL
-SIF GLOBAL:200 >= 500
+SIF 所持クリアポイント >= 500
 	CALL CLEARBONUS_CHARA_EXTEND
 
 ;===========================================================
@@ -185,7 +185,7 @@ ELSEIF RESULT == 0
 	ABL:奉仕精神 = 7
 	MARK:屈服刻印 = 3
 	LOADGLOBAL
-	GLOBAL:200 -= 500
+	所持クリアポイント -= 500
 	SAVEGLOBAL
 	X += 500
 	EXP:愛情経験 = 500

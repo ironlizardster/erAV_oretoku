@@ -9,11 +9,11 @@ RESULTS = スケコマシ
 ; 実績の達成条件
 @ACHIEVEMENT_CALC_0
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:0 == 0 && DIFFICULTY_CHECK() && FLAG:陥落人数 >= 10
-	GLOBAL:0 = 1
+IF 実績達成:0 == 0 && DIFFICULTY_CHECK() && FLAG:陥落人数 >= 10
+	実績達成:0 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:0
+RETURN 実績達成:0
 
 @ACHIEVEMENT_HINT_0
 RESULTS = 周回で10人以上陥落

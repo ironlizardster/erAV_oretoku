@@ -19,11 +19,11 @@ FOR COUNT, 0, CHARANUM
 		BREAK
 NEXT
 ; 条件を達成している場合は実績番号のグローバルを1にする
-IF GLOBAL:7 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
-	GLOBAL:7 = 1
+IF 実績達成:7 == 0 && DIFFICULTY_CHECK() && LOCAL >= 4
+	実績達成:7 = 1
 	SAVEGLOBAL
 ENDIF
-RETURN GLOBAL:7
+RETURN 実績達成:7
 
 @ACHIEVEMENT_HINT_7
 RESULTS = 【褐色肌】で【ギャル系】の女優が4人以上いる

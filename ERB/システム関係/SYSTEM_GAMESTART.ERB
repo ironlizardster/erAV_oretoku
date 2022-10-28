@@ -24,18 +24,61 @@ PRINTL
 DRAWLINE
 WAIT
 
-;一日目の午後からスタート（DAYは初期値で0）
+CALL NEWGAME_START
+
+
+@NEWGAME_START
+CALL RESET_FLAGS
+CALL DEFAULT_CONFIGS
+
+;ゲームモード選択
+CALL ゲームモード選択
+
+CALL 開始前コンフィグ
+
+[IF_DEBUG]
+LOADGLOBAL
+SIF 所持クリアポイント < 100000
+	所持クリアポイント += 100000
+SAVEGLOBAL
+[ENDIF]
+
+LOADGLOBAL
+IF 所持クリアポイント > 0
+	CALL CLEARBONUS
+ENDIF
+
+CALL ビデオ売れ筋
+
+CALL オープニングストーリー
+
+BEGIN SHOP
+
+@RESET_FLAGS
+;日付、時間、調教対象や助手のリセット
 DAY = 0
 TIME = 0
 
-;調教対象と助手を空白にしておく
+;調教対象・助手を空に
 TARGET = -1
 ASSI = -1
-
-;前回の調教対象と助手フラグも空白に
 FLAG:前回調教対象 = -1
 FLAG:前回助手 = -1
 
+;引き継がれないフラグのクリア
+FLAG:休憩 = 0
+FLAG:前回調教対象 = 0
+FLAG:前回助手 = 0
+FLAG:期限日数 = 0
+FLAG:目標金額 = 0
+FLAG:難易度 = 0
+
+;娼館の拡張状況をクリア
+FLAG:警備員人数 = 0
+FLAG:娼館拡張 = 0
+
+
+@DEFAULT_CONFIGS
 ;デフォルトでは陰毛設定使用
 FLAG:陰毛を生やす = 1
 ;デフォルトでは着衣設定使用
@@ -45,27 +88,75 @@ FLAG:妊娠なし = 0
 
 FLAG:失神なし = 1
 
-CALL CHARA_PRICE
-
-$BEFORE_MODE_SELECT
-;ゲームモード選択
+@ゲームモード選択
 PRINTL 
 PRINTL ★★モードを選択してください★★
-PRINTL [0] EASY     (120日期限、目標金額3000000Pt)
+
+TEMP_STR '= "EASY"
+STRLENS TEMP_STR
+TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+TEMP_STR += " " * TEMP_NUM
+TEMP_STR += @"(120日期限、目標金額{3000000-FLAG:借金チャラ*3000000/4}Pt)"
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_EASY,-1,1)
+
 IF FLAG:EASY経由
-	PRINTL [1] NORMAL   (100日期限、目標金額5000000Pt)
+	TEMP_STR '= "NORMAL"
+	STRLENS TEMP_STR
+	TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+	TEMP_STR += " " * TEMP_NUM
+	TEMP_STR += @"(100日期限、目標金額{5000000-FLAG:借金チャラ*5000000/4}Pt)"
+	CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_NORMAL,-1,1)
 ELSE
-	PRINTL [1] 実績チャレンジ   (100日期限、目標金額5000000Pt)
+	TEMP_STR '= "CHALLENGE"
+	STRLENS TEMP_STR
+	TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+	TEMP_STR += " " * TEMP_NUM
+	TEMP_STR += @"(100日期限、目標金額{5000000-FLAG:借金チャラ*5000000/4}Pt)"
+	CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_CHALLENGE,-1,1)
 ENDIF
-PRINTL [9] EXTRA    (   無期限、目標金額$???????)
-PRINTL [10] モードの説明を読む
-$INPUT_LOOP_0
-INPUT
-IF RESULT == 0
+
+TEMP_STR '= "EXTRA"
+STRLENS TEMP_STR
+TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+TEMP_STR += " " * TEMP_NUM
+TEMP_STR += "(無期限、目標金額なし)"
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_EXTRA,-1,1)
+
+TEMP_STR '= "モードの説明を読む"
+CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_モード説明,-1,1)
+
+IF FLAG:EASY経由
+	CALL INPUTF, COMMAND_EASY, COMMAND_NORMAL, COMMAND_EXTRA, COMMAND_モード説明
+ELSE
+	CALL INPUTF, COMMAND_EASY, COMMAND_CHALLENGE, COMMAND_EXTRA, COMMAND_モード説明
+ENDIF
+
+IF RESULT == COMMAND_EASY
 	CALL SETUP_MASTER	;主人公セットアップ
 	FLAG:期限日数 = 120
-	FLAG:目標金額 = 3000000
-	FLAG:難易度 = 1
+	FLAG:目標金額 = 3000000-FLAG:借金チャラ*3000000/4
+	FLAG:難易度 = GAME_MODE_EASY
+	FLAG:瀕死時自動終了 = 1
+	ITEM:ビデオカメラ = 1
+;	ITEM:ビデオテープ = 1
+	MONEY = 5000
+	MASTER = NO:0
+	REALTIME:0 = TOINT(SUBSTRING(GETTIMES(), 0, 4))
+	DAY:日付_年 = REALTIME:0
+	DAY:日付_月 = 4
+	DAY:日付_日 = 1
+	FLAG:事務所規模 = 10
+	FLAG:EASY経由 = 1
+	IF GETCHARA([[キャラ:小鳥遊乃絵美]], 0) < 0
+		CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
+		PRINTFORMW 《桐生組より風俗嬢「小鳥遊乃絵美」が派遣されました》
+	ENDIF
+	ABL:MASTER:技巧 += 1
+ELSEIF RESULT == COMMAND_NORMAL || RESULT == COMMAND_CHALLENGE
+	CALL SETUP_MASTER	;主人公セットアップ
+	FLAG:期限日数 = 100
+	FLAG:目標金額 = 5000000-FLAG:借金チャラ*5000000/4
+	FLAG:難易度 = GAME_MODE_ACHIEVEMENT_CHALLENGE
 	FLAG:瀕死時自動終了 = 1
 	ITEM:ビデオカメラ = 1
 ;	ITEM:ビデオテープ = 1
@@ -76,105 +167,67 @@ IF RESULT == 0
 	DAY:日付_月 = 4
 	DAY:日付_日 = 1
 	FLAG:事務所規模 = 10
-	FLAG:EASY経由 = 1
-	CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
-	ABL:MASTER:技巧 += 1
-ELSEIF RESULT == 1
-	CALL SETUP_MASTER	;主人公セットアップ
-	FLAG:期限日数 = 100
-	FLAG:目標金額 = 5000000
-	FLAG:難易度 = 2
-	FLAG:瀕死時自動終了 = 1
-	ITEM:ビデオカメラ = 1
-;	ITEM:ビデオテープ = 1
-	MONEY = 1000
-	MASTER = NO:0
-	REALTIME:0 = TOINT(SUBSTRING(GETTIMES(), 0, 4))
-	DAY:日付_年 = REALTIME:0
-	DAY:日付_月 = 4
-	DAY:日付_日 = 1
-	FLAG:事務所規模 = 10
-ELSEIF RESULT == 9
+ELSEIF RESULT == COMMAND_EXTRA
 	FLAG:期限日数 = 0
 	FLAG:目標金額 = 0
 	FLAG:難易度 = 9
 	MONEY = 30000
 	FLAG:事務所規模 = 30
-ELSEIF RESULT == 10
-	PRINTL EASYモードは期限が120週（行動回数+40回）、目標金額3000000Pt（NORMALの3/5）のほか、
-	PRINTL 初期ポイントが2000pt（NORMALの倍）、主人公技巧が+1、女優候補「小鳥遊乃絵美」が加入する特典があります
-	PRINTL また、ミッション報告の時に強制成功にできるメダルを実績達成以外からもらえることがあります
-	PRINT ただし、
-	CALL HINT_CHARA("EASYモードを経由したデータ")
-	PRINTL では実績が達成できません
-	PRINTL 実績達成を目指すのであれば、新しく実績チャレンジモードで開始するのがよいでしょう
-	PRINTL なお、もう一つのボーナスであるキャラクリボーナスはEASYモードでも取得することができます
-	PRINTL 実績チャレンジで遊ぶ前にEASYを極めても無駄にはならないはずです……労力に見合うかはともかく
-	PRINTW
-	GOTO BEFORE_MODE_SELECT
-ELSE
-	GOTO INPUT_LOOP_0
+ELSEIF RESULT == COMMAND_モード説明
+	TEMP_STR = @"EASYモードは期限が120週（行動回数+40回）、目標金額3000000Pt（NORMALの3/5）のほか、初期ポイントが2000pt（NORMALの倍）、主人公技巧が+1、女優候補「小鳥遊乃絵美」が加入する特典があります<br>"
+	TEMP_STR += "また、ミッション報告の時に強制成功にできるメダルを実績達成以外からもらえることがあります<br>"
+	TEMP_STR += "ただし、"+HTML_HINT("EASYモードを経由したデータ")+"では実績が達成できません<br>"
+	TEMP_STR += "実績達成を目指すのであれば、新しく実績チャレンジモードで開始するのがよいでしょう<br>"
+	TEMP_STR += "なお、もう一つのボーナスであるキャラクリボーナスはEASYモードでも取得することができます<br>"
+	TEMP_STR += "実績チャレンジで遊ぶ前にEASYを極めても無駄にはならないはずです……労力に見合うかはともかく<br>"
+	CALL HTML_PRINT_P(TEMP_STR)
+	RESTART
 ENDIF
 
+SIF FLAG:エレンミッション失敗
+	FLAG:目標金額 *= 100
+
+
+@開始前コンフィグ
 ;ここで「開始前にコンフィグを変更しますか？」あたりにしたい。要検討
 PRINTL 寝取られ機能をＯＮにしますか？
-$INPUT_LOOP_2
-PRINTL [0] - はい
-PRINTL [1] - いいえ
-PRINTL [2] - どういうこと？
-INPUT
-	IF RESULT == 0
-		PRINTL 寝取られ機能をＯＮにしました
-		PRINTL
-		FLAG:寝取られなし = 0
-	ELSEIF RESULT == 1
-		PRINTL 寝取られ機能をＯＦＦにしました
-		PRINTL
-		FLAG:寝取られなし = 1
-	ELSEIF RESULT == 2
-		PRINTL 登場する女性キャラたちは常に他の男たちからモーションをかけられています
-		PRINTL それはクラスメイトであったり、ホストであったり、痴漢であったり……
-		PRINTL 女性キャラたちが他の男のモノになってしまうのが嫌な方はＯＦＦにするのを推奨します 
-		PRINTW
-		GOTO INPUT_LOOP_2
-	ELSE
-		GOTO INPUT_LOOP_2
-	ENDIF
+CALL PRINT_BUTTON("はい",1,0,-1,1)
+CALL PRINT_BUTTON("いいえ",1,1,-1,1)
+CALL PRINT_BUTTON("どういうこと？",1,2,-1,1)
 
-[IF_DEBUG]
-LOADGLOBAL
-SIF GLOBAL:200 < 100000
-	GLOBAL:200 += 100000
-SAVEGLOBAL
-[ENDIF]
+CALL INPUTF, 1, 2, 0
 
-LOADGLOBAL
-IF GLOBAL:200 > 0
-	CALL CLEARBONUS
+IF RESULT == 0
+	PRINTL 寝取られ機能をＯＮにしました
+	PRINTL
+	FLAG:寝取られなし = 0
+ELSEIF RESULT == 1
+	PRINTL 寝取られ機能をＯＦＦにしました
+	PRINTL
+	FLAG:寝取られなし = 1
+ELSEIF RESULT == 2
+	PRINTL 登場する女性キャラたちは常に他の男たちからモーションをかけられています
+	PRINTL それはクラスメイトであったり、ホストであったり、痴漢であったり……
+	PRINTL 女性キャラたちが他の男のモノになってしまうのが嫌な方はＯＦＦにするのを推奨します 
+	PRINTW
+	RESTART
 ENDIF
 
-CALL SET_VIDEOSALE
-
-SIF FLAG:難易度 == 1
-	PRINTFORMW 《桐生組より風俗嬢「小鳥遊乃絵美」が派遣されました》
-CALL START_SELECT_OPENING
-BEGIN SHOP
-
-RETURN 0
 
 ;オープニング表示
-@START_SELECT_OPENING
+@オープニングストーリー
 
-FOR LOCAL, 0, MAX_ACHIEVEMENT + 1
-	BASE:MASTER:メダル += GLOBAL:LOCAL
+FOR LOCAL, 0, 実績最大ID + 1
+	BASE:MASTER:メダル += 実績達成:LOCAL
 NEXT
 
-$INPUT_LOOP_2
 PRINTL ★オープニングストーリーを省略しますか？★
-PRINTL [0] - 省略する
-PRINTL [1] - 省略しない
-PRINTL [2] - 三行で
-INPUT
+CALL PRINT_BUTTON("省略する",1,0,-1,1)
+CALL PRINT_BUTTON("省略しない",1,1,-1,1)
+CALL PRINT_BUTTON("三行で",1,2,-1,1)
+
+CALL INPUTF, 1, 2, 0
+
 IF RESULT == 0
 	DRAWLINE
 	PRINTL （オープニングストーリーを省略します）
@@ -182,22 +235,15 @@ ELSEIF RESULT == 1
 	CALL OPENING
 ELSEIF RESULT == 2
 	CALL SIMPLE_OPENING
-ELSE
-	GOTO INPUT_LOOP_2
 ENDIF
 
 ;主人公セットアップ用サブルーチン
 @SETUP_MASTER
 $INPUT_LOOP_MASTER
 PRINTL 主人公のセットアップを行ないますか？
-PRINTFORML [0] - はい
-PRINTFORML [1] - いいえ
+CALL GET_はいいいえ()
 
-INPUT
-IF RESULT == 0
+SIF RESULT == COMMAND_はい
 	CALL SET_MASTER
-ELSEIF RESULT == 1
-	RETURN 1
-ELSE
-	GOTO INPUT_LOOP_MASTER
-ENDIF
+
+RETURN 1
