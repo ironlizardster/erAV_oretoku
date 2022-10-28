@@ -303,17 +303,17 @@ CALL INCEST
 
 ;調教者がアナル処女なら処女喪失
 IF TALENT:PLAYER:アナル処女
-	CSTR:PLAYER:アナル処女喪失の相手 = %NAME:TARGET%
+	CSTR:PLAYER:アナル処女喪失相手 = %NAME:TARGET%
 	TALENT:PLAYER:アナル処女 = 0
 	SETCOLOR 0xF58F98
 	PRINTFORML 【アナル処女喪失】(%CALLNAME:PLAYER%)
 	RESETCOLOR
 	CFLAG:PLAYER:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:PLAYER:アナル処女喪失月 = DAY:1
-	CFLAG:PLAYER:アナル処女喪失日 = DAY:2
+	CFLAG:PLAYER:アナル処女喪失月 = DAY:日付_月
+	CFLAG:PLAYER:アナル処女喪失日 = DAY:日付_日
 	CFLAG:PLAYER:アナル処女喪失場所 = 14
 	CFLAG:PLAYER:アナル処女喪失シチュ = 1
-	CFLAG:PLAYER:アナル処女喪失の相手 = 1
+	CFLAG:PLAYER:アナル処女喪失相手 = 1
 ENDIF
 
 TFLAG:近親相姦 = 0

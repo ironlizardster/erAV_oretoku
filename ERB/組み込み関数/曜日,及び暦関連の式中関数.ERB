@@ -127,11 +127,11 @@ ENDSELECT
 #DIM DYNAMIC 対象曜日
 #DIM DYNAMIC 週
 SIF 年 == -1
-	年 = YEAR
+	年 = DAY:日付_年
 SIF 月 == -1
-	月 = MONTH
+	月 = DAY:日付_月
 SIF 日 == -1
-	日 = DAYS
+	日 = DAY:日付_日
 
 ;式中関数「NO_WEEK」
 ;その日が月の何週目かを返す 週始めは日曜日
@@ -155,9 +155,9 @@ RETURNF 週
 #DIM DYNAMIC 曜日補正
 #DIM DYNAMIC 月始め曜日
 SIF 年 == -1
-	年 = YEAR
+	年 = DAY:日付_年
 SIF 月 == -1
-	月 = MONTH
+	月 = DAY:日付_月
 
 ;式中関数「NO_DOW」
 ;当月の指定した第何何曜日が何日かを返す式中関数
@@ -219,14 +219,14 @@ SIF 年 < 2017 || (年 == 2017 && 月 < 2) || (年 == 2017 && 月 == 2 && 日 < 24)
 	RETURNF 0
 
 ;その月の日数を計算
-SELECTCASE MONTH
+SELECTCASE DAY:日付_月
 	CASE 1, 3, 5, 7, 8, 10, 12
 		日数 = 31
 	CASE 4, 6, 9, 11
 		日数 = 30
 	CASE 2
 		;うるう年かどうかで場合分け
-		IF (YEAR%4 == 0 && YEAR%100 != 0) || YEAR%400 == 0
+		IF (DAY:日付_年%4 == 0 && DAY:日付_年%100 != 0) || DAY:日付_年%400 == 0
 			日数 = 29
 		ELSE
 			日数 = 28
@@ -253,7 +253,7 @@ SIF !INRANGE(月, 1, 12)
 	RETURNF 0
 
 ;日がめちゃくちゃでもアウト
-SELECTCASE MONTH
+SELECTCASE DAY:日付_月
 	CASE 1, 3, 5, 7, 8, 10, 12
 		SIF !INRANGE(日, 1, 31)
 			RETURNF 0
@@ -287,7 +287,7 @@ SELECTCASE MONTH
 					RETURNF 0
 			;(紀元前46年以前を含め)残りの期間すべてをユリウス暦とする
 			CASEELSE
-				IF ABS(YEAR)%4 == 0
+				IF ABS(DAY:日付_年)%4 == 0
 					SIF !INRANGE(日, 1, 29)
 						RETURNF 0
 				ELSE

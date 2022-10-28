@@ -14,7 +14,7 @@ RESULTS = I☆CAN'T DO IT ALL NIGHT
 ;=================================================
 @MISSION_VISIBLE_130
 ; 不可視なら0、可視なら1を戻す
-RETURN GETCHARA([[キャラ:新島みひろ]]) != -1 && DAY:1 >= 11 && DAY:1 <= 12
+RETURN GETCHARA([[キャラ:新島みひろ]]) != -1 && DAY:日付_月 >= 11 && DAY:日付_月 <= 12
 
 ;=================================================
 ; ミッション報酬
@@ -188,9 +188,9 @@ SIF TALENT:処女 == 1
 	LOCAL:11++
 SIF TALENT:アナル処女 == 1
 	LOCAL:11++
-SIF CFLAG:ファーストキスの相手 == -1
+SIF CFLAG:初キス相手 == -1
 	LOCAL:11++
-SIF CFLAG:初体験の相手 == 0
+SIF CFLAG:処女喪失相手 == 0
 	LOCAL:11++
 
 
@@ -235,45 +235,45 @@ IF TALENT:永遠の愛 == 0 && TALENT:崩壊 == 0
 	TALENT:彼氏あり = 1
 	CSTR:彼氏姓 = 重村
 	CSTR:彼氏名 = 慎二
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 8
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 8
 		IF TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = 慎二
+			CSTR:初キス相手 = 慎二
 		ELSEIF TALENT:淫乱 == 1
-			CSTR:ファーストキスの相手 = 重村慎二
+			CSTR:初キス相手 = 重村慎二
 		ENDIF
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 13
-		CFLAG:ファーストキス喪失シチュ = 1
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 13
+		CFLAG:初キス喪失シチュ = 1
 	ENDIF
 	IF TALENT:処女 == 1
 		CSTR:処女喪失の相手 = 重村慎二（お笑い芸人）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 12
+		CFLAG:処女喪失相手 = 12
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 13
 		CFLAG:処女喪失シチュ = 4
 	ENDIF
 	IF TALENT:アナル処女 == 1
 		TALENT:アナル処女 = 0
-		CFLAG:アナル処女喪失の相手 = 12
-		CSTR:アナル処女喪失の相手 = 中野敦史（お笑い芸人）
+		CFLAG:アナル処女喪失相手 = 12
+		CSTR:アナル処女喪失相手 = 中野敦史（お笑い芸人）
 		SETCOLOR 0xF58F98
 		PRINTL 【アナル処女喪失】
 		RESETCOLOR
 		CFLAG:アナル処女喪失年齢 = BASE:実年齢
-		CFLAG:アナル処女喪失月 = DAY:1
-		CFLAG:アナル処女喪失日 = DAY:2
+		CFLAG:アナル処女喪失月 = DAY:日付_月
+		CFLAG:アナル処女喪失日 = DAY:日付_日
 		CFLAG:アナル処女喪失場所 = 13
 		CFLAG:アナル処女喪失シチュ = 4
 	ENDIF
@@ -285,8 +285,8 @@ IF TALENT:永遠の愛 == 0 && TALENT:崩壊 == 0
 ;	SIF RELATION:0 <= 0
 ;		RELATION:0 = 10
 ;	JUEL:否定 += 100000 * LOCAL
-	CFLAG:彼氏の有無 = 1
-	CFLAG:彼氏の種類 = 0
+	CFLAG:彼氏有 = 1
+	CFLAG:彼氏タイプ = 0
 	TALENT:恋心 = 0
 	LOCAL = 2 + RAND(5)
 	EXP:彼氏性経験 += TCVAR:性交経験 / 5 + LOCAL
@@ -296,42 +296,42 @@ ELSE
 	IF TALENT:処女 == 1
 		CSTR:処女喪失の相手 = 中野敦史（お笑い芸人）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 12
+		CFLAG:処女喪失相手 = 12
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 13
 		CFLAG:処女喪失シチュ = 4
 	ENDIF
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 1
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 1
 		IF TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = 敦史
+			CSTR:初キス相手 = 敦史
 			;すまん……あっちゃん……
 		ELSEIF TALENT:淫乱 == 1
-			CSTR:ファーストキスの相手 = 中野敦史
+			CSTR:初キス相手 = 中野敦史
 		ENDIF
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 13
-		CFLAG:ファーストキス喪失シチュ = 1
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 13
+		CFLAG:初キス喪失シチュ = 1
 	ENDIF
 	IF TALENT:アナル処女 == 1
 		TALENT:アナル処女 = 0
-		CSTR:アナル処女喪失の相手 = 重村慎二（お笑い芸人）
+		CSTR:アナル処女喪失相手 = 重村慎二（お笑い芸人）
 		SETCOLOR 0xF58F98
 		PRINTL 【アナル処女喪失】
 		RESETCOLOR
 		CFLAG:アナル処女喪失年齢 = BASE:実年齢
-		CFLAG:アナル処女喪失月 = DAY:1
-		CFLAG:アナル処女喪失日 = DAY:2
+		CFLAG:アナル処女喪失月 = DAY:日付_月
+		CFLAG:アナル処女喪失日 = DAY:日付_日
 		CFLAG:アナル処女喪失場所 = 13
 		CFLAG:アナル処女喪失シチュ = 4
 	ENDIF
@@ -442,7 +442,7 @@ PRINTFORML 　さっきから何回もイってるのに物足りないよぉ…
 PRINTFORML 　もっとっ、もっと気持ちよくなりたいのっ%UNICODE(0x2665)%
 PRINTFORML 　クスリのせいだってわかってるのにっ――あハぁンっ、こんなの本当はイヤなのにぃっ%UNICODE(0x2665)%」
 PRINTFORMW
-PRINTFORML 審査員たちの精液で顔面を汚されたみひろは腰を浮かせてＭ字に股を開きオナニーをしながら、つい先ほどファーストキスを
+PRINTFORML 審査員たちの精液で顔面を汚されたみひろは腰を浮かせてＭ字に股を開きオナニーをしながら、つい先ほど初キスを
 PRINTFORML 肉棒に捧げた口から呟きを漏らす
 PRINTFORML ほとんど開発されていなかったみひろのアナルは特殊な軟膏でほぐされ、熱に浮かされたように疼きが止まらないのか、自ら
 PRINTFORML ２本の指をぐぽぐぽと卑猥な音を立てながらアナルに挿入している

@@ -79,14 +79,14 @@ ELSEIF RESULT == 202
 	RETURN 1
 ELSEIF RESULT == 300 && TALENT:PLAYER:具現 && TALENT:PLAYER:ふたなり == 0
 	PRINTFORM 《%CALLNAME:PLAYER%はペニスを具現化させた》
-	SIF CFLAG:PLAYER:ファーストキスの相手 == 0
+	SIF CFLAG:PLAYER:初キス相手 == 0
 		TALENT:PLAYER:童貞 = 1
 	TALENT:PLAYER:ふたなり = 1
 	WAIT
 	RETURN 1
 ELSEIF RESULT == 300 && TALENT:PLAYER:具現 && TALENT:PLAYER:ふたなり == 1
 	PRINTFORM 《%CALLNAME:PLAYER%は具現化したペニスを消去した》
-	SIF CFLAG:PLAYER:ファーストキスの相手 == 0
+	SIF CFLAG:PLAYER:初キス相手 == 0
 		TALENT:PLAYER:童貞 = 0
 	TALENT:PLAYER:ふたなり = 0
 	WAIT
@@ -147,11 +147,11 @@ SIF CFLAG:33 != 6
 	PRINTL  [6] - 顔
 SIF CFLAG:33 != 7
 	PRINTL  [7] - 髪
-IF CFLAG:33 != 8 && (CFLAG:特別コスチュームのタイプ == 80 && CFLAG:特別コスチュームのタイプ == 81)
+IF CFLAG:33 != 8 && (CFLAG:特別コスタイプ == 80 && CFLAG:特別コスタイプ == 81)
 	PRINT  [8] - 
-	IF CFLAG:特別コスチュームのタイプ == 80
+	IF CFLAG:特別コスタイプ == 80
 		PRINT 眼鏡
-	ELSEIF CFLAG:特別コスチュームのタイプ == 80
+	ELSEIF CFLAG:特別コスタイプ == 80
 		PRINT サングラス
 	ENDIF
 ENDIF
@@ -160,7 +160,7 @@ INPUT
 
 IF RESULT < 0 || RESULT > 8
 	GOTO INPUT_LOOP
-ELSEIF RESULT == 8 && CFLAG:特別コスチュームのタイプ != 80 && CFLAG:特別コスチュームのタイプ != 81
+ELSEIF RESULT == 8 && CFLAG:特別コスタイプ != 80 && CFLAG:特別コスタイプ != 81
 	GOTO INPUT_LOOP
 ELSEIF CFLAG:33 != RESULT
 	CFLAG:33 = RESULT
@@ -197,9 +197,9 @@ ELSEIF CFLAG:33 == 6
 ELSEIF CFLAG:33 == 7
 	PRINT 髪
 ELSEIF CFLAG:33 == 8
-	IF CFLAG:特別コスチュームのタイプ == 80
+	IF CFLAG:特別コスタイプ == 80
 		PRINT 眼鏡
-	ELSEIF CFLAG:特別コスチュームのタイプ == 81
+	ELSEIF CFLAG:特別コスタイプ == 81
 		PRINT サングラス
 	ENDIF
 ENDIF

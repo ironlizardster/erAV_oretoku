@@ -135,10 +135,10 @@ EXP:野外露出経験 += 1
 PRINTFORML 野外露出経験＋1
 
 ;野外プレイが始めての場合
-IF TEQUIP:野外プレイ && CFLAG:野外露出経験 == 0
+IF TEQUIP:野外プレイ && CFLAG:野外露出済 == 0
 	PRINTFORML 異常経験＋１
 	EXP:異常経験 += 1
-	CFLAG:野外露出経験 = 1
+	CFLAG:野外露出済 = 1
 ENDIF
 
 RETURN 1

@@ -80,50 +80,49 @@ ELSEIF RESULT == 0
 		PRINTFORMW %CALLNAME:T%は【%TALENTNAME:[[TALENT:彼氏あり]]%】ではなくなった
 		TALENT:T:彼氏あり = 0
 		TALENT:T:清い付き合い = 0
-		CFLAG:T:寝取られ進行ポイント = 0
-		CFLAG:T:彼氏の有無 = 2
-		CFLAG:T:彼氏の種類 = 0
-		IF CFLAG:T:ファーストキスの相手 == 8 && CFLAG:T:ファーストキス喪失シチュ == 0 && CFLAG:T:827 == 0
-			CSTR:T:ファーストキスの相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:827 = 1
-		ELSEIF CFLAG:T:ファーストキスの相手 == 8 && CFLAG:T:ファーストキス喪失シチュ == 1 && CFLAG:T:827 == 0
-			CSTR:T:ファーストキスの相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:827 = 1
+		CFLAG:T:NTR進行 = 0
+		CFLAG:T:彼氏有 = 2
+		CFLAG:T:彼氏タイプ = 0
+		IF CFLAG:T:初キス相手 == 8 && CFLAG:T:初キス喪失シチュ == 0 && CFLAG:T:初キス相手元カレ == 0
+			CSTR:T:初キス相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:初キス相手元カレ = 1
+		ELSEIF CFLAG:T:初キス相手 == 8 && CFLAG:T:初キス喪失シチュ == 1 && CFLAG:T:初キス相手元カレ == 0
+			CSTR:T:初キス相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:初キス相手元カレ = 1
 		ENDIF
-		IF CFLAG:T:初体験の相手 == 8 && CFLAG:T:167 == 0
+		IF CFLAG:T:処女喪失相手 == 8 && CFLAG:T:167 == 0
 			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
 			CFLAG:T:167 = 1
 		ENDIF
-		IF CFLAG:T:アナル処女喪失の相手 == 8 && CFLAG:T:837 == 0
-			CSTR:T:アナル処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+		IF CFLAG:T:アナル処女喪失相手 == 8 && CFLAG:T:837 == 0
+			CSTR:T:アナル処女喪失相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
 			CFLAG:T:837 = 1
 		ENDIF
 		EXP:T:交際人数 += 1
-	ELSEIF CFLAG:T:スタッフ寝取られイベントの進行度 == 1 && CFLAG:T:スタッフ寝取られイベントの進行度 == 1
+	ELSEIF CFLAG:T:スタッフNTR進行度 == 1
 		PRINTFORMW %NAME:T%が気落ちしている……
 		PRINTFORML スタッフの%CSTR:T:彼氏姓%がここのところ姿を見せていないのと何か関係があるのだろうか
 		PRINTFORM %CALLNAME:MASTER%が事務所のソファに腰掛け、日本茶をすすっている
 		PRINTFORMW 歌音を見ると、意味ありげな笑みを浮かべていた……
 		TALENT:T:彼氏あり = 0
-		CFLAG:T:寝取られ進行ポイント = 0
-		CFLAG:T:彼氏の有無 = 2
-		CFLAG:T:彼氏の種類 = 0
-		CFLAG:T:スタッフ寝取られイベントの進行度 = 0
-		CFLAG:T:スタッフ寝取られイベントの進行度 = 0
-		IF CFLAG:T:ファーストキスの相手 == 10
-			CSTR:T:ファーストキスの相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
+		CFLAG:T:NTR進行 = 0
+		CFLAG:T:彼氏有 = 2
+		CFLAG:T:彼氏タイプ = 0
+		CFLAG:T:スタッフNTR進行度 = 0
+		IF CFLAG:T:初キス相手 == 10
+			CSTR:T:初キス相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
 		ENDIF
-		IF CFLAG:T:初体験の相手 == 10
+		IF CFLAG:T:処女喪失相手 == 10
 			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
 		ENDIF
-		CFLAG:T:寝取りスタッフ抹殺依頼判定 = 1
+		CFLAG:T:スタッフNTR抹殺 = 1
 		EXP:T:交際人数 += 1
 	ELSE
 		PRINTFORM %CALLNAME:MASTER%が事務所のソファに腰掛け、日本茶をすすっている
 		PRINTFORML 歌音を見ると、意味ありげな笑みを浮かべていた……
 		PRINTFORM どうやら%CALLNAME:T%にアプローチをかけていた男たちを桐生組の力を使ってアレコレしてど
 		PRINTFORML うにかしたようだ……
-		CFLAG:T:寝取られ進行ポイント = 0
+		CFLAG:T:NTR進行 = 0
 	ENDIF
 ENDIF
 PRINTW
@@ -188,14 +187,14 @@ ELSEIF TALENT:RESULT:アンドロイド
 	PRINTFORMW 【%TALENTNAME:[[TALENT:アンドロイド]]%】にはタトゥーが入れられません
 	RETURN 0
 ;デビュー前の女優候補は排除
-ELSEIF EXP:RESULT:ＡＶ出演経験 == 0 && CFLAG:RESULT:タトゥーの有無 == 0
+ELSEIF EXP:RESULT:ＡＶ出演経験 == 0 && CFLAG:RESULT:タトゥー == 0
 	PRINTFORMW %CALLNAME:RESULT%はまだ女優デビューしていません
 	RETURN 0
 ;露出癖3以下は排除
-ELSEIF ABL:RESULT:露出癖 <= 3 && CFLAG:RESULT:タトゥーの有無 == 0
+ELSEIF ABL:RESULT:露出癖 <= 3 && CFLAG:RESULT:タトゥー == 0
 	PRINTFORMW %CALLNAME:RESULT%は裸を見られるのが恥ずかしいようです
 	RETURN 0
-ELSEIF CFLAG:RESULT:タトゥーの有無 == 15
+ELSEIF CFLAG:RESULT:タトゥー == 15
 	PRINTFORMW %CALLNAME:RESULT%にはもうタトゥーを入れられません
 	RETURN 0
 ENDIF
@@ -210,7 +209,7 @@ INPUT
 
 IF RESULT == 1
 	RETURN 0
-ELSEIF RESULT == 0 && CFLAG:タトゥーの有無 != 15
+ELSEIF RESULT == 0 && CFLAG:タトゥー != 15
 	$INPUTLOOP_00
 	PRINTFORML どこに彫りますか？
 	PRINTFORML 《部位の名前を入力してください》
@@ -279,28 +278,28 @@ ELSEIF RESULT == 0 && CFLAG:タトゥーの有無 != 15
 		ENDIF
 		PRINTFORMW 異常経験＋１
 		EXP:異常経験 += 1
-		IF CFLAG:タトゥーの有無 == 0
+		IF CFLAG:タトゥー == 0
 			CSTR:タトゥー1場所 = %CSTR:タトゥー5場所%
 			CSTR:タトゥー1モチーフ = %CSTR:タトゥー5モチーフ%
-			CFLAG:タトゥーの有無 |= 1
+			CFLAG:タトゥー |= 1
 			MONEY -= C
 			RETURN 1
-		ELSEIF (CFLAG:タトゥーの有無 & 1)
+		ELSEIF (CFLAG:タトゥー & 1)
 			CSTR:タトゥー2場所 = %CSTR:タトゥー5場所%
 			CSTR:タトゥー2モチーフ = %CSTR:タトゥー5モチーフ%
-			CFLAG:タトゥーの有無 |= 2
+			CFLAG:タトゥー |= 2
 			MONEY -= C
 			RETURN 1
-		ELSEIF (CFLAG:タトゥーの有無 & 2)
+		ELSEIF (CFLAG:タトゥー & 2)
 			CSTR:タトゥー3場所 = %CSTR:タトゥー5場所%
 			CSTR:タトゥー3モチーフ = %CSTR:タトゥー5モチーフ%
-			CFLAG:タトゥーの有無 |= 4
+			CFLAG:タトゥー |= 4
 			MONEY -= C
 			RETURN 1
-		ELSEIF (CFLAG:タトゥーの有無 & 4)
+		ELSEIF (CFLAG:タトゥー & 4)
 			CSTR:タトゥー4場所 = %CSTR:タトゥー5場所%
 			CSTR:タトゥー4モチーフ = %CSTR:タトゥー5モチーフ%
-			CFLAG:タトゥーの有無 |= 8
+			CFLAG:タトゥー |= 8
 			MONEY -= C
 			RETURN 1
 		ENDIF
@@ -386,7 +385,7 @@ ELSEIF TALENT:RESULT:極道の娘
 	PRINTFORMW %CALLNAME:RESULT%には既に護衛がいます
 	RETURN 0
 ;護衛ありは排除
-ELSEIF CFLAG:RESULT:護衛の有無 == 1
+ELSEIF CFLAG:RESULT:護衛 == 1
 	PRINTFORMW %CALLNAME:RESULT%には既に護衛がいます
 	RETURN 0
 ENDIF
@@ -402,7 +401,7 @@ IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0
 	PRINTFORML %CALLNAME:T%に護衛を付けました
-	CFLAG:T:護衛の有無 = 1
+	CFLAG:T:護衛 = 1
 ENDIF
 
 MONEY -= C

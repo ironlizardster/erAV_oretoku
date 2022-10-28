@@ -2,9 +2,9 @@
 ;ヴァギナの形状
 ;===========================================================
 @VAGINAFORM
-IF CFLAG:性器の形状 == 1 && FLAG:性器形状変化なし == 0
+IF CFLAG:性器 == 1 && FLAG:性器形状変化なし == 0
 	PRINT 小陰唇がはみ出しています
-ELSEIF CFLAG:性器の形状 == 2 && FLAG:性器形状変化なし == 0
+ELSEIF CFLAG:性器 == 2 && FLAG:性器形状変化なし == 0
 	PRINT 淫水焼けして黒ずんだ小陰唇がはみ出しています
 ELSE
 	PRINT 綺麗なタテスジです
@@ -21,9 +21,9 @@ REPEAT CHARANUM
 	ELSEIF TALENT:COUNT:オトコ == 0
 		V = EXP:COUNT:Ｖ経験 + EXP:COUNT:自慰経験
 		IF V >= 120 && V < 300
-			CFLAG:COUNT:性器の形状 = 1
+			CFLAG:COUNT:性器 = 1
 		ELSEIF V >= 300
-			CFLAG:COUNT:性器の形状 = 2
+			CFLAG:COUNT:性器 = 2
 		ENDIF
 		V = 0
 	ENDIF
@@ -33,23 +33,23 @@ REND
 ;ペニスの形状
 ;===========================================================
 @PENISFORM
-IF CFLAG:ペニスのサイズ == 0
+IF CFLAG:ペニスサイズ == 0
 	PRINT 小さめの
-ELSEIF CFLAG:ペニスのサイズ == 1
+ELSEIF CFLAG:ペニスサイズ == 1
 	PRINT 
-ELSEIF CFLAG:ペニスのサイズ == 2
+ELSEIF CFLAG:ペニスサイズ == 2
 	PRINT 極太
 ENDIF
 
-IF CFLAG:包皮の状態 == 0
+IF CFLAG:包皮状態 == 0
 	PRINTFORM 真性包茎
-ELSEIF CFLAG:包皮の状態 == 1
+ELSEIF CFLAG:包皮状態 == 1
 	PRINTFORM 仮性包茎
-ELSEIF CFLAG:包皮の状態 == 2 && TALENT:童貞 == 1
+ELSEIF CFLAG:包皮状態 == 2 && TALENT:童貞 == 1
 	PRINTFORM 仮性包茎
-ELSEIF CFLAG:包皮の状態 == 2 && TALENT:童貞 == 0
+ELSEIF CFLAG:包皮状態 == 2 && TALENT:童貞 == 0
 	PRINTFORM ズル剥け
-ELSEIF CFLAG:包皮の状態 == 3
+ELSEIF CFLAG:包皮状態 == 3
 	PRINTFORM ズル剥け
 ELSE
 	PRINTFORM 仮性包茎
@@ -60,11 +60,11 @@ ENDIF
 ;===========================================================
 @DECIDE_PENISSIZE
 
-IF CFLAG:T:ペニスのサイズ == 0
+IF CFLAG:T:ペニスサイズ == 0
 	BASE:T:ペニスサイズ = 9 + RAND:4
-ELSEIF CFLAG:T:ペニスのサイズ == 1
+ELSEIF CFLAG:T:ペニスサイズ == 1
 	BASE:T:ペニスサイズ = 13 + RAND:4
-ELSEIF CFLAG:T:ペニスのサイズ == 2
+ELSEIF CFLAG:T:ペニスサイズ == 2
 	BASE:T:ペニスサイズ = 17 + RAND:4
 ENDIF
 
@@ -84,19 +84,19 @@ $INPUTLOOP_1
 INPUT
 
 IF RESULT == 0
-	CFLAG:T:ペニスのサイズ = 0
+	CFLAG:T:ペニスサイズ = 0
 	BASE:T:ペニスサイズ = 9 + RAND:4
 ELSEIF RESULT == 1
-	CFLAG:T:ペニスのサイズ = 1
+	CFLAG:T:ペニスサイズ = 1
 	BASE:T:ペニスサイズ = 13 + RAND:4
 ELSEIF RESULT == 2
-	CFLAG:T:ペニスのサイズ = 2
+	CFLAG:T:ペニスサイズ = 2
 	BASE:T:ペニスサイズ = 17 + RAND:4
 ELSE
 	GOTO INPUTLOOP_1
 ENDIF
 
-PRINTL 《包皮の状態を選んで下さい》
+PRINTL 《包皮状態を選んで下さい》
 
 PRINTL [0] - 真性包茎
 PRINTL [1] - 仮性包茎（永続的）
@@ -107,34 +107,34 @@ $INPUTLOOP_2
 INPUT
 
 IF RESULT == 0
-	CFLAG:T:包皮の状態 = 0
+	CFLAG:T:包皮状態 = 0
 ELSEIF RESULT == 1
-	CFLAG:T:包皮の状態 = 1
+	CFLAG:T:包皮状態 = 1
 ELSEIF RESULT == 2
-	CFLAG:T:包皮の状態 = 2
+	CFLAG:T:包皮状態 = 2
 ELSEIF RESULT == 3
-	CFLAG:T:包皮の状態 = 3
+	CFLAG:T:包皮状態 = 3
 ELSE
 	GOTO INPUTLOOP_2
 ENDIF
 
 PRINTFORM %NAME:T%に生やすふたなりペニスは{BASE:T:ペニスサイズ}cmの
 
-IF CFLAG:T:ペニスのサイズ == 0
+IF CFLAG:T:ペニスサイズ == 0
 	PRINTFORM 短小
-ELSEIF CFLAG:T:ペニスのサイズ == 1
+ELSEIF CFLAG:T:ペニスサイズ == 1
 	PRINTFORM 
-ELSEIF CFLAG:T:ペニスのサイズ == 2
+ELSEIF CFLAG:T:ペニスサイズ == 2
 	PRINTFORM 極太
 ENDIF
 
-IF CFLAG:T:包皮の状態 == 0
+IF CFLAG:T:包皮状態 == 0
 	PRINTFORM 真性包茎
-ELSEIF CFLAG:T:包皮の状態 == 1
+ELSEIF CFLAG:T:包皮状態 == 1
 	PRINTFORM 仮性包茎
-ELSEIF CFLAG:T:包皮の状態 == 2
+ELSEIF CFLAG:T:包皮状態 == 2
 	PRINTFORM 仮性包茎
-ELSEIF CFLAG:T:包皮の状態 == 3
+ELSEIF CFLAG:T:包皮状態 == 3
 	PRINTFORM ズル剥け
 ENDIF
 

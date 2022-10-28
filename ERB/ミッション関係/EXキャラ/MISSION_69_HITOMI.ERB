@@ -190,9 +190,9 @@ NEXT
 
 
 ;CFLAGをクリアする前にFLAG関係を戻す
-SIF CFLAG:習い事判定 == 1
+SIF CFLAG:習い事 == 1
 	FLAG:習い事人数 -= 1
-SIF CFLAG:朝フェラ係に任命 == 1
+SIF CFLAG:朝フェラ係 == 1
 	FLAG:朝起こしてもらう = 0
 
 ; CFLAGをクリア
@@ -304,13 +304,13 @@ IF GETCHARA([[キャラ:アンドロイド]]) != -1
 ENDIF
 
 
-CFLAG:ファーストキスの相手 = -1
+CFLAG:初キス相手 = -1
 CFLAG:着衣状態 = 15
-CFLAG:上着のタイプ = 1
-CFLAG:靴下の種類 = 1
-CFLAG:靴の種類 = 1
+CFLAG:上着タイプ = 1
+CFLAG:靴下タイプ = 1
+CFLAG:靴タイプ = 1
 CFLAG:ブラの色 = 0
-CFLAG:ブラの種類 = 0
+CFLAG:ブラタイプ = 0
 CFLAG:パンツの色 = 0
-CFLAG:パンツの種類 = 0
-CFLAG:寝取られ完了値 = 999999
+CFLAG:パンツタイプ = 0
+CFLAG:NTR完了値 = 999999

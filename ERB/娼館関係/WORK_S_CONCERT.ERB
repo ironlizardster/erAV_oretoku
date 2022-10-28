@@ -28,7 +28,7 @@ ELSEIF RESULT == 1 && TIME == 1
 	PRINTFORMW 特殊チケットを販売します。コンサート後にお楽しみがあります
 	FLAG:特殊営業で夜の部を開催フラグ = 1
 	;コンドーム使用フラグ外す
-	CFLAG:労役でコンドーム使用 = 0
+	CFLAG:営業コンドーム = 0
 ELSEIF RESULT == 100
 	RETURN 100
 ELSE
@@ -115,25 +115,25 @@ IF FLAG:特殊営業参加人数 >= 2 && FLAG:着衣使用
 			CONTINUE
 		IF E == -1
 			S = CFLAG:COUNT:着衣状態
-			E = CFLAG:COUNT:上着のタイプ
-			F = CFLAG:COUNT:特別コスチュームのタイプ
+			E = CFLAG:COUNT:上着タイプ
+			F = CFLAG:COUNT:特別コスタイプ
 		;すっぱだか
 		ELSEIF S == 0 && CFLAG:COUNT:着衣状態 == 0
 			CONTINUE
 		;裸＋特別コス
-		ELSEIF F == CFLAG:COUNT:特別コスチュームのタイプ && S == 64 && CFLAG:COUNT:着衣状態 == 64
+		ELSEIF F == CFLAG:COUNT:特別コスタイプ && S == 64 && CFLAG:COUNT:着衣状態 == 64
 			CONTINUE
 		;下着姿。ランナウェイズ……
 		ELSEIF S > 0 && S < 4 && CFLAG:COUNT:着衣状態 > 0 && CFLAG:COUNT:着衣状態 < 4
 			CONTINUE
 		;下着＋特別コス
-		ELSEIF F == CFLAG:COUNT:特別コスチュームのタイプ && S > 64 && S < 68 && CFLAG:COUNT:着衣状態 > 64 && CFLAG:COUNT:着衣状態 < 68
+		ELSEIF F == CFLAG:COUNT:特別コスタイプ && S > 64 && S < 68 && CFLAG:COUNT:着衣状態 > 64 && CFLAG:COUNT:着衣状態 < 68
 			CONTINUE
-		ELSEIF (CFLAG:COUNT:上着上の状態 || CFLAG:COUNT:上着下の状態 || CFLAG:COUNT:特別コスチュームの状態)
+		ELSEIF (CFLAG:COUNT:上着上状態 || CFLAG:COUNT:上着下状態 || CFLAG:COUNT:特別コス状態)
 			FLAG:特殊営業時お揃い衣装 = 0
 		ELSEIF (CFLAG:COUNT:着衣状態 & 92) == 0
 			FLAG:特殊営業時お揃い衣装 = 0
-		ELSEIF E != CFLAG:COUNT:上着のタイプ || F != CFLAG:COUNT:特別コスチュームのタイプ
+		ELSEIF E != CFLAG:COUNT:上着タイプ || F != CFLAG:COUNT:特別コスタイプ
 			FLAG:特殊営業時お揃い衣装 = 0
 		ELSEIF ((S & 92) != (CFLAG:COUNT:着衣状態 & 92))
 			FLAG:特殊営業時お揃い衣装 = 0
@@ -534,7 +534,7 @@ IF FLAG:特殊営業時お揃い衣装
 		PRINT 下着姿
 	ELSE
 		CALL PRINT_CLOTHTYPE_MAIN2
-		IF CFLAG:特別コスチュームのタイプ
+		IF CFLAG:特別コスタイプ
 			PRINT に
 			CALL PRINT_CLOTHTYPE_SPECIAL
 		ENDIF
@@ -789,7 +789,7 @@ REPEAT CHARANUM
 		;特殊チケットだと人数ベースでかなり疲れる
 		LOSEBASE:体力 += G * 40
 		;処女喪失だとかなり増える
-		SIF CFLAG:Ｖ売春で処女喪失フラグ
+		SIF CFLAG:売春処女喪失
 			TIMES LOSEBASE:体力 , 2.00
 	
 		;売春中毒のレベルに応じてちょっとずつ減る
@@ -1091,7 +1091,7 @@ IF FLAG:特殊営業で夜の部を開催フラグ == 1
 	REPEAT CHARANUM
 		SIF CFLAG:COUNT:130 == 0
 			CONTINUE
-		SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+		SIF CFLAG:COUNT:売春Ｖ不能
 			TIMES V , 0.70
 	REND
 	PRINT 特殊チケット

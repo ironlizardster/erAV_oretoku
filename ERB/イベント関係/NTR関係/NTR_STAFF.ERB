@@ -35,13 +35,13 @@ REPEAT CHARANUM
 		CONTINUE
 	ELSEIF TALENT:COUNT:[[TALENT:ONLY ONE EMPRESS]] == 1
 		CONTINUE
-	ELSEIF CFLAG:COUNT:スタッフ寝取られイベントの進行度 >= 1
+	ELSEIF CFLAG:COUNT:スタッフNTR進行度
 		CONTINUE
-	ELSEIF CFLAG:COUNT:護衛の有無 == 1
+	ELSEIF CFLAG:COUNT:護衛 == 1
 		CONTINUE
 	ELSEIF CFLAG:COUNT:入寮中 == 1 && (FLAG:女子寮拡張 & 128)
 		CONTINUE
-	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスチュームのタイプ == 79
+	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスタイプ == 79
 		CONTINUE
 	ELSEIF FLAG:リーナスタッフ動向調査
 		CONTINUE
@@ -96,11 +96,11 @@ REPEAT CHARANUM
 			ENDIF
 			IF LOCAL >= 95
 				;進行緩やかに。
-				CFLAG:COUNT:スタッフ寝取られイベントの実行判定 += 1
-				IF CFLAG:COUNT:スタッフ寝取られイベントの実行判定 >= 5
-					CFLAG:COUNT:スタッフ寝取られイベントの進行度 = 1
-					CFLAG:COUNT:寝取られ進行ポイント = 0
-					CFLAG:COUNT:彼氏の有無 = 1
+				CFLAG:COUNT:スタッフNTR実行 += 1
+				IF CFLAG:COUNT:スタッフNTR実行 >= 5
+					CFLAG:COUNT:スタッフNTR進行度 = 1
+					CFLAG:COUNT:NTR進行 = 0
+					CFLAG:COUNT:彼氏有 = 1
 					CALL DECIDE_BOYFRIEND,COUNT
 				ENDIF
 				LOCAL = 0
@@ -117,11 +117,11 @@ REND
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスチュームのタイプ == 79
+	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスタイプ == 79
 		CONTINUE
-	ELSEIF CFLAG:COUNT:護衛の有無 == 1
+	ELSEIF CFLAG:COUNT:護衛 == 1
 		CONTINUE
-	ELSEIF CFLAG:COUNT:スタッフ寝取られイベントの進行度 == 1
+	ELSEIF CFLAG:COUNT:スタッフNTR進行度 == 1
 		CALL EXP_NTR_STAFF
 		EXP:COUNT:スタッフ寝取られ経験 += 1
 	ENDIF
@@ -133,7 +133,7 @@ REND
 @EXP_NTR_STAFF
 IF EXP:COUNT:スタッフ寝取られ経験 == 0
 	CALL FIRSTKISS_NTR_STAFF
-ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 1 && TALENT:COUNT:処女 == 1 && CFLAG:COUNT:初体験の相手 == 0
+ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 1 && TALENT:COUNT:処女 == 1 && CFLAG:COUNT:処女喪失相手 == 0
 	CALL LOSTVIRGIN_NTR_STAFF
 ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 5
 	CALL CHANGECLOTH_NTR_STAFF
@@ -145,17 +145,17 @@ ELSE
 ENDIF
 
 ;=================================================
-;スタッフ寝取られ・ファーストキス
+;スタッフ寝取られ・初キス
 ;=================================================
 @FIRSTKISS_NTR_STAFF
-	IF CFLAG:COUNT:ファーストキスの相手 == -1
-		CFLAG:COUNT:ファーストキスの相手 = 10
-		CSTR:COUNT:ファーストキスの相手 = ？？？
+	IF CFLAG:COUNT:初キス相手 == -1
+		CFLAG:COUNT:初キス相手 = 10
+		CSTR:COUNT:初キス相手 = ？？？
 ;		CALL DECIDE_BOYFRIEND
 		BASE:COUNT:魅力値 -= 5
-		CFLAG:COUNT:ファーストキス喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:ファーストキス喪失月 = DAY:1
-		CFLAG:COUNT:ファーストキス喪失日 = DAY:2
+		CFLAG:COUNT:初キス喪失年齢 = BASE:COUNT:実年齢
+		CFLAG:COUNT:初キス喪失月 = DAY:日付_月
+		CFLAG:COUNT:初キス喪失日 = DAY:日付_日
 	ENDIF
 
 ;=================================================
@@ -171,13 +171,13 @@ S += RAND:3
 A += RAND:2
 
 CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
-CFLAG:COUNT:処女喪失月 = DAY:1
-CFLAG:COUNT:処女喪失日 = DAY:2
+CFLAG:COUNT:処女喪失月 = DAY:日付_月
+CFLAG:COUNT:処女喪失日 = DAY:日付_日
 CFLAG:COUNT:処女喪失場所 = 3
 CFLAG:COUNT:処女喪失シチュ = 3
 
 	TALENT:COUNT:処女 = 0
-	CFLAG:COUNT:初体験の相手 = 10
+	CFLAG:COUNT:処女喪失相手 = 10
 	CSTR:COUNT:処女喪失の相手 = ？？？
 	EXP:COUNT:Ｖ経験 += V
 	EXP:COUNT:絶頂経験 += A
@@ -194,7 +194,7 @@ CFLAG:COUNT:処女喪失シチュ = 3
 			BASE:COUNT:魅力値 -= 10
 		ENDIF
 	ENDIF
-;	IF CFLAG:ファーストキスの相手 != 10
+;	IF CFLAG:初キス相手 != 10
 ;		CALL DECIDE_BOYFRIEND
 ;	ENDIF
 
@@ -219,9 +219,9 @@ PRINTFORML しかし%CALLNAME:MASTER%以外のスタッフが女優たちに手�
 DRAWLINE
 
 CFLAG:COUNT:着衣状態 = 13
-CFLAG:COUNT:上着のタイプ = 205
-CFLAG:COUNT:靴下の種類 = 8
-CFLAG:COUNT:靴の種類 = 8
+CFLAG:COUNT:上着タイプ = 205
+CFLAG:COUNT:靴下タイプ = 8
+CFLAG:COUNT:靴タイプ = 8
 IF CFLAG:COUNT:髪色 != 2
 	CFLAG:COUNT:髪色 = 2
 	CFLAG:COUNT:染髪済 = 1
@@ -247,16 +247,16 @@ IF TALENT:COUNT:影響されやすい == 1
 		CSTR:COUNT:男性器呼び方 = チンポ
 		CSTR:COUNT:女性器呼び方 = マンコ
 		TALENT:COUNT:褐色肌 = 1
-		CFLAG:COUNT:ピアスの装着状況 |= 2
-		CFLAG:COUNT:ピアスの装着状況 |= 16
+		CFLAG:COUNT:ピアス状況 |= 2
+		CFLAG:COUNT:ピアス状況 |= 16
 		CFLAG:COUNT:ブラの色 = 11
-		CFLAG:COUNT:ブラの種類 = 6
+		CFLAG:COUNT:ブラタイプ = 6
 		CFLAG:COUNT:パンツの色 = 11
-		CFLAG:COUNT:パンツの種類 = 6
+		CFLAG:COUNT:パンツタイプ = 6
 	ENDIF
 ENDIF
 
-CFLAG:COUNT:スタッフ寝取られイベントの進行度 = 1
+CFLAG:COUNT:スタッフNTR進行度 = 1
 
 ;=================================================
 ;スタッフ寝取られ・通常セックス
@@ -357,25 +357,25 @@ PRINTW
 PRINTFORML そう言うと、どこかから戻ってきた歌音はどこかほっとした表情を浮かべてお茶を一口すすった
 PRINTFORML もしかしたら、%CALLNAME:COUNT%に恨まれることがなくてよかったと思っているのかもしれない……
 PRINTW
-IF CFLAG:COUNT:初体験の相手 == 10
-	PRINTFORML 《%NAME:COUNT%の初体験の相手の名前がオープンされました》
+IF CFLAG:COUNT:処女喪失相手 == 10
+	PRINTFORML 《%NAME:COUNT%の処女喪失相手の名前がオープンされました》
 		CSTR:COUNT:処女喪失の相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
-		CFLAG:COUNT:初体験の相手 = 8
+		CFLAG:COUNT:処女喪失相手 = 8
 		EXP:COUNT:彼氏性経験 += 10
 ENDIF
-IF CFLAG:COUNT:ファーストキスの相手 == 10
-	PRINTFORML 《%NAME:COUNT%のファーストキスの相手の名前がオープンされました》
+IF CFLAG:COUNT:初キス相手 == 10
+	PRINTFORML 《%NAME:COUNT%のファーストキス相手の名前がオープンされました》
 		IF RAND:2 == 0
-			CSTR:COUNT:ファーストキスの相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
+			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
 		ELSE
-			CSTR:COUNT:ファーストキスの相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
-			CFLAG:COUNT:ファーストキス喪失シチュ = 1
+			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
+			CFLAG:COUNT:初キス喪失シチュ = 1
 		ENDIF
 ENDIF
-	CFLAG:COUNT:寝取られ進行ポイント = 0
-	CFLAG:COUNT:彼氏の有無 = 0
-	CFLAG:COUNT:スタッフ寝取られイベントの進行度 = 2
+	CFLAG:COUNT:NTR進行 = 0
+	CFLAG:COUNT:彼氏有 = 0
+	CFLAG:COUNT:スタッフNTR進行度 = 0
 	BASE:COUNT:魅力値 -= 10
 	EXP:COUNT:交際人数 += 1
 	;△暫定。消えたスタッフがカレシと出続けるのもどうかと思うので。
-	CFLAG:COUNT:827 = 1
+	CFLAG:COUNT:初キス相手元カレ = 1

@@ -382,7 +382,7 @@ IF MARK:反発刻印 == 3 && TALENT:TARGET:恋心 == 0
 	PRINTFORMW 「でも……ひどいことするお兄ちゃんは信じられない……」
 	RETURN 1
 
-;屈服刻印Lv1以下+愛なし　ファーストキスで堕ちるからまず見ない。
+;屈服刻印Lv1以下+愛なし　初キスで堕ちるからまず見ない。
 ELSEIF MARK:屈服刻印 <= 1 && TALENT:TARGET:恋心 == 0
 	DRAWLINE
 	PRINTFORMW 「うん……またね……」
@@ -733,8 +733,8 @@ ENDIF
 ;キスする CFLAG:307
 ;-------------------------------------------------
 IF SELECTCOM == 6
-	;ファーストキス
-	IF CFLAG:307 == 0 && TFLAG:ファーストキス
+	;初キス
+	IF CFLAG:307 == 0 && TFLAG:初キス
 		;愛かつ淫魔かつ主人
 		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:淫魔 == 1 && ASSIPLAY == 0 && TEQUIP:獣姦プレイ == 0 && TEQUIP:触手召喚 == 0
 			PRINTFORMW 「マスターにあげるためにとってたの……もらって……ｖ」
@@ -2923,7 +2923,7 @@ IF TFLAG:口上番号 == 11
 	IF TALENT:崩壊 == 1
 		PRINTFORMW 
 	;父親が主人で母親が愛持ち
-	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+	ELSEIF TALENT:恋心 && CFLAG:妊娠精子 == 1
 		PRINTFORMW 「%CSTR:一人称%が……お母さん……？」
 		PRINTFORMW 「……うれしい……。%CSTR:一人称%、絶対におかーさんになれないって思ってたから……」
 		PRINTFORMW 「ありがとう、お兄ちゃん。この子、大切にするね……」
@@ -2945,7 +2945,7 @@ IF TFLAG:口上番号 == 12
 	IF TALENT:崩壊 == 1
 		PRINTFORMW 
 	;父親が主人で母親が愛持ち
-	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+	ELSEIF TALENT:恋心 && CFLAG:妊娠精子 == 1
 		PRINTFORMW 「よかった……無事に産まれてくれた……」
 		PRINTFORMW 「……この子も獣耳。でも、ちょっとお兄ちゃんに似てる……」
 		PRINTFORMW 「…………産まれてきてくれてありがとう。愛してる……」

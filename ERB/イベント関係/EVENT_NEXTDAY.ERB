@@ -45,11 +45,11 @@ REPEAT CHARANUM
 ;一応コメントアウト。
 ;△進学イベ
 ;	;12歳で3月31日を終えた時、【中学生】に進学（【愛】がない場合、素質は付かない）
-;	IF BASE:実年齢 == 12 && DAY:1 == 3 && DAY:2 == 31
+;	IF BASE:実年齢 == 12 && DAY:日付_月 == 3 && DAY:日付_日 == 31
 ;		CALL EVENT_JUNIORHIGHSCHOOL
 ;	ENDIF
 ;	;15歳で3月31日を終えた時、【高校生】に進学（【愛】がない場合、素質は付かない）
-;	IF BASE:実年齢 == 15 && DAY:1 == 3 && DAY:2 == 31
+;	IF BASE:実年齢 == 15 && DAY:日付_月 == 3 && DAY:日付_日 == 31
 ;		CALL EVENT_HIGHSCHOOL
 ;	ENDIF
 	;媚薬中毒
@@ -419,9 +419,9 @@ PRINTFORML %NAME:TARGET%は、中学校に入学することになっている�
 		PRINTL
 		CFLAG:着衣状態 |= 4
 		CFLAG:着衣状態 |= 8
-		CFLAG:上着のタイプ = 18
-		CFLAG:上着上の状態 = 0
-		CFLAG:上着下の状態 = 0
+		CFLAG:上着タイプ = 18
+		CFLAG:上着上状態 = 0
+		CFLAG:上着下状態 = 0
 		PRINTFORMW %PALAMNAME:[[PALAM:恭順]]%の珠＋1000
 		JUEL:恭順 += 1000
 		PRINTFORMW %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
@@ -485,9 +485,9 @@ PRINTFORML %NAME:TARGET%は、高校に入学することになっている。
 			PRINT 、
 		PRINTL あなたの目の前で高校の制服を着てみせた。
 		PRINTL
-		CFLAG:上着のタイプ = 18
-		CFLAG:上着上の状態 = 0
-		CFLAG:上着下の状態 = 0
+		CFLAG:上着タイプ = 18
+		CFLAG:上着上状態 = 0
+		CFLAG:上着下状態 = 0
 		PRINTFORMW %PALAMNAME:[[PALAM:恭順]]%の珠＋1000
 		JUEL:恭順 += 1000
 		PRINTFORMW %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
@@ -695,7 +695,7 @@ REPEAT CHARANUM
 		SIF TALENT:COUNT:オトコ && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 12
 			CONTINUE
 		;貞操帯の場合は従順+欲望+Ａ感覚+14以下だとダメ
-		SIF CFLAG:COUNT:特別コスチュームのタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)  && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
+		SIF CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)  && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
 			CONTINUE
 
 		;性交中毒
@@ -771,7 +771,7 @@ SIF TALENT:TEMP_NUM:オトコ
 SIF TALENT:TEMP_NUM:処女
 	F = 0
 ;貞操帯だとダメ
-SIF CFLAG:TEMP_NUM:特別コスチュームのタイプ == 79 && (CFLAG:TEMP_NUM:着衣状態 & 64)
+SIF CFLAG:TEMP_NUM:特別コスタイプ == 79 && (CFLAG:TEMP_NUM:着衣状態 & 64)
 	F = 0
 ;Ａ感覚がＶより高いとダメ
 SIF ABL:TEMP_NUM:Ｖ感覚 < ABL:TEMP_NUM:Ａ感覚
@@ -828,11 +828,11 @@ ELSE
 		RESETCOLOR
 		TALENT:TEMP_NUM:アナル処女 = 0
 		IF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 0
-			CSTR:TEMP_NUM:アナル処女喪失の相手 = お兄ちゃん
+			CSTR:TEMP_NUM:アナル処女喪失相手 = お兄ちゃん
 		ELSEIF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 1
-			CSTR:TEMP_NUM:アナル処女喪失の相手 = アニキ
+			CSTR:TEMP_NUM:アナル処女喪失相手 = アニキ
 		ELSE
-			CSTR:TEMP_NUM:アナル処女喪失の相手 = %CALLNAME:MASTER%
+			CSTR:TEMP_NUM:アナル処女喪失相手 = %CALLNAME:MASTER%
 		ENDIF
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
@@ -877,7 +877,7 @@ SIF TALENT:TEMP_NUM:オトコ
 SIF TALENT:TEMP_NUM:処女
 	F = 0
 ;貞操帯だとダメ
-SIF CFLAG:TEMP_NUM:特別コスチュームのタイプ == 79 && (CFLAG:TEMP_NUM:着衣状態 & 64)
+SIF CFLAG:TEMP_NUM:特別コスタイプ == 79 && (CFLAG:TEMP_NUM:着衣状態 & 64)
 	F = 0
 ;Ａ感覚がＶより高いとダメ
 SIF ABL:TEMP_NUM:Ｖ感覚 < ABL:TEMP_NUM:Ａ感覚
@@ -963,11 +963,11 @@ ELSEIF F == 0 && TALENT:TEMP_NUM:アナル処女 == 0
 		RESETCOLOR
 		TALENT:TEMP_NUM:アナル処女 = 0
 		IF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 0
-			CSTR:TEMP_NUM:アナル処女喪失の相手 = お兄ちゃん
+			CSTR:TEMP_NUM:アナル処女喪失相手 = お兄ちゃん
 		ELSEIF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 1
-			CSTR:TEMP_NUM:アナル処女喪失の相手 = アニキ
+			CSTR:TEMP_NUM:アナル処女喪失相手 = アニキ
 		ELSE
-			CSTR:TEMP_NUM:アナル処女喪失の相手 = %CALLNAME:MASTER%
+			CSTR:TEMP_NUM:アナル処女喪失相手 = %CALLNAME:MASTER%
 		ENDIF
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}

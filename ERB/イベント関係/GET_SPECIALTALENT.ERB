@@ -31,17 +31,17 @@ IF MARK:反発刻印 == 0
 		;淫魔アンドロ天使は
 		IF TALENT:淫魔 == 1 || TALENT:アンドロイド == 1 || TALENT:天使 == 1
 			;従順3以上、奉仕快楽経験200以上で【彼氏あり】がなければ【恋心】を獲得
-			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= 200 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏の有無 != 1
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= 200 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏有 != 1
 				CALL 恋心GET
 			ENDIF
 		ELSE
 			;普通はこっち
 			;信頼3以上、奉仕快楽経験200以上でレズ経験が1200以下であり、【淫乱】【彼氏あり】がなければ【恋心】を獲得
-			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && EXP:レズ経験 <= 1200 && CFLAG:彼氏の有無 != 1 && FLAG:恋心レズ経験無視 == 0
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && EXP:レズ経験 <= 1200 && CFLAG:彼氏有 != 1 && FLAG:恋心レズ経験無視 == 0
 				CALL 恋心GET
 			ENDIF
 			;実績ボーナスによるレズ経験の無視
-			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏の有無 != 1 && FLAG:恋心レズ経験無視 == 1
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏有 != 1 && FLAG:恋心レズ経験無視 == 1
 				CALL 恋心GET
 			ENDIF
 		ENDIF
@@ -357,7 +357,7 @@ ENDIF
 IF FLAG:常時発情なし == 0
 	IF TALENT:常時発情 == 0
 		;潤滑の蓄積が700以上、と欲情の蓄積が2250以上
-		IF CFLAG:常時発情システム使用時潤滑蓄積量 >= 700 && CFLAG:常時発情システム使用時欲情蓄積量 >= 2250
+		IF CFLAG:潤滑蓄積量 >= 700 && CFLAG:欲情蓄積量 >= 2250
 			PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
 			PRINTFORM %CALLNAME:TARGET%の
 			SIF TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり
@@ -442,9 +442,9 @@ IF ((!TALENT:ルーンマスター && ABL:信頼 >= 7 && ABL:奉仕精神 >= 7 &
 	PRINTFORM %CALLNAME:MASTER%に結婚してもらえなくてもいい、それでもそばにいさせてほしい
 	PRINTFORMW ……と、%CALLNAME:MASTER%に【%TALENTNAME:[[TALENT:永遠の愛]]%】を誓った
 	TALENT:永遠の愛 = 1
-	IF CFLAG:スタッフ寝取られイベントの進行度 == 1
-		CFLAG:スタッフ寝取られイベントの進行度 = 0
-		CFLAG:彼氏の有無 = 0
+	IF CFLAG:スタッフNTR進行度
+		CFLAG:スタッフNTR進行度 = 0
+		CFLAG:彼氏有 = 0
 	ENDIF
 	SIF RELATION:TARGET:(NO:MASTER) <= 200
 			RELATION:TARGET:(NO:MASTER) = 200
@@ -509,7 +509,7 @@ IF TALENT:彼氏あり == 1 && TALENT:貞操観念 == 0 && TALENT:淫乱 == 1 &&
 	SIF TALENT:ＡＶ女優 == 1
 		PRINTFORM も
 	PRINTFORMW ならないかと持ちかけてきた……
-	SIF CFLAG:初体験の相手 == 8
+	SIF CFLAG:処女喪失相手 == 8
 		PRINTFORM 彼氏に処女を捧げてから、何度もその肢体を貫かれ
 	PRINTFORML すっかりセックスの味を覚えてしまった%CALLNAME:TARGET%には、彼氏とのセックスだけでは満足できないらしい……
 	PRINTFORM プライベートでも%CALLNAME:TARGET%の肢体を味わえるという魅力的な提案に、%CALLNAME:MASTER%は黙って
@@ -711,8 +711,8 @@ PRINTFORML %CALLNAME:TARGET%は%CALLNAME:MASTER%との行為に悦びを感じ�
 PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:恋心]]%】を得た
 TALENT:恋心 = 1
 ;寝取られ進行値をリセット、完了値を倍に
-CFLAG:寝取られ進行ポイント = 0
-CFLAG:寝取られ完了値 *= 2
+CFLAG:NTR進行 = 0
+CFLAG:NTR完了値 *= 2
 ;堕とした人数＋１。既に淫乱だとなし
 SIF TALENT:淫乱 == 0
 	FLAG:陥落人数 += 1

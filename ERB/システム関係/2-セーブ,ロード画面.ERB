@@ -67,7 +67,7 @@ RETURN 0
 
 @SYSTEM_AUTOSAVE
 #DIM DYNAMIC データ番号
-データ番号 = 94+((DAY-1)*2%6+TIME)
+データ番号 = 94+((DAY:日付_経過日数-1)*2%6+TIME)
 
 SAVEDATA データ番号, セーブデータ情報()
 
@@ -90,14 +90,14 @@ SPLIT REALTIMENOW, " ", DETAIL
 ;現実の時間を入れる
 DETAIL = %DETAIL%(%DOW(ZELLER(年, 月, 日))%) %DETAIL:1%
 ;ここからゲーム内の時間や情報
-DETAIL = %DETAIL% | {YEAR}/%TOSTR(MONTH, "D2")%/%TOSTR(DAYS, "D2")%(%DOW(FLAG:曜日)%)
+DETAIL = %DETAIL% | {DAY:日付_年}/%TOSTR(DAY:日付_月, "D2")%/%TOSTR(DAY:日付_日, "D2")%(%DOW(FLAG:曜日)%)
 
 
 SELECTCASE FLAG:難易度
 	CASE 1
 		DETAIL += " EASY"
 	CASE 2
-		IF FLAG:EASYモードを経由したデータ
+		IF FLAG:EASY経由
 			DETAIL += " NORMAL"
 		ELSE
 			DETAIL += " 実績チャレンジ"
@@ -112,9 +112,9 @@ ENDSELECT
 
 SELECTCASE TIME
 	CASE 0
-		DETAIL += @" {DAY, 4}日目昼 "
+		DETAIL += @" {DAY:日付_経過日数, 4}日目昼 "
 	CASE 1
-		DETAIL += @" {DAY, 4}日目夜 "
+		DETAIL += @" {DAY:日付_経過日数, 4}日目夜 "
 ENDSELECT
 
 SIF FLAG:前回調教対象 >= 0

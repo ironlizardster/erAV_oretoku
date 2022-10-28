@@ -9,13 +9,7 @@ DRAWLINE
 PRINTL ＲＢ団のアジト
 PRINTL 《メチャモテ☆リア充になれるような様々なセミナーを受けることができます》
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  前半
-ELSE
-	PRINTL  後半
-ENDIF
+CALL PRINT_DAY_TIME
 
 PRINTFORML 所持金：{MONEY}ポイント
 DRAWLINE

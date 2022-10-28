@@ -179,9 +179,9 @@ IF TALENT:永遠の愛 == 0
 	TALENT:彼氏あり = 1
 	CSTR:彼氏姓 = 神崎
 	CSTR:彼氏名 = 京一
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 1
-		CSTR:ファーストキスの相手 = 神崎京一のカリ高極太黒チンポｖ
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 1
+		CSTR:初キス相手 = 神崎京一のカリ高極太黒チンポｖ
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
@@ -189,13 +189,13 @@ IF TALENT:永遠の愛 == 0
 	IF TALENT:処女 == 1
 		CSTR:処女喪失の相手 = 神崎京一（彼氏）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 8
+		CFLAG:処女喪失相手 = 8
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 	ENDIF
-	CFLAG:彼氏の有無 = 1
-	CFLAG:彼氏の種類 = 0
+	CFLAG:彼氏有 = 1
+	CFLAG:彼氏タイプ = 0
 	TALENT:恋心 = 0
 	TALENT:ギャル系 = 1
 	EXP:彼氏性経験 += TCVAR:性交経験 / 2 + 2 + RAND(2)
@@ -206,17 +206,17 @@ ELSE
 	IF TALENT:処女 == 1
 		CSTR:処女喪失の相手 = 神崎京一（セフレ）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 9
+		CFLAG:処女喪失相手 = 9
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 	ENDIF
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 1
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 1
 		IF TALENT:淫乱 == 0
-			CSTR:ファーストキスの相手 = 神崎京一のおちん○ん
+			CSTR:初キス相手 = 神崎京一のおちん○ん
 		ELSE
-			CSTR:ファーストキスの相手 = 神崎京一のオチ○ポ
+			CSTR:初キス相手 = 神崎京一のオチ○ポ
 		ENDIF
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】

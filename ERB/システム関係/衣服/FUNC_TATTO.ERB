@@ -4,11 +4,11 @@
 @PRINT_TATTO
 
 PRINT  
-IF (CFLAG:タトゥーの有無 & 1)
+IF (CFLAG:タトゥー & 1)
 	PRINTFORM %CSTR:タトゥー1場所%に%CSTR:タトゥー1モチーフ%
 	LOCAL = 1
 ENDIF
-IF (CFLAG:タトゥーの有無 & 2)
+IF (CFLAG:タトゥー & 2)
 	IF LOCAL
 		PRINTL タトゥーと、
 		PRINT  
@@ -16,7 +16,7 @@ IF (CFLAG:タトゥーの有無 & 2)
 	PRINTFORM %CSTR:タトゥー2場所%に%CSTR:タトゥー2モチーフ%
 	LOCAL = 1
 ENDIF
-IF (CFLAG:タトゥーの有無 & 4)
+IF (CFLAG:タトゥー & 4)
 	IF LOCAL
 		PRINTL タトゥーと、
 		PRINT  
@@ -24,7 +24,7 @@ IF (CFLAG:タトゥーの有無 & 4)
 	PRINTFORM %CSTR:タトゥー3場所%に%CSTR:タトゥー3モチーフ%
 	LOCAL = 1
 ENDIF
-IF (CFLAG:タトゥーの有無 & 8)
+IF (CFLAG:タトゥー & 8)
 	IF LOCAL
 		PRINTL タトゥーと、
 		PRINT  
@@ -32,7 +32,7 @@ IF (CFLAG:タトゥーの有無 & 8)
 	PRINTFORM %CSTR:タトゥー4場所%に%CSTR:タトゥー4モチーフ%
 	LOCAL = 1
 ENDIF
-IF (CFLAG:タトゥーの有無 & 16)
+IF (CFLAG:タトゥー & 16)
 	IF LOCAL
 		PRINTL タトゥーと、
 		PRINT  

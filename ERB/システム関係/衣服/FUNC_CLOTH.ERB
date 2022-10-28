@@ -3,21 +3,21 @@
 ;=================================================
 ;-------------------------------------------------
 ;使用一時フラグ
-;TFLAG:下着着衣下が穿けない状態になっている = パンツの状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
-;TFLAG:46 = ブラジャーの状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
-;TFLAG:上着上汚れ = 上着上の状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
-;TFLAG:上着下汚れ = 上着下の状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
+;TFLAG:下着着衣下が穿けない状態になっている = パンツ状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
+;TFLAG:46 = ブラジャー状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
+;TFLAG:上着上汚れ = 上着上状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
+;TFLAG:上着下汚れ = 上着下状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
 ;TFLAG:特別コスチューム汚れ = 特別コスの状態(&1:尿まみれ &2:精液まみれ &64:調教後に処分)
 ;-------------------------------------------------
 ;使用キャラフラグ
 ;CFLAG;40 = 着衣状態（&1:パンツ &2:ブラジャー &4:上着上 &8:上着下・スカートタイプ &:16上着下・ズボンタイプ &64:特別コス）
-;CFLAG:上着のタイプ = 上着のタイプ
-;CFLAG:特別コスチュームのタイプ = 特別コスチュームのタイプ
-;CFLAG:パンツの状態 = パンツの状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
-;CFLAG:ブラジャーの状態 = ブラジャーの状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
-;CFLAG:上着上の状態 = 上着上の状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
-;CFLAG:上着下の状態 = 上着下の状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
-;CFLAG:特別コスチュームの状態 = 特別コスチュームの状態（-1:没収 0:通常 1以上:洗濯中）
+;CFLAG:上着タイプ = 上着タイプ
+;CFLAG:特別コスタイプ = 特別コスタイプ
+;CFLAG:パンツ状態 = パンツ状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
+;CFLAG:ブラジャー状態 = ブラジャー状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
+;CFLAG:上着上状態 = 上着上状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
+;CFLAG:上着下状態 = 上着下状態（-2:廃棄 -1:没収 0:通常 1以上:洗濯中）
+;CFLAG:特別コス状態 = 特別コス状態（-1:没収 0:通常 1以上:洗濯中）
 ;-------------------------------------------------
 ;よく参照するシチュ早見表
 ;CFLAG:着衣状態 & 3  == False;:何も下着を着けていない True:何か下着を付けている
@@ -32,13 +32,13 @@
 ;-------------------------------------------------
 @PRINT_CLOTHTYPE
 ;着衣設定を使ってない場合
-IF (CFLAG:上着のタイプ == 0 && CFLAG:特別コスチュームのタイプ == 0) || FLAG:着衣使用 == 0
+IF (CFLAG:上着タイプ == 0 && CFLAG:特別コスタイプ == 0) || FLAG:着衣使用 == 0
 	PRINT 全裸
 	RETURN 1
 ENDIF
 
 ;特別コス：ズーコの着ぐるみの場合の処理
-IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	PRINT ズーコの着ぐるみ
 	RETURN 1
 ENDIF
@@ -47,7 +47,7 @@ ENDIF
 CALL PRINT_CLOTHTYPE_MAIN
 
 ;特別コスチューム処理
-IF CFLAG:特別コスチュームのタイプ && (CFLAG:着衣状態 & 64)
+IF CFLAG:特別コスタイプ && (CFLAG:着衣状態 & 64)
 	PRINT と
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINT 
@@ -58,11 +58,11 @@ RETURN 1
 ;基本コスチューム
 @PRINT_CLOTHTYPE_MAIN
 ;ふんどしの場合
-IF CFLAG:上着のタイプ == 192 && (CFLAG:着衣状態 & 16)
+IF CFLAG:上着タイプ == 192 && (CFLAG:着衣状態 & 16)
 	PRINT ふんどし一丁
 	RETURN 1
 ;体操着とブルマで半脱ぎの場合の処理
-ELSEIF CFLAG:上着のタイプ == 109
+ELSEIF CFLAG:上着タイプ == 109
 	IF (CFLAG:着衣状態 & 4) && (CFLAG:着衣状態 & 24) == 0
 		PRINT 体操着の上だけで
 		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 0
@@ -93,7 +93,7 @@ ELSEIF CFLAG:上着のタイプ == 109
 	ENDIF
 ENDIF
 ;全身タイプで半脱ぎの場合の処理
-IF CFLAG:上着のタイプ >= 201 && CFLAG:上着のタイプ <= 300
+IF CFLAG:上着タイプ >= 201 && CFLAG:上着タイプ <= 300
 	IF (CFLAG:着衣状態 & 4) && (CFLAG:着衣状態 & 24) == 0
 		CALL PRINT_CLOTHTYPE_MAIN2
 		PRINT の下が破れて、
@@ -163,7 +163,7 @@ IF (CFLAG:着衣状態 & 28)
 			ENDIF
 		ENDIF
 		CALL PRINT_CLOTHTYPE_MAIN2
-		IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+		IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 			PRINT のスカート
 		ELSE
 			PRINT 下だけ
@@ -214,36 +214,36 @@ RETURN 1
 
 CALL WEARING_CLOTH_ALL
 
-SIF CFLAG:パンツの状態 != 0
+SIF CFLAG:パンツ状態 != 0
 	CFLAG:着衣状態 -= (CFLAG:着衣状態 & 1)
-SIF CFLAG:ブラジャーの状態 != 0
+SIF CFLAG:ブラジャー状態 != 0
 	CFLAG:着衣状態 -= (CFLAG:着衣状態 & 2)
-SIF CFLAG:上着上の状態 != 0
+SIF CFLAG:上着上状態 != 0
 	CFLAG:着衣状態 -= (CFLAG:着衣状態 & 4)
-SIF CFLAG:上着下の状態 != 0
+SIF CFLAG:上着下状態 != 0
 	CFLAG:着衣状態 -= (CFLAG:着衣状態 & 8)
-SIF CFLAG:上着下の状態 != 0
+SIF CFLAG:上着下状態 != 0
 	CFLAG:着衣状態 -= (CFLAG:着衣状態 & 16)
-SIF CFLAG:特別コスチュームの状態 != 0
+SIF CFLAG:特別コス状態 != 0
 	CFLAG:着衣状態 -= (CFLAG:着衣状態 & 64)
 
 ;靴下を履く
-SIF CFLAG:靴下の種類 != 0
-	CFLAG:靴下の着用状態 = 0
+SIF CFLAG:靴下タイプ != 0
+	CFLAG:靴下着用 = 0
 
 ;-------------------------------------------------
 ;着衣フラグの初期化
 ;-------------------------------------------------
 @WEARING_CLOTH_ALL
 ;標準衣装が設定されてない場合は戻る
-SIF CFLAG:上着のタイプ == 0 && CFLAG:特別コスチュームのタイプ == 0
+SIF CFLAG:上着タイプ == 0 && CFLAG:特別コスタイプ == 0
 	RETURN 0
 
 ;一旦全裸に
 CFLAG:着衣状態 = 0
 
 ;全裸以外の場合の標準コス処理
-IF CFLAG:上着のタイプ != 0
+IF CFLAG:上着タイプ != 0
 
 	;下着着衣フラグの初期化
 	CALL WEARING_UNDERWARE_ALL
@@ -254,7 +254,7 @@ IF CFLAG:上着のタイプ != 0
 ENDIF
 
 ;特別コスの装着
-SIF CFLAG:特別コスチュームのタイプ
+SIF CFLAG:特別コスタイプ
 	CFLAG:着衣状態 |= 64
 
 RETURN 1
@@ -271,20 +271,20 @@ CFLAG:着衣状態 |= 1
 SIF TALENT:絶壁 == 0 && TALENT:未熟 == 0 && (TALENT:幼稚 == 0 || TALENT:貧乳 == 0)
 	CFLAG:着衣状態 |= 2
 ;和服・バニースーツ用ノーブラ化処理
-SIF CFLAG:上着のタイプ == 202 || CFLAG:上着のタイプ == 254
+SIF CFLAG:上着タイプ == 202 || CFLAG:上着タイプ == 254
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 2
 ;全裸の上にまとうタイプ(191～200or241～250or291～300)ならノーブラ・ノーパン化
-SIF CFLAG:上着のタイプ >= 191 && CFLAG:上着のタイプ <= 200
+SIF CFLAG:上着タイプ >= 191 && CFLAG:上着タイプ <= 200
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 3
-SIF CFLAG:上着のタイプ >= 241 && CFLAG:上着のタイプ <= 250
+SIF CFLAG:上着タイプ >= 241 && CFLAG:上着タイプ <= 250
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 3
-SIF CFLAG:上着のタイプ >= 291 && CFLAG:上着のタイプ <= 300
+SIF CFLAG:上着タイプ >= 291 && CFLAG:上着タイプ <= 300
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 3
 ;島の娘の服用ノーブラ・ノーパン処理
-SIF CFLAG:上着のタイプ == 29
+SIF CFLAG:上着タイプ == 29
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 3
 ;オムツ着用時のノーパン処理
-SIF CFLAG:特別コスチュームのタイプ == 69
+SIF CFLAG:特別コスタイプ == 69
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 1
 
 ;-------------------------------------------------
@@ -293,25 +293,25 @@ SIF CFLAG:特別コスチュームのタイプ == 69
 @WEARING_OUTERWARE_ALL
 
 ;下がスカートタイプのツーピース
-IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 	CFLAG:着衣状態 |= 4
 	CFLAG:着衣状態 |= 8
 ;下がズボンタイプのツーピース
-ELSEIF CFLAG:上着のタイプ >= 101 && CFLAG:上着のタイプ <= 200
+ELSEIF CFLAG:上着タイプ >= 101 && CFLAG:上着タイプ <= 200
 	CFLAG:着衣状態 |= 4
 	CFLAG:着衣状態 |= 16
 ;下がスカートタイプの全身衣装
-ELSEIF CFLAG:上着のタイプ >= 201 && CFLAG:上着のタイプ <= 250
+ELSEIF CFLAG:上着タイプ >= 201 && CFLAG:上着タイプ <= 250
 	CFLAG:着衣状態 |= 4
 	CFLAG:着衣状態 |= 8
 ;下がズボンタイプの全身衣装
-ELSEIF CFLAG:上着のタイプ >= 251 && CFLAG:上着のタイプ <= 300
+ELSEIF CFLAG:上着タイプ >= 251 && CFLAG:上着タイプ <= 300
 	CFLAG:着衣状態 |= 4
 	CFLAG:着衣状態 |= 16
 ENDIF
 
 ;ふんどし
-SIF CFLAG:上着のタイプ == 192
+SIF CFLAG:上着タイプ == 192
 	CFLAG:着衣状態 = 16
 
 ;-------------------------------------------------
@@ -321,16 +321,16 @@ SIF CFLAG:上着のタイプ == 192
 ;汚れた衣類の始末
 S = 0
 ;特別コス
-IF CFLAG:特別コスチュームのタイプ && (TFLAG:特別コスチューム汚れ & 64)
+IF CFLAG:特別コスタイプ && (TFLAG:特別コスチューム汚れ & 64)
 	PRINTFORM （%NAME:TARGET%の
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTL は廃棄処分にされました）
-	CFLAG:特別コスチュームのタイプ = 0
+	CFLAG:特別コスタイプ = 0
 	TFLAG:特別コスチューム汚れ = 0
 	S = 1
 	SIF CFLAG:着衣状態 & 64
 		CFLAG:着衣状態 -= 64
-ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (TFLAG:特別コスチューム汚れ & 3) && CFLAG:特別コスチュームの状態 == 0 && MONEY >= 50
+ELSEIF CFLAG:特別コスタイプ == 69 && (TFLAG:特別コスチューム汚れ & 3) && CFLAG:特別コス状態 == 0 && MONEY >= 50
 	;オムツの場合の特殊処理
 	$INPUT_LOOP_01
 	PRINTFORML 50ドラクマで%CALLNAME:TARGET%のオムツを交換してやりますか？
@@ -340,7 +340,7 @@ ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (TFLAG:特別コス�
 	IF RESULT == 0
 		PRINTFORM （%CALLNAME:TARGET%に新しいオムツをはかせてやりました）
 		MONEY -= 50
-		CFLAG:特別コスチュームの状態 = 0
+		CFLAG:特別コス状態 = 0
 		TFLAG:特別コスチューム汚れ = 0
 		IF TALENT:未熟 == 0
 			PRINTL 
@@ -351,7 +351,7 @@ ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (TFLAG:特別コス�
 		S = 1
 	ELSEIF RESULT == 1
 		PRINTFORMW （%NAME:TARGET%のオムツを洗濯に出しました）
-		CFLAG:特別コスチュームの状態 = 2
+		CFLAG:特別コス状態 = 2
 		TFLAG:特別コスチューム汚れ = 0
 		S = 1
 		SIF CFLAG:着衣状態 & 64
@@ -359,26 +359,26 @@ ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (TFLAG:特別コス�
 	ELSE
 		GOTO INPUT_LOOP_01
 	ENDIF
-ELSEIF CFLAG:特別コスチュームのタイプ && (TFLAG:特別コスチューム汚れ & 3) && CFLAG:特別コスチュームの状態 == 0
+ELSEIF CFLAG:特別コスタイプ && (TFLAG:特別コスチューム汚れ & 3) && CFLAG:特別コス状態 == 0
 	PRINTFORM （%NAME:TARGET%の
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTW を洗濯に出しました）
-	CFLAG:特別コスチュームの状態 = 5
+	CFLAG:特別コス状態 = 5
 	;オムツの場合は洗濯速度は下着並
-	SIF CFLAG:特別コスチュームのタイプ == 69
-		CFLAG:特別コスチュームの状態 = 2
+	SIF CFLAG:特別コスタイプ == 69
+		CFLAG:特別コス状態 = 2
 	TFLAG:特別コスチューム汚れ = 0
 	S = 1
 	SIF CFLAG:着衣状態 & 64
 		CFLAG:着衣状態 -= 64
 ENDIF
 ;上着下
-IF CFLAG:上着のタイプ && (TFLAG:上着下汚れ & 64)
+IF CFLAG:上着タイプ && (TFLAG:上着下汚れ & 64)
 	PRINTFORM （%NAME:TARGET%が着ていた
 	CALL PRINT_CLOTHTYPE_MAIN_BOTTOM
 	PRINTW は廃棄処分にされました）
-	IF CFLAG:上着のタイプ >= 201
-		CFLAG:上着のタイプ = 0
+	IF CFLAG:上着タイプ >= 201
+		CFLAG:上着タイプ = 0
 		SIF CFLAG:着衣状態 & 4
 			CFLAG:着衣状態 -= 4
 		SIF CFLAG:着衣状態 & 8
@@ -386,7 +386,7 @@ IF CFLAG:上着のタイプ && (TFLAG:上着下汚れ & 64)
 		SIF CFLAG:着衣状態 & 16
 			CFLAG:着衣状態 -= 16
 	ELSE
-		CFLAG:上着下の状態 = -2
+		CFLAG:上着下状態 = -2
 		SIF CFLAG:着衣状態 & 8
 			CFLAG:着衣状態 -= 8
 		SIF CFLAG:着衣状態 & 16
@@ -394,13 +394,13 @@ IF CFLAG:上着のタイプ && (TFLAG:上着下汚れ & 64)
 	ENDIF
 	TFLAG:上着下汚れ = 0
 	S = 1
-ELSEIF CFLAG:上着のタイプ && (TFLAG:上着下汚れ & 3) && CFLAG:上着下の状態 == 0
+ELSEIF CFLAG:上着タイプ && (TFLAG:上着下汚れ & 3) && CFLAG:上着下状態 == 0
 	PRINTFORM （%NAME:TARGET%が着ていた
 	CALL PRINT_CLOTHTYPE_MAIN_BOTTOM
 	PRINTW を洗濯に出しました）
-	IF CFLAG:上着のタイプ >= 201
-		CFLAG:上着上の状態 = 3
-		CFLAG:上着下の状態 = 3
+	IF CFLAG:上着タイプ >= 201
+		CFLAG:上着上状態 = 3
+		CFLAG:上着下状態 = 3
 		SIF CFLAG:着衣状態 & 4
 			CFLAG:着衣状態 -= 4
 		SIF CFLAG:着衣状態 & 8
@@ -408,7 +408,7 @@ ELSEIF CFLAG:上着のタイプ && (TFLAG:上着下汚れ & 3) && CFLAG:上着�
 		SIF CFLAG:着衣状態 & 16
 			CFLAG:着衣状態 -= 16
 	ELSE
-		CFLAG:上着下の状態 = 3
+		CFLAG:上着下状態 = 3
 		SIF CFLAG:着衣状態 & 8
 			CFLAG:着衣状態 -= 8
 		SIF CFLAG:着衣状態 & 16
@@ -420,14 +420,14 @@ ENDIF
 ;パンツ
 IF (TFLAG:下着着衣下が穿けない状態になっている & 64)
 	PRINTFORMW （%NAME:TARGET%の下着は廃棄処分にされました）
-	CFLAG:パンツの状態 = -2
+	CFLAG:パンツ状態 = -2
 	SIF CFLAG:着衣状態 & 1
 		CFLAG:着衣状態 -= 1
 	TFLAG:下着着衣下が穿けない状態になっている = 0
 	S = 1
-ELSEIF (TFLAG:下着着衣下が穿けない状態になっている & 3) && CFLAG:パンツの状態 == 0
+ELSEIF (TFLAG:下着着衣下が穿けない状態になっている & 3) && CFLAG:パンツ状態 == 0
 	PRINTFORMW （%NAME:TARGET%の下着を洗濯に出しました）
-	CFLAG:パンツの状態 = 2
+	CFLAG:パンツ状態 = 2
 	SIF CFLAG:着衣状態 & 1
 		CFLAG:着衣状態 -= 1
 	TFLAG:下着着衣下が穿けない状態になっている = 0
@@ -435,17 +435,17 @@ ELSEIF (TFLAG:下着着衣下が穿けない状態になっている & 3) && CFL
 ENDIF
 
 ;上下ともダメになった衣装は削除
-IF CFLAG:上着のタイプ
-	SIF CFLAG:上着上の状態 < 0 && CFLAG:上着下の状態 < 0
-		CFLAG:上着のタイプ = 0
+IF CFLAG:上着タイプ
+	SIF CFLAG:上着上状態 < 0 && CFLAG:上着下状態 < 0
+		CFLAG:上着タイプ = 0
 	;ふんどし用処理
-	SIF CFLAG:上着のタイプ == 192 && CFLAG:上着下の状態 < 0
-		CFLAG:上着のタイプ = 0
+	SIF CFLAG:上着タイプ == 192 && CFLAG:上着下状態 < 0
+		CFLAG:上着タイプ = 0
 ENDIF
 ;ダメになった特別コスは削除
-IF CFLAG:特別コスチュームのタイプ
-	SIF CFLAG:特別コスチュームの状態 < 0
-		CFLAG:特別コスチュームのタイプ = 0
+IF CFLAG:特別コスタイプ
+	SIF CFLAG:特別コス状態 < 0
+		CFLAG:特別コスタイプ = 0
 ENDIF
 
 RETURN 1
@@ -460,7 +460,7 @@ IF ABL:信頼 + ABL:露出癖 < 3
 	C = CFLAG:着衣状態
 	;特別コスが貞操帯で外した状態かチェック
 	D = 0
-	SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64) == 0
+	SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) == 0
 		D = 1
 	CALL WEARING_CLOTH_ABLE
 	SIF D
@@ -481,32 +481,32 @@ S = 0
 REPEAT CHARANUM
 	TARGET = COUNT
 	;全身衣装の場合、洗濯の進行状況は下半身部分にあわせる
-	SIF CFLAG:上着のタイプ >= 200 && CFLAG:上着上の状態 > 0 && CFLAG:上着下の状態 > 0
-		CFLAG:上着上の状態 = CFLAG:上着下の状態
+	SIF CFLAG:上着タイプ >= 200 && CFLAG:上着上状態 > 0 && CFLAG:上着下状態 > 0
+		CFLAG:上着上状態 = CFLAG:上着下状態
 	;下着の洗濯
-	IF CFLAG:パンツの状態 > 0
-		CFLAG:パンツの状態 -= 1
-		IF CFLAG:パンツの状態 == 0
+	IF CFLAG:パンツ状態 > 0
+		CFLAG:パンツ状態 -= 1
+		IF CFLAG:パンツ状態 == 0
 			PRINTFORML （%NAME:TARGET%の下着が洗濯から戻ってきました）
 			S = 1
 		ENDIF
 	ENDIF
 	;通常コスの洗濯
-	IF CFLAG:上着下の状態 > 0
-		CFLAG:上着下の状態 -= 1
-		IF CFLAG:上着下の状態 == 0 && CFLAG:上着のタイプ
+	IF CFLAG:上着下状態 > 0
+		CFLAG:上着下状態 -= 1
+		IF CFLAG:上着下状態 == 0 && CFLAG:上着タイプ
 			PRINTFORM （%NAME:TARGET%の
 			CALL PRINT_CLOTHTYPE_MAIN_BOTTOM
 			PRINTFORML が洗濯から戻ってきました）
 			S = 1
-			SIF CFLAG:上着のタイプ >= 200 && CFLAG:上着上の状態 >= 0
-				CFLAG:上着上の状態 = 0
+			SIF CFLAG:上着タイプ >= 200 && CFLAG:上着上状態 >= 0
+				CFLAG:上着上状態 = 0
 		ENDIF
 	ENDIF
 	;特別コスの洗濯
-	IF CFLAG:特別コスチュームの状態 > 0
-		CFLAG:特別コスチュームの状態 -= 1
-		IF CFLAG:特別コスチュームの状態 == 0 && CFLAG:特別コスチュームのタイプ
+	IF CFLAG:特別コス状態 > 0
+		CFLAG:特別コス状態 -= 1
+		IF CFLAG:特別コス状態 == 0 && CFLAG:特別コスタイプ
 			PRINTFORM （%NAME:TARGET%の
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORML が洗濯から戻ってきました）
@@ -516,7 +516,7 @@ REPEAT CHARANUM
 
 	;パンツのはき古し進行もここで
 	SIF (CFLAG:着衣状態 & 1)
-		CFLAG:現在のパンツを穿き続けている期間 += 1
+		CFLAG:パンツ継続日数 += 1
 
 REND
 IF S
@@ -535,13 +535,13 @@ SIF FLAG:着衣使用 == 0
 	RETURN 0
 
 ;着衣中に放尿した場合、着衣は一時的に使えなくなる
-IF (CFLAG:着衣状態 & 64) && (CFLAG:特別コスチュームのタイプ <= 50 || CFLAG:特別コスチュームのタイプ == 69)
+IF (CFLAG:着衣状態 & 64) && (CFLAG:特別コスタイプ <= 50 || CFLAG:特別コスタイプ == 69)
 	PRINTFORM 《%CALLNAME:TARGET%の
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML はおしっこまみれになった》
 	TFLAG:特別コスチューム汚れ |= 1
 	;オムツ着用中なら他の衣類は無事
-	SIF CFLAG:特別コスチュームのタイプ == 69
+	SIF CFLAG:特別コスタイプ == 69
 		RETURN 1
 ENDIF
 IF (CFLAG:着衣状態 & 8) || (CFLAG:着衣状態 & 16)
@@ -566,13 +566,13 @@ SIF FLAG:着衣使用 == 0
 	RETURN 0
 
 ;着衣中に脱糞した場合、着衣は廃棄処分になる
-IF (CFLAG:着衣状態 & 64) && (CFLAG:特別コスチュームのタイプ <= 50 || CFLAG:特別コスチュームのタイプ == 69)
+IF (CFLAG:着衣状態 & 64) && (CFLAG:特別コスタイプ <= 50 || CFLAG:特別コスタイプ == 69)
 	PRINTFORM 《%CALLNAME:TARGET%の
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTL は汚物まみれになった
 	TFLAG:特別コスチューム汚れ |= 64
 	;オムツ着用中なら他の衣類は無事
-	SIF CFLAG:特別コスチュームのタイプ == 69
+	SIF CFLAG:特別コスタイプ == 69
 		RETURN 1
 ENDIF
 IF (CFLAG:着衣状態 & 8) || (CFLAG:着衣状態 & 16)
@@ -597,13 +597,13 @@ SIF FLAG:着衣使用 == 0
 	RETURN 0
 
 ;着衣中に放尿した場合、着衣は一時的に使えなくなる
-IF (CFLAG:着衣状態 & 64) && (CFLAG:特別コスチュームのタイプ <= 50 || CFLAG:特別コスチュームのタイプ == 69)
+IF (CFLAG:着衣状態 & 64) && (CFLAG:特別コスタイプ <= 50 || CFLAG:特別コスタイプ == 69)
 	PRINTFORM 《%CALLNAME:TARGET%は
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML の中に射精した》
 	TFLAG:特別コスチューム汚れ |= 2
 	;オムツ着用中なら他の衣類は無事
-	SIF CFLAG:特別コスチュームのタイプ == 69
+	SIF CFLAG:特別コスタイプ == 69
 		RETURN 1
 ENDIF
 IF (CFLAG:着衣状態 & 1)
@@ -640,7 +640,7 @@ IF (CFLAG:着衣状態 & 16)
 	RETURN 1
 ENDIF
 ;特別コス・オムツの判定
-IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 69
+IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ == 69
 	PRINTFORM 《%CALLNAME:TARGET%の
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML にぶっかけた》
@@ -720,15 +720,15 @@ PRINT パンツ
 ;ツーピース下の表示
 ;-------------------------------------------------
 @PRINT_CLOTHTYPE_MAIN_BOTTOM
-IF CFLAG:上着のタイプ == 109
+IF CFLAG:上着タイプ == 109
 	PRINT ブルマ
-ELSEIF CFLAG:上着のタイプ == 192
+ELSEIF CFLAG:上着タイプ == 192
 	PRINT ふんどし
 ELSE
 	CALL PRINT_CLOTHTYPE_MAIN2
-	IF CFLAG:上着のタイプ >= 1 && CFLAG:上着のタイプ <= 100
+	IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 		PRINT スカート
-	ELSEIF CFLAG:上着のタイプ <= 200
+	ELSEIF CFLAG:上着タイプ <= 200
 		PRINT 下
 	ENDIF
 ENDIF
@@ -737,161 +737,161 @@ ENDIF
 ;衣装の定義
 ;-------------------------------------------------
 @PRINT_CLOTHTYPE_MAIN2
-IF CFLAG:上着のタイプ == 0
+IF CFLAG:上着タイプ == 0
 	PRINT 全裸
 ;股間を覆わないのツーピース(1～100)
-ELSEIF CFLAG:上着のタイプ == 1
+ELSEIF CFLAG:上着タイプ == 1
 	PRINT 普段着
-ELSEIF CFLAG:上着のタイプ == 2
+ELSEIF CFLAG:上着タイプ == 2
 	PRINT 極亜久高校の制服
-ELSEIF CFLAG:上着のタイプ == 3
+ELSEIF CFLAG:上着タイプ == 3
 	PRINT 日の出高校の制服
-ELSEIF CFLAG:上着のタイプ == 4
+ELSEIF CFLAG:上着タイプ == 4
 	PRINT 花丸高校の制服
-ELSEIF CFLAG:上着のタイプ == 5
+ELSEIF CFLAG:上着タイプ == 5
 	PRINT 親切高校の制服
-ELSEIF CFLAG:上着のタイプ == 6
+ELSEIF CFLAG:上着タイプ == 6
 	PRINT 星英高校の制服
-ELSEIF CFLAG:上着のタイプ == 7
+ELSEIF CFLAG:上着タイプ == 7
 	PRINT パライソ中学の制服
-ELSEIF CFLAG:上着のタイプ == 8
+ELSEIF CFLAG:上着タイプ == 8
 	PRINT 私立メキメキ学園の制服
-ELSEIF CFLAG:上着のタイプ == 17
+ELSEIF CFLAG:上着タイプ == 17
 	PRINT 高校の制服
-ELSEIF CFLAG:上着のタイプ == 18
+ELSEIF CFLAG:上着タイプ == 18
 	PRINT 中学校の制服
-ELSEIF CFLAG:上着のタイプ == 19
+ELSEIF CFLAG:上着タイプ == 19
 	PRINT セーラー服
-ELSEIF CFLAG:上着のタイプ == 20
+ELSEIF CFLAG:上着タイプ == 20
 	PRINT 麻帆良女子中学の制服
-ELSEIF CFLAG:上着のタイプ == 21
+ELSEIF CFLAG:上着タイプ == 21
 	PRINT スーツ
-ELSEIF CFLAG:上着のタイプ == 22
+ELSEIF CFLAG:上着タイプ == 22
 	PRINT 子供服
-ELSEIF CFLAG:上着のタイプ == 23
+ELSEIF CFLAG:上着タイプ == 23
 	PRINT ブランド服
-ELSEIF CFLAG:上着のタイプ == 24
+ELSEIF CFLAG:上着タイプ == 24
 	PRINT ナース服
-ELSEIF CFLAG:上着のタイプ == 25
+ELSEIF CFLAG:上着タイプ == 25
 	PRINT メイド服
-ELSEIF CFLAG:上着のタイプ == 26
+ELSEIF CFLAG:上着タイプ == 26
 	PRINT ウェイトレスの制服
-ELSEIF CFLAG:上着のタイプ == 27
+ELSEIF CFLAG:上着タイプ == 27
 	PRINT コンビニの制服
-ELSEIF CFLAG:上着のタイプ == 28
+ELSEIF CFLAG:上着タイプ == 28
 	PRINT 事務員の制服
-ELSEIF CFLAG:上着のタイプ == 29
+ELSEIF CFLAG:上着タイプ == 29
 	PRINT ＣＰＧの制服
-ELSEIF CFLAG:上着のタイプ == 30
+ELSEIF CFLAG:上着タイプ == 30
 	PRINT パンクロリータ
-ELSEIF CFLAG:上着のタイプ == 31
+ELSEIF CFLAG:上着タイプ == 31
 	PRINT ブレザー
-ELSEIF CFLAG:上着のタイプ == 32
+ELSEIF CFLAG:上着タイプ == 32
 	PRINT 喪服
-ELSEIF CFLAG:上着のタイプ == 40
+ELSEIF CFLAG:上着タイプ == 40
 	PRINT キャミとデニムミニ
-ELSEIF CFLAG:上着のタイプ == 51
+ELSEIF CFLAG:上着タイプ == 51
 	PRINT 軍服
-ELSEIF CFLAG:上着のタイプ == 52
+ELSEIF CFLAG:上着タイプ == 52
 	PRINT ゴシックロリータ
-ELSEIF CFLAG:上着のタイプ == 53
+ELSEIF CFLAG:上着タイプ == 53
 	PRINT 麻帆良芸大付属中の制服
-ELSEIF CFLAG:上着のタイプ == 54
+ELSEIF CFLAG:上着タイプ == 54
 	PRINT チアリーダーの衣装
-ELSEIF CFLAG:上着のタイプ == 55
+ELSEIF CFLAG:上着タイプ == 55
 	PRINT テニスウェア
-ELSEIF CFLAG:上着のタイプ == 56
+ELSEIF CFLAG:上着タイプ == 56
 	PRINT ハロウィン魔女っ子服
-ELSEIF CFLAG:上着のタイプ == 99
+ELSEIF CFLAG:上着タイプ == 99
 	PRINT ガラスのメイド服
 ;股間を覆うタイプのツーピース(101～200)
-ELSEIF CFLAG:上着のタイプ == 101
+ELSEIF CFLAG:上着タイプ == 101
 	PRINT 普段着
-ELSEIF CFLAG:上着のタイプ == 102
+ELSEIF CFLAG:上着タイプ == 102
 	PRINT スーツ
-ELSEIF CFLAG:上着のタイプ == 103
+ELSEIF CFLAG:上着タイプ == 103
 	PRINT ジャージ
-ELSEIF CFLAG:上着のタイプ == 104
+ELSEIF CFLAG:上着タイプ == 104
 	PRINT 巫女装束
-ELSEIF CFLAG:上着のタイプ == 105
+ELSEIF CFLAG:上着タイプ == 105
 	PRINT 野球のユニフォーム
-ELSEIF CFLAG:上着のタイプ == 106
+ELSEIF CFLAG:上着タイプ == 106
 	PRINT 軍服
-ELSEIF CFLAG:上着のタイプ == 108
+ELSEIF CFLAG:上着タイプ == 108
 	PRINT ブレザー
-ELSEIF CFLAG:上着のタイプ == 109
+ELSEIF CFLAG:上着タイプ == 109
 	PRINT 体操着
-ELSEIF CFLAG:上着のタイプ == 110
+ELSEIF CFLAG:上着タイプ == 110
 	PRINT 忍者装束
-ELSEIF CFLAG:上着のタイプ == 111
+ELSEIF CFLAG:上着タイプ == 111
 	PRINT 王子の正装
-ELSEIF CFLAG:上着のタイプ == 122
+ELSEIF CFLAG:上着タイプ == 122
 	PRINT 子供服
-ELSEIF CFLAG:上着のタイプ == 131
+ELSEIF CFLAG:上着タイプ == 131
 	PRINT パジャマ
 ;股間を覆うタイプで全裸で付けるツーピース(191～200)
-ELSEIF CFLAG:上着のタイプ == 191
+ELSEIF CFLAG:上着タイプ == 191
 	PRINT マイクロビキニ
-ELSEIF CFLAG:上着のタイプ == 192
+ELSEIF CFLAG:上着タイプ == 192
 	PRINT 陸上部のユニフォーム
 ;股間を覆わないタイプの全身衣装(201～240)
-ELSEIF CFLAG:上着のタイプ == 201
+ELSEIF CFLAG:上着タイプ == 201
 	PRINT ワンピース
-ELSEIF CFLAG:上着のタイプ == 202
+ELSEIF CFLAG:上着タイプ == 202
 	PRINT 和服
-ELSEIF CFLAG:上着のタイプ == 203
+ELSEIF CFLAG:上着タイプ == 203
 	PRINT カクテルドレス
-ELSEIF CFLAG:上着のタイプ == 204
+ELSEIF CFLAG:上着タイプ == 204
 	PRINT 浴衣
-ELSEIF CFLAG:上着のタイプ == 205
+ELSEIF CFLAG:上着タイプ == 205
 	PRINT マイクロミニタイトワンピース
-ELSEIF CFLAG:上着のタイプ == 221
+ELSEIF CFLAG:上着タイプ == 221
 	PRINT チャイナドレス
-ELSEIF CFLAG:上着のタイプ == 222
+ELSEIF CFLAG:上着タイプ == 222
 	PRINT フェミニンワンピース
-ELSEIF CFLAG:上着のタイプ == 229
+ELSEIF CFLAG:上着タイプ == 229
 	PRINT 中学校の制服
-ELSEIF CFLAG:上着のタイプ == 230
+ELSEIF CFLAG:上着タイプ == 230
 	PRINT 聖ウルスラ高校の制服
-ELSEIF CFLAG:上着のタイプ == 231
+ELSEIF CFLAG:上着タイプ == 231
 	PRINT 修道服
-ELSEIF CFLAG:上着のタイプ == 232
+ELSEIF CFLAG:上着タイプ == 232
 	PRINT ワンピーススーツ
-ELSEIF CFLAG:上着のタイプ == 233
+ELSEIF CFLAG:上着タイプ == 233
 	PRINT 女陰陽師の衣装
-ELSEIF CFLAG:上着のタイプ == 240
+ELSEIF CFLAG:上着タイプ == 240
 	PRINT ウェディングドレス
 ;股間を覆わないタイプで全裸で付ける全身衣装(241～250)
-ELSEIF CFLAG:上着のタイプ == 241
+ELSEIF CFLAG:上着タイプ == 241
 	PRINT ボンテージ
-ELSEIF CFLAG:上着のタイプ == 242
+ELSEIF CFLAG:上着タイプ == 242
 	PRINT 淫魔のボンテージ
-ELSEIF CFLAG:上着のタイプ == 243
+ELSEIF CFLAG:上着タイプ == 243
 	PRINT ベリーダンスの衣装
-ELSEIF CFLAG:上着のタイプ == 244
+ELSEIF CFLAG:上着タイプ == 244
 	PRINT 旧型スクール水着
-ELSEIF CFLAG:上着のタイプ == 245
+ELSEIF CFLAG:上着タイプ == 245
 	PRINT ラバーボディスーツ
-ELSEIF CFLAG:上着のタイプ == 246
+ELSEIF CFLAG:上着タイプ == 246
 	PRINT スリングショット
 ;股間を覆うタイプでの全身衣装(251～290)
-ELSEIF CFLAG:上着のタイプ == 251
+ELSEIF CFLAG:上着タイプ == 251
 	PRINT 全身タイツ
-ELSEIF CFLAG:上着のタイプ == 252
+ELSEIF CFLAG:上着タイプ == 252
 	PRINT オーバーオール
-ELSEIF CFLAG:上着のタイプ == 253
+ELSEIF CFLAG:上着タイプ == 253
 	PRINT プロペラ団コスチューム
-ELSEIF CFLAG:上着のタイプ == 254
+ELSEIF CFLAG:上着タイプ == 254
 	PRINT バニースーツ
 ;股間を覆うタイプで全裸で付ける全身衣装(291～300)
-ELSEIF CFLAG:上着のタイプ == 291
+ELSEIF CFLAG:上着タイプ == 291
 	PRINT スクール水着
-ELSEIF CFLAG:上着のタイプ == 292
+ELSEIF CFLAG:上着タイプ == 292
 	PRINT ブラックのコスチューム
-ELSEIF CFLAG:上着のタイプ == 295
+ELSEIF CFLAG:上着タイプ == 295
 	PRINT レオタード
 ;その他
-ELSEIF CFLAG:上着のタイプ == -1
+ELSEIF CFLAG:上着タイプ == -1
 	PRINT 下着
 ELSE
 	PRINT 服
@@ -900,74 +900,74 @@ ENDIF
 ;特別コス
 @PRINT_CLOTHTYPE_SPECIAL
 ;通常コスの上にまとうタイプ(1～50)
-IF CFLAG:特別コスチュームのタイプ == 1
+IF CFLAG:特別コスタイプ == 1
 	PRINT エプロン
-ELSEIF CFLAG:特別コスチュームのタイプ == 2
+ELSEIF CFLAG:特別コスタイプ == 2
 	PRINT コート
-ELSEIF CFLAG:特別コスチュームのタイプ == 3
+ELSEIF CFLAG:特別コスタイプ == 3
 	PRINT 白衣
-ELSEIF CFLAG:特別コスチュームのタイプ == 4
+ELSEIF CFLAG:特別コスタイプ == 4
 	PRINT 男物のワイシャツ
-ELSEIF CFLAG:特別コスチュームのタイプ == 10
+ELSEIF CFLAG:特別コスタイプ == 10
 	PRINT 地味な色のベスト
-ELSEIF CFLAG:特別コスチュームのタイプ == 11
+ELSEIF CFLAG:特別コスタイプ == 11
 	PRINT ズーコの着ぐるみ
-ELSEIF CFLAG:特別コスチュームのタイプ == 12
+ELSEIF CFLAG:特別コスタイプ == 12
 	PRINT 風来坊のマント
-ELSEIF CFLAG:特別コスチュームのタイプ == 40
+ELSEIF CFLAG:特別コスタイプ == 40
 	PRINT スーツジャケット
-ELSEIF CFLAG:特別コスチュームのタイプ == 41
+ELSEIF CFLAG:特別コスタイプ == 41
 	PRINT 魔法使いのローブ
-ELSEIF CFLAG:特別コスチュームのタイプ == 50
+ELSEIF CFLAG:特別コスタイプ == 50
 	PRINT フリルエプロン
 ;体にまとわず濡らせないタイプ(51～65)
-ELSEIF CFLAG:特別コスチュームのタイプ == 51
+ELSEIF CFLAG:特別コスタイプ == 51
 	PRINT マフラー
-ELSEIF CFLAG:特別コスチュームのタイプ == 52
+ELSEIF CFLAG:特別コスタイプ == 52
 	PRINT ナースキャップ
-ELSEIF CFLAG:特別コスチュームのタイプ == 53
+ELSEIF CFLAG:特別コスタイプ == 53
 	PRINT ロンググローブ
-ELSEIF CFLAG:特別コスチュームのタイプ == 54
+ELSEIF CFLAG:特別コスタイプ == 54
 	PRINT ヘアリボン
-ELSEIF CFLAG:特別コスチュームのタイプ == 60
+ELSEIF CFLAG:特別コスタイプ == 60
 	PRINT シスターヴェール
-ELSEIF CFLAG:特別コスチュームのタイプ == 61
+ELSEIF CFLAG:特別コスタイプ == 61
 	PRINT ウェディングベール
-ELSEIF CFLAG:特別コスチュームのタイプ == 62
+ELSEIF CFLAG:特別コスタイプ == 62
 	PRINT 
-;ELSEIF CFLAG:特別コスチュームのタイプ == 63
+;ELSEIF CFLAG:特別コスタイプ == 63
 ;	PRINT 聖ウルスラ高校帽子
-;ELSEIF CFLAG:特別コスチュームのタイプ == 64
+;ELSEIF CFLAG:特別コスタイプ == 64
 ;	PRINT 麻帆良芸大付属中の帽子
-ELSEIF CFLAG:特別コスチュームのタイプ == 65
+ELSEIF CFLAG:特別コスタイプ == 65
 	PRINT 猫耳＆尻尾
-ELSEIF CFLAG:特別コスチュームのタイプ == 66
+ELSEIF CFLAG:特別コスタイプ == 66
 	PRINT チアボンボン
 ;パンツ代わりに付けるタイプ(69)
-ELSEIF CFLAG:特別コスチュームのタイプ == 69
+ELSEIF CFLAG:特別コスタイプ == 69
 	PRINT オムツ
 ;体にまとわず濡れても平気なタイプ(71～100)
-ELSEIF CFLAG:特別コスチュームのタイプ == 71
+ELSEIF CFLAG:特別コスタイプ == 71
 	PRINT 首輪
-ELSEIF CFLAG:特別コスチュームのタイプ == 72
+ELSEIF CFLAG:特別コスタイプ == 72
 	PRINT 亀甲縛り
-ELSEIF CFLAG:特別コスチュームのタイプ == 73
+ELSEIF CFLAG:特別コスタイプ == 73
 	PRINT カウベルと鼻輪
-ELSEIF CFLAG:特別コスチュームのタイプ == 74
+ELSEIF CFLAG:特別コスタイプ == 74
 	PRINT バングル＆リング
-ELSEIF CFLAG:特別コスチュームのタイプ == 79
+ELSEIF CFLAG:特別コスタイプ == 79
 	PRINT 貞操帯
-ELSEIF CFLAG:特別コスチュームのタイプ == 80
+ELSEIF CFLAG:特別コスタイプ == 80
 	PRINT 眼鏡
-ELSEIF CFLAG:特別コスチュームのタイプ == 81
+ELSEIF CFLAG:特別コスタイプ == 81
 	PRINT サングラス
-ELSEIF CFLAG:特別コスチュームのタイプ == 82
+ELSEIF CFLAG:特別コスタイプ == 82
 	PRINT しっぽ付きアナルプラグ
-ELSEIF CFLAG:特別コスチュームのタイプ == 83
+ELSEIF CFLAG:特別コスタイプ == 83
 	PRINT レースパーティグローブ
-ELSEIF CFLAG:特別コスチュームのタイプ == 85
+ELSEIF CFLAG:特別コスタイプ == 85
 	PRINT エナメルロンググローブ
-ELSEIF CFLAG:特別コスチュームのタイプ == 99
+ELSEIF CFLAG:特別コスタイプ == 99
 	PRINT ガラスのねこみみ
 ENDIF
 

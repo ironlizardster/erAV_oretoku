@@ -5,46 +5,46 @@
 ;タバコの銘柄の決定
 ;===========================================================
 @CIGARETTES
-CFLAG:タバコの種類 = RAND:21
-	IF CFLAG:タバコの種類 == 0
+CFLAG:タバコ = RAND:21
+	IF CFLAG:タバコ == 0
 		CSTR:タバコの銘柄 = セブンスター
-	ELSEIF CFLAG:タバコの種類 == 1
+	ELSEIF CFLAG:タバコ == 1
 		CSTR:タバコの銘柄 = ブラックストーン
-	ELSEIF CFLAG:タバコの種類 == 2
+	ELSEIF CFLAG:タバコ == 2
 		CSTR:タバコの銘柄 = セーラムピアニッシモ
-	ELSEIF CFLAG:タバコの種類 == 3
+	ELSEIF CFLAG:タバコ == 3
 		CSTR:タバコの銘柄 = ベヴェルフレアーメンソール
-	ELSEIF CFLAG:タバコの種類 == 4
+	ELSEIF CFLAG:タバコ == 4
 		CSTR:タバコの銘柄 = マルボロメンソールライト
-	ELSEIF CFLAG:タバコの種類 == 5
+	ELSEIF CFLAG:タバコ == 5
 		CSTR:タバコの銘柄 = セブンスターメンソール
-	ELSEIF CFLAG:タバコの種類 == 6
+	ELSEIF CFLAG:タバコ == 6
 		CSTR:タバコの銘柄 = 赤ラーク
-	ELSEIF CFLAG:タバコの種類 == 7
+	ELSEIF CFLAG:タバコ == 7
 		CSTR:タバコの銘柄 = ハイライト
-	ELSEIF CFLAG:タバコの種類 == 8
+	ELSEIF CFLAG:タバコ == 8
 		CSTR:タバコの銘柄 = ラッキーストライク
-	ELSEIF CFLAG:タバコの種類 == 9
+	ELSEIF CFLAG:タバコ == 9
 		CSTR:タバコの銘柄 = KENT
-	ELSEIF CFLAG:タバコの種類 == 10
+	ELSEIF CFLAG:タバコ == 10
 		CSTR:タバコの銘柄 = KOOL
-	ELSEIF CFLAG:タバコの種類 == 11
+	ELSEIF CFLAG:タバコ == 11
 		CSTR:タバコの銘柄 = アメリカンスピリット
-	ELSEIF CFLAG:タバコの種類 == 12
+	ELSEIF CFLAG:タバコ == 12
 		CSTR:タバコの銘柄 = キースアロマメルティ
-	ELSEIF CFLAG:タバコの種類 == 13
+	ELSEIF CFLAG:タバコ == 13
 		CSTR:タバコの銘柄 = ガラム
-	ELSEIF CFLAG:タバコの種類 == 14
+	ELSEIF CFLAG:タバコ == 14
 		CSTR:タバコの銘柄 = 中南海
-	ELSEIF CFLAG:タバコの種類 == 15
+	ELSEIF CFLAG:タバコ == 15
 		CSTR:タバコの銘柄 = ゴロワーズ
-	ELSEIF CFLAG:タバコの種類 == 16
+	ELSEIF CFLAG:タバコ == 16
 		CSTR:タバコの銘柄 = JPS
-	ELSEIF CFLAG:タバコの種類 == 17
+	ELSEIF CFLAG:タバコ == 17
 		CSTR:タバコの銘柄 = ブラックデビル
-	ELSEIF CFLAG:タバコの種類 == 18
+	ELSEIF CFLAG:タバコ == 18
 		CSTR:タバコの銘柄 = DEATH
-	ELSEIF CFLAG:タバコの種類 == 19
+	ELSEIF CFLAG:タバコ == 19
 		CSTR:タバコの銘柄 = わかば
 	ELSE
 		CSTR:タバコの銘柄 = 赤マルボロ
@@ -93,31 +93,31 @@ REPEAT CHARANUM
 	ELSEIF TALENT:COUNT:アンドロイド
 		CONTINUE
 		IF CFLAG:COUNT:30 > 5
-			CFLAG:COUNT:ファーストキスの相手 = 0
-		ELSEIF DAY:2 == 1 && CFLAG:COUNT:30 == 1
-			CFLAG:COUNT:口上の表示 = 1
-		ELSEIF DAY:2 == 2 && CFLAG:COUNT:30 == 2
-			CFLAG:COUNT:口上の表示 = 1
-		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 3
-			CFLAG:COUNT:口上の表示 = 1
-		ELSEIF DAY:2 == 4 && CFLAG:COUNT:30 == 4
-			CFLAG:COUNT:口上の表示 = 1
-		ELSEIF DAY:2 == 5 && CFLAG:COUNT:30 == 5
-			CFLAG:COUNT:口上の表示 = 1
-		ELSEIF DAY:2 == 5 && CFLAG:COUNT:30 == 0
-			CFLAG:COUNT:口上の表示 = 1
-		ELSEIF DAY:2 == 1 && CFLAG:COUNT:30 == 3
-			CFLAG:COUNT:口上の表示 = 2
-		ELSEIF DAY:2 == 2 && CFLAG:COUNT:30 == 4
-			CFLAG:COUNT:口上の表示 = 2
-		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 5
-			CFLAG:COUNT:口上の表示 = 2
-		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 0
-			CFLAG:COUNT:口上の表示 = 2
-		ELSEIF DAY:2 == 3 && CFLAG:COUNT:30 == 1
-			CFLAG:COUNT:口上の表示 = 2
-		ELSEIF DAY:2 == 4 && CFLAG:COUNT:30 == 2
-			CFLAG:COUNT:口上の表示 = 2
+			CFLAG:COUNT:初キス相手 = 0
+		ELSEIF DAY:日付_日 == 1 && CFLAG:COUNT:30 == 1
+			CFLAG:COUNT:口上表示 = 1
+		ELSEIF DAY:日付_日 == 2 && CFLAG:COUNT:30 == 2
+			CFLAG:COUNT:口上表示 = 1
+		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 3
+			CFLAG:COUNT:口上表示 = 1
+		ELSEIF DAY:日付_日 == 4 && CFLAG:COUNT:30 == 4
+			CFLAG:COUNT:口上表示 = 1
+		ELSEIF DAY:日付_日 == 5 && CFLAG:COUNT:30 == 5
+			CFLAG:COUNT:口上表示 = 1
+		ELSEIF DAY:日付_日 == 5 && CFLAG:COUNT:30 == 0
+			CFLAG:COUNT:口上表示 = 1
+		ELSEIF DAY:日付_日 == 1 && CFLAG:COUNT:30 == 3
+			CFLAG:COUNT:口上表示 = 2
+		ELSEIF DAY:日付_日 == 2 && CFLAG:COUNT:30 == 4
+			CFLAG:COUNT:口上表示 = 2
+		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 5
+			CFLAG:COUNT:口上表示 = 2
+		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 0
+			CFLAG:COUNT:口上表示 = 2
+		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 1
+			CFLAG:COUNT:口上表示 = 2
+		ELSEIF DAY:日付_日 == 4 && CFLAG:COUNT:30 == 2
+			CFLAG:COUNT:口上表示 = 2
 		ENDIF
 	ENDIF
 REND
@@ -125,46 +125,46 @@ REND
 ;タバコの銘柄の決定
 ;===========================================================
 @CIGARETTES_4COUNT
-CFLAG:COUNT:タバコの種類 = RAND:21
-	IF CFLAG:COUNT:タバコの種類 == 0
+CFLAG:COUNT:タバコ = RAND:21
+	IF CFLAG:COUNT:タバコ == 0
 		CSTR:COUNT:タバコの銘柄 = セブンスター
-	ELSEIF CFLAG:COUNT:タバコの種類 == 1
+	ELSEIF CFLAG:COUNT:タバコ == 1
 		CSTR:COUNT:タバコの銘柄 = ブラックストーン
-	ELSEIF CFLAG:COUNT:タバコの種類 == 2
+	ELSEIF CFLAG:COUNT:タバコ == 2
 		CSTR:COUNT:タバコの銘柄 = セーラムピアニッシモ
-	ELSEIF CFLAG:COUNT:タバコの種類 == 3
+	ELSEIF CFLAG:COUNT:タバコ == 3
 		CSTR:COUNT:タバコの銘柄 = ベヴェルフレアーメンソール
-	ELSEIF CFLAG:COUNT:タバコの種類 == 4
+	ELSEIF CFLAG:COUNT:タバコ == 4
 		CSTR:COUNT:タバコの銘柄 = マルボロメンソールライト
-	ELSEIF CFLAG:COUNT:タバコの種類 == 5
+	ELSEIF CFLAG:COUNT:タバコ == 5
 		CSTR:COUNT:タバコの銘柄 = セブンスターメンソール
-	ELSEIF CFLAG:COUNT:タバコの種類 == 6
+	ELSEIF CFLAG:COUNT:タバコ == 6
 		CSTR:COUNT:タバコの銘柄 = 赤ラーク
-	ELSEIF CFLAG:COUNT:タバコの種類 == 7
+	ELSEIF CFLAG:COUNT:タバコ == 7
 		CSTR:COUNT:タバコの銘柄 = ハイライト
-	ELSEIF CFLAG:COUNT:タバコの種類 == 8
+	ELSEIF CFLAG:COUNT:タバコ == 8
 		CSTR:COUNT:タバコの銘柄 = ラッキーストライク
-	ELSEIF CFLAG:COUNT:タバコの種類 == 9
+	ELSEIF CFLAG:COUNT:タバコ == 9
 		CSTR:COUNT:タバコの銘柄 = KENT
-	ELSEIF CFLAG:COUNT:タバコの種類 == 10
+	ELSEIF CFLAG:COUNT:タバコ == 10
 		CSTR:COUNT:タバコの銘柄 = KOOL
-	ELSEIF CFLAG:COUNT:タバコの種類 == 11
+	ELSEIF CFLAG:COUNT:タバコ == 11
 		CSTR:COUNT:タバコの銘柄 = アメリカンスピリット
-	ELSEIF CFLAG:COUNT:タバコの種類 == 12
+	ELSEIF CFLAG:COUNT:タバコ == 12
 		CSTR:COUNT:タバコの銘柄 = キースアロマメルティ
-	ELSEIF CFLAG:COUNT:タバコの種類 == 13
+	ELSEIF CFLAG:COUNT:タバコ == 13
 		CSTR:COUNT:タバコの銘柄 = ガラム
-	ELSEIF CFLAG:COUNT:タバコの種類 == 14
+	ELSEIF CFLAG:COUNT:タバコ == 14
 		CSTR:COUNT:タバコの銘柄 = 中南海
-	ELSEIF CFLAG:COUNT:タバコの種類 == 15
+	ELSEIF CFLAG:COUNT:タバコ == 15
 		CSTR:COUNT:タバコの銘柄 = ゴロワーズ
-	ELSEIF CFLAG:COUNT:タバコの種類 == 16
+	ELSEIF CFLAG:COUNT:タバコ == 16
 		CSTR:COUNT:タバコの銘柄 = JPS
-	ELSEIF CFLAG:COUNT:タバコの種類 == 17
+	ELSEIF CFLAG:COUNT:タバコ == 17
 		CSTR:COUNT:タバコの銘柄 = ブラックデビル
-	ELSEIF CFLAG:COUNT:タバコの種類 == 18
+	ELSEIF CFLAG:COUNT:タバコ == 18
 		CSTR:COUNT:タバコの銘柄 = DEATH
-	ELSEIF CFLAG:COUNT:タバコの種類 == 19
+	ELSEIF CFLAG:COUNT:タバコ == 19
 		CSTR:COUNT:タバコの銘柄 = わかば
 	ELSE
 		CSTR:COUNT:タバコの銘柄 = 赤マルボロ

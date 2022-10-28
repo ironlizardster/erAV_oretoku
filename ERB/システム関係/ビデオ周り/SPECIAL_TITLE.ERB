@@ -140,7 +140,7 @@ SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間未依]] || NO:ASSI == [[キャ�
 SIF ASSI > 0 && (NO:TARGET == [[キャラ:宮間未依]] || NO:ASSI == [[キャラ:宮間未依]]) && (NO:TARGET == [[キャラ:ヒトミちゃん]] || NO:ASSI == [[キャラ:ヒトミちゃん]])
 	RETURNF 54
 
-SIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:交渉上手 && TALENT:サド && CFLAG:上着のタイプ == 241 && CFLAG:着衣状態 == 76 && CFLAG:特別コスチュームのタイプ == 85
+SIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:交渉上手 && TALENT:サド && CFLAG:上着タイプ == 241 && CFLAG:着衣状態 == 76 && CFLAG:特別コスタイプ == 85
 	RETURNF 55
 
 SIF ASSI > 0 && (NO:TARGET == [[キャラ:佐々木美乃里]] || NO:ASSI == [[キャラ:佐々木美乃里]]) && (NO:TARGET == [[キャラ:赤坂姫乃]] || NO:ASSI == [[キャラ:赤坂姫乃]])
@@ -164,28 +164,28 @@ SIF ASSI > 0 && TALENT:高校生 && TALENT:ギャル系 && TALENT:ASSI:高校生
 SIF F & 128
 	RETURNF 558
 
-SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 243 && TALENT:褐色肌
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着タイプ == 243 && TALENT:褐色肌
 	RETURNF 500
 
-SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 99 && CFLAG:特別コスチュームのタイプ == 99 && CFLAG:靴下の種類 == 99 && TALENT:小悪魔
+SIF CFLAG:着衣状態 >= 76 && CFLAG:上着タイプ == 99 && CFLAG:特別コスタイプ == 99 && CFLAG:靴下タイプ == 99 && TALENT:小悪魔
 	RETURNF 501
 
-SIF (ASSI > 0 && CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 52 && CFLAG:髪色 == 2 && CFLAG:髪型 == 4 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:髪色 == 3 && CFLAG:ASSI:髪型 == 5) || (ASSI > 0 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:上着のタイプ == 52 && CFLAG:ASSI:髪色 == 2 && CFLAG:ASSI:髪型 == 4 && CFLAG:着衣状態 >= 12 && CFLAG:上着のタイプ == 52 && CFLAG:着衣状態 != 64 && CFLAG:髪色 == 3 && CFLAG:髪型 == 5)
+SIF (ASSI > 0 && CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着タイプ == 52 && CFLAG:髪色 == 2 && CFLAG:髪型 == 4 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:上着タイプ == 52 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:髪色 == 3 && CFLAG:ASSI:髪型 == 5) || (ASSI > 0 && CFLAG:ASSI:着衣状態 >= 12 && CFLAG:ASSI:着衣状態 != 64 && CFLAG:ASSI:上着タイプ == 52 && CFLAG:ASSI:髪色 == 2 && CFLAG:ASSI:髪型 == 4 && CFLAG:着衣状態 >= 12 && CFLAG:上着タイプ == 52 && CFLAG:着衣状態 != 64 && CFLAG:髪色 == 3 && CFLAG:髪型 == 5)
 	RETURNF 502
 
-SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 51 && CFLAG:髪色 == 2 && CFLAG:髪型 == 8 && TALENT:アイドル && TALENT:カリスマ
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着タイプ == 51 && CFLAG:髪色 == 2 && CFLAG:髪型 == 8 && TALENT:アイドル && TALENT:カリスマ
 	RETURNF 503
 
-SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 40 && CFLAG:特別コスチュームのタイプ == 74 && (TALENT:小悪魔 || TALENT:ギャル系)
+SIF CFLAG:着衣状態 >= 76 && CFLAG:上着タイプ == 40 && CFLAG:特別コスタイプ == 74 && (TALENT:小悪魔 || TALENT:ギャル系)
 	RETURNF 504
 
-SIF CFLAG:着衣状態 >= 76 && CFLAG:上着のタイプ == 240 && CFLAG:特別コスチュームのタイプ == 61 && TALENT:永遠の愛 && TFLAG:ビデオ撮影内容 & 1
+SIF CFLAG:着衣状態 >= 76 && CFLAG:上着タイプ == 240 && CFLAG:特別コスタイプ == 61 && TALENT:永遠の愛 && TFLAG:ビデオ撮影内容 & 1
 	RETURNF 505
 
-SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 30 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着タイプ == 30 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0
 	RETURNF 506
 
-SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着のタイプ == 244
+SIF CFLAG:着衣状態 >= 12 && CFLAG:着衣状態 != 64 && CFLAG:上着タイプ == 244
 	RETURNF 507
 
 SIF TFLAG:コスプレ衣装 == 1 && CFLAG:髪色 == 6 && CFLAG:髪型 == 4

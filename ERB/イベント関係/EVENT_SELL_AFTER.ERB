@@ -13,7 +13,7 @@ ENDIF
 
 ;恋心あり淫乱なし永遠の愛なし、寝取られ度激高でかなで以外のとき駆け落ちエンド
 ;セリフ
-IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント >= CFLAG:寝取られ完了値 - 10
+IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:NTR進行 >= CFLAG:NTR完了値 - 10
 	PRINTFORML 「%CSTR:一人称%のことを構ってくれない%CALLNAME:MASTER%なんて、もう知らない……」
 	PRINTFORML 「%CSTR:一人称%は%CSTR:一人称%で、幸せになるんだから……！」
 	PRINTFORML 「うん、愛してるよダーリンｖ　ダーリンの赤ちゃん産んであげるからねｖ」
@@ -21,7 +21,7 @@ IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TA
 	
 ;恋心あり淫乱なし永遠の愛なし、寝取られ度高めでかなで以外のとき浮気エンド
 ;セリフ
-ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント >= CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:NTR進行 >= CFLAG:NTR完了値 / 2
 	PRINTFORML 「お願い、もっと激しくパンパンしてぇｖ」
 	PRINTFORML 「カントクが悪いんだよ、%CSTR:一人称%のことほっとくからぁ！」
 	PRINTFORML 「ねぇ～、もっと%CSTR:一人称%の膣内にドピュドピュしてぇｖ」
@@ -118,7 +118,7 @@ SETFONT ""
 PRINTL
 
 ;本文
-IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント >= CFLAG:寝取られ完了値 / 2
+IF TALENT:恋心 == 1 && TALENT:淫乱 == 0 && TALENT:永遠の愛 == 0 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:NTR進行 >= CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORM しばらく%CALLNAME:TARGET%と同棲生活を送っていた%CALLNAME:TARGET%だが、あまりにも%CALLNAME:MASTER%に
 	PRINTFORML 構ってもらえない生活に次第に嫌気がさし、指導によって火照った体を持て余しはじめた……
@@ -152,7 +152,7 @@ ELSEIF TALENT:恋心 == 1 && TALENT:淫乱 == 1 && TALENT:永遠の愛 == 1 && N
 	PRINTFORM ラブホテルの一室で%CALLNAME:TARGET%と撮影中の浮気シーンは、この後匿名で%CALLNAME:TARGET%の夫のＰＣに
 	PRINTFORML 送られる予定だ
 	PRINTFORML 帰ったときの夫の表情を想像して、%CALLNAME:TARGET%の情欲は一層燃え上がるのだった……
-ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 &&NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 &&NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:NTR進行 < CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORM 事務所から同棲中の%CALLNAME:TARGET%が待つ我が家へと帰った%CALLNAME:MASTER%が目にしたのは、
 	PRINTFORML 玄関口でバイブを片手に、裸エプロンで激しくオナニーをしている%CALLNAME:TARGET%の姿だった
@@ -164,7 +164,7 @@ ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 &&NO:TARGET != [[キャラ:宮�
 	PRINTFORM 女優を辞めてもなお続けられた開発ですっかり快楽器官となった%CALLNAME:TARGET%のアナルに
 	PRINTFORML 怒張を一息に奥まで突き入れた……
 	PRINTFORML どうやら今夜も寝るのが遅くなりそうだ……
-ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 && NO:MASTER == [[キャラ:あなた]] && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && CFLAG:NTR進行 < CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORM 事務所から愛しの妻であり……実の妹である%CALLNAME:TARGET%が待つ我が家へと帰った
 	PRINTFORM %CALLNAME:MASTER%が目にしたのは、玄関口でバイブを片手に、
@@ -177,7 +177,7 @@ ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 1 && NO:MASTER == [[キャラ:あ�
 	PRINTFORM 女優を辞めてもなお続けられた開発ですっかり快楽器官となった%CALLNAME:TARGET%のアナルに
 	PRINTFORML 怒張を一息に奥まで突き入れた……
 	PRINTFORML どうやら今夜も寝るのが遅くなりそうだ……
-ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && CFLAG:NTR進行 < CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORM ある日の休日、撮影のために家を出ようとする%CALLNAME:MASTER%を、同棲中の%CALLNAME:TARGET%が
 	PRINTFORML 巾着袋を片手に呼び止めた
@@ -188,7 +188,7 @@ ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && NO:TARGET != [[キャラ:宮�
 	PRINTFORM 礼を言って弁当を受け取ろうとした%CALLNAME:MASTER%の頬に、%CALLNAME:TARGET%が突然軽いキスを
 	PRINTFORML してきた……
 	PRINTFORML どうやら今日も頑張れそうだ……
-ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:永遠の愛 == 0 && NO:MASTER == [[キャラ:あなた]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:永遠の愛 == 0 && NO:MASTER == [[キャラ:あなた]] && CFLAG:NTR進行 < CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORM ある日の休日、撮影のために家を出ようとする%CALLNAME:MASTER%を、%CALLNAME:TARGET%が
 	PRINTFORML 巾着袋を片手に呼び止めた
@@ -197,7 +197,7 @@ ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮
 	PRINTFORM 礼を言って弁当を受け取ろうとした%CALLNAME:MASTER%の頬に、%CALLNAME:TARGET%が突然軽いキスを
 	PRINTFORML してきた……
 	PRINTFORML どうやら今日も頑張れそうだ……
-ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:永遠の愛 == 1 && NO:MASTER == [[キャラ:あなた]] && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:永遠の愛 == 1 && NO:MASTER == [[キャラ:あなた]] && CFLAG:NTR進行 < CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORM ある日の休日、撮影のために家を出ようとする%CALLNAME:MASTER%を、最愛の妹であり……
 	PRINTFORML 最愛の妻でもある%CALLNAME:TARGET%が巾着袋を片手に呼び止めた
@@ -210,7 +210,7 @@ ELSEIF TALENT:淫乱 == 0 && TALENT:恋心 == 1 && (NO:TARGET == [[キャラ:宮
 	PRINTFORM 礼を言って弁当を受け取ろうとした%CALLNAME:MASTER%の頬に、%CALLNAME:TARGET%が突然軽いキスを
 	PRINTFORML してきた……
 	PRINTFORML どうやら今日も頑張れそうだ……
-ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 0 && CFLAG:寝取られ進行ポイント < CFLAG:寝取られ完了値 / 2
+ELSEIF TALENT:淫乱 == 1 && TALENT:恋心 == 0 && CFLAG:NTR進行 < CFLAG:NTR完了値 / 2
 	PRINTFORMW ＡＶ女優を引退した%CALLNAME:TARGET%は……
 	PRINTFORML どうやら名前を変えて別のレーベルから再デビューしたようだった
 	PRINTFORM %CALLNAME:MASTER%が撮影してきたどの作品よりも淫らに映っている%CALLNAME:TARGET%の姿に、

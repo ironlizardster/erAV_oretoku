@@ -22,7 +22,7 @@ ENDIF
 
 
 ;乳房ピアスでノーブラの場合
-IF (CFLAG:ピアスの装着状況 & 1) && (CFLAG:着衣状態 & 2) == 0
+IF (CFLAG:ピアス状況 & 1) && (CFLAG:着衣状態 & 2) == 0
 	IF (CFLAG:着衣状態 & 4) == 1
 		PRINTFORML 服の布地ごしに、%CALLNAME:TARGET%の両乳首に施されたピアスの形が浮かびあがっていた。
 	ELSE
@@ -43,26 +43,26 @@ IF  (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 8)
 ENDIF
 
 ;下半身ピアスでノーパン、かつズボンタイプでない場合
-IF (CFLAG:ピアスの装着状況 & 4) || (CFLAG:ピアスの装着状況 & 8) && (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 16) == 0
+IF (CFLAG:ピアス状況 & 4) || (CFLAG:ピアス状況 & 8) && (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 16) == 0
 	IF (CFLAG:着衣状態 & 8) == 1
 		PRINT スカートの間から覗く
 	ELSE
 		PRINT 裸のままの
 	ENDIF
 	PRINT 秘部では、
-		SIF (CFLAG:ピアスの装着状況 & 4)
+		SIF (CFLAG:ピアス状況 & 4)
 			PRINT 両方のラビア
-		SIF (CFLAG:ピアスの装着状況 & 4) && (CFLAG:ピアスの装着状況 & 8)
+		SIF (CFLAG:ピアス状況 & 4) && (CFLAG:ピアス状況 & 8)
 			PRINT と
-		SIF (CFLAG:ピアスの装着状況 & 8)
+		SIF (CFLAG:ピアス状況 & 8)
 			PRINT クリトリス
 	PRINTL では、柔らかい肉を貫いて金属製のピアスが光っている……
 ENDIF
 ;乳房ピアスでノーブラの場合
-IF (CFLAG:ピアスの装着状況 & 16)
+IF (CFLAG:ピアス状況 & 16)
 		PRINTFORML 客に自己アピールする%CALLNAME:TARGET%の舌にはピアスが施されていた……。
 ENDIF
 ;乳房ピアスでノーブラの場合
-IF (CFLAG:ピアスの装着状況 & 2) && (CFLAG:着衣状態 & 4) == 0
+IF (CFLAG:ピアス状況 & 2) && (CFLAG:着衣状態 & 4) == 0
 		PRINTFORML %CALLNAME:TARGET%のおへそに施されたピアスが金属の輝きを放っていた……。
 ENDIF

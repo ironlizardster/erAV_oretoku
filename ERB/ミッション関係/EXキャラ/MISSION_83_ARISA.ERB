@@ -121,7 +121,7 @@ SIF ABL:話術 >= 5
 	LOCAL:1++
 SIF TALENT:処女 == 1
 	LOCAL:1++
-SIF CFLAG:初体験の相手 == 0
+SIF CFLAG:処女喪失相手 == 0
 	LOCAL:1++
 ;再生処女ではない
 SIF CFLAG:処女膜再生回数 == 0
@@ -147,18 +147,18 @@ RETURN 0
 @MISSION_REPORT_83(ARG)
 BASE:魅力値 -= 20 + RAND:11
 IF TALENT:永遠の愛 == 1
-	;処女＋アナル処女＋ファーストキス未経験で【永遠の愛】なら【天使】を得る
+	;処女＋アナル処女＋初キス未経験で【永遠の愛】なら【天使】を得る
 	IF TALENT:処女 == 1
 		;閣下はこんなことしないよ！
 		CSTR:処女喪失の相手 = 朝生太郎（元議員）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 13
+		CFLAG:処女喪失相手 = 13
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 13
 		CFLAG:処女喪失シチュ = 0
 	ENDIF
@@ -168,17 +168,17 @@ IF TALENT:永遠の愛 == 1
 	TCVAR:フェラ経験 += 2 + RAND:6
 	TCVAR:異常経験 += 1
 	TCVAR:性交経験 = TCVAR:絶頂経験
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 13
-		CSTR:ファーストキスの相手 = 朝生太郎（元議員）
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 13
+		CSTR:初キス相手 = 朝生太郎（元議員）
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 13
-		CFLAG:ファーストキス喪失シチュ = 0
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 13
+		CFLAG:初キス喪失シチュ = 0
 	ENDIF
 	MARK:反発刻印 = 3
 	PRINTFORML 元議員に気に入られた%CALLNAME:TARGET%は性処理用ペットとして飼われないかと打診されたようだが、
@@ -188,13 +188,13 @@ ELSE
 	IF TALENT:処女 == 1
 		CSTR:処女喪失の相手 = 朝生太郎（元議員）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 8
+		CFLAG:処女喪失相手 = 8
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 13
 		CFLAG:処女喪失シチュ = 0 
 	ENDIF
@@ -202,25 +202,25 @@ ELSE
 	CSTR:彼氏名 = 太郎
 	TALENT:彼氏あり = 1
 	TALENT:恋心 = 0
-	CFLAG:彼氏の有無 = 1
-	CFLAG:彼氏の種類 = 99
+	CFLAG:彼氏有 = 1
+	CFLAG:彼氏タイプ = 99
 	TCVAR:絶頂経験 += 15 + RAND:6
 	TCVAR:Ｖ経験 += 10 + RAND:6
 	TCVAR:精液経験 += 40 + RAND:6
 	TCVAR:フェラ経験 += 5 + RAND:6
 	TCVAR:異常経験 += 1
 	TCVAR:性交経験 = TCVAR:絶頂経験
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 8
-		CSTR:ファーストキスの相手 = 朝生太郎（元議員）
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 8
+		CSTR:初キス相手 = 朝生太郎（元議員）
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 13
-		CFLAG:ファーストキス喪失シチュ = 0
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 13
+		CFLAG:初キス喪失シチュ = 0
 	ENDIF
 	MARK:反発刻印 = 3
 	PRINTFORML 元議員に気に入られた%CALLNAME:TARGET%は性処理用看護婦として飼われることになった……

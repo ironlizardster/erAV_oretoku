@@ -126,7 +126,7 @@ REPEAT CHARANUM
 	SIF COUNT == 0
 		CONTINUE
 	;労役中だと不可
-	SIF TIME == 1 && CFLAG:COUNT:労役中のフラグ != 0
+	SIF TIME == 1 && CFLAG:COUNT:営業内容 != 0
 		CONTINUE
 	;売却可でないと不可
 	SIF CFLAG:COUNT:売却助手可能 == 0
@@ -175,7 +175,7 @@ IF RESULT == 999
 ;接待可能キャラの判定
 ELSEIF RESULT < 1 || RESULT >= CHARANUM
 	GOTO INPUT_LOOP
-ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+ELSEIF TIME == 1 && CFLAG:RESULT:営業内容 != 0
 	GOTO INPUT_LOOP
 ELSEIF CFLAG:RESULT:売却助手可能 == 0
 	GOTO INPUT_LOOP
@@ -241,17 +241,17 @@ B += 30
 LOSEBASE:体力 = 0
 
 ;営業フラグ外れる
-CFLAG:労役中のフラグ = 0
+CFLAG:営業内容 = 0
 
 ;V使用不可フラグのチェック
 ;オトコである
 IF TALENT:オトコ
-	CFLAG:営業でＶ使用不能フラグ = 1
+	CFLAG:売春Ｖ不能 = 1
 ;貞操帯着用
-ELSEIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
-	CFLAG:営業でＶ使用不能フラグ = 1
+ELSEIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
+	CFLAG:売春Ｖ不能 = 1
 ELSE
-	CFLAG:営業でＶ使用不能フラグ = 0
+	CFLAG:売春Ｖ不能 = 0
 ENDIF
 
 ;--------------------------------------------------
@@ -362,7 +362,7 @@ ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > Q
 ENDIF
 
 ;V使用不可フラグリセット
-CFLAG:営業でＶ使用不能フラグ = 0
+CFLAG:売春Ｖ不能 = 0
 
 ;接待相手の特徴はここでリセット
 FLAG:奴隷接待相手性癖 = 0
@@ -417,9 +417,9 @@ REPEAT 10
 	PRINTFORML 何をしますか？
 	PRINTL  [0] - 会話する
 	PRINTL  [1] - 奉仕する
-	SIF ABL:話術 >= 2 && CFLAG:営業でＶ使用不能フラグ == 0
+	SIF ABL:話術 >= 2 && CFLAG:売春Ｖ不能 == 0
 		PRINTL  [2] - 誘惑する
-	SIF ABL:マゾっ気 >= 2 && CFLAG:営業でＶ使用不能フラグ == 0
+	SIF ABL:マゾっ気 >= 2 && CFLAG:売春Ｖ不能 == 0
 		PRINTL  [3] - 身を任せる
 	PRINTL  [999] - 接待を途中放棄する
 	
@@ -789,33 +789,33 @@ WAIT
 IF (FLAG:奴隷接待相手性癖 & 1) == 0
 	EXP:フェラ経験 += 1
 	PRINTW フェラ経験　+1
-	IF CFLAG:ファーストキスの相手 == -1
+	IF CFLAG:初キス相手 == -1
 		SETCOLOR 0xF58F98
 		PRINTFORML ファーストキス
 		RESETCOLOR
-		CFLAG:ファーストキスの相手 = 4
-		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないおじさんのおちん○ん
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないおじさんのオチ○ポ
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = 知らないオヤジのチンポ
+		CFLAG:初キス相手 = 4
+		IF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないおじさんのおちん○ん
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないおじさんのオチ○ポ
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:初キス相手 = 知らないオヤジのチンポ
 		ENDIF
 	ENDIF
 ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1
 	EXP:レズ経験 += 1
 	PRINTW レズ経験　+1
-	IF CFLAG:ファーストキスの相手 == -1
+	IF CFLAG:初キス相手 == -1
 		SETCOLOR 0xF58F98
 		PRINTFORML ファーストキス
 		RESETCOLOR
-		CFLAG:ファーストキスの相手 = 4
-		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないお姉さんのアソコ
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないお姉さんのオマ○コ
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = 知らない女のマンコ
+		CFLAG:初キス相手 = 4
+		IF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないお姉さんのアソコ
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないお姉さんのオマ○コ
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:初キス相手 = 知らない女のマンコ
 		ENDIF
 	ENDIF
 ENDIF
@@ -1323,41 +1323,41 @@ ENDIF
 IF (FLAG:奴隷接待相手性癖 & 1) == 1
 	EXP:レズ経験 += 1
 	PRINTL レズ経験　+1
-	IF CFLAG:ファーストキスの相手 == -1
+	IF CFLAG:初キス相手 == -1
 		SETCOLOR 0xF58F98
 		PRINTFORML ファーストキス
 		RESETCOLOR
-		CFLAG:ファーストキスの相手 = 1
-		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないお姉さんのアソコ
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないお姉さんのオマ○コ
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = 知らない女のマンコ
+		CFLAG:初キス相手 = 1
+		IF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないお姉さんのアソコ
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないお姉さんのオマ○コ
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:初キス相手 = 知らない女のマンコ
 		ENDIF
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
 	ENDIF
 ;男性だった場合
 ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0
 	EXP:フェラ経験 += 1
 	PRINTL フェラ経験　+1 
-	IF CFLAG:ファーストキスの相手 == -1
+	IF CFLAG:初キス相手 == -1
 		SETCOLOR 0xF58F98
 		PRINTFORML ファーストキス
 		RESETCOLOR
-		CFLAG:ファーストキスの相手 = 1
-		IF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないおじさんのおちん○ん
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = 知らないおじさんのオチ○ポ
-		ELSEIF CFLAG:ファーストキスの相手 == 4 && TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = 知らないオヤジのチンポ
+		CFLAG:初キス相手 = 1
+		IF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 0 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないおじさんのおちん○ん
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 1 && TALENT:ギャル系 == 0
+			CSTR:初キス相手 = 知らないおじさんのオチ○ポ
+		ELSEIF CFLAG:初キス相手 == 4 && TALENT:ギャル系 == 1
+			CSTR:初キス相手 = 知らないオヤジのチンポ
 		ENDIF
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
 	ENDIF
 ENDIF
 
@@ -1481,18 +1481,18 @@ IF S >= 30
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+{2+(FLAG:奴隷接待相手性癖 & 1)}
 		EXP:異常経験 += 2 + (FLAG:奴隷接待相手性癖 & 1)
 		;処女喪失の相手を記録
-		IF CFLAG:初体験の相手 == 0
+		IF CFLAG:処女喪失相手 == 0
 			IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
-				CFLAG:初体験の相手 = 3
+				CFLAG:処女喪失相手 = 3
 				CSTR:処女喪失の相手 = 知らないオンナの人
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1
-				CFLAG:初体験の相手 = 3
+				CFLAG:処女喪失相手 = 3
 				CSTR:処女喪失の相手 = 知らないオンナ				
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 0
-				CFLAG:初体験の相手 = 2
+				CFLAG:処女喪失相手 = 2
 				CSTR:処女喪失の相手 = 知らないおじさん
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 1
-				CFLAG:初体験の相手 = 2
+				CFLAG:処女喪失相手 = 2
 				CSTR:処女喪失の相手 = 知らないオヤジ
 			ENDIF
 		ENDIF
@@ -1564,18 +1564,18 @@ ELSE
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+{2+(FLAG:奴隷接待相手性癖 & 1)}
 		EXP:異常経験 += 2 + (FLAG:奴隷接待相手性癖 & 1)
 		;処女喪失の相手を記録
-		IF CFLAG:初体験の相手 == 0
+		IF CFLAG:処女喪失相手 == 0
 			IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
-				CFLAG:初体験の相手 = 3
+				CFLAG:処女喪失相手 = 3
 				CSTR:処女喪失の相手 = 知らないオンナの人
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1
-				CFLAG:初体験の相手 = 3
+				CFLAG:処女喪失相手 = 3
 				CSTR:処女喪失の相手 = 知らないオンナ				
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 0
-				CFLAG:初体験の相手 = 2
+				CFLAG:処女喪失相手 = 2
 				CSTR:処女喪失の相手 = 知らないおじさん
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 1
-				CFLAG:初体験の相手 = 2
+				CFLAG:処女喪失相手 = 2
 				CSTR:処女喪失の相手 = 知らないオヤジ
 			ENDIF
 		ENDIF
@@ -1758,13 +1758,13 @@ IF TALENT:アナル処女 == 1
 	RESETCOLOR
 	TALENT:アナル処女 = 0
 			IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
-				CSTR:アナル処女喪失の相手 = 知らないオンナの人
+				CSTR:アナル処女喪失相手 = 知らないオンナの人
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1
-				CSTR:アナル処女喪失の相手 = 知らないオンナ				
+				CSTR:アナル処女喪失相手 = 知らないオンナ				
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 0
-				CSTR:アナル処女喪失の相手 = 知らないおじさん
+				CSTR:アナル処女喪失相手 = 知らないおじさん
 			ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 0 && TALENT:ギャル系 == 1
-				CSTR:アナル処女喪失の相手 = 知らないオヤジ
+				CSTR:アナル処女喪失相手 = 知らないオヤジ
 			ENDIF
 ENDIF
 

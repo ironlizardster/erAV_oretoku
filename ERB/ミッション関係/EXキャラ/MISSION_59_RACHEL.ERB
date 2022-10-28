@@ -141,9 +141,9 @@ SIF TALENT:アナル処女 == 1
 	LOCAL:1++
 SIF TALENT:一線越えない == 0
 	LOCAL:1++
-SIF CFLAG:初体験の相手 == 0
+SIF CFLAG:処女喪失相手 == 0
 	LOCAL:1++
-SIF CFLAG:ファーストキスの相手 == -1
+SIF CFLAG:初キス相手 == -1
 	LOCAL:1++
 SIF CFLAG:処女膜再生回数 == 0
 	LOCAL:1++
@@ -191,38 +191,38 @@ SIF TALENT:ふたなり || TALENT:オトコ
 IF TALENT:処女 == 1
 	CSTR:処女喪失の相手 = 触手生物
 	TALENT:処女 = 0
-	CFLAG:初体験の相手 = 14
+	CFLAG:処女喪失相手 = 14
 	SETCOLOR 0xF58F98
 	PRINTL 【処女喪失】
 	RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 12
 		CFLAG:処女喪失シチュ = 4
 ENDIF
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 14
-	CSTR:ファーストキスの相手 = 触手生物
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 14
+	CSTR:初キス相手 = 触手生物
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-	CFLAG:ファーストキス喪失月 = DAY:1
-	CFLAG:ファーストキス喪失日 = DAY:2
-	CFLAG:ファーストキス喪失場所 = 12
-	CFLAG:ファーストキス喪失シチュ = 4
+	CFLAG:初キス喪失年齢 = BASE:実年齢
+	CFLAG:初キス喪失月 = DAY:日付_月
+	CFLAG:初キス喪失日 = DAY:日付_日
+	CFLAG:初キス喪失場所 = 12
+	CFLAG:初キス喪失シチュ = 4
 ENDIF
 IF TALENT:アナル処女 == 1
 	TALENT:アナル処女 = 0
-	CFLAG:アナル処女喪失の相手 = 14
-	CSTR:アナル処女喪失の相手 = 触手生物
+	CFLAG:アナル処女喪失相手 = 14
+	CSTR:アナル処女喪失相手 = 触手生物
 	SETCOLOR 0xF58F98
 	PRINTL 【アナル処女喪失】
 	RESETCOLOR
 	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:1
-	CFLAG:アナル処女喪失日 = DAY:2
+	CFLAG:アナル処女喪失月 = DAY:日付_月
+	CFLAG:アナル処女喪失日 = DAY:日付_日
 	CFLAG:アナル処女喪失場所 = 12
 	CFLAG:アナル処女喪失シチュ = 4
 ENDIF

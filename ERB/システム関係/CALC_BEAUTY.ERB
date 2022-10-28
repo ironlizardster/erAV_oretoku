@@ -24,7 +24,7 @@ ELSEIF TALENT:整形美人 == 1
 	BASE:魅力値 -= 5
 ELSEIF TALENT:喫煙者 == 1
 	BASE:魅力値 -= 10
-ELSEIF CFLAG:ファーストキスの相手 == 1
+ELSEIF CFLAG:初キス相手 == 1
 	BASE:魅力値 -= 5
 ENDIF
 
@@ -43,10 +43,10 @@ ENDIF
 IF TFLAG:アナル処女喪失 == 1
 	X += 5
 ENDIF
-IF TFLAG:ファーストキス == 1
+IF TFLAG:初キス == 1
 	X += 5
 ENDIF
-IF TFLAG:ファーストキス口以外 == 1
+IF TFLAG:初キス口以外 == 1
 	X += 10
 ENDIF
 IF TFLAG:ビデオ配信 == 1

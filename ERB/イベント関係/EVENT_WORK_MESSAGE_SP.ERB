@@ -23,7 +23,7 @@ F = 1
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+	SIF CFLAG:COUNT:売春Ｖ不能
 		CONTINUE
 	F = 0
 REND
@@ -69,7 +69,7 @@ REPEAT CHARANUM
 			SETFONT ""
 		ENDIF
 	PRINTFORM %CALLNAME:COUNT%は
-	IF CFLAG:COUNT:営業でＶ使用不能フラグ == 0
+	IF CFLAG:COUNT:売春Ｖ不能 == 0
 		SIF TALENT:COUNT:処女
 			PRINT 汚れを知らない
 		PRINTFORM 膣と
@@ -168,7 +168,7 @@ REPEAT CHARANUM
 		PRINTFORML スカトロ鑑賞が趣味の客用に用意されたおまるを持って来た
 		PRINTFORM そこに排泄するように促された%CALLNAME:COUNT%は頭の上で腕を組み、
 		PRINTFORM すえた汗の臭いが漂う
-		IF CFLAG:COUNT:腋毛の有無 == 1
+		IF CFLAG:COUNT:腋毛 == 1
 			PRINTFORM 、汗で濡れ輝く腋毛の生えた
 		ENDIF
 		PRINTFORM 腋を見せつけるように
@@ -273,7 +273,7 @@ REPEAT CHARANUM
 	PRINTL
 
 	;処女喪失
-	IF CFLAG:COUNT:営業でＶ使用不能フラグ == 0 && TALENT:COUNT:処女
+	IF CFLAG:COUNT:売春Ｖ不能 == 0 && TALENT:COUNT:処女
 		PRINTFORML 犯される%CALLNAME:COUNT%の膣からは、白く泡立った愛液と精液に混じって破瓜の鮮血が流れ出していた
 		SETCOLOR 0xF58F98
 		PRINTFORMW 【処女喪失】

@@ -727,9 +727,9 @@ FLAG:リーナスタッフ動向調査 = 1
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF CFLAG:COUNT:スタッフ寝取られイベントの進行度 == 1
-		CFLAG:COUNT:スタッフ寝取られイベントの進行度 = 0
-		CFLAG:COUNT:彼氏の有無 = 0
+	ELSEIF CFLAG:COUNT:スタッフNTR進行度
+		CFLAG:COUNT:スタッフNTR進行度 = 0
+		CFLAG:COUNT:彼氏有 = 0
 	ENDIF
 REND
 

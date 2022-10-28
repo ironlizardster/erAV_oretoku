@@ -18,11 +18,6 @@
 ;変数「REALTIME」ゲームスタート時のリアルタイムを代入(0=年 1=月 2=日)
 #DIM SAVEDATA REALTIME, 3
 
-;変数「YEAR」「MONTH」「DAYS」ゲーム開始時にリアルタイムと同じ値が代入され、あとはゲーム内の進行に応じて日付が変わる
-#DIM SAVEDATA YEAR
-#DIM SAVEDATA MONTH
-#DIM SAVEDATA DAYS
-
 ;変数「月齢」 本日の月齢を記録
 #DIM SAVEDATA 月齢
 

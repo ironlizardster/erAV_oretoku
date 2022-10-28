@@ -21,13 +21,7 @@ PRINTL アーカーシャ本部・ユーニスの研究室
 PRINTL 《ユーニスの恩恵を受けることができます》
 
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  前半
-ELSE
-	PRINTL  後半
-ENDIF
+CALL PRINT_DAY_TIME
 
 PRINTFORML 所持金：{MONEY}ポイント
 DRAWLINE
@@ -48,7 +42,7 @@ PRINTL  [12] - 事象改変：ニュートラル　　　　　　　　　（ 1
 IF ミッション結果:136 >= 3 || FLAG:FALLENANGELSボーナス受け取り == 1
 	PRINTL  [13] - 事象改変：処女喪失　　　　　　　　　　　（80000000ポイント）
 	PRINTL  [14] - 事象改変：アナル処女喪失　　　　　　　　（80000000ポイント）
-	PRINTL  [15] - 事象改変：ファーストキス　　　　　　　　（80000000ポイント）
+	PRINTL  [15] - 事象改変：初キス　　　　　　　　（80000000ポイント）
 ENDIF
 SIF FLAG:FALLENANGELSボーナス受け取り == 1; && Y >= 2
 	PRINTL  [99] - 事象改変：【堕天使】の取得と転生    　　（30000000ポイント）

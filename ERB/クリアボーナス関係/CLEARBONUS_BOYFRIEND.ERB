@@ -30,10 +30,10 @@ REND
 
 $INPUT_LOOP_000
 LOCAL = TARGET
-CFLAG:LOCAL:彼氏の有無 = 1
+CFLAG:LOCAL:彼氏有 = 1
 
 IF FLAG:チャラ男固定 == 1
-	CFLAG:LOCAL:彼氏の種類 = 0
+	CFLAG:LOCAL:彼氏タイプ = 0
 ELSE
 	PRINTFORML %CALLNAME:LOCAL%のカレシは……
 	PRINTL  [0] - チャラ男
@@ -46,14 +46,14 @@ ELSE
 	$INPUT_LOOP_00
 	INPUT
 	IF RESULT >= 0 && RESULT <= 6
-		CFLAG:LOCAL:彼氏の種類 = RESULT
+		CFLAG:LOCAL:彼氏タイプ = RESULT
 	ELSE
 		GOTO INPUT_LOOP_00
 	ENDIF
 ENDIF  	
 
 LOCAL:5 = 0
-IF CFLAG:LOCAL:彼氏の種類 == 0
+IF CFLAG:LOCAL:彼氏タイプ == 0
 	LOCAL:5 = RAND:100
 		SIF NO:LOCAL == [[キャラ:宮間かなで]]
 			LOCAL:5 = 100
@@ -86,8 +86,8 @@ TALENT:LOCAL:彼氏あり = 1
 
 CALL DECIDE_BOYFRIEND,LOCAL
 
-IF CFLAG:LOCAL:ファーストキスの相手 == -1
-	PRINTFORML %CALLNAME:LOCAL%のファーストキスの相手は……
+IF CFLAG:LOCAL:初キス相手 == -1
+	PRINTFORML %CALLNAME:LOCAL%のファーストキス相手は……
 	PRINTL  [0] - カレシ
 	PRINTL  [1] - まだ
 	$INPUT_LOOP_01
@@ -95,20 +95,20 @@ IF CFLAG:LOCAL:ファーストキスの相手 == -1
 	IF RESULT == 1
 		PRINT
 	ELSEIF RESULT == 0
-		CFLAG:LOCAL:ファーストキスの相手 = RAND:3
-		SIF CFLAG:LOCAL:ファーストキスの相手 == 0
-			CFLAG:LOCAL:ファーストキスの相手 = 2
-		IF CFLAG:LOCAL:ファーストキスの相手 == 1
-			CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
+		CFLAG:LOCAL:初キス相手 = RAND:3
+		SIF CFLAG:LOCAL:初キス相手 == 0
+			CFLAG:LOCAL:初キス相手 = 2
+		IF CFLAG:LOCAL:初キス相手 == 1
+			CSTR:LOCAL:初キス相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
 			BASE:LOCAL:魅力値 -= 5
-		ELSEIF CFLAG:LOCAL:ファーストキスの相手 == 2
-			CFLAG:LOCAL:ファーストキスの相手 = 3
+		ELSEIF CFLAG:LOCAL:初キス相手 == 2
+			CFLAG:LOCAL:初キス相手 = 3
 			IF TALENT:ギャル系 == 0
-				CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
-				CFLAG:ファーストキス喪失シチュ = 1
+				CSTR:LOCAL:初キス相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+				CFLAG:初キス喪失シチュ = 1
 			ELSE
-				CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
-				CFLAG:ファーストキス喪失シチュ = 1
+				CSTR:LOCAL:初キス相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+				CFLAG:初キス喪失シチュ = 1
 			ENDIF
 			BASE:LOCAL:魅力値 -= 10
 		ENDIF
@@ -117,7 +117,7 @@ IF CFLAG:LOCAL:ファーストキスの相手 == -1
 	ENDIF	
 ENDIF
 
-IF CFLAG:LOCAL:初体験の相手 == 0 && TALENT:LOCAL:処女 == 1
+IF CFLAG:LOCAL:処女喪失相手 == 0 && TALENT:LOCAL:処女 == 1
 	PRINTFORML %CALLNAME:LOCAL%のロストヴァージンのお相手は……
 	PRINTL  [0] - カレシ
 	PRINTL  [1] - まだ処女のようです
@@ -127,7 +127,7 @@ IF CFLAG:LOCAL:初体験の相手 == 0 && TALENT:LOCAL:処女 == 1
 		PRINT
 	ELSEIF RESULT == 0
 		CSTR:LOCAL:処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
-		CFLAG:LOCAL:初体験の相手 = 20
+		CFLAG:LOCAL:処女喪失相手 = 20
 		TALENT:LOCAL:処女 = 0
 		BASE:魅力値 -= 10
 	ELSE
@@ -154,15 +154,15 @@ IF TALENT:LOCAL:処女 == 0
 		CFLAG:処女喪失年齢 = (BASE:実年齢 - RAND:4)
 		SIF CFLAG:処女喪失年齢 == BASE:実年齢
 			CFLAG:処女喪失年齢 = BASE:実年齢 - 1
-		CFLAG:処女喪失月 = (DAY:1 - RAND:4)
+		CFLAG:処女喪失月 = (DAY:日付_月 - RAND:4)
 		SIF CFLAG:処女喪失月 <= 0
 			CFLAG:処女喪失月 = 12
 		IF CFLAG:処女喪失年齢 >= BASE:実年齢
 			 SIF CFLAG:処女喪失月 <= BASE:誕生月
 				CFLAG:処女喪失年齢 -= 1
 		ENDIF	
-		SIF CFLAG:処女喪失月 == DAY:1 && CFLAG:処女喪失日 >= DAY:2
-			CFLAG:処女喪失月 = DAY:2
+		SIF CFLAG:処女喪失月 == DAY:日付_月 && CFLAG:処女喪失日 >= DAY:日付_日
+			CFLAG:処女喪失月 = DAY:日付_日
 		CFLAG:処女喪失日 = RAND:4
 		SIF CFLAG:処女喪失日 == 0
 			CFLAG:処女喪失日 = 1
@@ -177,12 +177,12 @@ IF TALENT:LOCAL:処女 == 0
 		ABL:LOCAL:欲望 += 1
 		ABL:LOCAL:性交技術 += 1
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = (DAY:1 - RAND:4)
+		CFLAG:処女喪失月 = (DAY:日付_月 - RAND:4)
 		SIF CFLAG:処女喪失月 <= 0
 			CFLAG:処女喪失月 = 12
 		CFLAG:処女喪失日 = RAND:4
-		SIF CFLAG:処女喪失月 == DAY:1 && CFLAG:処女喪失日 >= DAY:2
-			CFLAG:処女喪失月 = DAY:2
+		SIF CFLAG:処女喪失月 == DAY:日付_月 && CFLAG:処女喪失日 >= DAY:日付_日
+			CFLAG:処女喪失月 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
 		CFLAG:処女喪失シチュ = 0
 	ELSEIF RESULT == 2
@@ -196,12 +196,12 @@ IF TALENT:LOCAL:処女 == 0
 		TCVAR:LOCAL:絶頂経験 += RAND:2
 		ABL:LOCAL:Ｖ感覚 +=  RAND:2
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = (DAY:1 - RAND:2)
+		CFLAG:処女喪失月 = (DAY:日付_月 - RAND:2)
 		SIF CFLAG:処女喪失月 <= 0
 			CFLAG:処女喪失月 = 12
 		CFLAG:処女喪失日 = RAND:4
-		SIF CFLAG:処女喪失月 == DAY:1 && CFLAG:処女喪失日 >= DAY:2
-			CFLAG:処女喪失月 = DAY:2
+		SIF CFLAG:処女喪失月 == DAY:日付_月 && CFLAG:処女喪失日 >= DAY:日付_日
+			CFLAG:処女喪失月 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
 		CFLAG:処女喪失シチュ = 0
 	ELSE
@@ -211,7 +211,7 @@ ENDIF
 
 IF TALENT:LOCAL:アナル処女 == 1
 	PRINTFORML %CALLNAME:LOCAL%は……
-	IF CFLAG:LOCAL:初体験の相手 == 20
+	IF CFLAG:LOCAL:処女喪失相手 == 20
 		PRINTL  [0] - アナル処女もカレシに捧げました
 	ELSE
 		PRINTL  [0] - アナル処女をカレシに捧げました
@@ -228,8 +228,8 @@ IF TALENT:LOCAL:アナル処女 == 1
 	IF RESULT == 1
 		PRINT
 	ELSEIF RESULT == 0
-		CFLAG:LOCAL:アナル処女喪失の相手 = 8
-		CSTR:LOCAL:アナル処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
+		CFLAG:LOCAL:アナル処女喪失相手 = 8
+		CSTR:LOCAL:アナル処女喪失相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%（カレシ）
 		TALENT:LOCAL:アナル処女 = 0
 		BASE:魅力値 -= 5
 	ELSE
@@ -239,17 +239,17 @@ ENDIF
 
 IF TALENT:LOCAL:アナル処女 == 0
 	PRINTFORML %CALLNAME:LOCAL%は……
-	IF CFLAG:LOCAL:初体験の相手 == 20
+	IF CFLAG:LOCAL:処女喪失相手 == 20
 		PRINTL  [0] - カレシとアナルでもヤりまくりで経験豊富
 	ELSE
 		PRINTL  [0] - カレシとヤりまくりで経験豊富
 	ENDIF
-	IF CFLAG:LOCAL:初体験の相手 == 20
+	IF CFLAG:LOCAL:処女喪失相手 == 20
 		PRINTL  [1] - アナルＳＥＸにも慣れてきたぐらい
 	ELSE
 		PRINTL  [1] - アナルＳＥＸに慣れてきたぐらい
 	ENDIF
-	IF CFLAG:LOCAL:初体験の相手 == 20
+	IF CFLAG:LOCAL:処女喪失相手 == 20
 		PRINTL  [2] - アナル処女も喪失したばかり
 	ELSE
 		PRINTL  [2] - アナル処女喪失したばかり
@@ -270,15 +270,15 @@ IF TALENT:LOCAL:アナル処女 == 0
 		CFLAG:LOCAL:アナル処女喪失年齢 = (BASE:実年齢 - RAND:4)
 		SIF CFLAG:LOCAL:アナル処女喪失年齢 == BASE:実年齢
 			CFLAG:LOCAL:アナル処女喪失年齢 = BASE:実年齢 - 1
-		CFLAG:LOCAL:アナル処女喪失月 = (DAY:1 - RAND:4)
+		CFLAG:LOCAL:アナル処女喪失月 = (DAY:日付_月 - RAND:4)
 		SIF CFLAG:LOCAL:アナル処女喪失月 <= 0
 			CFLAG:LOCAL:アナル処女喪失月 = 12
 		IF CFLAG:LOCAL:アナル処女喪失年齢 >= BASE:実年齢
 			 SIF CFLAG:LOCAL:アナル処女喪失月 <= BASE:誕生月
 				CFLAG:LOCAL:アナル処女喪失年齢 -= 1
 		ENDIF	
-		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:1 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:2
-			CFLAG:LOCAL:アナル処女喪失月 = DAY:2
+		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:日付_月 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:日付_日
+			CFLAG:LOCAL:アナル処女喪失月 = DAY:日付_日
 		CFLAG:LOCAL:アナル処女喪失日 = RAND:4
 		SIF CFLAG:LOCAL:アナル処女喪失日 == 0
 			CFLAG:LOCAL:アナル処女喪失日 = 1
@@ -296,12 +296,12 @@ IF TALENT:LOCAL:アナル処女 == 0
 		ABL:LOCAL:性交技術 += 1
 		CFLAG:アナル処女喪失年齢 = BASE:実年齢
 		CFLAG:LOCAL:アナル処女喪失年齢 = BASE:実年齢
-		CFLAG:LOCAL:アナル処女喪失月 = (DAY:1 - RAND:4)
+		CFLAG:LOCAL:アナル処女喪失月 = (DAY:日付_月 - RAND:4)
 		SIF CFLAG:LOCAL:アナル処女喪失月 <= 0
 			CFLAG:LOCAL:アナル処女喪失月 = 12
 		CFLAG:LOCAL:アナル処女喪失日 = RAND:4
-		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:1 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:2
-			CFLAG:LOCAL:アナル処女喪失月 = DAY:2
+		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:日付_月 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:日付_日
+			CFLAG:LOCAL:アナル処女喪失月 = DAY:日付_日
 		CFLAG:LOCAL:アナル処女喪失場所 = 3
 		CFLAG:LOCAL:アナル処女喪失シチュ = 0
 	ELSEIF RESULT == 2
@@ -317,12 +317,12 @@ IF TALENT:LOCAL:アナル処女 == 0
 			ABL:LOCAL:Ａ感覚 = 3
 		TCVAR:LOCAL:絶頂経験 += RAND:2
 		CFLAG:LOCAL:アナル処女喪失年齢 = BASE:実年齢
-		CFLAG:LOCAL:アナル処女喪失月 = (DAY:1 - RAND:2)
+		CFLAG:LOCAL:アナル処女喪失月 = (DAY:日付_月 - RAND:2)
 		SIF CFLAG:LOCAL:アナル処女喪失月 <= 0
 			CFLAG:LOCAL:アナル処女喪失月 = 12
 		CFLAG:LOCAL:アナル処女喪失日 = RAND:4
-		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:1 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:2
-			CFLAG:LOCAL:アナル処女喪失月 = DAY:2
+		SIF CFLAG:LOCAL:アナル処女喪失月 == DAY:日付_月 && CFLAG:LOCAL:アナル処女喪失日 >= DAY:日付_日
+			CFLAG:LOCAL:アナル処女喪失月 = DAY:日付_日
 		CFLAG:LOCAL:アナル処女喪失場所 = 3
 		CFLAG:LOCAL:アナル処女喪失シチュ = 0
 	ELSE
@@ -346,10 +346,10 @@ EXP:LOCAL:精液経験 += TCVAR:LOCAL:精液経験
 EXP:LOCAL:彼氏性経験 += TCVAR:LOCAL:性交経験 / 4
 
 
-SIF CFLAG:LOCAL:初体験の相手 == 20
-	CFLAG:LOCAL:初体験の相手 = 8
-SIF CFLAG:LOCAL:ファーストキスの相手
-	CFLAG:LOCAL:ファーストキスの相手 = 8
+SIF CFLAG:LOCAL:処女喪失相手 == 20
+	CFLAG:LOCAL:処女喪失相手 = 8
+SIF CFLAG:LOCAL:初キス相手
+	CFLAG:LOCAL:初キス相手 = 8
 
 SIF ABL:LOCAL:欲望 >= 5
 	ABL:LOCAL:欲望 = 5
@@ -544,34 +544,34 @@ ELSEIF RESULT == 8826
 	CSTR:LOCAL:男性器呼び方 = チンポ
 	CSTR:LOCAL:女性器呼び方 = 生ハメＳＥＸ大好きな淫乱ヌレヌレマンコ
 	CSTR:LOCAL:処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
-	CSTR:LOCAL:ファーストキスの相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
-	CSTR:LOCAL:アナル処女喪失の相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
-	CFLAG:LOCAL:ファーストキス喪失シチュ = 1
+	CSTR:LOCAL:初キス相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+	CSTR:LOCAL:アナル処女喪失相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
+	CFLAG:LOCAL:初キス喪失シチュ = 1
 	GOTO INPUT_LOOP_DECIDE
 ELSE
 	GOTO INPUT_LOOP_DECIDE
 ENDIF
 
-IF CFLAG:LOCAL:ファーストキスの相手
+IF CFLAG:LOCAL:初キス相手
 	IF CFLAG:LOCAL:処女喪失年齢 >= CFLAG:LOCAL:アナル処女喪失年齢 && CFLAG:LOCAL:処女喪失月 >= CFLAG:LOCAL:アナル処女喪失月
-		CFLAG:LOCAL:ファーストキス喪失年齢 = CFLAG:LOCAL:アナル処女喪失年齢
-		CFLAG:LOCAL:ファーストキス喪失月 = CFLAG:LOCAL:アナル処女喪失月
-		CFLAG:LOCAL:ファーストキス喪失日 = CFLAG:LOCAL:アナル処女喪失日
-		CFLAG:LOCAL:ファーストキス喪失場所 = CFLAG:LOCAL:アナル処女喪失場所
+		CFLAG:LOCAL:初キス喪失年齢 = CFLAG:LOCAL:アナル処女喪失年齢
+		CFLAG:LOCAL:初キス喪失月 = CFLAG:LOCAL:アナル処女喪失月
+		CFLAG:LOCAL:初キス喪失日 = CFLAG:LOCAL:アナル処女喪失日
+		CFLAG:LOCAL:初キス喪失場所 = CFLAG:LOCAL:アナル処女喪失場所
 	ELSEIF CFLAG:LOCAL:処女喪失年齢 <= CFLAG:LOCAL:アナル処女喪失年齢  && CFLAG:LOCAL:処女喪失月 <= CFLAG:LOCAL:アナル処女喪失月
-		CFLAG:LOCAL:ファーストキス喪失年齢 = CFLAG:LOCAL:処女喪失年齢
-		CFLAG:LOCAL:ファーストキス喪失月 = CFLAG:LOCAL:処女喪失月
-		CFLAG:LOCAL:ファーストキス喪失日 = CFLAG:LOCAL:処女喪失日
-		CFLAG:LOCAL:ファーストキス喪失場所 = CFLAG:LOCAL:処女喪失場所
+		CFLAG:LOCAL:初キス喪失年齢 = CFLAG:LOCAL:処女喪失年齢
+		CFLAG:LOCAL:初キス喪失月 = CFLAG:LOCAL:処女喪失月
+		CFLAG:LOCAL:初キス喪失日 = CFLAG:LOCAL:処女喪失日
+		CFLAG:LOCAL:初キス喪失場所 = CFLAG:LOCAL:処女喪失場所
 	ELSE
-		CFLAG:LOCAL:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:LOCAL:ファーストキス喪失月 = (DAY:1 - RAND:2)
-		SIF CFLAG:LOCAL:ファーストキス喪失月 <= 0
-			CFLAG:LOCAL:ファーストキス喪失月 = 12
-		CFLAG:LOCAL:ファーストキス喪失日 = RAND:4
-		SIF CFLAG:LOCAL:ファーストキス喪失月 == DAY:1 && CFLAG:LOCAL:ファーストキス喪失日 >= DAY:2
-			CFLAG:LOCAL:ファーストキス喪失月 = DAY:2
-		CFLAG:LOCAL:ファーストキス喪失場所 = 3
+		CFLAG:LOCAL:初キス喪失年齢 = BASE:実年齢
+		CFLAG:LOCAL:初キス喪失月 = (DAY:日付_月 - RAND:2)
+		SIF CFLAG:LOCAL:初キス喪失月 <= 0
+			CFLAG:LOCAL:初キス喪失月 = 12
+		CFLAG:LOCAL:初キス喪失日 = RAND:4
+		SIF CFLAG:LOCAL:初キス喪失月 == DAY:日付_月 && CFLAG:LOCAL:初キス喪失日 >= DAY:日付_日
+			CFLAG:LOCAL:初キス喪失月 = DAY:日付_日
+		CFLAG:LOCAL:初キス喪失場所 = 3
 	ENDIF
 ENDIF
 
@@ -582,26 +582,26 @@ ENDIF
 IF FLAG:陰毛を生やす
 	;かなでは毛深いのがコンプレックスです
 	IF NO:TARGET == [[キャラ:宮間かなで]]
-		CFLAG:陰毛の状態 = 14
+		CFLAG:陰毛状態 = 14
 	;郁美はひどいことになっています
 	ELSEIF NO:TARGET == [[キャラ:須野郁美]]
-		CFLAG:陰毛の状態 = 18
+		CFLAG:陰毛状態 = 18
 	;外人さんは下の毛の処理は常識です
 	ELSEIF NO:TARGET == [[キャラ:レイチェル・パラディスス]]
-		CFLAG:陰毛の状態 = 1
+		CFLAG:陰毛状態 = 1
 	ELSEIF NO:TARGET == [[キャラ:恋歌・ロックウェル]]
-		CFLAG:陰毛の状態 = 1
+		CFLAG:陰毛状態 = 1
 	;美乃里は下の毛の発育が悪いのがコンプレックスです
 	ELSEIF NO:TARGET == [[キャラ:佐々木美乃里]]
-		CFLAG:陰毛の状態 = 7
+		CFLAG:陰毛状態 = 7
 	;パイパンなら生えない
 	ELSEIF TALENT:パイパン
-		CFLAG:陰毛の状態 = -1
+		CFLAG:陰毛状態 = -1
 	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
 	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
-		CFLAG:陰毛の状態 = 6 
+		CFLAG:陰毛状態 = 6 
 	;それ以外なら12に設定
 	ELSE
-		CFLAG:陰毛の状態 = 12
+		CFLAG:陰毛状態 = 12
 	ENDIF
 ENDIF

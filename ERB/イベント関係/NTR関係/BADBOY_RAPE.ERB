@@ -11,7 +11,7 @@ REPEAT CHARANUM
 		CONTINUE
 	ELSEIF TALENT:COUNT:オトコ == 1
 		CONTINUE
-	ELSEIF CFLAG:COUNT:護衛の有無 == 1
+	ELSEIF CFLAG:COUNT:護衛 == 1
 		CONTINUE
 	ELSEIF TALENT:COUNT:妊娠 == 1
 		CONTINUE
@@ -41,7 +41,7 @@ REPEAT CHARANUM
 		CONTINUE
 	ELSEIF TALENT:COUNT:[[TALENT:ONLY ONE EMPRESS]] == 1
 		CONTINUE
-	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスチュームのタイプ == 79
+	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスタイプ == 79
 		CONTINUE
 	ELSE
 		LOCAL = RAND:100
@@ -138,18 +138,18 @@ A += RAND:3
 D += RAND:3
 
 PRINTFORML Ｖ経験＋{S}
-IF CFLAG:COUNT:初体験の相手 == 0 && TALENT:COUNT:処女 == 1
+IF CFLAG:COUNT:処女喪失相手 == 0 && TALENT:COUNT:処女 == 1
 	SETCOLOR 0xF58F98
 	PRINTFORML 【処女喪失】
-	CFLAG:COUNT:初体験の相手 = 11
+	CFLAG:COUNT:処女喪失相手 = 11
 	TALENT:COUNT:処女 = 0
 	CSTR:COUNT:処女喪失の相手 = 不良
 	E += 1
 	RESETCOLOR
 	BASE:COUNT:魅力値 -= 10
 	CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
-	CFLAG:COUNT:処女喪失月 = DAY:1
-	CFLAG:COUNT:処女喪失日 = DAY:2
+	CFLAG:COUNT:処女喪失月 = DAY:日付_月
+	CFLAG:COUNT:処女喪失日 = DAY:日付_日
 	CFLAG:COUNT:処女喪失場所 = 6
 	CFLAG:COUNT:処女喪失シチュ = 4
 ENDIF
@@ -159,14 +159,14 @@ IF A > 0
 		SETCOLOR 0xF58F98
 		PRINTFORML 【アナル処女喪失】
 		TALENT:COUNT:アナル処女 = 0
-		CSTR:COUNT:アナル処女喪失の相手 = 不良
+		CSTR:COUNT:アナル処女喪失相手 = 不良
 		RESETCOLOR
 		E += 1
 		BASE:COUNT:魅力値 -= 5
-		CFLAG:COUNT:アナル処女喪失の相手 = 11
+		CFLAG:COUNT:アナル処女喪失相手 = 11
 		CFLAG:COUNT:アナル処女喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:アナル処女喪失月 = DAY:1
-		CFLAG:COUNT:アナル処女喪失日 = DAY:2
+		CFLAG:COUNT:アナル処女喪失月 = DAY:日付_月
+		CFLAG:COUNT:アナル処女喪失日 = DAY:日付_日
 		CFLAG:COUNT:アナル処女喪失場所 = 6
 		CFLAG:COUNT:アナル処女喪失シチュ = 4
 	ENDIF
@@ -176,18 +176,18 @@ SIF EXP:COUNT:強姦回数 == 0
 	E += 1 
 PRINTFORML 性交経験＋{S}
 PRINTFORML フェラ経験＋{F}
-IF CFLAG:COUNT:ファーストキスの相手 == -1
+IF CFLAG:COUNT:初キス相手 == -1
 	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
-	CFLAG:COUNT:ファーストキスの相手 = 11
-	CSTR:COUNT:ファーストキスの相手 = 不良
+	PRINTFORML 初キス
+	CFLAG:COUNT:初キス相手 = 11
+	CSTR:COUNT:初キス相手 = 不良
 	RESETCOLOR
 	BASE:COUNT:魅力値 -= 10
-	CFLAG:COUNT:ファーストキス喪失年齢 = BASE:COUNT:実年齢
-	CFLAG:COUNT:ファーストキス喪失月 = DAY:1
-	CFLAG:COUNT:ファーストキス喪失日 = DAY:2
-	CFLAG:COUNT:ファーストキス喪失場所 = 6
-	CFLAG:COUNT:ファーストキス喪失シチュ = 1
+	CFLAG:COUNT:初キス喪失年齢 = BASE:COUNT:実年齢
+	CFLAG:COUNT:初キス喪失月 = DAY:日付_月
+	CFLAG:COUNT:初キス喪失日 = DAY:日付_日
+	CFLAG:COUNT:初キス喪失場所 = 6
+	CFLAG:COUNT:初キス喪失シチュ = 1
 ENDIF
 PRINTFORML 精液経験＋{A+S+F}
 PRINTFORML 薬物経験＋{D}
@@ -195,7 +195,6 @@ SIF E
 	PRINTFORML 異常経験＋{E}
 
 LOCAL = 0 
-CFLAG:COUNT:不良によるレイプイベントの発生の累積 = 0 
 
 EXP:COUNT:Ｖ経験 += S
 EXP:COUNT:Ａ経験 += A

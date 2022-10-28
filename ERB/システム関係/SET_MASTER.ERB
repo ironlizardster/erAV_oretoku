@@ -59,10 +59,10 @@ ELSE
 ENDIF
 RETURN
 
-;主人公のファーストキスの相手設定
+;主人公の初キス相手設定
 @SET_MASTER_FIRSTKISS
 
-PRINTL ファーストキスの相手は？
+PRINTL ファーストキス相手は？
 PRINTFORML [0] - 実はまだ
 PRINTFORML [1] - 元カノ
 PRINTFORML [2] - 元カレ
@@ -73,17 +73,17 @@ INPUT
 
 IF RESULT == 0
 ELSEIF RESULT == 1
-	CSTR:MASTER:ファーストキスの相手 = 元カノ
-	CFLAG:MASTER:ファーストキスの相手 = 1
+	CSTR:MASTER:初キス相手 = 元カノ
+	CFLAG:MASTER:初キス相手 = 1
 						;****カノ設定改造追加ここから****
 	FLAG:元カノ存在 |= 2
 						;****カノ設定改造追加ここまで****
 ELSEIF RESULT == 2
-	CSTR:MASTER:ファーストキスの相手 = 元カレ
-	CFLAG:MASTER:ファーストキスの相手 = 1
+	CSTR:MASTER:初キス相手 = 元カレ
+	CFLAG:MASTER:初キス相手 = 1
 ELSEIF RESULT == 3
-	CSTR:MASTER:ファーストキスの相手 = 今カノ
-	CFLAG:MASTER:ファーストキスの相手 = 1
+	CSTR:MASTER:初キス相手 = 今カノ
+	CFLAG:MASTER:初キス相手 = 1
 						;****カノ設定改造追加ここから****
 	FLAG:今カノ存在 |= 2
 						;****カノ設定改造追加ここまで****
@@ -153,7 +153,7 @@ IF TALENT:MASTER:オトコ == 0
 	IF RESULT == 0
 	ELSEIF RESULT == 1
 		TALENT:MASTER:処女 = 0
-		CFLAG:MASTER:初体験の相手 = 1
+		CFLAG:MASTER:処女喪失相手 = 1
 		CSTR:MASTER:処女喪失の相手 = 元カノ
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
@@ -161,7 +161,7 @@ IF TALENT:MASTER:オトコ == 0
 			EXP:MASTER:レズ経験 += 3
 	ELSEIF RESULT == 2
 		TALENT:MASTER:処女 = 0
-		CFLAG:MASTER:初体験の相手 = 1
+		CFLAG:MASTER:処女喪失相手 = 1
 		CSTR:MASTER:処女喪失の相手 = 元カレ
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
@@ -169,7 +169,7 @@ IF TALENT:MASTER:オトコ == 0
 			EXP:MASTER:ＢＬ経験 += 3
 	ELSEIF RESULT == 3
 		TALENT:MASTER:処女 = 0
-		CFLAG:MASTER:初体験の相手 = 1
+		CFLAG:MASTER:処女喪失相手 = 1
 		CSTR:MASTER:処女喪失の相手 = 今カノ
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
@@ -181,8 +181,8 @@ IF TALENT:MASTER:オトコ == 0
 ELSE
 ENDIF
 
-;アナル処女喪失の相手
-PRINTL アナル処女喪失の相手は？
+;アナル処女喪失相手
+PRINTL アナル処女喪失相手は？
 PRINTFORML [0] - 実はまだ
 PRINTFORML [1] - 元カノ
 PRINTFORML [2] - 元カレ
@@ -193,21 +193,21 @@ INPUT
 IF RESULT == 0
 ELSEIF RESULT == 1
 	TALENT:MASTER:アナル処女 = 0
-	CSTR:MASTER:アナル処女喪失の相手 = 元カノ
+	CSTR:MASTER:アナル処女喪失相手 = 元カノ
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
 	SIF TALENT:MASTER:オトコ == 0
 		EXP:MASTER:レズ経験 += 3
 ELSEIF RESULT == 2
 	TALENT:MASTER:アナル処女 = 0
-	CSTR:MASTER:アナル処女喪失の相手 = 元カレ
+	CSTR:MASTER:アナル処女喪失相手 = 元カレ
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
 	SIF TALENT:MASTER:オトコ == 1
 		EXP:MASTER:ＢＬ経験 += 3
 ELSEIF RESULT == 3
 	TALENT:MASTER:アナル処女 = 0
-	CSTR:MASTER:アナル処女喪失の相手 = 今カノ
+	CSTR:MASTER:アナル処女喪失相手 = 今カノ
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
 	SIF TALENT:MASTER:オトコ == 1
@@ -227,13 +227,13 @@ IF TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1 || TALENT:MAS
 	INPUT
 
 	IF RESULT == 0
-		CFLAG:MASTER:ペニスのサイズ = 0
+		CFLAG:MASTER:ペニスサイズ = 0
 		BASE:MASTER:ペニスサイズ = 9 + RAND:4
 	ELSEIF RESULT == 1
-		CFLAG:MASTER:ペニスのサイズ = 1
+		CFLAG:MASTER:ペニスサイズ = 1
 		BASE:MASTER:ペニスサイズ = 13 + RAND:4
 	ELSEIF RESULT == 2
-		CFLAG:MASTER:ペニスのサイズ = 2
+		CFLAG:MASTER:ペニスサイズ = 2
 		BASE:MASTER:ペニスサイズ = 17 + RAND:4
 	ELSE
 		GOTO SET_MASTER_PENISSIZE
@@ -248,11 +248,11 @@ IF TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1 || TALENT:MAS
 	INPUT
 
 	IF RESULT == 0
-		CFLAG:MASTER:包皮の状態 = 0
+		CFLAG:MASTER:包皮状態 = 0
 	ELSEIF RESULT == 1
-		CFLAG:MASTER:包皮の状態 = 1
+		CFLAG:MASTER:包皮状態 = 1
 	ELSEIF RESULT == 2
-		CFLAG:MASTER:包皮の状態 = 3
+		CFLAG:MASTER:包皮状態 = 3
 	ELSE
 		GOTO SET_MASTER_PENISFORM
 	ENDIF

@@ -9,13 +9,7 @@ DRAWLINE
 PRINTL 秘密ラボ
 PRINTL 《女優候補の肉体や精神を魔改造できます》
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  前半
-ELSE
-	PRINTL  後半
-ENDIF
+CALL PRINT_DAY_TIME
 
 PRINTFORML 所持金：{MONEY}ポイント
 DRAWLINE
@@ -353,15 +347,15 @@ ELSEIF RESULT == 0
 		PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[TALENT:ふたなり]]%】になった》
 		TALENT:T:ふたなり = 1
 		TALENT:T:おしゃれ = 0
-		SIF CFLAG:T:ファーストキスの相手 == 0
+		SIF CFLAG:T:初キス相手 == 0
 			TALENT:T:童貞 = 1
-		CFLAG:T:ペニスのサイズ = RAND:3
-		CFLAG:T:包皮の状態 = RAND:4
-			IF CFLAG:T:ペニスのサイズ >= 2
-				CFLAG:T:ペニスのサイズ = 2
+		CFLAG:T:ペニスサイズ = RAND:3
+		CFLAG:T:包皮状態 = RAND:4
+			IF CFLAG:T:ペニスサイズ >= 2
+				CFLAG:T:ペニスサイズ = 2
 			ENDIF
-			IF CFLAG:T:包皮の状態 >= 3
-				CFLAG:T:包皮の状態 = 3
+			IF CFLAG:T:包皮状態 >= 3
+				CFLAG:T:包皮状態 = 3
 			ENDIF
 		CALL DECIDE_PENISSIZE
 		EXP:T:異常経験 += 1
@@ -436,7 +430,7 @@ ELSEIF RESULT == 0
 	PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[TALENT:ふたなり]]%】でなくなった》
 	TALENT:T:ふたなり = 0
 	SIF TALENT:T:童貞 == 0
-		CFLAG:T:ペニスアクセサリの有無 = 1
+		CFLAG:T:ペニスアクセ = 1
 	TALENT:T:童貞 = 0
 ELSE
 	GOTO INPUT_LOOP
@@ -604,7 +598,7 @@ ELSEIF RESULT == 0
 	ENDIF
 	PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[TALENT:パイパン]]%】になった》
 	TALENT:T:パイパン = 1
-	CFLAG:T:陰毛の状態 = -2
+	CFLAG:T:陰毛状態 = -2
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
@@ -725,11 +719,11 @@ ELSEIF RESULT == 0
 	MAXBASE:D:気力 = MAXBASE:C:気力
 	;処女
 	TALENT:D:処女 = TALENT:C:処女
-	CFLAG:D:初体験の相手 = CFLAG:C:初体験の相手
+	CFLAG:D:処女喪失相手 = CFLAG:C:処女喪失相手
 	;童貞
 	TALENT:D:童貞 = TALENT:C:童貞
-	;陰毛の状態
-	CFLAG:D:陰毛の状態 = CFLAG:C:陰毛の状態
+	;陰毛状態
+	CFLAG:D:陰毛状態 = CFLAG:C:陰毛状態
 	;ふたなり
 	TALENT:D:ふたなり = TALENT:C:ふたなり
 	TALENT:D:おしゃれ = TALENT:C:おしゃれ
@@ -768,29 +762,29 @@ ELSEIF RESULT == 0
 	;妊娠関連
 	TALENT:D:妊娠 = TALENT:C:妊娠
 	TALENT:D:育児中 = TALENT:C:育児中
-	CFLAG:D:マスターによる膣内射精カウント = CFLAG:C:マスターによる膣内射精カウント
-	CFLAG:D:誰によって妊娠させられたか = CFLAG:C:誰によって妊娠させられたか
-	CFLAG:D:助手から奴隷への膣内射精カウント = CFLAG:C:助手から奴隷への膣内射精カウント
-	CFLAG:D:奴隷から助手への膣内射精ウント = CFLAG:C:奴隷から助手への膣内射精ウント
-	CFLAG:D:娼館などの客から奴隷への中田氏カウント = CFLAG:C:娼館などの客から奴隷への中田氏カウント
-	CFLAG:D:ノラ犬からの中田氏カウント = CFLAG:C:ノラ犬からの中田氏カウント
+	CFLAG:D:主奴膣内精子量 = CFLAG:C:主奴膣内精子量
+	CFLAG:D:妊娠精子 = CFLAG:C:妊娠精子
+	CFLAG:D:助奴膣内精子量 = CFLAG:C:助奴膣内精子量
+	CFLAG:D:奴助膣内精子量 = CFLAG:C:奴助膣内精子量
+	CFLAG:D:客奴膣内精子量 = CFLAG:C:客奴膣内精子量
+	CFLAG:D:獣奴膣内精子量 = CFLAG:C:獣奴膣内精子量
 	CFLAG:D:排卵促進剤使用 = CFLAG:C:排卵促進剤使用
 	CFLAG:D:出産日 = CFLAG:C:出産日
-	CFLAG:D:父親のキャラ番号 = CFLAG:C:父親のキャラ番号
+	CFLAG:D:妊娠精子キャラ番号 = CFLAG:C:妊娠精子キャラ番号
 	;しあわせ草中毒
 	TALENT:D:薬物中毒 = TALENT:C:薬物中毒
-	CFLAG:D:体内媚薬残留度 = CFLAG:C:体内媚薬残留度
-	CFLAG:D:媚薬中毒の禁断症状判定 = CFLAG:C:媚薬中毒の禁断症状判定
+	CFLAG:D:媚薬残留 = CFLAG:C:媚薬残留
+	CFLAG:D:媚薬使用 = CFLAG:C:媚薬使用
 	;現在の着衣状況
 	CFLAG:D:着衣状態 = CFLAG:C:着衣状態
-	CFLAG:D:上着のタイプ = CFLAG:C:上着のタイプ
-	CFLAG:D:特別コスチュームのタイプ = CFLAG:C:特別コスチュームのタイプ
-	CFLAG:D:パンツの状態 = CFLAG:C:パンツの状態
-	CFLAG:D:ブラジャーの状態 = CFLAG:C:ブラジャーの状態
-	CFLAG:D:上着上の状態 = CFLAG:C:上着上の状態
-	CFLAG:D:上着下の状態 = CFLAG:C:上着下の状態
-	CFLAG:D:特別コスチュームの状態 = CFLAG:C:特別コスチュームの状態
-	CFLAG:D:現在のパンツを穿き続けている期間 = CFLAG:C:現在のパンツを穿き続けている期間
+	CFLAG:D:上着タイプ = CFLAG:C:上着タイプ
+	CFLAG:D:特別コスタイプ = CFLAG:C:特別コスタイプ
+	CFLAG:D:パンツ状態 = CFLAG:C:パンツ状態
+	CFLAG:D:ブラジャー状態 = CFLAG:C:ブラジャー状態
+	CFLAG:D:上着上状態 = CFLAG:C:上着上状態
+	CFLAG:D:上着下状態 = CFLAG:C:上着下状態
+	CFLAG:D:特別コス状態 = CFLAG:C:特別コス状態
+	CFLAG:D:パンツ継続日数 = CFLAG:C:パンツ継続日数
 	;性転換関連
 	CFLAG:D:性転換済 = CFLAG:C:性転換済
 	TALENT:D:オトコ = TALENT:C:オトコ

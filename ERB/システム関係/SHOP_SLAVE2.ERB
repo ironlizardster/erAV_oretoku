@@ -7,27 +7,27 @@
 IF FLAG:陰毛を生やす
 	;かなでは毛深いのがコンプレックスです
 	IF NO:TARGET == [[キャラ:宮間かなで]]
-		CFLAG:陰毛の状態 = 14
+		CFLAG:陰毛状態 = 14
 	;郁美はひどいことになっています
 	ELSEIF NO:TARGET == [[キャラ:須野郁美]]
-		CFLAG:陰毛の状態 = 18
+		CFLAG:陰毛状態 = 18
 	;外人さんは下の毛の処理は常識です
 	ELSEIF NO:TARGET == [[キャラ:レイチェル・パラディスス]]
-		CFLAG:陰毛の状態 = 1
+		CFLAG:陰毛状態 = 1
 	ELSEIF NO:TARGET == [[キャラ:恋歌・ロックウェル]]
-		CFLAG:陰毛の状態 = 1
+		CFLAG:陰毛状態 = 1
 	;美乃里は下の毛の発育が悪いのがコンプレックスです
 	ELSEIF NO:TARGET == [[キャラ:佐々木美乃里]]
-		CFLAG:陰毛の状態 = 7
+		CFLAG:陰毛状態 = 7
 	;パイパンなら生えない
 	ELSEIF TALENT:パイパン
-		CFLAG:陰毛の状態 = -1
+		CFLAG:陰毛状態 = -1
 	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
 	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
-		CFLAG:陰毛の状態 = 6 
+		CFLAG:陰毛状態 = 6 
 	;それ以外なら12に設定
 	ELSE
-		CFLAG:陰毛の状態 = 12
+		CFLAG:陰毛状態 = 12
 	ENDIF
 ENDIF
 

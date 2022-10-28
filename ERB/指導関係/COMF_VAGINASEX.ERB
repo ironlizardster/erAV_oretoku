@@ -737,7 +737,7 @@ IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
 ENDIF
 E = 0
 
-;初体験の相手が助手
+;処女喪失相手が助手
 IF ASSI > 0 && ASSIPLAY
 	R = NO:ASSI
 	;助手が童貞で調教対象が処女
@@ -781,13 +781,13 @@ IF TALENT:PLAYER:童貞 == 1
 	TALENT:PLAYER:童貞 = 0
 	CSTR:PLAYER:童貞喪失の相手 = %NAME:TARGET%
 	PRINTFORML 【童貞喪失】（%CALLNAME:PLAYER%）
-	SIF CFLAG:PLAYER:包皮の状態 == 2
-		CFLAG:PLAYER:包皮の状態 = 3
-	SIF CFLAG:ファーストキスの相手 == 0
-		CFLAG:ファーストキスの相手 = 1
+	SIF CFLAG:PLAYER:包皮状態 == 2
+		CFLAG:PLAYER:包皮状態 = 3
+	SIF CFLAG:初キス相手 == 0
+		CFLAG:初キス相手 = 1
 	RESETCOLOR
 	SIF NO:PLAYER == [[キャラ:あなた]] && NO:TARGET == [[キャラ:宮間かなで]]
-		CFLAG:MASTER:かなで相手童貞喪失 = 1
+		FLAG:かなで相手童貞喪失 = 1
 ENDIF
 
 TFLAG:近親相姦 = 0

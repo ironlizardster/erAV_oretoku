@@ -4,9 +4,9 @@
 @CHARADEAD_CHECK
 
 IF TALENT:恋心 == 1
-	CFLAG:寝取られ進行ポイント -= RAND:5
-		IF CFLAG:寝取られ進行ポイント <= 0
-			CFLAG:寝取られ進行ポイント = 0
+	CFLAG:NTR進行 -= RAND:5
+		IF CFLAG:NTR進行 <= 0
+			CFLAG:NTR進行 = 0
 		ENDIF
 ENDIF
 
@@ -85,13 +85,13 @@ SIF TFLAG:失神中終了 >= 1
 	RETURN 0
 
 IF FLAG:貞操帯自動着脱 == 1
-	IF CFLAG:特別コスチュームのタイプ == 79 && CFLAG:貞操帯のカギを捨てた == 0 && CFLAG:着衣状態 <= 63
+	IF CFLAG:特別コスタイプ == 79 && CFLAG:貞操帯鍵廃棄 == 0 && CFLAG:着衣状態 <= 63
 		CFLAG:着衣状態 += 64
 	ENDIF
 ENDIF
 
 IF TALENT:メガネっ娘 == 1
-	IF CFLAG:特別コスチュームのタイプ == 80 && CFLAG:着衣状態 <=63
+	IF CFLAG:特別コスタイプ == 80 && CFLAG:着衣状態 <=63
 		CFLAG:着衣状態 += 64
 	ENDIF
 ENDIF
@@ -144,7 +144,7 @@ SIF EXP:性交経験 < 30
 SIF TALENT:処女 || TALENT:オトコ == 1
 	RETURN 0
 ;貞操帯だとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;主人がオトコかフタナリじゃないとダメ
 SIF TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
@@ -766,7 +766,7 @@ SIF EXP:獣姦経験 < 50
 SIF TALENT:処女 || TALENT:オトコ == 1
 	RETURN 0
 ;貞操帯だとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ITEM:野良犬がないとダメ
 SIF ITEM:犬 == 0
@@ -905,7 +905,7 @@ SIF EXP:触手経験 < 50
 SIF TALENT:処女 || TALENT:オトコ == 1
 	RETURN 0
 ;貞操帯だとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ITEM:触手生物がないとダメ
 SIF ITEM:触手生物 == 0
@@ -1013,7 +1013,7 @@ EXP:触手経験 += B
 EXP:Ｖ経験 += B
 EXP:性交経験 += B
 EXP:精液経験 += B
-CFLAG:触手からの中田氏カウント += B
+CFLAG:触奴膣内精子量 += B
 
 ;珠経験
 PRINTFORML %PALAMNAME:[[PALAM:快Ｖ]]%の珠＋{B*200}

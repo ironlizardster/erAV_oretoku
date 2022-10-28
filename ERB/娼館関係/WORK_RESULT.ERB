@@ -14,7 +14,7 @@ DRAWLINE
 
 REPEAT CHARANUM
 	;営業を行っていない人(CFLAG:12が0の人)はスルー
-	SIF CFLAG:COUNT:労役中のフラグ == 0
+	SIF CFLAG:COUNT:営業内容 == 0
 		CONTINUE
 	TARGET = COUNT
 	CALL WORKING_MAIN
@@ -69,27 +69,27 @@ ENDIF
 
 ;ここから各営業内容の関数へ飛びます
 ;会話営業の場合
-IF CFLAG:労役中のフラグ == 1 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:アナル処女 && CFLAG:ファーストキスの相手 == -1)
+IF CFLAG:営業内容 == 1 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:アナル処女 && CFLAG:初キス相手 == -1)
 	CALL WORK_1ST
 
 ;奉仕営業の場合
-ELSEIF CFLAG:労役中のフラグ == 2 || CFLAG:労役中のフラグ == 7 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:アナル処女)
+ELSEIF CFLAG:営業内容 == 2 || CFLAG:営業内容 == 7 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:アナル処女)
 	CALL WORK_2ND
 
 ;Ａ営業の場合
-ELSEIF CFLAG:労役中のフラグ == 3 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && !TALENT:アナル処女)
+ELSEIF CFLAG:営業内容 == 3 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && !TALENT:アナル処女)
 	CALL WORK_3RD
 
 ;Ｖ営業の場合
-ELSEIF CFLAG:労役中のフラグ == 4
+ELSEIF CFLAG:営業内容 == 4
 	CALL WORK_4TH
 
 ;ＳＭ営業の場合
-ELSEIF CFLAG:労役中のフラグ == 5
+ELSEIF CFLAG:営業内容 == 5
 	CALL WORK_5TH
 
 ;出張営業の場合
-ELSEIF CFLAG:労役中のフラグ == 6
+ELSEIF CFLAG:営業内容 == 6
 	CALL WORK_6TH
 
 ENDIF
@@ -110,32 +110,32 @@ CALL WORK_BASE
 ;死亡
 IF BASE:体力 <= 0
 	PRINTFORML その日の営業が終わるなり、%CALLNAME:TARGET%は突っ伏すように倒れた…
-	CFLAG:労役中のフラグ = 0
+	CFLAG:営業内容 = 0
 	;キャラの死亡確認
 	CALL CHARADEAD_CHECK
 ;瀕死
 ELSEIF BASE:体力 <= 500
 	PRINTFORML 体力が限界に来ています。営業メンバーから外れました
-	CFLAG:労役中のフラグ = 0
+	CFLAG:営業内容 = 0
 ENDIF
 
 ;処女喪失の相手を記録
-IF CFLAG:Ｖ売春で処女喪失フラグ && CFLAG:初体験の相手 == 0
-	CFLAG:初体験の相手 = 2
+IF CFLAG:売春処女喪失 && CFLAG:処女喪失相手 == 0
+	CFLAG:処女喪失相手 = 2
 	CSTR:処女喪失の相手 = 知らないオトコの人
 	CFLAG:処女喪失年齢 = BASE:実年齢
-	CFLAG:処女喪失月 = DAY:1
-	CFLAG:処女喪失日 = DAY:2
+	CFLAG:処女喪失月 = DAY:日付_月
+	CFLAG:処女喪失日 = DAY:日付_日
 	CFLAG:処女喪失場所 = 7
 	CFLAG:処女喪失シチュ = 0
 ENDIF
 
 ;営業関連の計算が終わったら処女喪失判定等のフラグをリセット
-CFLAG:Ｖ売春で処女喪失フラグ = 0
-CFLAG:Ｖ売春で否定の珠増加フラグ = 0
-CFLAG:Ａ売春で否定の珠増加フラグ = 0
-CFLAG:公衆便所プレイで公開浣腸ショー = 0
-CFLAG:営業でＶ使用不能フラグ = 0
+CFLAG:売春処女喪失 = 0
+CFLAG:Ｖ売春否定 = 0
+CFLAG:Ａ売春否定 = 0
+CFLAG:便所公開浣腸 = 0
+CFLAG:売春Ｖ不能 = 0
 
 SIF (FLAG:指導テキスト設定 & 2) == 0
 	WAIT
@@ -208,7 +208,7 @@ SIF G < 2
 	G = 2
 
 ;会話営業の場合、客の数がちょっと増えます
-SIF CFLAG:労役中のフラグ == 1
+SIF CFLAG:営業内容 == 1
 	TIMES G , 1.50
 
 ;常連客が代表のお客かどうか
@@ -264,9 +264,9 @@ IF TALENT:彼氏あり == 1 && ITEM:コスプレ衣装
 		PRINTFORM バニーガール好き
 	ELSEIF LOCAL == 8
 		PRINTFORM ブルセラマニア
-	ELSEIF LOCAL == 9 && CFLAG:労役中のフラグ == 5 && ABL:サドっ気 + TALENT:サド * 5 >= ABL:マゾっ気 + TALENT:マゾ * 5
+	ELSEIF LOCAL == 9 && CFLAG:営業内容 == 5 && ABL:サドっ気 + TALENT:サド * 5 >= ABL:マゾっ気 + TALENT:マゾ * 5
 		PRINTFORM ドＭ
-	ELSEIF LOCAL == 9 && CFLAG:労役中のフラグ == 5 && ABL:サドっ気 + TALENT:サド * 5 < ABL:マゾっ気 + TALENT:マゾ * 5
+	ELSEIF LOCAL == 9 && CFLAG:営業内容 == 5 && ABL:サドっ気 + TALENT:サド * 5 < ABL:マゾっ気 + TALENT:マゾ * 5
 		PRINTFORM ドＳ
 	ELSEIF LOCAL == 9
 		PRINTFORM 水着フェチ
@@ -279,7 +279,7 @@ ENDIF
 IF LOCAL == 0
 	SIF TALENT:乳狂い
 		PRINTFORM つん、と勃起した
-	SIF (CFLAG:ピアスの装着状況 & 1)
+	SIF (CFLAG:ピアス状況 & 1)
 		PRINTFORM リングピアスが光る
 	PRINTFORM 乳首が透けて見える、シースルーのベビードール
 ELSEIF LOCAL == 1
@@ -315,7 +315,7 @@ ELSEIF LOCAL == 7
 	PRINTFORM 大胆に胸元の開いたバニースーツ
 ELSEIF LOCAL == 8
 	PRINTFORM 濃紺のブルマに%CALLNAME:TARGET%と書かれた名札が縫い付けられた体操服
-ELSEIF LOCAL == 9 && CFLAG:労役中のフラグ == 5
+ELSEIF LOCAL == 9 && CFLAG:営業内容 == 5
 	PRINTFORM エナメルボンデージ
 ELSEIF LOCAL == 9
 	IF TALENT:[[TALENT:Mermaid girl]]
@@ -346,7 +346,7 @@ SIF TALENT:高級娼婦
 	D += 4
 
 ;コンドーム使用中だと満足度2/3
-IF CFLAG:労役でコンドーム使用 && CFLAG:労役中のフラグ
+IF CFLAG:営業コンドーム && CFLAG:営業内容
 	D *= 2
 	D /= 3
 ENDIF
@@ -376,7 +376,7 @@ ENDIF
 @WORK_EXP
 ;娼婦デビュー
 IF CFLAG:娼館デビュー == 0
-	SIF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:労役中のフラグ == 0
+	SIF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:営業内容 == 0
 		PRINTFORML 【%NAME:TARGET%が風俗嬢としてデビューしました】
 	TCVAR:異常経験 += 1
 	B = A
@@ -397,7 +397,7 @@ IF CFLAG:娼館デビュー == 0
 		B = 90
 	IF B == 0
 		J = 0
-		SIF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:労役中のフラグ == 0
+		SIF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:営業内容 == 0
 			PRINTFORML 残念ながら人気は全く得られなかったが、これから頑張っていこう
 	ELSE
 		J = B
@@ -476,7 +476,7 @@ SIF EXP:MASTER:人気 + I <= 0
 	I = 0 - EXP:MASTER:人気
 
 ;人気・娼館人気変化の表示
-IF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:労役中のフラグ == 0
+IF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:営業内容 == 0
 	PRINT  人気　　　　:
 	N = EXP:人気
 	CALL FIGURE_INDENT
@@ -531,24 +531,24 @@ EXP:MASTER:人気 += I
 
 ;満足度最高の場合常連客が付くことあり
 IF A >= 4
-	IF TALENT:常連客 == 0 && (C == 0 || CFLAG:労役中のフラグ == 3 || CFLAG:労役中のフラグ == 4 || CFLAG:労役中のフラグ == 5) && TALENT:一線越えない == 0
+	IF TALENT:常連客 == 0 && (C == 0 || CFLAG:営業内容 == 3 || CFLAG:営業内容 == 4 || CFLAG:営業内容 == 5) && TALENT:一線越えない == 0
 		PRINTFORML 客の一人は%CALLNAME:TARGET%を大変気に入ったようだ…
 		PRINTFORMW %CALLNAME:TARGET%に【%TALENTNAME:[[TALENT:常連客]]%】がついた
 		TALENT:常連客 = 1
 	ENDIF
 ENDIF
 
-SIF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:労役中のフラグ == 0
+SIF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:営業内容 == 0
 	DRAWLINE
 
 ;Ｖ経験増加量＝客に膣内射精された回数と解釈して妊娠フラグを加算
-SIF TCVAR:Ｖ経験 && CFLAG:労役でコンドーム使用 == 0 
-	CFLAG:娼館などの客から奴隷への中田氏カウント += TCVAR:Ｖ経験
+SIF TCVAR:Ｖ経験 && CFLAG:営業コンドーム == 0 
+	CFLAG:客奴膣内精子量 += TCVAR:Ｖ経験
 
 ;『TCVAR:X』のXの値に応じて経験が上昇します
 REPEAT 76
 	IF TCVAR:COUNT
-		IF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:労役中のフラグ == 0
+		IF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:営業内容 == 0
 			PRINTFORM  %EXPNAME:COUNT%
 			IF COUNT == 0 || COUNT == 1
 				PRINT 　　　
@@ -577,13 +577,13 @@ REPEAT 76
 	ENDIF
 REND
 
-SIF CFLAG:労役中のフラグ == 0
+SIF CFLAG:営業内容 == 0
 	DRAWLINE
 
 ;『U:X』のXの値に応じて珠を獲得します
 REPEAT 101
 	IF U:COUNT
-		IF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:労役中のフラグ == 0
+		IF (FLAG:指導テキスト設定 & 2) == 0 || CFLAG:営業内容 == 0
 			PRINTFORM  %PALAMNAME:COUNT%の珠　　
 			PRINT :
 			N = JUEL:COUNT
@@ -647,8 +647,8 @@ IF !TALENT:永遠の愛 && EXP:売春経験 >= 100 && EXP:営業愛情経験 >= 
 	SIF TALENT:恋心
 		TALENT:恋心 = 0
 	TALENT:彼氏あり = 1
-	CFLAG:彼氏の有無 = 1
-	CFLAG:彼氏の種類 += RAND:6
+	CFLAG:彼氏有 = 1
+	CFLAG:彼氏タイプ += RAND:6
 ENDIF
 
 ;---------------------------------------------------------
@@ -666,14 +666,14 @@ CALL WORK_MONEYD
 B *= G
 
 ;コンドームの代金を引く
-B -= CFLAG:労役でコンドーム使用 * G * 200
+B -= CFLAG:営業コンドーム * G * 200
 
 ;マイナスになる事はない
 SIF B < 0
 	B = 0
 
 ;会話営業の場合、客が多く来るので帳尻あわせを
-SIF CFLAG:労役中のフラグ == 1
+SIF CFLAG:営業内容 == 1
 	TIMES B , 0.75
 
 ;プレイ内容補正
@@ -713,7 +713,7 @@ ENDIF
 
 
 IF (FLAG:指導テキスト設定 & 2) == 0
-	IF CFLAG:労役中のフラグ == 6
+	IF CFLAG:営業内容 == 6
 		PRINTFORML 帰り際に客から今日の分の料金を受け取りました
 	ELSE
 		PRINTFORML 今日は{G}人の顧客が訪れました
@@ -789,7 +789,7 @@ ELSEIF ABL:欲望 >= 10
 ENDIF
 
 ;話術：会話営業だった場合通常よりも多く加算
-IF CFLAG:労役中のフラグ == 1
+IF CFLAG:営業内容 == 1
 	IF ABL:話術 == 1
 		B += 10
 	ELSEIF ABL:話術 == 2
@@ -820,7 +820,7 @@ ELSE
 ENDIF
 
 ;奉仕精神：出張営業だった場合通常よりも多く加算
-IF CFLAG:労役中のフラグ == 6
+IF CFLAG:営業内容 == 6
 	IF ABL:奉仕精神 == 1
 		B += 15
 	ELSEIF ABL:奉仕精神 == 2
@@ -851,7 +851,7 @@ ELSE
 ENDIF
 
 ;奉仕営業だった場合、奉仕技術に応じて加算
-IF CFLAG:労役中のフラグ == 2 || CFLAG:労役中のフラグ == 7
+IF CFLAG:営業内容 == 2 || CFLAG:営業内容 == 7
 	IF ABL:奉仕技術 == 1
 		B += 15
 	ELSEIF ABL:奉仕技術 == 2
@@ -868,7 +868,7 @@ IF CFLAG:労役中のフラグ == 2 || CFLAG:労役中のフラグ == 7
 ENDIF
 
 ;ＡorＶ営業だった場合、性交技術に応じて加算
-IF CFLAG:労役中のフラグ == 3 || CFLAG:労役中のフラグ == 4
+IF CFLAG:営業内容 == 3 || CFLAG:営業内容 == 4
 	IF ABL:性交技術 == 1
 		B += 30
 	ELSEIF ABL:性交技術 == 2
@@ -885,7 +885,7 @@ IF CFLAG:労役中のフラグ == 3 || CFLAG:労役中のフラグ == 4
 ENDIF
 
 ;ＳＭ営業だった場合、サドっ気orマゾっ気に応じて加算（高い方を判定）
-IF CFLAG:労役中のフラグ == 5
+IF CFLAG:営業内容 == 5
 	IF ABL:サドっ気 >= ABL:マゾっ気
 		IF ABL:サドっ気 == 1
 			B += 15
@@ -967,15 +967,15 @@ A *= B
 
 ;経験補正
 ;処女喪失だとかなり増える
-SIF CFLAG:Ｖ売春で処女喪失フラグ
+SIF CFLAG:売春処女喪失
 	TIMES A , 10.00
 
 ;Ｖ経験が足りないとちょっと増える
-SIF CFLAG:Ｖ売春で否定の珠増加フラグ
+SIF CFLAG:Ｖ売春否定
 	TIMES A , 1.50
 
 ;Ａ経験が足りないとちょっと増える
-SIF CFLAG:Ａ売春で否定の珠増加フラグ
+SIF CFLAG:Ａ売春否定
 	TIMES A ,1.50
 
 ;売春中毒のレベルに応じてちょっとずつ減る
@@ -1067,12 +1067,12 @@ IF MARK:反発刻印 != 3 && JUEL:否定 > C
 	PRINTL 反発刻印LV3を取得
 	PRINTL これ以上売春を続ける事が出来ません
 	MARK:反発刻印 = 3
-	CFLAG:労役中のフラグ = 0
+	CFLAG:営業内容 = 0
 ELSEIF MARK:反発刻印 != 2 && JUEL:否定 > B
 	PRINTL 反発刻印LV2を取得
 	PRINTL これ以上売春を続ける事が出来ません
 	MARK:反発刻印 = 2
-	CFLAG:労役中のフラグ = 0
+	CFLAG:営業内容 = 0
 ELSEIF MARK:反発刻印 != 1 && JUEL:否定 > A
 	PRINTL 反発刻印LV1を取得
 	MARK:反発刻印 = 1
@@ -1103,19 +1103,19 @@ LOSEBASE:体力 *= F
 
 ;経験補正
 ;処女喪失だとかなり増える
-IF CFLAG:Ｖ売春で処女喪失フラグ
+IF CFLAG:売春処女喪失
 	TIMES LOSEBASE:体力 , 2.00
 	BASE:魅力値 -= 20
 ENDIF
 
 ;Ｖ経験が足りないとちょっと増える
-IF CFLAG:Ｖ売春で否定の珠増加フラグ
+IF CFLAG:Ｖ売春否定
 	TIMES LOSEBASE:体力 , 1.10
 	BASE:魅力値 -= 2
 ENDIF
 
 ;Ａ経験が足りないとちょっと増える
-IF CFLAG:Ａ売春で否定の珠増加フラグ
+IF CFLAG:Ａ売春否定
 	TIMES LOSEBASE:体力 , 1.20
 	BASE:魅力値 -= 2
 ENDIF

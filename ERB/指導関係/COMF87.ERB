@@ -11,22 +11,22 @@ PRINTL ピアシング
 ;-------------------------------------------------
 $INPUT_LOOP
 PRINTFORM 現在%CALLNAME:TARGET%の身体には 
-SIF CFLAG:ピアスの装着状況 & 1
+SIF CFLAG:ピアス状況 & 1
 	PRINT 乳首 
-SIF CFLAG:ピアスの装着状況 & 2
+SIF CFLAG:ピアス状況 & 2
 	PRINT へそ 
-SIF CFLAG:ピアスの装着状況 & 4
+SIF CFLAG:ピアス状況 & 4
 	PRINT ラビア 
-IF CFLAG:ピアスの装着状況 & 8
+IF CFLAG:ピアス状況 & 8
 	IF TALENT:ふたなり || TALENT:オトコ
 		PRINT ペニス 
 	ELSE
 		PRINT クリトリス 
 	ENDIF
 ENDIF
-SIF CFLAG:ピアスの装着状況 & 16
+SIF CFLAG:ピアス状況 & 16
 	PRINT 舌 
-IF (CFLAG:ピアスの装着状況 & 1) == 0 && (CFLAG:ピアスの装着状況 & 2) == 0 && (CFLAG:ピアスの装着状況 & 4) == 0  && (CFLAG:ピアスの装着状況 & 8) == 0  && (CFLAG:ピアスの装着状況 & 16) == 0
+IF (CFLAG:ピアス状況 & 1) == 0 && (CFLAG:ピアス状況 & 2) == 0 && (CFLAG:ピアス状況 & 4) == 0  && (CFLAG:ピアス状況 & 8) == 0  && (CFLAG:ピアス状況 & 16) == 0
 	PRINTL ピアスは取り付けられていません
 ELSE
 	PRINTL にピアスが取り付けられています
@@ -37,9 +37,9 @@ ELSE
 	PRINTFORML 手元にはピアスリングはありません
 ENDIF
 
-SIF ITEM:ピアスリング && ((CFLAG:ピアスの装着状況 & 1) == 0 || (CFLAG:ピアスの装着状況 & 2) == 0 || (CFLAG:ピアスの装着状況 & 4) == 0 || (CFLAG:ピアスの装着状況 & 8) == 0 || (CFLAG:ピアスの装着状況 & 16) == 0)
+SIF ITEM:ピアスリング && ((CFLAG:ピアス状況 & 1) == 0 || (CFLAG:ピアス状況 & 2) == 0 || (CFLAG:ピアス状況 & 4) == 0 || (CFLAG:ピアス状況 & 8) == 0 || (CFLAG:ピアス状況 & 16) == 0)
 	PRINTL  [0] - ピアスを取り付ける
-SIF (CFLAG:ピアスの装着状況 & 1) || (CFLAG:ピアスの装着状況 & 2) || (CFLAG:ピアスの装着状況 & 4) || (CFLAG:ピアスの装着状況 & 8) || (CFLAG:ピアスの装着状況 & 16)
+SIF (CFLAG:ピアス状況 & 1) || (CFLAG:ピアス状況 & 2) || (CFLAG:ピアス状況 & 4) || (CFLAG:ピアス状況 & 8) || (CFLAG:ピアス状況 & 16)
 	PRINTL  [1] - ピアスを取り外す
 PRINTL  [10]- やめる
 
@@ -47,20 +47,20 @@ INPUT
 
 IF RESULT == 0
 	PRINTL どこにピアスを装着させますか？
-	SIF (CFLAG:ピアスの装着状況 & 1) == 0 && ITEM:ピアスリング >= 2
+	SIF (CFLAG:ピアス状況 & 1) == 0 && ITEM:ピアスリング >= 2
 		PRINTL  [0] - 乳首(2個消費)
-	SIF (CFLAG:ピアスの装着状況 & 2) == 0
+	SIF (CFLAG:ピアス状況 & 2) == 0
 		PRINTL  [1] - へそ
-	SIF (CFLAG:ピアスの装着状況 & 4) == 0 && TALENT:オトコ == 0 && ITEM:ピアスリング >= 2
+	SIF (CFLAG:ピアス状況 & 4) == 0 && TALENT:オトコ == 0 && ITEM:ピアスリング >= 2
 		PRINTL  [2] - ラビア(2個消費)
-	IF (CFLAG:ピアスの装着状況 & 8) == 0 
+	IF (CFLAG:ピアス状況 & 8) == 0 
 		IF TALENT:ふたなり || TALENT:オトコ
 			PRINTL  [3] - ペニス
 		ELSE
 			PRINTL  [3] - クリトリス
 		ENDIF
 	ENDIF
-	SIF (CFLAG:ピアスの装着状況 & 16) == 0
+	SIF (CFLAG:ピアス状況 & 16) == 0
 		PRINTL  [4] - 舌
 	PRINTL  [10]- やめる
 
@@ -75,20 +75,20 @@ IF RESULT == 0
 	ENDIF
 ELSEIF RESULT == 1
 	PRINTL どのピアスを取り外しますか？
-	SIF (CFLAG:ピアスの装着状況 & 1)
+	SIF (CFLAG:ピアス状況 & 1)
 		PRINTL  [0] - 乳首
-	SIF (CFLAG:ピアスの装着状況 & 2)
+	SIF (CFLAG:ピアス状況 & 2)
 		PRINTL  [1] - へそ
-	SIF (CFLAG:ピアスの装着状況 & 4) && TALENT:オトコ == 0
+	SIF (CFLAG:ピアス状況 & 4) && TALENT:オトコ == 0
 		PRINTL  [2] - ラビア
-	IF (CFLAG:ピアスの装着状況 & 8) 
+	IF (CFLAG:ピアス状況 & 8) 
 		IF TALENT:ふたなり || TALENT:オトコ
 			PRINTL  [3] - ペニス
 		ELSE
 			PRINTL  [3] - クリトリス
 		ENDIF
 	ENDIF
-	SIF (CFLAG:ピアスの装着状況 & 16)
+	SIF (CFLAG:ピアス状況 & 16)
 		PRINTL  [4] - 舌
 	PRINTL  [10]- やめる
 
@@ -128,7 +128,7 @@ SIF TEQUIP:縄
 	GOTO SUCCESS_LOOP
 
 ;外す際には自動成功
-SIF CFLAG:ピアスの装着状況 & P
+SIF CFLAG:ピアス状況 & P
 	GOTO SUCCESS_LOOP
 
 A = 0
@@ -398,14 +398,14 @@ IF TEQUIP:撮影中
 ENDIF
 
 ;過去に装着経験があれば痛み減
-IF CFLAG:ピアスの装着状況 & (P * 32)
+IF CFLAG:ピアス状況 & (P * 32)
 	TIMES SOURCE:6 , 0.30
 	TIMES SOURCE:13 , 0.20
 	TIMES SOURCE:14 , 0.50
 ENDIF
 
 ;外す際にはダメージもパラメータ増減もなし
-IF CFLAG:ピアスの装着状況 & P
+IF CFLAG:ピアス状況 & P
 	LOSEBASE:体力 = 0
 	LOSEBASE:気力 = 0
 	SOURCE:6 = 0
@@ -417,7 +417,7 @@ ENDIF
 ;経験上昇
 ;-------------------------------------------------
 ;初めて付けたピアスがへそ以外なら異常経験＋１
-IF CFLAG:ピアスの装着状況 == 0 && P != 2
+IF CFLAG:ピアス状況 == 0 && P != 2
 	EXP:異常経験 += 1
 	PRINTL 異常経験＋１
 ENDIF
@@ -430,11 +430,11 @@ ENDIF
 ;-------------------------------------------------
 ;装着処理
 ;-------------------------------------------------
-IF CFLAG:ピアスの装着状況 & P
-	CFLAG:ピアスの装着状況 -= P
+IF CFLAG:ピアス状況 & P
+	CFLAG:ピアス状況 -= P
 ELSE
-	CFLAG:ピアスの装着状況 |= P
-	CFLAG:ピアスの装着状況 |= P * 32
+	CFLAG:ピアス状況 |= P
+	CFLAG:ピアス状況 |= P * 32
 	ITEM:ピアスリング -= 1
 	SIF P == 1 || P == 4 
 		ITEM:ピアスリング -= 1

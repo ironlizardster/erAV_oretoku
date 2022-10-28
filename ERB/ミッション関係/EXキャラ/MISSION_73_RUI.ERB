@@ -169,7 +169,7 @@ SIF TALENT:処女 == 1
 	LOCAL:1++
 SIF TALENT:アナル処女 == 1
 	LOCAL:1++
-SIF CFLAG:ファーストキスの相手 == -1
+SIF CFLAG:初キス相手 == -1
 	LOCAL:1++
 
 SIF TALENT:永遠の愛 == 1
@@ -207,7 +207,7 @@ IF ARG == 2
 	TCVAR:異常経験 += 50 * ARG
 	TALENT:処女 = 0
 	TALENT:アナル処女 = 0
-	CFLAG:ファーストキスの相手 = 0
+	CFLAG:初キス相手 = 0
 	ABL:舞踊技能 = 10
 	TALENT:解放 = 1
 	TALENT:人気者 = 1

@@ -13,7 +13,7 @@ LOCAL = 0
 FOR COUNT, 0, CHARANUM
 	SIF COUNT == MASTER
 		CONTINUE
-	SIF TALENT:COUNT:処女 == 1 && CFLAG:COUNT:初体験の相手 == 0 && TALENT:COUNT:アナル処女 == 1 && TALENT:COUNT:永遠の愛 == 1 && TALENT:COUNT:淫魔 == 0 && TALENT:COUNT:アンドロイド == 0
+	SIF TALENT:COUNT:処女 == 1 && CFLAG:COUNT:処女喪失相手 == 0 && TALENT:COUNT:アナル処女 == 1 && TALENT:COUNT:永遠の愛 == 1 && TALENT:COUNT:淫魔 == 0 && TALENT:COUNT:アンドロイド == 0
 		LOCAL++
 	SIF LOCAL >= 5
 		BREAK
@@ -26,7 +26,7 @@ ENDIF
 RETURN GLOBAL:5
 
 @ACHIEVEMENT_HINT_5
-RESULTS = 初体験の相手なしで【処女】、【アナル処女】、【永遠の愛】の女優が5人以上いる(淫魔、アンドロイドを除く)
+RESULTS = 処女喪失相手なしで【処女】、【アナル処女】、【永遠の愛】の女優が5人以上いる(淫魔、アンドロイドを除く)
 
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_5
@@ -100,7 +100,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || GLOBAL:3
 		TARGET = RESULT
 		PRINTFORMW %NAME:TARGET%に【淫魔】を付与しました
 		TALENT:淫魔 = 1
-		CFLAG:寝取られ完了値 = 999999
+		CFLAG:NTR完了値 = 999999
 		CALL SUCCUBUS_STATUS_ACH(TARGET)
 		MAXBASE:体力 += 1000
 		MAXBASE:気力 += 1000

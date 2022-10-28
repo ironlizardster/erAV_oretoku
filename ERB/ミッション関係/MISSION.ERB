@@ -100,7 +100,7 @@ ENDIF
 ;=================================================
 @MISSION_HEADER_INFO(ARG = 0)
 DRAWLINE
-PRINTFORML {DAY + 1}週目\@ TIME == 0 ? 前半 # 後半 \@
+PRINTFORML {DAY + 1}日目\@ TIME == 0 ? 前半 # 後半 \@
 PRINTFORML 所持金：{MONEY}ポイント 貢献度：{EXP:MASTER:貢献度}
 IF ARG
 	CALLFORM MISSION_TITLE_{ARG}

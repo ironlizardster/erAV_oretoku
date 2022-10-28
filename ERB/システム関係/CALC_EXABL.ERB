@@ -38,7 +38,7 @@ RETURNF TALENT:ARG:優等生 || TALENT:ARG:ニート || TALENT:ARG:コスプレ�
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF CFLAG:COUNT:エステ通い判定 == 1
+	ELSEIF CFLAG:COUNT:エステ通い == 1
 						;****追加ここから****
 		IF EXP:COUNT:美容トレーニング経験 <= 5 && ABL:COUNT:美容感覚 == 1
 			EXP:COUNT:美容トレーニング経験 = 5
@@ -75,7 +75,7 @@ REND
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE	
-	ELSEIF CFLAG:COUNT:ジム通い判定 == 1
+	ELSEIF CFLAG:COUNT:ジム通い == 1
 						;****追加ここから****
 		IF EXP:COUNT:運動トレーニング経験 <= 5 && ABL:COUNT:運動能力 == 1
 			EXP:COUNT:運動トレーニング経験 = 5
@@ -112,7 +112,7 @@ REND
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF CFLAG:COUNT:学習塾通い判定 == 1
+	ELSEIF CFLAG:COUNT:塾通い == 1
 						;****追加ここから****
 		IF EXP:COUNT:学業トレーニング経験 <= 5 && ABL:COUNT:学力 == 1
 			EXP:COUNT:学業トレーニング経験 = 5
@@ -147,7 +147,7 @@ REND
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF CFLAG:COUNT:新作アニメチェック判定 == 1
+	ELSEIF CFLAG:COUNT:アニメチェック == 1
 						;****追加ここから****
 		IF EXP:COUNT:オタクトレーニング経験 <= 5 && ABL:COUNT:オタク知識 == 1
 			EXP:COUNT:オタクトレーニング経験 = 5

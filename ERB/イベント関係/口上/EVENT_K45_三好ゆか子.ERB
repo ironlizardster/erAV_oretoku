@@ -89,7 +89,7 @@ IF CFLAG:201 == 0
 	ELSE
 		PRINTFORML 面接受かったのがまだ信じられないんですけど…」
 	ENDIF
-	IF CFLAG:上着のタイプ > 0
+	IF CFLAG:上着タイプ > 0
 		IF RAND:3 == 0
 			PRINTFORMW 事務所に現れた%CALLNAME:TARGET%は緊張した面持ちで一生懸命に笑顔を作ってみせた。
 		ELSEIF RAND:2 == 0
@@ -99,7 +99,7 @@ IF CFLAG:201 == 0
 			PRINTFORMW 恥ずかしそうに%CALLNAME:TARGET%は%CALLNAME:MASTER%から視線を反らした。
 		ENDIF
 		IF RAND:2 == 0
-			IF CFLAG:上着のタイプ == 17
+			IF CFLAG:上着タイプ == 17
 				PRINTFORMW 身に着けた高校の制服の上からでも解る豊満な胸が否応なく目を引く。
 			;着衣設定　スカート
 			ELSEIF CFLAG:着衣状態 & 8
@@ -1116,8 +1116,8 @@ ENDIF
 ;キスする CFLAG:307
 ;-------------------------------------------------
 IF SELECTCOM == 6
-	;ファーストキス
-	IF CFLAG:307 == 0 && TFLAG:ファーストキス
+	;初キス
+	IF CFLAG:307 == 0 && TFLAG:初キス
 		;愛かつ主人
 		IF TALENT:TARGET:恋心 == 1 && ASSIPLAY == 0 && TEQUIP:獣姦プレイ == 0 && TEQUIP:触手召喚 == 0
 			PRINTFORMW 
@@ -3662,7 +3662,7 @@ IF TFLAG:口上番号 == 11
 	IF TALENT:崩壊 == 1
 		PRINTFORMW 
 	;父親が主人で母親が愛持ち
-	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+	ELSEIF TALENT:恋心 && CFLAG:妊娠精子 == 1
 		PRINTFORML 「監督さん…%CSTR:一人称%、妊娠しちゃった」
 		;PRINTFORMW 膨らんだ腹部を優しくさすり、%CALLNAME:TARGET%は不安そうに%CALLNAME:MASTER%を見つめる。
 		PRINTFORML 「一生懸命育てるから、応援してくれるよね？」
@@ -3685,7 +3685,7 @@ IF TFLAG:口上番号 == 12
 	IF TALENT:崩壊 == 1
 		PRINTFORMW 
 	;父親が主人で母親が愛持ち
-	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+	ELSEIF TALENT:恋心 && CFLAG:妊娠精子 == 1
 		PRINTFORML 「パパとママ、どっちに似るのかな…」
 		PRINTFORMW 「楽しみ%UNICODE(0x2665)%」
 	;その他

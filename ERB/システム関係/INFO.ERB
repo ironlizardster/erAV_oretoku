@@ -471,16 +471,16 @@ PRINTL
 ;現在のターゲットの寝取られ進行を表示
 ;-------------------------------------------------
 @NTR_BAR
-SIF CFLAG:寝取られ完了値 <= 0
+SIF CFLAG:NTR完了値 <= 0
 	RETURN 0
 
 PRINT  寝行度
-IF CFLAG:寝取られ進行ポイント < 0
-	BAR 0,CFLAG:寝取られ完了値,32
-	PRINTFORM (0/{CFLAG:寝取られ完了値})
+IF CFLAG:NTR進行 < 0
+	BAR 0,CFLAG:NTR完了値,32
+	PRINTFORM (0/{CFLAG:NTR完了値})
 ELSE
-	BAR CFLAG:寝取られ進行ポイント,CFLAG:寝取られ完了値,32
-	PRINTFORM ({CFLAG:寝取られ進行ポイント}/{CFLAG:寝取られ完了値})
+	BAR CFLAG:NTR進行,CFLAG:NTR完了値,32
+	PRINTFORM ({CFLAG:NTR進行}/{CFLAG:NTR完了値})
 ENDIF
 PRINTL 
 
@@ -508,16 +508,16 @@ IF FLAG:着衣使用
 ENDIF
 
 ;ズーコの着ぐるみを着ていたらここで終了
-IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	SIF CFLAG:着衣状態 == 64
 		PRINTL  どうやら、中身は全裸のようです。
 	RETURN 1
 ENDIF
 
-SIF (CFLAG:着衣状態 & 8) && (CFLAG:着衣状態 & 1) == 0 && CFLAG:上着のタイプ <= 240 && CFLAG:上着のタイプ >= 251
+SIF (CFLAG:着衣状態 & 8) && (CFLAG:着衣状態 & 1) == 0 && CFLAG:上着タイプ <= 240 && CFLAG:上着タイプ >= 251
 	PRINTL  どうやら、パンツははいていないようです。
 
-IF CFLAG:タトゥーの有無 >= 1 && ((CFLAG:着衣状態 <= 3 || (CFLAG:着衣状態 == 15 && CFLAG:上着のタイプ >= 241 && CFLAG:上着のタイプ <= 250)) || (CFLAG:着衣状態 >= 64 && CFLAG:着衣状態 <= 67 && CFLAG:特別コスチュームのタイプ >= 51))
+IF CFLAG:タトゥー >= 1 && ((CFLAG:着衣状態 <= 3 || (CFLAG:着衣状態 == 15 && CFLAG:上着タイプ >= 241 && CFLAG:上着タイプ <= 250)) || (CFLAG:着衣状態 >= 64 && CFLAG:着衣状態 <= 67 && CFLAG:特別コスタイプ >= 51))
 	CALL PRINT_TATTO
 	PRINTFORML タトゥーが施されています。
 ENDIF
@@ -525,7 +525,7 @@ ENDIF
 
 
 IF (CFLAG:着衣状態 & 6) == 0 || CFLAG:着衣状態 == 0 || (CFLAG:着衣状態 & 1) == 1
-	IF CFLAG:腋毛の有無 == 1
+	IF CFLAG:腋毛 == 1
 		PRINTL  両方の腋では腋毛が綺麗に生えそろっています。
 	ELSE
 		PRINTL  ムダ毛の処理は完璧のようです。
@@ -536,49 +536,49 @@ ENDIF
 SIF CFLAG:着衣状態 & 17
 	RETURN 0
 ;オムツ着用中でも終了
-SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 69
+SIF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ == 69
 	RETURN 0
 ;スカートタイプ着用で従順＋露出度が３未満でもここで終了
 SIF (CFLAG:着衣状態 & 8) && ABL:信頼 + ABL:露出癖 < 3
 	RETURN 0
-SIF (CFLAG:着衣状態 & 8) && (CFLAG:上着のタイプ >= 240 && CFLAG:上着のタイプ <= 250)
+SIF (CFLAG:着衣状態 & 8) && (CFLAG:上着タイプ >= 240 && CFLAG:上着タイプ <= 250)
 	RETURN 0
 
 PRINT  
-IF (CFLAG:着衣状態 & 8) && (FLAG:陰毛を生やす || (CFLAG:ピアスの装着状況 & 12)) 
+IF (CFLAG:着衣状態 & 8) && (FLAG:陰毛を生やす || (CFLAG:ピアス状況 & 12)) 
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINT の裾を持ち上げさせると、
 ENDIF
 
-;陰毛の状態
+;陰毛状態
 IF FLAG:陰毛を生やす 
-	IF CFLAG:陰毛の状態 > 18
+	IF CFLAG:陰毛状態 > 18
 		PRINTL 恥丘からアナルまで密生した陰毛に覆われています。
-	ELSEIF CFLAG:陰毛の状態 > 13
+	ELSEIF CFLAG:陰毛状態 > 13
 		PRINTL 股間では伸び放題の陰毛が繁っています。
-	ELSEIF CFLAG:陰毛の状態 > 10
+	ELSEIF CFLAG:陰毛状態 > 10
 		PRINTL 恥丘では陰毛が綺麗に生えそろっています。
-	ELSEIF CFLAG:陰毛の状態 > 8 && TALENT:褐色肌 == 0
+	ELSEIF CFLAG:陰毛状態 > 8 && TALENT:褐色肌 == 0
 		PRINTL 陰部はうっすらと陰毛に覆われています。
-	ELSEIF CFLAG:陰毛の状態 > 8 && TALENT:褐色肌 == 1
+	ELSEIF CFLAG:陰毛状態 > 8 && TALENT:褐色肌 == 1
 		PRINTL マイクロビキニのラインに沿って陰毛が整えられています。
-	ELSEIF CFLAG:陰毛の状態 > 6
+	ELSEIF CFLAG:陰毛状態 > 6
 		PRINTL 陰部を微かに生えかけの陰毛が覆っています。
-	ELSEIF CFLAG:陰毛の状態 > 0 && TALENT:パイパン
+	ELSEIF CFLAG:陰毛状態 > 0 && TALENT:パイパン
 		PRINTL 性器はまったくの無毛です。
-	ELSEIF CFLAG:陰毛の状態 > 0
+	ELSEIF CFLAG:陰毛状態 > 0
 		PRINTL 性器は綺麗に剃り上げられています。
-	ELSEIF CFLAG:陰毛の状態 == 0 || CFLAG:陰毛の状態 == 0 - 1
+	ELSEIF CFLAG:陰毛状態 == 0 || CFLAG:陰毛状態 == 0 - 1
 		PRINTL 性器はまったくの無毛です。
-	ELSEIF CFLAG:陰毛の状態 == 0 - 2
+	ELSEIF CFLAG:陰毛状態 == 0 - 2
 		PRINTL 陰毛は永久脱毛されています。	
 	ENDIF
 ENDIF
 
-;女性器の形状
+;女性器
 IF TALENT:オトコ == 0
 	IF FLAG:陰毛を生やす == 1
-		IF CFLAG:陰毛の状態 > 6
+		IF CFLAG:陰毛状態 > 6
 			PRINTFORM  陰毛に覆われた
 		ELSE
 			PRINTFORM  陰毛の生えていないつるつるの
@@ -591,7 +591,7 @@ ENDIF
 
 ;ピアシング
 S = 0
-IF (CFLAG:ピアスの装着状況 & 8)
+IF (CFLAG:ピアス状況 & 8)
 	IF TALENT:オトコ || TALENT:ふたなり
 		PRINT  ペニス
 	ELSE
@@ -599,7 +599,7 @@ IF (CFLAG:ピアスの装着状況 & 8)
 	ENDIF
 	S = 1
 ENDIF
-IF (CFLAG:ピアスの装着状況 & 4)
+IF (CFLAG:ピアス状況 & 4)
 	IF S
 		PRINT と
 	ELSE
@@ -609,7 +609,7 @@ IF (CFLAG:ピアスの装着状況 & 4)
 	S = 1
 ENDIF
 IF (CFLAG:着衣状態 & 6) == 0
-	IF (CFLAG:ピアスの装着状況 & 1)
+	IF (CFLAG:ピアス状況 & 1)
 		IF S
 			PRINT と
 		ELSE
@@ -619,7 +619,7 @@ IF (CFLAG:着衣状態 & 6) == 0
 		S = 1
 	ENDIF
 ENDIF
-IF (CFLAG:ピアスの装着状況 & 2)
+IF (CFLAG:ピアス状況 & 2)
 	IF S
 		PRINT と
 	ELSE
@@ -628,7 +628,7 @@ IF (CFLAG:ピアスの装着状況 & 2)
 	PRINT おへそ
 	S = 1
 ENDIF
-IF (CFLAG:ピアスの装着状況 & 16)
+IF (CFLAG:ピアス状況 & 16)
 	IF S
 		PRINT と
 	ELSE
@@ -904,7 +904,7 @@ ENDIF
 IF FLAG:難易度 == 1
 	PUTFORM EASY/
 ELSEIF FLAG:難易度 == 2
-	IF FLAG:EASYモードを経由したデータ
+	IF FLAG:EASY経由
 		PUTFORM NORMAL/
 	ELSE
 		PUTFORM 実績チャレンジ/
@@ -917,11 +917,7 @@ ELSEIF FLAG:難易度 == 9
 	PUTFORM EXTRA/
 ENDIF
 
-IF TIME == 0
-	PUTFORM {DAY+1}週目・前半
-ELSE
-	PUTFORM {DAY+1}週目・後半
-ENDIF
+CALL PRINT_DAY_TIME
 
 SIF FLAG:前回調教対象 >= 0
 	TARGET = FLAG:前回調教対象

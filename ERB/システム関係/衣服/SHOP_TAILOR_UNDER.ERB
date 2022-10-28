@@ -48,11 +48,11 @@ INPUT
 X = RESULT
 
 	IF RESULT == X && X != 999 && X <= Y
-		CFLAG:ブラの種類 = X
+		CFLAG:ブラタイプ = X
 		PRINTFORM 《ブラのデザインは
 		CALL PRINT_UNDERWEAR_TOPS
 		PRINTFORMW にしました》
-		IF CFLAG:ブラの種類 != 12 && CFLAG:ブラの種類 != 11 && CFLAG:ブラの種類 != 14 && CFLAG:ブラの種類 != 10
+		IF CFLAG:ブラタイプ != 12 && CFLAG:ブラタイプ != 11 && CFLAG:ブラタイプ != 14 && CFLAG:ブラタイプ != 10
 			CALL CHOICE_TOPS_COLOR
 		ELSE
 			CFLAG:ブラの色 = 99
@@ -97,7 +97,7 @@ PRINTFORML [17] - ターコイズブルー
 PRINTFORML [18] - ロイヤルブルー
 PRINTFORML [19] - ワインレッド
 PRINTFORML [20] - ブラックパープル
-SIF CFLAG:ブラの種類 != 8 && CFLAG:ブラの種類 != 12 && CFLAG:ブラの種類 != 15
+SIF CFLAG:ブラタイプ != 8 && CFLAG:ブラタイプ != 12 && CFLAG:ブラタイプ != 15
 	PRINTFORML [21] - ヒョウ柄
 DRAWLINE
 PRINTFORML [999] - 戻る
@@ -112,7 +112,7 @@ X = RESULT
 		CALL PRINT_UNDERWEAR_COLOR_TOPS
 		PRINTFORMW にしました》
 		CALL CHOICE_UNDER
-	ELSEIF RESULT == 21 && CFLAG:ブラの種類 != 8 && CFLAG:ブラの種類 != 12 && CFLAG:ブラの種類 != 15
+	ELSEIF RESULT == 21 && CFLAG:ブラタイプ != 8 && CFLAG:ブラタイプ != 12 && CFLAG:ブラタイプ != 15
 		CFLAG:ブラの色 = X
 		PRINTFORM 《ブラの色は
 		CALL PRINT_UNDERWEAR_COLOR_TOPS
@@ -166,7 +166,7 @@ INPUT
 X = RESULT
 
 	IF RESULT == X && X != 999 && X <= Y && X != 18 && X != 19 && X != 20
-		CFLAG:パンツの種類 = X
+		CFLAG:パンツタイプ = X
 		PRINTFORM 《
 		IF TALENT:オトコ == 0 
 			PRINTFORM ショーツ
@@ -176,19 +176,19 @@ X = RESULT
 		PRINTFORM のデザインは
 		CALL PRINT_UNDERWEAR_UNDER
 		PRINTFORMW にしました》
-		IF CFLAG:パンツの種類 != 12 && CFLAG:パンツの種類 != 11 && CFLAG:パンツの種類 != 14 && CFLAG:パンツの種類 != 10
+		IF CFLAG:パンツタイプ != 12 && CFLAG:パンツタイプ != 11 && CFLAG:パンツタイプ != 14 && CFLAG:パンツタイプ != 10
 			CALL CHOICE_UNDER_COLOR
 		ELSE
 			CFLAG:パンツの色 = 99
 		ENDIF
 	ELSEIF RESULT >= 18 && X <= Y && X != 999 && TALENT:オトコ == 1
-		CFLAG:パンツの種類 = X
+		CFLAG:パンツタイプ = X
 		PRINTFORM 《
 		PRINTFORM パンツ
 		PRINTFORM のデザインは
 		CALL PRINT_UNDERWEAR_UNDER
 		PRINTFORMW にしました》
-		IF CFLAG:パンツの種類 != 12 && CFLAG:パンツの種類 != 11 && CFLAG:パンツの種類 != 14 && CFLAG:パンツの種類 != 10
+		IF CFLAG:パンツタイプ != 12 && CFLAG:パンツタイプ != 11 && CFLAG:パンツタイプ != 14 && CFLAG:パンツタイプ != 10
 			CALL CHOICE_UNDER_COLOR
 		ENDIF
 	ELSEIF RESULT == 999
@@ -230,7 +230,7 @@ PRINTFORML [17] - ターコイズブルー
 PRINTFORML [18] - ロイヤルブルー
 PRINTFORML [19] - ワインレッド
 PRINTFORML [20] - ブラックパープル
-SIF CFLAG:パンツの種類 != 7 && CFLAG:パンツの種類 != 9 && CFLAG:パンツの種類 != 15
+SIF CFLAG:パンツタイプ != 7 && CFLAG:パンツタイプ != 9 && CFLAG:パンツタイプ != 15
 	PRINTFORML [21] - ヒョウ柄
 DRAWLINE
 PRINTFORML [999] - 戻る
@@ -250,7 +250,7 @@ X = RESULT
 		PRINTFORM の色は
 		CALL PRINT_UNDERWEAR_COLOR_UNDER
 		PRINTFORMW にしました》
-	ELSEIF RESULT == 21 && CFLAG:パンツの種類 != 7 && CFLAG:パンツの種類 != 9 && CFLAG:パンツの種類 != 15
+	ELSEIF RESULT == 21 && CFLAG:パンツタイプ != 7 && CFLAG:パンツタイプ != 9 && CFLAG:パンツタイプ != 15
 		CFLAG:パンツの色 = X
 		PRINTFORM 《
 		IF TALENT:オトコ == 0 

@@ -63,7 +63,7 @@ INPUT
 
 IF RESULT == 0
 	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%に化粧品をプレゼントすることにした……
-	IF CFLAG:西方杏子雇用判定 != 1 || TALENT:永遠の愛 == 1
+	IF CFLAG:前回誕生日プレゼント != 1 || TALENT:永遠の愛 == 1
 		LOCAL = 5
 		LOCAL += RAND:6
 		SIF TALENT:おしゃれ
@@ -110,11 +110,11 @@ IF RESULT == 0
 		ENDIF
 		WAIT
 	ENDIF
-	CFLAG:西方杏子雇用判定 = 1
+	CFLAG:前回誕生日プレゼント = 1
 	MONEY -= 1000
 ELSEIF RESULT == 1
 	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%にエクササイズ器具をプレゼントすることにした……
-	IF CFLAG:西方杏子雇用判定 != 2 || TALENT:永遠の愛 == 1
+	IF CFLAG:前回誕生日プレゼント != 2 || TALENT:永遠の愛 == 1
 		LOCAL = 100
 		LOCAL *= RAND:3
 		SIF LOCAL == 0
@@ -154,11 +154,11 @@ ELSEIF RESULT == 1
 		ENDIF
 		WAIT
 	ENDIF
-	CFLAG:西方杏子雇用判定 = 2
+	CFLAG:前回誕生日プレゼント = 2
 	MONEY -= 5000
 ELSEIF RESULT == 2
 	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%にアロマキャンドルセットをプレゼントすることにした……
-	IF CFLAG:西方杏子雇用判定 != 3 || TALENT:永遠の愛 == 1
+	IF CFLAG:前回誕生日プレゼント != 3 || TALENT:永遠の愛 == 1
 		LOCAL = 100
 		LOCAL *= RAND:3
 		SIF LOCAL == 0
@@ -196,7 +196,7 @@ ELSEIF RESULT == 2
 		ENDIF
 		WAIT
 	ENDIF
-	CFLAG:西方杏子雇用判定 = 3
+	CFLAG:前回誕生日プレゼント = 3
 	MONEY -= 500
 ELSEIF RESULT == 3
 	PRINTFORML %CALLNAME:MASTER%は%CALLNAME:TARGET%に手料理を振舞ってあげることにした……
@@ -261,20 +261,20 @@ ELSEIF RESULT == 1
 	PRINTFORML %CALLNAME:MASTER%に不意打ち気味にキスをしてきた……
 	PRINTFORML 
 	PRINTFORML どうやら%CALLNAME:TARGET%とのデートは成功に終わったようだった
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 1
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 1
 		SETCOLOR 0xDDBBCC
 		PRINTFORML ファーストキス
 		RESETCOLOR
-		CFLAG:ファーストキスの相手 = 1
+		CFLAG:初キス相手 = 1
 		IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
-			CSTR:ファーストキスの相手 = お兄ちゃん
+			CSTR:初キス相手 = お兄ちゃん
 		ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-			CSTR:ファーストキスの相手 = お兄ぃ
-		ELSEIF NO:TARGET == [[キャラ:加瀬芙美香]] && NO:MASTER == [[キャラ:あなた]]
-			CSTR:ファーストキスの相手 = アニキ
+			CSTR:初キス相手 = お兄ぃ
+		ELSEIF NO:TARGET == [[キャラ:宮間カナ]] && NO:MASTER == [[キャラ:あなた]]
+			CSTR:初キス相手 = アニキ
 		ELSE
-			CSTR:ファーストキスの相手 = %NAME:MASTER%
+			CSTR:初キス相手 = %NAME:MASTER%
 		ENDIF
 	ENDIF
 ELSE
@@ -301,7 +301,7 @@ PRINTW
 PRINTFORML ピンク色の間接照明に照らされた部屋の中心のベッドの上で、%CALLNAME:MASTER%と%CALLNAME:TARGET%はどちらからともなくお互いの唇を
 PRINTFORML 重ね、お互い服の上から激しく鼓動する胸に手を這わせて寄り添うようにしている
 PRINTFORM そしてそれは次第に、
-SIF (CFLAG:ピアスの装着状況 & 16)
+SIF (CFLAG:ピアス状況 & 16)
 	PRINTFORM ピアスが輝く
 PRINTFORML %CALLNAME:TARGET%の舌と%CALLNAME:MASTER%の舌を絡めて唾液を交換するような濃厚なものへと変わっていった
 PRINTFORML %CALLNAME:MASTER%が%CALLNAME:TARGET%と視線を合わせると、朱色に染まった頬の%CALLNAME:TARGET%は潤んだ瞳でゆっくりと頷く

@@ -28,7 +28,7 @@ ELSEIF RESULT == 1 && TIME == 1
 	PRINTFORMW 特殊チケットを販売します。ストリップショー後にお楽しみがあります
 	FLAG:特殊営業で夜の部を開催フラグ = 1
 	;コンドーム使用フラグ外す
-	CFLAG:労役でコンドーム使用 = 0
+	CFLAG:営業コンドーム = 0
 ELSEIF RESULT == 100
 	RETURN 100
 ELSE
@@ -639,7 +639,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	E = 0
 	PRINTW 本番行為が始まった……
 	;TARGETとASSI双方がふたなりでＶ使用可
-	IF TALENT:TARGET:ふたなり && CFLAG:TARGET:営業でＶ使用不能フラグ == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+	IF TALENT:TARGET:ふたなり && CFLAG:TARGET:売春Ｖ不能 == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%と%CALLNAME:ASSI%は
 		PRINTFORMW お互いのペニスでお互いのヴァギナを交互に貫きあった
 		SIF TALENT:処女
@@ -651,13 +651,13 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		SIF TALENT:ASSI:童貞
 			E |= 8
 		;助手→奴隷の妊娠フラグを加算
-		SIF CFLAG:労役でコンドーム使用 == 0
-			CFLAG:助手から奴隷への膣内射精カウント += G / 10 + 1
+		SIF CFLAG:営業コンドーム == 0
+			CFLAG:助奴膣内精子量 += G / 10 + 1
 		;奴隷→助手の妊娠フラグを加算
-		SIF CFLAG:労役でコンドーム使用 == 0
-			CFLAG:奴隷から助手への膣内射精ウント += G / 10 + 1
+		SIF CFLAG:営業コンドーム == 0
+			CFLAG:奴助膣内精子量 += G / 10 + 1
 	;TARGETがオトコorふたなりでASSIがＶ使用可
-	ELSEIF (TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり) && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+	ELSEIF (TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり) && CFLAG:ASSI:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%は勃起した自分のペニスを
 		PRINTFORMW %CALLNAME:ASSI%の陰唇に出し入れする様子を観客に見せつけた
 		SIF TALENT:童貞
@@ -665,10 +665,10 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		SIF TALENT:ASSI:処女
 			E |= 4
 		;奴隷→助手の妊娠フラグを加算
-		SIF CFLAG:労役でコンドーム使用 == 0
-			CFLAG:奴隷から助手への膣内射精ウント += G / 10 + 1
+		SIF CFLAG:営業コンドーム == 0
+			CFLAG:奴助膣内精子量 += G / 10 + 1
 	;ASSIがオトコorふたなりでTARGETがＶ使用可
-	ELSEIF  (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:営業でＶ使用不能フラグ == 0
+	ELSEIF  (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%は自分のヴァギナが
 		PRINTFORMW %CALLNAME:ASSI%の陰茎で貫かれる様子を観客に見せつけた
 		SIF TALENT:処女
@@ -676,8 +676,8 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		SIF TALENT:ASSI:童貞
 			E |= 8
 		;助手→奴隷の妊娠フラグを加算
-		SIF CFLAG:労役でコンドーム使用 == 0
-			CFLAG:助手から奴隷への膣内射精カウント += G / 10 + 1
+		SIF CFLAG:営業コンドーム == 0
+			CFLAG:助奴膣内精子量 += G / 10 + 1
 	ENDIF
 
 	;近親相姦ショー
@@ -691,11 +691,11 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ
 			PRINT 自分の弟
 		ENDIF
-		IF TALENT:ふたなり && CFLAG:営業でＶ使用不能フラグ == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+		IF TALENT:ふたなり && CFLAG:売春Ｖ不能 == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:売春Ｖ不能 == 0
 			PRINT と互いに犯しあう
-		ELSEIF (TALENT:オトコ || TALENT:ふたなり) && CFLAG:ASSI:営業でＶ使用不能フラグ == 0
+		ELSEIF (TALENT:オトコ || TALENT:ふたなり) && CFLAG:ASSI:売春Ｖ不能 == 0
 			PRINT を犯し続ける
-		ELSEIF (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:営業でＶ使用不能フラグ == 0
+		ELSEIF (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:売春Ｖ不能 == 0
 			PRINT に犯され続ける
 		ENDIF
 		IF TFLAG:近親相姦 == 2 && TALENT:オトコ
@@ -715,15 +715,15 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	F = 0
 	IF E & 1
 		TALENT:処女 = 0
-		CFLAG:Ｖ売春で処女喪失フラグ = 1
+		CFLAG:売春処女喪失 = 1
 		PRINTFORML %NAME:TARGET%【処女喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
 		SIF TALENT:ASSI:オトコ == 0
 			F += 1
-		SIF CFLAG:ファーストキスの相手 == 0
-			CFLAG:ファーストキスの相手 = 1
+		SIF CFLAG:初キス相手 == 0
+			CFLAG:初キス相手 = 1
 		ENDIF
 	IF E & 2
 		TALENT:童貞 = 0
@@ -731,21 +731,21 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
-		SIF CFLAG:ファーストキスの相手 == 0
-			CFLAG:ファーストキスの相手 = 1
+		SIF CFLAG:初キス相手 == 0
+			CFLAG:初キス相手 = 1
 	ENDIF
 	IF E & 1 || E & 2
-		IF CFLAG:TARGET:初体験の相手 == 0
-			CFLAG:TARGET:初体験の相手 = NO:ASSI + 1
+		IF CFLAG:TARGET:処女喪失相手 == 0
+			CFLAG:TARGET:処女喪失相手 = NO:ASSI + 1
 			;初体験が近親相姦
-			;初体験の相手が自分の息子・娘という状況は生物学的にありえないので省く
+			;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
 			IF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ
-				CFLAG:初体験の相手 = 306
+				CFLAG:処女喪失相手 = 306
 			ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ == 0
-				CFLAG:初体験の相手 = 307
+				CFLAG:処女喪失相手 = 307
 			ENDIF
-			SIF CFLAG:ファーストキスの相手 == 0
-				CFLAG:ファーストキスの相手 = 1
+			SIF CFLAG:初キス相手 == 0
+				CFLAG:初キス相手 = 1
 		ENDIF
 	ENDIF
 	IF F
@@ -759,15 +759,15 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	F = 0
 	IF E & 4
 		TALENT:ASSI:処女 = 0
-		CFLAG:ASSI:Ｖ売春で処女喪失フラグ = 1
+		CFLAG:ASSI:売春処女喪失 = 1
 		PRINTFORML %NAME:ASSI%【処女喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
 		SIF TALENT:オトコ == 0
 			F += 1
-		SIF CFLAG:ASSI:ファーストキスの相手 == 0
-			CFLAG:ASSI:ファーストキスの相手 = 1
+		SIF CFLAG:ASSI:初キス相手 == 0
+			CFLAG:ASSI:初キス相手 = 1
 	ENDIF
 	IF E & 8
 		TALENT:ASSI:童貞 = 0
@@ -775,26 +775,26 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
-		SIF CFLAG:ASSI:ファーストキスの相手 == 0
-			CFLAG:ASSI:ファーストキスの相手 = 1
+		SIF CFLAG:ASSI:初キス相手 == 0
+			CFLAG:ASSI:初キス相手 = 1
 	ENDIF
 	IF E & 4 || E & 8
-		IF CFLAG:ASSI:初体験の相手 == 0
-			CFLAG:ASSI:初体験の相手 = NO:TARGET + 1
+		IF CFLAG:ASSI:処女喪失相手 == 0
+			CFLAG:ASSI:処女喪失相手 = NO:TARGET + 1
 			;初体験が近親相姦
-			;初体験の相手が自分の息子・娘という状況は生物学的にありえないので省く
+			;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
 			IF TFLAG:近親相姦 == 2 && TALENT:オトコ
-				CFLAG:ASSI:初体験の相手 = 300
+				CFLAG:ASSI:処女喪失相手 = 300
 			ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0
-				CFLAG:ASSI:初体験の相手 = 301
+				CFLAG:ASSI:処女喪失相手 = 301
 			ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ
-				CFLAG:ASSI:初体験の相手 = 304
+				CFLAG:ASSI:処女喪失相手 = 304
 			ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0
-				CFLAG:ASSI:初体験の相手 = 305
+				CFLAG:ASSI:処女喪失相手 = 305
 			ENDIF
 		ENDIF
-		SIF CFLAG:ASSI:ファーストキスの相手 == 0
-			CFLAG:ASSI:ファーストキスの相手 = 1
+		SIF CFLAG:ASSI:初キス相手 == 0
+			CFLAG:ASSI:初キス相手 = 1
 	ENDIF
 	IF F
 		SIF F > 3
@@ -965,7 +965,7 @@ REPEAT CHARANUM
 	ENDIF
 	;公開セックス成功
 	IF FLAG:特殊営業タイプ詳細 & 2
-		IF TALENT:オトコ == 0 && CFLAG:営業でＶ使用不能フラグ == 0
+		IF TALENT:オトコ == 0 && CFLAG:売春Ｖ不能 == 0
 			TCVAR:Ｖ経験 = (G / (10 - Z)) + (G / 10)
 			U:1 = G * (ABL:性交中毒 + TALENT:セックス狂 * 5) * 10
 			TCVAR:性交経験 = (G / (10 - Z)) + (G / 10)
@@ -1060,7 +1060,7 @@ REPEAT CHARANUM
 		A += 1
 	ELSE
 		;昼の部でも処女喪失だとかなり増える
-		SIF CFLAG:Ｖ売春で処女喪失フラグ
+		SIF CFLAG:売春処女喪失
 			U:100 *= 3
 		;昼の部の参加人数による否定の珠補正
 		IF FLAG:特殊営業参加人数 == 2
@@ -1142,7 +1142,7 @@ REPEAT CHARANUM
 	ENDIF
 	
 	;処女喪失だとかなり増える
-	SIF CFLAG:Ｖ売春で処女喪失フラグ
+	SIF CFLAG:売春処女喪失
 		TIMES LOSEBASE:体力 , 2.00
 
 	;運動能力に応じて疲労軽減
@@ -1631,7 +1631,7 @@ IF FLAG:特殊営業で夜の部を開催フラグ == 1
 	REPEAT CHARANUM
 		SIF CFLAG:COUNT:130 == 0
 			CONTINUE
-		SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+		SIF CFLAG:COUNT:売春Ｖ不能
 			TIMES V , 0.70
 	REND
 	PRINT 特殊チケット
@@ -1657,7 +1657,7 @@ IF FLAG:特殊営業で夜の部を開催フラグ == 0
 	REPEAT CHARANUM
 		SIF CFLAG:COUNT:130 == 0
 			CONTINUE
-		CFLAG:COUNT:娼館などの客から奴隷への中田氏カウント = 0
+		CFLAG:COUNT:客奴膣内精子量 = 0
 	REND
 ENDIF
 

@@ -10,12 +10,12 @@ REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
 	;コンドーム使用フラグ外す
-	CFLAG:COUNT:労役でコンドーム使用 = 0
+	CFLAG:COUNT:営業コンドーム = 0
 	;売春時の状況フラグ初期化
-	CFLAG:COUNT:Ｖ売春で処女喪失フラグ = 0
-	CFLAG:COUNT:Ｖ売春で否定の珠増加フラグ = 0
-	CFLAG:COUNT:Ａ売春で否定の珠増加フラグ = 0
-	CFLAG:COUNT:公衆便所プレイで公開浣腸ショー = 0
+	CFLAG:COUNT:売春処女喪失 = 0
+	CFLAG:COUNT:Ｖ売春否定 = 0
+	CFLAG:COUNT:Ａ売春否定 = 0
+	CFLAG:COUNT:便所公開浣腸 = 0
 REND
 
 ;特殊営業のフラグを初期化
@@ -216,7 +216,7 @@ WAIT
 ;主人公が童貞なら童貞喪失
 IF TALENT:MASTER:童貞
 	TALENT:MASTER:童貞 = 0
-	;初体験の相手（乱交）はここで記録
+	;処女喪失相手（乱交）はここで記録
 		CSTR:MASTER:童貞喪失の相手 = 女性客
 ENDIF
 
@@ -236,36 +236,36 @@ REPEAT CHARANUM
 	TFLAG:口上番号 = 0
 
 	;処女喪失
-	IF CFLAG:COUNT:営業でＶ使用不能フラグ == 0 && TALENT:COUNT:処女
-		IF CFLAG:COUNT:初体験の相手 == 0
-			CFLAG:COUNT:初体験の相手 = 1
-			;初体験の相手（乱交）はここで記録
+	IF CFLAG:COUNT:売春Ｖ不能 == 0 && TALENT:COUNT:処女
+		IF CFLAG:COUNT:処女喪失相手 == 0
+			CFLAG:COUNT:処女喪失相手 = 1
+			;処女喪失相手（乱交）はここで記録
 				TALENT:COUNT:処女 = 0
 				CFLAG:COUNT:131 += RAND:6
 					IF CFLAG:131 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
 						CSTR:COUNT:処女喪失の相手 = %CALLNAME:MASTER%
-						CFLAG:COUNT:初体験の相手 = 1
+						CFLAG:COUNT:処女喪失相手 = 1
 					ELSEIF CFLAG:131 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
 						CSTR:COUNT:処女喪失の相手 = お兄ちゃん
-						CFLAG:COUNT:初体験の相手 = 1
+						CFLAG:COUNT:処女喪失相手 = 1
 					ELSEIF CFLAG:131 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
 						CSTR:COUNT:処女喪失の相手 = アニキ
-						CFLAG:COUNT:初体験の相手 = 1
+						CFLAG:COUNT:処女喪失相手 = 1
 					ELSEIF CFLAG:131 == 1
 						CSTR:COUNT:処女喪失の相手 = 知らないオトコの人
-						CFLAG:COUNT:初体験の相手 = 2
+						CFLAG:COUNT:処女喪失相手 = 2
 					ELSEIF CFLAG:131 == 2
 						CSTR:COUNT:処女喪失の相手 = 知らないオンナの人
-						CFLAG:COUNT:初体験の相手 = 3
+						CFLAG:COUNT:処女喪失相手 = 3
 					ELSEIF CFLAG:131 == 3
 						CSTR:COUNT:処女喪失の相手 = バイブ
-						CFLAG:COUNT:初体験の相手 = 4
+						CFLAG:COUNT:処女喪失相手 = 4
 					ELSEIF CFLAG:131 == 4
 						CSTR:COUNT:処女喪失の相手 = 極太バイブ
-						CFLAG:COUNT:初体験の相手 = 5
+						CFLAG:COUNT:処女喪失相手 = 5
 					ELSE
 						CSTR:COUNT:処女喪失の相手 = 誰かわからない
-						CFLAG:COUNT:初体験の相手 = 6
+						CFLAG:COUNT:処女喪失相手 = 6
 					ENDIF
 		ENDIF
 
@@ -274,17 +274,17 @@ REPEAT CHARANUM
 		TALENT:COUNT:アナル処女 = 0
 		CFLAG:COUNT:132 += RAND:3 
 			IF CFLAG:COUNT:132 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-				CSTR:COUNT:アナル処女喪失の相手 = %CALLNAME:MASTER%
+				CSTR:COUNT:アナル処女喪失相手 = %CALLNAME:MASTER%
 			ELSEIF CFLAG:COUNT:132 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-				CSTR:COUNT:アナル処女喪失の相手 = お兄ちゃん
+				CSTR:COUNT:アナル処女喪失相手 = お兄ちゃん
 			ELSEIF CFLAG:COUNT:132 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
-				CSTR:COUNT:アナル処女喪失の相手 = アニキ
+				CSTR:COUNT:アナル処女喪失相手 = アニキ
 			ELSEIF CFLAG:COUNT:132 == 1
-				CSTR:COUNT:アナル処女喪失の相手 = 知らないオトコの人
+				CSTR:COUNT:アナル処女喪失相手 = 知らないオトコの人
 			ELSEIF CFLAG:COUNT:132 == 2
-				CSTR:COUNT:アナル処女喪失の相手 = 知らないオンナの人
+				CSTR:COUNT:アナル処女喪失相手 = 知らないオンナの人
 			ELSE
-				CSTR:COUNT:アナル処女喪失の相手 = 誰かわからない
+				CSTR:COUNT:アナル処女喪失相手 = 誰かわからない
 			ENDIF
 	ENDIF
 	IF TALENT:COUNT:童貞 == 1
@@ -294,75 +294,75 @@ REPEAT CHARANUM
 				CSTR:COUNT:童貞喪失の相手 = 知らないオンナの人
 			ELSEIF CFLAG:COUNT:133 == 1 && TALENT:MASTER:オトコ == 0
 				CSTR:COUNT:童貞喪失の相手 = %CALLNAME:MASTER%
-					IF TALENT:MASTER:処女 == 1 && CFLAG:MASTER:初体験の相手 == 0
-						CFLAG:MASTER:初体験の相手 = 1
+					IF TALENT:MASTER:処女 == 1 && CFLAG:MASTER:処女喪失相手 == 0
+						CFLAG:MASTER:処女喪失相手 = 1
 						CSTR:MASTER:処女喪失の相手 = %CALLNAME:TARGET%
 					ENDIF
 			ELSE
 				CSTR:COUNT:童貞喪失の相手 = 誰かわからない
 			ENDIF
 	ENDIF
-	IF CFLAG:COUNT:ファーストキスの相手 == -1
-		CFLAG:COUNT:ファーストキスの相手 = 0
-			CFLAG:COUNT:ファーストキスの相手 += RAND:8 
-				IF CFLAG:COUNT:ファーストキスの相手 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = お兄ちゃん
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
-					CSTR:COUNT:ファーストキスの相手 = アニキ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 1
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 2
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 3 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%のおちん○ん
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 3 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%のオチ○ポ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 3 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%のチンポ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 3 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = お兄ちゃんのおちん○ん
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 3 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = お兄ちゃんのオチ○ポ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 3 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT == [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = アニキのチンポ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 4 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人のおちん○ん
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 4 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人のオチ○ポ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 4 && TALENT:COUNT:ギャル系 == 1
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人のチンポ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 5 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人のアソコ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 5 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人のオマ○コ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 5 && TALENT:COUNT:ギャル系 == 1
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人のマンコ
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 6 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%のお尻の穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 6 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%のアナル
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 6 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT != [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = %CALLNAME:MASTER%のケツ穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 6 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = お兄ちゃんのお尻の穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 6 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = お兄ちゃんのアナル
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 6 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT == [[キャラ:宮間かなで]]
-					CSTR:COUNT:ファーストキスの相手 = アニキのケツ穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 7 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人のお尻の穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 7 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人のアナル
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 7 && TALENT:COUNT:ギャル系 == 1
-					CSTR:COUNT:ファーストキスの相手 = 知らないオトコの人のケツ穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 8 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人のお尻の穴
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 8 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人のアナル
-				ELSEIF CFLAG:COUNT:ファーストキスの相手 == 8 && TALENT:COUNT:ギャル系 == 1
-					CSTR:COUNT:ファーストキスの相手 = 知らないオンナの人のケツ穴
+	IF CFLAG:COUNT:初キス相手 == -1
+		CFLAG:COUNT:初キス相手 = 0
+			CFLAG:COUNT:初キス相手 += RAND:8 
+				IF CFLAG:COUNT:初キス相手 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%
+				ELSEIF CFLAG:COUNT:初キス相手 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = お兄ちゃん
+				ELSEIF CFLAG:COUNT:初キス相手 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
+					CSTR:COUNT:初キス相手 = アニキ
+				ELSEIF CFLAG:COUNT:初キス相手 == 1
+					CSTR:COUNT:初キス相手 = 知らないオトコの人
+				ELSEIF CFLAG:COUNT:初キス相手 == 2
+					CSTR:COUNT:初キス相手 = 知らないオンナの人
+				ELSEIF CFLAG:COUNT:初キス相手 == 3 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%のおちん○ん
+				ELSEIF CFLAG:COUNT:初キス相手 == 3 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%のオチ○ポ
+				ELSEIF CFLAG:COUNT:初キス相手 == 3 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%のチンポ
+				ELSEIF CFLAG:COUNT:初キス相手 == 3 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = お兄ちゃんのおちん○ん
+				ELSEIF CFLAG:COUNT:初キス相手 == 3 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = お兄ちゃんのオチ○ポ
+				ELSEIF CFLAG:COUNT:初キス相手 == 3 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT == [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = アニキのチンポ
+				ELSEIF CFLAG:COUNT:初キス相手 == 4 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオトコの人のおちん○ん
+				ELSEIF CFLAG:COUNT:初キス相手 == 4 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオトコの人のオチ○ポ
+				ELSEIF CFLAG:COUNT:初キス相手 == 4 && TALENT:COUNT:ギャル系 == 1
+					CSTR:COUNT:初キス相手 = 知らないオトコの人のチンポ
+				ELSEIF CFLAG:COUNT:初キス相手 == 5 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオンナの人のアソコ
+				ELSEIF CFLAG:COUNT:初キス相手 == 5 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオンナの人のオマ○コ
+				ELSEIF CFLAG:COUNT:初キス相手 == 5 && TALENT:COUNT:ギャル系 == 1
+					CSTR:COUNT:初キス相手 = 知らないオンナの人のマンコ
+				ELSEIF CFLAG:COUNT:初キス相手 == 6 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%のお尻の穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 6 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%のアナル
+				ELSEIF CFLAG:COUNT:初キス相手 == 6 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT != [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%のケツ穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 6 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = お兄ちゃんのお尻の穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 6 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0 && NO:COUNT == [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = お兄ちゃんのアナル
+				ELSEIF CFLAG:COUNT:初キス相手 == 6 && TALENT:COUNT:ギャル系 == 1 && NO:COUNT == [[キャラ:宮間かなで]]
+					CSTR:COUNT:初キス相手 = アニキのケツ穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 7 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオトコの人のお尻の穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 7 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオトコの人のアナル
+				ELSEIF CFLAG:COUNT:初キス相手 == 7 && TALENT:COUNT:ギャル系 == 1
+					CSTR:COUNT:初キス相手 = 知らないオトコの人のケツ穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 8 && TALENT:COUNT:淫乱 == 0 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオンナの人のお尻の穴
+				ELSEIF CFLAG:COUNT:初キス相手 == 8 && TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:ギャル系 == 0
+					CSTR:COUNT:初キス相手 = 知らないオンナの人のアナル
+				ELSEIF CFLAG:COUNT:初キス相手 == 8 && TALENT:COUNT:ギャル系 == 1
+					CSTR:COUNT:初キス相手 = 知らないオンナの人のケツ穴
 				ENDIF
 	ENDIF
 REND
@@ -435,7 +435,7 @@ REPEAT CHARANUM
 
 	;各素質に応じて加減
 	;処女だった
-	SIF CFLAG:COUNT:Ｖ売春で処女喪失フラグ
+	SIF CFLAG:COUNT:売春処女喪失
 		B += 10
 	;反抗的
 	SIF TALENT:COUNT:ナマイキ && ABL:COUNT:欲望 <= 3
@@ -514,7 +514,7 @@ REPEAT CHARANUM
 		B += 3
 	
 	;Ｖ使用不可キャラ
-	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+	SIF CFLAG:COUNT:売春Ｖ不能
 		B -= 10
 
 	;狂気・崩壊があると満足度激減
@@ -553,7 +553,7 @@ REPEAT CHARANUM
 	;Ｖ使用回数は人数＋０～５
 	TCVAR:Ｖ経験 = (G / FLAG:特殊営業参加人数) + RAND:6
 	;Ｖ使用不可フラグチェック
-	SIF CFLAG:営業でＶ使用不能フラグ
+	SIF CFLAG:売春Ｖ不能
 		TCVAR:Ｖ経験 = 0
 		
 	;Ａ使用回数は人数＋０～５
@@ -682,7 +682,7 @@ REPEAT CHARANUM
 	LOSEBASE:体力 = G * 25
 
 	;処女喪失だとかなり増える
-	SIF CFLAG:Ｖ売春で処女喪失フラグ
+	SIF CFLAG:売春処女喪失
 		TIMES LOSEBASE:体力 , 2.00
 
 	;売春中毒のレベルに応じてちょっとずつ減る
@@ -699,7 +699,7 @@ REPEAT CHARANUM
 	ENDIF
 	
 	;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
-	SIF EXP:Ｖ経験 <= 200 && CFLAG:営業でＶ使用不能フラグ == 0
+	SIF EXP:Ｖ経験 <= 200 && CFLAG:売春Ｖ不能 == 0
 		TIMES LOSEBASE:体力 , 1.10
 	SIF EXP:Ａ経験 <= 200
 		TIMES LOSEBASE:体力 , 1.20
@@ -799,7 +799,7 @@ REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
 	;処女喪失ならば増える
-	IF CFLAG:COUNT:Ｖ売春で処女喪失フラグ
+	IF CFLAG:COUNT:売春処女喪失
 		V = 200
 		PRINTFORM 処女喪失(%CALLNAME:COUNT%)
 		PRINTFORML  ×{V/100}.{V%100}
@@ -808,7 +808,7 @@ REPEAT CHARANUM
 		V = 0
 	ENDIF
 	;Ｖ使用不可キャラがいると減る
-	IF CFLAG:COUNT:営業でＶ使用不能フラグ
+	IF CFLAG:COUNT:売春Ｖ不能
 		V = 70
 		IF TALENT:COUNT:オトコ
 			PRINT オトコ
@@ -862,7 +862,7 @@ REPEAT CHARANUM
 		CONTINUE
 	PRINTFORML  [{COUNT}] - %NAME:COUNT%
 	;ついでに達成回数をクリア
-	CFLAG:COUNT:公衆便所プレイで公開浣腸ショー = 0
+	CFLAG:COUNT:便所公開浣腸 = 0
 REND
 DRAWLINE
 INPUT
@@ -920,10 +920,10 @@ SIF E < RAND:100
 	GOTO LOOP_ONANY
 
 ;絶頂回数を加算
-CFLAG:公衆便所プレイで公開浣腸ショー += 1
+CFLAG:便所公開浣腸 += 1
 IF ABL:Ａ感覚 > ABL:Ｖ感覚 && ABL:Ａ感覚 > ABL:Ｃ感覚
 	PRINT 自分のアナルをほじり続けていた
-ELSEIF ABL:Ｖ感覚 > ABL:Ｃ感覚 && TALENT:オトコ == 0 && CFLAG:営業でＶ使用不能フラグ == 0
+ELSEIF ABL:Ｖ感覚 > ABL:Ｃ感覚 && TALENT:オトコ == 0 && CFLAG:売春Ｖ不能 == 0
 	PRINT ヴァギナに指を出し入れし続けていた
 ELSEIF TALENT:オトコ || TALENT:ふたなり
 	PRINT ペニスをしごき続けていた
@@ -931,34 +931,34 @@ ELSE
 	PRINT クリトリスをいじり続けていた
 ENDIF
 PRINTFORM %CALLNAME:TARGET%が
-IF CFLAG:公衆便所プレイで公開浣腸ショー == 1
+IF CFLAG:便所公開浣腸 == 1
 	PRINT ぶるっと体を震わせ
-ELSEIF CFLAG:公衆便所プレイで公開浣腸ショー == 2
+ELSEIF CFLAG:便所公開浣腸 == 2
 	PRINT 切なそうな声を上げ
-ELSEIF CFLAG:公衆便所プレイで公開浣腸ショー == 3
+ELSEIF CFLAG:便所公開浣腸 == 3
 	PRINT 大きく背中をのけぞらせ
 ENDIF
 
 IF TALENT:オトコ || TALENT:ふたなり
 	PRINTL て、ザーメンを勢いよく迸らせた……
-ELSEIF CFLAG:公衆便所プレイで公開浣腸ショー == 3
+ELSEIF CFLAG:便所公開浣腸 == 3
 	PRINTL て、
 	PRINTL 股間から愛液の筋を飛ばした……
 ELSE
 	PRINTL た……
 ENDIF
-IF CFLAG:公衆便所プレイで公開浣腸ショー == 1
+IF CFLAG:便所公開浣腸 == 1
 	PRINT そして頬を赤くしながら片手を上げて、
-ELSEIF CFLAG:公衆便所プレイで公開浣腸ショー == 2
+ELSEIF CFLAG:便所公開浣腸 == 2
 	PRINT そしてオナニーを続けながら、上ずった声で
-ELSEIF CFLAG:公衆便所プレイで公開浣腸ショー == 3
+ELSEIF CFLAG:便所公開浣腸 == 3
 	PRINT 最後に息を弾ませながら、
 ENDIF
-PRINTFORMW {CFLAG:公衆便所プレイで公開浣腸ショー}回目の絶頂を迎えた事を申告した
+PRINTFORMW {CFLAG:便所公開浣腸}回目の絶頂を迎えた事を申告した
 PRINTFORML 
 
 ;絶頂回数が３未満ならコンテスト継続
-SIF CFLAG:公衆便所プレイで公開浣腸ショー < 3
+SIF CFLAG:便所公開浣腸 < 3
 	GOTO LOOP_ONANY
 
 PRINTFORML %CALLNAME:TARGET%は、これで計三回の絶頂を迎えた
@@ -999,7 +999,7 @@ REPEAT CHARANUM
 		CONTINUE
 	PRINTFORML  [{COUNT}] - %NAME:COUNT%
 	;ついでに達成回数をクリア
-	CFLAG:COUNT:公衆便所プレイで公開浣腸ショー = 0
+	CFLAG:COUNT:便所公開浣腸 = 0
 REND
 DRAWLINE
 INPUT
@@ -1065,8 +1065,8 @@ SIF E < RAND:100
 	GOTO LOOP_FELLATIO
 
 ;射精ゲージを加算
-CFLAG:公衆便所プレイで公開浣腸ショー += 1
-IF CFLAG:公衆便所プレイで公開浣腸ショー == 1
+CFLAG:便所公開浣腸 += 1
+IF CFLAG:便所公開浣腸 == 1
 	IF TARGET == Y
 		PRINTFORML %CALLNAME:TARGET%の舌使いに、%CALLNAME:MASTER%は思わず声を洩らした……
 	ELSE
@@ -1074,7 +1074,7 @@ IF CFLAG:公衆便所プレイで公開浣腸ショー == 1
 	ENDIF
 	WAIT
 	GOTO LOOP_FELLATIO
-ELSEIF  CFLAG:公衆便所プレイで公開浣腸ショー == 2
+ELSEIF  CFLAG:便所公開浣腸 == 2
 	IF TARGET == Y
 		PRINTFORML %CALLNAME:TARGET%に舐めまわされている%CALLNAME:MASTER%の陰茎の根元が強く疼いている
 	ELSE
@@ -1137,7 +1137,7 @@ REPEAT CHARANUM
 	TARGET = COUNT
 	PRINTFORML  [{COUNT}] - %NAME:COUNT%
 	;ついでに周回数と消耗体力をクリア
-	CFLAG:COUNT:公衆便所プレイで公開浣腸ショー = 0
+	CFLAG:COUNT:便所公開浣腸 = 0
 	CFLAG:COUNT:55 = 0
 REND
 DRAWLINE
@@ -1245,7 +1245,7 @@ REPEAT CHARANUM
 	;失敗時でも体力は2消耗
 	CFLAG:55 += 2
 	IF BASE:体力 - CFLAG:55 < 100
-		CFLAG:公衆便所プレイで公開浣腸ショー = -1
+		CFLAG:便所公開浣腸 = -1
 		Z += 1
 		IF TARGET == Y && FLAG:特殊営業タイプ詳細
 			PRINTFORML 息を激しく喘がせながらよろよろと進んでいた%CALLNAME:TARGET%は、
@@ -1284,9 +1284,9 @@ REPEAT CHARANUM
 		CFLAG:55 += 10
 
 	;走行距離を加算
-	CFLAG:公衆便所プレイで公開浣腸ショー += 1
+	CFLAG:便所公開浣腸 += 1
 
-	IF (CFLAG:公衆便所プレイで公開浣腸ショー == 10 || CFLAG:公衆便所プレイで公開浣腸ショー == 30 || CFLAG:公衆便所プレイで公開浣腸ショー == 50 || CFLAG:公衆便所プレイで公開浣腸ショー == 70 || CFLAG:公衆便所プレイで公開浣腸ショー == 90) && FLAG:特殊営業タイプ詳細
+	IF (CFLAG:便所公開浣腸 == 10 || CFLAG:便所公開浣腸 == 30 || CFLAG:便所公開浣腸 == 50 || CFLAG:便所公開浣腸 == 70 || CFLAG:便所公開浣腸 == 90) && FLAG:特殊営業タイプ詳細
 		IF TARGET == Y
 			PRINTFORM %CALLNAME:MASTER%を背中に乗せた%CALLNAME:TARGET%が、
 		ELSE
@@ -1295,13 +1295,13 @@ REPEAT CHARANUM
 		CALL HUMAN_RACING_ORDER
 		PRINTL で向こうの壁に手を突いた
 		PRINT （残り
-		IF CFLAG:公衆便所プレイで公開浣腸ショー == 90
+		IF CFLAG:便所公開浣腸 == 90
 		PRINTL 半往復）
 		ELSE
-		PRINTFORML {4 - (CFLAG:公衆便所プレイで公開浣腸ショー / 20)}往復半）
+		PRINTFORML {4 - (CFLAG:便所公開浣腸 / 20)}往復半）
 		ENDIF
 		WAIT
-	ELSEIF (CFLAG:公衆便所プレイで公開浣腸ショー == 20 || CFLAG:公衆便所プレイで公開浣腸ショー == 40 || CFLAG:公衆便所プレイで公開浣腸ショー == 60 || CFLAG:公衆便所プレイで公開浣腸ショー == 80) && FLAG:特殊営業タイプ詳細
+	ELSEIF (CFLAG:便所公開浣腸 == 20 || CFLAG:便所公開浣腸 == 40 || CFLAG:便所公開浣腸 == 60 || CFLAG:便所公開浣腸 == 80) && FLAG:特殊営業タイプ詳細
 		IF TARGET == Y
 			PRINTFORM %CALLNAME:MASTER%を乗せた%CALLNAME:TARGET%が、
 		ELSE
@@ -1309,7 +1309,7 @@ REPEAT CHARANUM
 		ENDIF
 		CALL HUMAN_RACING_ORDER
 		PRINTL でスタートラインに戻って来た
-		PRINTFORML （残り{5 - (CFLAG:公衆便所プレイで公開浣腸ショー / 20)}往復）
+		PRINTFORML （残り{5 - (CFLAG:便所公開浣腸 / 20)}往復）
 		IF BASE:体力 - CFLAG:55 < 1200 && BASE:体力 - CFLAG:55 >= 700
 			PRINTFORML %CALLNAME:TARGET%はそろそろ息が上がりかけて、手足もふらついている
 		ELSEIF BASE:体力 - CFLAG:55 < 700 && BASE:体力 - CFLAG:55 >= 300
@@ -1318,7 +1318,7 @@ REPEAT CHARANUM
 			PRINTFORML 全身汗だくの%CALLNAME:TARGET%はほとんど床に体を擦り付けて、気力だけで這いずっている
 		ENDIF
 		WAIT
-	ELSEIF CFLAG:公衆便所プレイで公開浣腸ショー >= 100
+	ELSEIF CFLAG:便所公開浣腸 >= 100
 		IF TARGET == Y
 			PRINTFORM %CALLNAME:MASTER%を乗せた%CALLNAME:TARGET%が、
 		ELSE
@@ -1330,7 +1330,7 @@ REPEAT CHARANUM
 	ENDIF
 
 	IF BASE:体力 - CFLAG:55 < 100
-		CFLAG:公衆便所プレイで公開浣腸ショー = -1
+		CFLAG:便所公開浣腸 = -1
 		Z += 1
 		IF TARGET == Y && FLAG:特殊営業タイプ詳細
 			PRINTFORML 息を激しく喘がせながらよろよろと進んでいた%CALLNAME:TARGET%は、
@@ -1356,7 +1356,7 @@ REPEAT CHARANUM
 	TARGET = COUNT
 	SIF CFLAG:130 == 0
 		CONTINUE
-	SIF CFLAG:公衆便所プレイで公開浣腸ショー >= 100
+	SIF CFLAG:便所公開浣腸 >= 100
 		E = TARGET
 REND
 
@@ -1396,7 +1396,7 @@ REPEAT CHARANUM
 		CONTINUE
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー >= CFLAG:公衆便所プレイで公開浣腸ショー
+	SIF CFLAG:COUNT:便所公開浣腸 >= CFLAG:便所公開浣腸
 		E += 1
 REND
 IF E == 1
@@ -1435,7 +1435,7 @@ SIF F:2 <= FLAG:特殊営業参加人数 - Z
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー >= 0
+	SIF CFLAG:COUNT:便所公開浣腸 >= 0
 		CONTINUE
 	PRINTFORM   脱落 %NAME:COUNT%
 	SIF Y == COUNT
@@ -1455,10 +1455,10 @@ REPEAT CHARANUM
 		CONTINUE
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー >= CFLAG:公衆便所プレイで公開浣腸ショー
+	SIF CFLAG:COUNT:便所公開浣腸 >= CFLAG:便所公開浣腸
 		E += 1
 	;同着の馬がいた場合の処理
-	SIF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー == CFLAG:公衆便所プレイで公開浣腸ショー
-		CFLAG:COUNT:公衆便所プレイで公開浣腸ショー -= 1
+	SIF CFLAG:COUNT:便所公開浣腸 == CFLAG:便所公開浣腸
+		CFLAG:COUNT:便所公開浣腸 -= 1
 REND
 COUNT = X

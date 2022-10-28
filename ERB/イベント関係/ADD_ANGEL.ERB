@@ -5,7 +5,7 @@
 
 CALL RESET_CHARA_STATUS(ARG)
 
-CFLAG:ARG:寝取られ完了値 = 999999
+CFLAG:ARG:NTR完了値 = 999999
 TALENT:ARG:処女 = 1
 TALENT:ARG:童貞 = 1
 TALENT:ARG:アナル処女 = 1
@@ -20,7 +20,7 @@ TALENT:ARG:カリスマ = 1
 TALENT:ARG:魅力 = 1
 IF TALENT:ARG:ふたなり == 0 && TALENT:ARG:オトコ == 0
 	BASE:ARG:ペニスサイズ = 13 + RAND:5
-	CFLAG:ARG:包皮の状態 = RAND:4
+	CFLAG:ARG:包皮状態 = RAND:4
 ENDIF
 TALENT:ARG:ふたなり = 1
 TALENT:ARG:オトコ = 0

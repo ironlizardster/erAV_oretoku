@@ -198,36 +198,36 @@ IF ARG >= 1
 	CSTR:女性器呼び方 = マンコ
 	CSTR:肛門呼び方 = ケツ穴
 	
-	IF CFLAG:初体験の相手 == 0
+	IF CFLAG:処女喪失相手 == 0
 		CSTR:処女喪失の相手 = 園田雅彦（セフレ）
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 9
+		CFLAG:処女喪失相手 = 9
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
 		CFLAG:処女喪失シチュ = 0
 	ENDIF
-	IF CFLAG:ファーストキスの相手 == -1
-		CSTR:ファーストキスの相手 = 園田雅彦（セフレ）
-		CFLAG:ファーストキスの相手 = 9
+	IF CFLAG:初キス相手 == -1
+		CSTR:初キス相手 = 園田雅彦（セフレ）
+		CFLAG:初キス相手 = 9
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 3
-		CFLAG:ファーストキス喪失シチュ = 1
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 3
+		CFLAG:初キス喪失シチュ = 1
 	ENDIF
 	
 	CFLAG:ブラの色 = 1
-	CFLAG:ブラの種類 = 8
+	CFLAG:ブラタイプ = 8
 	CFLAG:パンツの色 = 21
-	CFLAG:パンツの種類 = 6
+	CFLAG:パンツタイプ = 6
 	CFLAG:髪色 = 2
 	CFLAG:染髪済 = 1
 	CFLAG:髪型 = 7
@@ -246,30 +246,30 @@ IF ARG >= 1
 	PRINTFORM 純朴な少女が都会の悪い遊びを覚えて堕ちていく様そのままの変わりぶりではあっ
 	PRINTFORMW たが、案外これも似合っているように思えた
 ELSE
-	IF CFLAG:初体験の相手 == 0
+	IF CFLAG:処女喪失相手 == 0
 		CSTR:処女喪失の相手 = 園田雅彦
 		TALENT:処女 = 0
-		CFLAG:初体験の相手 = 13
+		CFLAG:処女喪失相手 = 13
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:1
-		CFLAG:処女喪失日 = DAY:2
+		CFLAG:処女喪失月 = DAY:日付_月
+		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
 		CFLAG:処女喪失シチュ = 0
 	ENDIF
-	IF CFLAG:ファーストキスの相手 == -1
-		CSTR:ファーストキスの相手 = 園田雅彦の真珠入り%CSTR:男性器呼び方%
-		CFLAG:ファーストキスの相手 = 13
+	IF CFLAG:初キス相手 == -1
+		CSTR:初キス相手 = 園田雅彦の真珠入り%CSTR:男性器呼び方%
+		CFLAG:初キス相手 = 13
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 3
-		CFLAG:ファーストキス喪失シチュ = 1
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 3
+		CFLAG:初キス喪失シチュ = 1
 	ENDIF	
 ENDIF
 

@@ -6,8 +6,8 @@
 ;新しいメッセージにすげかえるまで表示されないようにしておく
 IF 1
 	DRAWLINE
-	CFLAG:調教経験回数 += 1
-	PRINTFORML %NAME:TARGET%への、第{CFLAG:調教経験回数}回目の指導を開始した。
+	CFLAG:調教回数 += 1
+	PRINTFORML %NAME:TARGET%への、第{CFLAG:調教回数}回目の指導を開始した。
 	WAIT
 	DRAWLINE
 	RETURN 0
@@ -16,11 +16,11 @@ ENDIF
 
 VARSET LOCAL
 ;指導経験を加算
-CFLAG:調教経験回数 += 1
+CFLAG:調教回数 += 1
 
 ;指導テキスト省略設定の場合
 IF (FLAG:指導テキスト設定 & 1)
-	PRINTFORML %NAME:TARGET%への、第{CFLAG:調教経験回数}回目の指導を開始した。
+	PRINTFORML %NAME:TARGET%への、第{CFLAG:調教回数}回目の指導を開始した。
 	WAIT
 	RETURN 0
 ENDIF
@@ -29,7 +29,7 @@ DRAWLINE
 
 ;貞操帯装備で鍵アリ、フラグONではここで外す
 IF FLAG:貞操帯自動着脱 == 1
-	IF CFLAG:特別コスチュームのタイプ == 79 && CFLAG:貞操帯のカギを捨てた == 0 && CFLAG:着衣状態 >= 64
+	IF CFLAG:特別コスタイプ == 79 && CFLAG:貞操帯鍵廃棄 == 0 && CFLAG:着衣状態 >= 64
 		CFLAG:着衣状態 -= 64
 	ENDIF
 ENDIF
@@ -38,7 +38,7 @@ C = NO:TARGET + 2000
 ;口上が存在すればそちらを優先
 
 ;初指導時
-IF CFLAG:調教経験回数 == 1 && FLAG:C == 0
+IF CFLAG:調教回数 == 1 && FLAG:C == 0
 	PRINTFORML %NAME:TARGET%への、初めての指導を開始した。
 	PRINTL 
  
@@ -80,7 +80,7 @@ IF CFLAG:調教経験回数 == 1 && FLAG:C == 0
 	RETURN 1
 ENDIF
 
-PRINTFORML %NAME:TARGET%への、第{CFLAG:調教経験回数}回目の指導を開始した。
+PRINTFORML %NAME:TARGET%への、第{CFLAG:調教回数}回目の指導を開始した。
 
 S = 0
 C = NO:TARGET + 2000
@@ -90,30 +90,30 @@ IF (TALENT:素直 || TALENT:大人しい || TALENT:マゾ) && ABL:信頼 >= 4 &&
 	WAIT
 	PRINTFORM %CALLNAME:TARGET%は
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と 
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -122,7 +122,7 @@ IF (TALENT:素直 || TALENT:大人しい || TALENT:マゾ) && ABL:信頼 >= 4 &&
 		PRINTFORM 
 	ENDIF
 	PRINTFORM でベッドの縁に腰を下ろし、
-		IF CFLAG:靴の種類 >= 1 && CFLAG:靴下の着用状態 == 0 && CFLAG:靴下の種類 != 0 && CFLAG:着衣状態 != 0
+		IF CFLAG:靴タイプ >= 1 && CFLAG:靴下着用 == 0 && CFLAG:靴下タイプ != 0 && CFLAG:着衣状態 != 0
 			CALL PRINT_SHOESTYPE_MAIN2
 			PRINTFORM を脱いで
 		ELSE
@@ -140,30 +140,30 @@ ELSEIF (TALENT:素直 || TALENT:大人しい) && ABL:信頼 >= 3 && MARK:反発�
 	WAIT
 	PRINTFORM %CALLNAME:TARGET%は
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -172,7 +172,7 @@ ELSEIF (TALENT:素直 || TALENT:大人しい) && ABL:信頼 >= 3 && MARK:反発�
 		PRINTFORM 
 	ENDIF
 	PRINTFORM でベッドの縁に腰を下ろし、
-		IF CFLAG:靴の種類 >= 1 && CFLAG:靴下の着用状態 == 0 && CFLAG:靴下の種類 != 0 && CFLAG:着衣状態 != 0
+		IF CFLAG:靴タイプ >= 1 && CFLAG:靴下着用 == 0 && CFLAG:靴下タイプ != 0 && CFLAG:着衣状態 != 0
 			CALL PRINT_SHOESTYPE_MAIN2
 			PRINTFORM を脱いで
 		ELSE
@@ -184,30 +184,30 @@ ELSEIF (TALENT:素直 || TALENT:大人しい) && ABL:信頼 >= 3 && MARK:反発�
 ELSEIF FLAG:C == 0
 	WAIT
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -216,7 +216,7 @@ ELSEIF FLAG:C == 0
 		PRINTFORM 
 	ENDIF
 	PRINTFORM でベッドの縁に腰を下ろし、
-		IF CFLAG:靴の種類 >= 1 && CFLAG:靴下の着用状態 == 0 && CFLAG:靴下の種類 != 0 && CFLAG:着衣状態 != 0
+		IF CFLAG:靴タイプ >= 1 && CFLAG:靴下着用 == 0 && CFLAG:靴下タイプ != 0 && CFLAG:着衣状態 != 0
 			CALL PRINT_SHOESTYPE_MAIN2
 			PRINTFORM を脱いで
 		ELSE
@@ -228,7 +228,7 @@ ENDIF
 
 
 ;ズーコの着ぐるみを着てるならここで終了
-IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64) && FLAG:C == 0
+IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64) && FLAG:C == 0
 	SIF CFLAG:着衣状態 == 64
 		PRINTL どうやら、中身は全裸らしい……。
 	WAIT
@@ -240,26 +240,26 @@ ENDIF
 IF TALENT:妊娠 && CFLAG:出産日 <= DAY+10
 	IF S == 0
 		CALL PRINT_CLOTHTYPE
-		IF CFLAG:靴下の着用状態 == 0
-			IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下着用 == 0
+			IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 				PRINTFORM 
-			ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+			ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 				PRINTFORM に
-			ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+			ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 				PRINTFORM で、
-			ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+			ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 				PRINTFORM に
 			ELSE
 				PRINT と
 			ENDIF
 			CALL PRINT_SHOESTYPE
-			IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+			IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 				PRINTFORM 
-			ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+			ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 				PRINTFORM 
-			ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+			ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 				PRINTFORM 姿
-			ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+			ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 				PRINTFORM 姿
 				ELSE
 				PRINT 姿
@@ -297,7 +297,7 @@ IF (CFLAG:着衣状態 & 4)
 ENDIF
 
 ;乳房ピアスでノーブラの場合
-IF (CFLAG:ピアスの装着状況 & 1) && (CFLAG:着衣状態 & 2) == 0
+IF (CFLAG:ピアス状況 & 1) && (CFLAG:着衣状態 & 2) == 0
 	IF (CFLAG:着衣状態 & 4) == 1
 		PRINTFORML 服の布地ごしに、%CALLNAME:TARGET%の両乳首に施されたピアスの形が浮かびあがっていた。
 	ELSE
@@ -317,7 +317,7 @@ IF  (CFLAG:着衣状態 & 1) == 0 && ((CFLAG:着衣状態 & 8) || (CFLAG:着衣�
 				PRINTFORM の、
 			ENDIF
 			CALL PENISFORM
-			SIF CFLAG:ペニスのサイズ != 2
+			SIF CFLAG:ペニスサイズ != 2
 				PRINTFORM の
 			PRINTFORM ふたなりペニスの生えた
 		ENDIF
@@ -337,7 +337,7 @@ IF  (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 8)
 				PRINTFORM の、
 			ENDIF
 			CALL PENISFORM
-			SIF CFLAG:ペニスのサイズ != 2
+			SIF CFLAG:ペニスサイズ != 2
 				PRINTFORM の
 			PRINTFORM ふたなりペニス
 		ELSE
@@ -355,7 +355,7 @@ IF CFLAG:着衣状態 == 0 && TALENT:ふたなり
 			PRINTFORM の
 		ENDIF
 		CALL PENISFORM
-		SIF CFLAG:ペニスのサイズ != 2
+		SIF CFLAG:ペニスサイズ != 2
 			PRINTFORM の
 	PRINTFORM ふたなりペニス
 	IF ABL:射精中毒 >= 3 && ABL:自慰中毒 >= 2
@@ -366,18 +366,18 @@ IF CFLAG:着衣状態 == 0 && TALENT:ふたなり
 ENDIF
 
 ;下半身ピアスでノーパン、かつズボンタイプでない場合
-IF (CFLAG:ピアスの装着状況 & 4) || (CFLAG:ピアスの装着状況 & 8) && (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 16) == 0
+IF (CFLAG:ピアス状況 & 4) || (CFLAG:ピアス状況 & 8) && (CFLAG:着衣状態 & 1) == 0 && (CFLAG:着衣状態 & 16) == 0
 	IF (CFLAG:着衣状態 & 8) == 1
 		PRINT スカートの間から覗く
 	ELSE
 		PRINT 裸のままの
 	ENDIF
 		PRINT 秘部では、
-			SIF (CFLAG:ピアスの装着状況 & 4)
+			SIF (CFLAG:ピアス状況 & 4)
 				PRINT 両方のラビア
-			SIF (CFLAG:ピアスの装着状況 & 4) && (CFLAG:ピアスの装着状況 & 8)
+			SIF (CFLAG:ピアス状況 & 4) && (CFLAG:ピアス状況 & 8)
 				PRINT と
-			SIF (CFLAG:ピアスの装着状況 & 8)
+			SIF (CFLAG:ピアス状況 & 8)
 				PRINT クリトリス
 		PRINTL に施されたピアスが金属の輝きを放っていた……。
 ENDIF
@@ -444,30 +444,30 @@ RETURN 1
 @PRITRAIN_MESSAGE_CLOTHED
 IF TALENT:感情乏しい
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -478,30 +478,30 @@ IF TALENT:感情乏しい
 	PRINTFORML の%CALLNAME:TARGET%は、何の感情も見せずに棒立ちになっている。
 ELSEIF TALENT:幼稚 && TALENT:未熟
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -512,30 +512,30 @@ ELSEIF TALENT:幼稚 && TALENT:未熟
 	PRINTFORML の%CALLNAME:TARGET%は、何をされるのか理解できていないようだ。
 ELSEIF TALENT:気丈
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と 
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -547,30 +547,30 @@ ELSEIF TALENT:気丈
 	PRINTFORML 弱味だけは決して見せまいという覚悟のようだ。
 ELSEIF TALENT:ナマイキ
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -581,30 +581,30 @@ ELSEIF TALENT:ナマイキ
 	PRINTFORML の%CALLNAME:TARGET%は、物凄い勢いで%CALLNAME:MASTER%を睨みつけている。
 ELSEIF TALENT:クール
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と 
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -617,30 +617,30 @@ ELSEIF TALENT:クール
 	PRINTFORML という態度だ。
 ELSEIF TALENT:幼稚
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -652,30 +652,30 @@ ELSEIF TALENT:幼稚
 	PRINTFORML 結局のところ、ただの子供なのだ。
 ELSEIF TALENT:自制心
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -686,30 +686,30 @@ ELSEIF TALENT:自制心
 	PRINTFORML の%CALLNAME:TARGET%は、表面はあくまで平静を装っている。
 ELSEIF TALENT:臆病
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -721,30 +721,30 @@ ELSEIF TALENT:臆病
 	PRINTFORML これから自分を待ち受ける運命を想像して、恐怖に歯を鳴らしている。
 ELSEIF TALENT:プライド高い
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -756,30 +756,30 @@ ELSEIF TALENT:プライド高い
 	PRINTFORML 歯を食いしばり肩を震わせながら、必死に堪えている。
 ELSEIF TALENT:プライド低い
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -791,30 +791,30 @@ ELSEIF TALENT:プライド低い
 	PRINTFORML 言う事さえ聞いていれば、痛い目にはあわないかもしれない、と考えているようだ。
 ELSEIF TALENT:素直
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM で、
 		ELSE
 			PRINT と
 		ENDIF 
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -827,30 +827,30 @@ ELSEIF TALENT:素直
 ELSEIF TALENT:大人しい
 	PRINTFORM 抵抗は無駄だと悟ったらしく、
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 		PRINTFORM 
-	ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 		PRINTFORM に
-	ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+	ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 		PRINTFORM で、
-	ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 		PRINTFORM で、
-	ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 		PRINTFORM で、
 	ELSE
 		PRINT と
 		PRINT  
 	ENDIF 
 	CALL PRINT_SHOESTYPE
-	IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 		PRINTFORM 
-	ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 		PRINTFORM 姿で
-	ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+	ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 		PRINTFORM 姿で
-	ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 		PRINTFORM 姿で
-	ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+	ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 		PRINTFORM 姿で
 	ELSE
 		PRINT 姿で
@@ -858,26 +858,26 @@ ELSEIF TALENT:大人しい
 	PRINTFORML の%CALLNAME:TARGET%はおとなしくしている。
 ELSEIF TALENT:活発
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM に
 		ELSE
 			PRINT と
 		ENDIF
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -889,26 +889,26 @@ ELSEIF TALENT:活発
 	PRINTFORML こんな事で自分は屈服させられたりしないという自信があるらしい。
 ELSE
 	CALL PRINT_CLOTHTYPE
-	IF CFLAG:靴下の着用状態 == 0
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+	IF CFLAG:靴下着用 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM に
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM で、
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM に
 		ELSE
 			PRINT と
 		ENDIF
 		CALL PRINT_SHOESTYPE
-		IF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 != 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 != 0
 			PRINTFORM 
-		ELSEIF CFLAG:靴下の種類 == 0 && CFLAG:靴の種類 != 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ != 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
-		ELSEIF CFLAG:靴下の種類 != 0 && CFLAG:靴の種類 == 0 && CFLAG:着衣状態 == 0
+		ELSEIF CFLAG:靴下タイプ != 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
 			PRINTFORM 姿
 		ELSE
 			PRINT 姿
@@ -919,7 +919,7 @@ ELSE
 	PRINTFORM の%CALLNAME:TARGET%が指導室に連れてこられた。
 ENDIF
 
-IF CFLAG:靴の種類 != 0
+IF CFLAG:靴タイプ != 0
 	PRINTFORM ひとまず%CALLNAME:MASTER%は%CALLNAME:TARGET%に履いている
 	CALL PRINT_SHOESTYPE_MAIN2
 	PRINTFORM を脱いでこちらに来るように促した……

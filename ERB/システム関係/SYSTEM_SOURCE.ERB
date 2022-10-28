@@ -156,7 +156,7 @@ CALL MASTER_SKILL_CHECK
 ;コスチュームによる効果
 ;-------------------------------------------------
 ;ズーコの着ぐるみを着ている
-IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	TIMES SOURCE:6 , 0.10
 	IF TEQUIP:触手召喚 == 0
 		TIMES SOURCE:0 , 0.10
@@ -1831,17 +1831,17 @@ ENDIF
 IF TFLAG:V経験を伴うコマンド
 	;獣姦で膣内射精
 	IF TEQUIP:獣姦プレイ && TFLAG:犬が射精
-		CFLAG:TARGET:ノラ犬からの中田氏カウント += TFLAG:犬が射精
+		CFLAG:TARGET:獣奴膣内精子量 += TFLAG:犬が射精
 	;助手が膣内射精	
 	ELSEIF ASSIPLAY && TFLAG:セックスで射精
-		CFLAG:TARGET:助手から奴隷への膣内射精カウント += TFLAG:セックスで射精
+		CFLAG:TARGET:助奴膣内精子量 += TFLAG:セックスで射精
 	;主人が膣内射精	
 	ELSEIF TFLAG:セックスで射精
-		CFLAG:TARGET:マスターによる膣内射精カウント += TFLAG:セックスで射精
+		CFLAG:TARGET:主奴膣内精子量 += TFLAG:セックスで射精
 	ENDIF
 ;奴隷が助手に膣内射精	
 ELSEIF SELECTCOM == 65 && ASSI >= 1 && TFLAG:調教対象が射精
-	CFLAG:TARGET:奴隷から助手への膣内射精ウント += TFLAG:調教対象が射精
+	CFLAG:TARGET:奴助膣内精子量 += TFLAG:調教対象が射精
 ENDIF
 
 ;-------------------------------------------------

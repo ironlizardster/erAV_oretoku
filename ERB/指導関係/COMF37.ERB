@@ -324,11 +324,11 @@ ENDIF
 
 ;獣姦の場合はここで終了
 IF TEQUIP:獣姦プレイ
-	;犬のアナルとファーストキス
-	IF CFLAG:ファーストキスの相手 == -1
-		TFLAG:ファーストキス口以外 = 1
-		CFLAG:ファーストキスの相手 = 1
-		CSTR:ファーストキスの相手 = 犬のアナル
+	;犬のアナルと初キス
+	IF CFLAG:初キス相手 == -1
+		TFLAG:初キス口以外 = 1
+		CFLAG:初キス相手 = 1
+		CSTR:初キス相手 = 犬のアナル
 		;屈服刻印３に相当
 		TFLAG:屈服刻印2 = 3
 	ENDIF
@@ -510,32 +510,32 @@ TFLAG:快楽経験 = 1
 ;屈服刻印３に相当
 TFLAG:屈服刻印2 = 3
 
-;ファーストキス
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
+;初キス
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
+	PRINTFORML 初キス
 	RESETCOLOR
 	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
-		CSTR:ファーストキスの相手 = お兄ちゃんのお尻の穴
+		CSTR:初キス相手 = お兄ちゃんのお尻の穴
 	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
-		CSTR:ファーストキスの相手 = お兄ちゃんのアナル
+		CSTR:初キス相手 = お兄ちゃんのアナル
 	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-		CSTR:ファーストキスの相手 = アニキのケツ穴
+		CSTR:初キス相手 = アニキのケツ穴
 	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のお尻の穴
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のお尻の穴
 	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のアナル
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のアナル
 	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のケツ穴
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のケツ穴
 	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 0
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のケツ穴
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のケツ穴
 	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 1 
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のお尻の穴
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のお尻の穴
 	ELSE
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のお尻の穴	
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のお尻の穴	
 	ENDIF
-	TFLAG:ファーストキス口以外 = 1	
+	TFLAG:初キス口以外 = 1	
 ENDIF
 
 RETURN 1

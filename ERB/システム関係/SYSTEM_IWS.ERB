@@ -8,10 +8,10 @@
 ;使用フラグ
 ;FLAG:ＩＷＳなし IWSシステム強度
 ;CFLAG:カップサイズ カップサイズ
-;CFLAG:妊娠時の増加体重 妊娠時の増加体重
-;CFLAG:妊娠時の増加バストIWS除く 妊娠時の増加バスト（IWSによるボーナス除く）
-;CFLAG:妊娠時の増加ウェスト 妊娠時の増加ウェスト
-;CFLAG:妊娠時の増加ヒップ 妊娠時の増加ヒップ
+;CFLAG:妊娠増加体重 妊娠増加体重
+;CFLAG:妊娠増加バストIWS除く 妊娠時の増加バスト（IWSによるボーナス除く）
+;CFLAG:妊娠増加ウェスト 妊娠増加ウェスト
+;CFLAG:妊娠増加ヒップ 妊娠増加ヒップ
 
 ;自分用覚え書き
 ;その他のファイルで改造したところ
@@ -67,11 +67,11 @@ PRINTL
 IF TALENT:ふたなり == 1 || TALENT:オトコ == 1
 	PRINTFORM 　
 	PRINTFORM 勃起時のペニスサイズ：{BASE:ペニスサイズ}cm（
-	IF CFLAG:包皮の状態 == 3
+	IF CFLAG:包皮状態 == 3
 		PRINTFORM ズル剥け
-	ELSEIF CFLAG:包皮の状態 == 2
+	ELSEIF CFLAG:包皮状態 == 2
 		PRINTFORM 仮性包茎
-	ELSEIF CFLAG:包皮の状態 == 1
+	ELSEIF CFLAG:包皮状態 == 1
 		PRINTFORM 仮性包茎
 	ELSE
 		PRINTFORM 真性包茎
@@ -88,7 +88,7 @@ X = ((((BASE:バスト * 100) - (BASE:身長 * 54)) * 100) / 250)
 Y = ((((BASE:身長 * 38) - (BASE:ウェスト * 100)) * 100) / 342)
 ;妊娠時は妊娠発覚時のウェストから計算
 SIF TALENT:妊娠
-	Y = ((((BASE:身長 * 38) - ((BASE:ウェスト - (CFLAG:妊娠時の増加ウェスト / 100)) * 100)) * 100) / 342)
+	Y = ((((BASE:身長 * 38) - ((BASE:ウェスト - (CFLAG:妊娠増加ウェスト / 100)) * 100)) * 100) / 342)
 Z = ((((BASE:身長 * 100) - 15880) * 100) / 2300)
 S = X + Y + Z
 CFLAG:カップサイズ = 0
@@ -404,7 +404,7 @@ TARGET = COUNT
 IF TALENT:妊娠
 	U = 10 + RAND:5
 	BASE:[[BASE:体重（小数）]] += U
-	CFLAG:妊娠時の増加体重 += U
+	CFLAG:妊娠増加体重 += U
 	IF BASE:[[BASE:体重（小数）]] >= 100
 		BASE:体重 += BASE:[[BASE:体重（小数）]] / 100
 		BASE:[[BASE:体重（小数）]] = BASE:[[BASE:体重（小数）]] % 100
@@ -416,7 +416,7 @@ U = 15 + RAND:5
 ;IWSがオンの場合成長値にボーナスが付く。
 ;ボーナス分は出産育児後にも維持される。
 BASE:[[BASE:バスト（小数）]] += U + (FLAG:ＩＷＳなし * (RAND:5 + 5))
-CFLAG:妊娠時の増加バストIWS除く += U
+CFLAG:妊娠増加バストIWS除く += U
 IF BASE:[[BASE:バスト（小数）]] >= 100
 		BASE:バスト += BASE:[[BASE:バスト（小数）]] /100
 		BASE:[[BASE:バスト（小数）]] = BASE:[[BASE:バスト（小数）]] % 100
@@ -427,7 +427,7 @@ CALL BUST_RANKUP
 IF TALENT:妊娠
 	U = 70 + RAND:20
 	BASE:[[BASE:ウェスト（小数）]] += U
-	CFLAG:妊娠時の増加ウェスト += U
+	CFLAG:妊娠増加ウェスト += U
 	IF BASE:[[BASE:ウェスト（小数）]] >= 100
 		BASE:ウェスト += BASE:[[BASE:ウェスト（小数）]] /100
 		BASE:[[BASE:ウェスト（小数）]] = BASE:[[BASE:ウェスト（小数）]] % 100
@@ -438,7 +438,7 @@ ENDIF
 IF TALENT:妊娠
 	U = 10 + RAND:5
 	BASE:[[BASE:ヒップ（小数）]] += U
-	CFLAG:妊娠時の増加ヒップ += U
+	CFLAG:妊娠増加ヒップ += U
 	IF BASE:[[BASE:ヒップ（小数）]] >= 100
 		BASE:ヒップ += BASE:[[BASE:ヒップ（小数）]] /100
 		BASE:[[BASE:ヒップ（小数）]] = BASE:[[BASE:ヒップ（小数）]] % 100
@@ -454,42 +454,42 @@ A= TARGET
 TARGET = C
 
 ;体重減少
-BASE:[[BASE:体重（小数）]] -= CFLAG:妊娠時の増加体重
+BASE:[[BASE:体重（小数）]] -= CFLAG:妊娠増加体重
 IF BASE:[[BASE:体重（小数）]] < 0
 	BASE:体重 += BASE:[[BASE:体重（小数）]] / 100
 	BASE:[[BASE:体重（小数）]] = 0 - (BASE:[[BASE:体重（小数）]] % 100)
 ENDIF
-CFLAG:妊娠時の増加体重 = 0
+CFLAG:妊娠増加体重 = 0
 
 ;バスト縮小
 IF TALENT:育児中 == 1
 ELSE
-	BASE:[[BASE:バスト（小数）]] -= CFLAG:妊娠時の増加バストIWS除く
+	BASE:[[BASE:バスト（小数）]] -= CFLAG:妊娠増加バストIWS除く
 	IF BASE:[[BASE:バスト（小数）]] < 0
 		BASE:バスト += BASE:[[BASE:バスト（小数）]] / 100
 		BASE:[[BASE:バスト（小数）]] = 0 - (BASE:[[BASE:バスト（小数）]] % 100)
 	ENDIF
-	CFLAG:妊娠時の増加バストIWS除く = 0
+	CFLAG:妊娠増加バストIWS除く = 0
 	;複数ランクダウンが有り得る
 	CALL BUST_RANKDOWN
 	CALL BUST_RANKDOWN
 
 ENDIF
 ;ウェスト縮小
-BASE:[[BASE:ウェスト（小数）]] -= CFLAG:妊娠時の増加ウェスト
+BASE:[[BASE:ウェスト（小数）]] -= CFLAG:妊娠増加ウェスト
 IF BASE:[[BASE:ウェスト（小数）]] < 0
 	BASE:ウェスト += BASE:[[BASE:ウェスト（小数）]] / 100
 	BASE:[[BASE:ウェスト（小数）]] = 0 - (BASE:[[BASE:ウェスト（小数）]] % 100)
 ENDIF
-CFLAG:妊娠時の増加ウェスト = 0
+CFLAG:妊娠増加ウェスト = 0
 
 ;ヒップ縮小
-BASE:[[BASE:ヒップ（小数）]] -= CFLAG:妊娠時の増加ヒップ
+BASE:[[BASE:ヒップ（小数）]] -= CFLAG:妊娠増加ヒップ
 IF BASE:[[BASE:ヒップ（小数）]] < 0
 	BASE:ヒップ += BASE:[[BASE:ヒップ（小数）]] / 100
 	BASE:[[BASE:ヒップ（小数）]] = 0 - (BASE:[[BASE:ヒップ（小数）]] % 100)
 ENDIF
-CFLAG:妊娠時の増加ヒップ = 0
+CFLAG:妊娠増加ヒップ = 0
 
 TARGET = A
 

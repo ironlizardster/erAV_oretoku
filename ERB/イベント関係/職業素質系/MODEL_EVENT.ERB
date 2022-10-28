@@ -23,18 +23,18 @@ LOCAL = RAND:3
 DRAWLINE
 PRINTFORML  休日を利用して、スタジオで%CALLNAME:TARGET%の撮影が行われた……
 PRINTFORM  今回の撮影の内容は
-IF LOCAL == 1 && DAY:1 >= 5 && DAY:1 <= 7
+IF LOCAL == 1 && DAY:日付_月 >= 5 && DAY:日付_月 <= 7
 	PRINTFORM 新作水着
 	LOCAL:1 = 1
 ELSEIF LOCAL == 2 && ABL:露出癖 >= 3
 	PRINTFORM 新作下着
 	LOCAL:1 = 2
 ELSE
-	IF DAY:1 >=4 && DAY:1 <= 6
+	IF DAY:日付_月 >=4 && DAY:日付_月 <= 6
 		PRINT 夏の新作
-	ELSEIF DAY:1 >=7 && DAY:1 <= 9
+	ELSEIF DAY:日付_月 >=7 && DAY:日付_月 <= 9
 		PRINT 秋の新作
-	ELSEIF DAY:1 >= 10 && DAY:1 <= 12
+	ELSEIF DAY:日付_月 >= 10 && DAY:日付_月 <= 12
 		PRINT 冬の新作
 	ELSE
 		PRINT 春の新作

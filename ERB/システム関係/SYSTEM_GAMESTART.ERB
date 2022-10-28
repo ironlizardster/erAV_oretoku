@@ -51,11 +51,11 @@ $BEFORE_MODE_SELECT
 ;ゲームモード選択
 PRINTL 
 PRINTL ★★モードを選択してください★★
-PRINTL [0] EASY     (120週期限、目標金額3000000Pt)
-IF FLAG:EASYモードを経由したデータ
-	PRINTL [1] NORMAL   (100週期限、目標金額5000000Pt)
+PRINTL [0] EASY     (120日期限、目標金額3000000Pt)
+IF FLAG:EASY経由
+	PRINTL [1] NORMAL   (100日期限、目標金額5000000Pt)
 ELSE
-	PRINTL [1] 実績チャレンジ   (100週期限、目標金額5000000Pt)
+	PRINTL [1] 実績チャレンジ   (100日期限、目標金額5000000Pt)
 ENDIF
 PRINTL [9] EXTRA    (   無期限、目標金額$???????)
 PRINTL [10] モードの説明を読む
@@ -71,10 +71,12 @@ IF RESULT == 0
 ;	ITEM:ビデオテープ = 1
 	MONEY = 2000
 	MASTER = NO:0
-	DAY:1 = 4
-	DAY:2 = 1
+	REALTIME:0 = TOINT(SUBSTRING(GETTIMES(), 0, 4))
+	DAY:日付_年 = REALTIME:0
+	DAY:日付_月 = 4
+	DAY:日付_日 = 1
 	FLAG:事務所規模 = 10
-	FLAG:EASYモードを経由したデータ = 1
+	FLAG:EASY経由 = 1
 	CALL キャラ追加([[キャラ:小鳥遊乃絵美]])
 	ABL:MASTER:技巧 += 1
 ELSEIF RESULT == 1
@@ -87,8 +89,10 @@ ELSEIF RESULT == 1
 ;	ITEM:ビデオテープ = 1
 	MONEY = 1000
 	MASTER = NO:0
-	DAY:1 = 4
-	DAY:2 = 1
+	REALTIME:0 = TOINT(SUBSTRING(GETTIMES(), 0, 4))
+	DAY:日付_年 = REALTIME:0
+	DAY:日付_月 = 4
+	DAY:日付_日 = 1
 	FLAG:事務所規模 = 10
 ELSEIF RESULT == 9
 	FLAG:期限日数 = 0

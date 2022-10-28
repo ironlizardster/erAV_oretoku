@@ -50,12 +50,8 @@ CALL PRITRAIN_MESSAGE
 @SHOW_STATUS
 DRAWLINE
 PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL (前半)
-ELSE
-	PRINTL (後半)
-ENDIF
+PRINT 日目
+CALL PRINT_DAY_TIME
 PRINTFORM %NAME:TARGET% 調教中   調教者:
 IF ASSIPLAY
 	PRINTS NAME:ASSI
@@ -274,15 +270,15 @@ ENDIF
 IF FLAG:常時発情なし == 0 && TALENT:常時発情 == 0
 	;潤滑の10000分の1を蓄積　潤滑が10000を下回る場合はリセット
 	IF PALAM:潤滑 >= 10000
-		CFLAG:常時発情システム使用時潤滑蓄積量 += PALAM:潤滑 / 10000
+		CFLAG:潤滑蓄積量 += PALAM:潤滑 / 10000
 	ELSE
-		CFLAG:常時発情システム使用時潤滑蓄積量 = 0
+		CFLAG:潤滑蓄積量 = 0
 	ENDIF
 	;欲情の10000分の1を蓄積　欲情が10000を下回る場合はリセット
 	IF PALAM:欲情 >= 10000
-		CFLAG:常時発情システム使用時欲情蓄積量 += PALAM:欲情 / 10000
+		CFLAG:欲情蓄積量 += PALAM:欲情 / 10000
 	ELSE
-		CFLAG:常時発情システム使用時欲情蓄積量 = 0
+		CFLAG:欲情蓄積量 = 0
 	ENDIF
 ENDIF
 

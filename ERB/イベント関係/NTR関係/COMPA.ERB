@@ -6,7 +6,7 @@
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF CFLAG:COUNT:合コン参加判定 == 1 && CFLAG:COUNT:彼氏の有無 != 1 && TALENT:COUNT:彼氏あり == 0
+	ELSEIF CFLAG:COUNT:合コン参加 == 1 && CFLAG:COUNT:彼氏有 != 1 && TALENT:COUNT:彼氏あり == 0
 		CALL COMPA_MAIN
 	ENDIF
 REND
@@ -54,11 +54,11 @@ PRINTW
 		X = 150
 	IF Y + RAND:100 + X >= 150
 		IF FLAG:チャラ男固定 == 0
-			CFLAG:COUNT:彼氏の種類 = RAND:7
-			IF CFLAG:COUNT:彼氏の種類 == 1
-				CFLAG:COUNT:彼氏の種類 = 0
-			ELSEIF CFLAG:COUNT:彼氏の種類 == 3
-				CFLAG:COUNT:彼氏の種類 = 6
+			CFLAG:COUNT:彼氏タイプ = RAND:7
+			IF CFLAG:COUNT:彼氏タイプ == 1
+				CFLAG:COUNT:彼氏タイプ = 0
+			ELSEIF CFLAG:COUNT:彼氏タイプ == 3
+				CFLAG:COUNT:彼氏タイプ = 6
 			ENDIF
 		ENDIF
 		IF P == 1
@@ -67,30 +67,30 @@ PRINTW
 			PRINTFORM オフ会
 		ENDIF
 		PRINTFORM に参加していた
-			IF CFLAG:COUNT:彼氏の種類 == 1
+			IF CFLAG:COUNT:彼氏タイプ == 1
 				PRINT クラスメイト
-			ELSEIF CFLAG:COUNT:彼氏の種類 == 2
+			ELSEIF CFLAG:COUNT:彼氏タイプ == 2
 				PRINT 高校生
-			ELSEIF CFLAG:COUNT:彼氏の種類 == 3
+			ELSEIF CFLAG:COUNT:彼氏タイプ == 3
 				PRINT 中学生
-			ELSEIF CFLAG:COUNT:彼氏の種類 == 4
+			ELSEIF CFLAG:COUNT:彼氏タイプ == 4
 				PRINT 大学生
-			ELSEIF CFLAG:COUNT:彼氏の種類 == 5
+			ELSEIF CFLAG:COUNT:彼氏タイプ == 5
 				PRINT サラリーマン
-			ELSEIF CFLAG:COUNT:彼氏の種類 == 6
+			ELSEIF CFLAG:COUNT:彼氏タイプ == 6
 				PRINT ホスト
 			ELSE
 				PRINT チャラ男
 			ENDIF
 		PRINTFORML と付き合うことになったようだ……
-			CFLAG:COUNT:彼氏の有無 = 1
+			CFLAG:COUNT:彼氏有 = 1
 			TALENT:COUNT:彼氏あり = 1
 			CALL DECIDE_BOYFRIEND,COUNT
-			CFLAG:COUNT:合コン参加判定 = 0
-			CFLAG:COUNT:彼氏とラブホに寄る判定用 = 1
+			CFLAG:COUNT:合コン参加 = 0
+			CFLAG:COUNT:ラブホ = 1
 	ELSE
 		PRINTFORML 特に誰からも声をかけられなかったようだ……
-			CFLAG:COUNT:合コン参加判定 = 0
+			CFLAG:COUNT:合コン参加 = 0
 	ENDIF
 	DRAWLINE
 ;ENDIF

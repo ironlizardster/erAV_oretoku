@@ -39,14 +39,14 @@ X = 0
 
 ;引継ぎキャラの「お願いする」フラグクリア
 REPEAT CHARANUM
-	CFLAG:COUNT:エステ通い判定 = 0
-	CFLAG:COUNT:ジム通い判定 = 0
-	CFLAG:COUNT:学習塾通い判定 = 0
-	CFLAG:COUNT:新作アニメチェック判定 = 0
-	CFLAG:COUNT:習い事判定 = 0
-	CFLAG:COUNT:朝フェラ係に任命 = 0
-	CFLAG:COUNT:合コン参加判定 = 0
-	CFLAG:COUNT:お弁当作成判定 = 0
+	CFLAG:COUNT:エステ通い = 0
+	CFLAG:COUNT:ジム通い = 0
+	CFLAG:COUNT:塾通い = 0
+	CFLAG:COUNT:アニメチェック = 0
+	CFLAG:COUNT:習い事 = 0
+	CFLAG:COUNT:朝フェラ係 = 0
+	CFLAG:COUNT:合コン参加 = 0
+	CFLAG:COUNT:弁当係 = 0
 REND
 
 ;それに伴い起こす人がいるフラグクリア
@@ -238,32 +238,32 @@ REPEAT CHARANUM
 		CFLAG:COUNT:出産日 -= DAY
 	;それ以外なら妊娠関連のフラグは消去
 	ELSE
-		CFLAG:COUNT:マスターによる膣内射精カウント = 0
-		CFLAG:COUNT:誰によって妊娠させられたか = 0
-		CFLAG:COUNT:助手から奴隷への膣内射精カウント = 0
-		CFLAG:COUNT:奴隷から助手への膣内射精ウント = 0
-		CFLAG:COUNT:娼館などの客から奴隷への中田氏カウント = 0
-		CFLAG:COUNT:ノラ犬からの中田氏カウント = 0
+		CFLAG:COUNT:主奴膣内精子量 = 0
+		CFLAG:COUNT:妊娠精子 = 0
+		CFLAG:COUNT:助奴膣内精子量 = 0
+		CFLAG:COUNT:奴助膣内精子量 = 0
+		CFLAG:COUNT:客奴膣内精子量 = 0
+		CFLAG:COUNT:獣奴膣内精子量 = 0
 		CFLAG:COUNT:排卵促進剤使用 = 0
 		CFLAG:COUNT:出産日 = 0
-		CFLAG:COUNT:父親のキャラ番号 = 0
+		CFLAG:COUNT:妊娠精子キャラ番号 = 0
 	ENDIF
 
 	;衣服が洗濯中なら戻ってくる
-	SIF CFLAG:COUNT:パンツの状態 > 0
-		CFLAG:COUNT:パンツの状態 = 0
-	SIF CFLAG:COUNT:ブラジャーの状態 > 0
-		CFLAG:COUNT:ブラジャーの状態 = 0
-	SIF CFLAG:COUNT:上着上の状態 > 0
-		CFLAG:COUNT:上着上の状態 = 0
-	SIF CFLAG:COUNT:上着下の状態 > 0
-		CFLAG:COUNT:上着下の状態 = 0
-	SIF CFLAG:COUNT:特別コスチュームの状態 > 0
-		CFLAG:COUNT:特別コスチュームの状態 = 0
+	SIF CFLAG:COUNT:パンツ状態 > 0
+		CFLAG:COUNT:パンツ状態 = 0
+	SIF CFLAG:COUNT:ブラジャー状態 > 0
+		CFLAG:COUNT:ブラジャー状態 = 0
+	SIF CFLAG:COUNT:上着上状態 > 0
+		CFLAG:COUNT:上着上状態 = 0
+	SIF CFLAG:COUNT:上着下状態 > 0
+		CFLAG:COUNT:上着下状態 = 0
+	SIF CFLAG:COUNT:特別コス状態 > 0
+		CFLAG:COUNT:特別コス状態 = 0
 
 	;労役フラグ解除
-	CFLAG:COUNT:労役中のフラグ = 0
-	CFLAG:COUNT:労役でコンドーム使用 = 0
+	CFLAG:COUNT:営業内容 = 0
+	CFLAG:COUNT:営業コンドーム = 0
 		
 	;引き継ぎキャラに購入フラグを立てる
 	A = NO:COUNT + 999
@@ -363,11 +363,11 @@ ENDIF
 ;++++++++++++++++++++++++++++++++++++++++++++++
 PRINTL 
 PRINTL ★★モードを選択してください★★
-PRINTL [0] EASY     (120週期限、目標金額3000000pt)
-IF FLAG:EASYモードを経由したデータ
-	PRINTL [1] NORMAL   (100週期限、目標金額5000000Pt)
+PRINTL [0] EASY     (120日期限、目標金額3000000pt)
+IF FLAG:EASY経由
+	PRINTL [1] NORMAL   (100日期限、目標金額5000000Pt)
 ELSE
-	PRINTL [1] 実績チャレンジ   (100週期限、目標金額5000000Pt)
+	PRINTL [1] 実績チャレンジ   (100日期限、目標金額5000000Pt)
 ENDIF
 $INPUT_LOOP_0
 INPUT
@@ -380,7 +380,7 @@ IF RESULT == 0
 			FLAG:目標金額 = 0
 		ENDIF
 	FLAG:難易度 = GAME_MODE_EASY
-	FLAG:EASYモードを経由したデータ = 1
+	FLAG:EASY経由 = 1
 	MONEY = 5000
 	IF GETCHARA([[キャラ:小鳥遊乃絵美]], 0) < 0
 		CALL キャラ追加([[キャラ:小鳥遊乃絵美]])

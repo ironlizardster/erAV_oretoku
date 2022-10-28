@@ -98,13 +98,13 @@ IF CFLAG:処女喪失場所 == 0 || CFLAG:処女喪失場所 >= 15
 ELSE
 	IF CFLAG:処女喪失場所 == 1
 		PRINTFORM %CALLNAME:TARGET%の部屋
-	ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:初体験の相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏性経験 >= 1
+	ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:処女喪失相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏性経験 >= 1
 		IF CSTR:処女喪失の相手 == ""
 			PRINTFORM 元カレの部屋
 		ELSE
 			PRINTFORM %CSTR:処女喪失の相手%（元カレ）の部屋
 		ENDIF	
-	ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:初体験の相手 == 8 && TALENT:彼氏あり == 1
+	ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:処女喪失相手 == 8 && TALENT:彼氏あり == 1
 		IF CSTR:処女喪失の相手 == ""
 			PRINTFORM カレシの部屋
 		ELSE
@@ -141,60 +141,60 @@ ENDIF
 SIF CFLAG:処女喪失誕生日記念 == 1
 	PRINTFORM 誕生日記念に
 
-IF CFLAG:初体験の相手 == 0
+IF CFLAG:処女喪失相手 == 0
 	PRINTFORM 覚えていない誰か
-ELSEIF CFLAG:初体験の相手 == 1
+ELSEIF CFLAG:処女喪失相手 == 1
 	PRINTFORM %CSTR:処女喪失の相手%
-ELSEIF CFLAG:初体験の相手 == 2
+ELSEIF CFLAG:処女喪失相手 == 2
 	PRINTFORM 売春で名前も知らない男性客
-ELSEIF CFLAG:初体験の相手 == 3
+ELSEIF CFLAG:処女喪失相手 == 3
 	PRINTFORM 売春で名前も知らない女性客
-ELSEIF CFLAG:初体験の相手 == 4
+ELSEIF CFLAG:処女喪失相手 == 4
 	PRINTFORM バイブ
-ELSEIF CFLAG:初体験の相手 == 5
+ELSEIF CFLAG:処女喪失相手 == 5
 	PRINTFORM 極太バイブ
-ELSEIF CFLAG:初体験の相手 == 6
+ELSEIF CFLAG:処女喪失相手 == 6
 	PRINTFORM 売春で名前も知らない客
-ELSEIF CFLAG:初体験の相手 == 7
+ELSEIF CFLAG:処女喪失相手 == 7
 	PRINTFORM 痴漢
-ELSEIF CFLAG:初体験の相手 == 8 && CFLAG:167 == 1
+ELSEIF CFLAG:処女喪失相手 == 8 && CFLAG:167 == 1
 	IF CSTR:処女喪失の相手 == ""
 		PRINTFORM 元カレ
 	ELSE
 		PRINTFORM %CSTR:処女喪失の相手%（元カレ）
 	ENDIF	
-ELSEIF CFLAG:初体験の相手 == 8 && TALENT:彼氏あり == 1 && CFLAG:処女喪失場所 != 2
+ELSEIF CFLAG:処女喪失相手 == 8 && TALENT:彼氏あり == 1 && CFLAG:処女喪失場所 != 2
 	IF CSTR:処女喪失の相手 == ""
 		PRINTFORM カレシ
 	ELSE
 		PRINTFORM %CSTR:処女喪失の相手%（カレシ）
 	ENDIF	
-ELSEIF CFLAG:初体験の相手 == 9
+ELSEIF CFLAG:処女喪失相手 == 9
 	PRINTFORM セフレの%CSTR:セフレ姓%
-ELSEIF CFLAG:初体験の相手 == 11
+ELSEIF CFLAG:処女喪失相手 == 11
 	PRINTFORM 不良
 ;;;このあたりは対象者を入れる（状況だと、のちのち記述上の問題が生じやすいので）
-ELSEIF CFLAG:初体験の相手 == 12
+ELSEIF CFLAG:処女喪失相手 == 12
 	PRINTFORM 枕営業のお相手
-ELSEIF CFLAG:初体験の相手 == 13
+ELSEIF CFLAG:処女喪失相手 == 13
 	PRINTFORM 『接待』客
-ELSEIF CFLAG:初体験の相手 == 14
+ELSEIF CFLAG:処女喪失相手 == 14
 	PRINTFORM 触手生物
-ELSEIF CFLAG:初体験の相手 == 15
+ELSEIF CFLAG:処女喪失相手 == 15
 	PRINTFORM 夫
-ELSEIF CFLAG:初体験の相手 == 16
+ELSEIF CFLAG:処女喪失相手 == 16
 	PRINTFORM %NAME:MASTER%
 ENDIF
 
-IF CFLAG:初体験の相手 == 4 || CFLAG:初体験の相手 == 5
+IF CFLAG:処女喪失相手 == 4 || CFLAG:処女喪失相手 == 5
 	PRINTFORM で
-ELSEIF CFLAG:初体験の相手 == 10
+ELSEIF CFLAG:処女喪失相手 == 10
 	;空分岐。スタッフNTR用。
 ;意図がわからない分岐だったのでいったん殺す
 ;↑分かった。l166あたりでカレシの名前二回表示されるのくどいから避けてたのね。復帰
-ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:初体験の相手 == 8 && TALENT:彼氏あり == 1
+ELSEIF CFLAG:処女喪失場所 == 2 && CFLAG:処女喪失相手 == 8 && TALENT:彼氏あり == 1
 	PRINTFORM 
-;ELSEIF CFLAG:初体験の相手 >= 11 || CFLAG:処女喪失シチュ >= 1
+;ELSEIF CFLAG:処女喪失相手 >= 11 || CFLAG:処女喪失シチュ >= 1
 ;	PRINTFORM に
 ;上の代替
 ELSEIF CFLAG:処女喪失シチュ >= 3

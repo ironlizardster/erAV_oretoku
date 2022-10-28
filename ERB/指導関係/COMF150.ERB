@@ -229,9 +229,9 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 
 
 	;強絶頂
-	IF E == 2
+	IF E >= 2
 		SIF TEQUIP:スライム膣内進入
-			CFLAG:スライム抱卵判定用 += 3
+			CFLAG:抱卵判定 += 3
 		PRINTL スライム強絶頂
 
 		BASE:PLAYER:異種射精ゲージ -= EJAC*2
@@ -245,7 +245,7 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 	;通常の絶頂
 	ELSEIF E == 1
 		SIF TEQUIP:スライム膣内進入
-			CFLAG:スライム抱卵判定用 += 1
+			CFLAG:抱卵判定 += 1
 		PRINTL スライム絶頂
 
 		BASE:PLAYER:異種射精ゲージ -= EJAC
@@ -278,14 +278,14 @@ CALL TRAIN_MESSAGE_B
 LOSEBASE:体力 += 60
 LOSEBASE:気力 += 80
 
-;ファーストキス
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
+;初キス
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
+	PRINTFORML 初キス
 	RESETCOLOR
-	CSTR:ファーストキスの相手 = スライム
-	TFLAG:ファーストキス口以外 = 1	
+	CSTR:初キス相手 = スライム
+	TFLAG:初キス口以外 = 1	
 ENDIF
 
 ;ABL:奉仕精神をみる

@@ -27,7 +27,7 @@ DRAWLINE
 ;エクストラで勲章があればいつでも強くてニューゲーム開始
 SIF FLAG:難易度 == 9 && TALENT:MASTER:勲章
 	PRINTL  [10] - 強くてニューゲームの開始
-;エクストラ以外で二週目以降であれば、目標額さえ満たせばいつでも最終日まで飛ばせる
+;エクストラ以外で二日目以降であれば、目標額さえ満たせばいつでも最終日まで飛ばせる
 ;妊娠関連で不具合が起こるので現在は封印
 ;SIF FLAG:難易度 < 9 && FLAG:周回数 > 0 && MONEY >= FLAG:目標金額 
 ;	PRINTL  [11] - 一気に最終日まで進める
@@ -96,7 +96,7 @@ REPEAT CHARANUM
 		CONTINUE
 	TARGET = COUNT
 	PRINTFORM  [{COUNT}] %NAME:COUNT%
-	SIF CFLAG:COUNT:朝フェラ係に任命 & 1
+	SIF CFLAG:COUNT:朝フェラ係 & 1
 		PRINT  - 現在の朝フェラ係
 	PRINTL 
 REND
@@ -124,16 +124,16 @@ ELSEIF MARK:RESULT:反発刻印 > 0
 	PRINTW 反発心が強くて指示に従いません
 ELSEIF ABL:RESULT:欲望 < 4 || ABL:RESULT:奉仕精神 < 4 || ABL:RESULT:精液中毒 < 1
 	PRINTW 能力不足です。もっと育ててください
-ELSEIF CFLAG:RESULT:朝フェラ係に任命 & 1
+ELSEIF CFLAG:RESULT:朝フェラ係 & 1
 	PRINTFORML %NAME:RESULT%を朝のフェラチオ係から外しました
-	CFLAG:RESULT:朝フェラ係に任命 -= 1
+	CFLAG:RESULT:朝フェラ係 -= 1
 	WAIT
 ELSE
 	REPEAT CHARANUM
-		CFLAG:COUNT:朝フェラ係に任命 -= CFLAG:COUNT:朝フェラ係に任命 & 1
+		CFLAG:COUNT:朝フェラ係 -= CFLAG:COUNT:朝フェラ係 & 1
 	REND
 	PRINTFORML %NAME:RESULT%を朝のフェラチオ係に任命しました
-	CFLAG:RESULT:朝フェラ係に任命 |= 1
+	CFLAG:RESULT:朝フェラ係 |= 1
 	WAIT
 ENDIF
 

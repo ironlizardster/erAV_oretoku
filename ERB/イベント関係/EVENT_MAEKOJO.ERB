@@ -147,9 +147,9 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 			PRINTFORM おちん○ん
 		ENDIF
 	PRINTFORM 、
-		IF CFLAG:LOCAL:ペニスのサイズ < CFLAG:(LOCAL:1):ペニスのサイズ
+		IF CFLAG:LOCAL:ペニスサイズ < CFLAG:(LOCAL:1):ペニスサイズ
 			PRINTFORM %CSTR:LOCAL:一人称%のより大きか
-		ELSEIF CFLAG:LOCAL:ペニスのサイズ > CFLAG:(LOCAL:1):ペニスのサイズ
+		ELSEIF CFLAG:LOCAL:ペニスサイズ > CFLAG:(LOCAL:1):ペニスサイズ
 			PRINTFORM %CSTR:LOCAL:一人称%のより小さか
 		ELSE
 			PRINTFORM %CSTR:LOCAL:一人称%のと同じぐらいの大きさだ
@@ -162,9 +162,9 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 		ENDIF
 	PRINTFORML ……♪
 	PRINTFORM 　それに
-		IF CFLAG:(LOCAL:1):包皮の状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
+		IF CFLAG:(LOCAL:1):包皮状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
 			PRINTFORM ズル剥け
-		ELSEIF CFLAG:(LOCAL:1):包皮の状態 == 3
+		ELSEIF CFLAG:(LOCAL:1):包皮状態 == 3
 			PRINTFORM ズル剥け
 		ELSE
 			PRINTFORM 包茎
@@ -183,7 +183,7 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 		ENDIF
 	PRINTFORML ……
 	PRINTFORM 　
-		IF CFLAG:(LOCAL:1):包皮の状態 < 2 && CFLAG:LOCAL:包皮の状態 == 2 && TALENT:LOCAL:童貞 == 0
+		IF CFLAG:(LOCAL:1):包皮状態 < 2 && CFLAG:LOCAL:包皮状態 == 2 && TALENT:LOCAL:童貞 == 0
 			PRINTFORM %CSTR:LOCAL:一人称%みたいにムケてた方が
 				IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
 					PRINTFORM オチ○ポ
@@ -199,7 +199,7 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 					PRINTFORM だ
 				ENDIF
 			PRINTFORM よ♪
-		ELSEIF CFLAG:LOCAL:包皮の状態 < 2  && CFLAG:(LOCAL:1):包皮の状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
+		ELSEIF CFLAG:LOCAL:包皮状態 < 2  && CFLAG:(LOCAL:1):包皮状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
 			PRINTFORM %CSTR:LOCAL:一人称%も%CALLNAME:(LOCAL:1)%
 				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 					PRINTFORM さん
@@ -353,7 +353,7 @@ PRINTFORM 「あァァァんっ%UNICODE(0x2665)%%CSTR:COUNT:一人称%の
 		PRINTFORM %CSTR:COUNT:女性器呼び方%
 	ENDIF
 PRINTFORML 、%CSTR:COUNT:彼氏姓%さんの形に拡がっていくぅ……♪
-IF CFLAG:COUNT:初体験の相手 == 10
+IF CFLAG:COUNT:処女喪失相手 == 10
 	PRINTFORM 　%CSTR:COUNT:一人称%をオトナにしてくれた
 		IF TALENT:COUNT:ギャル系 == 1
 			PRINTFORM %CSTR:COUNT:男性器呼び方%

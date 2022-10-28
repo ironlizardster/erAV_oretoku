@@ -482,8 +482,8 @@ ENDIF
 ;キスする CFLAG:307
 ;-------------------------------------------------
 IF SELECTCOM == 6
-	;ファーストキス
-	IF CFLAG:307 == 0 && TFLAG:ファーストキス
+	;初キス
+	IF CFLAG:307 == 0 && TFLAG:初キス
 		;愛かつ主人
 		IF TALENT:TARGET:恋心 == 1 && ASSIPLAY == 0 && TEQUIP:獣姦プレイ == 0 && TEQUIP:触手召喚 == 0
 			PRINTFORMW 
@@ -2539,7 +2539,7 @@ IF TFLAG:口上番号 == 11
 	IF TALENT:崩壊 == 1
 		PRINTFORMW 
 	;父親が主人で母親が愛持ち
-	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+	ELSEIF TALENT:恋心 && CFLAG:妊娠精子 == 1
 		PRINTFORMW 
 	;その他
 	ELSE
@@ -2558,7 +2558,7 @@ IF TFLAG:口上番号 == 12
 	IF TALENT:崩壊 == 1
 		PRINTFORMW 
 	;父親が主人で母親が愛持ち
-	ELSEIF TALENT:恋心 && CFLAG:誰によって妊娠させられたか == 1
+	ELSEIF TALENT:恋心 && CFLAG:妊娠精子 == 1
 		PRINTFORMW 
 	;その他
 	ELSE

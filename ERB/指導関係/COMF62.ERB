@@ -387,10 +387,10 @@ CALL INCEST
 ;調教者が童貞なら童貞喪失
 IF TALENT:PLAYER:童貞
 	TALENT:PLAYER:童貞 = 0
-	SIF CFLAG:PLAYER:ファーストキスの相手 == 0
-		CFLAG:PLAYER:ファーストキスの相手 = 1
-	IF CFLAG:PLAYER:包皮の状態 == 2
-		CFLAG:PLAYER:包皮の状態 = 3
+	SIF CFLAG:PLAYER:初キス相手 == 0
+		CFLAG:PLAYER:初キス相手 = 1
+	IF CFLAG:PLAYER:包皮状態 == 2
+		CFLAG:PLAYER:包皮状態 = 3
 	ENDIF
 ENDIF
 TARGET = C
@@ -401,31 +401,31 @@ IF TALENT:ASSI:処女 == 1
 	TIMES SOURCE:14 , 3.00
 	TALENT:ASSI:処女 = 0
 
-	IF CFLAG:ASSI:初体験の相手 == 0
-		;助手の初体験の相手を記録（初期値が0のため、+1して記録）
-		CFLAG:ASSI:初体験の相手 = 1
+	IF CFLAG:ASSI:処女喪失相手 == 0
+		;助手の処女喪失相手を記録（初期値が0のため、+1して記録）
+		CFLAG:ASSI:処女喪失相手 = 1
 		CSTR:ASSI:処女喪失の相手 = %CALLNAME:PLAYER%
 		TFLAG:助手を犯す処女喪失 = 1
 		;助手の初体験が近親相姦
-		;初体験の相手が自分の息子・娘という状況は生物学的にありえないので省く
+		;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
 		IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
-			CFLAG:ASSI:初体験の相手 = 300
+			CFLAG:ASSI:処女喪失相手 = 300
 		ELSEIF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:初体験の相手 = 301
+			CFLAG:ASSI:処女喪失相手 = 301
 		ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
-			CFLAG:ASSI:初体験の相手 = 304
+			CFLAG:ASSI:処女喪失相手 = 304
 		ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:初体験の相手 = 305
+			CFLAG:ASSI:処女喪失相手 = 305
 		ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
-			CFLAG:ASSI:初体験の相手 = 306
+			CFLAG:ASSI:処女喪失相手 = 306
 		ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:初体験の相手 = 307
+			CFLAG:ASSI:処女喪失相手 = 307
 		ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:初体験の相手 = 308
+			CFLAG:ASSI:処女喪失相手 = 308
 		ENDIF
 		CFLAG:ASSI:処女喪失年齢 = BASE:実年齢
-		CFLAG:ASSI:処女喪失月 = DAY:1
-		CFLAG:ASSI:処女喪失日 = DAY:2
+		CFLAG:ASSI:処女喪失月 = DAY:日付_月
+		CFLAG:ASSI:処女喪失日 = DAY:日付_日
 		CFLAG:ASSI:処女喪失場所 = 14
 		CFLAG:ASSI:処女喪失シチュ = 1
 	ENDIF

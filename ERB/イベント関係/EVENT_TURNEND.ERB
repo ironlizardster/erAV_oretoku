@@ -112,14 +112,14 @@ IF TIME == 1
 			ELSEIF CFLAG:COUNT:入寮中 == 1 && (FLAG:女子寮拡張 & 128)
 				CONTINUE
 			ELSEIF TALENT:COUNT:オトコ == 0
-				CFLAG:COUNT:寝取られ進行ポイント += RAND:5
+				CFLAG:COUNT:NTR進行 += RAND:5
 					IF TALENT:COUNT:惚れっぽい
-						CFLAG:COUNT:寝取られ進行ポイント += RAND:5
+						CFLAG:COUNT:NTR進行 += RAND:5
 					ENDIF
 					IF TALENT:COUNT:ギャル系
-						CFLAG:COUNT:寝取られ進行ポイント += RAND:5
+						CFLAG:COUNT:NTR進行 += RAND:5
 					ENDIF
-				SIF CFLAG:COUNT:寝取られ進行ポイント > CFLAG:COUNT:寝取られ完了値
+				SIF CFLAG:COUNT:NTR進行 > CFLAG:COUNT:NTR完了値
 				CALL EVENT_BOYFRIEND
 			ENDIF
 		REND
@@ -141,7 +141,7 @@ IF TIME == 1
 		REPEAT CHARANUM
 			IF COUNT == 0
 				CONTINUE
-			ELSEIF CFLAG:COUNT:彼氏の有無 == 1
+			ELSEIF CFLAG:COUNT:彼氏有 == 1
 				CALL EVENT_BOYFRIEND2
 			ENDIF
 		REND
@@ -200,8 +200,8 @@ IF TIME == 1
 		CALL MARTINA_APPROACHING_CALC
 	SIF FLAG:女子寮建設
 		CALL LYCEE_EVENT_WEEKEND
-	DAY = DAY+1
-	PRINTW 一週間が終わった……
+
+	PRINTW 一日が終わった……
 
 	;排卵誘発剤の効果終了処理
 	REPEAT CHARANUM
@@ -217,17 +217,18 @@ IF TIME == 1
 	REND
 	;育毛剤の効果終了処理
 	REPEAT CHARANUM
-		IF CFLAG:COUNT:剛毛剤使用フラグ
+		IF CFLAG:COUNT:剛毛剤使用
 			PRINTFORML %NAME:COUNT%の育毛剤の効果が切れたようだ
-			CFLAG:COUNT:剛毛剤使用フラグ = 0
+			CFLAG:COUNT:剛毛剤使用 = 0
 		ENDIF
 	REND
-
-	DAY:2 = DAY:2 + 1
+		
 	;先週が月末だったら月替わり処理
 	SIF END_OF_MONTH
 		CALL EVENT_NEXTMONTH
 	
+	CALL NEXTDAY
+
 	TIME = 0
 
 	;翌朝に起こる出来事
@@ -299,7 +300,7 @@ REPEAT CHARANUM
 	ENDIF
 	
 	;今回の調教対象でなく営業中でなければ回復量増加
-	SIF COUNT != TARGET && CFLAG:COUNT:労役中のフラグ == 0
+	SIF COUNT != TARGET && CFLAG:COUNT:営業内容 == 0
 		A += 100
 	
 	;回復早い、回復遅い、アンドロイド、淫魔、天使
@@ -332,7 +333,7 @@ REPEAT CHARANUM
 	ENDIF
 
 	;営業中なら体力回復が遅れる
-	SIF CFLAG:COUNT:労役中のフラグ
+	SIF CFLAG:COUNT:営業内容
 		A /= 5
 
 	;嫉妬
@@ -384,17 +385,17 @@ SIF FLAG:陰毛を生やす == 0
 
 REPEAT CHARANUM
 	;剛毛剤使用中か剛毛体質
-	SIF (CFLAG:COUNT:剛毛剤使用フラグ || TALENT:COUNT:剛毛) && CFLAG:COUNT:陰毛の状態 <= 25
-		CFLAG:COUNT:陰毛の状態 += 1
+	SIF (CFLAG:COUNT:剛毛剤使用 || TALENT:COUNT:剛毛) && CFLAG:COUNT:陰毛状態 <= 25
+		CFLAG:COUNT:陰毛状態 += 1
 
 	;【パイパン】消失
-	IF TALENT:COUNT:パイパン && CFLAG:COUNT:陰毛の状態 > 5
+	IF TALENT:COUNT:パイパン && CFLAG:COUNT:陰毛状態 > 5
 		PRINTFORMW %NAME:COUNT%の性器にうっすらと毛が生え始めている……
 		PRINTFORMW %NAME:COUNT%は【%TALENTNAME:[[TALENT:パイパン]]%】でなくなった。	
 		TALENT:COUNT:パイパン = 0
 	ENDIF
 	;【剛毛体質】獲得
-	IF TALENT:COUNT:剛毛 == 0 && CFLAG:COUNT:陰毛の状態 > 18
+	IF TALENT:COUNT:剛毛 == 0 && CFLAG:COUNT:陰毛状態 > 18
 		PRINTFORML %NAME:COUNT%の下腹部は恥丘からアナルまで、
 		PRINTFORMW 密生した陰毛に覆われている……
 		PRINTFORMW %NAME:COUNT%は【%TALENTNAME:[[TALENT:剛毛]]%】になった。	
@@ -405,21 +406,21 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:パイパン
 		CONTINUE
 	;永久脱毛してるならそのまま
-	SIF CFLAG:COUNT:陰毛の状態 < 0
+	SIF CFLAG:COUNT:陰毛状態 < 0
 		CONTINUE
 	;幼稚か中学生なら7までしか伸びない
-	SIF CFLAG:COUNT:陰毛の状態 >= 9 && (TALENT:COUNT:幼稚 || TALENT:COUNT:中学生)
+	SIF CFLAG:COUNT:陰毛状態 >= 9 && (TALENT:COUNT:幼稚 || TALENT:COUNT:中学生)
 		CONTINUE
-	SIF CFLAG:COUNT:陰毛の状態 >= 9 && TALENT:COUNT:褐色肌
+	SIF CFLAG:COUNT:陰毛状態 >= 9 && TALENT:COUNT:褐色肌
 		CONTINUE
 	;高校生なら9までしか伸びない
-	SIF CFLAG:COUNT:陰毛の状態 >= 12 && TALENT:COUNT:高校生
+	SIF CFLAG:COUNT:陰毛状態 >= 12 && TALENT:COUNT:高校生
 		CONTINUE
 	;通常の場合の上限は12
-	SIF CFLAG:COUNT:陰毛の状態 >= 12
+	SIF CFLAG:COUNT:陰毛状態 >= 12
 		CONTINUE
 	
-	CFLAG:COUNT:陰毛の状態 += 1
+	CFLAG:COUNT:陰毛状態 += 1
 
 REND
 

@@ -138,7 +138,7 @@ ELSE
 	LOCAL = GETCHARA([[キャラ:クリスティナ・ラーグラーデ]])
 	LOCAL:20 = GETCHARA([[キャラ:エルファリア・ラーグラーデ]])
 	WAIT
-	IF !GLOBAL:30 || (LOCAL != -1 && LOCAL:20 != -1 && (CFLAG:(LOCAL:10):父親のキャラ番号 != 0 || !TALENT:LOCAL:永遠の愛))
+	IF !GLOBAL:30 || (LOCAL != -1 && LOCAL:20 != -1 && (CFLAG:(LOCAL:10):妊娠精子キャラ番号 != 0 || !TALENT:LOCAL:永遠の愛))
 		CALL キャラ削除, LOCAL
 	ELSE
 		TALENT:LOCAL:ミッション = 0
@@ -179,8 +179,8 @@ F = 0
 LOCAL:10 = GETCHARA([[キャラ:クリスティナ・ラーグラーデ]])
 
 IF LOCAL:10 != -1
-	SIF CFLAG:(LOCAL:10):父親のキャラ番号 >= 0
-		F = CFLAG:(LOCAL:10):父親のキャラ番号
+	SIF CFLAG:(LOCAL:10):妊娠精子キャラ番号 >= 0
+		F = CFLAG:(LOCAL:10):妊娠精子キャラ番号
 
 	CALL キャラ追加([[キャラ:エルファリア・ラーグラーデ]])
 	LOCAL:20 = GETCHARA([[キャラ:エルファリア・ラーグラーデ]])
@@ -219,23 +219,23 @@ IF LOCAL:10 != -1
 				TALENT:(LOCAL:20):ふたなり = 1
 				TALENT:(LOCAL:20):童貞 = 1
 				BASE:(LOCAL:20):ペニスサイズ = 13 + RAND:5
-				CFLAG:(LOCAL:20):包皮の状態 = 1 + RAND:3
+				CFLAG:(LOCAL:20):包皮状態 = 1 + RAND:3
 			ENDIF
 			RELATION:(LOCAL:20):(GETCHARA(F)) = 500
 			RELATION:(GETCHARA(F)):(LOCAL:20) = 500
-		ELSEIF CFLAG:(LOCAL:10):父親のキャラ番号 == -1
+		ELSEIF CFLAG:(LOCAL:10):妊娠精子キャラ番号 == -1
 			PRINTFORML %CALLNAME:(LOCAL:10)%の産んだ父親不明の娘？が恩返しとして母親の代わりにあなたに協力しにきてくれたようだ
 			MAXBASE:(LOCAL:20):体力 += 100
 			MAXBASE:(LOCAL:20):気力 += 100
 			BASE:(LOCAL:20):体力 += 100
 			BASE:(LOCAL:20):気力 += 100
-		ELSEIF CFLAG:(LOCAL:10):父親のキャラ番号 == -2
+		ELSEIF CFLAG:(LOCAL:10):妊娠精子キャラ番号 == -2
 			PRINTFORML %CALLNAME:(LOCAL:10)%の産んだ犬の娘？が恩返しとして母親の代わりにあなたに協力しにきてくれたようだ
 			MAXBASE:(LOCAL:20):体力 += 400
 			TALENT:(LOCAL:20):外国人 = 0
 			TALENT:(LOCAL:20):ハーフ = 1
 			TALENT:(LOCAL:20):動物耳 = 1
-		ELSEIF CFLAG:(LOCAL:10):父親のキャラ番号 == -3
+		ELSEIF CFLAG:(LOCAL:10):妊娠精子キャラ番号 == -3
 			PRINTFORML %CALLNAME:(LOCAL:10)%の産んだ触手の娘？が恩返しとして母親の代わりにあなたに協力しにきてくれたようだ
 			MAXBASE:(LOCAL:20):体力 += 500
 			MAXBASE:(LOCAL:20):気力 += 500

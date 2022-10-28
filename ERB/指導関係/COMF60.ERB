@@ -407,16 +407,16 @@ ENDIF
 STAIN:0 |= STAIN:PLAYER:0
 STAIN:PLAYER:0 |= STAIN:0
 
-;ファーストキス
-IF CFLAG:ファーストキスの相手 == -1
-	TFLAG:ファーストキス口以外 = 1
-	CFLAG:ファーストキスの相手 = 1
-	CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%
-	TFLAG:ファーストキス = 1
+;初キス
+IF CFLAG:初キス相手 == -1
+	TFLAG:初キス口以外 = 1
+	CFLAG:初キス相手 = 1
+	CSTR:初キス相手 = %CALLNAME:PLAYER%
+	TFLAG:初キス = 1
 ENDIF
-IF CFLAG:PLAYER:ファーストキスの相手 == -1
-	CFLAG:PLAYER:ファーストキスの相手 = 1
-	CSTR:PLAYER:ファーストキスの相手 = %CALLNAME:TARGET%
+IF CFLAG:PLAYER:初キス相手 == -1
+	CFLAG:PLAYER:初キス相手 = 1
+	CSTR:PLAYER:初キス相手 = %CALLNAME:TARGET%
 ENDIF
 
 IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0

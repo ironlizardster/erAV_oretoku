@@ -28,13 +28,13 @@ SIF TEQUIP:三角木馬騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;性器が精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合クンニはできない（調教者が汚れ無視ならＯＫ）
 IF (STAIN:2 & 4 || STAIN:2 & 8 || STAIN:2 & 32) && ASSIPLAY
@@ -57,13 +57,13 @@ SIF TEQUIP:三角木馬騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;主人プレイなら自動成功
 IF ASSIPLAY == 0
@@ -123,13 +123,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -166,13 +166,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 16)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -187,7 +187,7 @@ SIF TALENT:オトコ
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -259,13 +259,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -299,16 +299,16 @@ SIF TEQUIP:獣姦プレイ
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -351,10 +351,10 @@ SIF TEQUIP:アナル電極
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -386,13 +386,13 @@ SIF TEQUIP:獣姦プレイ
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -421,16 +421,16 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:バイブ
@@ -489,7 +489,7 @@ SIF TEQUIP:顔面騎乗
 SIF TEQUIP:シャワー
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -521,13 +521,13 @@ SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:アナルバイブ
@@ -576,13 +576,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:クリキャップ
@@ -625,7 +625,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:ニプルキャップ
@@ -668,7 +668,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:搾乳機
@@ -722,13 +722,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:オナホール
@@ -778,7 +778,7 @@ ENDIF
 ;全裸じゃないとダメ
 IF CFLAG:着衣状態
 	;ただし一部の特殊装備品のみなら可
-	SIF CFLAG:着衣状態 != 64 || CFLAG:特別コスチュームのタイプ <= 70 || CFLAG:上着のタイプ <= 240 && CFLAG:上着のタイプ >= 250 && CFLAG:上着のタイプ != 191
+	SIF CFLAG:着衣状態 != 64 || CFLAG:特別コスタイプ <= 70 || CFLAG:上着タイプ <= 240 && CFLAG:上着タイプ >= 250 && CFLAG:上着タイプ != 191
 		RETURN 0
 ENDIF
 RETURN 1
@@ -808,13 +808,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:アナルビーズ
@@ -887,16 +887,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -948,16 +948,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1015,16 +1015,16 @@ ENDIF
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1081,16 +1081,16 @@ ENDIF
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1149,17 +1149,17 @@ IF FLAG:着衣使用 == 1
 	SIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 16)
 		RETURN 0
 	;黒ストッキングだとダメ
-	SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 	;オムツをはいているとダメ
-	SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 		RETURN 0
 	;ズーコの着ぐるみを着てるとダメ
-;	SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+;	SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 ;		RETURN 0
 ENDIF
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1215,17 +1215,17 @@ IF FLAG:着衣使用 == 1
 	SIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 16)
 		RETURN 0
 	;黒ストッキングだとダメ
-	SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+	SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 	;オムツをはいているとダメ
-	SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 		RETURN 0
 	;ズーコの着ぐるみを着てるとダメ
-;	SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+;	SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 ;		RETURN 0
 ENDIF
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1281,13 +1281,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1337,13 +1337,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1399,13 +1399,13 @@ ENDIF
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1460,13 +1460,13 @@ ENDIF
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1504,7 +1504,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1547,7 +1547,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1608,7 +1608,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1658,13 +1658,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1718,16 +1718,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1786,7 +1786,7 @@ SIF TEQUIP:アナル電極
 ;全裸じゃないとダメ
 IF CFLAG:着衣状態
 	;ただし一部の特殊装備品のみなら可
-	SIF CFLAG:特別コスチュームのタイプ <= 70
+	SIF CFLAG:特別コスタイプ <= 70
 		RETURN 0
 ENDIF
 RETURN 1
@@ -1846,13 +1846,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -1894,7 +1894,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1926,7 +1926,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -1960,7 +1960,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -2062,7 +2062,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:アイマスク
@@ -2119,7 +2119,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:ボールギャグ
@@ -2158,13 +2158,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
@@ -2240,13 +2240,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -2275,13 +2275,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
 SIF TEQUIP:アナル電極
@@ -2502,7 +2502,7 @@ SIF TEQUIP:顔面騎乗
 ;全裸じゃないとダメ
 IF CFLAG:着衣状態
 	;ただし一部の特殊装備品のみなら可
-	SIF CFLAG:着衣状態 != 64 || CFLAG:特別コスチュームのタイプ <= 70 || CFLAG:上着のタイプ <= 240 && CFLAG:上着のタイプ >= 250 && CFLAG:上着のタイプ != 191
+	SIF CFLAG:着衣状態 != 64 || CFLAG:特別コスタイプ <= 70 || CFLAG:上着タイプ <= 240 && CFLAG:上着タイプ >= 250 && CFLAG:上着タイプ != 191
 		RETURN 0
 ENDIF
 RETURN 1
@@ -2628,7 +2628,7 @@ SIF TEQUIP:三角木馬騎乗
 SIF TEQUIP:獣姦プレイ
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -2678,7 +2678,7 @@ SIF TEQUIP:顔面騎乗
 SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 	RETURN 0
 ;助手が貞操帯を付けているとダメ
-SIF CFLAG:ASSI:特別コスチュームのタイプ == 79 && (CFLAG:ASSI:着衣状態 & 64)
+SIF CFLAG:ASSI:特別コスタイプ == 79 && (CFLAG:ASSI:着衣状態 & 64)
 	RETURN 0
 ;対象から助手への相性が良くないとダメ
 R = NO:ASSI
@@ -2733,13 +2733,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -2810,16 +2810,16 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -2869,19 +2869,19 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;助手が貞操帯を付けているとダメ
-SIF CFLAG:PLAYER:特別コスチュームのタイプ == 79 && (CFLAG:PLAYER:着衣状態 & 64)
+SIF CFLAG:PLAYER:特別コスタイプ == 79 && (CFLAG:PLAYER:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -2934,7 +2934,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -2986,7 +2986,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3031,13 +3031,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -3093,13 +3093,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -3164,7 +3164,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -3206,7 +3206,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3261,16 +3261,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3331,13 +3331,13 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3398,16 +3398,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3444,7 +3444,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE87
 ;対象がピアシングされているかアイテムにピアスがないとダメ
-SIF  ITEM:ピアスリング == 0 && ((CFLAG:ピアスの装着状況 & 1) == 0 && (CFLAG:ピアスの装着状況 & 2) == 0 && (CFLAG:ピアスの装着状況 & 4) == 0 && (CFLAG:ピアスの装着状況 & 8) == 0 && (CFLAG:ピアスの装着状況 & 16) == 0)
+SIF  ITEM:ピアスリング == 0 && ((CFLAG:ピアス状況 & 1) == 0 && (CFLAG:ピアス状況 & 2) == 0 && (CFLAG:ピアス状況 & 4) == 0 && (CFLAG:ピアス状況 & 8) == 0 && (CFLAG:ピアス状況 & 16) == 0)
 	RETURN 0
 ;獣姦プレイ中はダメ
 SIF TEQUIP:獣姦プレイ
@@ -3476,7 +3476,7 @@ SIF TEQUIP:ニプルキャップ
 SIF TEQUIP:搾乳機
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3488,7 +3488,7 @@ RETURN 1
 SIF FLAG:陰毛を生やす == 0
 	RETURN 0
 ;ある程度生え揃ってないとダメ
-SIF CFLAG:陰毛の状態 < 6
+SIF CFLAG:陰毛状態 < 6
 	RETURN 0
 ;獣姦プレイ中はダメ
 SIF TEQUIP:獣姦プレイ
@@ -3517,13 +3517,13 @@ SIF TEQUIP:バイブ
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3595,13 +3595,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3647,13 +3647,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3682,7 +3682,7 @@ SIF TEQUIP:スライム生成
 SIF TEQUIP:獣姦プレイ
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3730,7 +3730,7 @@ SIF TEQUIP:触手召喚 == 0
 SIF TALENT:オトコ
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -3814,7 +3814,7 @@ RETURN 1
 SIF FLAG:着衣使用 == 0
 	RETURN 0
 ;着衣フラグが存在しないとダメ
-SIF CFLAG:上着のタイプ == 0 && CFLAG:特別コスチュームのタイプ == 0
+SIF CFLAG:上着タイプ == 0 && CFLAG:特別コスタイプ == 0
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -3849,7 +3849,7 @@ RETURN 1
 SIF FLAG:着衣使用 == 0
 	RETURN 0
 ;着衣フラグが存在しないとダメ
-SIF CFLAG:上着のタイプ == 0 && CFLAG:特別コスチュームのタイプ == 0
+SIF CFLAG:上着タイプ == 0 && CFLAG:特別コスタイプ == 0
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -3935,16 +3935,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4001,16 +4001,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4048,16 +4048,16 @@ SIF TEQUIP:獣姦プレイ
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4124,7 +4124,7 @@ SIF TEQUIP:獣姦プレイ
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 	
 RETURN 1
@@ -4174,7 +4174,7 @@ SIF TEQUIP:スライム生成
 SIF TEQUIP:三角木馬騎乗
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4238,13 +4238,13 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -4296,7 +4296,7 @@ SIF TEQUIP:三角木馬騎乗
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -4345,7 +4345,7 @@ SIF TEQUIP:スライム生成
 	RETURN 0
 						;****スライムパッチ追加ここまで****
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 ;-------------------------------------------------
@@ -4404,16 +4404,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4473,16 +4473,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4542,16 +4542,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4608,16 +4608,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4674,16 +4674,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4740,16 +4740,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4806,16 +4806,16 @@ SIF TEQUIP:お風呂場プレイ && ITEM:プレイマット == 0 && NOITEM == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 
 RETURN 1
@@ -4853,10 +4853,10 @@ SIF TEQUIP:スライム生成
 SIF TEQUIP:三角木馬騎乗
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 ;-------------------------------------------------
@@ -4968,7 +4968,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -5023,7 +5023,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -5078,7 +5078,7 @@ SIF TEQUIP:顔面騎乗
 SIF (CFLAG:着衣状態 & 6)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -5154,19 +5154,19 @@ SIF TEQUIP:スライム生成 == 0
 SIF TALENT:オトコ
 	RETURN 0
 ;貞操帯を付けているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;パンツか上着下・ズボンタイプを着てるとダメ
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -5178,13 +5178,13 @@ SIF TEQUIP:スライム生成 == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -5196,13 +5196,13 @@ SIF TEQUIP:スライム生成 == 0
 SIF (CFLAG:着衣状態 & 17)
 	RETURN 0
 ;黒ストッキングだとダメ
-SIF CFLAG:靴下の種類 == 6 && CFLAG:靴下の着用状態 == 0
+SIF CFLAG:靴下タイプ == 6 && CFLAG:靴下着用 == 0
 	RETURN 0
 ;オムツをはいているとダメ
-SIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 
@@ -5278,7 +5278,7 @@ SIF TEQUIP:三角木馬騎乗
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;ズーコの着ぐるみを着てるとダメ
-SIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 RETURN 1
 

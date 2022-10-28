@@ -4,7 +4,7 @@
 @IDOL_PRODUCE_CALC
 
 ;月初めのみ
-SIF DAY:2 > 1 
+SIF DAY:日付_日 > 1 
 	RETURN
 
 A = 0
@@ -120,7 +120,7 @@ REPEAT CHARANUM
 							PRINTFORML %CALLNAME:COUNT%のユニット加入を確認します
 						ELSEIF RESULT == 1
 							PRINTFORML %CALLNAME:COUNT%のユニット加入を確認しません
-							CFLAG:COUNT:[[CFLAG:ユニット加入なし]] = 1
+							CFLAG:COUNT:ユニット加入なし = 1
 						ELSE
 							GOTO INPUT_LOOP_DECIDE4
 						ENDIF
@@ -149,4 +149,4 @@ NEXT
 
 @SKIP_ADD_ORIGINAL(ARG)
 #FUNCTION
-RETURNF !TALENT:ARG:アイドル || CFLAG:ARG:[[CFLAG:ユニット加入なし]] || TALENT:ARG:ColorfulPureGirls || TALENT:ARG:オリジナルユニット || TALENT:ARG:[[TALENT:Mermaid girl]] || TALENT:ARG:Triptych || TALENT:ARG:[[TALENT:Emerald Queen]] || TALENT:ARG:[[TALENT:Lily Princess]] || TALENT:ARG:ILMATAR || TALENT:ARG:AVALOKITESVARA || TALENT:ARG:QueenB 
+RETURNF !TALENT:ARG:アイドル || CFLAG:ARG:ユニット加入なし || TALENT:ARG:ColorfulPureGirls || TALENT:ARG:オリジナルユニット || TALENT:ARG:[[TALENT:Mermaid girl]] || TALENT:ARG:Triptych || TALENT:ARG:[[TALENT:Emerald Queen]] || TALENT:ARG:[[TALENT:Lily Princess]] || TALENT:ARG:ILMATAR || TALENT:ARG:AVALOKITESVARA || TALENT:ARG:QueenB 

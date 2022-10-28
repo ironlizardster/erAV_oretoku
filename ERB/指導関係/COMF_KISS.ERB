@@ -5,8 +5,8 @@
 SIF FLAG:82
 	RETURN 1
 $INPUT_LOOP_01
-IF CFLAG:ファーストキスの相手 == -1
-	PRINTFORML %CALLNAME:TARGET%のファーストキスを奪いますか？
+IF CFLAG:初キス相手 == -1
+	PRINTFORML %CALLNAME:TARGET%の初キスを奪いますか？
 	PRINTL  [0] - はい
 	PRINTL  [1] - いいえ
 	INPUT

@@ -7,7 +7,7 @@
 DRAWLINE
 
 ;コンドーム使用フラグ外す
-CFLAG:労役でコンドーム使用 = 0
+CFLAG:営業コンドーム = 0
 
 ;ローカル変数初期化
 A = 0
@@ -166,7 +166,7 @@ REPEAT CHARANUM
 		CONTINUE
 	SIF TALENT:COUNT:オトコ
 		CONTINUE
-	SIF CFLAG:COUNT:特別コスチュームのタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)
+	SIF CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)
 		CONTINUE
 	F = 0
 REND
@@ -183,10 +183,10 @@ S = 0
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:営業でＶ使用不能フラグ
+	SIF CFLAG:売春Ｖ不能
 		CONTINUE
 	IF TALENT:COUNT:処女
-		CFLAG:COUNT:Ｖ売春で処女喪失フラグ = 1
+		CFLAG:COUNT:売春処女喪失 = 1
 		SIF S == 0
 			PRINTL  
 		SIF S
@@ -250,8 +250,8 @@ TARGET = -1
 IF TALENT:X:淫乱 && (TALENT:X:マゾ || TALENT:X:露出狂 || TALENT:X:尻穴狂い)
 	IF ASSI > 0
 		IF TALENT:ASSI:淫乱 && (TALENT:ASSI:マゾ || TALENT:ASSI:露出狂 || TALENT:ASSI:尻穴狂い)
-			CFLAG:X:公衆便所プレイで公開浣腸ショー = 1
-			CFLAG:ASSI:公衆便所プレイで公開浣腸ショー = 1
+			CFLAG:X:便所公開浣腸 = 1
+			CFLAG:ASSI:便所公開浣腸 = 1
 			PRINTFORMW 最後に、客の誰かが持ってきた浣腸器で%CALLNAME:X%と%CALLNAME:ASSI%のアヌスに浣腸液が注ぎ込まれた
 			PRINTFORMW %CALLNAME:X%たちは切ない声を上げて、客が見守る中、卑猥な音を立てて汚物を噴出した
 			PRINTFORMW その姿に興奮した客達は、嬉しそうな声を上げて彼女に拍手を送っている
@@ -275,7 +275,7 @@ ELSEIF ASSI > 0
 		TARGET = ASSI
 ENDIF
 IF TARGET > 1
-	CFLAG:公衆便所プレイで公開浣腸ショー = 1
+	CFLAG:便所公開浣腸 = 1
 	PRINTFORMW 最後に、客の誰かが持ってきた浣腸器で%CALLNAME:TARGET%のアヌスに浣腸液が注ぎ込まれた
 	PRINTFORMW %CALLNAME:TARGET%は切ない声を上げて、客が見守る中、卑猥な音を立てて汚物を噴出した
 	PRINTFORMW その姿に興奮した客達は、嬉しそうな声を上げて彼女に拍手を送っている
@@ -328,7 +328,7 @@ REPEAT CHARANUM
 
 	;各素質に応じて加減
 	;処女だった
-	SIF CFLAG:COUNT:Ｖ売春で処女喪失フラグ
+	SIF CFLAG:COUNT:売春処女喪失
 		B += 10
 	;反抗的
 	SIF TALENT:COUNT:ナマイキ && ABL:COUNT:欲望 <= 3
@@ -406,11 +406,11 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:常連客
 		B += 3
 	;公開浣腸ショー
-	SIF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー == 1
+	SIF CFLAG:COUNT:便所公開浣腸 == 1
 		B += 5
 	
 	;Ｖ使用不可キャラ
-	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+	SIF CFLAG:COUNT:売春Ｖ不能
 		B -= 10
 
 	;狂気・崩壊があると満足度激減
@@ -543,7 +543,7 @@ REPEAT CHARANUM
 	LOSEBASE:体力 = G * 40
 
 	;処女喪失だとかなり増える
-	SIF CFLAG:Ｖ売春で処女喪失フラグ
+	SIF CFLAG:売春処女喪失
 		TIMES LOSEBASE:体力 , 2.00
 
 	;売春中毒のレベルに応じてちょっとずつ減る
@@ -560,13 +560,13 @@ REPEAT CHARANUM
 	ENDIF
 	
 	;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
-	SIF EXP:Ｖ経験 <= 200 && CFLAG:営業でＶ使用不能フラグ == 0
+	SIF EXP:Ｖ経験 <= 200 && CFLAG:売春Ｖ不能 == 0
 		TIMES LOSEBASE:体力 , 1.10
 	SIF EXP:Ａ経験 <= 200
 		TIMES LOSEBASE:体力 , 1.20
 	
 	;公開浣腸ショーをするとかなり増える
-	SIF CFLAG:公衆便所プレイで公開浣腸ショー
+	SIF CFLAG:便所公開浣腸
 		TIMES LOSEBASE:体力 , 1.50
 
 	;参加人数に応じて疲労軽減
@@ -685,7 +685,7 @@ REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
 	;処女喪失ならば増える
-	IF CFLAG:COUNT:Ｖ売春で処女喪失フラグ
+	IF CFLAG:COUNT:売春処女喪失
 		V = 200
 		PRINTFORM 処女喪失(%CALLNAME:COUNT%)
 		PRINTFORML  ×{V/100}.{V%100}
@@ -694,7 +694,7 @@ REPEAT CHARANUM
 		V = 0
 	ENDIF
 	;公開浣腸ショーがあれば増える
-	IF CFLAG:COUNT:公衆便所プレイで公開浣腸ショー
+	IF CFLAG:COUNT:便所公開浣腸
 		V = 130
 		PRINTFORM 公開排泄(%CALLNAME:COUNT%)
 		PRINTFORML  ×{V/100}.{V%100}
@@ -703,7 +703,7 @@ REPEAT CHARANUM
 		V = 0
 	ENDIF
 	;Ｖ使用不可キャラがいると減る
-	IF CFLAG:COUNT:営業でＶ使用不能フラグ
+	IF CFLAG:COUNT:売春Ｖ不能
 		V = 70
 		IF TALENT:COUNT:オトコ
 			PRINT オトコ
@@ -733,10 +733,10 @@ MONEY += Q
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	CFLAG:Ｖ売春で処女喪失フラグ = 0
-	CFLAG:Ｖ売春で否定の珠増加フラグ = 0
-	CFLAG:Ａ売春で否定の珠増加フラグ = 0
-	CFLAG:公衆便所プレイで公開浣腸ショー = 0
+	CFLAG:売春処女喪失 = 0
+	CFLAG:Ｖ売春否定 = 0
+	CFLAG:Ａ売春否定 = 0
+	CFLAG:便所公開浣腸 = 0
 REND
 
 ;特殊営業終了処理

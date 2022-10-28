@@ -99,17 +99,17 @@ IF CFLAG:アナル処女喪失場所 == 0 || CFLAG:アナル処女喪失場所 >
 ELSE
 	IF CFLAG:アナル処女喪失場所 == 1
 		PRINTFORM %CALLNAME:TARGET%の部屋
-	ELSEIF CFLAG:アナル処女喪失場所 == 2 && CFLAG:アナル処女喪失の相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏性経験 >= 1
-		IF CSTR:アナル処女喪失の相手 == ""
+	ELSEIF CFLAG:アナル処女喪失場所 == 2 && CFLAG:アナル処女喪失相手 == 8 && TALENT:彼氏あり == 0 && EXP:彼氏性経験 >= 1
+		IF CSTR:アナル処女喪失相手 == ""
 			PRINTFORM 元カレの部屋
 		ELSE
-			PRINTFORM %CSTR:アナル処女喪失の相手%（元カレ）の部屋
+			PRINTFORM %CSTR:アナル処女喪失相手%（元カレ）の部屋
 		ENDIF		
-	ELSEIF CFLAG:アナル処女喪失場所 == 2 && CFLAG:アナル処女喪失の相手 == 8 && TALENT:彼氏あり == 1
-		IF CSTR:アナル処女喪失の相手 == ""
+	ELSEIF CFLAG:アナル処女喪失場所 == 2 && CFLAG:アナル処女喪失相手 == 8 && TALENT:彼氏あり == 1
+		IF CSTR:アナル処女喪失相手 == ""
 			PRINTFORM カレシの部屋
 		ELSE
-			PRINTFORM %CSTR:アナル処女喪失の相手%（カレシ）の部屋
+			PRINTFORM %CSTR:アナル処女喪失相手%（カレシ）の部屋
 		ENDIF	
 	ELSEIF CFLAG:アナル処女喪失場所 == 3
 		PRINTFORM ラブホテル
@@ -143,61 +143,61 @@ ENDIF
 SIF CFLAG:アナル処女喪失誕生日記念 == 1
 	PRINTFORM 誕生日記念に
 
-IF CFLAG:アナル処女喪失の相手 == 0
+IF CFLAG:アナル処女喪失相手 == 0
 	PRINTFORM 覚えていない誰か
-ELSEIF CFLAG:アナル処女喪失の相手 == 1
-	PRINTFORM %CSTR:アナル処女喪失の相手%
-ELSEIF CFLAG:アナル処女喪失の相手 == 2
+ELSEIF CFLAG:アナル処女喪失相手 == 1
+	PRINTFORM %CSTR:アナル処女喪失相手%
+ELSEIF CFLAG:アナル処女喪失相手 == 2
 	PRINTFORM 売春で名前も知らない男性客
-ELSEIF CFLAG:アナル処女喪失の相手 == 3
+ELSEIF CFLAG:アナル処女喪失相手 == 3
 	PRINTFORM 売春で名前も知らない女性客
-ELSEIF CFLAG:アナル処女喪失の相手 == 4
+ELSEIF CFLAG:アナル処女喪失相手 == 4
 	PRINTFORM アナルバイブ
-ELSEIF CFLAG:アナル処女喪失の相手 == 5
+ELSEIF CFLAG:アナル処女喪失相手 == 5
 	PRINTFORM 極太アナルバイブ
-ELSEIF CFLAG:アナル処女喪失の相手 == 6
+ELSEIF CFLAG:アナル処女喪失相手 == 6
 	PRINTFORM 売春で名前も知らない客
-ELSEIF CFLAG:アナル処女喪失の相手 == 7
+ELSEIF CFLAG:アナル処女喪失相手 == 7
 	PRINTFORM 痴漢
-ELSEIF CFLAG:アナル処女喪失の相手 == 8 && CFLAG:837 == 1
-	IF CSTR:アナル処女喪失の相手 == ""
+ELSEIF CFLAG:アナル処女喪失相手 == 8 && CFLAG:837 == 1
+	IF CSTR:アナル処女喪失相手 == ""
 		PRINTFORM 元カレ
 	ELSE
-		PRINTFORM %CSTR:アナル処女喪失の相手%（元カレ）
+		PRINTFORM %CSTR:アナル処女喪失相手%（元カレ）
 	ENDIF
-ELSEIF CFLAG:アナル処女喪失の相手 == 8 && TALENT:彼氏あり == 1
+ELSEIF CFLAG:アナル処女喪失相手 == 8 && TALENT:彼氏あり == 1
 ;;;; && CFLAG:アナル処女喪失場所 != 2
-	IF CSTR:アナル処女喪失の相手 == ""
+	IF CSTR:アナル処女喪失相手 == ""
 		PRINTFORM カレシ
 	ELSE
-		PRINTFORM %CSTR:アナル処女喪失の相手%（カレシ）
+		PRINTFORM %CSTR:アナル処女喪失相手%（カレシ）
 	ENDIF	
-ELSEIF CFLAG:アナル処女喪失の相手 == 9
+ELSEIF CFLAG:アナル処女喪失相手 == 9
 	PRINTFORM セフレの%CSTR:セフレ姓%
-ELSEIF CFLAG:アナル処女喪失の相手 == 11
+ELSEIF CFLAG:アナル処女喪失相手 == 11
 	PRINTFORM 不良
 ;;;このあたりは対象者を入れる（状況だと、のちのち記述上の問題が生じやすいので）
-ELSEIF CFLAG:アナル処女喪失の相手 == 12
+ELSEIF CFLAG:アナル処女喪失相手 == 12
 	PRINTFORM 枕営業のお相手
-ELSEIF CFLAG:アナル処女喪失の相手 == 13
+ELSEIF CFLAG:アナル処女喪失相手 == 13
 	PRINTFORM 『接待』客
-ELSEIF CFLAG:アナル処女喪失の相手 == 14
+ELSEIF CFLAG:アナル処女喪失相手 == 14
 	PRINTFORM 触手生物
-ELSEIF CFLAG:アナル処女喪失の相手 == 15
+ELSEIF CFLAG:アナル処女喪失相手 == 15
 	PRINTFORM 夫
-ELSEIF CFLAG:アナル処女喪失の相手 == 16
+ELSEIF CFLAG:アナル処女喪失相手 == 16
 	PRINTFORM %NAME:MASTER%
 ENDIF
 
-IF CFLAG:アナル処女喪失の相手 != 4 && CFLAG:アナル処女喪失の相手 != 5 && CFLAG:アナル処女喪失の相手 != 7 && CFLAG:アナル処女喪失の相手 != 11 && CFLAG:アナル処女喪失の相手 != 12 && CFLAG:アナル処女喪失の相手 != 13 && CFLAG:アナル処女喪失の相手 != 8 && CFLAG:アナル処女喪失の相手 != 14
+IF CFLAG:アナル処女喪失相手 != 4 && CFLAG:アナル処女喪失相手 != 5 && CFLAG:アナル処女喪失相手 != 7 && CFLAG:アナル処女喪失相手 != 11 && CFLAG:アナル処女喪失相手 != 12 && CFLAG:アナル処女喪失相手 != 13 && CFLAG:アナル処女喪失相手 != 8 && CFLAG:アナル処女喪失相手 != 14
 	PRINTFORM と
-ELSEIF CFLAG:アナル処女喪失の相手 == 4 || CFLAG:アナル処女喪失の相手 == 5
+ELSEIF CFLAG:アナル処女喪失相手 == 4 || CFLAG:アナル処女喪失相手 == 5
 	PRINTFORM で
 ELSEIF CFLAG:アナル処女喪失シチュ >= 3
 	PRINTFORM に
-;ELSEIF CFLAG:アナル処女喪失の相手 >= 11 || CFLAG:アナル処女喪失シチュ == 3
+;ELSEIF CFLAG:アナル処女喪失相手 >= 11 || CFLAG:アナル処女喪失シチュ == 3
 ;	PRINTFORM に
-;ELSEIF CFLAG:アナル処女喪失場所 == 2 && CFLAG:アナル処女喪失の相手 == 8 && TALENT:彼氏あり == 1
+;ELSEIF CFLAG:アナル処女喪失場所 == 2 && CFLAG:アナル処女喪失相手 == 8 && TALENT:彼氏あり == 1
 ;	PRINTFORM 
 ELSE
 	PRINTFORM と
@@ -205,7 +205,7 @@ ENDIF
 
 
 
-IF CFLAG:アナル処女喪失シチュ == 0 && CFLAG:アナル処女喪失の相手 == 8
+IF CFLAG:アナル処女喪失シチュ == 0 && CFLAG:アナル処女喪失相手 == 8
 	PRINTFORM 
 ELSEIF CFLAG:アナル処女喪失シチュ == 1
 	PRINTFORM 指導中に

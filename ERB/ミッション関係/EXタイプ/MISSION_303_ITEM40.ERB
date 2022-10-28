@@ -107,7 +107,7 @@ SIF TALENT:薬毒耐性 == 0
 	LOCAL:1++
 SIF EXP:触手経験 >= 500
 	LOCAL:1++
-SIF CFLAG:父親のキャラ番号 == -3
+SIF CFLAG:妊娠精子キャラ番号 == -3
 	LOCAL:1++
 SIF LOCAL:1 == 6
 	RETURN 2
@@ -123,15 +123,15 @@ RETURN 0
 ;  ARG 成否判定の結果(0:失敗, 1:成功, 2:大成功)
 ;=================================================
 @MISSION_REPORT_303(ARG)
-CFLAG:マスターによる膣内射精カウント = 0
-CFLAG:誰によって妊娠させられたか = 0
-CFLAG:助手から奴隷への膣内射精カウント = 0
-CFLAG:奴隷から助手への膣内射精ウント = 0
-CFLAG:娼館などの客から奴隷への中田氏カウント = 0
-CFLAG:ノラ犬からの中田氏カウント = 0
-CFLAG:触手からの中田氏カウント = 0
+CFLAG:主奴膣内精子量 = 0
+CFLAG:妊娠精子 = 0
+CFLAG:助奴膣内精子量 = 0
+CFLAG:奴助膣内精子量 = 0
+CFLAG:客奴膣内精子量 = 0
+CFLAG:獣奴膣内精子量 = 0
+CFLAG:触奴膣内精子量 = 0
 CFLAG:出産日 = 0
-CFLAG:父親のキャラ番号 = 0
+CFLAG:妊娠精子キャラ番号 = 0
 MAXBASE:体力 += 500
 IF TALENT:爆乳
 	TALENT:爆乳 = 0

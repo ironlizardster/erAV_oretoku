@@ -19,13 +19,7 @@ PRINTL 《指導中の女優候補のＡＶを撮影しポイントを稼ぎま�
 PRINTL ※この機能は未完成です。
 PRINTL 　システム完成の暁には指導時のビデオ撮影より収入が多くなるように調整されると思います。
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  平日
-ELSE
-	PRINTL  週末
-ENDIF
+CALL PRINT_DAY_TIME
 
 ;撮影可能な女優数の確認
 T = 0
@@ -122,7 +116,7 @@ IF B < 3
 	GOTO INPUT_LOOP_0
 ENDIF
 ;臨月・育児中だと不可
-IF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
+IF CFLAG:RESULT:出産日 - 2 <= DAY:日付_経過日数 && TALENT:RESULT:妊娠
 	PRINTL 身重で、とても撮影を行えるような状態ではありません
 	WAIT
 	GOTO INPUT_LOOP_0
@@ -138,13 +132,13 @@ IF TALENT:RESULT:オトコ
 	WAIT
 	GOTO INPUT_LOOP_0
 ENDIF
-IF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+IF TIME == 1 && CFLAG:RESULT:営業内容 != 0
 	PRINTL 営業が終わるまで調教対象として選択できません
 	WAIT
 	GOTO INPUT_LOOP_0
 ENDIF
 
-CFLAG:RESULT:労役中のフラグ = 0
+CFLAG:RESULT:営業内容 = 0
 TARGET = RESULT
 
 ;まだデビュー前の場合、ここで芸名を決定する
@@ -176,7 +170,7 @@ ENDIF
 PRINTL 誰を助手にしますか？
 CALL LIFE_LIST_NEW,LL_MODE_指導可, 1
 DRAWLINE
-IF RESULT == COMMAND_GO_BACK || RESULT == 0 || RESULT < 0 || RESULT >= CHARANUM || CFLAG:RESULT:売却助手可能 < 2 || BASE:RESULT:体力 < 500 || TALENT:RESULT:育児中 || (CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠) || (TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0) || RESULT == TARGET
+IF RESULT == COMMAND_GO_BACK || RESULT == 0 || RESULT < 0 || RESULT >= CHARANUM || CFLAG:RESULT:売却助手可能 < 2 || BASE:RESULT:体力 < 500 || TALENT:RESULT:育児中 || (CFLAG:RESULT:出産日 - 2 <= DAY:日付_経過日数 && TALENT:RESULT:妊娠) || (TIME == 1 && CFLAG:RESULT:営業内容 != 0) || RESULT == TARGET
 	ASSI = -1
 ELSE
 	ASSI = RESULT
@@ -291,7 +285,7 @@ ENDIF
 ; PAGE		現在の表示ページ番号を格納する変数 (要素数1)
 ; PAGE_END	ページ番号の最大値を格納する変数 (要素数1)
 #LOCALSIZE 50
-#DIM LIST, CURRENT_MAX_CHARA_ID
+#DIM LIST, 固有キャラ最大ID
 #DIM PAGE
 #DIM PAGE_END
 VARSET LIST, -1

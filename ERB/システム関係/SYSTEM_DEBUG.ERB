@@ -20,7 +20,7 @@ INPUT
 
 IF RESULT == 0
 	PRINTL どの難易度にしますか？
-	IF FLAG:EASYモードを経由したデータ
+	IF FLAG:EASY経由
 		PRINTL （1:EASY 2:NORMAL 3:HARD 4:POWERFUL 9:EXTRA）
 	ELSE
 		PRINTL （1:EASY 2:実績チャレンジ 3:HARD 4:POWERFUL 9:EXTRA）
@@ -53,10 +53,10 @@ ELSEIF RESULT == 1
 	DAY = RESULT
 	PRINTL 何月にしますか？
 	INPUT
-	DAY:1 = RESULT
+	DAY:日付_月 = RESULT
 	PRINTL 月の何週にしますか？
 	INPUT
-	DAY:2 = RESULT
+	DAY:日付_日 = RESULT
 ELSEIF RESULT == 2
 	PRINTL 何ポイントにしますか？
 	INPUT
@@ -129,7 +129,7 @@ PRINTL  [5] - BASE
 PRINTL  [6] - MAXBASE
 PRINTL  [7] - RELATION
 CALL PRINT_BUTTON(" [8] - アルバイトボーナス",!(TALENT:交渉上手&&TALENT:おしゃれ&&TALENT:献身的&&TALENT:巫女&&TALENT:舞姫&&TALENT:マネージャー),8,-1,1)
-CALL PRINT_BUTTON(" [9] - 処女リセット",!(TALENT:処女&&CFLAG:ファーストキスの相手 == -1&&CFLAG:初体験の相手 == -1&&TALENT:アナル処女),9,-1,1)
+CALL PRINT_BUTTON(" [9] - 処女リセット",!(TALENT:処女&&CFLAG:初キス相手 == -1&&CFLAG:処女喪失相手 == -1&&TALENT:アナル処女),9,-1,1)
 CALL PRINT_BUTTON(" [10] - 恋心GET",!(TALENT:恋心),10,-1,1)
 CALL PRINT_BUTTON(" [11] - 永遠の愛情経験",EXP:愛情経験 < 10000,11,-1,1)
 CALL PRINT_BUTTON(" [12] - 調教経験",CFLAG:好感度 < 5000,12,-1,1)
@@ -275,10 +275,10 @@ ELSEIF RESULT == 8
 	CALL GET_PART_TIME_BONUS(TARGET)
 ELSEIF RESULT == 9
 	TALENT:処女 = 1 
-	CFLAG:ファーストキスの相手 = -1
-	CFLAG:初体験の相手 = 0
+	CFLAG:初キス相手 = -1
+	CFLAG:処女喪失相手 = 0
 	TALENT:アナル処女 = 1
-	CFLAG:アナル処女喪失の相手 = 0
+	CFLAG:アナル処女喪失相手 = 0
 ELSEIF RESULT == 10
 	SIF ABL:信頼 < 3 
 		ABL:信頼 = 3

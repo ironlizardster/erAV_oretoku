@@ -492,32 +492,32 @@ IF (FLAG:女子寮拡張 & 2)
 						RELATION:LOCAL:(NO:(LOCAL:1)) += 10
 						RELATION:(LOCAL:1):(NO:LOCAL) += 10
 [IF_NDEBUG]
-						IF CFLAG:LOCAL:ファーストキスの相手 == -1
+						IF CFLAG:LOCAL:初キス相手 == -1
 							PRINTL
-							CFLAG:LOCAL:ファーストキスの相手 = 1
+							CFLAG:LOCAL:初キス相手 = 1
 							SETCOLOR 0xF58F98
 								PRINTFORM 【ファーストキス】
 							RESETCOLOR
 							PRINTFORML （%CALLNAME:LOCAL%）
-							CSTR:LOCAL:ファーストキスの相手 = %NAME:(LOCAL:1)%
-							CFLAG:LOCAL:ファーストキス喪失年齢 = BASE:LOCAL:実年齢
-							CFLAG:LOCAL:ファーストキス喪失月 = DAY:1
-							CFLAG:LOCAL:ファーストキス喪失日 = DAY:2
+							CSTR:LOCAL:初キス相手 = %NAME:(LOCAL:1)%
+							CFLAG:LOCAL:初キス喪失年齢 = BASE:LOCAL:実年齢
+							CFLAG:LOCAL:初キス喪失月 = DAY:日付_月
+							CFLAG:LOCAL:初キス喪失日 = DAY:日付_日
 							;△そのうち場所に談話室とか突っ込んでおくこと
 							;ここに限らず日付を合わせる処理はどっかでしないと……
-							;どう考えてもファーストキス関数作るべきなんですが今回はパス
+							;どう考えても初キス関数作るべきなんですが今回はパス
 						ENDIF
-						IF CFLAG:(LOCAL:1):ファーストキスの相手 == -1
+						IF CFLAG:(LOCAL:1):初キス相手 == -1
 							PRINTL
-							CFLAG:(LOCAL:1):ファーストキスの相手 = 1
+							CFLAG:(LOCAL:1):初キス相手 = 1
 							SETCOLOR 0xF58F98
 								PRINTFORM 【ファーストキス】
 							RESETCOLOR
 							PRINTFORML （%CALLNAME:(LOCAL:1)%） 
-							CSTR:(LOCAL:1):ファーストキスの相手 = %NAME:LOCAL%
-							CFLAG:(LOCAL:1):ファーストキス喪失年齢 = BASE:(LOCAL:1):実年齢
-							CFLAG:(LOCAL:1):ファーストキス喪失月 = DAY:1
-							CFLAG:(LOCAL:1):ファーストキス喪失日 = DAY:2							
+							CSTR:(LOCAL:1):初キス相手 = %NAME:LOCAL%
+							CFLAG:(LOCAL:1):初キス喪失年齢 = BASE:(LOCAL:1):実年齢
+							CFLAG:(LOCAL:1):初キス喪失月 = DAY:日付_月
+							CFLAG:(LOCAL:1):初キス喪失日 = DAY:日付_日							
 						ENDIF
 						SIF !SKIP_DETAILS
 							PRINTL

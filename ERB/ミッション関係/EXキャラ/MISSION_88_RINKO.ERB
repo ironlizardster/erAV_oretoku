@@ -18,7 +18,7 @@ A = GETCHARA([[キャラ:闇崎燐子]])
 B = GETCHARA([[キャラ:渡来桔梗]])
 C = GETCHARA([[キャラ:小日向詩織]])
 D = GETCHARA([[キャラ:桐生歌音]])
-RETURN D != -1 && A != -1 && DAY:1 >= 7 && DAY:1 <= 8 && TALENT:D:アイドル && TALENT:A:恋心
+RETURN D != -1 && A != -1 && DAY:日付_月 >= 7 && DAY:日付_月 <= 8 && TALENT:D:アイドル && TALENT:A:恋心
 
 ;=================================================
 ; ミッション報酬
@@ -334,13 +334,13 @@ TCVAR:歌唱経験 += 300 + RAND:200 - RAND:200
 TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
 TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
 TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
-	CSTR:ファーストキスの相手 = 渡会桔梗
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 10
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
+	CSTR:初キス相手 = 渡会桔梗
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 10
 ENDIF
 CALL MISSION_ADD_EXP(TARGET)
 
@@ -355,13 +355,13 @@ IF 桔梗 != -1
 	TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
 	CALL MISSION_ADD_EXP(TARGET)
 	B = TARGET
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 1
-		CSTR:ファーストキスの相手 = 闇崎燐子
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 10
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 1
+		CSTR:初キス相手 = 闇崎燐子
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 10
 	ENDIF
 ENDIF
 
@@ -374,13 +374,13 @@ IF 詩織 != -1
 	TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
 	CALL MISSION_ADD_EXP(TARGET)
 	C = TARGET
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 1
-		CSTR:ファーストキスの相手 = 渡会桔梗
-		CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:ファーストキス喪失月 = DAY:1
-		CFLAG:ファーストキス喪失日 = DAY:2
-		CFLAG:ファーストキス喪失場所 = 10
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 1
+		CSTR:初キス相手 = 渡会桔梗
+		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失月 = DAY:日付_月
+		CFLAG:初キス喪失日 = DAY:日付_日
+		CFLAG:初キス喪失場所 = 10
 	ENDIF
 ENDIF
 
@@ -419,14 +419,14 @@ ELSE
 	TALENT:燐子:舞姫 = 1
 	TALENT:燐子:Triptych = 1
 	CFLAG:燐子:着衣状態 = 15
-	CFLAG:燐子:上着のタイプ = 52
-	CFLAG:燐子:靴下の種類 = 7
-	CFLAG:燐子:靴の種類 = 8
-	CFLAG:燐子:靴下の着用状態 = 0
+	CFLAG:燐子:上着タイプ = 52
+	CFLAG:燐子:靴下タイプ = 7
+	CFLAG:燐子:靴タイプ = 8
+	CFLAG:燐子:靴下着用 = 0
 	CFLAG:燐子:ブラの色 = 0
-	CFLAG:燐子:ブラの種類 = 5
+	CFLAG:燐子:ブラタイプ = 5
 	CFLAG:燐子:パンツの色 = 0
-	CFLAG:燐子:パンツの種類 = 5
+	CFLAG:燐子:パンツタイプ = 5
 	CFLAG:燐子:髪色 = 3
 	CFLAG:燐子:染髪済 = 1
 	CFLAG:燐子:髪型 = 11
@@ -443,14 +443,14 @@ ELSE
 	TALENT:桔梗:舞姫 = 1
 	TALENT:桔梗:Triptych = 1
 	CFLAG:桔梗:着衣状態 = 15
-	CFLAG:桔梗:上着のタイプ = 52
-	CFLAG:桔梗:靴下の種類 = 7
-	CFLAG:桔梗:靴の種類 = 12
-	CFLAG:桔梗:靴下の着用状態 = 0
+	CFLAG:桔梗:上着タイプ = 52
+	CFLAG:桔梗:靴下タイプ = 7
+	CFLAG:桔梗:靴タイプ = 12
+	CFLAG:桔梗:靴下着用 = 0
 	CFLAG:桔梗:ブラの色 = 2
-	CFLAG:桔梗:ブラの種類 = 17
+	CFLAG:桔梗:ブラタイプ = 17
 	CFLAG:桔梗:パンツの色 = 2
-	CFLAG:桔梗:パンツの種類 = 17
+	CFLAG:桔梗:パンツタイプ = 17
 	CFLAG:桔梗:髪色 = 13
 	CFLAG:桔梗:染髪済 = 1
 	CFLAG:桔梗:髪型 = 2
@@ -469,14 +469,14 @@ ELSE
 	TALENT:詩織:舞姫 = 1
 	TALENT:詩織:Triptych = 1
 	CFLAG:詩織:着衣状態 = 15
-	CFLAG:詩織:上着のタイプ = 52
-	CFLAG:詩織:靴下の種類 = 7
-	CFLAG:詩織:靴の種類 = 12
-	CFLAG:詩織:靴下の着用状態 = 0
+	CFLAG:詩織:上着タイプ = 52
+	CFLAG:詩織:靴下タイプ = 7
+	CFLAG:詩織:靴タイプ = 12
+	CFLAG:詩織:靴下着用 = 0
 	CFLAG:詩織:ブラの色 = 4
-	CFLAG:詩織:ブラの種類 = 9
+	CFLAG:詩織:ブラタイプ = 9
 	CFLAG:詩織:パンツの色 = 4
-	CFLAG:詩織:パンツの種類 = 3
+	CFLAG:詩織:パンツタイプ = 3
 	CFLAG:詩織:髪色 = 2
 	CFLAG:詩織:染髪済 = 1
 	CFLAG:詩織:髪型 = 5
@@ -490,7 +490,7 @@ ELSE
 	PRINTW 　…………
 	PRINTL 　……
 	PRINTW
-	PRINTFORML 　夏真っ盛りの{DAY:1}月、全国から集められた現役、卵を問わないアイドル達とその追っかけとで
+	PRINTFORML 　夏真っ盛りの{DAY:日付_月}月、全国から集められた現役、卵を問わないアイドル達とその追っかけとで
 	PRINTFORML 　ダイバータウンの熱気は朝９時にも関わらず外気温３０度を超すほどの熱気を醸し出していた
 	PRINTFORMW 　桐生組関係者の特設テントで涼んでいた%CALLNAME:MASTER%の元に３人のステージ用ゴスロリ衣装を来た少女達がやってきた…
 	PRINTL

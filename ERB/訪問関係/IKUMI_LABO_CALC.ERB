@@ -53,21 +53,21 @@ REPEAT CHARANUM
 			IF RESULT == 0
 				TALENT:COUNT:オトコ = 0
 				TALENT:COUNT:ふたなり = 0
-				CFLAG:COUNT:ペニスのサイズ = 0
-				CFLAG:COUNT:包皮の状態 = 0
+				CFLAG:COUNT:ペニスサイズ = 0
+				CFLAG:COUNT:包皮状態 = 0
 			ELSEIF RESULT == 1
 				TALENT:COUNT:処女 = 0
 				TALENT:COUNT:オトコ = 1
 				TALENT:COUNT:ふたなり = 0
 				TALENT:COUNT:童貞 = 1
-				CFLAG:COUNT:ペニスのサイズ = 2
-				CFLAG:COUNT:包皮の状態 = 2
+				CFLAG:COUNT:ペニスサイズ = 2
+				CFLAG:COUNT:包皮状態 = 2
 			ELSEIF RESULT == 2
 				TALENT:COUNT:オトコ = 0
 				TALENT:COUNT:ふたなり = 1
 				TALENT:COUNT:童貞 = 1
-				CFLAG:COUNT:ペニスのサイズ = 2
-				CFLAG:COUNT:包皮の状態 = 2
+				CFLAG:COUNT:ペニスサイズ = 2
+				CFLAG:COUNT:包皮状態 = 2
 			ELSE
 				GOTO INPUT_LOOP_SEX
 			ENDIF

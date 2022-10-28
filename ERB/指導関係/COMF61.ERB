@@ -1,7 +1,7 @@
 ﻿@COM61
 ;クンニ強制
 
-;ファーストキスを奪うかどうかの確認
+;初キスを奪うかどうかの確認
 CALL CONFIRM_FIRSTKISS
 SIF RESULT == 0
 	RETURN 0
@@ -421,7 +421,7 @@ ENDIF
 STAIN:0 |= STAIN:PLAYER:3
 STAIN:PLAYER:3 |= STAIN:0
 
-;ファーストキス
+;初キス
 TFLAG:621 |= 1
 TFLAG:621 |= 8
 

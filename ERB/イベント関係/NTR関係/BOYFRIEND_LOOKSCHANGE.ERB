@@ -12,7 +12,7 @@ REPEAT CHARANUM
 			CONTINUE
 		ELSEIF EXP:COUNT:イメチェン回数 >= 11
 			CONTINUE
-		ELSEIF CFLAG:COUNT:彼氏の種類 != 0
+		ELSEIF CFLAG:COUNT:彼氏タイプ != 0
 			CONTINUE
 		ELSEIF CFLAG:COUNT:入寮中 == 1 && (FLAG:女子寮拡張 & 128)
 			CONTINUE
@@ -34,7 +34,7 @@ REND
 @EVENT_LOOKSCHANGE_DETAIL
 
 TARGET = COUNT
-LOCAL = CFLAG:彼氏の種類
+LOCAL = CFLAG:彼氏タイプ
 VARSET TCVAR, 0
 
 PRINTFORMW 休み明けの月曜日、事務所にやってきた%NAME:TARGET%に%CALLNAME:MASTER%は違和感を覚えた……
@@ -104,16 +104,16 @@ ELSEIF EXP:イメチェン回数 == 1 && CFLAG:髪型 == 8
 	PRINTFORM の髪をカットし背中の中ほどまでの、ふんわりと緩やかなパーマがかかった長さに変わっているの
 	CFLAG:髪型 = 7
 ENDIF
-IF EXP:イメチェン回数 == 2 && CFLAG:上着のタイプ != 30
+IF EXP:イメチェン回数 == 2 && CFLAG:上着タイプ != 30
 	PRINTFORM いつも事務所に来る時は
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM だった服装が肌の露出の多いパンクロリータファッションになっているの
-	CFLAG:上着のタイプ = 30
-ELSEIF EXP:イメチェン回数 == 2 && CFLAG:上着のタイプ == 30
+	CFLAG:上着タイプ = 30
+ELSEIF EXP:イメチェン回数 == 2 && CFLAG:上着タイプ == 30
 	PRINTFORM いつも事務所に来る時は
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM だった服装が肌の露出の多いキャミとデニムミニという服装になっているの
-	CFLAG:上着のタイプ = 40
+	CFLAG:上着タイプ = 40
 ENDIF
 	IF EXP:イメチェン回数 == 3 && CFLAG:髪色 != 9
 		PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%色に染めたはずの髪を脱色したのか、人工的なプラチナブラウンに変わった
@@ -123,37 +123,37 @@ ENDIF
 	ELSEIF EXP:イメチェン回数 == 3 && CFLAG:髪色 == 9
 		PRINTFORM 脱色した髪にうっすらと明るいピンクでメッシュを入れた毛先をつまんでいじっているの
 	ENDIF
-	IF EXP:イメチェン回数 == 4 && (CFLAG:ピアスの装着状況 & 2) == 0
+	IF EXP:イメチェン回数 == 4 && (CFLAG:ピアス状況 & 2) == 0
 		CALL PRINT_CLOTHTYPE_MAIN2
 		PRINTFORM から覗くへそに淡いピンク色のジュエリーが嵌めこまれたピアスが、鈍い輝きを放っているの
-		CFLAG:ピアスの装着状況 |= 2
-	ELSEIF EXP:イメチェン回数 == 4 && (CFLAG:ピアスの装着状況 & 2)
+		CFLAG:ピアス状況 |= 2
+	ELSEIF EXP:イメチェン回数 == 4 && (CFLAG:ピアス状況 & 2)
 		CALL PRINT_CLOTHTYPE_MAIN2
 		PRINTFORM から覗くへそを貫くピアスをぐるりと一周するようにクロムメッキのベリーチェーンが追加されていたの
 	ENDIF
 
-IF EXP:イメチェン回数 == 5 && CFLAG:タトゥーの有無 != 15
+IF EXP:イメチェン回数 == 5 && CFLAG:タトゥー != 15
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM から覗く右の二の腕にアゲハ蝶のタトゥーが彫られていたの
-	IF CFLAG:タトゥーの有無 == 0
+	IF CFLAG:タトゥー == 0
 		CSTR:タトゥー1場所 = 右の二の腕
 		CSTR:タトゥー1モチーフ = アゲハ蝶をモチーフにした
-		CFLAG:タトゥーの有無 |= 1
-	ELSEIF CFLAG:タトゥーの有無 == 1
+		CFLAG:タトゥー |= 1
+	ELSEIF CFLAG:タトゥー == 1
 		CSTR:タトゥー2場所 = 右の二の腕
 		CSTR:タトゥー2モチーフ = アゲハ蝶をモチーフにした
-		CFLAG:タトゥーの有無 |= 2
-	ELSEIF CFLAG:タトゥーの有無 == 3
+		CFLAG:タトゥー |= 2
+	ELSEIF CFLAG:タトゥー == 3
 		CSTR:タトゥー3場所 = 右の二の腕
 		CSTR:タトゥー3モチーフ = アゲハ蝶をモチーフにした
-		CFLAG:タトゥーの有無 |= 4
-	ELSEIF CFLAG:タトゥーの有無 == 7
+		CFLAG:タトゥー |= 4
+	ELSEIF CFLAG:タトゥー == 7
 		CSTR:タトゥー4場所 = 右の二の腕
 		CSTR:タトゥー4モチーフ = アゲハ蝶をモチーフにした
-		CFLAG:タトゥーの有無 |= 8
+		CFLAG:タトゥー |= 8
 	ENDIF
 	TCVAR:異常経験 = 1
-ELSEIF EXP:イメチェン回数 == 5 && CFLAG:タトゥーの有無 == 15
+ELSEIF EXP:イメチェン回数 == 5 && CFLAG:タトゥー == 15
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM から覗くタトゥーが増えているような気がするの
 ENDIF
@@ -171,40 +171,40 @@ ENDIF
 ELSEIF EXP:イメチェン回数 == 7 && TALENT:褐色肌 == 1
 	PRINTFORM 日焼けした肌を惜しげもなく晒しているの
 ENDIF
-IF EXP:イメチェン回数 == 8 && CFLAG:上着のタイプ != 205
+IF EXP:イメチェン回数 == 8 && CFLAG:上着タイプ != 205
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM から更に露出の多いボディコン風のマイクロミニのタイトワンピース、蛍光色のネットストッキングに
 	PRINTFORM 腕にはバングルとリングブレスレットといった服装に変わっているの
-	CFLAG:上着のタイプ = 205
-	CFLAG:特別コスチュームのタイプ = 74
-	CFLAG:靴下の種類 = 8
-ELSEIF EXP:イメチェン回数 == 8 && CFLAG:上着のタイプ == 205
+	CFLAG:上着タイプ = 205
+	CFLAG:特別コスタイプ = 74
+	CFLAG:靴下タイプ = 8
+ELSEIF EXP:イメチェン回数 == 8 && CFLAG:上着タイプ == 205
 	PRINTFORM ただでさえ大胆な
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM が更に際どいデザインのモノに変わっているの
 ENDIF
-IF EXP:イメチェン回数 == 9 && CFLAG:タトゥーの有無 != 15
+IF EXP:イメチェン回数 == 9 && CFLAG:タトゥー != 15
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM から覗く左の太ももの内側にトライバルパターンのタトゥーが彫られていたの
-	IF CFLAG:タトゥーの有無 == 0
+	IF CFLAG:タトゥー == 0
 		CSTR:タトゥー1場所 = 左の太ももの内側
 		CSTR:タトゥー1モチーフ = トライバルパターンの
-		CFLAG:タトゥーの有無 |= 1
-	ELSEIF CFLAG:タトゥーの有無 == 1
+		CFLAG:タトゥー |= 1
+	ELSEIF CFLAG:タトゥー == 1
 		CSTR:タトゥー2場所 = 左の太ももの内側
 		CSTR:タトゥー2モチーフ = トライバルパターンの
-		CFLAG:タトゥーの有無 |= 2
-	ELSEIF CFLAG:タトゥーの有無 == 3
+		CFLAG:タトゥー |= 2
+	ELSEIF CFLAG:タトゥー == 3
 		CSTR:タトゥー3場所 = 左の太ももの内側
 		CSTR:タトゥー3モチーフ = トライバルパターンの
-		CFLAG:タトゥーの有無 |= 4
-	ELSEIF CFLAG:タトゥーの有無 == 7
+		CFLAG:タトゥー |= 4
+	ELSEIF CFLAG:タトゥー == 7
 		CSTR:タトゥー4場所 = 左の太ももの内側
 		CSTR:タトゥー4モチーフ = トライバルパターンの
-		CFLAG:タトゥーの有無 |= 8
+		CFLAG:タトゥー |= 8
 	ENDIF
 	TCVAR:異常経験 = 1
-ELSEIF EXP:イメチェン回数 == 9 && CFLAG:タトゥーの有無 == 15
+ELSEIF EXP:イメチェン回数 == 9 && CFLAG:タトゥー == 15
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM から覗くタトゥーが増えているような気がするの
 ENDIF

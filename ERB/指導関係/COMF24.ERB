@@ -44,7 +44,7 @@ IF TALENT:PLAYER:処女
 ENDIF
 ;コンドームを使うかの確認
 $INPUT_LOOP_02
-IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && (TALENT:TARGET:ふたなり || TALENT:TARGET:オトコ) && CFLAG:コンドーム使用禁止判定 != 2
+IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && (TALENT:TARGET:ふたなり || TALENT:TARGET:オトコ) && CFLAG:コンドーム使用禁止 != 2
 	PRINTFORML %CALLNAME:TARGET%にコンドームを嵌めますか？
 	PRINTL  [0] - 嵌める
 	PRINTL  [1] - 生でやる
@@ -61,7 +61,7 @@ IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && (TALENT:TA
 		INPUT
 		IF RESULT == 1
 			PRINTFORML 今後%CALLNAME:TARGET%はコンドームを使いません
-			CFLAG:コンドーム使用禁止判定 = 2
+			CFLAG:コンドーム使用禁止 = 2
 		ELSEIF RESULT != 0
 			GOTO INPUT_LOOP_04
 		ENDIF	
@@ -370,12 +370,12 @@ IF TALENT:童貞
 	ELSE
 		CSTR:童貞喪失の相手 = %NAME:PLAYER%
 	ENDIF
-	IF CFLAG:包皮の状態 == 2
-		CFLAG:包皮の状態 = 3
+	IF CFLAG:包皮状態 == 2
+		CFLAG:包皮状態 = 3
 	ENDIF
 	TFLAG:童貞喪失 = 1
-	SIF CFLAG:ファーストキスの相手 == 0
-		CFLAG:ファーストキスの相手 = 1
+	SIF CFLAG:初キス相手 == 0
+		CFLAG:初キス相手 = 1
 ENDIF
 
 ;調教者が処女なら処女喪失
@@ -384,13 +384,13 @@ IF TALENT:PLAYER:処女
 	SETCOLOR 0xF58F98
 	PRINTFORML 【処女喪失(%CALLNAME:PLAYER%)】
 	RESETCOLOR
-	IF CFLAG:PLAYER:初体験の相手 == 0
-		CFLAG:PLAYER:初体験の相手 =  1
+	IF CFLAG:PLAYER:処女喪失相手 == 0
+		CFLAG:PLAYER:処女喪失相手 =  1
 		CSTR:PLAYER:処女喪失の相手 = %NAME:TARGET%
 	ENDIF
 	CFLAG:PLAYER:処女喪失年齢 = BASE:実年齢
-	CFLAG:PLAYER:処女喪失月 = DAY:1
-	CFLAG:PLAYER:処女喪失日 = DAY:2
+	CFLAG:PLAYER:処女喪失月 = DAY:日付_月
+	CFLAG:PLAYER:処女喪失日 = DAY:日付_日
 	CFLAG:PLAYER:処女喪失場所 = 13
 	CFLAG:PLAYER:処女喪失シチュ = 1
 ENDIF

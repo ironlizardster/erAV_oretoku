@@ -5,7 +5,7 @@
 DRAWLINE
 PRINTL どの設定を変更しますか？
 DRAWLINE
-PRINT  [0] - 口上の表示頻度　　　　　　　　　　　　　　　　　　　　
+PRINT  [0] - 口上表示頻度　　　　　　　　　　　　　　　　　　　　
 IF FLAG:口上使用 == 2
 	PRINTL 　　常に表示
 ELSEIF FLAG:口上使用 == 1
@@ -206,7 +206,7 @@ ENDIF
 RESTART
 
 ;---------------------------------------------------------
-;口上の表示頻度 FLAG:7使用
+;口上表示頻度 FLAG:7使用
 ;---------------------------------------------------------
 @CONFIG_KOJO
 DRAWLINE
@@ -217,7 +217,7 @@ IF FLAG:口上使用 == 0
 ENDIF
 
 
-PRINTL 口上の表示頻度を設定します
+PRINTL 口上表示頻度を設定します
 IF FLAG:口上使用 == 2
 	PRINTL 現在の設定は《常に表示》です
 ELSEIF FLAG:口上使用 == 1
@@ -338,25 +338,25 @@ ELSE
 	;初期状態のキャラがいたら陰毛を設定する
 	REPEAT CHARANUM
 		;既に生えてるならそのまま
-		SIF CFLAG:COUNT:陰毛の状態 != 0
+		SIF CFLAG:COUNT:陰毛状態 != 0
 			CONTINUE
 		
 
 		;パイパンなら-1に設定
 		IF TALENT:COUNT:パイパン
-			CFLAG:COUNT:陰毛の状態 = -1
+			CFLAG:COUNT:陰毛状態 = -1
 		;幼稚・未熟なら7に設定
 		ELSEIF TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
-			CFLAG:COUNT:陰毛の状態 = 7
+			CFLAG:COUNT:陰毛状態 = 7
 		;中学生なら7に設定
 		ELSEIF TALENT:COUNT:中学生
-			CFLAG:COUNT:陰毛の状態 = 7
+			CFLAG:COUNT:陰毛状態 = 7
 		;高校生なら9に設定
 		ELSEIF TALENT:COUNT:高校生
-			CFLAG:COUNT:陰毛の状態 = 9
+			CFLAG:COUNT:陰毛状態 = 9
 		;それ以外なら12に設定
 		ELSE
-			CFLAG:COUNT:陰毛の状態 = 12
+			CFLAG:COUNT:陰毛状態 = 12
 		ENDIF
 	REND
 ENDIF
@@ -388,13 +388,13 @@ ELSE
 	;着衣フラグ初期化
 	REPEAT CHARANUM
 		CFLAG:COUNT:着衣状態 = 0
-		CFLAG:COUNT:上着のタイプ = 0
-		CFLAG:COUNT:特別コスチュームのタイプ = 0
-		CFLAG:COUNT:パンツの状態 = 0
-		CFLAG:COUNT:ブラジャーの状態 = 0
-		CFLAG:COUNT:上着上の状態 = 0
-		CFLAG:COUNT:上着下の状態 = 0
-		CFLAG:COUNT:特別コスチュームの状態 = 0
+		CFLAG:COUNT:上着タイプ = 0
+		CFLAG:COUNT:特別コスタイプ = 0
+		CFLAG:COUNT:パンツ状態 = 0
+		CFLAG:COUNT:ブラジャー状態 = 0
+		CFLAG:COUNT:上着上状態 = 0
+		CFLAG:COUNT:上着下状態 = 0
+		CFLAG:COUNT:特別コス状態 = 0
 	REND
 	
 	FLAG:着衣使用 = 0

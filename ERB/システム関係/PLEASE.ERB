@@ -48,37 +48,37 @@ DRAWLINE
 ;ABL:学力 = 10
 ;ABL:オタク知識 = 10
 ;CALL GET_PART_TIME_BONUS(TARGET)
-;CFLAG:新作アニメチェック判定 = 0
-;CFLAG:バイト就職 = 0
+;CFLAG:アニメチェック = 0
+;CFLAG:バイト = 0
 [ENDIF]
 
-IF CFLAG:習い事判定 == 0
+IF CFLAG:習い事 == 0
 	PRINT  [ 0] - エステに通ってもらう　　　（月額：10000ポイント）
 	CALL エステ通い有効
 	SIF !RESULT
 		PRINT （これ以上は効果がなさそうです）
 	PRINTL
 ENDIF
-IF CFLAG:習い事判定 == 0
+IF CFLAG:習い事 == 0
 	PRINT  [ 1] - ジムに通ってもらう　　　　（月額：10000ポイント）
 	CALL ジム通い有効
 	SIF !RESULT
 		PRINT （これ以上は効果がなさそうです）
 	PRINTL
 ENDIF
-IF (BASE:実年齢 <= 18 && CFLAG:習い事判定 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1)
+IF (BASE:実年齢 <= 18 && CFLAG:習い事 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1)
 	PRINT  [ 2] - 学習塾に通ってもらう　　　（月額：10000ポイント）
 	CALL 学習塾通い有効
 	SIF !RESULT
 		PRINT （これ以上は効果がなさそうです）
 	PRINTL
 ENDIF
-IF CFLAG:習い事判定
-	SIF CFLAG:エステ通い判定
+IF CFLAG:習い事
+	SIF CFLAG:エステ通い
 		CALL エステ通い有効
-	SIF CFLAG:ジム通い判定
+	SIF CFLAG:ジム通い
 		CALL ジム通い有効
-	SIF CFLAG:学習塾通い判定
+	SIF CFLAG:塾通い
 		CALL 学習塾通い有効
 	PRINT  [ 3] - 習い事を辞めてもらう
 	IF !RESULT
@@ -86,30 +86,30 @@ IF CFLAG:習い事判定
 	ENDIF
 	PRINTL
 ENDIF
-IF FLAG:弁当 == 0 && CFLAG:お弁当作成判定 == 0
+IF FLAG:弁当 == 0 && CFLAG:弁当係 == 0
 	PRINTL  [ 4] - お弁当を作ってもらう
 ENDIF
-IF FLAG:弁当 == 1 && CFLAG:お弁当作成判定 == 1
+IF FLAG:弁当 == 1 && CFLAG:弁当係 == 1
 	PRINTL  [ 4] - お弁当を作るのをやめてもらう
 ENDIF
-IF CFLAG:腋毛の有無 == 0
+IF CFLAG:腋毛 == 0
 	PRINTL  [ 5] - ムダ毛の処理をやめてもらう（恭順の珠×5000）
 ENDIF
-IF CFLAG:合コン参加判定 == 0 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+IF CFLAG:合コン参加 == 0 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTL  [ 6] - 合コンに参加してもらう
-ELSEIF CFLAG:合コン参加判定 == 1 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+ELSEIF CFLAG:合コン参加 == 1 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTL  [ 6] - 合コンの参加を取りやめてもらう
 ENDIF
-IF CFLAG:新作アニメチェック判定 == 0
+IF CFLAG:アニメチェック == 0
 	PRINTL  [ 7] - 新作アニメやマンガをチェックしてもらう
 ENDIF
-IF CFLAG:新作アニメチェック判定 == 1
+IF CFLAG:アニメチェック == 1
 	PRINTL  [ 7] - 新作アニメやマンガをチェックするのをやめてもらう
 ENDIF
-IF CFLAG:朝フェラ係に任命 == 0 && FLAG:朝起こしてもらう == 0
+IF CFLAG:朝フェラ係 == 0 && FLAG:朝起こしてもらう == 0
 	PRINTL  [ 8] - 毎朝起こしてもらう
 ENDIF
-IF CFLAG:朝フェラ係に任命 == 1 && FLAG:朝起こしてもらう == 1
+IF CFLAG:朝フェラ係 == 1 && FLAG:朝起こしてもらう == 1
 	PRINTL  [ 8] - 毎朝起こすのをやめてもらう
 ENDIF
 IF TALENT:ＡＶ女優
@@ -124,10 +124,10 @@ ELSEIF CFLAG:痴漢誘惑 == 1
 ENDIF
 						;****痴漢誘惑追加ここまで****
 IF TALENT:アイドル == 0 && TALENT:ファッションモデル == 0 && TALENT:キャバ嬢 == 0
-	IF CFLAG:バイト就職 == 0
+	IF CFLAG:バイト == 0
 		PRINTL  [11] - アルバイトをしてもらう
 	ELSE
-		CALLFORM ARBEIT_TITLE_{CFLAG:バイト就職}
+		CALLFORM ARBEIT_TITLE_{CFLAG:バイト}
 		LOCALS = %RESULTS%
 		PRINTFORML  [11] - 現在実行中のアルバイト『%LOCALS%』を変更する
 	ENDIF
@@ -163,33 +163,33 @@ PRINTFORMLC %" " * 24% [1000] メイン画面に戻る
 
 INPUT
 
-IF RESULT == 0 && CFLAG:習い事判定 == 0
+IF RESULT == 0 && CFLAG:習い事 == 0
 	PRINTFORMW 《%CALLNAME:TARGET%にエステに通ってもらうようにお願いしました》
-	CFLAG:エステ通い判定 = 1
-	CFLAG:習い事判定 = 1
+	CFLAG:エステ通い = 1
+	CFLAG:習い事 = 1
 	FLAG:習い事人数 += 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 1 && CFLAG:習い事判定 == 0
+ELSEIF RESULT == 1 && CFLAG:習い事 == 0
 	PRINTFORMW 《%CALLNAME:TARGET%にジムに通ってもらうようにお願いしました》
-	CFLAG:ジム通い判定 = 1
-	CFLAG:習い事判定 = 1
+	CFLAG:ジム通い = 1
+	CFLAG:習い事 = 1
 	FLAG:習い事人数 += 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 2 && ((BASE:実年齢 <= 18 && CFLAG:習い事判定 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1))
+ELSEIF RESULT == 2 && ((BASE:実年齢 <= 18 && CFLAG:習い事 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1))
 	PRINTFORMW 《%CALLNAME:TARGET%に学習塾に通ってもらうようにお願いしました》
-	CFLAG:学習塾通い判定 = 1
-	CFLAG:習い事判定 = 1
+	CFLAG:塾通い = 1
+	CFLAG:習い事 = 1
 	FLAG:習い事人数 += 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 3 && CFLAG:習い事判定 == 1
+ELSEIF RESULT == 3 && CFLAG:習い事 == 1
 	PRINTFORMW 《%CALLNAME:TARGET%に習い事を辞めてもらうようにお願いしました》
-	CFLAG:エステ通い判定 = 0
-	CFLAG:ジム通い判定 = 0
-	CFLAG:学習塾通い判定 = 0
-	CFLAG:習い事判定 = 0
+	CFLAG:エステ通い = 0
+	CFLAG:ジム通い = 0
+	CFLAG:塾通い = 0
+	CFLAG:習い事 = 0
 	FLAG:習い事人数 -= 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 4 && FLAG:弁当 == 0 && CFLAG:お弁当作成判定 == 0
+ELSEIF RESULT == 4 && FLAG:弁当 == 0 && CFLAG:弁当係 == 0
 	PRINTFORMW %CALLNAME:MASTER%は%CALLNAME:TARGET%にお弁当を作ってもらうようにお願いした……
 	PRINTFORM %CALLNAME:TARGET%は
 	IF ABL:料理技能 <= 2
@@ -203,48 +203,48 @@ ELSEIF RESULT == 4 && FLAG:弁当 == 0 && CFLAG:お弁当作成判定 == 0
 	ENDIF
 	PRINTFORMW 《%CALLNAME:TARGET%にお弁当を作ってもらうようにお願いしました》
 	FLAG:弁当 = 1
-	CFLAG:お弁当作成判定 = 1
+	CFLAG:弁当係 = 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 4 && FLAG:弁当 == 1 && CFLAG:お弁当作成判定 == 1
+ELSEIF RESULT == 4 && FLAG:弁当 == 1 && CFLAG:弁当係 == 1
 	PRINTFORMW 《%CALLNAME:TARGET%にお弁当を作るのをやめてもらうようにお願いしました》
 	FLAG:弁当 = 0
-	CFLAG:お弁当作成判定 = 0
+	CFLAG:弁当係 = 0
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 5 && CFLAG:腋毛の有無 == 0 && JUEL:恭順 > 4999
+ELSEIF RESULT == 5 && CFLAG:腋毛 == 0 && JUEL:恭順 > 4999
 	PRINTFORMW %CALLNAME:MASTER%は%CALLNAME:TARGET%に腋毛の処理を止めるようにお願いした……
 	PRINTFORM そんな突拍子もないお願いをする%CALLNAME:MASTER%を、%CALLNAME:TARGET%はジト目で見つめてきたものの
 	PRINTFORML 信頼している%CALLNAME:MASTER%からのお願いを無碍にするわけにもいかないのか、しぶしぶながらも頷いた
 	PRINTFORMW 《%CALLNAME:TARGET%は腋毛の処理をやめました》
-	CFLAG:腋毛の有無 = 1
+	CFLAG:腋毛 = 1
 	JUEL:恭順 -= 5000
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 5 && (CFLAG:腋毛の有無 == 1 || JUEL:恭順 < 5000)
+ELSEIF RESULT == 5 && (CFLAG:腋毛 == 1 || JUEL:恭順 < 5000)
 	PRINTFORMW  あなたのお願いは断られました……
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 6 && CFLAG:合コン参加判定 == 0 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+ELSEIF RESULT == 6 && CFLAG:合コン参加 == 0 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTFORMW 《%CALLNAME:TARGET%に合コンに参加してもらうようにお願いしました》
-	CFLAG:合コン参加判定 = 1
+	CFLAG:合コン参加 = 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 6 && CFLAG:合コン参加判定 == 1 && CFLAG:彼氏の有無 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+ELSEIF RESULT == 6 && CFLAG:合コン参加 == 1 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTFORMW 《%CALLNAME:TARGET%に合コンの参加を取りやめてもらうようにお願いしました》
-	CFLAG:合コン参加判定 = 0
+	CFLAG:合コン参加 = 0
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 7 && CFLAG:新作アニメチェック判定 == 0
+ELSEIF RESULT == 7 && CFLAG:アニメチェック == 0
 	PRINTFORMW 《%CALLNAME:TARGET%に新作アニメやマンガをチェックしてもらうようにお願いしました》
-	CFLAG:新作アニメチェック判定 = 1
+	CFLAG:アニメチェック = 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 7 && CFLAG:新作アニメチェック判定 == 1
+ELSEIF RESULT == 7 && CFLAG:アニメチェック == 1
 	PRINTFORMW 《%CALLNAME:TARGET%に新作アニメやマンガをチェックするのをやめてもらうようにお願いしました》
-	CFLAG:新作アニメチェック判定 = 0
+	CFLAG:アニメチェック = 0
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 8 && CFLAG:朝フェラ係に任命 == 0 && FLAG:朝起こしてもらう == 0
+ELSEIF RESULT == 8 && CFLAG:朝フェラ係 == 0 && FLAG:朝起こしてもらう == 0
 	PRINTFORMW 《%CALLNAME:TARGET%に毎朝起こしてもらうようにお願いしました》
-	CFLAG:朝フェラ係に任命 = 1
+	CFLAG:朝フェラ係 = 1
 	FLAG:朝起こしてもらう = 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 8 && CFLAG:朝フェラ係に任命 == 1 && FLAG:朝起こしてもらう == 1
+ELSEIF RESULT == 8 && CFLAG:朝フェラ係 == 1 && FLAG:朝起こしてもらう == 1
 	PRINTFORMW 《%CALLNAME:TARGET%に毎朝起こすのをやめてもらうようにお願いしました》
-	CFLAG:朝フェラ係に任命 = 0
+	CFLAG:朝フェラ係 = 0
 	FLAG:朝起こしてもらう = 0
 	GOTO INPUT_LOOP_02
 ELSEIF RESULT == 9 && TALENT:ＡＶ女優

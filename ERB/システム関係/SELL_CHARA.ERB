@@ -41,13 +41,7 @@ ENDIF
 ;-------------------------------------------------
 @CHARA_SALE
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  前半
-ELSE
-	PRINTL  後半
-ENDIF
+CALL PRINT_DAY_TIME
 
 PRINTFORML 所持金：${MONEY}ポイント
 DRAWLINE
@@ -103,7 +97,7 @@ ELSEIF CFLAG:RESULT:売却助手可能 < 1
 ELSEIF BASE:RESULT:体力 < 1
 	GOTO INPUT_LOOP
 ;営業中のキャラは排除
-ELSEIF  CFLAG:RESULT:労役中のフラグ && TIME == 1
+ELSEIF  CFLAG:RESULT:営業内容 && TIME == 1
 	PRINTL 今日の営業が済むまでは引退させられません
 	WAIT
 	GOTO INPUT_LOOP
@@ -121,11 +115,11 @@ CALL SALE_CHARA
 
 ;売却した場合はキャラを削除
 IF S > 0
-	SIF CFLAG:習い事判定 == 1
+	SIF CFLAG:習い事 == 1
 		FLAG:習い事人数 -= 1
-	SIF CFLAG:お弁当作成判定 == 1
+	SIF CFLAG:弁当係 == 1
 		FLAG:弁当 = 0
-	SIF CFLAG:朝フェラ係に任命 == 1
+	SIF CFLAG:朝フェラ係 == 1
 		FLAG:朝起こしてもらう = 0
 	T = -1
 	CALL KILL_TARGET

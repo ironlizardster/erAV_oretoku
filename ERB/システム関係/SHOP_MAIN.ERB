@@ -35,42 +35,34 @@ SIF BOUGHT >= 0
 
 $INPUT_LOOP
 DRAWLINE
-IF DAY:1 >=3 && DAY:1 <= 5
-	DAY:4 = 0
-	PRINT [春]
-ELSEIF DAY:1 >=6 && DAY:1 <= 8
-	DAY:4 = 1
-	PRINT [夏]
-ELSEIF DAY:1 >= 9 && DAY:1 <= 11
-	DAY:4 = 2
-	PRINT [秋]
-ELSE
-	DAY:4 = 3
-	PRINT [冬]
-ENDIF
+SELECTCASE DAY:日付_季節
+	CASE 0
+		PRINT [春]
+	CASE 1
+		PRINT [夏]
+	CASE 2
+		PRINT [秋]
+	CASE 3
+		PRINT [冬]
+ENDSELECT
 
-IF DAY:1 != 0 && DAY:2 != 0
-	PRINTFORM  {DAY:1}月 第{DAY:2}週
+IF DAY:日付_月 != 0 && DAY:日付_日 != 0
+	PRINTFORM  {DAY:日付_月}月 第{DAY:日付_日}日 (%DOW(FLAG:曜日)%)
 ELSE
 	PRINT  ？月 ？日
 ENDIF
 
 ;今週は月末？
-END_OF_MONTH = IS_END_OF_MONTH()
 SIF END_OF_MONTH
 	PRINT  （月末になりました） 
 
 ;曜日の表示
-PRINTFORM   {DAY:3}年目
+PRINTFORM   {DAY:日付_年}年目
 
-IF TIME == 0
-	PRINT  前半
-ELSE
-	PRINT  後半
-ENDIF
-PRINTFORM /開始から{DAY+1}週目
+CALL PRINT_DAY_TIME
+
 IF FLAG:期限日数 > 0
-	PRINTFORM (残り{FLAG:期限日数 - DAY - 1}週)
+	PRINTFORM (残り{FLAG:期限日数 - DAY - 1}日)
 ENDIF
 PRINTL 
 CALL PRINT_BUTTON("所持金",1,COMMAND_CHEAT)
@@ -359,7 +351,7 @@ ELSEIF BASE:RESULT:体力 < 500
 	WAIT
 	GOTO INPUT_LOOP
 ;営業中だとダメ
-ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+ELSEIF TIME == 1 && CFLAG:RESULT:営業内容 != 0
 	PRINTL 営業が終わるまで調教対象として選択できません
 	WAIT
 	GOTO INPUT_LOOP
@@ -376,7 +368,7 @@ SIF TARGET == ASSI
 	ASSI = -1
 
 ;営業フラグ外す
-CFLAG:TARGET:労役中のフラグ = 0
+CFLAG:TARGET:営業内容 = 0
 
 RETURN 1
 
@@ -403,7 +395,7 @@ REPEAT CHARANUM
 	SIF CFLAG:COUNT:出産日 - 2 <= DAY && TALENT:COUNT:妊娠
 		CONTINUE
 	;営業中のキャラは排除
-	SIF TIME == 1 && CFLAG:COUNT:労役中のフラグ != 0
+	SIF TIME == 1 && CFLAG:COUNT:営業内容 != 0
 		CONTINUE
 	;今回の調教対象は排除
 	SIF COUNT == TARGET
@@ -460,7 +452,7 @@ ELSEIF CFLAG:RESULT:出産日 - 2 <= DAY && TALENT:RESULT:妊娠
 	WAIT
 	GOTO INPUT_LOOP
 ;営業中だとダメ
-ELSEIF TIME == 1 && CFLAG:RESULT:労役中のフラグ != 0
+ELSEIF TIME == 1 && CFLAG:RESULT:営業内容 != 0
 	PRINTL 今日の営業が終わるまで助手として選択できません
 	WAIT
 	GOTO INPUT_LOOP
@@ -481,7 +473,7 @@ SIF ASSI == TARGET
 	TARGET = -1
 
 ;営業フラグ外す
-CFLAG:ASSI:労役中のフラグ = 0
+CFLAG:ASSI:営業内容 = 0
 
 RETURN 1
 ;
@@ -687,46 +679,46 @@ ELSEIF TALENT:抱卵
 ELSEIF TALENT:育児中
 	PRINT [育児中]
 ENDIF
-IF CFLAG:労役中のフラグ != 0
-	IF CFLAG:労役中のフラグ == 1
+IF CFLAG:営業内容 != 0
+	IF CFLAG:営業内容 == 1
 		PRINT 《会話営業中》
-	ELSEIF CFLAG:労役中のフラグ == 2
+	ELSEIF CFLAG:営業内容 == 2
 		PRINT 《奉仕営業中》
-	ELSEIF CFLAG:労役中のフラグ == 7
+	ELSEIF CFLAG:営業内容 == 7
 		PRINT 《ソープ営業中》
-	ELSEIF CFLAG:労役中のフラグ == 3
+	ELSEIF CFLAG:営業内容 == 3
 		PRINT 《Ａ営業中》
-	ELSEIF CFLAG:労役中のフラグ == 4
+	ELSEIF CFLAG:営業内容 == 4
 		PRINT 《Ｖ営業中》
-	ELSEIF CFLAG:労役中のフラグ == 5
+	ELSEIF CFLAG:営業内容 == 5
 		PRINT 《ＳＭ営業中》
-	ELSEIF CFLAG:労役中のフラグ == 6
+	ELSEIF CFLAG:営業内容 == 6
 		PRINT 《出張営業中》
 	ENDIF
 ENDIF
 
-SIF CFLAG:護衛の有無 == 1
+SIF CFLAG:護衛 == 1
 	PRINT 《護衛あり》
 PRINTL 
 
 IF ABL:信頼 >= 3
 	PRINTFORM  習いごと：
-	IF CFLAG:習い事判定 == 0
+	IF CFLAG:習い事 == 0
 		PRINTFORM なし
 	ELSE
-		IF CFLAG:エステ通い判定 == 1
+		IF CFLAG:エステ通い == 1
 			PRINTFORM エステ
 			CALL エステ通い有効
 			SIF !RESULT
 				PRINTFORM （これ以上は効果がなさそうです）
 		ENDIF
-		IF CFLAG:ジム通い判定 == 1
+		IF CFLAG:ジム通い == 1
 			PRINTFORM ジム
 			CALL ジム通い有効
 			SIF !RESULT
 				PRINTFORM （これ以上は効果がなさそうです）
 		ENDIF
-		IF CFLAG:学習塾通い判定 == 1
+		IF CFLAG:塾通い == 1
 			PRINTFORM 学習塾
 			CALL 学習塾通い有効
 			SIF !RESULT
@@ -751,16 +743,16 @@ IF TALENT:ミッション == 1
 	SETFONT ""
 ENDIF
 
-SIF ( CFLAG:初体験の相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:ファーストキスの相手 >= 0 || TALENT:アナル処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
+SIF ( CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:初キス相手 >= 0 || TALENT:アナル処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
 DRAWLINE
 
-IF CFLAG:ファーストキスの相手 >= 0
+IF CFLAG:初キス相手 >= 0
 	SETCOLOR 0xF58F98 
 	CALL FIRSTKISS_DETAIL
 	RESETCOLOR
 ENDIF
 
-IF CFLAG:初体験の相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0
+IF CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0
 	SETCOLOR 0xF58F98 
 	CALL LOSTVIRGIN_DETAIL
 	RESETCOLOR
@@ -1048,8 +1040,8 @@ CATCH
 			EXP:TARGET:レズ経験 -= 1200
 	ELSEIF RESULT == COMMAND_処女リセット
 		TALENT:処女 = 1 
-		CFLAG:ファーストキスの相手 = -1
-		CFLAG:初体験の相手 = -1
+		CFLAG:初キス相手 = -1
+		CFLAG:処女喪失相手 = -1
 		TALENT:アナル処女 = 1
 	ENDIF
 ENDCATCH
@@ -1069,7 +1061,7 @@ GOTO INPUT_LOOP_1
 	CALL PRINT_SPECIAL_MASTERNAME
 
 ;---------------------------------------------------------
-;ファーストキスを奪った主人公
+;初キスを奪った主人公
 ;---------------------------------------------------------
 @PRINT_FIRSTKISS_MASTERNAME
 	CALL PRINT_SPECIAL_MASTERNAME

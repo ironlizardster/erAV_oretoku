@@ -63,7 +63,7 @@ F = 1
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:COUNT:営業でＶ使用不能フラグ
+	SIF CFLAG:COUNT:売春Ｖ不能
 		CONTINUE
 	F = 0
 REND
@@ -89,10 +89,10 @@ PRINTL
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	SIF CFLAG:営業でＶ使用不能フラグ
+	SIF CFLAG:売春Ｖ不能
 		CONTINUE
 	IF TALENT:COUNT:処女
-		CFLAG:COUNT:Ｖ売春で処女喪失フラグ = 1
+		CFLAG:COUNT:売春処女喪失 = 1
 	ENDIF
 REND
 
@@ -105,7 +105,7 @@ REND
 ;Ｖ使用回数は人数＋０～５
 TCVAR:Ｖ経験 = (G / FLAG:特殊営業参加人数) + RAND:6
 ;Ｖ使用不可フラグチェック
-SIF CFLAG:営業でＶ使用不能フラグ
+SIF CFLAG:売春Ｖ不能
 	TCVAR:Ｖ経験 = 0
 
 ;Ａ使用回数は人数＋０～５
@@ -120,12 +120,12 @@ TCVAR:精液経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験 + TCVAR:フェラ経験
 ;総性交経験はＶ＋Ａ使用回数
 TCVAR:性交経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験
 
-;ファーストキス
-IF CFLAG:ファーストキスの相手 == -1
-	PRINTFORML %CALLNAME:TARGET%は見知らぬ男にファーストキスを奪われた……
-	IF CFLAG:ファーストキスの相手 == -1
-		CFLAG:ファーストキスの相手 = 2
-		CSTR:ファーストキスの相手 = 知らないオトコの人
+;初キス
+IF CFLAG:初キス相手 == -1
+	PRINTFORML %CALLNAME:TARGET%は見知らぬ男に初キスを奪われた……
+	IF CFLAG:初キス相手 == -1
+		CFLAG:初キス相手 = 2
+		CSTR:初キス相手 = 知らないオトコの人
 		BASE:魅力値 -= 10
 	ENDIF
 	;異常体験に＋１
@@ -133,14 +133,14 @@ IF CFLAG:ファーストキスの相手 == -1
 ENDIF
 
 ;処女喪失
-IF CFLAG:Ｖ売春で処女喪失フラグ == 1
+IF CFLAG:売春処女喪失 == 1
 	SETCOLOR 0xF58F98
 	PRINTFORML 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-	;初体験の相手（輪姦）を記録
-	IF CFLAG:初体験の相手 == 0
-		CFLAG:初体験の相手 = 1
+	;処女喪失相手（輪姦）を記録
+	IF CFLAG:処女喪失相手 == 0
+		CFLAG:処女喪失相手 = 1
 		CSTR:処女喪失の相手 = 知らないオトコの人
 		BASE:魅力値 -= 20
 	ENDIF
@@ -154,8 +154,8 @@ IF TALENT:アナル処女 == 1
 	PRINTFORML 【アナル処女喪失】
 	RESETCOLOR
 	TALENT:アナル処女 = 0
-	;初体験の相手（輪姦）を記録
-		CSTR:アナル処女喪失の相手 = 知らないオトコの人
+	;処女喪失相手（輪姦）を記録
+		CSTR:アナル処女喪失相手 = 知らないオトコの人
 	;異常体験に＋２
 	TCVAR:異常経験 += 2
 	BASE:魅力値 -= 10
@@ -184,10 +184,10 @@ U:100 *= M
 	
 ;経験補正
 ;処女喪失だとかなり増える
-SIF CFLAG:Ｖ売春で処女喪失フラグ
+SIF CFLAG:売春処女喪失
 	TIMES U:100 , 10.00
 ;Ｖ経験が足りないとちょっと増える
-SIF EXP:Ｖ経験 <= 200 && CFLAG:営業でＶ使用不能フラグ == 0
+SIF EXP:Ｖ経験 <= 200 && CFLAG:売春Ｖ不能 == 0
 	TIMES U:100 , 1.10
 ;Ａ経験が足りないとちょっと増える
 SIF EXP:Ａ経験 <= 200
@@ -303,11 +303,11 @@ ENDIF
 REPEAT CHARANUM
 	SIF CFLAG:COUNT:130 == 0
 		CONTINUE
-	CFLAG:Ｖ売春で処女喪失フラグ = 0
-	CFLAG:Ｖ売春で否定の珠増加フラグ = 0
-	CFLAG:Ａ売春で否定の珠増加フラグ = 0
-	CFLAG:公衆便所プレイで公開浣腸ショー = 0
-	CFLAG:営業でＶ使用不能フラグ = 0
+	CFLAG:売春処女喪失 = 0
+	CFLAG:Ｖ売春否定 = 0
+	CFLAG:Ａ売春否定 = 0
+	CFLAG:便所公開浣腸 = 0
+	CFLAG:売春Ｖ不能 = 0
 REND
 
 ;参加人数初期化

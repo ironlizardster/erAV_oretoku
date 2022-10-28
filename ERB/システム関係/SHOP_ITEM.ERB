@@ -17,13 +17,7 @@ DRAWLINE
 PRINTL アダルトショップ『NIGHT LOVE STORE』
 PRINTL 《指導に使用するアイテムを購入できます》
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  前半
-ELSE
-	PRINTL  後半
-ENDIF
+CALL PRINT_DAY_TIME
 
 PRINTFORML 所持金：{MONEY}ポイント
 
@@ -488,7 +482,7 @@ ELSEIF BOUGHT == 40
 ;剛毛剤
 ELSEIF BOUGHT == 41
 	PRINTFORML 《%NAME:RESULT%の陰毛の成長が早まりました》
-	CFLAG:RESULT:剛毛剤使用フラグ = 1
+	CFLAG:RESULT:剛毛剤使用 = 1
 	WAIT
 						;****使用アイテム連続購入改造ここから****
 	IF MONEY >= 1000

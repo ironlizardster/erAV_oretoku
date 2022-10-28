@@ -234,7 +234,7 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 		EXP:精液経験 += 3
 						;****追加ここから****
 		SIF TEQUIP:バイブ
-			CFLAG:触手からの中田氏カウント += 3
+			CFLAG:触奴膣内精子量 += 3
 						;****追加ここまで****
 		PRINTL 触手大量射精
 		PRINTL 精液経験＋３
@@ -249,7 +249,7 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 		EXP:精液経験 += 1
 						;****追加ここから****
 		SIF TEQUIP:バイブ
-			CFLAG:触手からの中田氏カウント += 1
+			CFLAG:触奴膣内精子量 += 1
 						;****追加ここまで****
 		PRINTL 触手射精
 		PRINTL 精液経験＋１
@@ -320,14 +320,14 @@ CALL TRAIN_MESSAGE_B
 LOSEBASE:体力 += 80
 LOSEBASE:気力 += 100
 
-;ファーストキス
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
+;初キス
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
+	PRINTFORML 初キス
 	RESETCOLOR
-	CSTR:ファーストキスの相手 = 触手生物
-	TFLAG:ファーストキス口以外 = 1	
+	CSTR:初キス相手 = 触手生物
+	TFLAG:初キス口以外 = 1	
 ENDIF
 
 ;ABL:奉仕精神をみる

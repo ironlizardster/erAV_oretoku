@@ -19,14 +19,7 @@ DRAWLINE
 PRINTL 仕立て屋
 PRINTL 《どんな衣装や装備品でも誂えてくれる仕立て屋です》
 DRAWLINE
-PRINTV DAY+1
-PRINT 週目
-IF TIME == 0
-	PRINTL  前半
-ELSE
-	PRINTL  後半
-ENDIF
-
+CALL PRINT_DAY_TIME
 PRINTFORML 所持金：{MONEY}ポイント
 DRAWLINE
 PRINTL 誰を連れて行ってあげますか？　
@@ -72,9 +65,9 @@ PRINTL  [ 2] - 学校指定制服（5000ポイント）
 PRINTL  [ 3] - その他の衣装（10000ポイント）
 PRINTL  [ 4] - 装備品
 PRINTL  [ 5] - 替え下着（100ポイント）
-SIF CFLAG:特別コスチュームのタイプ == 69 && ((CFLAG:着衣状態 & 64) == 0 || CFLAG:特別コスチュームの状態 > 0)
+SIF CFLAG:特別コスタイプ == 69 && ((CFLAG:着衣状態 & 64) == 0 || CFLAG:特別コス状態 > 0)
 	PRINTL  [ 6] - 替えオムツ（50ポイント）
-SIF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯のカギを捨てた == 0 && TALENT:処女
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯鍵廃棄 == 0 && TALENT:処女
 	PRINTL  [ 7] - 貞操帯のカギを捨てる
 ;SIF TALENT:恋心 == 1
 ;	PRINTL  [ 8] - 専用装備
@@ -85,9 +78,9 @@ PRINTL  [11] - 靴下
 PRINTL  [12] - 靴
 SIF ミッション結果:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
 	PRINTL  [13] - スペシャルエステ（3000000ポイント）
-SIF CFLAG:上着のタイプ
+SIF CFLAG:上着タイプ
 	DRAWLINE
-IF CFLAG:上着のタイプ && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
+IF CFLAG:上着タイプ && (CFLAG:上着上状態 == 0 || CFLAG:上着下状態 == 0)
 	PRINT  [20] - 
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTL を処分する
@@ -97,16 +90,16 @@ ENDIF
 
 ;/////2012/09/23改造部分ここから/////
 
-SIF CFLAG:パンツの状態 == 0 || CFLAG:ブラジャーの状態 == 0
+SIF CFLAG:パンツ状態 == 0 || CFLAG:ブラジャー状態 == 0
 	PRINTL  [21] - 下着を処分する
-IF CFLAG:特別コスチュームのタイプ && CFLAG:特別コスチュームの状態 == 0 && CFLAG:貞操帯のカギを捨てた == 0
+IF CFLAG:特別コスタイプ && CFLAG:特別コス状態 == 0 && CFLAG:貞操帯鍵廃棄 == 0
 	PRINT  [22] - 
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTL を処分する
 ENDIF
 
-IF CFLAG:予備の衣装 != 0
-	PRINT  [23] - 予備の衣装（
+IF CFLAG:予備衣装 != 0
+	PRINT  [23] - 予備衣装（
 		CALL PRINT_CLOTHTYPE_CASUALWEAR
 	PRINTL ）と取り替える
 ENDIF
@@ -139,9 +132,9 @@ ELSEIF RESULT == 4
 	CALL TAILOR_ACCESSORY
 ELSEIF RESULT == 5
 	CALL TAILOR_UNDERWARE
-ELSEIF RESULT == 6 && CFLAG:特別コスチュームのタイプ == 69
+ELSEIF RESULT == 6 && CFLAG:特別コスタイプ == 69
 	CALL TAILOR_DIAPER
-ELSEIF RESULT == 7 && CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯のカギを捨てた == 0 && TALENT:処女
+ELSEIF RESULT == 7 && CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯鍵廃棄 == 0 && TALENT:処女
 	CALL CHASTITY_KEY
 ;ELSEIF RESULT == 8 && TALENT:恋心 == 1
 ;	CALL TAILOR_SPECIA
@@ -155,48 +148,48 @@ ELSEIF RESULT == 12
 	CALL TAILOR_SHOES
 ELSEIF RESULT == 13 && ミッション結果:305 >= 3 && EXP:スペシャルエステ使用経験 == 0
 	CALL TAILOR_ESTHETIC
-ELSEIF RESULT == 20 && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
+ELSEIF RESULT == 20 && (CFLAG:上着上状態 == 0 || CFLAG:上着下状態 == 0)
 	PRINTFORM %CALLNAME:TARGET%の着ていた
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTL を焼却処分しました
-	CFLAG:上着のタイプ = 0
-	CFLAG:上着上の状態 = -3
-	CFLAG:上着下の状態 = -3
+	CFLAG:上着タイプ = 0
+	CFLAG:上着上状態 = -3
+	CFLAG:上着下状態 = -3
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 28
 	WAIT
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 21 && (CFLAG:パンツの状態 == 0 || CFLAG:ブラジャーの状態 == 0)
-	IF CFLAG:パンツの状態 >= 0
+ELSEIF RESULT == 21 && (CFLAG:パンツ状態 == 0 || CFLAG:ブラジャー状態 == 0)
+	IF CFLAG:パンツ状態 >= 0
 		CALL SELLING_PANTS
 	ELSE
 		PRINTFORMW %CALLNAME:TARGET%の着ていた下着を焼却処分しました
 	ENDIF
-	CFLAG:パンツの状態 = -3
-	CFLAG:ブラジャーの状態 = -3
+	CFLAG:パンツ状態 = -3
+	CFLAG:ブラジャー状態 = -3
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 3
 	CFLAG:ブラの色 = 99
-	CFLAG:ブラの種類 = -1
+	CFLAG:ブラタイプ = -1
 	CFLAG:パンツの色 = 99
-	CFLAG:パンツの種類 = -1
+	CFLAG:パンツタイプ = -1
 	WAIT
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 22 && CFLAG:特別コスチュームの状態 == 0 && CFLAG:貞操帯のカギを捨てた == 0
+ELSEIF RESULT == 22 && CFLAG:特別コス状態 == 0 && CFLAG:貞操帯鍵廃棄 == 0
 	PRINTFORM %CALLNAME:TARGET%の使っていた
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTL を焼却処分しました
-	CFLAG:特別コスチュームのタイプ = 0
+	CFLAG:特別コスタイプ = 0
 	CFLAG:着衣状態 -= CFLAG:着衣状態 & 64
 	WAIT
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 23 && CFLAG:予備の衣装 != 0
+ELSEIF RESULT == 23 && CFLAG:予備衣装 != 0
 	PRINTFORM 《現在着ている
 		CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORM を予備の
 		CALL PRINT_CLOTHTYPE_CASUALWEAR
 	PRINTFORMW に着替えさせました》
-		CFLAG:179 = CFLAG:上着のタイプ
-		CFLAG:上着のタイプ = CFLAG:予備の衣装
-		CFLAG:予備の衣装 = CFLAG:179
+		CFLAG:179 = CFLAG:上着タイプ
+		CFLAG:上着タイプ = CFLAG:予備衣装
+		CFLAG:予備衣装 = CFLAG:179
 
 ELSEIF RESULT == 999
 	GOTO INPUT_LOOP_01
@@ -225,7 +218,7 @@ ENDIF
 
 IF A == 0
 	GOTO INPUT_LOOP_02
-ELSEIF A == 20 && CFLAG:貞操帯のカギを捨てた
+ELSEIF A == 20 && CFLAG:貞操帯鍵廃棄
 	PRINTFORMW 貞操帯が外せない限り、他の装備品は付けられません
 	GOTO INPUT_LOOP_02
 ELSEIF MONEY < C
@@ -274,16 +267,16 @@ ENDIF
 
 IF A <= 9 
 	PRINTFORM %NAME:TARGET%を
-	IF CFLAG:上着のタイプ && (CFLAG:上着上の状態 == 0 || CFLAG:上着下の状態 == 0)
+	IF CFLAG:上着タイプ && (CFLAG:上着上状態 == 0 || CFLAG:上着下状態 == 0)
 		CALL PRINT_CLOTHTYPE_MAIN2
 		PRINTFORM から
-		CFLAG:179 = CFLAG:上着のタイプ
-		CFLAG:予備の衣装 = CFLAG:179
+		CFLAG:179 = CFLAG:上着タイプ
+		CFLAG:予備衣装 = CFLAG:179
 	ENDIF
 	
-	CFLAG:上着のタイプ = R
-	CFLAG:上着上の状態 = 0
-	CFLAG:上着下の状態 = 0
+	CFLAG:上着タイプ = R
+	CFLAG:上着上状態 = 0
+	CFLAG:上着下状態 = 0
 	
 	CALL PRINT_CLOTHTYPE_MAIN2
 	PRINTFORML に着替えさせました。
@@ -293,14 +286,14 @@ IF A <= 9
 		CALL PRINT_CLOTHTYPE_MAIN2
 		PRINTFORML は上半身が破れて、
 		PRINTFORML %CALLNAME:TARGET%のおっぱいが丸見えになっています……
-		CFLAG:ブラジャーの状態 = 0 - 3
-		CFLAG:上着上の状態 = 0 - 3
+		CFLAG:ブラジャー状態 = 0 - 3
+		CFLAG:上着上状態 = 0 - 3
 	ELSEIF F == 2
 		PRINT 買ったばかりの
 		CALL PRINT_CLOTHTYPE_MAIN2
 		PRINTFORML は下半身が破れて、
 		PRINTFORML %CALLNAME:TARGET%のお尻が丸見えになっています……
-		CFLAG:上着下の状態 = 0 - 3
+		CFLAG:上着下状態 = 0 - 3
 	ENDIF
 
 	CALL WEARING_CLOTH_ABLE
@@ -317,14 +310,14 @@ IF A <= 9
 		IF RESULT == 0
 			PRINTFORM 《
 			CALL PRINT_CLOTHTYPE_CASUALWEAR
-			PRINTFORML を予備の衣装にしました》
-			CFLAG:上着のタイプ = R
+			PRINTFORML を予備衣装にしました》
+			CFLAG:上着タイプ = R
 			CFLAG:179 = 0
 		ELSEIF RESULT == 1
 			PRINTFORM 《
 			CALL PRINT_CLOTHTYPE_CASUALWEAR
-			PRINTFORML を予備の衣装にしませんでした》
-			CFLAG:予備の衣装 = CFLAG:180
+			PRINTFORML を予備衣装にしませんでした》
+			CFLAG:予備衣装 = CFLAG:180
 			CFLAG:179 = 0
 		ELSE
 			GOTO INPUTLOOP_CASUALCHANGE
@@ -333,33 +326,33 @@ IF A <= 9
 
 ELSEIF A == 10
 	PRINTFORML %NAME:TARGET%に新しい下着を買ってやりました。
-	IF CFLAG:パンツの状態 >= 0 && CFLAG:現在のパンツを穿き続けている期間 >= 6
+	IF CFLAG:パンツ状態 >= 0 && CFLAG:パンツ継続日数 >= 6
 		WAIT
 		CALL SELLING_PANTS
 	ENDIF
 
 	;全裸だった場合は通常コスに普段着を代入しておく
-	IF CFLAG:上着のタイプ == 0
+	IF CFLAG:上着タイプ == 0
 
 		;/////2012/09/22改造部分/////
 		;挙動がバグにしか見えないのでコメントアウトしました。
-		;CFLAG:上着のタイプ = 1
+		;CFLAG:上着タイプ = 1
 
-		CFLAG:上着上の状態 = -3
-		CFLAG:上着下の状態 = -3
+		CFLAG:上着上状態 = -3
+		CFLAG:上着下状態 = -3
 	ENDIF
 
-	CFLAG:パンツの状態 = 0
-	CFLAG:ブラジャーの状態 = 0
+	CFLAG:パンツ状態 = 0
+	CFLAG:ブラジャー状態 = 0
 
 	;下着着衣フラグの初期化
 	CALL WEARING_UNDERWARE_ALL
 
 ELSEIF A == 11
 	PRINTFORML 店の隅を借りて、%CALLNAME:TARGET%にオムツをはかせてやりました。
-	CFLAG:特別コスチュームの状態 = 0
+	CFLAG:特別コス状態 = 0
 ELSEIF A == 20
-	IF CFLAG:特別コスチュームのタイプ && CFLAG:特別コスチュームの状態 == 0
+	IF CFLAG:特別コスタイプ && CFLAG:特別コス状態 == 0
 		PRINTFORM %NAME:TARGET%から
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORM を外させて、
@@ -367,8 +360,8 @@ ELSEIF A == 20
 		PRINTFORM %NAME:TARGET%に
 	ENDIF
 
-	CFLAG:特別コスチュームのタイプ = R
-	CFLAG:特別コスチュームの状態 = 0
+	CFLAG:特別コスタイプ = R
+	CFLAG:特別コス状態 = 0
 
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML を装着させました。
@@ -1155,7 +1148,7 @@ RETURN 1
 ;パンツ売却
 ;-------------------------------------------------
 @SELLING_PANTS
-M = 100 * CFLAG:現在のパンツを穿き続けている期間
+M = 100 * CFLAG:パンツ継続日数
 SIF M == 0
 	M = 50
 
@@ -1186,7 +1179,7 @@ SIF TALENT:常時発情
 	TIMES M , 2.00
 PRINTFORML %CALLNAME:TARGET%のはいていたパンツは、{M}ポイントで売れました。
 MONEY += M
-CFLAG:現在のパンツを穿き続けている期間 = 0
+CFLAG:パンツ継続日数 = 0
 
 ;-------------------------------------------------
 ;貞操帯のカギを捨てる
@@ -1208,7 +1201,7 @@ IF RESULT == 0
 	PRINTFORMW %CALLNAME:MASTER%は貞操帯のカギを遥か遠くへ投げ捨てた
 	PRINTFORML カギがどこへ落ちたかは、もう誰にもわからなくなった
 	WAIT
-	CFLAG:貞操帯のカギを捨てた = 1
+	CFLAG:貞操帯鍵廃棄 = 1
 ELSEIF RESULT != 1
 	GOTO INPUT_LOOP_01
 ENDIF
@@ -1474,15 +1467,15 @@ REPEAT CHARANUM
 		CONTINUE
 	TARGET = COUNT
 	PRINTFORM  [{COUNT}] %NAME:COUNT% 
-	IF CFLAG:上着のタイプ && (CFLAG:上着上の状態 >= 0 || CFLAG:上着下の状態 >= 0)
+	IF CFLAG:上着タイプ && (CFLAG:上着上状態 >= 0 || CFLAG:上着下状態 >= 0)
 		PRINT / 
 		CALL PRINT_CLOTHTYPE_MAIN2
-	ELSEIF CFLAG:上着のタイプ && (CFLAG:パンツの状態 >= 0 || CFLAG:ブラジャーの状態 >= 0)
+	ELSEIF CFLAG:上着タイプ && (CFLAG:パンツ状態 >= 0 || CFLAG:ブラジャー状態 >= 0)
 		PRINT / 下着
 	ELSE
 		PRINT / 全裸
 	ENDIF
-	IF CFLAG:特別コスチュームのタイプ && CFLAG:特別コスチュームの状態 >= 0
+	IF CFLAG:特別コスタイプ && CFLAG:特別コス状態 >= 0
 		PRINT / 
 		CALL PRINT_CLOTHTYPE_SPECIAL
 	ENDIF
@@ -1505,7 +1498,7 @@ DRAWLINE
 PRINTL  [0] - 髪型を変える（500ポイント）
 PRINTL        ※変更前より長い髪にも変更できます
 PRINTL  [1] - 髪色を変える（1000ポイント）
-PRINTL        ※地毛の色に戻す場合、1500ポイント必要になります
+PRINTL        ※地毛色に戻す場合、1500ポイント必要になります
 DRAWLINE
 PRINTL [999] - 戻る
 INPUT
@@ -1598,7 +1591,7 @@ PRINTL  [ 7] - ピンク
 PRINTL  [ 8] - 紫色
 PRINTL  [ 9] - 脱色する
 PRINTL  [10] - 栗色
-PRINTL  [99] - 地毛の色に戻す
+PRINTL  [99] - 地毛色に戻す
 DRAWLINE
 PRINTL  [999] - 戻る
 
@@ -1617,7 +1610,7 @@ ELSEIF RESULT == 999
 ELSEIF RESULT != 99 && RESULT >= 11
 	GOTO INPUT_LOOP_52
 
-;地毛の色に戻す以外の選択肢を選んだ場合の処理（肢０－１０）
+;地毛色に戻す以外の選択肢を選んだ場合の処理（肢０－１０）
 ELSEIF RESULT != 99 && RESULT != CFLAG:髪色 
 	PRINTFORM %CALLNAME:TARGET%は髪を
 	IF RESULT == 0
@@ -1657,9 +1650,9 @@ ELSEIF RESULT == 99 && CFLAG:TARGET:染髪済 == 1
 
 	;地毛色の値がある→0でないとき
 	;未入力の時はCSVCFLAGを取ってこれる。未指定なら0のはず
-	IF CFLAG:TARGET:地毛の色 
+	IF CFLAG:TARGET:地毛色 
 		PRINTFORMW %CALLNAME:TARGET%は髪の色を地毛に戻した。
-		CFLAG:TARGET:髪色 = CFLAG:TARGET:地毛の色
+		CFLAG:TARGET:髪色 = CFLAG:TARGET:地毛色
 	;初期設定で髪を染めているキャラは、地毛を黒髪とみなします。
 	;CFLAG:603をCSVで指定することでみなしを免れます
 	ELSEIF CSVCFLAG(NO:TARGET,601) == 1
@@ -1710,57 +1703,57 @@ IF RESULT == 1
 	PRINTFORMW 《%CALLNAME:TARGET%にショートソックスを買ってあげました》
 	C = 5
 	S = 0
-	CFLAG:靴下の種類 = 1
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 1
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 2
 	PRINTFORMW 《%CALLNAME:TARGET%に学園指定ソックスを買ってあげました》
 	C = 10
 	S = 0
-	CFLAG:靴下の種類 = 2
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 2
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 3
 	PRINTFORMW 《%CALLNAME:TARGET%にハイソックスを買ってあげました》
 	C = 15
 	S = 0
-	CFLAG:靴下の種類 = 3
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 3
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 4
 	PRINTFORMW 《%CALLNAME:TARGET%にルーズソックスを買ってあげました》
 	C = 20
 	S = 0
-	CFLAG:靴下の種類 = 4
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 4
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 5
 	PRINTFORMW 《%CALLNAME:TARGET%にニーソックスを買ってあげました》
 	C = 30
 	S = 0
-	CFLAG:靴下の種類 = 5
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 5
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 6
 	PRINTFORMW 《%CALLNAME:TARGET%に黒ストッキングを買ってあげました》
 	C = 40
 	S = 0
-	CFLAG:靴下の種類 = 6
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 6
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 7
 	PRINTFORMW 《%CALLNAME:TARGET%にガーターストッキングを買ってあげました》
 	C = 50
 	S = 0
-	CFLAG:靴下の種類 = 7
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 7
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 8
 	PRINTFORMW 《%CALLNAME:TARGET%にニーハイネットストッキングを買ってあげました》
 	C = 20
 	S = 0
-	CFLAG:靴下の種類 = 8
-	CFLAG:靴下の着用状態 = 0
+	CFLAG:靴下タイプ = 8
+	CFLAG:靴下着用 = 0
 ELSEIF RESULT == 99 && ミッション結果:304 == 4
 	PRINTFORMW 《%CALLNAME:TARGET%にガラスのニーソックスを買ってあげました》
 	C = 20
 	S = 0
-	CFLAG:靴下の種類 = 99
-	CFLAG:靴の種類 = 0
-	CFLAG:靴下の着用状態 = -1
+	CFLAG:靴下タイプ = 99
+	CFLAG:靴タイプ = 0
+	CFLAG:靴下着用 = -1
 ELSEIF RESULT == 999
 	A = 0
 	C = 0
@@ -1808,77 +1801,77 @@ IF RESULT == 1
 	PRINTFORMW 《%CALLNAME:TARGET%にスニーカーを買ってあげました》
 	C = 100
 	S = 0
-	CFLAG:靴の種類 = 1
+	CFLAG:靴タイプ = 1
 ELSEIF RESULT == 2
 	PRINTFORMW 《%CALLNAME:TARGET%に学園指定ローファーを買ってあげました》
 	C = 200
 	S = 0
-	CFLAG:靴の種類 = 2
+	CFLAG:靴タイプ = 2
 ELSEIF RESULT == 3
 	PRINTFORMW 《%CALLNAME:TARGET%にパンプスを買ってあげました》
 	C = 250
 	S = 0
-	CFLAG:靴の種類 = 3
+	CFLAG:靴タイプ = 3
 ELSEIF RESULT == 4
 	PRINTFORMW 《%CALLNAME:TARGET%にハイヒールを買ってあげました》
 	C = 300
 	S = 0
-	CFLAG:靴の種類 = 4
+	CFLAG:靴タイプ = 4
 ELSEIF RESULT == 5
 	PRINTFORMW 《%CALLNAME:TARGET%にサンダルを買ってあげました》
 	C = 50
 	S = 0
-	CFLAG:靴の種類 = 5
+	CFLAG:靴タイプ = 5
 ELSEIF RESULT == 6
 	PRINTFORMW 《%CALLNAME:TARGET%にビーチサンダルを買ってあげました》
 	C = 80
 	S = 0
-	CFLAG:靴の種類 = 6
+	CFLAG:靴タイプ = 6
 ELSEIF RESULT == 7
 	PRINTFORMW 《%CALLNAME:TARGET%にナースサンダルを買ってあげました》
 	C = 100
 	S = 0
-	CFLAG:靴の種類 = 7
+	CFLAG:靴タイプ = 7
 ELSEIF RESULT == 8
 	PRINTFORMW 《%CALLNAME:TARGET%にパールピンクミュールを買ってあげました》
 	C = 1000
 	S = 0
-	CFLAG:靴の種類 = 8
+	CFLAG:靴タイプ = 8
 ELSEIF RESULT == 9
 	PRINTFORMW 《%CALLNAME:TARGET%に下駄を買ってあげました》
 	C = 150
 	S = 0
-	CFLAG:靴の種類 = 9
+	CFLAG:靴タイプ = 9
 ELSEIF RESULT == 10
 	PRINTFORMW 《%CALLNAME:TARGET%にもこもこスリッパを買ってあげました》
 	C = 70
 	S = 0
-	CFLAG:靴の種類 = 10
+	CFLAG:靴タイプ = 10
 ELSEIF RESULT == 11
 	PRINTFORMW 《%CALLNAME:TARGET%に便所スリッパを買ってあげました》
 	C = 10
 	S = 3
-	CFLAG:靴の種類 = 11
+	CFLAG:靴タイプ = 11
 ELSEIF RESULT == 12
 	PRINTFORMW 《%CALLNAME:TARGET%に編み上げブーツを買ってあげました》
 	C = 500
 	S = 0
-	CFLAG:靴の種類 = 12
+	CFLAG:靴タイプ = 12
 ELSEIF RESULT == 13
 	PRINTFORMW 《%CALLNAME:TARGET%にカウボーイブーツを買ってあげました》
 	C = 700
 	S = 0
-	CFLAG:靴の種類 = 13
+	CFLAG:靴タイプ = 13
 ELSEIF RESULT == 14
 	PRINTFORMW 《%CALLNAME:TARGET%にピンヒールニーハイブーツを買ってあげました》
 	C = 1500
 	S = 0
-	CFLAG:靴の種類 = 14
+	CFLAG:靴タイプ = 14
 ELSEIF RESULT == 15
 	PRINTFORMW 《%CALLNAME:TARGET%にクロックスを買ってあげました》
 	C = 150
 	S = 0
-	CFLAG:靴の種類 = 15
+	CFLAG:靴タイプ = 15
 ELSEIF RESULT == 999
 	A = 0
 	C = 0

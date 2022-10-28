@@ -612,9 +612,9 @@ IF TFLAG:セックスで射精 > 0
 		IF CFLAG:33 == 1
 			PRINTFORM の
 			IF FLAG:陰毛を生やす
-				IF CFLAG:陰毛の状態 > 6
+				IF CFLAG:陰毛状態 > 6
 					PRINTFORM 陰毛の生えた
-				ELSEIF  CFLAG:陰毛の状態 <= 6 && TALENT:パイパン == 0
+				ELSEIF  CFLAG:陰毛状態 <= 6 && TALENT:パイパン == 0
 					PRINTFORM つるつるに剃り上げられた
 				ELSE
 					PRINTFORM 無毛の
@@ -623,8 +623,8 @@ IF TFLAG:セックスで射精 > 0
 			PRINTFORM 恥丘
 		ELSEIF CFLAG:33 == 2
 			PRINTFORM の
-			IF CFLAG:靴下の着用状態
-				IF CFLAG:靴下の種類 >= 5
+			IF CFLAG:靴下着用
+				IF CFLAG:靴下タイプ >= 5
 					CALL PRINT_SHOESTYPE_MAIN
 					PRINTFORM を履いた
 				ENDIF
@@ -632,12 +632,12 @@ IF TFLAG:セックスで射精 > 0
 			PRINTFORM 太もも
 		ELSEIF CFLAG:33 == 3
 			PRINTFORM の
-			SIF (CFLAG:ピアスの装着状況 & 2)
+			SIF (CFLAG:ピアス状況 & 2)
 				PRINTFORM ピアスが施された
 			PRINTFORM へそ
 		ELSEIF CFLAG:33 == 4
 			PRINTFORM の
-			SIF (CFLAG:ピアスの装着状況 & 1)
+			SIF (CFLAG:ピアス状況 & 1)
 				PRINTFORM 乳首にピアスが施された
 			IF TALENT:貧乳
 				PRINTFORM 慎ましやかな
@@ -672,9 +672,9 @@ IF TFLAG:セックスで射精 > 0
 			PRINTFORM %HAIRCOLOR_STRING(CFLAG:髪色,CFLAG:染髪済)%
 			PRINT の髪
 		ELSEIF CFLAG:33 == 8
-			IF CFLAG:特別コスチュームのタイプ == 80
+			IF CFLAG:特別コスタイプ == 80
 				PRINT 眼鏡
-			ELSEIF CFLAG:特別コスチュームのタイプ == 81
+			ELSEIF CFLAG:特別コスタイプ == 81
 				PRINT サングラス
 			ENDIF
 		ENDIF
@@ -811,15 +811,15 @@ IF TFLAG:失神中終了 >= 2 && TFLAG:絶頂の強度 >= 3 && (TEQUIP:利尿剤
 ELSEIF TFLAG:失神中終了 >= 2 && TFLAG:絶頂の強度 >= 1 && (TEQUIP:利尿剤効果 || TALENT:おもらし癖)
 	PRINTFORML 意識の無い%CALLNAME:TARGET%の陰唇から尿がちょろちょろと漏れ出ている…
 ;オムツの中へ放尿
-ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖))
+ELSEIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖))
 	PRINTFORML %CALLNAME:TARGET%のはいているオムツから湯気があがり、
 	PRINTFORML はっきりとわかる尿の臭いが漂ってきた
 	PRINTFORML どうやら興奮のあまり、オムツの中へおもらしをしてしまったらしい…
 ;オムツの中へ失禁
-ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果))
+ELSEIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果))
 	PRINTFORML %CALLNAME:TARGET%のオムツから湯気が立ち、おしっこの臭いが漂ってくる…
 ;ズーコの着ぐるみの中で放尿
-ELSEIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖))
+ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖))
 	PRINTFORM %CALLNAME:TARGET%の着ている
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML がのたうち、外からでもはっきりとわかる尿の臭いが漂ってきた
@@ -827,7 +827,7 @@ ELSEIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 &
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML の中で放尿してしまったらしい…
 ;ズーコの着ぐるみの中で失禁
-ELSEIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果))
+ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64) && ((TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果))
 	PRINTFORM さっきまで激しく動いていた
 	CALL PRINT_CLOTHTYPE_SPECIAL
 	PRINTFORML の動きがぴたっと止まった
@@ -1490,11 +1490,11 @@ ELSEIF SELECTCOM == 40 || SELECTCOM == 41 || SELECTCOM == 42 && TFLAG:失神中�
 ELSEIF SELECTCOM == 88 && TFLAG:失神中終了 <= 1
 	IF RAND:3 == 0 && TEQUIP:縄 == 0
 		PRINTFORM %CALLNAME:TARGET%は剃り上げられた
-			IF CFLAG:性器の形状 == 0
+			IF CFLAG:性器 == 0
 				PRINT 綺麗なタテスジの
-			ELSEIF CFLAG:性器の形状 == 1
+			ELSEIF CFLAG:性器 == 1
 				PRINT 小陰唇がはみ出している
-			ELSEIF CFLAG:性器の形状 == 2
+			ELSEIF CFLAG:性器 == 2
 				PRINT 淫水焼けして黒ずんだ小陰唇がはみ出している
 			ENDIF
 			PRINT 股間
@@ -1507,11 +1507,11 @@ ELSEIF SELECTCOM == 88 && TFLAG:失神中終了 <= 1
 			ENDIF
 	ELSEIF RAND:2 == 0 && TEQUIP:縄 == 0
 		PRINTFORM %CALLNAME:TARGET%はすっかり露わになった
-			IF CFLAG:性器の形状 == 0
+			IF CFLAG:性器 == 0
 				PRINT 綺麗なタテスジの
-			ELSEIF CFLAG:性器の形状 == 1
+			ELSEIF CFLAG:性器 == 1
 				PRINT 小陰唇がはみ出している
-			ELSEIF CFLAG:性器の形状 == 2
+			ELSEIF CFLAG:性器 == 2
 				PRINT 淫水焼けして黒ずんだ小陰唇がはみ出している
 			ENDIF
 			PRINTL 性器を、
@@ -1529,11 +1529,11 @@ ELSEIF SELECTCOM == 88 && TFLAG:失神中終了 <= 1
 		IF TALENT:ふたなり || TALENT:オトコ
 			PRINT ペニスを、
 		ELSE
-			IF CFLAG:性器の形状 == 0
+			IF CFLAG:性器 == 0
 				PRINT 綺麗なタテスジの
-			ELSEIF CFLAG:性器の形状 == 1
+			ELSEIF CFLAG:性器 == 1
 				PRINT 小陰唇がはみ出している
-			ELSEIF CFLAG:性器の形状 == 2
+			ELSEIF CFLAG:性器 == 2
 				PRINT 淫水焼けして黒ずんだ小陰唇がはみ出している
 			ENDIF
 			PRINTL 陰部を、

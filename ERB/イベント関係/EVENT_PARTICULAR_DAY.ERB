@@ -17,15 +17,15 @@
 ;EVENT_NEXTDAY.ERBから呼び出される関数
 ;-------------------------------------------------
 @PARTICULAR_DATE
-IF DAY:1 == 2 && DAY:2 == 3
+IF DAY:日付_月 == 2 && DAY:日付_日 == 3
 	CALL VALENTINE_DAY
-;ELSEIF DAY:1 == 3 && DAY:2 == 3
+;ELSEIF DAY:日付_月 == 3 && DAY:日付_日 == 3
 ;	CALL WHITE_DAY
-ELSEIF DAY:1 == 7 && DAY:2 == 3
+ELSEIF DAY:日付_月 == 7 && DAY:日付_日 == 3
 	CALL SUMMER_VACATION1
-;ELSEIF DAY:1 == 12 && DAY:2 == 4
+;ELSEIF DAY:日付_月 == 12 && DAY:日付_日 == 4
 ;	CALL CHRISTMAS_EVE
-;ELSEIF DAY:1 == 1 && DAY:2 == 1
+;ELSEIF DAY:日付_月 == 1 && DAY:日付_日 == 1
 ;	CALL NEWYEAR_DAY
 ENDIF
 
@@ -81,7 +81,7 @@ REPEAT CHARANUM
 				JUEL:COUNT:欲情 += 200
 
 			;全裸か、露出癖４以上の場合
-			ELSEIF (CFLAG:COUNT:上着のタイプ == 0 && CFLAG:COUNT:特別コスチュームのタイプ == 0) || FLAG:着衣使用 == 0 || ABL:COUNT:露出癖 >= 4
+			ELSEIF (CFLAG:COUNT:上着タイプ == 0 && CFLAG:COUNT:特別コスタイプ == 0) || FLAG:着衣使用 == 0 || ABL:COUNT:露出癖 >= 4
 				PRINTFORML 全裸の%CALLNAME:COUNT%が%CALLNAME:MASTER%を待っていた。
 				;露出癖5以上、Ｖ感覚3以上
 				IF ABL:COUNT:露出癖 >= 5 && ABL:COUNT:Ｖ感覚 >= 3
@@ -442,31 +442,31 @@ WAIT
 
 		PRINTFORML 愛情経験＋{N / 3}
 		EXP:愛情経験 += N * ABL:信頼 / 2
-		IF CFLAG:ファーストキスの相手 == -1
-			CFLAG:ファーストキスの相手 = 1
+		IF CFLAG:初キス相手 == -1
+			CFLAG:初キス相手 = 1
 			IF NO:TARGET != [[キャラ:宮間かなで]]
-				CSTR:ファーストキスの相手 = %CALLNAME:MASTER%
+				CSTR:初キス相手 = %CALLNAME:MASTER%
 			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 0
-				CSTR:ファーストキスの相手 = お兄ちゃん
+				CSTR:初キス相手 = お兄ちゃん
 			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 1
-				CSTR:ファーストキスの相手 = アニキ
+				CSTR:初キス相手 = アニキ
 			ENDIF
-			CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-			CFLAG:ファーストキス喪失月 = DAY:1
-			CFLAG:ファーストキス喪失日 = DAY:2
+			CFLAG:初キス喪失年齢 = BASE:実年齢
+			CFLAG:初キス喪失月 = DAY:日付_月
+			CFLAG:初キス喪失日 = DAY:日付_日
 			;4は海
-			CFLAG:ファーストキス喪失場所 = 4
+			CFLAG:初キス喪失場所 = 4
 			SETCOLOR 0xDDBBCC
 				PRINTFORML 【ファーストキス】
 			RESETCOLOR
 		ENDIF
-		IF CFLAG:MASTER:ファーストキスの相手 == -1
-			CFLAG:MASTER:ファーストキスの相手 = 1
-			CSTR:MASTER:ファーストキスの相手 = %NAME:TARGET%
-			CFLAG:MASTER:ファーストキス喪失年齢 = BASE:MASTER:実年齢
-			CFLAG:MASTER:ファーストキス喪失月 = DAY:1
-			CFLAG:MASTER:ファーストキス喪失日 = DAY:2
-			CFLAG:MASTER:ファーストキス喪失場所 = 4
+		IF CFLAG:MASTER:初キス相手 == -1
+			CFLAG:MASTER:初キス相手 = 1
+			CSTR:MASTER:初キス相手 = %NAME:TARGET%
+			CFLAG:MASTER:初キス喪失年齢 = BASE:MASTER:実年齢
+			CFLAG:MASTER:初キス喪失月 = DAY:日付_月
+			CFLAG:MASTER:初キス喪失日 = DAY:日付_日
+			CFLAG:MASTER:初キス喪失場所 = 4
 			SETCOLOR 0xDDBBCC
 				PRINTFORML 【ファーストキス】（%CALLNAME:MASTER%）
 			RESETCOLOR
@@ -477,7 +477,7 @@ WAIT
 			SETCOLOR 0xDDBBCC
 				PRINTFORML 【童貞喪失】（%CALLNAME:MASTER%）
 			RESETCOLOR
-			CFLAG:MASTER:ファーストキスの相手 = 1
+			CFLAG:MASTER:初キス相手 = 1
 		ENDIF
 	ENDIF
 

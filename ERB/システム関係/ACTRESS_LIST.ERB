@@ -7,7 +7,7 @@
 ;===========================================================
 @ACTRESS_LIST(MODE = 0)
 
-#DIM LIST, CURRENT_MAX_CHARA_ID
+#DIM LIST, 固有キャラ最大ID
 #DIM PAGE
 #DIM MAXPAGE
 ;1ページあたりの表示人数の定義
@@ -25,7 +25,7 @@ TEMP_CHARA_NO = 0
 ;------------------------------------------------------------
 VARSET LIST, -1
 LOCAL:1 = 0
-FOR LOCAL, 0, CURRENT_MAX_CHARA_ID
+FOR LOCAL, 0, 固有キャラ最大ID
 	;CSVが存在しない場合ははじく
 	SIF !EXISTCSV(LOCAL, 0)
 		CONTINUE
@@ -58,13 +58,8 @@ DRAWLINE
 IF MODE == ACTRESS_LIST_BUY_MODE
 	PRINTL 女優候補やスタッフのスカウト
 	PRINTL 《ＡＶ女優やスタッフになってくれるキャラと契約できます》
-	PRINTV DAY+1
-	PRINT 週目
-	IF TIME == 0
-		PRINTL  前半
-	ELSE
-		PRINTL  後半
-	ENDIF
+
+	CALL PRINT_DAY_TIME
 
 	PRINTFORML 所持金：{MONEY}ポイント
 	PRINTFORM 契約人数：{CHARANUM-1}人 / {FLAG:事務所規模}人
@@ -79,7 +74,7 @@ ENDIF
 DRAWLINE
 LOCAL:1 = 0
 FOR LOCAL, PAGE * SHOWNUM, (PAGE + 1) * SHOWNUM
-	SIF LOCAL > CURRENT_MAX_CHARA_ID
+	SIF LOCAL > 固有キャラ最大ID
 		CONTINUE
 	IF LIST:LOCAL < 0
 		PRINTFORM %"", SHOWLENGTH / SHOWCOLUMN, LEFT%	
@@ -124,7 +119,7 @@ ELSEIF RESULT == COMMAND_PREV_PAGE && PAGE > 0
 	PAGE -= 1
 ELSEIF RESULT == COMMAND_NEXT_PAGE && PAGE + 1 < MAXPAGE
 	PAGE += 1
-ELSEIF (RESULT >= 0 && RESULT < 250 || RESULT == 求人広告) && MATCH(LIST, RESULT)
+ELSEIF (RESULT >= 0 && RESULT < 固有キャラ最大ID || RESULT == 求人広告) && MATCH(LIST, RESULT)
 	TEMP_CHARA_NO = RESULT
 	IF MODE == ACTRESS_LIST_CB_MODE && 女優名鑑:RESULT > 0 
 		CALL キャラ追加(TEMP_CHARA_NO)

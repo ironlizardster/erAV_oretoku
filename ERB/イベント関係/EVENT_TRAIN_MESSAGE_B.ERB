@@ -19,7 +19,7 @@ DRAWLINE
 ;愛撫
 ;--------------------------------------------------------
 IF SELECTCOM == 0
-	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ <= 50
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINT ごしに、
 	ELSEIF CFLAG:着衣状態 & 28
@@ -33,7 +33,7 @@ IF SELECTCOM == 0
 						;****スライムパッチ追加ここまで****
 		PRINTFORM %CALLNAME:PLAYER%は
 		;口が汚れてないか、主人に汚れ無視があるか、助手でない時にボールギャグ装備中でなくキス経験済みの場合
-		SIF (STAIN:0 < 2 || STAIN:0 == 16 || STAIN:0 == 17 || TALENT:MASTER:汚れ無視 || ASSIPLAY) && TEQUIP:ボールギャグ == 0 && CFLAG:ファーストキスの相手 != -1
+		SIF (STAIN:0 < 2 || STAIN:0 == 16 || STAIN:0 == 17 || TALENT:MASTER:汚れ無視 || ASSIPLAY) && TEQUIP:ボールギャグ == 0 && CFLAG:初キス相手 != -1
 			PRINT キスをしながら
 	ENDIF
 	PRINTFORM %CALLNAME:TARGET%の
@@ -56,7 +56,7 @@ IF SELECTCOM == 0
 		PRINTL 体を丹念に愛撫した…
 	ENDIF
 	;妊娠中で、出産日の5日前でズーコの着ぐるみ以外の特別コスチュームか特別コスチュームでない時
-	SIF TALENT:妊娠 && CFLAG:出産日 <= DAY+5 && (CFLAG:特別コスチュームのタイプ != 11 || (CFLAG:着衣状態 & 64) == 0)
+	SIF TALENT:妊娠 && CFLAG:出産日 <= DAY+5 && (CFLAG:特別コスタイプ != 11 || (CFLAG:着衣状態 & 64) == 0)
 		PRINTFORML %CALLNAME:TARGET%のまん丸く膨れた腹部の中から、微かに赤ん坊が蹴り返してくる……
 ;--------------------------------------------------------
 ;クンニ
@@ -193,7 +193,7 @@ ELSEIF SELECTCOM == 5
 	ELSEIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
 						;****スライムパッチ追加ここまで****
 		PRINTFORM %CALLNAME:PLAYER%は
-		SIF CFLAG:ピアスの装着状況 & 1
+		SIF CFLAG:ピアス状況 & 1
 			PRINTL 、乳首を貫く金属製のピアスを軽く引っ張りながら、
 	ENDIF
 	PRINTFORM %CALLNAME:TARGET%の
@@ -236,11 +236,11 @@ ELSEIF SELECTCOM == 5
 ;キスする
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 6
-	IF TEQUIP:獣姦プレイ && CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF TEQUIP:獣姦プレイ && CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		PRINTFORM ノラ犬は
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML を舐めまわしている……
-	ELSEIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		PRINTFORM %CALLNAME:PLAYER%は
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML にキスをした……
@@ -265,7 +265,7 @@ ELSEIF SELECTCOM == 6
 		ELSE
 			PRINTL した…
 		ENDIF
-		SIF CFLAG:ピアスの装着状況 & 16
+		SIF CFLAG:ピアス状況 & 16
 			PRINTFORML %CALLNAME:TARGET%の舌先に取り付けられたピアスの感触が感じられる……
 	ENDIF
 ;--------------------------------------------------------
@@ -275,21 +275,21 @@ ELSEIF SELECTCOM == 7
 
 	IF FLAG:陰毛を生やす == 0
 		SAVESTR:2 = %STR:0%
-	ELSEIF CFLAG:陰毛の状態 == 0 - 2
+	ELSEIF CFLAG:陰毛状態 == 0 - 2
 		SAVESTR:2 = 永久脱毛された
-	ELSEIF CFLAG:陰毛の状態 == 0 - 1 || CFLAG:陰毛の状態 == 0 || (CFLAG:陰毛の状態 <= 5 && TALENT:パイパン)
+	ELSEIF CFLAG:陰毛状態 == 0 - 1 || CFLAG:陰毛状態 == 0 || (CFLAG:陰毛状態 <= 5 && TALENT:パイパン)
 		SAVESTR:2 = 無毛の
-	ELSEIF CFLAG:陰毛の状態 <= 5
+	ELSEIF CFLAG:陰毛状態 <= 5
 		SAVESTR:2 = すべすべに剃り上げられた
-	ELSEIF CFLAG:陰毛の状態 <= 7
+	ELSEIF CFLAG:陰毛状態 <= 7
 		SAVESTR:2 = 生えかけの陰毛に覆われた
-	ELSEIF CFLAG:陰毛の状態 <= 9
+	ELSEIF CFLAG:陰毛状態 <= 9
 		SAVESTR:2 = うっすらと陰毛に覆われた
-	ELSEIF CFLAG:陰毛の状態 <= 12
+	ELSEIF CFLAG:陰毛状態 <= 12
 		SAVESTR:2 = 陰毛の生え揃った
-	ELSEIF CFLAG:陰毛の状態 <= 18
+	ELSEIF CFLAG:陰毛状態 <= 18
 		SAVESTR:2 = 伸び放題の陰毛が生え茂った
-	ELSEIF CFLAG:陰毛の状態 > 18
+	ELSEIF CFLAG:陰毛状態 > 18
 		SAVESTR:2 = アナルまで繁茂した陰毛に覆われた
 	ENDIF
 
@@ -344,7 +344,7 @@ ELSEIF SELECTCOM == 7
 	ENDIF
 
 	;貞操帯
-	IF CFLAG:特別コスチュームのタイプ == 79 && (CFLAG:着衣状態 & 64) 
+	IF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) 
 		PRINTFORML そして、%CALLNAME:TARGET%のヴァギナは頑丈な貞操帯でしっかりと守られている
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%の
@@ -352,57 +352,57 @@ ELSEIF SELECTCOM == 7
 				PRINTFORM 愛液で濡れて妖しく光る
 			ENDIF
 
-			IF CFLAG:性器の形状 == 0 && TALENT:処女 == 1
+			IF CFLAG:性器 == 0 && TALENT:処女 == 1
 				PRINTFORML ヴァギナは新品そのものの綺麗なサーモンピンク色をしている
-			ELSEIF CFLAG:性器の形状 >= 1 && TALENT:処女 == 1
+			ELSEIF CFLAG:性器 >= 1 && TALENT:処女 == 1
 				PRINTFORM 度重なる性行為で肥大したラビアは
-				IF CFLAG:性器の形状 == 2
+				IF CFLAG:性器 == 2
 					PRINTFORM 淫水焼けして黒ずんで
-				ELSEIF CFLAG:性器の形状 == 1
+				ELSEIF CFLAG:性器 == 1
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTL いる
-			ELSEIF CFLAG:性器の形状 == 0 && TALENT:処女 == 0
+			ELSEIF CFLAG:性器 == 0 && TALENT:処女 == 0
 				PRINTFORML ヴァギナは新品同様の綺麗なサーモンピンク色をしている
 				PRINTFORM %CALLNAME:PLAYER%が初体験の経緯を聞くと%CALLNAME:TARGET%は
 					IF TALENT:恋心 == 0 || TALENT:淫乱 == 0
 						PRINTFORM 恥ずかしがりながら
 					ENDIF
 				PRINTFORM 
-					IF CFLAG:初体験の相手 == 16
+					IF CFLAG:処女喪失相手 == 16
 						PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられたことを幸せそうにしている
 							ENDIF
-					ELSEIF CFLAG:初体験の相手 == 2
+					ELSEIF CFLAG:処女喪失相手 == 2
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 3
+					ELSEIF CFLAG:処女喪失相手 == 3
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 4
+					ELSEIF CFLAG:処女喪失相手 == 4
 						PRINTFORM バイブで処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 5
+					ELSEIF CFLAG:処女喪失相手 == 5
 						PRINTFORM 極太バイブで処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 6
+					ELSEIF CFLAG:処女喪失相手 == 6
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 7
+					ELSEIF CFLAG:処女喪失相手 == 7
 						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 8
+					ELSEIF CFLAG:処女喪失相手 == 8
 						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
 							ENDIF
-					ELSEIF CFLAG:初体験の相手 == 11
+					ELSEIF CFLAG:処女喪失相手 == 11
 						PRINTFORM 不良に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 14
+					ELSEIF CFLAG:処女喪失相手 == 14
 						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSE
@@ -412,11 +412,11 @@ ELSEIF SELECTCOM == 7
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
 							ENDIF						
 					ENDIF
-			ELSEIF CFLAG:性器の形状 >= 1 && EXP:Ｖ経験 > 50 && TALENT:処女 == 0
+			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 > 50 && TALENT:処女 == 0
 				PRINTFORM 度重なる性行為で肥大したラビアは
-				IF CFLAG:性器の形状 == 2
+				IF CFLAG:性器 == 2
 					PRINTFORM 淫水焼けして黒ずんで
-				ELSEIF CFLAG:性器の形状 == 1
+				ELSEIF CFLAG:性器 == 1
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTFORML おり、何度もペニスで貫かれた膣口も大きく拡がっている
@@ -425,40 +425,40 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 恥ずかしがりながら
 					ENDIF
 				PRINTFORM 
-					IF CFLAG:初体験の相手 == 16
+					IF CFLAG:処女喪失相手 == 16
 						PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられたことを幸せそうにしている
 							ENDIF
-					ELSEIF CFLAG:初体験の相手 == 2
+					ELSEIF CFLAG:処女喪失相手 == 2
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 3
+					ELSEIF CFLAG:処女喪失相手 == 3
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 4
+					ELSEIF CFLAG:処女喪失相手 == 4
 						PRINTFORM バイブで処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 5
+					ELSEIF CFLAG:処女喪失相手 == 5
 						PRINTFORM 極太バイブで処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 6
+					ELSEIF CFLAG:処女喪失相手 == 6
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 7
+					ELSEIF CFLAG:処女喪失相手 == 7
 						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 8
+					ELSEIF CFLAG:処女喪失相手 == 8
 						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
 							ENDIF
-					ELSEIF CFLAG:初体験の相手 == 11
+					ELSEIF CFLAG:処女喪失相手 == 11
 						PRINTFORM 不良に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 14
+					ELSEIF CFLAG:処女喪失相手 == 14
 						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSE
@@ -468,11 +468,11 @@ ELSEIF SELECTCOM == 7
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
 							ENDIF						
 					ENDIF
-			ELSEIF CFLAG:性器の形状 >= 1 && EXP:Ｖ経験 <= 50 && TALENT:処女 == 0
+			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 <= 50 && TALENT:処女 == 0
 				PRINTFORM 度重なる性行為で肥大したラビアは
-				IF CFLAG:性器の形状 == 2
+				IF CFLAG:性器 == 2
 					PRINTFORM 淫水焼けして黒ずんで
-				ELSEIF CFLAG:性器の形状 == 1
+				ELSEIF CFLAG:性器 == 1
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTFORML いる
@@ -481,40 +481,40 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 恥ずかしがりながら
 					ENDIF
 				PRINTFORM 
-					IF CFLAG:初体験の相手 == 16
+					IF CFLAG:処女喪失相手 == 16
 						PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられたことを幸せそうにしている
 							ENDIF
-					ELSEIF CFLAG:初体験の相手 == 2
+					ELSEIF CFLAG:処女喪失相手 == 2
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 3
+					ELSEIF CFLAG:処女喪失相手 == 3
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 4
+					ELSEIF CFLAG:処女喪失相手 == 4
 						PRINTFORM バイブで処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 5
+					ELSEIF CFLAG:処女喪失相手 == 5
 						PRINTFORM 極太バイブで処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 6
+					ELSEIF CFLAG:処女喪失相手 == 6
 						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
 						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 7
+					ELSEIF CFLAG:処女喪失相手 == 7
 						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 8
+					ELSEIF CFLAG:処女喪失相手 == 8
 						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
 							ENDIF
-					ELSEIF CFLAG:初体験の相手 == 11
+					ELSEIF CFLAG:処女喪失相手 == 11
 						PRINTFORM 不良に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:初体験の相手 == 14
+					ELSEIF CFLAG:処女喪失相手 == 14
 						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSE
@@ -528,9 +528,9 @@ ELSEIF SELECTCOM == 7
 	ENDIF
 	
 	;ピアシング状態
-	SIF CFLAG:ピアスの装着状況 & 8 || CFLAG:ピアスの装着状況 & 4
+	SIF CFLAG:ピアス状況 & 8 || CFLAG:ピアス状況 & 4
 		PRINTFORM %CALLNAME:TARGET%の
-	IF CFLAG:ピアスの装着状況 & 8
+	IF CFLAG:ピアス状況 & 8
 		SIF PALAM:欲情 >= PALAMLV:4
 			PRINT 勃起した
 		IF TALENT:ふたなり
@@ -538,12 +538,12 @@ ELSEIF SELECTCOM == 7
 		ELSE
 			PRINT クリトリス
 		ENDIF
-		SIF CFLAG:ピアスの装着状況 & 4
+		SIF CFLAG:ピアス状況 & 4
 			PRINT と
 	ENDIF
-	SIF CFLAG:ピアスの装着状況 & 4
+	SIF CFLAG:ピアス状況 & 4
 		PRINT 左右のラビア
-	SIF CFLAG:ピアスの装着状況 & 8 || CFLAG:ピアスの装着状況 & 4
+	SIF CFLAG:ピアス状況 & 8 || CFLAG:ピアス状況 & 4
 		PRINTL では、柔らかい肉を貫いて金属製のピアスが光っている……
 
 	SAVESTR:2 = %STR:0%
@@ -1133,9 +1133,9 @@ ELSEIF SELECTCOM == 30
 		PRINTFORM %CALLNAME:PLAYER%の
 	ENDIF
 	PRINTFORM ペニスに
-	IF CFLAG:特別コスチュームのタイプ == 83
+	IF CFLAG:特別コスタイプ == 83
 		PRINTFORM レースパーティグローブをはめた
-	ELSEIF CFLAG:特別コスチュームのタイプ == 85
+	ELSEIF CFLAG:特別コスタイプ == 85
 		PRINTFORM エナメルロンググローブをはめた
 	ENDIF
 	PRINTFORML 指を絡めて擦りあげている…
@@ -1160,7 +1160,7 @@ ELSEIF SELECTCOM == 31
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 32
 	PRINTFORM %CALLNAME:TARGET%は
-	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ <= 50
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINT ごしに、
 	ELSEIF CFLAG:着衣状態 & 28
@@ -1361,28 +1361,28 @@ ELSEIF SELECTCOM == 38
 	ELSEIF TALENT:小悪魔 && (CFLAG:着衣状態 & 1) == 0 && TALENT:オトコ == 0
 		SIF PALAM:潤滑 >= PALAMLV:4
 			PRINT 愛液でしとどに濡れ、ぱっくりと口を開いた
-		SIF (CFLAG:ピアスの装着状況 & 4)
+		SIF (CFLAG:ピアス状況 & 4)
 			PRINTFORM 鏡合わせのようにふたつのリングピアスが輝く
-		IF CFLAG:性器の形状 == 0
+		IF CFLAG:性器 == 0
 			PRINTFORM 綺麗なサーモンピンク色の
-		ELSEIF CFLAG:性器の形状 == 1
+		ELSEIF CFLAG:性器 == 1
 			PRINTFORM ラビアが肥大化した、
-		ELSEIF CFLAG:性器の形状 == 2
+		ELSEIF CFLAG:性器 == 2
 			PRINTFORM ラビアが肥大化し淫水焼けした、
 		ENDIF
 		PRINTFORML
 		IF FLAG:陰毛を生やす 
-			IF CFLAG:陰毛の状態 > 18
+			IF CFLAG:陰毛状態 > 18
 				PRINT 恥丘からアナルまで密生した陰毛に覆われた
-			ELSEIF CFLAG:陰毛の状態 > 13
+			ELSEIF CFLAG:陰毛状態 > 13
 				PRINT かなり濃い目のアンダーヘアが繁った
-			ELSEIF CFLAG:陰毛の状態 > 10
+			ELSEIF CFLAG:陰毛状態 > 10
 				PRINT 陰毛が綺麗に生えそろった
-			ELSEIF CFLAG:陰毛の状態 > 8
+			ELSEIF CFLAG:陰毛状態 > 8
 				PRINT うっすらと陰毛に覆われた
-			ELSEIF CFLAG:陰毛の状態 > 6
+			ELSEIF CFLAG:陰毛状態 > 6
 				PRINT 微かに生えかけの陰毛に覆われた
-			ELSEIF CFLAG:陰毛の状態 > 0
+			ELSEIF CFLAG:陰毛状態 > 0
 				PRINT つるつるの
 			ENDIF
 			PRINTFORM 性器を
@@ -1391,9 +1391,9 @@ ELSEIF SELECTCOM == 38
 		ENDIF
 		PRINTFORM 挑発的に魅せつけるようにしながら、
 	ENDIF
-	IF CFLAG:靴下の着用状態 == - 1
+	IF CFLAG:靴下着用 == - 1
 		PRINTFORM 素足で
-	ELSEIF CFLAG:靴下の着用状態 == 0
+	ELSEIF CFLAG:靴下着用 == 0
 		CALL PRINT_SHOESTYPE_MAIN
 		PRINTFORM ごしに
 	ENDIF
@@ -1430,7 +1430,7 @@ ELSEIF SELECTCOM == 39
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 141
 	PRINTFORM %CALLNAME:TARGET%は
-	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ <= 50
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINT ごしに、
 	ELSEIF CFLAG:着衣状態 & 28
@@ -1473,14 +1473,14 @@ ELSEIF SELECTCOM == 142
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 40
 	PRINTFORM %CALLNAME:PLAYER%は
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORM の表面を
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%のお尻を
 	ENDIF
 	PRINTFORML 平手で叩いた
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML の中の%CALLNAME:TARGET%には、大して効いていないようだ…
 	ELSEIF PREVCOM == 40 && (CFLAG:着衣状態 & 16) == 0
@@ -1493,13 +1493,13 @@ ELSEIF SELECTCOM == 40
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 41
 	PRINTFORM %CALLNAME:PLAYER%は
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%の身体
 	ENDIF
 	PRINTFORML に鞭を振り下ろした…
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML の中の%CALLNAME:TARGET%には、大して効いていないようだ…
 	ELSEIF PREVCOM == 41
@@ -1512,13 +1512,13 @@ ELSEIF SELECTCOM == 41
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 42
 	PRINTFORM %CALLNAME:PLAYER%は
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML を針でつついた…
 	ELSE
 		PRINTFORML %CALLNAME:TARGET%の身体を針でつついた…
 	ENDIF
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML の中の%CALLNAME:TARGET%には、大して効いていないようだ…
 	ENDIF
@@ -1553,7 +1553,7 @@ ELSEIF SELECTCOM == 43
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 44
 	PRINTFORM %CALLNAME:PLAYER%は
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%
@@ -1691,7 +1691,7 @@ ELSEIF SELECTCOM == 54
 		PRINTFORM の%CALLNAME:TARGET%
 		IF ASSI > 0
 			;同じ格好
-			IF CFLAG:着衣状態 == CFLAG:ASSI:着衣状態 && CFLAG:上着のタイプ == CFLAG:ASSI:上着のタイプ && CFLAG:特別コスチュームのタイプ == CFLAG:ASSI:特別コスチュームのタイプ
+			IF CFLAG:着衣状態 == CFLAG:ASSI:着衣状態 && CFLAG:上着タイプ == CFLAG:ASSI:上着タイプ && CFLAG:特別コスタイプ == CFLAG:ASSI:特別コスタイプ
 				PRINTFORM と%CALLNAME:ASSI%
 			ELSE
 				PRINT と
@@ -1704,7 +1704,7 @@ ELSEIF SELECTCOM == 54
 		ENDIF
 		;野外
 		IF TEQUIP:野外プレイ == 1
-			IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ == 71
+			IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ == 71
 				PRINTFORML を連れて、%CALLNAME:MASTER%は外に出かけた…
 			ELSE
 				PRINTFORML に連れて、%CALLNAME:MASTER%は外に出かけた…
@@ -1712,12 +1712,13 @@ ELSEIF SELECTCOM == 54
 		;教室
 		ELSEIF TEQUIP:野外プレイ == 2
 			PRINT を連れて
-				SIF TIME == 0
-					PRINT 昼の
-				SIF TIME == 1
-					PRINT 放課後の
+			PRINTFORM \@ TIME ? 放課後の # 昼の \@
+;				SIF TIME == 0
+;					PRINT 昼の
+;				SIF TIME == 1
+;					PRINT 放課後の
 					
-					PRINTL 教室のセットへと出かけた…
+			PRINTL 教室のセットへと出かけた…
 		;プール
 		ELSEIF TEQUIP:野外プレイ == 3
 			PRINTL を連れてプールへと出かけた…
@@ -2004,7 +2005,7 @@ ELSEIF SELECTCOM == 85
 	;縄使用中に放尿
 	ELSEIF TEQUIP:縄
 		PRINTFORML 縛り上げられた%CALLNAME:TARGET%は身動きのできないままおもらしを始めた
-		SIF CFLAG:特別コスチュームのタイプ != 69 || (CFLAG:着衣状態 & 64) == 0
+		SIF CFLAG:特別コスタイプ != 69 || (CFLAG:着衣状態 & 64) == 0
 			PRINTFORML 湯気を立てる尿が%CALLNAME:TARGET%の上に逆流し、体中を汚していく…
 	;顔面騎乗位プレイ中に放尿
 	ELSEIF TEQUIP:顔面騎乗
@@ -2015,18 +2016,18 @@ ELSEIF SELECTCOM == 85
 				PRINTFORML %CALLNAME:PLAYER%の口の中へ放尿を始めた
 			;ENDIF
 	;オムツの中に放尿
-	ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64) && ABL:信頼 >= 3 && ABL:露出癖 >= 3
+	ELSEIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64) && ABL:信頼 >= 3 && ABL:露出癖 >= 3
 		PRINTFORML %CALLNAME:PLAYER%が命令すると、%CALLNAME:TARGET%はその場でオムツの中へ放尿を始めた
 		PRINTFORML %CALLNAME:TARGET%はうっとりとした顔で体を震わせている…
-	ELSEIF CFLAG:特別コスチュームのタイプ == 69 && (CFLAG:着衣状態 & 64)
+	ELSEIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 		PRINTFORML %CALLNAME:PLAYER%に命令され、%CALLNAME:TARGET%は顔を真っ赤にしながらオムツの中へ放尿した…
 	;ズーコの着ぐるみの中で放尿
-	ELSEIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64) && ABL:信頼 >= 3 && ABL:露出癖 >= 3
+	ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64) && ABL:信頼 >= 3 && ABL:露出癖 >= 3
 		PRINTFORM %CALLNAME:PLAYER%が命令すると、%CALLNAME:TARGET%は嬉々として
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML の中で放尿を始めた…
 		PRINTFORML 新たな種類の快楽を発見しつつあるようだ
-	ELSEIF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		PRINTFORM %CALLNAME:TARGET%は
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINTFORML の中で放尿した…
@@ -2132,7 +2133,7 @@ ELSEIF SELECTCOM == 87
 	ELSEIF P == 16
 		PRINT 舌先
 	ENDIF
-	IF CFLAG:ピアスの装着状況 & P
+	IF CFLAG:ピアス状況 & P
 		PRINTFORMW からピアスを取り外した…
 	ELSE
 		PRINTFORMW にピアスを取り付けた…
@@ -2148,19 +2149,19 @@ ELSEIF SELECTCOM == 88
 	ELSE
 		PRINTFORM 足を開かせた%CALLNAME:TARGET%の
 	ENDIF
-	SIF CFLAG:陰毛の状態 > 12
+	SIF CFLAG:陰毛状態 > 12
 		PRINT 伸び放題に繁った
 	PRINTFORML 陰毛を、%CALLNAME:PLAYER%は綺麗に剃り落とした…
 ;--------------------------------------------------------
 ;獣姦プレイ
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 89
-	IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+	IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 		CALL PRINT_CLOTHTYPE_SPECIAL
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%
 	ENDIF
-	SIF (CFLAG:特別コスチュームのタイプ != 11 || (CFLAG:着衣状態 & 64) == 0) && TEQUIP:獣姦プレイ
+	SIF (CFLAG:特別コスタイプ != 11 || (CFLAG:着衣状態 & 64) == 0) && TEQUIP:獣姦プレイ
 		PRINT の体
 	IF TEQUIP:獣姦プレイ
 		PRINTFORML から犬を引き離した…
@@ -2328,7 +2329,7 @@ ELSEIF SELECTCOM == 91
 ;乳首ローター
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == 92
-		IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスチュームのタイプ <= 50
+		IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ <= 50
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINT ごしに、
 		ELSEIF CFLAG:着衣状態 & 28
@@ -2359,7 +2360,7 @@ ELSEIF SELECTCOM == 100
 		PRINTFORML 触手をケージに戻し、%CALLNAME:TARGET%の体を解放した…
 	ELSE
 		PRINTFORM %CALLNAME:PLAYER%の操る異形の触手が、
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			CALL PRINT_CLOTHTYPE_SPECIAL
 		ELSE
 			PRINTFORM %CALLNAME:TARGET%の体
@@ -2373,7 +2374,7 @@ ELSEIF SELECTCOM == 101
 	IF TEQUIP:バイブ
 		PRINTFORML 触手が%CALLNAME:TARGET%の性器から引き抜かれた
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2387,7 +2388,7 @@ ELSEIF SELECTCOM == 102
 	IF TEQUIP:アナルバイブ
 		PRINTFORML 触手は%CALLNAME:TARGET%のアヌスから引き抜かれた
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2401,7 +2402,7 @@ ELSEIF SELECTCOM == 103
 	IF TEQUIP:クリキャップ
 		PRINTFORML 触手は%CALLNAME:TARGET%のクリ責めを中断した
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2415,7 +2416,7 @@ ELSEIF SELECTCOM == 104
 	IF TEQUIP:ニプルキャップ
 		PRINTFORML 触手は%CALLNAME:TARGET%の乳首から離れた
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2429,7 +2430,7 @@ ELSEIF SELECTCOM == 105
 	IF TEQUIP:搾乳機
 		PRINTFORML 触手は%CALLNAME:TARGET%の乳首を解放した
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2443,7 +2444,7 @@ ELSEIF SELECTCOM == 106
 	IF TEQUIP:縄
 		PRINTFORML 触手は%CALLNAME:TARGET%の拘束を解いた
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2457,7 +2458,7 @@ ELSEIF SELECTCOM == 107
 	IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
 		PRINTFORML 触手が抜き取られると、%CALLNAME:TARGET%は汚物を肛門から撒き散らした
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2471,7 +2472,7 @@ ELSEIF SELECTCOM == 108
 	IF TEQUIP:触手口辱
 		PRINTFORML 触手は%CALLNAME:TARGET%の口から引き抜かれた
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -2485,7 +2486,7 @@ ELSEIF SELECTCOM == 109
 	IF TEQUIP:オナホール
 		PRINTFORML 触手は%CALLNAME:TARGET%のペニスを解放した
 	ELSE
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			PRINTFORM 触手の群れは
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
@@ -3062,7 +3063,7 @@ ELSEIF SELECTCOM == 154
 		PRINTFORML スライムは%CALLNAME:TARGET%の口を解放した…
 	ELSE
 		PRINTFORM スライムは
-		IF CFLAG:特別コスチュームのタイプ == 11 && (CFLAG:着衣状態 & 64)
+		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINTFORM の隙間を通って潜り込み、
 		ENDIF
@@ -3082,7 +3083,7 @@ ELSEIF SELECTCOM == 138
 		PRINTFORM 固く閉ざされた
 	ENDIF
 	PRINTL 薄桃色のすぼまりの中に尖らせた舌先を挿入した…
-	IF (CFLAG:ピアスの装着状況 & 16)
+	IF (CFLAG:ピアス状況 & 16)
 		PRINTFORM %CALLNAME:TARGET%の舌先に取り付けられたピアスが%CALLNAME:PLAYER%の
 		IF TALENT:PLAYER:オトコ == 1
 			PRINTFORM 前立腺

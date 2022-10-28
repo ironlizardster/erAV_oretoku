@@ -3,7 +3,7 @@
 ;===========================================================
 @EVENT_MORNING_PICKUP
 
-FINDCHARA CFLAG:朝フェラ係に任命, 1
+FINDCHARA CFLAG:朝フェラ係, 1
 IF RESULT > 0 
 	TARGET = RESULT
 	CALL EVENT_MORNING_DECIDE
@@ -52,16 +52,16 @@ DRAWLINE
 PRINTFORMW 誰かが%CALLNAME:MASTER%を呼ぶ声がする……
 PRINTFORML 同時にどうやら揺すぶられているらしく、%CALLNAME:MASTER%が目を覚ますと、お願いした通り%NAME:TARGET%が起こしに来てくれたようだ
 PRINTFORM %CALLNAME:MASTER%が寝ぼけ眼をこすりながら感謝の言葉を述べると、%CALLNAME:TARGET%は
-IF CFLAG:ファーストキスの相手 == -1
+IF CFLAG:初キス相手 == -1
 	PRINTFORM 照れたようにはにかんで
 ELSE
 	PRINTFORM 軽く頬にキスをして微笑んで
 ENDIF
 PRINTFORML いる
 
-IF TALENT:小悪魔 == 1 && CFLAG:ファーストキスの相手 != -1
+IF TALENT:小悪魔 == 1 && CFLAG:初キス相手 != -1
 	PRINTFORML どうやらちょっとしたイタズラらしい……
-ELSEIF TALENT:恋心 == 1 && TALENT:小悪魔 == 0 && CFLAG:ファーストキスの相手 != -1
+ELSEIF TALENT:恋心 == 1 && TALENT:小悪魔 == 0 && CFLAG:初キス相手 != -1
 	PRINTFORML どうやら愛情表現のつもりらしい……
 ENDIF
 PRINTL
@@ -159,29 +159,29 @@ PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{X*30}
 PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{X*40}
 
 ;△SLANGとの整合性
-IF CFLAG:ファーストキスの相手 == -1
+IF CFLAG:初キス相手 == -1
 	IF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
-		CSTR:ファーストキスの相手 = アニキのチンポ
+		CSTR:初キス相手 = アニキのチンポ
 	ELSEIF TALENT:淫乱 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
-		CSTR:ファーストキスの相手 = お兄ちゃんのオチ○ポ
+		CSTR:初キス相手 = お兄ちゃんのオチ○ポ
 	ELSEIF TALENT:淫乱 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
-		CSTR:ファーストキスの相手 = お兄ちゃんのおちん○ん
+		CSTR:初キス相手 = お兄ちゃんのおちん○ん
 	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:ギャル系 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のチンポ
+		CSTR:初キス相手 = %CALLNAME:MASTER%のチンポ
 	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:淫乱 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のオチ○ポ
+		CSTR:初キス相手 = %CALLNAME:MASTER%のオチ○ポ
 	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:淫乱 == 0
-		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のおちん○ん
+		CSTR:初キス相手 = %CALLNAME:MASTER%のおちん○ん
 	;ここに来るのはどんなとき？
 	ELSE
-		CSTR:ファーストキスの相手 = %CALLNAME:MASTER%のオチンポ様ｖ
+		CSTR:初キス相手 = %CALLNAME:MASTER%のオチンポ様ｖ
 	ENDIF
 	;△CFLAG諸々未設定　→　とりあえず日付まわりとか設定してしまおう
 	;できれば場所にあなたの部屋と入れたり自分からとか入れたりしたい
-	CFLAG:ファーストキスの相手 = 1
-	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-	CFLAG:ファーストキス喪失月 = DAY:1
-	CFLAG:ファーストキス喪失日 = DAY:2
+	CFLAG:初キス相手 = 1
+	CFLAG:初キス喪失年齢 = BASE:実年齢
+	CFLAG:初キス喪失月 = DAY:日付_月
+	CFLAG:初キス喪失日 = DAY:日付_日
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR

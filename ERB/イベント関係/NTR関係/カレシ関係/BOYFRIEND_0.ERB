@@ -33,7 +33,7 @@ REPEAT CHARANUM
 ;		CONTINUE
 	ELSEIF TALENT:COUNT:処女 == 1 && TALENT:COUNT:好奇心 == 0 && ABL:COUNT:欲望 < 4
 		CONTINUE
-	ELSEIF CFLAG:COUNT:特別コスチュームのタイプ == 79 && CFLAG:COUNT:着衣状態 >= 64
+	ELSEIF CFLAG:COUNT:特別コスタイプ == 79 && CFLAG:COUNT:着衣状態 >= 64
 		CONTINUE
 	ELSE
 		ASSI = COUNT
@@ -48,7 +48,7 @@ PRINTFORM そこで待っていたのは無数の使用済みコンドームが�
 SIF TALENT:褐色肌
 	PRINTFORM 褐色の肌に
 PRINTFORM 珠のような汗を浮かべ、固くしこった
-SIF (CFLAG:ピアスの装着状況 & 1)
+SIF (CFLAG:ピアス状況 & 1)
 	PRINTFORM 、鈍色のニプルピアスが輝く
 PRINTFORM 乳首を摘むように%CSTR:彼氏姓%に胸を揉みしだかれ、
 PRINTFORML バックで犯されながらも%CSTR:彼氏姓%と舌を絡め合う濃厚なキスをしている%CALLNAME:TARGET%だった
@@ -112,7 +112,7 @@ PRINTFORML
 ;===========================================================
 ;イメチェンの呼び出し
 ;===========================================================
-;NUM{CFLAG:彼氏の種類}に上記で設定した番号
+;NUM{CFLAG:彼氏タイプ}に上記で設定した番号
 ;LOCALにRAND:Xで0か1を渡すことによってカレシの性格を決定
 ;同じ「チャラ男」のカレシでも好みが違う際にはCFLAG:623へ
 ;渡すRANDの値を変更し、0～X個のイメチェンの内容を制作
@@ -121,10 +121,10 @@ PRINTFORML
 @PARSONAL_CHANGE_0
 
 SIF EXP:イメチェン回数 == 0
-	CFLAG:彼氏とラブホに寄る判定用 = RAND:2
-;LOCAL = CFLAG:彼氏とラブホに寄る判定用
+	CFLAG:ラブホ = RAND:2
+;LOCAL = CFLAG:ラブホ
 
-TRYCALLFORM PC_NUM{CFLAG:彼氏の種類}_PT{LOCAL}
+TRYCALLFORM PC_NUM{CFLAG:彼氏タイプ}_PT{LOCAL}
 
 ;===========================================================
 ;イメチェンの内容

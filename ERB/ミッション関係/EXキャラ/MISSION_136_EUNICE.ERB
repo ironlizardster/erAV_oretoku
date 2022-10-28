@@ -149,7 +149,7 @@ SIF ABL:TARGET:性交技術 == 10
 	LOCAL:1++
 SIF ABL:TARGET:性交中毒 == 0
 	LOCAL:1++
-SIF CFLAG:TARGET:ファーストキスの相手 == -1
+SIF CFLAG:TARGET:初キス相手 == -1
 	LOCAL:1++
 SIF TALENT:TARGET:ギャル系 == 0
 	LOCAL:1++
@@ -180,9 +180,9 @@ SIF ABL:ASSI:奉仕精神 == 10
 	LOCAL:1++
 SIF EXP:ASSI:異常経験 >= 5
 	LOCAL:1++
-SIF CFLAG:ASSI:初体験の相手 <= 0
+SIF CFLAG:ASSI:処女喪失相手 <= 0
 	LOCAL:1++
-SIF CFLAG:ASSI:ファーストキスの相手 >= 0
+SIF CFLAG:ASSI:初キス相手 >= 0
 	LOCAL:1++
 
 
@@ -204,10 +204,10 @@ X = 0
 
 ;必ず起こる処理
 TALENT:ASSI:処女 = 0
-SIF CFLAG:ASSI:初体験の相手 == 0
+SIF CFLAG:ASSI:処女喪失相手 == 0
 	CSTR:ASSI:処女喪失の相手 = ユーニス・パラディスス
-CFLAG:TARGET:ファーストキスの相手 = 1
-	CSTR:TARGET:ファーストキスの相手 = レイチェル・パラディスス
+CFLAG:TARGET:初キス相手 = 1
+	CSTR:TARGET:初キス相手 = レイチェル・パラディスス
 
 ;ユーニス分の経験処理
 TCVAR:絶頂経験 += 10 + RAND:6

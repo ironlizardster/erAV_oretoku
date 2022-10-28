@@ -6,8 +6,8 @@
 ;---------------------------------------------------------
 
 ;CFLAG
-;101→マスターによる膣内射精カウント用
-;102→誰によって妊娠させられたか（マスター = 1, 助手 = 2, 奴隷 = 3）
+;101→主奴膣内精子量用
+;102→妊娠精子（マスター = 1, 助手 = 2, 奴隷 = 3）
 ;103、104→助手と奴隷間での膣内射精カウント用
 ;105→娼館などの客と奴隷間の膣内射精カウント用
 ;106→ノラ犬から奴隷への膣内射精カウント用
@@ -17,10 +17,10 @@
 ;109→排卵誘発剤の使用の有無
 ;110→出産日
 ;111→父親は？？
-;121→妊娠時の増加体重
+;121→妊娠増加体重
 ;122→妊娠時の増加バスト
-;123→妊娠時の増加ウェスト
-;124→妊娠時の増加ヒップ
+;123→妊娠増加ウェスト
+;124→妊娠増加ヒップ
 ;追加 FLAG
 ;97→臨月or育児中の奴隷はいるか？
 ;98→射精箇所選択機能および妊娠機能のON・OFF
@@ -275,22 +275,22 @@ SIF C < 0
 
 IF CFLAG:T:F >= 30
 	SIF RAND:((1 + TALENT:T:小柄 * 2) * C) == 0
-		CFLAG:T:誰によって妊娠させられたか = P
+		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 20
 	SIF RAND:((2 + TALENT:T:小柄 * 2) * C) == 0
-		CFLAG:T:誰によって妊娠させられたか = P
+		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 15
 	SIF RAND:((3 + TALENT:T:小柄 * 2) * C) == 0
-		CFLAG:T:誰によって妊娠させられたか = P
+		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 10
 	SIF RAND:((4 + TALENT:T:小柄 * 2) * C) == 0
-		CFLAG:T:誰によって妊娠させられたか = P
+		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 5
 	SIF RAND:((5 + TALENT:T:小柄 * 2) * C) == 0
-		CFLAG:T:誰によって妊娠させられたか = P
+		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 1
 	SIF RAND:((6 + TALENT:T:小柄 * 2) * C) == 0
-		CFLAG:T:誰によって妊娠させられたか = P
+		CFLAG:T:妊娠精子 = P
 ENDIF
 
 ;判定を行った膣射のリセット
@@ -310,11 +310,11 @@ RETURNF !TALENT:ARG:妊娠 && !TALENT:ARG:抱卵 && !TALENT:ARG:育児中 && CFL
 ;助手と奴隷がいるか
 IF ASSI >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:MASTER:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:MASTER:誰によって妊娠させられたか == 2 && CFLAG:MASTER:出産日 == 0
+	IF TALENT:MASTER:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:MASTER:妊娠精子 == 2 && CFLAG:MASTER:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:MASTER:出産日 = DAY + 10 + RAND:3
-		CFLAG:MASTER:父親のキャラ番号 = NO:ASSI
+		CFLAG:MASTER:妊娠精子キャラ番号 = NO:ASSI
 		CSTR:MASTER:妊娠精液 = %NAME:ASSI%
 	ENDIF
 ENDIF
@@ -324,11 +324,11 @@ ENDIF
 ;助手がいるか
 IF TARGET >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:MASTER:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:MASTER:誰によって妊娠させられたか == 3 && CFLAG:MASTER:出産日 == 0
+	IF TALENT:MASTER:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:MASTER:妊娠精子 == 3 && CFLAG:MASTER:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:MASTER:出産日 = DAY + 10 + RAND:3
-		CFLAG:MASTER:父親のキャラ番号 = NO:TARGET
+		CFLAG:MASTER:妊娠精子キャラ番号 = NO:TARGET
 		CSTR:MASTER:妊娠精液 = %NAME:TARGET%
 	ENDIF
 ENDIF
@@ -338,11 +338,11 @@ ENDIF
 ;奴隷がいるか
 IF TARGET >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 1 && CFLAG:TARGET:出産日 == 0
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:妊娠精子 == 1 && CFLAG:TARGET:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:TARGET:出産日 = DAY + 10 + RAND:3
-		CFLAG:TARGET:父親のキャラ番号 = NO:MASTER
+		CFLAG:TARGET:妊娠精子キャラ番号 = NO:MASTER
 						;****あなた妊娠パッチ追加ここから****
 		CSTR:TARGET:妊娠精液 = %CALLNAME:MASTER%
 						;****あなた妊娠パッチ追加ここまで****
@@ -354,11 +354,11 @@ ENDIF
 ;助手がいるか
 IF ASSI >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:ASSI:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:ASSI:誰によって妊娠させられたか == 1 && CFLAG:ASSI:出産日 == 0
+	IF TALENT:ASSI:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:ASSI:妊娠精子 == 1 && CFLAG:ASSI:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:ASSI:出産日 = DAY + 10 + RAND:3
-		CFLAG:ASSI:父親のキャラ番号 = NO:MASTER
+		CFLAG:ASSI:妊娠精子キャラ番号 = NO:MASTER
 						;****あなた妊娠パッチ追加ここから****
 		CSTR:ASSI:妊娠精液 = %CALLNAME:MASTER%
 						;****あなた妊娠パッチ追加ここまで****
@@ -370,11 +370,11 @@ ENDIF
 ;助手と奴隷がいるか
 IF ASSI >= 1 && TARGET >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 2 && CFLAG:TARGET:出産日 == 0
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:妊娠精子 == 2 && CFLAG:TARGET:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:TARGET:出産日 = DAY + 10 + RAND:3
-		CFLAG:TARGET:父親のキャラ番号 = NO:ASSI
+		CFLAG:TARGET:妊娠精子キャラ番号 = NO:ASSI
 						;****あなた妊娠パッチ追加ここから****
 		CSTR:TARGET:妊娠精液 = %NAME:ASSI%
 						;****あなた妊娠パッチ追加ここまで****
@@ -387,11 +387,11 @@ ENDIF
 ;助手がいるか
 IF ASSI >= 1 && TARGET >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:ASSI:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:ASSI:誰によって妊娠させられたか == 3 && CFLAG:ASSI:出産日 == 0
+	IF TALENT:ASSI:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:ASSI:妊娠精子 == 3 && CFLAG:ASSI:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:ASSI:出産日 = DAY + 10 + RAND:3
-		CFLAG:ASSI:父親のキャラ番号 = NO:TARGET
+		CFLAG:ASSI:妊娠精子キャラ番号 = NO:TARGET
 						;****あなた妊娠パッチ追加ここから****
 		CSTR:ASSI:妊娠精液 = %NAME:TARGET%
 						;****あなた妊娠パッチ追加ここまで****
@@ -403,12 +403,12 @@ ENDIF
 ;奴隷がいるか
 IF TARGET >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 5 && CFLAG:TARGET:出産日 == 0
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:妊娠精子 == 5 && CFLAG:TARGET:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		;犬の仔なら妊娠期間短い
 		CFLAG:TARGET:出産日 = DAY + 10 + RAND:3
-		CFLAG:TARGET:父親のキャラ番号 = -2
+		CFLAG:TARGET:妊娠精子キャラ番号 = -2
 						;****追加ここから****
 		CSTR:妊娠精液 = 犬
 						;****追加ここまで****
@@ -422,12 +422,12 @@ ENDIF
 ;奴隷がいるか
 IF TARGET >= 1
 						;****スライムパッチ追加ここから****
-	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 6 && CFLAG:TARGET:出産日 == 0
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:妊娠精子 == 6 && CFLAG:TARGET:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		;触手の仔なら妊娠期間短い
 		CFLAG:TARGET:出産日 = DAY + 5 + RAND:3
-		CFLAG:TARGET:父親のキャラ番号 = -3
+		CFLAG:TARGET:妊娠精子キャラ番号 = -3
 		CSTR:妊娠精液 = 触手
 	ENDIF
 ENDIF
@@ -437,11 +437,11 @@ ENDIF
 ;スライムの精液で奴隷妊娠確定時の処理
 ;奴隷がいるか
 IF TARGET >= 1
-	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:誰によって妊娠させられたか == 8 && CFLAG:TARGET:出産日 == 0
+	IF TALENT:TARGET:妊娠 == 0 && TALENT:TARGET:抱卵 == 0 && CFLAG:TARGET:妊娠精子 == 8 && CFLAG:TARGET:出産日 == 0
 		;出産系のフラグ設定
 		;抱卵は妊娠期間短い
 		CFLAG:TARGET:出産日 = DAY + 5 + RAND:3
-		CFLAG:TARGET:父親のキャラ番号 = -6
+		CFLAG:TARGET:妊娠精子キャラ番号 = -6
 		CSTR:妊娠精液 = スライム
 	ENDIF
 ENDIF
@@ -451,11 +451,11 @@ ENDIF
 ;CFLAG:108→素質の消滅をカウントする変数
 REPEAT CHARANUM
 						;****スライムパッチ追加ここから****
-	IF TALENT:COUNT:妊娠 == 0 && TALENT:COUNT:抱卵 == 0 && CFLAG:COUNT:誰によって妊娠させられたか == 4 && CFLAG:COUNT:出産日 == 0
+	IF TALENT:COUNT:妊娠 == 0 && TALENT:COUNT:抱卵 == 0 && CFLAG:COUNT:妊娠精子 == 4 && CFLAG:COUNT:出産日 == 0
 						;****スライムパッチ追加ここまで****
 		;出産系のフラグ設定
 		CFLAG:COUNT:出産日 = DAY + 9 + RAND:6
-		CFLAG:COUNT:父親のキャラ番号 = -1
+		CFLAG:COUNT:妊娠精子キャラ番号 = -1
 		CSTR:COUNT:妊娠精液 = 知らないオトコの人
 	ENDIF
 REND
@@ -473,7 +473,7 @@ SIF TALENT:COUNT:妊娠 || TALENT:COUNT:育児中 || TALENT:COUNT:抱卵
 						;****スライムパッチ追加ここまで****
 
 ;マスターの精液で妊娠発覚時の処理
-IF  CFLAG:COUNT:誰によって妊娠させられたか == 1 && CFLAG:COUNT:出産日 <= DAY+13
+IF  CFLAG:COUNT:妊娠精子 == 1 && CFLAG:COUNT:出産日 <= DAY+13
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%は%CALLNAME:MASTER%の子供を身篭った様だ
 	PRINTL 
@@ -483,7 +483,7 @@ IF  CFLAG:COUNT:誰によって妊娠させられたか == 1 && CFLAG:COUNT:出�
 	T = COUNT
 	CALL CHANGE_N_STATUS
 ;助手の精液で妊娠発覚時の処理
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 2 && CFLAG:COUNT:出産日 <= DAY+13
+ELSEIF CFLAG:COUNT:妊娠精子 == 2 && CFLAG:COUNT:出産日 <= DAY+13
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%は%CSTR:COUNT:妊娠精液%の子供を身篭った様だ
 	PRINTL 
@@ -493,7 +493,7 @@ ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 2 && CFLAG:COUNT:�
 	T = COUNT
 	CALL CHANGE_N_STATUS
 ;奴隷の精液で妊娠発覚時の処理
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 3 && CFLAG:COUNT:出産日 <= DAY+13
+ELSEIF CFLAG:COUNT:妊娠精子 == 3 && CFLAG:COUNT:出産日 <= DAY+13
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%は%CSTR:COUNT:妊娠精液%の子供を身篭った様だ
 	PRINTL 
@@ -503,7 +503,7 @@ ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 3 && CFLAG:COUNT:�
 	T = COUNT
 	CALL CHANGE_N_STATUS
 ;客の精液で妊娠発覚時の処理
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 4 && CFLAG:COUNT:出産日 <= DAY+13
+ELSEIF CFLAG:COUNT:妊娠精子 == 4 && CFLAG:COUNT:出産日 <= DAY+13
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%は名も知らぬ男の子供を身篭った様だ
 	PRINTL 
@@ -514,7 +514,7 @@ ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 4 && CFLAG:COUNT:�
 	T = COUNT
 	CALL CHANGE_N_STATUS
 ;犬の精液で妊娠発覚時の処理
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 5 && CFLAG:COUNT:出産日 <= DAY+8
+ELSEIF CFLAG:COUNT:妊娠精子 == 5 && CFLAG:COUNT:出産日 <= DAY+8
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%は野良犬の仔を身篭った様だ
 	PRINTL 
@@ -524,7 +524,7 @@ ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 5 && CFLAG:COUNT:�
 	T = COUNT
 	CALL CHANGE_N_STATUS
 						;****追加ここから****
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 6 && CFLAG:COUNT:出産日 <= DAY+8
+ELSEIF CFLAG:COUNT:妊娠精子 == 6 && CFLAG:COUNT:出産日 <= DAY+8
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%は触手の仔を身篭った様だ
 	PRINTL 
@@ -535,7 +535,7 @@ ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 6 && CFLAG:COUNT:�
 	CALL CHANGE_N_STATUS
 						;****追加ここまで****
 						;****スライムパッチ追加ここから****
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 8 && CFLAG:COUNT:出産日 <= DAY+8
+ELSEIF CFLAG:COUNT:妊娠精子 == 8 && CFLAG:COUNT:出産日 <= DAY+8
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%はスライムの卵を身篭った様だ
 	PRINTL 
@@ -545,7 +545,7 @@ ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 8 && CFLAG:COUNT:�
 	T = COUNT
 	CALL CHANGE_N_STATUS
 						;****スライムパッチ追加ここまで****
-ELSEIF CFLAG:COUNT:誰によって妊娠させられたか == 7 && CFLAG:COUNT:出産日 <= DAY+13
+ELSEIF CFLAG:COUNT:妊娠精子 == 7 && CFLAG:COUNT:出産日 <= DAY+13
 	PRINTFORML %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML %CALLNAME:COUNT%はカレシの子どもを身篭った様だ
 	PRINTL 
@@ -575,17 +575,17 @@ SIF BASE:T:体力 > MAXBASE:T:体力
 I  = 0
 F = 0
 
-SIF CFLAG:T:誰によって妊娠させられたか != 2 && CFLAG:T:誰によって妊娠させられたか != 3
+SIF CFLAG:T:妊娠精子 != 2 && CFLAG:T:妊娠精子 != 3
 	GOTO INCEST_CHECK_END
 
 G = COUNT
 REPEAT CHARANUM
-	SIF NO:COUNT == CFLAG:T:父親のキャラ番号
+	SIF NO:COUNT == CFLAG:T:妊娠精子キャラ番号
 		F = COUNT
 REND
 REPEAT 5
 	B = COUNT + 21
-	IF CFLAG:T:B % 1000 == CFLAG:T:父親のキャラ番号
+	IF CFLAG:T:B % 1000 == CFLAG:T:妊娠精子キャラ番号
 		;父親・母親の子供を妊娠
 		IF CFLAG:T:B < 1000
 			I = 1
@@ -657,25 +657,25 @@ ENDIF
 
 ;父親が誰なのかと母親の状態によるストレス値の分岐
 S = 0
-A = CFLAG:T:父親のキャラ番号
+A = CFLAG:T:妊娠精子キャラ番号
 
 ;父親が主人で母親が【恋心】持ち
-IF TALENT:T:恋心 && CFLAG:T:誰によって妊娠させられたか == 1
+IF TALENT:T:恋心 && CFLAG:T:妊娠精子 == 1
 	S += 0
 ;父親が主人で母親が【淫乱】持ち
-ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 1
+ELSEIF TALENT:T:淫乱 && CFLAG:T:妊娠精子 == 1
 	S += 30
 ENDIF
 
 ;父親が助手・奴隷で母親が【恋心】持ち
-IF TALENT:T:恋心 && (CFLAG:T:誰によって妊娠させられたか == 2 || CFLAG:T:誰によって妊娠させられたか == 3)
+IF TALENT:T:恋心 && (CFLAG:T:妊娠精子 == 2 || CFLAG:T:妊娠精子 == 3)
 	IF RELATION:T:A != 0
 		S += 30 * ((200-RELATION:T:A) / 100) + 30
 	ELSE
 		S += 60
 	ENDIF
 ;父親が助手・奴隷で母親が【淫乱】持ち
-ELSEIF TALENT:T:淫乱 && (CFLAG:T:誰によって妊娠させられたか == 2 || CFLAG:T:誰によって妊娠させられたか == 3)
+ELSEIF TALENT:T:淫乱 && (CFLAG:T:妊娠精子 == 2 || CFLAG:T:妊娠精子 == 3)
 	IF RELATION:T:A != 0
 		S += 30 * ((200-RELATION:T:A) / 100)
 	ELSE
@@ -684,27 +684,27 @@ ELSEIF TALENT:T:淫乱 && (CFLAG:T:誰によって妊娠させられたか == 2 
 ENDIF
 
 ;父親が顧客で母親が【恋心】持ち
-IF TALENT:T:恋心 && CFLAG:T:誰によって妊娠させられたか == 4
+IF TALENT:T:恋心 && CFLAG:T:妊娠精子 == 4
 	S += 80
 ;父親が顧客で母親が【淫乱】持ち
-ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 4
+ELSEIF TALENT:T:淫乱 && CFLAG:T:妊娠精子 == 4
 	S += 50
 ENDIF
 
 ;父親がノラ犬で母親が【恋心】持ち
-IF TALENT:T:恋心 && CFLAG:T:誰によって妊娠させられたか == 5
+IF TALENT:T:恋心 && CFLAG:T:妊娠精子 == 5
 	S += 120
 	;【牝犬】が付いてればかなり減る
 	SIF TALENT:T:牝犬
 		S -= 40
 ;父親がノラ犬で母親が【淫乱】持ち
-ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 5
+ELSEIF TALENT:T:淫乱 && CFLAG:T:妊娠精子 == 5
 	S += 80
 	;【牝犬】が付いてればかなり減る
 	SIF TALENT:T:牝犬
 		S -= 40
 ;それ以外で父親がノラ犬。「陥落素質なし」とあわせて+140
-ELSEIF CFLAG:T:誰によって妊娠させられたか == 5
+ELSEIF CFLAG:T:妊娠精子 == 5
 	S += 40
 	;【牝犬】が付いてればかなり減る
 	SIF TALENT:T:牝犬
@@ -713,19 +713,19 @@ ENDIF
 
 						;****追加ここから****
 ;父親が触手で母親が【恋心】持ち
-IF TALENT:T:恋心 && !TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 6
+IF TALENT:T:恋心 && !TALENT:T:淫乱 && CFLAG:T:妊娠精子 == 6
 	S += 120
 	;触手経験である程度軽減
 	SIF EXP:T:触手経験 > 100
 		S -= LIMIT((EXP:T:触手経験-300*MARK:T:反発刻印)/20, 0, 150)
 ;父親が触手で母親が【淫乱】持ち
-ELSEIF TALENT:T:淫乱 && CFLAG:T:誰によって妊娠させられたか == 6
+ELSEIF TALENT:T:淫乱 && CFLAG:T:妊娠精子 == 6
 	S += 80
 	;触手経験である程度軽減
 	SIF EXP:T:触手経験 > 100
 		S -= LIMIT((EXP:T:触手経験-300*MARK:T:反発刻印)/20, 0, 150)
 ;それ以外で父親が触手。「陥落素質なし」とあわせて+140
-ELSEIF CFLAG:T:誰によって妊娠させられたか == 6
+ELSEIF CFLAG:T:妊娠精子 == 6
 	S += 40
 	;触手経験である程度軽減
 	SIF EXP:T:触手経験 > 100
@@ -743,7 +743,7 @@ SIF I == 3 || I == 4
 ;陥落素質がついていない
 SIF TALENT:T:恋心 == 0 && TALENT:T:淫乱 == 0
 	S += 100
-SIF TALENT:T:彼氏あり == 1 && CFLAG:T:誰によって妊娠させられたか == 7
+SIF TALENT:T:彼氏あり == 1 && CFLAG:T:妊娠精子 == 7
 	S = 0
 
 
@@ -796,7 +796,7 @@ PRINTFORML %NAME:ARG%は臨月を迎えました
 PRINTFORML %CALLNAME:ARG%は出産に備え育児室へ移動します
 WAIT
 ;営業フラグ外れる
-CFLAG:ARG:労役中のフラグ = 0
+CFLAG:ARG:営業内容 = 0
 SIF TARGET == ARG
 	TARGET = -1
 SIF ASSI == ARG
@@ -806,27 +806,27 @@ SIF ASSI == ARG
 @CHILD_BIRTH
 F = -1
 REPEAT CHARANUM
-	SIF NO:COUNT == CFLAG:C:父親のキャラ番号
+	SIF NO:COUNT == CFLAG:C:妊娠精子キャラ番号
 		F = COUNT
 REND
 
 EXP:C:Ｖ拡張経験 += 1
 EXP:C:出産経験 += 1
 
-IF CFLAG:C:父親のキャラ番号 >= 0 && F >= 0
+IF CFLAG:C:妊娠精子キャラ番号 >= 0 && F >= 0
 	PRINTFORML %NAME:C%は、%NAME:F%の子供を無事出産しました
-ELSEIF CFLAG:C:父親のキャラ番号 == -4 && TALENT:C:彼氏あり == 1
+ELSEIF CFLAG:C:妊娠精子キャラ番号 == -4 && TALENT:C:彼氏あり == 1
 	PRINTFORML %NAME:C%は、カレシとの子供を無事出産しました
-ELSEIF CFLAG:C:父親のキャラ番号 == -5 && TALENT:C:彼氏あり == 0
+ELSEIF CFLAG:C:妊娠精子キャラ番号 == -5 && TALENT:C:彼氏あり == 0
 	PRINTFORML %NAME:C%は、元カレとの子供を無事出産しました
-ELSEIF CFLAG:C:父親のキャラ番号 == -1
+ELSEIF CFLAG:C:妊娠精子キャラ番号 == -1
 	PRINTFORML %NAME:C%は、父親のわからない子供を無事出産しました
-ELSEIF CFLAG:C:父親のキャラ番号 == -2
+ELSEIF CFLAG:C:妊娠精子キャラ番号 == -2
 	PRINTFORML %NAME:C%は、犬耳と尻尾の生えた子供を何匹も産み落としました
 	;犬の仔なら育児期間短縮
 	CFLAG:C:出産日 -= 10
 						;****追加ここから****
-ELSEIF CFLAG:C:父親のキャラ番号 == -3
+ELSEIF CFLAG:C:妊娠精子キャラ番号 == -3
 	PRINTFORML %NAME:C%は、得体の知れない卵を産み落としました
 	;触手の仔なら育児期間短縮
 	CFLAG:C:出産日 -= 10
@@ -842,7 +842,7 @@ TFLAG:口上番号 = 12
 CALL SELF_KOJO
 
 ;【恋心】持ちの奴隷に産ませた子供が3人以上でマスターに【父性】が付く
-SIF TALENT:C:恋心 && CFLAG:C:父親のキャラ番号 == NO:MASTER
+SIF TALENT:C:恋心 && CFLAG:C:妊娠精子キャラ番号 == NO:MASTER
 	FLAG:恋心子供 += 1
 IF FLAG:恋心子供 >= 3 && TALENT:MASTER:父性 == 0 && TALENT:MASTER:オトコ
 	PRINTFORML %CALLNAME:MASTER%は【%TALENTNAME:[[TALENT:父性]]%】に目覚めた
@@ -907,11 +907,11 @@ IF TALENT:C:崩壊 || C == MASTER
 			CFLAG:RESULT:出産日 = DAY
 			;犬の仔なら育児期間短縮
 						;****追加ここから****(加筆)
-			SIF CFLAG:C:父親のキャラ番号 == -2 || CFLAG:C:父親のキャラ番号 == -3
+			SIF CFLAG:C:妊娠精子キャラ番号 == -2 || CFLAG:C:妊娠精子キャラ番号 == -3
 				CFLAG:RESULT:出産日 -= 10
 						;****追加ここまで****(加筆)
 			;営業フラグ外す
-			CFLAG:RESULT:労役中のフラグ = 0
+			CFLAG:RESULT:営業内容 = 0
 			IF TALENT:RESULT:育児中 == 0
 				TALENT:RESULT:育児中 = 1
 				SIF RESULT == TARGET
@@ -960,7 +960,7 @@ ELSE
 	PRINTFORML %CALLNAME:C%は育児室で育児を始めた
 	TALENT:C:育児中 = 1
 	;【恋心】持ちで父親が主人なら【母性】に目覚める
-	IF TALENT:C:恋心 && CFLAG:C:父親のキャラ番号 == NO:MASTER && TALENT:C:母性 == 0
+	IF TALENT:C:恋心 && CFLAG:C:妊娠精子キャラ番号 == NO:MASTER && TALENT:C:母性 == 0
 		PRINTFORML どうやら%CALLNAME:C%は【%TALENTNAME:[[TALENT:母性]]%】に目覚めたようだ
 		TALENT:C:母性 = 1
 	ENDIF
@@ -979,7 +979,7 @@ DRAWLINE
 IF TALENT:C:処女 == 1
 	CSTR:C:処女喪失の相手 = スライムの卵
 	TALENT:C:処女 = 0
-	CFLAG:C:初体験の相手 = 4
+	CFLAG:C:処女喪失相手 = 4
 	SETCOLOR 0xF58F98
 	PRINTL 【処女喪失】
 	RESETCOLOR
@@ -1048,19 +1048,19 @@ DRAWLINE
 
 ;妊娠パッチまわりのフラグをリセット
 @CLEAR_FLAG
-CFLAG:C:マスターによる膣内射精カウント = 0
-CFLAG:C:誰によって妊娠させられたか = 0
-CFLAG:C:助手から奴隷への膣内射精カウント = 0
-CFLAG:C:奴隷から助手への膣内射精ウント = 0
-CFLAG:C:娼館などの客から奴隷への中田氏カウント = 0
+CFLAG:C:主奴膣内精子量 = 0
+CFLAG:C:妊娠精子 = 0
+CFLAG:C:助奴膣内精子量 = 0
+CFLAG:C:奴助膣内精子量 = 0
+CFLAG:C:客奴膣内精子量 = 0
 						;****追加ここから****
-CFLAG:C:ノラ犬からの中田氏カウント = 0
-CFLAG:C:触手からの中田氏カウント = 0
+CFLAG:C:獣奴膣内精子量 = 0
+CFLAG:C:触奴膣内精子量 = 0
 						;****追加ここまで****
 CFLAG:C:出産日 = 0
-CFLAG:C:父親のキャラ番号 = 0
+CFLAG:C:妊娠精子キャラ番号 = 0
 						;****スライムパッチ追加ここから****
-CFLAG:C:スライム抱卵判定用 = 0
+CFLAG:C:抱卵判定 = 0
 						;****スライムパッチ追加ここまで****
 
 

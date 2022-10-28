@@ -286,7 +286,7 @@ IF TALENT:露出狂
 ENDIF
 
 ;陰毛を生やす設定で剃毛状態
-SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛の状態 <= 5
+SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛状態 <= 5
 	TIMES SOURCE:12 , 2.00
 
 ;-------------------------------------------------
@@ -313,10 +313,10 @@ IF ABL:露出癖 >= 3
 		EXP:調教自慰経験 += 1
 		PRINTL 調教自慰経験＋１
 	ENDIF
-	IF TEQUIP:撮影中 && CFLAG:公開オナニーの経験 == 0
+	IF TEQUIP:撮影中 && CFLAG:公開自慰済 == 0
 		EXP:異常経験 += 1
 		PRINTL 異常経験＋１
-		CFLAG:公開オナニーの経験 = 1
+		CFLAG:公開自慰済 = 1
 	ENDIF
 ENDIF
 

@@ -1,27 +1,27 @@
 ﻿;===========================================================
 ;ボーイフレンドの処理
 ;===========================================================
-;CFLAG:彼氏の種類＝彼氏の仕事
-;CFLAG:彼氏とラブホに寄る判定用＝彼氏とラブホに寄る度合い
+;CFLAG:彼氏タイプ＝彼氏の仕事
+;CFLAG:ラブホ＝彼氏とラブホに寄る度合い
 ;CFLAG:彼氏とのセックスの有無＝彼氏とセックスしたかどうか
 ;CFLAG:彼氏の好みの服装に変更したかどうか＝彼氏好みのファッションになったか
 ;CFLAG:服装変更の判定用＝ファッションを変えたい希望の度合い
 ;===========================================================
 @PRINT_BOYFRIEND
-IF CFLAG:彼氏の有無 >= 1
-	IF CFLAG:彼氏の種類 == 1
+IF CFLAG:彼氏有 >= 1
+	IF CFLAG:彼氏タイプ == 1
 		PRINT クラスメイト
-	ELSEIF CFLAG:彼氏の種類 == 2
+	ELSEIF CFLAG:彼氏タイプ == 2
 		PRINT 高校生
-	ELSEIF CFLAG:彼氏の種類 == 3
+	ELSEIF CFLAG:彼氏タイプ == 3
 		PRINT 中学生
-	ELSEIF CFLAG:彼氏の種類 == 4
+	ELSEIF CFLAG:彼氏タイプ == 4
 		PRINT 大学生
-	ELSEIF CFLAG:彼氏の種類 == 5
+	ELSEIF CFLAG:彼氏タイプ == 5
 		PRINT サラリーマン
-	ELSEIF CFLAG:彼氏の種類 == 6
+	ELSEIF CFLAG:彼氏タイプ == 6
 		PRINT ホスト
-	ELSEIF CFLAG:彼氏の種類 == 99
+	ELSEIF CFLAG:彼氏タイプ == 99
 		PRINT 御主人様
 	ELSE
 		PRINT チャラ男
@@ -32,56 +32,56 @@ ENDIF
 ;交際発覚
 ;===========================================================
 @EVENT_BOYFRIEND
-IF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:永遠の愛 == 0 && CFLAG:COUNT:彼氏の有無 != 1
+IF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:永遠の愛 == 0 && CFLAG:COUNT:彼氏有 != 1
 	PRINTFORMW %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML そのことについて問い質してみると%CALLNAME:COUNT%に彼氏ができたようだ。
 	PRINTFORMW %CALLNAME:COUNT%は頬を染めて彼氏との惚気話を%CALLNAME:MASTER%に語ってみせた……
 	CALL DECIDE_BOYFRIEND,COUNT
-		CFLAG:COUNT:彼氏の有無 = 1
+		CFLAG:COUNT:彼氏有 = 1
 		IF FLAG:チャラ男固定 == 0 || TALENT:COUNT:ギャル系 == 0
-			CFLAG:COUNT:彼氏の種類 += RAND:7
-				IF CFLAG:COUNT:彼氏の種類 == 1 && BASE:COUNT:実年齢 > 18
-					CFLAG:COUNT:彼氏の種類 = 5
+			CFLAG:COUNT:彼氏タイプ += RAND:7
+				IF CFLAG:COUNT:彼氏タイプ == 1 && BASE:COUNT:実年齢 > 18
+					CFLAG:COUNT:彼氏タイプ = 5
 				ENDIF
 			BASE:COUNT:魅力値 -= 5
 		ENDIF
 		TALENT:COUNT:彼氏あり = 1
 
-	IF CFLAG:COUNT:ファーストキスの相手 == -1
+	IF CFLAG:COUNT:初キス相手 == -1
 		PRINTFORMW %CALLNAME:COUNT%はもうすでに彼氏にファーストキスを捧げたらしい……
-		CFLAG:COUNT:ファーストキスの相手 = 8
-		CSTR:COUNT:ファーストキスの相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）
+		CFLAG:COUNT:初キス相手 = 8
+		CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）
 			BASE:COUNT:魅力値 -= 5
-		CFLAG:COUNT:ファーストキス喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:ファーストキス喪失月 = DAY:1
-		CFLAG:COUNT:ファーストキス喪失日 = DAY:2
+		CFLAG:COUNT:初キス喪失年齢 = BASE:COUNT:実年齢
+		CFLAG:COUNT:初キス喪失月 = DAY:日付_月
+		CFLAG:COUNT:初キス喪失日 = DAY:日付_日
 	ENDIF
 	DRAWLINE
-ELSEIF TALENT:COUNT:恋心 == 1 && TALENT:COUNT:永遠の愛 == 0 && CFLAG:COUNT:彼氏の有無 != 1
+ELSEIF TALENT:COUNT:恋心 == 1 && TALENT:COUNT:永遠の愛 == 0 && CFLAG:COUNT:彼氏有 != 1
 	PRINTFORMW %CALLNAME:COUNT%の様子がおかしい……
 	PRINTFORML そのことについて問い質してみると%CALLNAME:COUNT%は%CALLNAME:MASTER%よりも好きな男が出来たようだ。
 	PRINTFORML %CALLNAME:COUNT%は%CALLNAME:MASTER%に以前の関係に戻ろうと別れ話を切り出した……
-		CFLAG:COUNT:彼氏の有無 = 1 || TALENT:COUNT:ギャル系 == 0
+		CFLAG:COUNT:彼氏有 = 1 || TALENT:COUNT:ギャル系 == 0
 		IF FLAG:チャラ男固定 == 0
-			CFLAG:COUNT:彼氏の種類 += RAND:7
-				IF CFLAG:COUNT:彼氏の種類 == 1 && BASE:COUNT:実年齢 > 18
-					CFLAG:COUNT:彼氏の種類 = 5
+			CFLAG:COUNT:彼氏タイプ += RAND:7
+				IF CFLAG:COUNT:彼氏タイプ == 1 && BASE:COUNT:実年齢 > 18
+					CFLAG:COUNT:彼氏タイプ = 5
 				ENDIF 
 		ELSE
-			CFLAG:COUNT:彼氏の種類 = 0
+			CFLAG:COUNT:彼氏タイプ = 0
 		ENDIF
 		CALL DECIDE_BOYFRIEND,COUNT
 		TALENT:COUNT:恋心 = 0
 		TALENT:COUNT:彼氏あり = 1
 			BASE:COUNT:魅力値 -= 5
-	IF CFLAG:COUNT:ファーストキスの相手 == -1
+	IF CFLAG:COUNT:初キス相手 == -1
 		PRINTFORMW %CALLNAME:COUNT%はもうすでに他の男にファーストキスを捧げたらしい……
-		CFLAG:COUNT:ファーストキスの相手 = 8
-		CSTR:COUNT:ファーストキスの相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）
+		CFLAG:COUNT:初キス相手 = 8
+		CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）
 			BASE:COUNT:魅力値 -= 5
-		CFLAG:COUNT:ファーストキス喪失年齢 = BASE:実年齢
-		CFLAG:COUNT:ファーストキス喪失月 = DAY:1
-		CFLAG:COUNT:ファーストキス喪失日 = DAY:2
+		CFLAG:COUNT:初キス喪失年齢 = BASE:実年齢
+		CFLAG:COUNT:初キス喪失月 = DAY:日付_月
+		CFLAG:COUNT:初キス喪失日 = DAY:日付_日
 	ENDIF
 	DRAWLINE
 ENDIF
@@ -113,9 +113,9 @@ FOR LOCAL, 0, CHARANUM
 		CONTINUE
 	ELSE
 		TARGET = LOCAL
-		LOCAL:1 = CFLAG:彼氏の種類
+		LOCAL:1 = CFLAG:彼氏タイプ
 		LOCAL:2 = RAND:3
-		SIF CFLAG:彼氏とラブホに寄る判定用 == 1
+		SIF CFLAG:ラブホ == 1
 			LOCAL:2 = 0
 			IF LOCAL:2 <= 1
 				TRYCALLFORM BF_COMMONEV_{LOCAL:2}
@@ -273,9 +273,9 @@ IF TALENT:妊娠 == 0 && TALENT:育児中 == 0
 	SIF TALENT:幽霊 == 1
 		LOCAL:1 = 0
 	IF LOCAL:1 >= 95
-		CFLAG:誰によって妊娠させられたか = 7
-		CFLAG:出産日 = DAY + 10 + RAND:3
-		CFLAG:父親のキャラ番号 = -4
+		CFLAG:妊娠精子 = 7
+		CFLAG:出産日 = DAY:日付_経過日数 + 10 + RAND:3
+		CFLAG:妊娠精子キャラ番号 = -4
 		CSTR:妊娠精液 = %CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）
 	ENDIF
 ENDIF
@@ -292,22 +292,22 @@ J:8 += LOCAL * 20
 ;===========================================================
 @BF_COMMONEV_0
 
-SIF CFLAG:特別コスチュームのタイプ == 79 && CFLAG:着衣状態 >= 64
+SIF CFLAG:特別コスタイプ == 79 && CFLAG:着衣状態 >= 64
 	RETURN
 
-IF DAY:1 >= 7 && DAY:1 <= 8
+IF DAY:日付_月 >= 7 && DAY:日付_月 <= 8
 	LOCAL = RAND:4
 ELSE
 	LOCAL = RAND:3
 ENDIF
 
-SIF CFLAG:彼氏とラブホに寄る判定用 == 1
+SIF CFLAG:ラブホ == 1
 	LOCAL = 2
 
 CALL CALC_BFSEX
 
 PRINTFORM 週が開けて月曜、
-IF CFLAG:彼氏とラブホに寄る判定用 != 1
+IF CFLAG:ラブホ != 1
 	PRINTFORM 昨日はオフだった%NAME:TARGET%は、
 ELSE
 	PRINTFORM 週末に参加した合コンの後にそのまま『お持ち帰り』された%NAME:TARGET%は、
@@ -330,7 +330,7 @@ ELSEIF LOCAL == 3
 ENDIF
 PRINTFORM で
 
-IF CFLAG:初体験の相手 == 0
+IF CFLAG:処女喪失相手 == 0
 	PRINTFORM 初えっちを済ませロストヴァージン
 ELSE
 	PRINTFORM らぶらぶなＳＥＸを
@@ -339,7 +339,7 @@ ENDIF
 PRINTFORM し
 
 LOCAL:1 = RAND:10
-SIF CFLAG:彼氏の種類 == 0
+SIF CFLAG:彼氏タイプ == 0
 	LOCAL:1 = 9
 IF LOCAL:1 >= 8
 	PRINTFORM 、しかもその模様をハメ撮りまでしてい
@@ -368,7 +368,7 @@ ENDIF
 
 PRINTFORML に嬉しそうにはにかみながら赤裸々に語っていた……
 
-IF CFLAG:初体験の相手 == 0
+IF CFLAG:処女喪失相手 == 0
 	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:TARGET%の横顔からは
 	PRINTFORML オトコを知ったオンナ特有の色香が漂っているのが感じられる
 	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]]
@@ -384,39 +384,39 @@ EXP:彼氏性経験 += 1
 
 SIF LOCAL:1 >= 8 && TALENT:処女
 	TCVAR:異常経験 += 1
-IF CFLAG:初体験の相手 == 0
+IF CFLAG:処女喪失相手 == 0
 	SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 	RESETCOLOR
-	CFLAG:初体験の相手 = 8
+	CFLAG:処女喪失相手 = 8
 	TALENT:処女 = 0
 	CSTR:処女喪失の相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	CFLAG:処女喪失年齢 = BASE:実年齢
-	CFLAG:処女喪失月 = DAY:1
-	CFLAG:処女喪失日 = DAY:2
+	CFLAG:処女喪失月 = DAY:日付_月
+	CFLAG:処女喪失日 = DAY:日付_日
 
 ENDIF
 
-IF CFLAG:ファーストキスの相手 == -1
+IF CFLAG:初キス相手 == -1
 	SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
+		PRINTL 【ファーストキスキス】
 	RESETCOLOR
 	IF RAND:2 == 0
-		CSTR:ファーストキスの相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
-		CFLAG:ファーストキスの相手 = 8
+		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
+		CFLAG:初キス相手 = 8
 	ELSE
-		CSTR:ファーストキスの相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
-		CFLAG:ファーストキスの相手 = 8
-		CFLAG:ファーストキス喪失シチュ = 1
+		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
+		CFLAG:初キス相手 = 8
+		CFLAG:初キス喪失シチュ = 1
 		TCVAR:異常経験 += 1
 	ENDIF
-	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-	CFLAG:ファーストキス喪失月 = DAY:1
-	CFLAG:ファーストキス喪失日 = DAY:2
+	CFLAG:初キス喪失年齢 = BASE:実年齢
+	CFLAG:初キス喪失月 = DAY:日付_月
+	CFLAG:初キス喪失日 = DAY:日付_日
 ENDIF
 
-SIF CFLAG:彼氏とラブホに寄る判定用 == 1
-	CFLAG:彼氏とラブホに寄る判定用 = 0
+SIF CFLAG:ラブホ == 1
+	CFLAG:ラブホ = 0
 
 ;===========================================================
 ;BFの与える経験計算・A
@@ -493,10 +493,10 @@ J:8 += LOCAL * 20
 
 SIF EXP:Ａ経験 == 0
 	RETURN
-SIF CFLAG:特別コスチュームのタイプ == 79 && CFLAG:着衣状態 >= 64
+SIF CFLAG:特別コスタイプ == 79 && CFLAG:着衣状態 >= 64
 	RETURN
 
-IF DAY:1 >= 7 && DAY:1 <= 8
+IF DAY:日付_月 >= 7 && DAY:日付_月 <= 8
 	LOCAL = RAND:4
 ELSE
 	LOCAL = RAND:3
@@ -521,7 +521,7 @@ ELSEIF LOCAL == 3
 ENDIF
 PRINTFORM で
 
-IF CFLAG:初体験の相手 == 8 && TALENT:アナル処女 == 1
+IF CFLAG:処女喪失相手 == 8 && TALENT:アナル処女 == 1
 	PRINTFORM 処女だけでなく指ぐらいしか挿入したことが無かったアナルの処女もカレシに捧げ
 ELSEIF TALENT:アナル処女 == 1
 	PRINTFORM 指ぐらいしか挿入したことが無かったアナルの処女をカレシに捧げ
@@ -565,30 +565,30 @@ EXP:彼氏性経験 += 1
 SIF LOCAL:1 >= 8 && TALENT:処女
 	TCVAR:異常経験 = 1
 IF TALENT:アナル処女 == 1
-	CFLAG:アナル処女喪失の相手 = 8
+	CFLAG:アナル処女喪失相手 = 8
 	SETCOLOR 0xF58F98
 		PRINTL 【アナル処女喪失】
 	RESETCOLOR
 	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失の相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
+	CSTR:アナル処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:1
-	CFLAG:アナル処女喪失日 = DAY:2
+	CFLAG:アナル処女喪失月 = DAY:日付_月
+	CFLAG:アナル処女喪失日 = DAY:日付_日
 ENDIF
 
-IF CFLAG:ファーストキスの相手 == -1
+IF CFLAG:初キス相手 == -1
 	SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
+		PRINTL 【ファーストキスキス】
 	RESETCOLOR
-	CFLAG:ファーストキスの相手 = 8
+	CFLAG:初キス相手 = 8
 		IF RAND:2 == 0
-		CSTR:ファーストキスの相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
+		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ELSE
-		CSTR:ファーストキスの相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
-		CFLAG:ファーストキス喪失シチュ = 1
+		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
+		CFLAG:初キス喪失シチュ = 1
 	ENDIF
-	CFLAG:ファーストキス喪失年齢 = BASE:実年齢
-	CFLAG:ファーストキス喪失月 = DAY:1
-	CFLAG:ファーストキス喪失日 = DAY:2
+	CFLAG:初キス喪失年齢 = BASE:実年齢
+	CFLAG:初キス喪失月 = DAY:日付_月
+	CFLAG:初キス喪失日 = DAY:日付_日
 ENDIF
 

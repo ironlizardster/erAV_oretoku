@@ -5,17 +5,17 @@
 ;媚薬中毒の発病と回復
 ;-------------------------------------------------
 @APHRODISIAC_ADDICT
-;体内媚薬残留度を7日ごとに1減らす
+;媚薬残留を7日ごとに1減らす
 ;IF (DAY + 1) % 7 == 0
-	IF CFLAG:体内媚薬残留度 > 0
-		CFLAG:体内媚薬残留度 -= 1
-		SIF CFLAG:体内媚薬残留度 < 0
-			CFLAG:体内媚薬残留度 = 0
+	IF CFLAG:媚薬残留 > 0
+		CFLAG:媚薬残留 -= 1
+		SIF CFLAG:媚薬残留 < 0
+			CFLAG:媚薬残留 = 0
 	ENDIF
 			
 ;【媚薬中毒】の消失判定
-;体内媚薬残留度が0になれば[媚薬中毒]消失
-IF CFLAG:体内媚薬残留度 == 0 && TALENT:薬物中毒
+;媚薬残留が0になれば[媚薬中毒]消失
+IF CFLAG:媚薬残留 == 0 && TALENT:薬物中毒
 	PRINTFORML %CALLNAME:TARGET%の様子が変わった……
 	PRINTFORML 体内から媚薬の効果がすっかり抜けきり、%CALLNAME:TARGET%は依存症から脱した
 	PRINTFORML %NAME:TARGET%は【%TALENTNAME:[[TALENT:薬物中毒]]%】を失った
@@ -25,8 +25,8 @@ ENDIF
 
 	;[媚薬中毒]の場合は禁断症状チェックも行う
 	IF TALENT:薬物中毒
-		IF CFLAG:媚薬中毒の禁断症状判定
-			CFLAG:媚薬中毒の禁断症状判定 = 0
+		IF CFLAG:媚薬使用
+			CFLAG:媚薬使用 = 0
 		ELSE
 			CALL PRECIPITATE_WITHDRAWAL
 		ENDIF
@@ -34,20 +34,20 @@ ENDIF
 ;ENDIF
 
 ;【媚薬中毒】の取得判定
-;[中毒しやすい]がなければ体内媚薬残留度が12以上、あれば9以上で[媚薬中毒]取得
-IF ((TALENT:妄信 == 0 && CFLAG:体内媚薬残留度 >= 12) || (TALENT:中毒しやすい && CFLAG:体内媚薬残留度 >= 9)) && TALENT:薬物中毒 == 0
+;[中毒しやすい]がなければ媚薬残留が12以上、あれば9以上で[媚薬中毒]取得
+IF ((TALENT:妄信 == 0 && CFLAG:媚薬残留 >= 12) || (TALENT:中毒しやすい && CFLAG:媚薬残留 >= 9)) && TALENT:薬物中毒 == 0
 	PRINTFORML %CALLNAME:TARGET%の様子がおかしい……
 	PRINTFORML 媚薬の使い過ぎで、%CALLNAME:TARGET%は中毒になってしまった
 	PRINTFORML %NAME:TARGET%は【%TALENTNAME:[[TALENT:薬物中毒]]%】を得た
 	WAIT
 	TALENT:薬物中毒 = 1
-	;中毒になりたてということで、ボーナスとして体内媚薬残留度を一律15以上に（おめでとう！）
-	SIF CFLAG:体内媚薬残留度 < 15
-		CFLAG:体内媚薬残留度 = 15
+	;中毒になりたてということで、ボーナスとして媚薬残留を一律15以上に（おめでとう！）
+	SIF CFLAG:媚薬残留 < 15
+		CFLAG:媚薬残留 = 15
 ENDIF
 ;【狂気】の取得判定
-;[中毒しやすい]がなければ体内媚薬残留度が40以上、あれば30以上で[狂気]取得
-IF (CFLAG:体内媚薬残留度 >= 40 || (TALENT:中毒しやすい && CFLAG:体内媚薬残留度 >= 30)) && TALENT:狂気 == 0
+;[中毒しやすい]がなければ媚薬残留が40以上、あれば30以上で[狂気]取得
+IF (CFLAG:媚薬残留 >= 40 || (TALENT:中毒しやすい && CFLAG:媚薬残留 >= 30)) && TALENT:狂気 == 0
 	PRINTFORML %CALLNAME:TARGET%の様子がおかしい……
 	PRINTFORML %CALLNAME:TARGET%は媚薬の使い過ぎで、気が触れてしまった
 	PRINTFORML %NAME:TARGET%は【%TALENTNAME:[[TALENT:狂気]]%】を得た
@@ -55,8 +55,8 @@ IF (CFLAG:体内媚薬残留度 >= 40 || (TALENT:中毒しやすい && CFLAG:体
 	TALENT:狂気 = 1
 ENDIF
 ;【廃人】の取得判定
-;[中毒しやすい]がなければ体内媚薬残留度が100以上、あれば75以上で[崩壊]取得
-IF (CFLAG:体内媚薬残留度 >= 100 || (TALENT:中毒しやすい && CFLAG:体内媚薬残留度 >= 75)) && TALENT:崩壊 == 0
+;[中毒しやすい]がなければ媚薬残留が100以上、あれば75以上で[崩壊]取得
+IF (CFLAG:媚薬残留 >= 100 || (TALENT:中毒しやすい && CFLAG:媚薬残留 >= 75)) && TALENT:崩壊 == 0
 	PRINTFORML %CALLNAME:TARGET%の様子がおかしい……
 	PRINTFORML %CALLNAME:TARGET%は媚薬の使い過ぎで、完全に廃人と化してしまった
 	PRINTFORML %NAME:TARGET%の精神は【%TALENTNAME:[[TALENT:崩壊]]%】してしまった
@@ -87,7 +87,7 @@ IF ITEM:プリンセスポイズン
 		PRINTFORML %CALLNAME:TARGET%は媚薬のエキス入りアンプルを奪い取ると、
 		PRINTFORML すぐさま貪るように一気に飲み干して、ほっと一息をついた
 		WAIT
-		CFLAG:体内媚薬残留度 += 1
+		CFLAG:媚薬残留 += 1
 		ITEM:プリンセスポイズン -= 1
 		RETURN 0
 	ELSEIF RESULT != 1
@@ -104,8 +104,8 @@ REPEAT CHARANUM
 		U += 1
 REND
 
-;体内媚薬残留度と[治療][献身的]持ちによる禁断症状緩和効果に応じてチェック回数決定
-V = (CFLAG:体内媚薬残留度 / 10) + 1 - U
+;媚薬残留と[治療][献身的]持ちによる禁断症状緩和効果に応じてチェック回数決定
+V = (CFLAG:媚薬残留 / 10) + 1 - U
 IF V < 1
 	V = 1
 ELSEIF V > 10

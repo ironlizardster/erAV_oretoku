@@ -141,24 +141,24 @@ IF TALENT:処女 == 1
 	PRINTL 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-		IF CFLAG:初体験の相手 == 0
+		IF CFLAG:処女喪失相手 == 0
 			CSTR:処女喪失の相手 = %CALLNAME:PLAYER%
-			CFLAG:初体験の相手 = 1
+			CFLAG:処女喪失相手 = 1
 		ENDIF
 ENDIF
 
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
 	RESETCOLOR
-	CFLAG:ファーストキスの相手 = 1
+	CFLAG:初キス相手 = 1
 		IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
-			CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のおちん○ん
+			CSTR:初キス相手 = %CALLNAME:PLAYER%のおちん○ん
 		ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
-			CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のオチ○ポ
+			CSTR:初キス相手 = %CALLNAME:PLAYER%のオチ○ポ
 		ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
-			CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のチンポ
+			CSTR:初キス相手 = %CALLNAME:PLAYER%のチンポ
 		ENDIF
 ENDIF
 
@@ -189,24 +189,24 @@ IF TALENT:処女 == 1
 	PRINTL 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-		IF CFLAG:初体験の相手 == 0
+		IF CFLAG:処女喪失相手 == 0
 			CSTR:処女喪失の相手 = %CALLNAME:PLAYER%
-			CFLAG:初体験の相手 = 1
+			CFLAG:処女喪失相手 = 1
 		ENDIF
 ENDIF
 
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
 	RESETCOLOR
-	CFLAG:ファーストキスの相手 = 1
+	CFLAG:初キス相手 = 1
 	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のおちん○ん
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のおちん○ん
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のオチ○ポ
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のオチ○ポ
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のチンポ
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のチンポ
 	ENDIF
 ENDIF
 PRINTL
@@ -232,24 +232,24 @@ IF TALENT:処女 == 1
 	PRINTL 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-		IF CFLAG:初体験の相手 == 0
+		IF CFLAG:処女喪失相手 == 0
 			CSTR:処女喪失の相手 = %CALLNAME:PLAYER%
-			CFLAG:初体験の相手 = 1
+			CFLAG:処女喪失相手 = 1
 		ENDIF
 ENDIF
 
-IF CFLAG:ファーストキスの相手 == -1
-	CFLAG:ファーストキスの相手 = 1
+IF CFLAG:初キス相手 == -1
+	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
 	RESETCOLOR
-	CFLAG:ファーストキスの相手 = 1
+	CFLAG:初キス相手 = 1
 	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のおちん○ん
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のおちん○ん
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のオチ○ポ
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のオチ○ポ
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
-		CSTR:ファーストキスの相手 = %CALLNAME:PLAYER%のチンポ
+		CSTR:初キス相手 = %CALLNAME:PLAYER%のチンポ
 	ENDIF
 ENDIF
 PRINTL
