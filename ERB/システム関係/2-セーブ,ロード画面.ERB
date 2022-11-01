@@ -1,106 +1,106 @@
-@USERSAVE
+ï»¿@USERSAVE
 #DIM DYNAMIC LCOUNT
-#DIM DYNAMIC ƒf[ƒ^”Ô†
-#DIM DYNAMIC ƒf[ƒ^”
-#DIM DYNAMIC ƒy[ƒW”
-PRINTL  ‰½”Ô‚ÉƒZ[ƒu‚µ‚Ü‚·‚©H
-PRINTL @[--]@@@ Œ»ŽÀ‚ÌŽžŠÔ@@@@|@@@ƒQ[ƒ€“à‚ÌŽžŠÔ
+#DIM DYNAMIC ãƒ‡ãƒ¼ã‚¿ç•ªå·
+#DIM DYNAMIC ãƒ‡ãƒ¼ã‚¿æ•°
+#DIM DYNAMIC ãƒšãƒ¼ã‚¸æ•°
+PRINTL â–¡ä½•ç•ªã«ã‚»ãƒ¼ãƒ–ã—ã¾ã™ã‹ï¼Ÿ
+PRINTL ã€€[--]ã€€ã€€ã€€ ç¾å®Ÿã®æ™‚é–“ã€€ã€€ã€€ã€€|ã€€ã€€ã€€ã‚²ãƒ¼ãƒ å†…ã®æ™‚é–“
 
-FOR LCOUNT, ƒy[ƒW”*20, ƒy[ƒW”*20+20
+FOR LCOUNT, ãƒšãƒ¼ã‚¸æ•°*20, ãƒšãƒ¼ã‚¸æ•°*20+20
 	SELECTCASE CHKDATA(LCOUNT)
 		CASE 0
-			PRINTFORML @[{LCOUNT, 2}] %RESULTS%
+			PRINTFORML ã€€[{LCOUNT, 2}] %RESULTS%
 		CASE 1
 			SETCOLORBYNAME gray
-			;•\Ž¦ƒeƒ“ƒvƒŒ
-			;PRINTFORML @[ 5] 2016/01/10(—j) 00:10:15 | 2016/3/28(—j) 197“ú–Ú–é “ïˆÕ“x:(N) ‡ 
-			PRINTFORML @[{LCOUNT, 2}] ----@@@@@@@@@@|
+			;è¡¨ç¤ºãƒ†ãƒ³ãƒ—ãƒ¬
+			;PRINTFORML ã€€[ 5] 2016/01/10(æ›œ) 00:10:15 | 2016/3/28(æ›œ) 197æ—¥ç›®å¤œ é›£æ˜“åº¦:(N) âˆž 
+			PRINTFORML ã€€[{LCOUNT, 2}] ----ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€|
 			RESETCOLOR
 		CASE 2
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] •ÊƒoƒŠƒAƒ“ƒg‚ÌƒZ[ƒuƒf[ƒ^‚Å‚· ã‘‚«‚Í‰Â”\‚Å‚·
+			PRINTFORML ã€€[{LCOUNT, 2}] åˆ¥ãƒãƒªã‚¢ãƒ³ãƒˆã®ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã§ã™ ä¸Šæ›¸ãã¯å¯èƒ½ã§ã™
 			RESETCOLOR
 		CASE 3
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] ŒÝŠ·«‚Ì–³‚¢ƒZ[ƒuƒf[ƒ^‚Å‚· ã‘‚«‚Í‰Â”\‚Å‚·
+			PRINTFORML ã€€[{LCOUNT, 2}] äº’æ›æ€§ã®ç„¡ã„ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã§ã™ ä¸Šæ›¸ãã¯å¯èƒ½ã§ã™
 			RESETCOLOR
 		CASE 4
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] ƒ[ƒh‚Å‚«‚È‚¢ƒZ[ƒuƒf[ƒ^‚Å‚· ã‘‚«‚Í‰Â”\‚Å‚·
+			PRINTFORML ã€€[{LCOUNT, 2}] ãƒ­ãƒ¼ãƒ‰ã§ããªã„ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã§ã™ ä¸Šæ›¸ãã¯å¯èƒ½ã§ã™
 	ENDSELECT
 NEXT
 DRAWLINE
-PRINTPLAINFORM @SAVE.{ƒy[ƒW”+1}@
-CALL PRINT_PAGE_NAVI(ƒy[ƒW” > 0, ƒy[ƒW” < 3)
+PRINTPLAINFORM ã€€SAVE.{ãƒšãƒ¼ã‚¸æ•°+1}ã€€
+CALL PRINT_PAGE_NAVI(ãƒšãƒ¼ã‚¸æ•° > 0, ãƒšãƒ¼ã‚¸æ•° < 3)
 PRINTL 
 DO
 	INPUT
-	ƒf[ƒ^”Ô† = RESULT
-	SELECTCASE ƒf[ƒ^”Ô†
+	ãƒ‡ãƒ¼ã‚¿ç•ªå· = RESULT
+	SELECTCASE ãƒ‡ãƒ¼ã‚¿ç•ªå·
 		CASE 0 TO 79
-			SELECTCASE CHKDATA(ƒf[ƒ^”Ô†)
+			SELECTCASE CHKDATA(ãƒ‡ãƒ¼ã‚¿ç•ªå·)
 				CASE 0, 2, 3, 4
-					PRINTL Šù‚ÉƒZ[ƒuƒf[ƒ^‚ª‘¶Ý‚µ‚Ü‚·Bã‘‚«‚µ‚Ü‚·‚©H
-					CALL GET_‚Í‚¢‚¢‚¢‚¦()
-					SIF RESULT == COMMAND_‚¢‚¢‚¦
+					PRINTL æ—¢ã«ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ã¾ã™ã€‚ä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ
+					CALL GET_ã¯ã„ã„ã„ãˆ()
+					SIF RESULT == COMMAND_ã„ã„ãˆ
 						RESTART
 					BREAK
 				CASE 1
 					BREAK
 			ENDSELECT
 		CASE COMMAND_PREV_PAGE
-			SIF ƒy[ƒW” > 0
-				ƒy[ƒW”--
+			SIF ãƒšãƒ¼ã‚¸æ•° > 0
+				ãƒšãƒ¼ã‚¸æ•°--
 			RESTART
 		CASE COMMAND_NEXT_PAGE
-			SIF ƒy[ƒW” < 3
-				ƒy[ƒW”++
+			SIF ãƒšãƒ¼ã‚¸æ•° < 3
+				ãƒšãƒ¼ã‚¸æ•°++
 			RESTART
 		CASE COMMAND_GO_BACK
 			RETURN 0
 	ENDSELECT
 LOOP 1
 
-SAVEDATA ƒf[ƒ^”Ô†, ƒZ[ƒuƒf[ƒ^î•ñ()
+SAVEDATA ãƒ‡ãƒ¼ã‚¿ç•ªå·, ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿æƒ…å ±()
 
 RETURN 0
 
 @SYSTEM_AUTOSAVE
-#DIM DYNAMIC ƒf[ƒ^”Ô†
-ƒf[ƒ^”Ô† = 94+((DAY:“ú•t_Œo‰ß“ú”-1)*2%6+TIME)
+#DIM DYNAMIC ãƒ‡ãƒ¼ã‚¿ç•ªå·
+ãƒ‡ãƒ¼ã‚¿ç•ªå· = 94+((DAY:æ—¥ä»˜_çµŒéŽæ—¥æ•°-1)*2%6+TIME)
 
-SAVEDATA ƒf[ƒ^”Ô†, ƒZ[ƒuƒf[ƒ^î•ñ()
+SAVEDATA ãƒ‡ãƒ¼ã‚¿ç•ªå·, ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿æƒ…å ±()
 
-@ƒZ[ƒuƒf[ƒ^î•ñ, ARG
+@ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿æƒ…å ±, ARG
 #FUNCTIONS
 #DIMS DYNAMIC REALTIMENOW
-#DIM DYNAMIC ”N
-#DIM DYNAMIC ŒŽ
-#DIM DYNAMIC “ú
+#DIM DYNAMIC å¹´
+#DIM DYNAMIC æœˆ
+#DIM DYNAMIC æ—¥
 #DIMS DYNAMIC DETAIL, 2
 
-;ƒŠƒAƒ‹ƒ^ƒCƒ€‚ÌŒvŽZ
-”N = TOINT(SUBSTRING(GETTIMES(), 0, 4))
-ŒŽ = TOINT(SUBSTRING(GETTIMES(), 5, 2))
-“ú = TOINT(SUBSTRING(GETTIMES(), 8, 2))
+;ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ã®è¨ˆç®—
+å¹´ = TOINT(SUBSTRING(GETTIMES(), 0, 4))
+æœˆ = TOINT(SUBSTRING(GETTIMES(), 5, 2))
+æ—¥ = TOINT(SUBSTRING(GETTIMES(), 8, 2))
 
 REALTIMENOW = %GETTIMES()%
-;—j“ú‹²‚Þ‚½‚ß‚Éˆê“x•ªŠ„‚·‚é
+;æ›œæ—¥æŒŸã‚€ãŸã‚ã«ä¸€åº¦åˆ†å‰²ã™ã‚‹
 SPLIT REALTIMENOW, " ", DETAIL
-;Œ»ŽÀ‚ÌŽžŠÔ‚ð“ü‚ê‚é
-DETAIL = %DETAIL%(%DOW(ZELLER(”N, ŒŽ, “ú))%) %DETAIL:1%
-;‚±‚±‚©‚çƒQ[ƒ€“à‚ÌŽžŠÔ‚âî•ñ
-DETAIL = %DETAIL% | {DAY:“ú•t_”N}/%TOSTR(DAY:“ú•t_ŒŽ, "D2")%/%TOSTR(DAY:“ú•t_“ú, "D2")%(%DOW(FLAG:—j“ú)%)
+;ç¾å®Ÿã®æ™‚é–“ã‚’å…¥ã‚Œã‚‹
+DETAIL = %DETAIL%(%DOW(ZELLER(å¹´, æœˆ, æ—¥))%) %DETAIL:1%
+;ã“ã“ã‹ã‚‰ã‚²ãƒ¼ãƒ å†…ã®æ™‚é–“ã‚„æƒ…å ±
+DETAIL = %DETAIL% | {DAY:æ—¥ä»˜_å¹´}/%TOSTR(DAY:æ—¥ä»˜_æœˆ, "D2")%/%TOSTR(DAY:æ—¥ä»˜_æ—¥, "D2")%(%DOW(FLAG:æ›œæ—¥)%)
 
 
-SELECTCASE FLAG:“ïˆÕ“x
+SELECTCASE FLAG:é›£æ˜“åº¦
 	CASE 1
 		DETAIL += " EASY"
 	CASE 2
-		IF FLAG:EASYŒo—R
+		IF FLAG:EASYçµŒç”±
 			DETAIL += " NORMAL"
 		ELSE
-			DETAIL += " ŽÀÑƒ`ƒƒƒŒƒ“ƒW"
+			DETAIL += " å®Ÿç¸¾ãƒãƒ£ãƒ¬ãƒ³ã‚¸"
 		ENDIF
 	CASE 3
 		DETAIL += " HARD"
@@ -112,48 +112,48 @@ ENDSELECT
 
 SELECTCASE TIME
 	CASE 0
-		DETAIL += @" {DAY:“ú•t_Œo‰ß“ú”, 4}“ú–Ú’‹ "
+		DETAIL += @" {DAY:æ—¥ä»˜_çµŒéŽæ—¥æ•°, 4}æ—¥ç›®æ˜¼ "
 	CASE 1
-		DETAIL += @" {DAY:“ú•t_Œo‰ß“ú”, 4}“ú–Ú–é "
+		DETAIL += @" {DAY:æ—¥ä»˜_çµŒéŽæ—¥æ•°, 4}æ—¥ç›®å¤œ "
 ENDSELECT
 
-SIF FLAG:‘O‰ñ’²‹³‘ÎÛ >= 0
-	TARGET = FLAG:‘O‰ñ’²‹³‘ÎÛ
-SIF FLAG:‘O‰ñ•Žè >= 0
-	ASSI = FLAG:‘O‰ñ•Žè
+SIF FLAG:å‰å›žèª¿æ•™å¯¾è±¡ >= 0
+	TARGET = FLAG:å‰å›žèª¿æ•™å¯¾è±¡
+SIF FLAG:å‰å›žåŠ©æ‰‹ >= 0
+	ASSI = FLAG:å‰å›žåŠ©æ‰‹
 
 SIF TARGET >= 1
-	DETAIL += @" ‘O‰ñ:%NAME:TARGET%Žw“±"
+	DETAIL += @" å‰å›ž:%NAME:TARGET%æŒ‡å°Ž"
 
 RETURNF DETAIL
 
 @USERLOAD
 #DIM DYNAMIC LCOUNT
-#DIM DYNAMIC ƒy[ƒW”
-#DIM DYNAMIC ÅVƒZ[ƒu, 2
+#DIM DYNAMIC ãƒšãƒ¼ã‚¸æ•°
+#DIM DYNAMIC æœ€æ–°ã‚»ãƒ¼ãƒ–, 2
 #DIMS DYNAMIC SPLITVAR, 2
-PRINTL  ‰½”Ô‚ðƒ[ƒh‚µ‚Ü‚·‚©H
-PRINTL @[--]@@@ Œ»ŽÀ‚ÌŽžŠÔ@@@@|@@@ƒQ[ƒ€“à‚ÌŽžŠÔ
+PRINTL â–¡ä½•ç•ªã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã‹ï¼Ÿ
+PRINTL ã€€[--]ã€€ã€€ã€€ ç¾å®Ÿã®æ™‚é–“ã€€ã€€ã€€ã€€|ã€€ã€€ã€€ã‚²ãƒ¼ãƒ å†…ã®æ™‚é–“
 
-FOR LCOUNT, ƒy[ƒW”*20, ƒy[ƒW”*20+20
+FOR LCOUNT, ãƒšãƒ¼ã‚¸æ•°*20, ãƒšãƒ¼ã‚¸æ•°*20+20
 	SELECTCASE CHKDATA(LCOUNT)
 		CASE 0
-			PRINTFORML @[{LCOUNT, 2}] %RESULTS%
+			PRINTFORML ã€€[{LCOUNT, 2}] %RESULTS%
 		CASE 1
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] ----@@@@@@@@@@|
+			PRINTFORML ã€€[{LCOUNT, 2}] ----ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€|
 			RESETCOLOR
 		CASE 2
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] •ÊƒoƒŠƒAƒ“ƒg‚ÌƒZ[ƒuƒf[ƒ^‚Å‚·
+			PRINTFORML ã€€[{LCOUNT, 2}] åˆ¥ãƒãƒªã‚¢ãƒ³ãƒˆã®ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã§ã™
 			RESETCOLOR
 		CASE 3
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] ŒÝŠ·«‚Ì–³‚¢ƒZ[ƒuƒf[ƒ^‚Å‚·
+			PRINTFORML ã€€[{LCOUNT, 2}] äº’æ›æ€§ã®ç„¡ã„ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã§ã™
 			RESETCOLOR
 		CASE 4
 			SETCOLORBYNAME gray
-			PRINTFORML @[{LCOUNT, 2}] ƒ[ƒh‚Å‚«‚È‚¢ƒZ[ƒuƒf[ƒ^‚Å‚·
+			PRINTFORML ã€€[{LCOUNT, 2}] ãƒ­ãƒ¼ãƒ‰ã§ããªã„ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã§ã™
 	ENDSELECT
 NEXT
 DRAWLINE
@@ -162,21 +162,21 @@ FOR LCOUNT, 94, 100
 		CASE 0
 			SPLIT RESULTS, "|", SPLITVAR
 			REPLACE SPLITVAR, "[^0-9]", ""
-			IF TOINT(RESULTS) > ÅVƒZ[ƒu:1
-				ÅVƒZ[ƒu:0 = LCOUNT
-				ÅVƒZ[ƒu:1 = TOINT(RESULTS)
+			IF TOINT(RESULTS) > æœ€æ–°ã‚»ãƒ¼ãƒ–:1
+				æœ€æ–°ã‚»ãƒ¼ãƒ–:0 = LCOUNT
+				æœ€æ–°ã‚»ãƒ¼ãƒ–:1 = TOINT(RESULTS)
 			ENDIF
 	ENDSELECT
 NEXT
 FOR LCOUNT, 94, 100
 	SELECTCASE CHKDATA(LCOUNT)
 		CASE 0
-			PRINTFORML @[{LCOUNT, 2}] %RESULTS% \@ LCOUNT == ÅVƒZ[ƒu:0 ? yÅVz#\@
+			PRINTFORML ã€€[{LCOUNT, 2}] %RESULTS% \@ LCOUNT == æœ€æ–°ã‚»ãƒ¼ãƒ–:0 ? ã€æœ€æ–°ã€‘#\@
 	ENDSELECT
 NEXT
 DRAWLINE
-PRINTPLAINFORM @LOAD.{ƒy[ƒW”+1}@
-CALL PRINT_PAGE_NAVI(ƒy[ƒW” > 0, ƒy[ƒW” < 3)
+PRINTPLAINFORM ã€€LOAD.{ãƒšãƒ¼ã‚¸æ•°+1}ã€€
+CALL PRINT_PAGE_NAVI(ãƒšãƒ¼ã‚¸æ•° > 0, ãƒšãƒ¼ã‚¸æ•° < 3)
 PRINTL 
 INPUT
 SELECTCASE RESULT
@@ -191,12 +191,12 @@ SELECTCASE RESULT
 	CASE COMMAND_GO_BACK
 		RETURN 0
 	CASE COMMAND_PREV_PAGE
-		SIF ƒy[ƒW” > 0
-			ƒy[ƒW”--
+		SIF ãƒšãƒ¼ã‚¸æ•° > 0
+			ãƒšãƒ¼ã‚¸æ•°--
 		RESTART
 	CASE COMMAND_NEXT_PAGE
-		SIF ƒy[ƒW” < 3
-			ƒy[ƒW”++
+		SIF ãƒšãƒ¼ã‚¸æ•° < 3
+			ãƒšãƒ¼ã‚¸æ•°++
 		RESTART
 	CASEELSE
 		RESTART
@@ -205,4 +205,4 @@ ENDSELECT
 RETURN 0
 
 @SYSTEM_LOADEND
-CALLF ƒƒ‚ƒŠ‰ð•ú, "SYSTEM_LOADEND"
+CALLF ãƒ¡ãƒ¢ãƒªè§£æ”¾, "SYSTEM_LOADEND"

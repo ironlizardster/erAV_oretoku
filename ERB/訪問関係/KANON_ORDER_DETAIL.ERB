@@ -94,9 +94,9 @@ ELSEIF RESULT == 0
 			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
 			CFLAG:T:167 = 1
 		ENDIF
-		IF CFLAG:T:アナル処女喪失相手 == 8 && CFLAG:T:837 == 0
+		IF CFLAG:T:アナル処女喪失相手 == 8 && CFLAG:T:アナル処女喪失誕生日記念 == 0
 			CSTR:T:アナル処女喪失相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:837 = 1
+			CFLAG:T:アナル処女喪失誕生日記念 = 1
 		ENDIF
 		EXP:T:交際人数 += 1
 	ELSEIF CFLAG:T:スタッフNTR進行度 == 1

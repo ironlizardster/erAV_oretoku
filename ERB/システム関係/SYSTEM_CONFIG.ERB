@@ -889,25 +889,25 @@ ENDIF
 RETURN 0
 
 ;---------------------------------------------------------
-;初体験フィルタ系 FLAG:80-82 設定なしなら全フィルタonからにする
+;初体験フィルタ系  設定なしなら全フィルタonからにする
 ;---------------------------------------------------------
 @CONFIG_FIRSTPLAY
 DRAWLINE
 PRINTL 初体験が記録されるコマンドの実行前に確認を挟むかどうかを設定します
 PRINT  [0] 処女フィルタ
-IF !FLAG:80
+IF FLAG:処女初体験確認
 	PRINTL - ON
 ELSE
 	PRINTL - OFF
 ENDIF
 PRINT  [1] Ａ処女フィルタ
-IF !FLAG:81
+IF FLAG:Ａ処女初体験確認
 	PRINTL - ON
 ELSE
 	PRINTL - OFF
 ENDIF
 PRINT  [2] ファーストキスフィルタ
-IF !FLAG:82
+IF FLAG:初キス初体験確認
 	PRINTL - ON
 ELSE
 	PRINTL - OFF
@@ -915,13 +915,13 @@ ENDIF
 PRINTL [999] 戻る
 INPUT
 IF RESULT == 0
-	FLAG:80 = ~FLAG:80
+	FLAG:処女初体験確認 = ~FLAG:処女初体験確認
 	RESTART
 ELSEIF RESULT == 1
-	FLAG:81 = ~FLAG:81
+	FLAG:Ａ処女初体験確認 = ~FLAG:Ａ処女初体験確認
 	RESTART
 ELSEIF RESULT == 2
-	FLAG:82 = ~FLAG:82
+	FLAG:初キス初体験確認 = ~FLAG:初キス初体験確認
 	RESTART
 ELSEIF RESULT != 999
 	RESTART

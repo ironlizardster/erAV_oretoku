@@ -117,7 +117,7 @@ IF RESULTS == ""
 			PRINTFORM 今
 		ENDIF
 		PRINTFORML カノの苗字を野々宮に設定しました》
-		CSTR:MASTER:元カノ姓 = 野々宮
+		CSTR:MASTER:彼氏姓 = 野々宮
 	ELSEIF RESULT == 1
 		PRINTFORML 《再入力してください》
 		GOTO INPUT_LOOP_FAMILYNAME
@@ -147,7 +147,7 @@ ELSE
 			PRINTFORM 今
 		ENDIF
 		PRINTFORML カノの苗字を%RESULTS%に設定しました》
-		CSTR:MASTER:元カノ姓 = %RESULTS%
+		CSTR:MASTER:彼氏姓 = %RESULTS%
 	ELSEIF RESULT == 1
 		PRINTFORML 《再入力してください》
 		GOTO INPUT_LOOP_FAMILYNAME
@@ -193,7 +193,7 @@ IF RESULTS == ""
 			PRINTFORM 今
 		ENDIF
 		PRINTFORML カノの名前を初佳に設定しました》
-		CSTR:MASTER:元カノ名 = 初佳
+		CSTR:MASTER:彼氏名 = 初佳
 	ELSEIF RESULT == 1
 		PRINTFORML 《再入力してください》
 		GOTO INPUT_LOOP_NAME
@@ -223,7 +223,7 @@ ELSE
 			PRINTFORM 今
 		ENDIF
 		PRINTFORML カノの名前を%RESULTS%に設定しました》
-		CSTR:MASTER:元カノ名 = %RESULTS%
+		CSTR:MASTER:彼氏名 = %RESULTS%
 	ELSEIF RESULT == 1
 		PRINTFORML 《再入力してください》
 		GOTO INPUT_LOOP_NAME
@@ -232,7 +232,7 @@ ELSE
 	ENDIF
 ENDIF
 
-PRINTFORML %CSTR:MASTER:元カノ名%は……
+PRINTFORML %CSTR:MASTER:彼氏名%は……
 PRINTFORML
 $INPUT_LOOP_PERSONAL00
 PRINTL [0] - 素直でしっかりものの委員長タイプ
@@ -307,7 +307,7 @@ ELSE
 ENDIF
 
 IF ((FLAG:元カノ存在 & 2) == 0 && FLAG:今カノ存在 == 0)|| (FLAG:今カノ存在 & 2) == 0
-	PRINTFORML %CSTR:MASTER:元カノ名%は……
+	PRINTFORML %CSTR:MASTER:彼氏名%は……
 	PRINTL  [0] - ファーストキス経験済み
 	PRINTL  [1] - キスもまだ
 	$SET_FK
@@ -325,7 +325,7 @@ ENDIF
 
 						;****カノ設定改造追加ここから****
 IF ((FLAG:元カノ存在 & 2) == 0 && FLAG:今カノ存在 == 0) || (FLAG:今カノ存在 & 2) || FLAG:元カノ初キス経験済
-	PRINTFORML %CSTR:MASTER:元カノ名%のファーストキス相手は……
+	PRINTFORML %CSTR:MASTER:彼氏名%のファーストキス相手は……
 	SIF FLAG:元カノ存在 & 2 || FLAG:今カノ存在 & 2
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
@@ -349,7 +349,7 @@ IF ((FLAG:元カノ存在 & 2) == 0 && FLAG:今カノ存在 == 0) || (FLAG:今�
 ENDIF
 						;****カノ設定改造追加ここまで****
 
-PRINTFORML %CSTR:MASTER:元カノ名%の性経験は……
+PRINTFORML %CSTR:MASTER:彼氏名%の性経験は……
 PRINTL [0] - ヤりまくりで経験豊富
 PRINTL [1] - ＳＥＸに慣れてきたぐらい
 PRINTL [2] - 処女喪失したばかり
@@ -357,23 +357,23 @@ PRINTL [3] - まだ処女です
 $INPUT_LOOP_PLAYING
 INPUT
 IF RESULT == 0
-	PRINTFORML 《%CSTR:MASTER:元カノ名%の性経験を『豊富』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%の性経験を『豊富』に設定しました》
 	FLAG:元カノ性経験 = 1
 ELSEIF RESULT == 1
-	PRINTFORML 《%CSTR:MASTER:元カノ名%の性経験を『そこそこ』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%の性経験を『そこそこ』に設定しました》
 	FLAG:元カノ性経験 = 2
 ELSEIF RESULT == 2
-	PRINTFORML 《%CSTR:MASTER:元カノ名%の性経験を『少ない』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%の性経験を『少ない』に設定しました》
 	FLAG:元カノ性経験 = 3
 ELSEIF RESULT == 3
-	PRINTFORML 《%CSTR:MASTER:元カノ名%の性経験を『なし』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%の性経験を『なし』に設定しました》
 ELSE
 	GOTO INPUT_LOOP_PLAYING
 ENDIF
 
 						;****カノ設定改造追加ここから****
 IF FLAG:元カノ性経験
-	PRINTFORML %CSTR:MASTER:元カノ名%のロストヴァージンの相手は……
+	PRINTFORML %CSTR:MASTER:彼氏名%のロストヴァージンの相手は……
 	SIF TALENT:MASTER:童貞 == 0
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
@@ -398,7 +398,7 @@ ENDIF
 
 						;****カノ設定改造追加ここから****
 
-PRINTFORML %CSTR:MASTER:元カノ名%のアナル経験は……
+PRINTFORML %CSTR:MASTER:彼氏名%のアナル経験は……
 PRINTL [0] - ヤりまくりで経験豊富
 PRINTL [1] - ＳＥＸに慣れてきたぐらい
 PRINTL [2] - 処女喪失したばかり
@@ -407,22 +407,22 @@ SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 > 0) || (FLAG:今カノ存
 $INPUT_LOOP_PLAYING_ANAL
 INPUT
 IF RESULT == 0
-	PRINTFORML 《%CSTR:MASTER:元カノ名%のアナル経験を『豊富』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%のアナル経験を『豊富』に設定しました》
 	FLAG:元カノアナル経験 = 1
 ELSEIF RESULT == 1
-	PRINTFORML 《%CSTR:MASTER:元カノ名%のアナル経験を『そこそこ』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%のアナル経験を『そこそこ』に設定しました》
 	FLAG:元カノアナル経験 = 2
 ELSEIF RESULT == 2
-	PRINTFORML 《%CSTR:MASTER:元カノ名%のアナル経験を『少ない』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%のアナル経験を『少ない』に設定しました》
 	FLAG:元カノアナル経験 = 3
 ELSEIF RESULT == 3 && ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 > 0) || (FLAG:今カノ存在 & 4 && FLAG:元カノ性経験 > 0) || ((FLAG:元カノ存在 & 4) == 0 && (FLAG:今カノ存在 & 4) == 0))
-	PRINTFORML 《%CSTR:MASTER:元カノ名%のアナル経験を『なし』に設定しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏名%のアナル経験を『なし』に設定しました》
 ELSE
 	GOTO INPUT_LOOP_PLAYING_ANAL
 ENDIF
 
 IF FLAG:元カノアナル経験
-	PRINTFORML %CSTR:MASTER:元カノ名%のアナル処女喪失相手は……
+	PRINTFORML %CSTR:MASTER:彼氏名%のアナル処女喪失相手は……
 	SIF TALENT:MASTER:童貞 == 0
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
@@ -447,13 +447,13 @@ ENDIF
 
 						;****カノ設定改造追加ここから****
 IF FLAG:元カノ性経験
-	PRINTFORML %CSTR:MASTER:元カノ名%は……
+	PRINTFORML %CSTR:MASTER:彼氏名%は……
 	PRINTL  [0] - 妊娠していない
 	PRINTL  [1] - 妊娠している
 	$INPUT_LOOP_MOTOKANO_PREGNANCY
 	INPUT
 	IF RESULT == 1
-		PRINTFORML %CSTR:MASTER:元カノ名%の子供の父親は……
+		PRINTFORML %CSTR:MASTER:彼氏名%の子供の父親は……
 		SIF TALENT:MASTER:童貞 == 0
 			PRINTFORML [0] - %CALLNAME:MASTER%
 		PRINTFORML [1] - 元カレ
@@ -496,7 +496,7 @@ SIF FLAG:元カノ存在
 
 
 IF FLAG:今カノ存在
-	PRINTFORML %CSTR:MASTER:元カノ名%に事情を話して撮影に協力してもらいますか？
+	PRINTFORML %CSTR:MASTER:彼氏名%に事情を話して撮影に協力してもらいますか？
 	PRINTL [0] - はい
 	PRINTL [1] - いいえ
 	$INPUT_LOOP_ADD
@@ -504,7 +504,7 @@ IF FLAG:今カノ存在
 	IF RESULT == 0
 		CALL MOTOKANO_SETUPFINISH
 	ELSEIF RESULT == 1
-		PRINTFORML 《%CSTR:MASTER:元カノ名%に事情を話しませんでした》
+		PRINTFORML 《%CSTR:MASTER:彼氏名%に事情を話しませんでした》
 		PRINTFORMW ※ゲームがある程度進行し、条件を満たした場合に登場します
 		CFLAG:MASTER:238 = 2
 		RETURN
@@ -526,9 +526,9 @@ FLAG:陥落人数 += 1
 
 CALL キャラ追加([[キャラ:野々宮初佳]])
 IF CFLAG:MASTER:238 != 2
-	NAME:TARGET = %CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%
-	CALLNAME:TARGET = %CSTR:MASTER:元カノ名%
-	NICKNAME:TARGET = %CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%
+	NAME:TARGET = %CSTR:MASTER:彼氏姓%%CSTR:MASTER:彼氏名%
+	CALLNAME:TARGET = %CSTR:MASTER:彼氏名%
+	NICKNAME:TARGET = %CSTR:MASTER:彼氏姓%%CSTR:MASTER:彼氏名%
 ENDIF
 
 SIF FLAG:元カノ初キス経験済
@@ -539,12 +539,12 @@ IF FLAG:元カノ性経験
 ENDIF
 
 IF (FLAG:元カノ存在 & 2) && FLAG:今カノ存在 == 0
-	CSTR:MASTER:初キス相手 = %CSTR:MASTER:元カノ名%（元カノ）
+	CSTR:MASTER:初キス相手 = %CSTR:MASTER:彼氏名%（元カノ）
 ELSEIF (FLAG:元カノ存在 & 2)
 	CSTR:MASTER:初キス相手 = FLAG:元カノ
 ENDIF
 SIF (FLAG:今カノ存在 & 2)
-	CSTR:MASTER:初キス相手 = %CSTR:MASTER:元カノ名%
+	CSTR:MASTER:初キス相手 = %CSTR:MASTER:彼氏名%
 
 IF FLAG:元カノタイプ == 1
 	TALENT:優等生 = 1
@@ -662,7 +662,7 @@ IF FLAG:元カノ初キス相手 == 1
 	CFLAG:初キス相手 = 16
 	;あなたの初キス相手が今カノor元カノで今カノはいない
 	SIF (FLAG:元カノ存在 & 2 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 2
-		CSTR:MASTER:初キス相手 = %CSTR:MASTER:元カノ名%
+		CSTR:MASTER:初キス相手 = %CSTR:MASTER:彼氏名%
 ELSEIF FLAG:元カノ初キス相手 == 2
 	CFLAG:初キス相手 = 8
 						;****カノ設定改造追加ここから****
@@ -683,7 +683,7 @@ IF FLAG:元カノ処女喪失相手 == 1
 	CFLAG:処女喪失相手 = 16
 	;あなたの童貞喪失の相手が今カノor元カノで今カノはいない
 	SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4
-		CSTR:MASTER:童貞喪失の相手 = %CSTR:MASTER:元カノ名%
+		CSTR:MASTER:童貞喪失の相手 = %CSTR:MASTER:彼氏名%
 ELSEIF FLAG:元カノ処女喪失相手 == 2
 						;****カノ設定改造追加ここから****
 	IF (元カノ初キス相手 == 3) || (CFLAG:MASTER:240 == 3)
@@ -793,7 +793,7 @@ IF CFLAG:MASTER:240 == 1
 	CFLAG:アナル処女喪失相手 = 16
 	;あなたの童貞喪失の相手が今カノor元カノで今カノはいないかつ彼女が処女
 	SIF ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4) && FLAG:元カノ性経験 == 0
-		CSTR:MASTER:童貞喪失の相手 = %CSTR:MASTER:元カノ名%
+		CSTR:MASTER:童貞喪失の相手 = %CSTR:MASTER:彼氏名%
 ELSEIF CFLAG:MASTER:240 == 2
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
 		CSTR:アナル処女喪失相手 = %TMP_彼氏姓%%TMP_彼氏名%
@@ -808,7 +808,7 @@ ELSEIF CFLAG:MASTER:240 == 2
 	ELSEIF FLAG:元カノアナル経験 == 3
 		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
-	CFLAG:837 = 1
+	CFLAG:アナル処女喪失誕生日記念 = 1
 ELSEIF CFLAG:MASTER:240 == 3
 	CSTR:アナル処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	CFLAG:彼氏タイプ += RAND:7
@@ -1443,7 +1443,7 @@ ELSEIF CFLAG:MASTER:240 == 2
 	ELSEIF FLAG:元カノアナル経験 == 3
 		EXP:彼氏性経験 += 1 + RAND:5
 	ENDIF
-	CFLAG:837 = 1
+	CFLAG:アナル処女喪失誕生日記念 = 1
 ELSEIF CFLAG:MASTER:240 == 3
 	CSTR:アナル処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	CFLAG:彼氏タイプ += RAND:7

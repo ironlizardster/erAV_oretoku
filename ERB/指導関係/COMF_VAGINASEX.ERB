@@ -2,19 +2,13 @@
 ;処女を奪うかどうかの確認
 ;-------------------------------------------------
 @CONFIRM_LOST_VIRGIN
-SIF FLAG:80
+SIF !FLAG:処女初体験確認
 	RETURN 1
 $INPUT_LOOP_01
 IF TALENT:処女
 	PRINTFORML %CALLNAME:TARGET%の処女を奪いますか？
-	PRINTL  [0] - はい
-	PRINTL  [1] - いいえ
-	INPUT
-	IF RESULT == 1
-		RETURN 0
-	ELSEIF RESULT != 0
-		GOTO INPUT_LOOP_01
-	ENDIF
+	CALL GET_はいいいえ()
+	RETURN RESULT == COMMAND_はい
 ENDIF
 RETURN 1
 ;-------------------------------------------------

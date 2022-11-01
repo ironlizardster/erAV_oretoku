@@ -68,7 +68,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || 実績�
 			WAIT
 			GOTO INPUT_LOOP_5
 		ENDIF
-		IF CFLAG:RESULT:900 == 1
+		IF CFLAG:RESULT:性別 == 1
 			PRINTFORMW %CALLNAME:RESULT%を天使にすることはもう二度とできません
 			GOTO INPUT_LOOP_5
 		ENDIF
@@ -93,7 +93,7 @@ IF FLAG:難易度 > 0 && FLAG:処女厨ボーナス受け取り == 0 || 実績�
 			WAIT
 			GOTO INPUT_LOOP_6
 		ENDIF
-		IF CFLAG:RESULT:900 == 1
+		IF CFLAG:RESULT:性別 == 1
 			PRINTFORMW %CALLNAME:TARGET%を【淫魔】にすることはもう二度とできません
 			GOTO INPUT_LOOP_6
 		ENDIF

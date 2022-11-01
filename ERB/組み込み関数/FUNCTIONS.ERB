@@ -29,19 +29,19 @@ PRINTFORML {DAY+1}日目\@ TIME ? 夜 # 昼 \@
 TFLAG:近親相姦 = 0
 
 ;関数の汎用性を考えて、敢えてREPEAT文の使用は避ける
-SIF CFLAG:21 && CFLAG:21 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:21 / 1000) + 1
-SIF CFLAG:22 && CFLAG:22 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:22 / 1000) + 1
-SIF CFLAG:23 && CFLAG:23 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:23 / 1000) + 1
-SIF CFLAG:24 && CFLAG:24 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:24 / 1000) + 1
+SIF CFLAG:親族判定1 && CFLAG:親族判定1 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:親族判定1 / 1000) + 1
+SIF CFLAG:親族判定2 && CFLAG:親族判定2 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:親族判定2 / 1000) + 1
+SIF CFLAG:親族判定3 && CFLAG:親族判定3 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:親族判定3 / 1000) + 1
+SIF CFLAG:親族判定4 && CFLAG:親族判定4 % 1000 == NO:PLAYER
+	TFLAG:近親相姦 = (CFLAG:親族判定4 / 1000) + 1
 ;SIF CFLAG:ミッション期間 && CFLAG:ミッション期間 % 1000 == NO:PLAYER
 ;	TFLAG:近親相姦 = (CFLAG:ミッション期間 / 1000) + 1
 
 ;主人が父親か母親である場合の処理
-IF PLAYER == MASTER && (CFLAG:21 == -1 || CFLAG:22 == -1 || CFLAG:23 == -1 || CFLAG:24 == -1)
+IF PLAYER == MASTER && (CFLAG:親族判定1 == -1 || CFLAG:親族判定2 == -1 || CFLAG:親族判定3 == -1 || CFLAG:親族判定4 == -1)
 	TFLAG:近親相姦 = 1
 ENDIF
 

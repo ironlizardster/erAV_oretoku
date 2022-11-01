@@ -180,25 +180,21 @@ REPEAT CHARANUM
 		CONTINUE
 	;キャラのストレス値
 	U = 0
-	SIF A == (CFLAG:COUNT:21 % 100) && (CFLAG:COUNT:21 / 100) < 2
+	SIF A == (CFLAG:COUNT:親族判定1 % 100) && (CFLAG:COUNT:親族判定1 / 100) < 2
 		U += 40
-	SIF A == (CFLAG:COUNT:21 % 100)
+	SIF A == (CFLAG:COUNT:親族判定1 % 100)
 		U += 80
-	SIF A == (CFLAG:COUNT:22 % 100) && (CFLAG:COUNT:22 / 100) < 2
+	SIF A == (CFLAG:COUNT:親族判定2 % 100) && (CFLAG:COUNT:親族判定2 / 100) < 2
 		U += 40
-	SIF A == (CFLAG:COUNT:22 % 100)
+	SIF A == (CFLAG:COUNT:親族判定2 % 100)
 		U += 80
-	SIF A == (CFLAG:COUNT:23 % 100) && (CFLAG:COUNT:23 / 100) < 2
+	SIF A == (CFLAG:COUNT:親族判定3 % 100) && (CFLAG:COUNT:親族判定3 / 100) < 2
 		U += 40
-	SIF A == (CFLAG:COUNT:23 % 100)
+	SIF A == (CFLAG:COUNT:親族判定3 % 100)
 		U += 80
-	SIF A == (CFLAG:COUNT:24 % 100) && (CFLAG:COUNT:24 / 100) < 2
+	SIF A == (CFLAG:COUNT:親族判定4 % 100) && (CFLAG:COUNT:親族判定4 / 100) < 2
 		U += 40
-	SIF A == (CFLAG:COUNT:24 % 100)
-		U += 80
-	SIF A == (CFLAG:COUNT:ミッション期間 % 100) && (CFLAG:COUNT:ミッション期間 / 100) < 2
-		U += 40
-	SIF A == (CFLAG:COUNT:ミッション期間 % 100)
+	SIF A == (CFLAG:COUNT:親族判定4 % 100)
 		U += 80
 	SIF RELATION:COUNT:A > 100
 		U += RELATION:COUNT:A - 100

@@ -1,9 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\CSV",
     "\\ERB",
-    "\\ERB\\システム関係"
+    "\\ERB\\システム関係",
+    "\\ERB\\実績関係"
   ],
-  "SelectedNode": "\\ERB\\システム関係\\LYCEE.ERB",
+  "SelectedNode": "\\CSV\\Chara018_恋歌・ロックウェル.csv",
   "PreviewInSolutionExplorer": false
 }

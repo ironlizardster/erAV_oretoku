@@ -519,7 +519,7 @@ IF (FLAG:エレン紹介雇用 & 4) == 0
 ENDIF
 IF (FLAG:エレン紹介雇用 & 8) == 0 && CFLAG:MASTER:238 == 2
 	DRAWLINE
-	PRINTFORML 【%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%】（ののみや・もとか）
+	PRINTFORML 【%CSTR:MASTER:彼氏姓%%CSTR:MASTER:彼氏名%】（ののみや・もとか）
 	SETCOLOR 0xDDBBCC
 	CHKFONT "あくびん"
 	IF RESULT
@@ -560,7 +560,7 @@ SIF (FLAG:エレン紹介雇用 & 2) == 0
 SIF (FLAG:エレン紹介雇用 & 4) == 0
 	PRINTL  [2] - 新堂あゆみを紹介してもらう   （1000000ポイント）
 SIF (FLAG:エレン紹介雇用 & 8) == 0 && CFLAG:MASTER:238 == 2
-	PRINTFORML  [3] - %CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%を紹介してもらう   （10000ポイント） 
+	PRINTFORML  [3] - %CSTR:MASTER:彼氏姓%%CSTR:MASTER:彼氏名%を紹介してもらう   （10000ポイント） 
 PRINTL  [9] - やっぱりやめる
 PRINTL ※CAUTION※
 PRINTL 払い下げした場合、これらのキャラは今後の周回プレイ時に復活しません！
@@ -633,16 +633,16 @@ ELSEIF RESULT == 2 && (FLAG:エレン紹介雇用 & 4) == 0 && MONEY >= 1000000
 	FLAG:エレン紹介雇用 |= 4
 	CALL キャラ追加([[キャラ:新堂あゆみ]])
 ELSEIF RESULT == 3 && (FLAG:エレン紹介雇用 & 8) == 0 && MONEY >= 10000 && CFLAG:MASTER:238 == 2
-	PRINTFORML %CALLNAME:MASTER%は%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%を紹介してもらうことにした……
+	PRINTFORML %CALLNAME:MASTER%は%CSTR:MASTER:彼氏姓%%CSTR:MASTER:彼氏名%を紹介してもらうことにした……
 	PRINTFORMW
 	PRINTFORML 気まずい空気が流れる事務所が彼女との面談の場となった
-	PRINTFORML %CSTR:MASTER:元カノ名%は事務所にいる他の、あなたへ熱視線を向ける者たちに困惑しながらも、あなたの話をきちんと聞いている
+	PRINTFORML %CSTR:MASTER:彼氏名%は事務所にいる他の、あなたへ熱視線を向ける者たちに困惑しながらも、あなたの話をきちんと聞いている
 	PRINTFORML ……
 	CALL MOTOKANO_SETUPFINISH
 	PRINTFORMW
-	PRINTFORML %CALLNAME:MASTER%が最後まで説明すると、%CSTR:MASTER:元カノ名%は比較的すんなりとＯＫしてくれた
+	PRINTFORML %CALLNAME:MASTER%が最後まで説明すると、%CSTR:MASTER:彼氏名%は比較的すんなりとＯＫしてくれた
 	PRINTL
-	PRINTFORML 《%CSTR:MASTER:元カノ姓%%CSTR:MASTER:元カノ名%と契約しました》
+	PRINTFORML 《%CSTR:MASTER:彼氏姓%%CSTR:MASTER:彼氏名%と契約しました》
 	FLAG:エレン紹介雇用 |= 8
 	IF 所持クリアポイント >= 0 && FLAG:寝取られなし == 0
 		IF GETCHARA([[キャラ:野々宮初佳]], 0) >= 0
