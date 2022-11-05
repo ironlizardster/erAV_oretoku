@@ -279,14 +279,12 @@ LOSEBASE:体力 += 60
 LOSEBASE:気力 += 80
 
 ;初キス
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 1
-	SETCOLOR 0xDDBBCC
-	PRINTFORML 初キス
-	RESETCOLOR
-	CSTR:初キス相手 = スライム
-	TFLAG:初キス口以外 = 1	
-ENDIF
+TFLAG:621 |= 1
+TFLAG:621 |= 32
+;現在の判定法と違うのが残ってるのを偶然見つけたので↑に書き換え
+;IF !CFLAG:初キス相手
+;	CFLAG:初キス相手 = NO:PLAYER + 201
+;	TFLAG:初キス口以外 = 1
 
 ;ABL:奉仕精神をみる
 IF ABL:奉仕精神 == 0

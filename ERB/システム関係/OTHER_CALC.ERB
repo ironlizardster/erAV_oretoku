@@ -84,44 +84,6 @@ CALL キャラ削除, G
 ;REND
 ;	
 ;===========================================================
-;危険日算出
-;===========================================================
-@OVULATION_CALC
-REPEAT CHARANUM
-	IF TALENT:COUNT:オトコ == 1
-		CONTINUE
-	ELSEIF TALENT:COUNT:アンドロイド
-		CONTINUE
-		IF CFLAG:COUNT:30 > 5
-			CFLAG:COUNT:初キス相手 = 0
-		ELSEIF DAY:日付_日 == 1 && CFLAG:COUNT:30 == 1
-			CFLAG:COUNT:口上表示 = 1
-		ELSEIF DAY:日付_日 == 2 && CFLAG:COUNT:30 == 2
-			CFLAG:COUNT:口上表示 = 1
-		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 3
-			CFLAG:COUNT:口上表示 = 1
-		ELSEIF DAY:日付_日 == 4 && CFLAG:COUNT:30 == 4
-			CFLAG:COUNT:口上表示 = 1
-		ELSEIF DAY:日付_日 == 5 && CFLAG:COUNT:30 == 5
-			CFLAG:COUNT:口上表示 = 1
-		ELSEIF DAY:日付_日 == 5 && CFLAG:COUNT:30 == 0
-			CFLAG:COUNT:口上表示 = 1
-		ELSEIF DAY:日付_日 == 1 && CFLAG:COUNT:30 == 3
-			CFLAG:COUNT:口上表示 = 2
-		ELSEIF DAY:日付_日 == 2 && CFLAG:COUNT:30 == 4
-			CFLAG:COUNT:口上表示 = 2
-		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 5
-			CFLAG:COUNT:口上表示 = 2
-		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 0
-			CFLAG:COUNT:口上表示 = 2
-		ELSEIF DAY:日付_日 == 3 && CFLAG:COUNT:30 == 1
-			CFLAG:COUNT:口上表示 = 2
-		ELSEIF DAY:日付_日 == 4 && CFLAG:COUNT:30 == 2
-			CFLAG:COUNT:口上表示 = 2
-		ENDIF
-	ENDIF
-REND
-;===========================================================
 ;タバコの銘柄の決定
 ;===========================================================
 @CIGARETTES_4COUNT

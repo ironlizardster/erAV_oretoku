@@ -81,7 +81,7 @@ PRINTL 報酬：なし
 PRINTL エクストラ報酬：期間延長１０週＋ヒトミちゃんのパワーアップ
 ;SETCOLOR 0xF58F98
 ;FONTSTYLE 1
-;PRINTL ※ミッション終了後、対象は【処女】【アナル処女】【キス未経験】ではなくなります！
+;PRINTL ※ミッション終了後、対象は【処女】【Ａ処女】【キス未経験】ではなくなります！
 ;FONTSTYLE 0
 ;RESETCOLOR
 DRAWLINE
@@ -99,7 +99,7 @@ PRINTL 　　　　ミッション達成条件：【永遠の愛】＋好感度�
 PRINTL ミッション終了後の状態変化：ミッションに失敗した場合、ヒトミちゃんの廃棄
 PRINTL 　　　　　　　　　　　　　　ミッションに成功した場合、全ての経験・能力をリセット
 PRINTL 　　　　　　　　　　　　　　最大体力・最大気力・最大魅力の大幅増加
-PRINTL 　　　　　　　　　　　　　【処女】【アナル処女】ほか、素質の大幅変更
+PRINTL 　　　　　　　　　　　　　【処女】【Ａ処女】ほか、素質の大幅変更
 PRINTL 　　　ミッション対象キャラ：ヒトミちゃん
 DRAWLINE
 
@@ -240,7 +240,7 @@ NEXT
 
 
 TALENT:処女 = 1
-TALENT:アナル処女 = 1
+TALENT:Ａ処女 = 1
 TALENT:素直 = 1
 TALENT:好奇心 = 1
 TALENT:ポジティブ = 1
@@ -304,7 +304,7 @@ IF GETCHARA([[キャラ:アンドロイド]]) != -1
 ENDIF
 
 
-CFLAG:初キス相手 = -1
+CFLAG:初キス相手 = 0
 CFLAG:着衣状態 = 15
 CFLAG:上着タイプ = 1
 CFLAG:靴下タイプ = 1

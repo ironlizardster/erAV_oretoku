@@ -490,10 +490,12 @@ ELSE
 	E = 1
 ENDIF
 ;初キス
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = NO:PLAYER + 201
-	TFLAG:初キス口以外 = 1
-ENDIF
+TFLAG:621 |= 1
+TFLAG:621 |= 2
+;現在の判定法と違うのが残ってるのを偶然見つけたので↑に書き換え
+;IF !CFLAG:初キス相手
+;	CFLAG:初キス相手 = NO:PLAYER + 201
+;	TFLAG:初キス口以外 = 1
 ;愛情経験
 IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
 	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}

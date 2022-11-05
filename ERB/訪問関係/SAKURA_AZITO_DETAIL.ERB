@@ -1039,14 +1039,15 @@ ELSEIF RESULT == 0
 					TALENT:COUNT:清い付き合い = 0
 					CFLAG:COUNT:NTR進行 = 0
 					CFLAG:COUNT:彼氏有 = 2
-					IF CFLAG:処女喪失相手 == 8 && CFLAG:彼氏とのセックスの有無 == 0
-						CSTR:処女喪失の相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
+					IF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏とのセックスの有無 == 0
+						CSTR:処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
 						CFLAG:彼氏とのセックスの有無 += 1
 					ENDIF
 
-					IF CFLAG:初キス相手 == 3 && CFLAG:初キス相手元カレ == 0
+					IF CFLAG:初キス相手 == 初相手_今彼 && CFLAG:交際終了 == 0
 						CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
-						CFLAG:初キス相手元カレ = 1
+						CFLAG:初キス相手 = 初相手_元彼
+						CFLAG:交際終了 = 1
 					ENDIF
 					EXP:COUNT:交際人数 += 1
 				ELSEIF LOCAL == 1

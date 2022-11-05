@@ -387,8 +387,8 @@ CALL INCEST
 ;調教者が童貞なら童貞喪失
 IF TALENT:PLAYER:童貞
 	TALENT:PLAYER:童貞 = 0
-	SIF CFLAG:PLAYER:初キス相手 == 0
-		CFLAG:PLAYER:初キス相手 = 1
+	SIF CFLAG:PLAYER:童貞喪失相手 == 0
+		CFLAG:PLAYER:童貞喪失相手 = 1
 	IF CFLAG:PLAYER:包皮状態 == 2
 		CFLAG:PLAYER:包皮状態 = 3
 	ENDIF
@@ -404,7 +404,7 @@ IF TALENT:ASSI:処女 == 1
 	IF CFLAG:ASSI:処女喪失相手 == 0
 		;助手の処女喪失相手を記録（初期値が0のため、+1して記録）
 		CFLAG:ASSI:処女喪失相手 = 1
-		CSTR:ASSI:処女喪失の相手 = %CALLNAME:PLAYER%
+		CSTR:ASSI:処女喪失相手 = %CALLNAME:PLAYER%
 		TFLAG:助手を犯す処女喪失 = 1
 		;助手の初体験が近親相姦
 		;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
@@ -427,7 +427,7 @@ IF TALENT:ASSI:処女 == 1
 		CFLAG:ASSI:処女喪失月 = DAY:日付_月
 		CFLAG:ASSI:処女喪失日 = DAY:日付_日
 		CFLAG:ASSI:処女喪失場所 = 14
-		CFLAG:ASSI:処女喪失シチュ = 1
+		CFLAG:ASSI:処女喪失状況 = 1
 	ENDIF
 
 	PRINTL ＜助手が処女＞

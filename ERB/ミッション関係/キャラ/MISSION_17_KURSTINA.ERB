@@ -198,8 +198,8 @@ IF LOCAL:10 != -1
 			TALENT:(LOCAL:20):ファザコン = 1
 			RELATION:(LOCAL:20):(NO:F) = 1000
 			RELATION:F:(LOCAL:20) = 1000
-			CFLAG:F:親族判定1 = 1000 + 104
-			CFLAG:(LOCAL:20):親族判定4 = -1
+;			CFLAG:F:親族判定1 = 1000 + 104
+;			CFLAG:(LOCAL:20):親族判定4 = -1
 		ELSEIF F >= 0
 			PRINTFORML %CALLNAME:(LOCAL:10)%と%CALLNAME:(GETCHARA(F))%の娘？が恩返しとして母親の代わりにあなたに協力しにきてくれたようだ
 			MAXBASE:(LOCAL:20):体力 += 100

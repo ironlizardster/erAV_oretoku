@@ -4,11 +4,9 @@
 #DIM DYNAMIC LCOUNT
 #DIMS DYNAMIC HTML用, 3
 #DIM DYNAMIC 誕生日人数
+#DIMS DYNAMIC 誕生日名前, 固有キャラ最大ID
 #DIM DYNAMIC HOGE, 3
 #DIM CONST 最大文字数 = 34
-
-SIF EXISTCSV(10000)
-	THROW キャラ番号10000は当バリアントでは使用できません。別の番号に置き換えてください
 
 ;10秒(デフォルト)
 IF ツールチップ表示時間
@@ -22,9 +20,15 @@ SIF ツールチップディレイ
 	TOOLTIP_SETDELAY ツールチップディレイ
 
 CSVCOUNT = 0
-FOR LCOUNT, 0, 10000
-	SIF EXISTCSV(LCOUNT)
+FOR LCOUNT, 0, 固有キャラ最大ID
+	IF EXISTCSV(LCOUNT)
 		CSVCOUNT++
+		固有キャラ名前リスト:LCOUNT '= CSVNAME(LCOUNT)
+		IF (CSVBASE(LCOUNT, [[BASE:誕生月]])) == LMONTH && (CSVBASE(LCOUNT, [[BASE:誕生日]])) == LDAYS
+			誕生日名前:誕生日人数 '= CSVNAME(LCOUNT)
+			誕生日人数++
+		ENDIF
+	ENDIF
 NEXT
 
 ALIGNMENT LEFT
@@ -37,15 +41,13 @@ DO
 	LDAYS = TOINT(SUBSTRING(GETTIMES(), 8, 2))
 	誕生日人数 = 0
 	DRAWLINE
-	FOR LCOUNT, 0, 10000
-		SIF !EXISTCSV(LCOUNT)
-			CONTINUE
-		IF (CSVBASE(LCOUNT, [[BASE:誕生月]])) == LMONTH && (CSVBASE(LCOUNT, [[BASE:誕生日]])) == LDAYS
-			PRINTFORML 今日は%CSVNAME(LCOUNT)%の誕生日です
-			誕生日人数++
-		ENDIF
-	NEXT
 	IF 誕生日人数
+		FOR LCOUNT, 0, 誕生日人数
+			STRLENS 誕生日名前:LCOUNT
+			IF RESULT
+				PRINTFORML 今日は%誕生日名前:LCOUNT%の誕生日です
+			ENDIF
+		NEXT
 		PRINTL ハッピーバースデー！
 		DRAWLINE
 	ENDIF

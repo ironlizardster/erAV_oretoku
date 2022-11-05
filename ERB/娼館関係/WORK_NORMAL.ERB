@@ -163,19 +163,14 @@ IF (FLAG:指導テキスト設定 & 2) == 0
 ENDIF
 
 ;初キス
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	PRINTFORML %CALLNAME:TARGET%は見知らぬ男のペニスにファーストキスを捧げた……
-		CFLAG:初キス相手 = 2
-			IF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 0
-				CSTR:初キス相手 = 知らないおじさんの%CSTR:男性器呼び方%
-			ELSEIF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 1
-				CSTR:初キス相手 = 知らないおじさんの%CSTR:男性器呼び方%
-			ENDIF
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 7
-		CFLAG:初キス喪失シチュ = 1
+	IF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 0
+		CSTR:初キス相手 = 知らないおじさんの%CSTR:男性器呼び方%
+	ELSEIF CFLAG:初キス相手 == 4 && TALENT:淫乱 == 1
+		CSTR:初キス相手 = 知らないおじさんの%CSTR:男性器呼び方%
+	ENDIF
+	CALL 初キス実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:初キス相手)
 	;異常体験に＋１
 	EXP:異常経験 += 1
 ENDIF
@@ -278,18 +273,18 @@ IF (FLAG:指導テキスト設定 & 2) == 0
 		PRINTFORML しかしながら、%CALLNAME:TARGET%のアナルでは客たちの欲求を満たす事は出来なかった
 	ENDIF
 ENDIF
-IF TALENT:アナル処女 == 1 && CFLAG:アナル処女喪失相手 == 0
-	PRINTFORMW 【売春でアナル処女喪失】
-	TALENT:アナル処女 = 0
-	CFLAG:アナル処女喪失相手 = 2
-	CSTR:アナル処女喪失相手 = 知らないオトコの人
+IF TALENT:Ａ処女 == 1 && CFLAG:Ａ処女喪失相手 == 0
+	PRINTFORMW 【売春でＡ処女喪失】
+	TALENT:Ａ処女 = 0
+	CFLAG:Ａ処女喪失相手 = 2
+	CSTR:Ａ処女喪失相手 = 知らないオトコの人
 	;異常体験に＋１
 	EXP:異常経験 += 1
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CFLAG:アナル処女喪失場所 = 7
-	CFLAG:アナル処女喪失シチュ = 0
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:Ａ処女喪失場所 = 7
+	CFLAG:Ａ処女喪失状況 = 0
 ENDIF
 
 ;Ａ経験が少ないと、体力の減少量と否定の珠の取得量が増加するフラグを点灯
@@ -410,12 +405,12 @@ IF TALENT:処女
 	;処女喪失相手を記録
 	IF CFLAG:処女喪失相手 == 0
 		CFLAG:処女喪失相手 = 2
-		CSTR:処女喪失の相手 = 知らないオトコの人
+		CSTR:処女喪失相手 = 知らないオトコの人
 		CFLAG:処女喪失年齢 = BASE:実年齢
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 7
-		CFLAG:処女喪失シチュ = 0
+		CFLAG:処女喪失状況 = 0
 	ENDIF
 	;異常経験に＋２
 	TCVAR:異常経験 += 2
@@ -603,7 +598,7 @@ IF TALENT:処女
 	;処女喪失相手を記録
 	SIF CFLAG:処女喪失相手 == 0
 		CFLAG:処女喪失相手 = 2
-		CSTR:アナル処女喪失相手 = 知らないオトコの人
+		CSTR:Ａ処女喪失相手 = 知らないオトコの人
 	;異常経験に＋２
 	TCVAR:異常経験 += 2
 ENDIF
@@ -666,19 +661,19 @@ IF TALENT:処女
 	;処女喪失相手を記録
 	SIF CFLAG:処女喪失相手 == 0
 		CFLAG:処女喪失相手 = 2
-		CSTR:処女喪失の相手 = 常連のお客さん
+		CSTR:処女喪失相手 = 常連のお客さん
 	;異常経験に＋２
 	TCVAR:異常経験 += 2
 ENDIF
 ;初キス
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	PRINTFORML 初キス
-		CFLAG:初キス相手 = 4
-			IF TALENT:ギャル系 == 0
-				CSTR:初キス相手 = 常連のお客さん
-			ELSEIF TALENT:ギャル系 == 1
-				CSTR:初キス相手 = 常連のお客さんのチンポ
-			ENDIF
+	IF TALENT:ギャル系 == 0
+		CSTR:初キス相手 = 常連のお客さん
+	ELSEIF TALENT:ギャル系 == 1
+		CSTR:初キス相手 = 常連のお客さんのチンポ
+	ENDIF
+	CALL 初キス実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,CSTR:初キス相手)
 ENDIF
 
 ;Ｖ経験が少ないと、体力の減少量と否定の珠の取得量が増加するフラグを点灯

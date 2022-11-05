@@ -88,7 +88,7 @@ PRINTL 報酬：１００万ポイント＋貢献度４０
 PRINTL エクストラ報酬：期間延長２０週＋アイテム【触手生物】
 SETCOLOR 0xF58F98
 FONTSTYLE 1
-PRINTL ※ミッション終了後、対象は【処女】【アナル処女】【キス未経験】ではなくなります！
+PRINTL ※ミッション終了後、対象は【処女】【Ａ処女】【キス未経験】ではなくなります！
 FONTSTYLE 0
 RESETCOLOR
 DRAWLINE
@@ -102,7 +102,7 @@ DRAWLINE
 ;=================================================
 @MISSION_COND_59
 DRAWLINE
-PRINTL ミッション達成条件：【処女】＋【アナル処女】＋最大体力3000以上＋最大精神2500以上
+PRINTL ミッション達成条件：【処女】＋【Ａ処女】＋最大体力3000以上＋最大精神2500以上
 PRINTL 　　　　　　　　　　かつ【一線超えない】を所持しておらずキス未経験
 PRINTL ミッション終了後の状態変化：Ｖ経験・Ａ経験・フェラ経験・異常経験増加
 PRINTL 　　　　　　　　　　　　　　ミッションに失敗した場合【崩壊】を取得
@@ -137,13 +137,13 @@ SIF MAXBASE:気力 >= 2500
 	LOCAL:1++
 SIF TALENT:処女 == 1
 	LOCAL:1++
-SIF TALENT:アナル処女 == 1
+SIF TALENT:Ａ処女 == 1
 	LOCAL:1++
 SIF TALENT:一線越えない == 0
 	LOCAL:1++
 SIF CFLAG:処女喪失相手 == 0
 	LOCAL:1++
-SIF CFLAG:初キス相手 == -1
+SIF !CFLAG:初キス相手
 	LOCAL:1++
 SIF CFLAG:処女膜再生回数 == 0
 	LOCAL:1++
@@ -189,7 +189,7 @@ TCVAR:緊縛経験 = TCVAR:触手経験
 SIF TALENT:ふたなり || TALENT:オトコ 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = 触手生物
+	CSTR:処女喪失相手 = 触手生物
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 14
 	SETCOLOR 0xF58F98
@@ -199,32 +199,27 @@ IF TALENT:処女 == 1
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 12
-		CFLAG:処女喪失シチュ = 4
+		CFLAG:処女喪失状況 = 4
 ENDIF
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 14
+IF !CFLAG:初キス相手
 	CSTR:初キス相手 = 触手生物
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
-	CFLAG:初キス喪失場所 = 12
-	CFLAG:初キス喪失シチュ = 4
+	CALL 初キス実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,CSTR:初キス相手)
 ENDIF
-IF TALENT:アナル処女 == 1
-	TALENT:アナル処女 = 0
-	CFLAG:アナル処女喪失相手 = 14
-	CSTR:アナル処女喪失相手 = 触手生物
+IF TALENT:Ａ処女 == 1
+	TALENT:Ａ処女 = 0
+	CFLAG:Ａ処女喪失相手 = 14
+	CSTR:Ａ処女喪失相手 = 触手生物
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CFLAG:アナル処女喪失場所 = 12
-	CFLAG:アナル処女喪失シチュ = 4
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:Ａ処女喪失場所 = 12
+	CFLAG:Ａ処女喪失状況 = 4
 ENDIF
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)

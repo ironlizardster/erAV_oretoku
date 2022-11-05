@@ -80,18 +80,14 @@ WAIT
 IF ITEM:プリンセスポイズン
 	$INPUT_LOOP_01
 	PRINTFORML %CALLNAME:TARGET%に媚薬を与えますか？
-	PRINTL  [0] - はい
-	PRINTL  [1] - いいえ
-	INPUT
-	IF RESULT == 0
+	CALL GET_はいいいえ()
+	IF RESULT == COMMAND_はい
 		PRINTFORML %CALLNAME:TARGET%は媚薬のエキス入りアンプルを奪い取ると、
 		PRINTFORML すぐさま貪るように一気に飲み干して、ほっと一息をついた
 		WAIT
 		CFLAG:媚薬残留 += 1
 		ITEM:プリンセスポイズン -= 1
 		RETURN 0
-	ELSEIF RESULT != 1
-		GOTO INPUT_LOOP_01
 	ENDIF	
 ENDIF
 

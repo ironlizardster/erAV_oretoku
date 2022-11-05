@@ -103,7 +103,7 @@ PRINTL 報酬：１００万ポイント＋貢献度５０
 PRINTL エクストラ報酬：期間延長２０週＋由希の最大魅力値５０上昇
 SETCOLOR 0xF58F98
 FONTSTYLE 1
-PRINTL ※ミッション終了後、対象は【処女】【アナル処女】【キス未経験】ではなくなります！
+PRINTL ※ミッション終了後、対象は【処女】【Ａ処女】【キス未経験】ではなくなります！
 FONTSTYLE 0
 RESETCOLOR
 DRAWLINE
@@ -229,7 +229,7 @@ TCVAR:フェラ経験 += 100 + RAND:26
 TCVAR:異常経験 += 1 + RAND:2
 
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = アンドリュー・テイラー
+	CSTR:処女喪失相手 = アンドリュー・テイラー
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 12
 	SETCOLOR 0xF58F98
@@ -239,10 +239,9 @@ IF TALENT:処女 == 1
 	CFLAG:処女喪失月 = DAY:日付_月
 	CFLAG:処女喪失日 = DAY:日付_日
 	CFLAG:処女喪失場所 = 13
-	CFLAG:処女喪失シチュ = 0
+	CFLAG:処女喪失状況 = 0
 ENDIF
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 12
+IF !CFLAG:初キス相手
 	IF TALENT:ギャル系 == 1
 		CSTR:初キス相手 = アンドリュー・テイラー
 		;すまん……あっちゃん……
@@ -252,24 +251,20 @@ IF CFLAG:初キス相手 == -1
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
-	CFLAG:初キス喪失場所 = 13
-	CFLAG:初キス喪失シチュ = 1
+	CALL 初キス実行(TARGET,初相手_枕営業,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"%CSTR:初キス相手%の%CSTR:男性器呼び方%")
 ENDIF
-IF TALENT:アナル処女 == 1
-	CFLAG:アナル処女喪失相手 = 12
-	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失相手 = アンドリュー・テイラー
+IF TALENT:Ａ処女 == 1
+	CFLAG:Ａ処女喪失相手 = 12
+	TALENT:Ａ処女 = 0
+	CSTR:Ａ処女喪失相手 = アンドリュー・テイラー
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CFLAG:アナル処女喪失場所 = 13
-	CFLAG:アナル処女喪失シチュ = 0
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:Ａ処女喪失場所 = 13
+	CFLAG:Ａ処女喪失状況 = 0
 ENDIF
 
 SIF TALENT:ふたなり || TALENT:オトコ 

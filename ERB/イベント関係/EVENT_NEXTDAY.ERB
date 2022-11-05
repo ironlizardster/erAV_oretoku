@@ -395,11 +395,8 @@ PRINTFORML %NAME:TARGET%は、中学校に入学することになっている�
 	PRINTFORML %CALLNAME:TARGET%の撮影は順調に進んでいるようだし、時には学校に通わせてやるのも良いだろう。
 	PRINTFORML そう考え、あなたは新しい制服を贈ってやることにした。
 	PRINTFORML さっそく着替えさせますか？
-	$INPUT_LOOP_0
-	PRINTL  [0] - はい
-	PRINTL  [1] - いいえ
-	INPUT
-	IF RESULT == 0
+	CALL GET_はいいいえ()
+	IF RESULT == COMMAND_はい
 		CALL PRINT_CLOTHTYPE
 		PRINTFORML の%NAME:TARGET%は、新品の制服を受け取ると
 		;露出癖Lv3/マゾっ気Lv3/恥じらい/素直/好奇心で形容追加
@@ -431,8 +428,6 @@ PRINTFORML %NAME:TARGET%は、中学校に入学することになっている�
 			ABL:信頼 = 4
 			PRINTFORMW %ABLNAME:[[ABL:信頼]]%が{ABL:信頼}になった
 		ENDIF
-	ELSEIF RESULT != 1
-		GOTO INPUT_LOOP_0
 	ELSE
 		PRINTFORML 今すぐ着替えなくても良い、と言うと%CALLNAME:TARGET%は少し残念そうにしたが、
 		PRINTFORML これはあくまでも通学のためのプレゼントで、撮影用の物ではない……。
@@ -463,11 +458,8 @@ PRINTFORML %NAME:TARGET%は、高校に入学することになっている。
 	PRINTFORML %CALLNAME:TARGET%の撮影は順調に進んでいるようだし、時には学校に通わせてやるのも良いだろう。
 	PRINTFORML そう考え、あなたは新しい制服を贈ってやることにした。
 	PRINTFORML さっそく着替えさせますか？
-	$INPUT_LOOP_00
-	PRINTL  [0] - はい
-	PRINTL  [1] - いいえ
-	INPUT
-	IF RESULT == 0
+	CALL GET_はいいいえ()
+	IF RESULT == COMMAND_はい
 		CALL PRINT_CLOTHTYPE
 		PRINTFORML の%NAME:TARGET%は、新品の制服を受け取ると
 		;露出癖Lv3/マゾっ気Lv3/恥じらい/素直/好奇心で形容追加
@@ -497,8 +489,6 @@ PRINTFORML %NAME:TARGET%は、高校に入学することになっている。
 			ABL:信頼 = 4
 			PRINTFORMW %ABLNAME:[[ABL:信頼]]%が{ABL:信頼}になった
 		ENDIF
-	ELSEIF RESULT != 1
-		GOTO INPUT_LOOP_00
 	ELSE
 		PRINTFORML 今すぐ着替えなくても良い、と言うと%CALLNAME:TARGET%は少し残念そうにしたが、
 		PRINTFORML これはあくまでも通学のためのプレゼントで、撮影用の物ではない……
@@ -813,7 +803,7 @@ ELSE
 	ENDIF
 	PRINTFORM %CALLNAME:MASTER%に抱かれたくて、
 	PRINTFORML アナルが疼いてどうしようもないらしい……
-	IF TALENT:TEMP_NUM:アナル処女 == 1
+	IF TALENT:TEMP_NUM:Ａ処女 == 1
 		PRINTFORM %CALLNAME:TEMP_NUM%は未だ肉棒を受け入れたことがない、快楽を覚えるようになった窄まりを左右の手で拡げて
 		PRINTFORML %CALLNAME:MASTER%に後ろの処女を奪って欲しいと懇願してきた
 		PRINTFORML 左右に拡げられて薄く口を開いたアナルは、%CALLNAME:MASTER%のモノを待ち望んでヒクついている
@@ -822,17 +812,17 @@ ELSE
 		PRINTFORMW 慣らすようにゆっくりと挿入した……
 	ENDIF
 	PRINTFORML {S}回の交わりの後に、二人は繋がったまま抱き合い、深い眠りに落ちた
-	IF TALENT:TEMP_NUM:アナル処女 == 1
+	IF TALENT:TEMP_NUM:Ａ処女 == 1
 		SETCOLOR 0xF58F98
-		PRINTL 【アナル処女喪失】
+		PRINTL 【Ａ処女喪失】
 		RESETCOLOR
-		TALENT:TEMP_NUM:アナル処女 = 0
+		TALENT:TEMP_NUM:Ａ処女 = 0
 		IF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 0
-			CSTR:TEMP_NUM:アナル処女喪失相手 = お兄ちゃん
+			CSTR:TEMP_NUM:Ａ処女喪失相手 = お兄ちゃん
 		ELSEIF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 1
-			CSTR:TEMP_NUM:アナル処女喪失相手 = アニキ
+			CSTR:TEMP_NUM:Ａ処女喪失相手 = アニキ
 		ELSE
-			CSTR:TEMP_NUM:アナル処女喪失相手 = %CALLNAME:MASTER%
+			CSTR:TEMP_NUM:Ａ処女喪失相手 = %CALLNAME:MASTER%
 		ENDIF
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
@@ -925,7 +915,7 @@ IF F == 1
 	JUEL:TEMP_NUM:快Ｖ += S*400
 	JUEL:TEMP_NUM:恭順 += S*250
 	JUEL:TEMP_NUM:欲情 += S*250
-ELSEIF F == 0 && TALENT:TEMP_NUM:アナル処女 == 0
+ELSEIF F == 0 && TALENT:TEMP_NUM:Ａ処女 == 0
 	;アナルセックス回数
 	S = ABL:TEMP_NUM:性交中毒
 	;Ａ感覚
@@ -957,17 +947,17 @@ ELSEIF F == 0 && TALENT:TEMP_NUM:アナル処女 == 0
 		ENDIF
 	PRINTFORML ながら、そのまま二回戦目に突入した……
 	PRINTFORML {S}回の交わりの後に、二人はようやく家を出た
-	IF TALENT:TEMP_NUM:アナル処女 == 1
+	IF TALENT:TEMP_NUM:Ａ処女 == 1
 		SETCOLOR 0xF58F98
-		PRINTL 【アナル処女喪失】
+		PRINTL 【Ａ処女喪失】
 		RESETCOLOR
-		TALENT:TEMP_NUM:アナル処女 = 0
+		TALENT:TEMP_NUM:Ａ処女 = 0
 		IF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 0
-			CSTR:TEMP_NUM:アナル処女喪失相手 = お兄ちゃん
+			CSTR:TEMP_NUM:Ａ処女喪失相手 = お兄ちゃん
 		ELSEIF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 1
-			CSTR:TEMP_NUM:アナル処女喪失相手 = アニキ
+			CSTR:TEMP_NUM:Ａ処女喪失相手 = アニキ
 		ELSE
-			CSTR:TEMP_NUM:アナル処女喪失相手 = %CALLNAME:MASTER%
+			CSTR:TEMP_NUM:Ａ処女喪失相手 = %CALLNAME:MASTER%
 		ENDIF
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}

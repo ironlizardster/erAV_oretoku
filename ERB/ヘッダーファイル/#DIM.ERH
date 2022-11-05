@@ -3,18 +3,19 @@
 #DIM CONST RANDCHOOSE_MAX = 10000
 #DIM RANDCHOOSE_NUM,RANDCHOOSE_MAX
 
+#DIM CONST 固有キャラ最大ID = 250
+#DIM CONST 全キャラ最大ID = 1000
+
 #DIM TEMP_NUM
 #DIMS TEMP_STR
 #DIM TEMP_CHARA_NO
-#DIM TEMP_CHARA_LIST,1000
+#DIM TEMP_CHARA_LIST,全キャラ最大ID
 
-#DIM CONST 固有キャラ最大ID = 250
-
-#DIM CONST MAX_FIXED_CHARA = 500
-#DIM CONST MIN_NO_RANDOM_CHARA = 500
+#DIM CONST MIN_NO_RANDOM_CHARA = 250
 #DIM CONST MAX_RANDOM_CHARA = 750
 
 #DIM GLOBAL SAVEDATA 女優名鑑, 固有キャラ最大ID
+#DIMS 固有キャラ名前リスト,全キャラ最大ID
 
 #DIM CONST 実績最大ID = 50
 #DIM GLOBAL SAVEDATA 実績達成, 実績最大ID
@@ -69,3 +70,45 @@
 #DIM CONST 求人広告上限回数 = 10
 #DIM CONST 求人広告 = 固有キャラ最大ID
 #DIM TALENT_FILTER, 1000
+
+#DIM CONST 初相手_不明 = -1
+#DIM CONST 初相手_夫 = -2
+#DIM CONST 初相手_バイブ = -3
+#DIM CONST 初相手_極太バイブ = -4
+#DIM CONST 初相手_犬 = -5
+#DIM CONST 初相手_触手 = -6
+#DIM CONST 初相手_元彼 = -7
+#DIM CONST 初相手_今彼 = -8
+#DIM CONST 初相手_セフレ = -9
+#DIM CONST 初相手_スタッフ = -10
+#DIM CONST 初相手_不良 = -11
+#DIM CONST 初相手_枕営業 = -12
+#DIM CONST 初相手_売春客男 = -13
+#DIM CONST 初相手_売春客女 = -14
+#DIM CONST 初相手_痴漢 = -15
+#DIM CONST 初相手_接待客 = -16
+#DIM CONST 初場所_あなたの部屋 = 0
+#DIM CONST 初場所_自室 = 1
+#DIM CONST 初場所_彼部屋 = 2
+#DIM CONST 初場所_ラブホ = 3
+#DIM CONST 初場所_海 = 4
+#DIM CONST 初場所_学校 = 5
+#DIM CONST 初場所_廃工場 = 6
+#DIM CONST 初場所_娼館 = 7
+#DIM CONST 初場所_電車 = 8
+#DIM CONST 初場所_バス = 9
+#DIM CONST 初場所_野外 = 10
+#DIM CONST 初場所_プール = 11
+#DIM CONST 初場所_地下室 = 12
+#DIM CONST 初場所_会員制クラブ = 13
+#DIM CONST 初場所_スタジオ = 14
+#DIM CONST 初状況_口 = 0
+#DIM CONST 初状況_男性器 = 1
+#DIM CONST 初状況_肛門 = 2
+#DIM CONST 初状況_女性器 = 3
+#DIM CONST 初状況_指導 = 1
+#DIM CONST 初状況_撮影 = 2
+#DIM CONST 初状況_ハメ撮 = 3
+#DIM CONST 初状況_無理犯 = 4
+#DIM CONST 初状況_輪姦 = 5
+#DIM CONST 初状況_クスリ = 6

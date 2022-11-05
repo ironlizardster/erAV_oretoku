@@ -121,13 +121,10 @@ TCVAR:精液経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験 + TCVAR:フェラ経験
 TCVAR:性交経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験
 
 ;初キス
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	PRINTFORML %CALLNAME:TARGET%は見知らぬ男に初キスを奪われた……
-	IF CFLAG:初キス相手 == -1
-		CFLAG:初キス相手 = 2
-		CSTR:初キス相手 = 知らないオトコの人
-		BASE:魅力値 -= 10
-	ENDIF
+	CALL 初キス実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,"知らないオトコの人")
+	BASE:魅力値 -= 5
 	;異常体験に＋１
 	TCVAR:異常経験 += 1
 ENDIF
@@ -141,21 +138,21 @@ IF CFLAG:売春処女喪失 == 1
 	;処女喪失相手（輪姦）を記録
 	IF CFLAG:処女喪失相手 == 0
 		CFLAG:処女喪失相手 = 1
-		CSTR:処女喪失の相手 = 知らないオトコの人
+		CSTR:処女喪失相手 = 知らないオトコの人
 		BASE:魅力値 -= 20
 	ENDIF
 	;異常体験に＋２
 	TCVAR:異常経験 += 2
 ENDIF
 
-;アナル処女喪失
-IF TALENT:アナル処女 == 1
+;Ａ処女喪失
+IF TALENT:Ａ処女 == 1
 	SETCOLOR 0xF58F98
-	PRINTFORML 【アナル処女喪失】
+	PRINTFORML 【Ａ処女喪失】
 	RESETCOLOR
-	TALENT:アナル処女 = 0
+	TALENT:Ａ処女 = 0
 	;処女喪失相手（輪姦）を記録
-		CSTR:アナル処女喪失相手 = 知らないオトコの人
+		CSTR:Ａ処女喪失相手 = 知らないオトコの人
 	;異常体験に＋２
 	TCVAR:異常経験 += 2
 	BASE:魅力値 -= 10

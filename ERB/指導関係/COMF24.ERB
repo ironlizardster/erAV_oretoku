@@ -301,16 +301,16 @@ CALL EVENT_SEITSU_REVRAPE
 Z = 0
 TFLAG:近親相姦 = 0
 CALL INCEST
-;逆レイプで童貞喪失の場合異常経験に＋１
+;逆レイプで童貞喪失場合異常経験に＋１
 SIF TALENT:童貞
 	Z += 1
-;童貞喪失の相手が母親なら異常経験に＋２
+;童貞喪失相手が母親なら異常経験に＋２
 IF TALENT:童貞 && TFLAG:近親相姦 == 1
 	Z += 2
-;童貞喪失の相手が祖母なら異常経験に＋１
+;童貞喪失相手が祖母なら異常経験に＋１
 ELSEIF TALENT:童貞 && TFLAG:近親相姦 == 5
 	Z += 1
-;童貞喪失の相手が姉妹なら異常経験に＋１
+;童貞喪失相手が姉妹なら異常経験に＋１
 ELSEIF TALENT:童貞 && (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4)
 	Z += 1
 ENDIF
@@ -360,22 +360,23 @@ IF TALENT:童貞
 	PRINTFORML 【童貞喪失】
 	RESETCOLOR
 	IF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 1
-		CSTR:童貞喪失の相手 = お兄ちゃん
+		CSTR:童貞喪失相手 = お兄ちゃん
 	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0
-		CSTR:童貞喪失の相手 = お姉ちゃん
+		CSTR:童貞喪失相手 = お姉ちゃん
 	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 1
-		CSTR:童貞喪失の相手 = アニキ
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 1
-		CSTR:童貞喪失の相手 = アネキ
+		CSTR:童貞喪失相手 = アニキ
+	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0
+		CSTR:童貞喪失相手 = アネキ
 	ELSE
-		CSTR:童貞喪失の相手 = %NAME:PLAYER%
+		CSTR:童貞喪失相手 = %NAME:PLAYER%
 	ENDIF
 	IF CFLAG:包皮状態 == 2
 		CFLAG:包皮状態 = 3
 	ENDIF
 	TFLAG:童貞喪失 = 1
-	SIF CFLAG:初キス相手 == 0
-		CFLAG:初キス相手 = 1
+	SIF !CFLAG:初キス相手
+		CALL 初キス実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口,CSTR:童貞喪失相手)
+
 ENDIF
 
 ;調教者が処女なら処女喪失
@@ -386,13 +387,13 @@ IF TALENT:PLAYER:処女
 	RESETCOLOR
 	IF CFLAG:PLAYER:処女喪失相手 == 0
 		CFLAG:PLAYER:処女喪失相手 =  1
-		CSTR:PLAYER:処女喪失の相手 = %NAME:TARGET%
+		CSTR:PLAYER:処女喪失相手 = %NAME:TARGET%
 	ENDIF
 	CFLAG:PLAYER:処女喪失年齢 = BASE:実年齢
 	CFLAG:PLAYER:処女喪失月 = DAY:日付_月
 	CFLAG:PLAYER:処女喪失日 = DAY:日付_日
 	CFLAG:PLAYER:処女喪失場所 = 13
-	CFLAG:PLAYER:処女喪失シチュ = 1
+	CFLAG:PLAYER:処女喪失状況 = 1
 ENDIF
 
 TFLAG:近親相姦 = 0

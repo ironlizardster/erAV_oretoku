@@ -227,8 +227,8 @@ PRINTL  [1] - 会話営業
 PRINTL  [2] - 奉仕営業
 ;Ａ営業の条件：Ａ感覚が3以上かつ、屈服刻印が2以上で個室拡張済み
 IF MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
-	IF TALENT:アナル処女
-		PRINTL  [3] - Ａ営業 (アナル処女)
+	IF TALENT:Ａ処女
+		PRINTL  [3] - Ａ営業 (Ａ処女)
 	ELSE
 		PRINTL  [3] - Ａ営業
 	ENDIF

@@ -10,7 +10,7 @@ SIF FLAG:淫語なし == 1
 	RETURN
 
 PRINTL
-IF EXP:卑語指導回数 == 0
+IF CFLAG:卑語指導 == 0
 	PRINTFORM %CALLNAME:TARGET%にもだいぶ信頼されるようになり、
 	PRINTFORML 最近の%CALLNAME:TARGET%は指導の成果か、性行為への羞恥心もそれなりに薄れてきたらしい……
 	PRINTFORM そこで%CALLNAME:MASTER%は次のステップとして%CALLNAME:TARGET%に、
@@ -200,7 +200,7 @@ ELSE
 	GOTO INPUT_LOOP07
 ENDIF
 
-EXP:卑語指導回数 += 1
+CFLAG:卑語指導 += 1
 
 
 ;===========================================================

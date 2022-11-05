@@ -101,7 +101,7 @@ ENDIF
 						;****触手中毒パッチ追加ここまで****
 ;調教後の性交渉チェック
 ;奴隷がオトコか、女かつＶ感覚よりＡ感覚の方が高いか、処女でもＡ感覚が3以上ある場合はアナルセックス
-IF TALENT:オトコ || (TALENT:オトコ == 0 && ABL:Ｖ感覚 < ABL:Ａ感覚) || (TALENT:処女 && ABL:Ａ感覚 >= 3 && TALENT:アナル処女 == 0)
+IF TALENT:オトコ || (TALENT:オトコ == 0 && ABL:Ｖ感覚 < ABL:Ａ感覚) || (TALENT:処女 && ABL:Ａ感覚 >= 3 && TALENT:Ａ処女 == 0)
 	CALL AFTERTRAIN_ANALSEX_CHECK
 ;それ以外なら通常のセックス
 ELSE

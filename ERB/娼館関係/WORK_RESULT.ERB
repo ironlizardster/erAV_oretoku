@@ -69,15 +69,15 @@ ENDIF
 
 ;ここから各営業内容の関数へ飛びます
 ;会話営業の場合
-IF CFLAG:営業内容 == 1 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:アナル処女 && CFLAG:初キス相手 == -1)
+IF CFLAG:営業内容 == 1 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:Ａ処女 && !CFLAG:初キス相手)
 	CALL WORK_1ST
 
 ;奉仕営業の場合
-ELSEIF CFLAG:営業内容 == 2 || CFLAG:営業内容 == 7 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:アナル処女)
+ELSEIF CFLAG:営業内容 == 2 || CFLAG:営業内容 == 7 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:Ａ処女)
 	CALL WORK_2ND
 
 ;Ａ営業の場合
-ELSEIF CFLAG:営業内容 == 3 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && !TALENT:アナル処女)
+ELSEIF CFLAG:営業内容 == 3 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && !TALENT:Ａ処女)
 	CALL WORK_3RD
 
 ;Ｖ営業の場合
@@ -119,15 +119,15 @@ ELSEIF BASE:体力 <= 500
 	CFLAG:営業内容 = 0
 ENDIF
 
-;処女喪失の相手を記録
+;処女喪失相手を記録
 IF CFLAG:売春処女喪失 && CFLAG:処女喪失相手 == 0
 	CFLAG:処女喪失相手 = 2
-	CSTR:処女喪失の相手 = 知らないオトコの人
+	CSTR:処女喪失相手 = 知らないオトコの人
 	CFLAG:処女喪失年齢 = BASE:実年齢
 	CFLAG:処女喪失月 = DAY:日付_月
 	CFLAG:処女喪失日 = DAY:日付_日
 	CFLAG:処女喪失場所 = 7
-	CFLAG:処女喪失シチュ = 0
+	CFLAG:処女喪失状況 = 0
 ENDIF
 
 ;営業関連の計算が終わったら処女喪失判定等のフラグをリセット

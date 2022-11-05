@@ -77,7 +77,7 @@ P = 0
 
 
 ;調教者の初キス記録
-IF CFLAG:PLAYER:初キス相手 == -1
+IF !CFLAG:PLAYER:初キス相手
 	TFLAG:620 |= 1
 	IF TALENT:オトコ || TALENT:ふたなり
 		TFLAG:620 |= 2

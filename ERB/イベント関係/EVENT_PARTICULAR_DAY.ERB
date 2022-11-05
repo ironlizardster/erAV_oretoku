@@ -287,119 +287,96 @@ DRAWLINE
 PRINTFORML 今日は海の日だ……
 PRINTFORML 天気も良く、絶好の海水浴日和だ。
 PRINTFORML 
-$SUMMER_VACATION_LOOP
 PRINTL 女優、及び女優候補を海に連れていきますか？
-PRINTL  [0] - はい
-PRINTL  [1] - いいえ
+CALL GET_はいいいえ()
+IF RESULT == COMMAND_はい
 
-INPUT
-IF RESULT == 1
-	RETURN 1
-ELSEIF RESULT == 0
-	PRINTL 
-	GOTO SUMMER_VACATION_LOOP2
-ELSE
-	GOTO SUMMER_VACATION_LOOP
-ENDIF
+	PRINTFORML 海に連れていく女優、及び女優候補を１人選んでください
+	DRAWLINE
+	REPEAT CHARANUM
+		;主人公は排除
+		SIF COUNT == 0
+			CONTINUE
+		;臨死中のキャラは排除
+		SIF BASE:COUNT:体力 < 1
+			CONTINUE
+		;【恋心】【永遠の愛】持ちでないキャラは排除
+		;△と見せかけて[セフレ]でも可になってるんですが。下コメでは淫乱とか言ってるしわけわかめ。
+		SIF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:永遠の愛 == 0
+			CONTINUE
+		PRINTFORM  [{COUNT}] %NAME:COUNT% 
+		PRINTL 
+		TEMP_CHARA_LIST:TEMP_NUM = COUNT
+		TEMP_NUM ++ 
+	REND
+	DRAWLINE
+	PRINTFORML  [{COMMAND_GO_BACK}] - やっぱりやめる
+	TEMP_CHARA_LIST:TEMP_NUM = COMMAND_GO_BACK
 
-$SUMMER_VACATION_LOOP2
-PRINTFORML 海に連れていく女優、及び女優候補を１人選んでください
-DRAWLINE
-REPEAT CHARANUM
-	;主人公は排除
-	SIF COUNT == 0
-		CONTINUE
-	;臨死中のキャラは排除
-	SIF BASE:COUNT:体力 < 1
-		CONTINUE
-	;【恋心】【永遠の愛】持ちでないキャラは排除
-	;△と見せかけて[セフレ]でも可になってるんですが。下コメでは淫乱とか言ってるしわけわかめ。
-	SIF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:永遠の愛 == 0
-		CONTINUE
-	PRINTFORM  [{COUNT}] %NAME:COUNT% 
-	PRINTL 
-REND
-DRAWLINE
-PRINTFORML  [999] - やっぱりやめる
+	DO
+		INPUT
+	LOOP MATCH(TEMP_CHARA_LIST, RESULT)
 
-INPUT
+	IF RESULT == COMMAND_GO_BACK
+		RETURN 1
+	ENDIF
 
-IF RESULT == 999
-	RETURN 1
-ELSEIF RESULT == 0
-	GOTO SUMMER_VACATION_LOOP2
-ELSEIF RESULT < 0 || RESULT >= CHARANUM
-	GOTO SUMMER_VACATION_LOOP2
-;【恋心】【淫乱】持ちでないキャラは排除
-;△実際には淫乱は見ていない
-ELSEIF TALENT:RESULT:恋心 == 0 && TALENT:RESULT:永遠の愛 == 0
-	GOTO SUMMER_VACATION_LOOP2
-;臨死中のキャラは排除
-ELSEIF BASE:RESULT:体力 < 1
-	GOTO SUMMER_VACATION_LOOP2
-ENDIF
+	TARGET = RESULT
+	PRINTFORMW %NAME:TARGET%と海に遊びに行きます。
 
-TARGET = RESULT
-PRINTFORMW %NAME:TARGET%と海に遊びに行きます。
+	DRAWLINE
+	;露出癖のLvに応じて文章が変わります
+	IF ミッション結果:68 >= 3 && ABL:露出癖 >= 5
+		PRINTFORM ほとんど紐にしか見えないエロティックなスリングショット
+	ELSEIF ABL:露出癖 >= 5
+		PRINTFORM 露出の多いマイクロビキニ
+	ELSE
+		PRINTFORM 控え目なワンピースビキニ
+	ENDIF
+	PRINTFORM を着た%CALLNAME:TARGET%は
+	;おっぱいおっぱい(絶望)
+	IF TALENT:巨乳 == 1 || TALENT:爆乳 == 1
+		PRINTFORM 大きな胸を揺らしながら
+	ENDIF
+	PRINTFORML 元気よく%CALLNAME:MASTER%とじゃれ合っている……
+	PRINTW 
 
-DRAWLINE
-;露出癖のLvに応じて文章が変わります
-IF ミッション結果:68 >= 3 && ABL:露出癖 >= 5
-	PRINTFORM ほとんど紐にしか見えないエロティックなスリングショット
-ELSEIF ABL:露出癖 >= 5
-	PRINTFORM 露出の多いマイクロビキニ
-ELSE
-	PRINTFORM 控え目なワンピースビキニ
-ENDIF
-PRINTFORM を着た%CALLNAME:TARGET%は
-;おっぱいおっぱい(絶望)
-IF TALENT:巨乳 == 1 || TALENT:爆乳 == 1
-	PRINTFORM 大きな胸を揺らしながら
-ENDIF
-PRINTFORML 元気よく%CALLNAME:MASTER%とじゃれ合っている……
-PRINTW 
-
-IF TALENT:褐色肌 == 0 && ABL:露出癖 >= 3
-	PRINTFORM ひとしきり%CALLNAME:TARGET%と遊んだ後、ビーチチェアにうつ伏せで寝転がり休憩していた%CALLNAME:TARGET%は
-	PRINTFORML %CALLNAME:MASTER%にサンオイルを塗って欲しい、とせがんできた
-	PRINTFORML どうやらせっかく海に来たのだからこういうことでいちゃつきたい、とのことだが……
-	PRINTFORML 《%CALLNAME:TARGET%にサンオイルを塗ってあげますか？》
-	PRINTL [0] - はい
-	PRINTL [1] - いいえ
-	$INPUT_LOOP_SUNOIL
-	INPUT
-		IF RESULT == 0
+	IF TALENT:褐色肌 == 0 && ABL:露出癖 >= 3
+		PRINTFORM ひとしきり%CALLNAME:TARGET%と遊んだ後、ビーチチェアにうつ伏せで寝転がり休憩していた%CALLNAME:TARGET%は
+		PRINTFORML %CALLNAME:MASTER%にサンオイルを塗って欲しい、とせがんできた
+		PRINTFORML どうやらせっかく海に来たのだからこういうことでいちゃつきたい、とのことだが……
+		PRINTFORML 《%CALLNAME:TARGET%にサンオイルを塗ってあげますか？》
+		CALL GET_はいいいえ()
+		IF RESULT == COMMAND_はい
 			PRINTFORML %CALLNAME:MASTER%はうつ伏せになった%CALLNAME:TARGET%の全身にくまなくサンオイルを塗りこんであげた
 			PRINTFORML %CALLNAME:TARGET%はくすぐったそうな声を漏らしながらも、%CALLNAME:MASTER%とのスキンシップを楽しんでいるようだ……
 			TFLAG:日焼けさせる = 1
-		ELSEIF RESULT == 1
+		ELSE
 			PRINTFORML せっかくの綺麗な肌を日焼けさせるのはもったいない、との%CALLNAME:MASTER%の言葉に%CALLNAME:TARGET%は残念そうにしていた
 			PRINTFORM しかしその埋め合わせとして%CALLNAME:MASTER%が気恥ずかしさをこらえて海の家で買ってきた、カップル向けの
 			PRINTFORM 二股に分かれたストローが刺さったトロピカルジュースを見せると、
 			PRINTFORML %CALLNAME:TARGET%は嬉しそうにはにかみながらストローに口をつけ、%CALLNAME:MASTER%も早く飲むように急かしてきた……
-		ELSE
-			GOTO INPUT_LOOP_SUNOIL
 		ENDIF
-	PRINTW
-ENDIF
+		PRINTW
+	ENDIF
 
-;口上21番使用
-TFLAG:口上番号 = 21
-CALL SELF_KOJO
-PRINTL
+	;口上21番使用
+	TFLAG:口上番号 = 21
+	CALL SELF_KOJO
+	PRINTL
 
-PRINTL 恭順の珠＋1000
-JUEL:恭順 += 1000
-PRINTL 欲情の珠＋500
-JUEL:欲情 += 500
-PRINTL 野外露出経験＋5
-EXP:野外露出経験 += 5
-PRINT 愛情経験＋5
-EXP:愛情経験 += 5
+	PRINTL 恭順の珠＋1000
+	JUEL:恭順 += 1000
+	PRINTL 欲情の珠＋500
+	JUEL:欲情 += 500
+	PRINTL 野外露出経験＋5
+	EXP:野外露出経験 += 5
+	PRINT 愛情経験＋5
+	EXP:愛情経験 += 5
 
-WAIT
+	WAIT
 
-;お楽しみはこれからだ
+	;お楽しみはこれからだ
 	;処女ではなく、露出癖4以上、性交中毒2以上
 	IF TALENT:処女 == 0 && ABL:性交中毒 >= 2 && ABL:露出癖 >= 4
 		DRAWLINE
@@ -417,7 +394,7 @@ WAIT
 		N = ((ABL:欲望 + ABL:性交中毒) * 5) + RAND:5
 		IF TALENT:絶倫 == 1
 			TIMES N , 1.80
-		ELSEIF TALENT:絶倫 == 1
+		ELSEIF TALENT:淫乱 == 1
 			TIMES N , 1.50
 		ENDIF
 		N /= 10
@@ -442,8 +419,7 @@ WAIT
 
 		PRINTFORML 愛情経験＋{N / 3}
 		EXP:愛情経験 += N * ABL:信頼 / 2
-		IF CFLAG:初キス相手 == -1
-			CFLAG:初キス相手 = 1
+		IF !CFLAG:初キス相手
 			IF NO:TARGET != [[キャラ:宮間かなで]]
 				CSTR:初キス相手 = %CALLNAME:MASTER%
 			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 0
@@ -451,48 +427,39 @@ WAIT
 			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 1
 				CSTR:初キス相手 = アニキ
 			ENDIF
-			CFLAG:初キス喪失年齢 = BASE:実年齢
-			CFLAG:初キス喪失月 = DAY:日付_月
-			CFLAG:初キス喪失日 = DAY:日付_日
-			;4は海
-			CFLAG:初キス喪失場所 = 4
+			CALL 初キス実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口,CSTR:初キス相手)
 			SETCOLOR 0xDDBBCC
 				PRINTFORML 【ファーストキス】
 			RESETCOLOR
 		ENDIF
-		IF CFLAG:MASTER:初キス相手 == -1
-			CFLAG:MASTER:初キス相手 = 1
-			CSTR:MASTER:初キス相手 = %NAME:TARGET%
-			CFLAG:MASTER:初キス喪失年齢 = BASE:MASTER:実年齢
-			CFLAG:MASTER:初キス喪失月 = DAY:日付_月
-			CFLAG:MASTER:初キス喪失日 = DAY:日付_日
-			CFLAG:MASTER:初キス喪失場所 = 4
+		IF !CFLAG:MASTER:初キス相手
+			CALL 初キス実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口,NAME:TARGET)
 			SETCOLOR 0xDDBBCC
 				PRINTFORML 【ファーストキス】（%CALLNAME:MASTER%）
 			RESETCOLOR
 		ENDIF
 		IF TALENT:MASTER:童貞 == 1 && (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
 			TALENT:MASTER:童貞 = 0
-			CSTR:MASTER:童貞喪失の相手 = %NAME:TARGET%
+			CSTR:MASTER:童貞喪失相手 = %NAME:TARGET%
 			SETCOLOR 0xDDBBCC
 				PRINTFORML 【童貞喪失】（%CALLNAME:MASTER%）
 			RESETCOLOR
-			CFLAG:MASTER:初キス相手 = 1
 		ENDIF
 	ENDIF
 
-PRINTFORML 
-PRINTFORMW %CALLNAME:MASTER%との夏の想い出を、%CALLNAME:TARGET%は胸に刻みつけたようだ……
-IF CFLAG:海デート == 0
-	CFLAG:海デート = 1
-ENDIF
-IF TFLAG:日焼けさせる == 1 || RAND:11 >= 8
-	PRINTFORML 《夏の海を満喫した%CALLNAME:TARGET%はすっかり日焼けしてしまったようだ……》
-	TALENT:褐色肌 = 1
-	CFLAG:614 = 4 + RAND:4
-ENDIF
+	PRINTFORML 
+	PRINTFORMW %CALLNAME:MASTER%との夏の想い出を、%CALLNAME:TARGET%は胸に刻みつけたようだ……
+	IF CFLAG:海デート == 0
+		CFLAG:海デート = 1
+	ENDIF
+	IF TFLAG:日焼けさせる == 1 || RAND:11 >= 8
+		PRINTFORML 《夏の海を満喫した%CALLNAME:TARGET%はすっかり日焼けしてしまったようだ……》
+		TALENT:褐色肌 = 1
+		CFLAG:614 = 4 + RAND:4
+	ENDIF
 
-RETURN 1
+	RETURN 1
+ENDIF
 
 ;-------------------------------------------------
 ;ホワイトデー

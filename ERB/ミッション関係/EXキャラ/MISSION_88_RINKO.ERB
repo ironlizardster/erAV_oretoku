@@ -13,12 +13,15 @@ RESULTS = 地上に降りた堕天使達
 ; このミッションの表示条件に使用したい時に編集する
 ;=================================================
 @MISSION_VISIBLE_88
+#DIM 燐子
+#DIM 桔梗
+#DIM 詩織
+
 ; 不可視なら0、可視なら1を戻す
-A = GETCHARA([[キャラ:闇崎燐子]])
-B = GETCHARA([[キャラ:渡来桔梗]])
-C = GETCHARA([[キャラ:小日向詩織]])
-D = GETCHARA([[キャラ:桐生歌音]])
-RETURN D != -1 && A != -1 && DAY:日付_月 >= 7 && DAY:日付_月 <= 8 && TALENT:D:アイドル && TALENT:A:恋心
+
+燐子 = GETCHARA([[キャラ:闇崎燐子]])
+LOCAL = GETCHARA([[キャラ:桐生歌音]])
+RETURN LOCAL != -1 && 燐子 != -1 && DAY:日付_月 >= 7 && DAY:日付_月 <= 8 && TALENT:LOCAL:アイドル && TALENT:燐子:恋心
 
 ;=================================================
 ; ミッション報酬
@@ -158,7 +161,7 @@ DRAWLINE
 ;=================================================
 @MISSION_RECEIVE_88
 ; キャラクターを選択
-CALL MISSION_LIFELIST_DECIDE([[キャラ:闇崎燐子]])
+;CALL MISSION_LIFELIST_DECIDE(NO:燐子)
 
 ; 即座に報告処理を呼び出す
 CALL MISSION_EXEC_REPORT(88)
@@ -173,6 +176,7 @@ CALL MISSION_EXEC_REPORT(88)
 #DIM 桔梗
 #DIM 詩織
 
+燐子 = GETCHARA([[キャラ:闇崎燐子]])
 桔梗 = GETCHARA([[キャラ:渡来桔梗]])
 詩織 = GETCHARA([[キャラ:小日向詩織]])
 
@@ -180,39 +184,39 @@ CALL MISSION_EXEC_REPORT(88)
 LOCAL:1 = 0
 
 ;燐子分
-SIF NO:TARGET == [[キャラ:闇崎燐子]]
+SIF NO:燐子 == [[キャラ:闇崎燐子]]
 	LOCAL:1++
-SIF ABL:TARGET:話術 >= 5
+SIF ABL:燐子:話術 >= 5
 	LOCAL:1++
-SIF ABL:TARGET:奉仕精神 == 10
+SIF ABL:燐子:奉仕精神 == 10
 	LOCAL:1++
-SIF ABL:TARGET:露出癖 >= 5
+SIF ABL:燐子:露出癖 >= 5
 	LOCAL:1++
-SIF ABL:TARGET:レズっ気 >= 5
+SIF ABL:燐子:レズっ気 >= 5
 	LOCAL:1++
-SIF ABL:TARGET:美容感覚 >= 8
+SIF ABL:燐子:美容感覚 >= 8
 	LOCAL:1++
-SIF ABL:TARGET:被写技能 >= 5
+SIF ABL:燐子:被写技能 >= 5
 	LOCAL:1++
-SIF ABL:TARGET:歌唱技能 >= 5
+SIF ABL:燐子:歌唱技能 >= 5
 	LOCAL:1++
-SIF ABL:TARGET:舞踊技能 >= 5
+SIF ABL:燐子:舞踊技能 >= 5
 	LOCAL:1++
-SIF MAXBASE:TARGET:体力 >= 2500
+SIF MAXBASE:燐子:体力 >= 2500
 	LOCAL:1++
-SIF MAXBASE:TARGET:気力 >= 2500
+SIF MAXBASE:燐子:気力 >= 2500
 	LOCAL:1++
-SIF TALENT:TARGET:アイドル == 1
+SIF TALENT:燐子:アイドル == 1
 	LOCAL:1++
-SIF TALENT:TARGET:永遠の愛 == 1
+SIF TALENT:燐子:永遠の愛 == 1
 	LOCAL:1++
-SIF TALENT:TARGET:オリジナルユニット == 0
+SIF TALENT:燐子:オリジナルユニット == 0
 	LOCAL:1++
-SIF TALENT:TARGET:淫魔 == 0
+SIF TALENT:燐子:淫魔 == 0
 	LOCAL:1++
-SIF TALENT:TARGET:天使 == 0
+SIF TALENT:燐子:天使 == 0
 	LOCAL:1++
-SIF BASE:TARGET:魅力値 >= 100
+SIF BASE:燐子:魅力値 >= 100
 	LOCAL:1++
 
 ;桔梗分
@@ -334,13 +338,8 @@ TCVAR:歌唱経験 += 300 + RAND:200 - RAND:200
 TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
 TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
 TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 1
-	CSTR:初キス相手 = 渡会桔梗
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 10
+IF !CFLAG:初キス相手
+	CALL 初キス実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,"%NAME:桔梗%")
 ENDIF
 CALL MISSION_ADD_EXP(TARGET)
 
@@ -355,13 +354,8 @@ IF 桔梗 != -1
 	TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
 	CALL MISSION_ADD_EXP(TARGET)
 	B = TARGET
-	IF CFLAG:初キス相手 == -1
-		CFLAG:初キス相手 = 1
-		CSTR:初キス相手 = 闇崎燐子
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 10
+	IF !CFLAG:初キス相手
+		CALL 初キス実行(TARGET,[[キャラ:闇崎燐子]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,"%NAME:燐子%")
 	ENDIF
 ENDIF
 
@@ -374,13 +368,8 @@ IF 詩織 != -1
 	TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
 	CALL MISSION_ADD_EXP(TARGET)
 	C = TARGET
-	IF CFLAG:初キス相手 == -1
-		CFLAG:初キス相手 = 1
-		CSTR:初キス相手 = 渡会桔梗
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 10
+	IF !CFLAG:初キス相手
+		CALL 初キス実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,"%NAME:桔梗%")
 	ENDIF
 ENDIF
 
@@ -408,8 +397,8 @@ ELSE
 		TARGET = COUNT
 	REND
 	;燐子分
-	RELATION:燐子:5 = 500
-	RELATION:燐子:39 = 500
+	RELATION:燐子:(NO:桔梗) = 500
+	RELATION:燐子:(NO:詩織) = 500
 	BASE:燐子:ギャラ *= 10
 	BASE:燐子:魅力値 += 40
 	MAXBASE:燐子:魅力値 += 40
@@ -433,8 +422,8 @@ ELSE
 	CFLAG:燐子:130 = 0
 
 	;桔梗分
-	RELATION:桔梗:38 = 500
-	RELATION:桔梗:39 = 500
+	RELATION:桔梗:(NO:燐子) = 500
+	RELATION:桔梗:(NO:詩織) = 500
 	BASE:桔梗:ギャラ *= 10
 	BASE:桔梗:魅力値 += 40
 	MAXBASE:桔梗:魅力値 += 40
@@ -457,8 +446,8 @@ ELSE
 	CFLAG:桔梗:130 = 0
 
 	;詩織分
-	RELATION:詩織:5 = 500
-	RELATION:詩織:38 = 500
+	RELATION:詩織:(NO:桔梗) = 500
+	RELATION:詩織:(NO:燐子) = 500
 	BASE:詩織:ギャラ *= 10
 	BASE:詩織:魅力値 += 30
 	MAXBASE:詩織:魅力値 += 30

@@ -142,12 +142,12 @@ IF TALENT:処女 == 1
 	RESETCOLOR
 	TALENT:処女 = 0
 		IF CFLAG:処女喪失相手 == 0
-			CSTR:処女喪失の相手 = %CALLNAME:PLAYER%
+			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
 			CFLAG:処女喪失相手 = 1
 		ENDIF
 ENDIF
 
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
@@ -190,12 +190,12 @@ IF TALENT:処女 == 1
 	RESETCOLOR
 	TALENT:処女 = 0
 		IF CFLAG:処女喪失相手 == 0
-			CSTR:処女喪失の相手 = %CALLNAME:PLAYER%
+			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
 			CFLAG:処女喪失相手 = 1
 		ENDIF
 ENDIF
 
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
@@ -233,12 +233,12 @@ IF TALENT:処女 == 1
 	RESETCOLOR
 	TALENT:処女 = 0
 		IF CFLAG:処女喪失相手 == 0
-			CSTR:処女喪失の相手 = %CALLNAME:PLAYER%
+			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
 			CFLAG:処女喪失相手 = 1
 		ENDIF
 ENDIF
 
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス

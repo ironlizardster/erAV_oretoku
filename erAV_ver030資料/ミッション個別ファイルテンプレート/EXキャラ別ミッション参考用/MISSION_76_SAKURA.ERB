@@ -179,7 +179,7 @@ IF TALENT:永遠の愛 == 0
 	TALENT:彼氏あり = 1
 	CSTR:彼氏姓 = 神崎
 	CSTR:彼氏名 = 京一
-	IF CFLAG:初キス相手 == -1
+	IF !CFLAG:初キス相手
 		CFLAG:初キス相手 = 1
 		CSTR:初キス相手 = 神崎京一のカリ高極太黒チンポｖ
 		SETCOLOR 0xF58F98
@@ -187,7 +187,7 @@ IF TALENT:永遠の愛 == 0
 		RESETCOLOR
 	ENDIF
 	IF TALENT:処女 == 1
-		CSTR:処女喪失の相手 = 神崎京一（彼氏）
+		CSTR:処女喪失相手 = 神崎京一（彼氏）
 		TALENT:処女 = 0
 		CFLAG:処女喪失相手 = 8
 		SETCOLOR 0xF58F98
@@ -204,14 +204,14 @@ IF TALENT:永遠の愛 == 0
 	PRINTFORML 神崎京一と付き合うことになったようだ……
 ELSE
 	IF TALENT:処女 == 1
-		CSTR:処女喪失の相手 = 神崎京一（セフレ）
+		CSTR:処女喪失相手 = 神崎京一（セフレ）
 		TALENT:処女 = 0
 		CFLAG:処女喪失相手 = 9
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 		RESETCOLOR
 	ENDIF
-	IF CFLAG:初キス相手 == -1
+	IF !CFLAG:初キス相手
 		CFLAG:初キス相手 = 1
 		IF TALENT:淫乱 == 0
 			CSTR:初キス相手 = 神崎京一のおちん○ん

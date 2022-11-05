@@ -1,0 +1,200 @@
+﻿@処女喪失実行(CHARA_NO,PLAYER_NO,AGE,MONTH,DAY_,LOCATION,TYPE,NAME_STRING="")
+#DIM CHARA_NO
+#DIM PLAYER_NO
+#DIM AGE
+#DIM MONTH
+#DIM DAY_
+#DIM LOCATION
+#DIM TYPE
+#DIMS NAME_STRING
+
+SIF CFLAG:CHARA_NO:処女喪失相手
+	RETURN
+
+CFLAG:CHARA_NO:処女喪失相手 = PLAYER_NO
+CFLAG:CHARA_NO:処女喪失年齢 = AGE
+CFLAG:CHARA_NO:処女喪失月 = MONTH
+CFLAG:CHARA_NO:処女喪失日 = DAY_
+CFLAG:CHARA_NO:処女喪失場所 = LOCATION
+CFLAG:CHARA_NO:処女喪失状況 = TYPE
+CFLAG:CHARA_NO:処女喪失誕生日記念 = CFLAG:CHARA_NO:処女喪失日 == MAXBASE:CHARA_NO:誕生日 && CFLAG:CHARA_NO:処女喪失月 == MAXBASE:CHARA_NO:誕生月
+
+STRLENS NAME_STRING
+SIF RESULT
+	CSTR:CHARA_NO:処女喪失相手 '= NAME_STRING
+
+
+;===========================================================
+;CFLAG:処女喪失年齢 = 年齢
+;CFLAG:処女喪失月 = 月
+;CFLAG:処女喪失日 = 週
+;CFLAG:処女喪失場所 = 場所
+;CFLAG:処女喪失状況 = 状況
+;===========================================================
+@PRINT_LOSTVIRGIN_DETAIL(CHARA_NO)
+#DIM CHARA_NO
+#DIMS STRING
+
+STRING '= "処女喪失　　　："
+
+IF ABL:CHARA_NO:信頼 < 3 && NO:CHARA_NO != [[キャラ:あなた]]
+	STRING += "済"
+
+[IF_DEBUG]
+DEBUGPRINTFORML %STRING%
+[ENDIF]
+
+ELSE
+	IF !CFLAG:CHARA_NO:処女喪失年齢
+		STRING += "何年か前の"
+	ELSE
+		STRING += @"{CFLAG:CHARA_NO:処女喪失年齢}歳の"
+	ENDIF
+
+	IF !CFLAG:CHARA_NO:処女喪失月
+		STRING += "ある日に"
+	ELSE
+		STRING += @"{CFLAG:CHARA_NO:処女喪失月,2}月{CFLAG:CHARA_NO:処女喪失日,2}日に"
+	ENDIF
+
+[IF_DEBUG]
+DEBUGPRINTFORML %STRING%
+[ENDIF]
+
+	SELECTCASE CFLAG:CHARA_NO:処女喪失場所
+		CASE 初場所_あなたの部屋
+			STRING += @"%NAME:MASTER%の部屋で、"
+		CASE 初場所_自室
+			STRING += @"%CALLNAME:CHARA_NO%の部屋で、"
+		CASE 初場所_彼部屋
+			STRLENS CSTR:CHARA_NO:初キス相手
+			IF RESULT
+				STRING += @"%CSTR:初キス相手%%\@CFLAG:CHARA_NO:初キス相手 == 初相手_今彼 ? （カレシ） # （元カレ） \@%の部屋で、"
+			ELSE
+				STRING += @"%\@CFLAG:CHARA_NO:初キス相手 == 初相手_今彼 ? カレシ # 元カレ \@%の部屋で、"
+			ENDIF
+		CASE 初場所_ラブホ
+			STRING += @"ラブホテルで、"
+		CASE 初場所_海
+			STRING += @"海で、"
+		CASE 初場所_学校
+			STRING += @"学校で、"
+		CASE 初場所_廃工場
+			STRING += @"廃工場で、"
+		CASE 初場所_娼館
+			STRING += @"娼館で、"
+		CASE 初場所_電車
+			STRING += @"電車の中で、"
+		CASE 初場所_バス
+			STRING += @"バスの中で、"
+		CASE 初場所_野外
+			STRING += @"野外で、"
+		CASE 初場所_プール
+			STRING += @"プールで、"
+		CASE 初場所_地下室
+			STRING += @"秘密の地下室で、"
+		CASE 初場所_会員制クラブ
+			STRING += @"会員制の秘密クラブで、"
+		CASE 初場所_スタジオ
+			STRING += @"撮影スタジオで、"
+		CASEELSE
+
+	ENDSELECT
+
+	SIF CFLAG:CHARA_NO:処女喪失誕生日記念
+		STRING += @"誕生日記念に"
+
+[IF_DEBUG]
+DEBUGPRINTFORML %STRING%
+[ENDIF]
+
+	STRLENS CSTR:CHARA_NO:初キス相手
+	IF RESULT
+		TEMP_STR '= @"%CSTR:CHARA_NO:初キス相手%"
+	ELSEIF CFLAG:CHARA_NO:初キス相手 < 0		
+		SELECTCASE CFLAG:CHARA_NO:初キス相手
+			CASE 初相手_不明
+				TEMP_STR += @"覚えていない誰か"
+			CASE 初相手_夫
+				TEMP_STR += @"夫"
+			CASE 初相手_バイブ
+				TEMP_STR += @"バイブ"
+			CASE 初相手_極太バイブ
+				TEMP_STR += @"極太バイブ"
+			CASE 初相手_犬
+				TEMP_STR += @"犬"
+			CASE 初相手_触手
+				TEMP_STR += @"触手生物"
+			CASE 初相手_元彼
+				TEMP_STR += @"元カレ"
+			CASE 初相手_今彼
+				TEMP_STR += @"カレシ"
+			CASE 初相手_セフレ
+				TEMP_STR += @"セフレ"
+			CASE 初相手_スタッフ
+				TEMP_STR += @"スタッフ"
+			CASE 初相手_不良
+				TEMP_STR += @"不良"
+			CASE 初相手_枕営業
+				TEMP_STR += @"枕営業のお相手"
+			CASE 初相手_売春客男
+				TEMP_STR += @"売春で名前も知らない男性客"
+			CASE 初相手_売春客女
+				TEMP_STR += @"売春で名前も知らない女性客"
+			CASE 初相手_痴漢
+				TEMP_STR += @"痴漢"
+			CASE 初相手_接待客
+				TEMP_STR += @"『接待』客"
+			CASEELSE
+		ENDSELECT
+	ENDIF
+	
+	STRLENS TEMP_STR
+	IF RESULT && CFLAG:CHARA_NO:処女喪失状況
+		SELECTCASE CFLAG:CHARA_NO:処女喪失状況
+			CASE 初状況_ハメ撮
+				TEMP_STR += @"に"
+			CASE 初状況_無理犯
+				TEMP_STR += @"で"
+			CASE 初状況_輪姦
+				TEMP_STR += @"で"
+			CASE 初状況_クスリ
+				TEMP_STR += @"に"
+			CASEELSE
+		ENDSELECT
+		SELECTCASE CFLAG:CHARA_NO:処女喪失状況
+			CASE 初状況_指導
+				TEMP_STR += @"指導中に"
+			CASE 初状況_撮影
+				TEMP_STR += @"撮影中に"
+			CASE 初状況_ハメ撮
+				TEMP_STR += @"ハメ撮りされながら"
+			CASE 初状況_無理犯
+				TEMP_STR += @"無理やり犯されて"
+			CASE 初状況_輪姦
+				TEMP_STR += @"輪姦されて"
+			CASE 初状況_クスリ
+				TEMP_STR += @"クスリをキめさせられ、自ら%CSTR:CHARA_NO:男性器呼び方%をおねだり"
+			CASEELSE
+		ENDSELECT
+	ELSEIF RESULT && !CFLAG:CHARA_NO:処女喪失状況
+		TEMP_STR += @"と"
+	ENDIF
+
+[IF_DEBUG]
+DEBUGPRINTFORML %TEMP_STR%
+[ENDIF]
+
+	STRING += TEMP_STR
+
+[IF_DEBUG]
+DEBUGPRINTFORML %STRING%
+[ENDIF]
+
+ENDIF
+
+[IF_DEBUG]
+DEBUGPRINTFORML %"&#x2764;" + STRING + "&#x2764;"%
+[ENDIF]
+
+CALL HTML_PRINT_萌("&#x2764;" + STRING + "&#x2764;", "#0xF58F98")

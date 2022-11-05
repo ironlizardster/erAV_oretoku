@@ -10,14 +10,15 @@ REPEAT CHARANUM
 		CFLAG:COUNT:安全日 = 0 
 		CONTINUE
 	ELSE
-		TARGET = COUNT
-		IF CFLAG:安全日 == 30
-			CFLAG:危険日 = 1
-			CFLAG:安全日 = 0 
+		IF CFLAG:COUNT:安全日 > 5
+			CFLAG:COUNT:危険日 = 0
+		ELSEIF CFLAG:COUNT:安全日 < 0
+			CFLAG:COUNT:安全日 = 30
+			CFLAG:COUNT:危険日 = 0
 		ELSE
-			CFLAG:危険日 = 0
-			CFLAG:安全日 ++
+			CFLAG:COUNT:危険日 = 1
 		ENDIF
+		CFLAG:COUNT:安全日 --
 	ENDIF
 REND
 

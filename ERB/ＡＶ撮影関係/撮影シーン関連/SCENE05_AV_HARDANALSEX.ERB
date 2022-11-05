@@ -60,7 +60,7 @@ LOCAL:1 += ABL:性交技術
 LOCAL:1 += ABL:性交中毒
 LOCAL:1 += ABL:被写技能
 
-SIF TALENT:アナル処女
+SIF TALENT:Ａ処女
 	LOCAL:1 += 10
 SIF TALENT:貞操無頓着
 	LOCAL:1 += 5
@@ -135,15 +135,15 @@ ELSE
 ENDIF
 PRINTL で突かれた…… 
 PRINTL
-IF TALENT:アナル処女 == 1
+IF TALENT:Ａ処女 == 1
 	TFLAG:ビデオ撮影内容2 |= 1
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失相手 = %CALLNAME:PLAYER%
+	TALENT:Ａ処女 = 0
+	CSTR:Ａ処女喪失相手 = %CALLNAME:PLAYER%
 ENDIF
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
@@ -178,15 +178,15 @@ ELSE
 ENDIF
 PRINTL で突かれた…… 
 PRINTL
-IF TALENT:アナル処女 == 1
+IF TALENT:Ａ処女 == 1
 	TFLAG:ビデオ撮影内容2 |= 1
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失相手 = %CALLNAME:PLAYER%
+	TALENT:Ａ処女 = 0
+	CSTR:Ａ処女喪失相手 = %CALLNAME:PLAYER%
 ENDIF
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス
@@ -217,14 +217,14 @@ ENDIF
 PRINTFORML %CALLNAME:PLAYER%に抱かれていたが、その動きはぎこちなく魅力に乏しい……
 PRINTL
 
-IF TALENT:アナル処女 == 1
+IF TALENT:Ａ処女 == 1
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失相手 = %CALLNAME:PLAYER%
+	TALENT:Ａ処女 = 0
+	CSTR:Ａ処女喪失相手 = %CALLNAME:PLAYER%
 ENDIF
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	SETCOLOR 0xDDBBCC
 	PRINTFORML ファーストキス

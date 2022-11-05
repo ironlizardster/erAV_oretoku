@@ -73,7 +73,7 @@ PRINTL 報酬：５０万ポイント＋貢献度２０
 PRINTL エクストラ報酬：期間延長１０週＋和泉透子のミッション期限延長１０週
 SETCOLOR 0xF58F98
 FONTSTYLE 1
-PRINTL ※ミッション終了後、対象は【処女】【アナル処女】【キス未経験】ではなくなります！
+PRINTL ※ミッション終了後、対象は【処女】【Ａ処女】【キス未経験】ではなくなります！
 FONTSTYLE 0
 RESETCOLOR
 DRAWLINE
@@ -87,7 +87,7 @@ DRAWLINE
 ;=================================================
 @MISSION_COND_254
 DRAWLINE
-PRINTFORML ミッション達成条件：【処女】＋【アナル処女】＋信頼LV4以上＋欲望LV3以下＋Ｃ・Ｂ・Ａ感覚LV2以下
+PRINTFORML ミッション達成条件：【処女】＋【Ａ処女】＋信頼LV4以上＋欲望LV3以下＋Ｃ・Ｂ・Ａ感覚LV2以下
 PRINTFORML 　　　　　　　　　　かつ屈服刻印3＋快楽刻印1以下で指導を受けた回数が3回以下
 PRINTFORML ミッション終了後の状態変化：Ｖ経験・Ａ経験・フェラ経験・異常経験・レズ経験増加
 PRINTFORML 　　　　　　　　　　　　　　ミッションの成否に関わらず【セフレあり】【男嫌い】
@@ -129,7 +129,7 @@ SIF ABL:欲望 <= 3
 	LOCAL:1++
 SIF TALENT:処女 == 1
 	LOCAL:1++
-SIF TALENT:アナル処女 == 1
+SIF TALENT:Ａ処女 == 1
 	LOCAL:1++
 SIF MARK:快楽刻印 <= 1
 	LOCAL:1++
@@ -154,7 +154,7 @@ RETURN 0
 ;=================================================
 @MISSION_REPORT_254(ARG)
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = 楠谷響子
+	CSTR:処女喪失相手 = 楠谷響子
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 9
 	SETCOLOR 0xF58F98
@@ -164,32 +164,28 @@ IF TALENT:処女 == 1
 	CFLAG:処女喪失月 = DAY:日付_月
 	CFLAG:処女喪失日 = DAY:日付_日
 	CFLAG:処女喪失場所 = 13
-	CFLAG:処女喪失シチュ = 0
+	CFLAG:処女喪失状況 = 0
 ENDIF
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 9
 	CSTR:初キス相手 = 楠谷響子
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
-	CFLAG:初キス喪失場所 = 13
-	CFLAG:初キス喪失シチュ = 2
+	CALL 初キス実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_肛門,"楠谷響子の%CSTR:肛門呼び方%")
 ENDIF
-IF TALENT:アナル処女 == 1
-	CFLAG:アナル処女喪失相手 = 9
-	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失相手 = 楠谷響子
+IF TALENT:Ａ処女 == 1
+	CFLAG:Ａ処女喪失相手 = 9
+	TALENT:Ａ処女 = 0
+	CSTR:Ａ処女喪失相手 = 楠谷響子
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CFLAG:アナル処女喪失場所 = 13
-	CFLAG:アナル処女喪失シチュ = 1
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:Ａ処女喪失場所 = 13
+	CFLAG:Ａ処女喪失状況 = 1
 ENDIF
 TCVAR:絶頂経験 += 20 + RAND:11
 TCVAR:Ｖ経験 += 25 + RAND:11
@@ -235,4 +231,4 @@ CFLAG:処女喪失年齢 = BASE:実年齢
 CFLAG:処女喪失月 = DAY:日付_月
 CFLAG:処女喪失日 = DAY:日付_日
 CFLAG:処女喪失場所 = 13
-CFLAG:処女喪失シチュ = 3
+CFLAG:処女喪失状況 = 3

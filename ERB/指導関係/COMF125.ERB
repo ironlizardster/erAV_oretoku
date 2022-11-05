@@ -1115,32 +1115,13 @@ ELSE
 	E = 1
 ENDIF
 ;初キス
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 1
-	SETCOLOR 0xDDBBCC
-	PRINTFORML 初キス
-	RESETCOLOR
-	CFLAG:初キス相手 = 1
-	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
-		CSTR:初キス相手 = お兄ちゃんの%CSTR:男性器呼び方%
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
-		CSTR:初キス相手 = お兄ちゃんの%CSTR:男性器呼び方%
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = アニキの%CSTR:男性器呼び方%
-	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
-		CSTR:初キス相手 = %CALLNAME:PLAYER%の%CSTR:男性器呼び方%
-	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%の%CSTR:男性器呼び方%
-	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%の%CSTR:男性器呼び方%
-	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 0
-		CSTR:初キス相手 = %CALLNAME:PLAYER%の%CSTR:男性器呼び方%
-	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%の%CSTR:男性器呼び方%
-	ELSE
-		CSTR:初キス相手 = %CALLNAME:PLAYER%の%CSTR:男性器呼び方%	
-	ENDIF	
-ENDIF
+TFLAG:621 |= 1
+TFLAG:621 |= 2
+;現在の判定法と違うのが残ってるのを偶然見つけたので↑に書き換え
+;IF !CFLAG:初キス相手
+;	CFLAG:初キス相手 = NO:PLAYER + 201
+;	TFLAG:初キス口以外 = 1
+
 ;愛情経験
 IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
 	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}

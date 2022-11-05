@@ -25,7 +25,7 @@ ENDIF
 ;ボンデージルックの装着
 IF TALENT:ふたなり == 0
 	TALENT:ふたなり = 1
-	SIF CFLAG:初キス相手 == 0
+	SIF !CFLAG:童貞喪失相手
 		TALENT:童貞 = 1
 	IF MAXBASE:ペニスサイズ == 0
 		MAXBASE:ペニスサイズ = 15 + RAND:6
@@ -39,8 +39,7 @@ IF TALENT:ふたなり == 0
 	ENDIF
 ELSEIF TALENT:ふたなり == 1
 	TALENT:ふたなり = 0
-	SIF CFLAG:初キス相手 == 0
-		TALENT:童貞 = 0
+	TALENT:童貞 = 0
 ENDIF
 
 

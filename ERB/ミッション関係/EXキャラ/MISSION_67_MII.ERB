@@ -176,7 +176,7 @@ CFLAG:ASSI:包皮状態 = 3
 
 
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = 須野郁美
+	CSTR:処女喪失相手 = 須野郁美
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 9
 	SETCOLOR 0xF58F98
@@ -186,42 +186,37 @@ IF TALENT:処女 == 1
 	CFLAG:処女喪失月 = DAY:日付_月
 	CFLAG:処女喪失日 = DAY:日付_日
 	CFLAG:処女喪失場所 = 12
-	CFLAG:処女喪失シチュ = 5
+	CFLAG:処女喪失状況 = 5
 ENDIF
 
-IF TALENT:アナル処女 == 1
-	CFLAG:アナル処女喪失相手 = 1
-	CSTR:アナル処女喪失相手 = %CALLNAME:MASTER%
-	TALENT:アナル処女 = 0
+IF TALENT:Ａ処女 == 1
+	CFLAG:Ａ処女喪失相手 = 1
+	CSTR:Ａ処女喪失相手 = %CALLNAME:MASTER%
+	TALENT:Ａ処女 = 0
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CFLAG:アナル処女喪失場所 = 12
-	CFLAG:アナル処女喪失シチュ = 5
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:Ａ処女喪失場所 = 12
+	CFLAG:Ａ処女喪失状況 = 5
 ENDIF
 
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	IF TALENT:ギャル系 == 1
 		CSTR:初キス相手 = 須野郁美
 	ELSEIF TALENT:淫乱 == 1
 		CSTR:初キス相手 = 須野郁美
 	ENDIF
-	TALENT:童貞 = 0
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
-	CFLAG:初キス喪失場所 = 12
-	CFLAG:初キス喪失シチュ = 1
+	CALL 初キス実行(TARGET,NO:ASSI + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,CSTR:初キス相手)
 ENDIF
 
 IF TALENT:ASSI:童貞 == 1
-	CSTR:ASSI:童貞喪失の相手 = 宮間未依
+	CSTR:ASSI:童貞喪失相手 = 宮間未依
 	TALENT:ASSI:童貞 = 0
 	SETCOLOR 0xF58F98
 	PRINTFORML 【童貞喪失】（%NAME:ASSI%）
@@ -229,7 +224,7 @@ IF TALENT:ASSI:童貞 == 1
 ENDIF
 
 IF TALENT:MASTER:童貞 == 1
-	CSTR:MASTER:童貞喪失の相手 = 宮間未依
+	CSTR:MASTER:童貞喪失相手 = 宮間未依
 	TALENT:MASTER:童貞 = 0
 	SETCOLOR 0xF58F98
 	PRINTFORML 【童貞喪失】（%NAME:MASTER%）

@@ -722,17 +722,13 @@ IF FLAG:特殊営業タイプ詳細 & 4
 			F += 1
 		SIF TALENT:ASSI:オトコ == 0
 			F += 1
-		SIF CFLAG:初キス相手 == 0
-			CFLAG:初キス相手 = 1
-		ENDIF
+	ENDIF
 	IF E & 2
 		TALENT:童貞 = 0
 		PRINTFORML %NAME:TARGET%【童貞喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
-		SIF CFLAG:初キス相手 == 0
-			CFLAG:初キス相手 = 1
 	ENDIF
 	IF E & 1 || E & 2
 		IF CFLAG:TARGET:処女喪失相手 == 0
@@ -744,8 +740,6 @@ IF FLAG:特殊営業タイプ詳細 & 4
 			ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ == 0
 				CFLAG:処女喪失相手 = 307
 			ENDIF
-			SIF CFLAG:初キス相手 == 0
-				CFLAG:初キス相手 = 1
 		ENDIF
 	ENDIF
 	IF F
@@ -766,8 +760,6 @@ IF FLAG:特殊営業タイプ詳細 & 4
 			F += 1
 		SIF TALENT:オトコ == 0
 			F += 1
-		SIF CFLAG:ASSI:初キス相手 == 0
-			CFLAG:ASSI:初キス相手 = 1
 	ENDIF
 	IF E & 8
 		TALENT:ASSI:童貞 = 0
@@ -775,8 +767,6 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
-		SIF CFLAG:ASSI:初キス相手 == 0
-			CFLAG:ASSI:初キス相手 = 1
 	ENDIF
 	IF E & 4 || E & 8
 		IF CFLAG:ASSI:処女喪失相手 == 0
@@ -793,9 +783,9 @@ IF FLAG:特殊営業タイプ詳細 & 4
 				CFLAG:ASSI:処女喪失相手 = 305
 			ENDIF
 		ENDIF
-		SIF CFLAG:ASSI:初キス相手 == 0
-			CFLAG:ASSI:初キス相手 = 1
 	ENDIF
+	CALL 初キス実行(TARGET,NO:ASSI + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,NAME:ASSI)
+	CALL 初キス実行(ASSI,NO:TARGET + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,NAME:TARGET)
 	IF F
 		SIF F > 3
 			F = 3

@@ -80,7 +80,7 @@ PRINTL 報酬：５０万ポイント＋貢献度３０
 PRINTL エクストラ報酬：期間延長１０週＋多々良ひな・多々良ゆなが素質【Lily Princess】を取得
 ;SETCOLOR 0xF58F98
 ;FONTSTYLE 1
-;PRINTL ※ミッション終了後、対象は【処女】【アナル処女】【キス未経験】ではなくなります！
+;PRINTL ※ミッション終了後、対象は【処女】【Ａ処女】【キス未経験】ではなくなります！
 ;FONTSTYLE 0
 ;RESETCOLOR
 DRAWLINE
@@ -96,7 +96,7 @@ DRAWLINE
 DRAWLINE
 PRINTL 　　　　ミッション達成条件：多々良ひな・多々良ゆな共に露出癖LV7以上
 PRINTL 　　　　　　　　　　　　　　レズっ気LV10＋美容感覚LV5以上
-PRINTL 　　　　　　　　　　　　　　純粋な【処女】＋【アナル処女】の場合、レズ経験３０００以上
+PRINTL 　　　　　　　　　　　　　　純粋な【処女】＋【Ａ処女】の場合、レズ経験３０００以上
 PRINTL 　　　　　　　　　　　　　　どちらか、あるいは両方とも経験済みの場合、レズ経験５０００以上
 PRINTL 　　　　　　　　　　　　　　かつ職業系素質（【アイドル】【ファッションモデル】【キャバ嬢】）を取得していない
 PRINTL 　　　　　　　　　　　　　　
@@ -141,7 +141,7 @@ LOCAL:11 = 0
 
 SIF NO:TARGET == [[キャラ:多々良ひな]]
 	LOCAL:1++
-IF TALENT:処女 == 1 && TALENT:アナル処女 == 1 && EXP:レズ経験 >= 3000
+IF TALENT:処女 == 1 && TALENT:Ａ処女 == 1 && EXP:レズ経験 >= 3000
 	LOCAL:1++
 ELSEIF EXP:レズ経験 >= 5000
 	LOCAL:1++
@@ -157,7 +157,7 @@ SIF TALENT:キャバ嬢 == 0
 
 SIF NO:ASSI == [[キャラ:多々良ゆな]]
 	LOCAL:1++
-IF TALENT:ASSI:処女 == 1 && TALENT:ASSI:アナル処女 == 1 && EXP:ASSI:レズ経験 >= 3000
+IF TALENT:ASSI:処女 == 1 && TALENT:ASSI:Ａ処女 == 1 && EXP:ASSI:レズ経験 >= 3000
 	LOCAL:1++
 ELSEIF EXP:ASSI:レズ経験 >= 5000
 	LOCAL:1++
@@ -218,7 +218,7 @@ TCVAR:絶頂経験 += 75 + RAND:26
 
 SIF TALENT:処女 == 0
 	TCVAR:Ｖ経験 += (TCVAR:絶頂経験 / 3)
-SIF TALENT:アナル処女 == 0
+SIF TALENT:Ａ処女 == 0
 	TCVAR:Ａ経験 += (TCVAR:絶頂経験 / 3)
 SIF (TCVAR:Ｖ経験 + TCVAR:絶頂経験) >= 1
 	TCVAR:性交経験 += (TCVAR:Ａ経験 + TCVAR:絶頂経験) / 2
@@ -228,7 +228,7 @@ TCVAR:ASSI:絶頂経験 += TCVAR:絶頂経験
 
 SIF TALENT:ASSI:処女 == 0
 	TCVAR:ASSI:Ｖ経験 += (TCVAR:絶頂経験 / 3)
-SIF TALENT:ASSI:アナル処女 == 0
+SIF TALENT:ASSI:Ａ処女 == 0
 	TCVAR:ASSI:Ａ経験 += (TCVAR:絶頂経験 / 3)
 SIF (TCVAR:ASSI:Ｖ経験 + TCVAR:ASSI:絶頂経験) >= 1
 	TCVAR:ASSI:性交経験 += (TCVAR:Ａ経験 + TCVAR:絶頂経験) / 2

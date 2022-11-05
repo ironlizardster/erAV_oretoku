@@ -1,12 +1,12 @@
 ﻿;-------------------------------------------------
-;アナル処女を奪うかどうかの確認
+;Ａ処女を奪うかどうかの確認
 ;-------------------------------------------------
 @CONFIRM_LOST_ANALVIRGIN
-SIF !FLAG:Ａ処女初体験確認
+SIF !FLAG:Ａ処女確認
 	RETURN 1
 $INPUT_LOOP_01
-IF TALENT:アナル処女
-	PRINTFORML %CALLNAME:TARGET%のアナル処女を奪いますか？
+IF TALENT:Ａ処女
+	PRINTFORML %CALLNAME:TARGET%のＡ処女を奪いますか？
 	CALL GET_はいいいえ()
 	RETURN RESULT == COMMAND_はい
 ENDIF
@@ -404,7 +404,7 @@ IF ASSI > 0 && ASSIPLAY
 	R = NO:ASSI
 	;助手が童貞で調教対象が処女
 	;調教対象が処女
-	IF TALENT:アナル処女
+	IF TALENT:Ａ処女
 		RELATION:TARGET:R += 20
 		SIF RELATION:TARGET:R == 20
 			RELATION:R = 120

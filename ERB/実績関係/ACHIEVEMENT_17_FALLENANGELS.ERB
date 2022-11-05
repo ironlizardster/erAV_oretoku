@@ -15,15 +15,15 @@ SIF ミッション結果:135 < 3 || ミッション結果:144 < 3
 LOCAL = 0
 
 LOCAL:1 = GETCHARA([[キャラ:雛見春乃]] ,0)
-SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女 && TALENT:(LOCAL:1):絶倫
+SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):Ａ処女 && TALENT:(LOCAL:1):絶倫
 	LOCAL++
 
 LOCAL:1 = GETCHARA([[キャラ:雛見まゆ]] ,0)
-SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女 && TALENT:(LOCAL:1):絶倫
+SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):Ａ処女 && TALENT:(LOCAL:1):絶倫
 	LOCAL++
 
 LOCAL:1 = GETCHARA([[キャラ:羽瀬川みこと]] ,0)
-SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):アナル処女 && TALENT:(LOCAL:1):絶倫
+SIF LOCAL:1 > 0 && !TALENT:(LOCAL:1):処女 && !TALENT:(LOCAL:1):Ａ処女 && TALENT:(LOCAL:1):絶倫
 	LOCAL++
 
 ; 条件を達成している場合は実績番号のグローバルを1にする
@@ -34,7 +34,7 @@ ENDIF
 RETURN 実績達成:17
 
 @ACHIEVEMENT_HINT_17
-RESULTS = 「雛見春乃」「雛見まゆ」「羽瀬川みこと」が【絶倫】で【処女】なし、【アナル処女】なし
+RESULTS = 「雛見春乃」「雛見まゆ」「羽瀬川みこと」が【絶倫】で【処女】なし、【Ａ処女】なし
 
 ; 実績の説明および諸々の処理
 @ACHIEVEMENT_MAIN_17

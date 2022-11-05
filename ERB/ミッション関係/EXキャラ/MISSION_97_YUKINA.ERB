@@ -199,7 +199,7 @@ IF ARG >= 1
 	CSTR:肛門呼び方 = ケツ穴
 	
 	IF CFLAG:処女喪失相手 == 0
-		CSTR:処女喪失の相手 = 園田雅彦（セフレ）
+		CSTR:処女喪失相手 = 園田雅彦（セフレ）
 		TALENT:処女 = 0
 		CFLAG:処女喪失相手 = 9
 		SETCOLOR 0xF58F98
@@ -209,19 +209,14 @@ IF ARG >= 1
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
-		CFLAG:処女喪失シチュ = 0
+		CFLAG:処女喪失状況 = 0
 	ENDIF
-	IF CFLAG:初キス相手 == -1
+	IF !CFLAG:初キス相手
 		CSTR:初キス相手 = 園田雅彦（セフレ）
-		CFLAG:初キス相手 = 9
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 3
-		CFLAG:初キス喪失シチュ = 1
+		CALL 初キス実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:初キス相手%の%CSTR:LOCAL:男性器呼び方%")
 	ENDIF
 	
 	CFLAG:ブラの色 = 1
@@ -247,7 +242,7 @@ IF ARG >= 1
 	PRINTFORMW たが、案外これも似合っているように思えた
 ELSE
 	IF CFLAG:処女喪失相手 == 0
-		CSTR:処女喪失の相手 = 園田雅彦
+		CSTR:処女喪失相手 = 園田雅彦
 		TALENT:処女 = 0
 		CFLAG:処女喪失相手 = 13
 		SETCOLOR 0xF58F98
@@ -257,19 +252,15 @@ ELSE
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
-		CFLAG:処女喪失シチュ = 0
+		CFLAG:処女喪失状況 = 0
 	ENDIF
-	IF CFLAG:初キス相手 == -1
+	IF !CFLAG:初キス相手
 		CSTR:初キス相手 = 園田雅彦の真珠入り%CSTR:男性器呼び方%
 		CFLAG:初キス相手 = 13
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 3
-		CFLAG:初キス喪失シチュ = 1
+		CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,CSTR:初キス相手)
 	ENDIF	
 ENDIF
 

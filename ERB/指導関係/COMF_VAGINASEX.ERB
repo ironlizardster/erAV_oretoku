@@ -2,7 +2,7 @@
 ;処女を奪うかどうかの確認
 ;-------------------------------------------------
 @CONFIRM_LOST_VIRGIN
-SIF !FLAG:処女初体験確認
+SIF !FLAG:処女確認
 	RETURN 1
 $INPUT_LOOP_01
 IF TALENT:処女
@@ -663,13 +663,13 @@ Z = 0
 TFLAG:近親相姦 = 0
 CALL INCEST
 
-;処女喪失の相手が女性なら異常経験に＋1
+;処女喪失相手が女性なら異常経験に＋1
 SIF TALENT:処女 && TALENT:PLAYER:オトコ == 0
 	Z += 1
-;処女喪失の相手が父親か母親なら異常経験に＋２
+;処女喪失相手が父親か母親なら異常経験に＋２
 IF TALENT:処女 && TFLAG:近親相姦 == 1
 	Z += 2
-;処女喪失の相手が兄弟姉妹なら異常経験に＋１
+;処女喪失相手が兄弟姉妹なら異常経験に＋１
 ELSEIF TALENT:処女 && (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4)
 	Z += 1
 ENDIF
@@ -773,12 +773,12 @@ CALL INCEST
 IF TALENT:PLAYER:童貞 == 1
 	SETCOLOR 0xF58F98
 	TALENT:PLAYER:童貞 = 0
-	CSTR:PLAYER:童貞喪失の相手 = %NAME:TARGET%
+	CSTR:PLAYER:童貞喪失相手 = %NAME:TARGET%
 	PRINTFORML 【童貞喪失】（%CALLNAME:PLAYER%）
 	SIF CFLAG:PLAYER:包皮状態 == 2
 		CFLAG:PLAYER:包皮状態 = 3
-	SIF CFLAG:初キス相手 == 0
-		CFLAG:初キス相手 = 1
+	SIF !CFLAG:童貞喪失相手
+		CFLAG:童貞喪失相手 = 1
 	RESETCOLOR
 	SIF NO:PLAYER == [[キャラ:あなた]] && NO:TARGET == [[キャラ:宮間かなで]]
 		FLAG:かなで相手童貞喪失 = 1

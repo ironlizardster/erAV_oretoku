@@ -68,7 +68,7 @@ TALENT:ARG:絶倫 = 0
 ABL:ARG:欲望 = 5
 ABL:ARG:技巧 = 3
 EXP:ARG:異常経験 = 1
-CFLAG:ARG:初キス相手 = -1
+CFLAG:ARG:初キス相手 = 0
 CFLAG:ARG:着衣状態 = 12
 CFLAG:ARG:上着タイプ = 242
 CFLAG:ARG:靴下タイプ = 0
@@ -81,7 +81,7 @@ SIF !TALENT:ARG:オトコ
 	TALENT:ARG:処女 = 1
 SIF TALENT:ARG:オトコ || TALENT:ARG:ふたなり
 	TALENT:ARG:童貞 = 1
-TALENT:ARG:アナル処女 = 1
+TALENT:ARG:Ａ処女 = 1
 TALENT:ARG:好奇心 = 1
 TALENT:ARG:貞操無頓着 = 1
 TALENT:ARG:解放 = 1
@@ -93,8 +93,8 @@ TALENT:ARG:Ｃ敏感 = 1
 TALENT:ARG:Ｖ敏感 = 1
 TALENT:ARG:Ａ敏感 = 1
 TALENT:ARG:Ｂ敏感 = 1
-TALENT:ARG:倒錯的 += 1
-TALENT:ARG:両刀 += 1
+TALENT:ARG:倒錯的 = 1
+TALENT:ARG:両刀 = 1
 TALENT:ARG:魅惑 = 1
 TALENT:ARG:魅力 = 1
 TALENT:ARG:洗脳されない = 1
@@ -105,10 +105,10 @@ IF TALENT:ARG:天使 && TALENT:ARG:交渉上手
 	ABL:ARG:技巧 = 10
 ENDIF
 
-CSTR:ARG:処女喪失の相手 =
+CSTR:ARG:処女喪失相手 =
 CSTR:ARG:初キス相手 =
-CSTR:ARG:童貞喪失の相手 =
-CSTR:ARG:アナル処女喪失相手 =
+CSTR:ARG:童貞喪失相手 =
+CSTR:ARG:Ａ処女喪失相手 =
 CSTR:ARG:タバコの銘柄 =
 CSTR:ARG:彼氏姓 =
 CSTR:ARG:彼氏名 =

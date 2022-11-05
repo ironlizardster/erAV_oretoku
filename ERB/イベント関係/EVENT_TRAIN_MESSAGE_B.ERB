@@ -33,7 +33,7 @@ IF SELECTCOM == 0
 						;****スライムパッチ追加ここまで****
 		PRINTFORM %CALLNAME:PLAYER%は
 		;口が汚れてないか、主人に汚れ無視があるか、助手でない時にボールギャグ装備中でなくキス経験済みの場合
-		SIF (STAIN:0 < 2 || STAIN:0 == 16 || STAIN:0 == 17 || TALENT:MASTER:汚れ無視 || ASSIPLAY) && TEQUIP:ボールギャグ == 0 && CFLAG:初キス相手 != -1
+		SIF (STAIN:0 < 2 || STAIN:0 == 16 || STAIN:0 == 17 || TALENT:MASTER:汚れ無視 || ASSIPLAY) && TEQUIP:ボールギャグ == 0 && CFLAG:初キス相手
 			PRINT キスをしながら
 	ENDIF
 	PRINTFORM %CALLNAME:TARGET%の
@@ -394,7 +394,7 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSEIF CFLAG:処女喪失相手 == 8
-						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
@@ -406,7 +406,7 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSE
-						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
@@ -450,7 +450,7 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSEIF CFLAG:処女喪失相手 == 8
-						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
@@ -462,7 +462,7 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSE
-						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
@@ -506,7 +506,7 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSEIF CFLAG:処女喪失相手 == 8
-						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
@@ -518,7 +518,7 @@ ELSEIF SELECTCOM == 7
 						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
 						PRINTFORML %CALLNAME:PLAYER%に告白した…
 					ELSE
-						PRINTFORML %CSTR:処女喪失の相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
 							IF TALENT:恋心 == 1
 								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
 								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた

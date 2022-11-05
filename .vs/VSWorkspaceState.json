@@ -3,9 +3,14 @@
     "",
     "\\CSV",
     "\\ERB",
+    "\\ERB\\イベント関係",
+    "\\ERB\\イベント関係\\NTR関係",
+    "\\ERB\\イベント関係\\NTR関係\\カレシ関係",
+    "\\ERB\\イベント関係\\初体験関係",
+    "\\ERB\\キャラ関数",
     "\\ERB\\システム関係",
-    "\\ERB\\実績関係"
+    "\\ERB\\ＡＶ撮影関係"
   ],
-  "SelectedNode": "\\CSV\\Chara018_恋歌・ロックウェル.csv",
+  "SelectedNode": "\\CSV\\Chara040_庄野そら.csv",
   "PreviewInSolutionExplorer": false
 }

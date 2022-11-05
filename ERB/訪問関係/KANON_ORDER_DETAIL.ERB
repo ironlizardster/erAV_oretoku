@@ -83,20 +83,21 @@ ELSEIF RESULT == 0
 		CFLAG:T:NTR進行 = 0
 		CFLAG:T:彼氏有 = 2
 		CFLAG:T:彼氏タイプ = 0
-		IF CFLAG:T:初キス相手 == 8 && CFLAG:T:初キス喪失シチュ == 0 && CFLAG:T:初キス相手元カレ == 0
+		CFLAG:T:交際終了 = 1
+		IF CFLAG:T:初キス相手 == 初相手_今彼 && CFLAG:T:初キス喪失状況 == 0 && CFLAG:T:交際終了 == 0
 			CSTR:T:初キス相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:初キス相手元カレ = 1
-		ELSEIF CFLAG:T:初キス相手 == 8 && CFLAG:T:初キス喪失シチュ == 1 && CFLAG:T:初キス相手元カレ == 0
+			CFLAG:T:初キス相手 = 初相手_元彼
+		ELSEIF CFLAG:T:初キス相手 == 初相手_今彼 && CFLAG:T:初キス喪失状況 == 1 && CFLAG:T:交際終了 == 0
 			CSTR:T:初キス相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:初キス相手元カレ = 1
+			CFLAG:T:初キス相手 = 初相手_元彼
 		ENDIF
-		IF CFLAG:T:処女喪失相手 == 8 && CFLAG:T:167 == 0
-			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:167 = 1
+		IF CFLAG:T:処女喪失相手 == 初相手_今彼
+			CSTR:T:処女喪失相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:処女喪失相手 = 初相手_元彼
 		ENDIF
-		IF CFLAG:T:アナル処女喪失相手 == 8 && CFLAG:T:アナル処女喪失誕生日記念 == 0
-			CSTR:T:アナル処女喪失相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
-			CFLAG:T:アナル処女喪失誕生日記念 = 1
+		IF CFLAG:T:Ａ処女喪失相手 == 初相手_今彼
+			CSTR:T:Ａ処女喪失相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%
+			CFLAG:T:Ａ処女喪失相手 = 初相手_元彼
 		ENDIF
 		EXP:T:交際人数 += 1
 	ELSEIF CFLAG:T:スタッフNTR進行度 == 1
@@ -109,11 +110,12 @@ ELSEIF RESULT == 0
 		CFLAG:T:彼氏有 = 2
 		CFLAG:T:彼氏タイプ = 0
 		CFLAG:T:スタッフNTR進行度 = 0
-		IF CFLAG:T:初キス相手 == 10
+		CFLAG:T:交際終了 = 1
+		IF CFLAG:T:初キス相手 == 初相手_スタッフ
 			CSTR:T:初キス相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
 		ENDIF
-		IF CFLAG:T:処女喪失相手 == 10
-			CSTR:T:処女喪失の相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
+		IF CFLAG:T:処女喪失相手 == 初相手_スタッフ
+			CSTR:T:処女喪失相手 = %CSTR:T:彼氏姓%%CSTR:T:彼氏名%（元スタッフ）
 		ENDIF
 		CFLAG:T:スタッフNTR抹殺 = 1
 		EXP:T:交際人数 += 1

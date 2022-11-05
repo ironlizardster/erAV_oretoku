@@ -153,7 +153,7 @@ SIF MAXBASE:体力 >= 2500
 
 SIF TALENT:処女 == 1
 	LOCAL:11++
-SIF TALENT:アナル処女 == 1
+SIF TALENT:Ａ処女 == 1
 	LOCAL:11++
 IF LOCAL:1 >= 14
 	SIF LOCAL:11 == 2
@@ -175,7 +175,7 @@ RETURN 0
 @MISSION_REPORT_54(ARG)
 
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = 柴田智久（クラスメイト）
+	CSTR:処女喪失相手 = 柴田智久（クラスメイト）
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 13
 	SETCOLOR 0xF58F98
@@ -185,31 +185,27 @@ IF TALENT:処女 == 1
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 5
-		CFLAG:処女喪失シチュ = 5
+		CFLAG:処女喪失状況 = 5
 ENDIF
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 13
+IF !CFLAG:初キス相手
 	CSTR:初キス相手 = 浅田一貴（クラスメイト）
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
-	CFLAG:初キス喪失場所 = 5
+	CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,CSTR:初キス相手)
 ENDIF
-IF TALENT:アナル処女 == 1
-	TALENT:アナル処女 = 0
-	CFLAG:アナル処女喪失相手 = 13
-	CSTR:アナル処女喪失相手 = 木幡基樹（クラスメイト）
+IF TALENT:Ａ処女 == 1
+	TALENT:Ａ処女 = 0
+	CFLAG:Ａ処女喪失相手 = 13
+	CSTR:Ａ処女喪失相手 = 木幡基樹（クラスメイト）
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CFLAG:アナル処女喪失場所 = 5
-	CFLAG:アナル処女喪失シチュ = 5
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:Ａ処女喪失場所 = 5
+	CFLAG:Ａ処女喪失状況 = 5
 ENDIF
 TCVAR:絶頂経験 += 15 + RAND:11
 TCVAR:Ｖ経験 += 15 + RAND:11

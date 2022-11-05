@@ -13,7 +13,7 @@ DRAWLINE
 IF ABL:Ａ感覚 >= 5 && TALENT:尻穴狂い == 0
 	PRINTW これ以上UPするには素質が必要です
 	RETURN 0
-ELSEIF ABL:Ａ感覚 >= 3 && TALENT:アナル処女 == 1
+ELSEIF ABL:Ａ感覚 >= 3 && TALENT:Ａ処女 == 1
 	PRINTW これ以上UPするにはアナル非処女である必要があります
 	RETURN 0
 ELSEIF ABL:Ａ感覚 >= 10
@@ -74,7 +74,7 @@ RETURN 0
 ;Ａ感覚はLv5が上限、[尻穴狂い]が付いている場合はLv10まで解放
 SIF ABL:Ａ感覚 >= 5 && TALENT:尻穴狂い == 0
 	RETURN 0
-SIF ABL:Ａ感覚 >= 3 && TALENT:アナル処女 == 1
+SIF ABL:Ａ感覚 >= 3 && TALENT:Ａ処女 == 1
 	RETURN 0
 SIF ABL:Ａ感覚 >= 10
 	RETURN 0

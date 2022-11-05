@@ -25,27 +25,49 @@ PRINTFORML {DAY+1}日目\@ TIME ? 夜 # 昼 \@
 ;erAVにおいては25はミッション期限で使用のためコメントアウト。最下段からも外してある。
 ;=================================================
 @INCEST
+TFLAG:近親相姦 = 親族度(TARGET,PLAYER)
 
-TFLAG:近親相姦 = 0
+;=================================================
+;親族度
+;親族関係の判定
+;-------------------------------------------------
+;現在のCHARA_NO1から見てCHARA_NO2が何にあたるかの判定を返す
+;（0:親族関係なし. 1:父か母, 2:息子か娘, 3:兄か姉, 4:弟か妹, 5:従姉,6:従弟）
+@親族度(CHARA_NO1,CHARA_NO2)
+#FUNCTION
+#DIM CHARA_NO1
+#DIM CHARA_NO2
+#DIMS DYNAMIC 親族設定用, 100
+#DIMS DYNAMIC 親族設定, 2
+#DIM LCOUNT
 
 ;関数の汎用性を考えて、敢えてREPEAT文の使用は避ける
-SIF CFLAG:親族判定1 && CFLAG:親族判定1 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:親族判定1 / 1000) + 1
-SIF CFLAG:親族判定2 && CFLAG:親族判定2 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:親族判定2 / 1000) + 1
-SIF CFLAG:親族判定3 && CFLAG:親族判定3 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:親族判定3 / 1000) + 1
-SIF CFLAG:親族判定4 && CFLAG:親族判定4 % 1000 == NO:PLAYER
-	TFLAG:近親相姦 = (CFLAG:親族判定4 / 1000) + 1
-;SIF CFLAG:ミッション期間 && CFLAG:ミッション期間 % 1000 == NO:PLAYER
-;	TFLAG:近親相姦 = (CFLAG:ミッション期間 / 1000) + 1
+SPLIT CSTR:CHARA_NO1:親族関係, "/", 親族設定用
+FOR LCOUNT, 0, RESULT
+	;なぜか行連結で行頭にスペースが入るので削る
+	親族設定用:LCOUNT = %SUBSTRINGU(親族設定用:LCOUNT, 1)%
+	SIF 親族設定用:LCOUNT == ""
+		BREAK
+	SPLIT 親族設定用:LCOUNT, ":", 親族設定
+	IF 親族設定:0 == NAME:CHARA_NO2
+		SELECTCASE 親族設定:1
+			CASE "父", "母"
+				RETURNF 1
+			CASE "子", "娘"
+				RETURNF 2
+			CASE "兄", "姉"
+				RETURNF 3
+			CASE "弟", "妹"
+				RETURNF 4
+			CASE "従姉"
+				RETURNF 5
+			CASE "従弟"
+				RETURNF 6
+		ENDSELECT
+	ENDIF
+NEXT
+RETURNF 0
 
-;主人が父親か母親である場合の処理
-IF PLAYER == MASTER && (CFLAG:親族判定1 == -1 || CFLAG:親族判定2 == -1 || CFLAG:親族判定3 == -1 || CFLAG:親族判定4 == -1)
-	TFLAG:近親相姦 = 1
-ENDIF
-
-RETURN
 ;
 ;================================================
 ;SERIHU
@@ -276,6 +298,28 @@ RETURNF @"<font color='#0xCCCCFF'>%STRING%</font>"
 HTML_PRINT @"<p align='%ALIGN%'>%STRING%</p>"
 WAIT
 
+@HTML_PRINT_萌(STRING,COLOR_CODE="#0xDDBBCC")
+#DIMS STRING
+#DIMS COLOR_CODE
+#DIMS 萌フォント
+
+萌フォント '= 萌フォントチェック()
+CHKFONT 萌フォント
+IF RESULT
+	;まきばフォント太Ｐはハートマークのコードが違う
+	SIF 萌フォント == "まきばフォント太Ｐ"
+		STRING '= REPLACE(STRING, "&#x2764;", "&#x250F;")
+
+	STRING '= @"<font color='%COLOR_CODE%' face='" + 萌フォント + @"'>%STRING%</font>"
+ENDIF
+
+[IF_DEBUG]
+DEBUGPRINTFORML %STRING%
+[ENDIF]
+
+HTML_PRINT @"%STRING%"
+
+
 @HTML_PRINT_PROFILE(STRING)
 #DIMS STRING
 #DIMS REPLACE_STRING
@@ -321,6 +365,7 @@ DEBUGPRINTFORML %STRING%
 
 HTML_PRINT @"%STRING%"
 
+
 @NEWLINE
 ;LINEISEMPTYとPRINTLをやる関数
 SIF !LINEISEMPTY()
@@ -328,7 +373,7 @@ SIF !LINEISEMPTY()
 
 @萌フォントチェック
 #FUNCTIONS
-#DIMS 萌フォント = "えり字", "まきばフォント太Ｐ"
+#DIMS 萌フォント = "まきばフォント太Ｐ",  "えり字"
 
 FOR LOCAL, 0, VARSIZE("萌フォント")
 	CHKFONT 萌フォント:LOCAL

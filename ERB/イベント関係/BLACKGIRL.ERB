@@ -344,25 +344,19 @@ ELSE
 		PRINTL 異常経験＋1
 		TALENT:COUNT:処女 = 0
 		EXP:COUNT:異常経験 += 1
-		CSTR:COUNT:処女喪失の相手 = %CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）
+		CSTR:COUNT:処女喪失相手 = %CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）
 		CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
 		CFLAG:COUNT:処女喪失月 = DAY:日付_月
 		CFLAG:COUNT:処女喪失日 = DAY:日付_日
 		CFLAG:COUNT:処女喪失場所 = 3
-		CFLAG:COUNT:処女喪失シチュ = 3
+		CFLAG:COUNT:処女喪失状況 = 3
 	ENDIF
 			
-	IF CFLAG:COUNT:初キス相手 == -1
-		CFLAG:COUNT:初キス相手 = 9
+	IF !CFLAG:COUNT:初キス相手
+		CALL 初キス実行(COUNT,初相手_セフレ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）の極太%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%")
 		SETCOLOR 0xDDBBCC
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CSTR:COUNT:初キス相手 = %CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）の極太%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%
-		CFLAG:COUNT:初キス喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:初キス喪失月 = DAY:日付_月
-		CFLAG:COUNT:初キス喪失日 = DAY:日付_日
-		CFLAG:COUNT:初キス喪失場所 = 3
-		CFLAG:COUNT:初キス喪失シチュ = 1
 	ENDIF
 		
 	;性交回数

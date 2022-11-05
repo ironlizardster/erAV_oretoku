@@ -148,15 +148,9 @@ ENDIF
 ;スタッフ寝取られ・初キス
 ;=================================================
 @FIRSTKISS_NTR_STAFF
-	IF CFLAG:COUNT:初キス相手 == -1
-		CFLAG:COUNT:初キス相手 = 10
-		CSTR:COUNT:初キス相手 = ？？？
-;		CALL DECIDE_BOYFRIEND
-		BASE:COUNT:魅力値 -= 5
-		CFLAG:COUNT:初キス喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:初キス喪失月 = DAY:日付_月
-		CFLAG:COUNT:初キス喪失日 = DAY:日付_日
-	ENDIF
+IF !CFLAG:COUNT:初キス相手
+	CALL 初キス実行(TARGET,初相手_スタッフ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"？？？")
+ENDIF
 
 ;=================================================
 ;スタッフ寝取られ・処女喪失
@@ -174,11 +168,11 @@ CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
 CFLAG:COUNT:処女喪失月 = DAY:日付_月
 CFLAG:COUNT:処女喪失日 = DAY:日付_日
 CFLAG:COUNT:処女喪失場所 = 3
-CFLAG:COUNT:処女喪失シチュ = 3
+CFLAG:COUNT:処女喪失状況 = 3
 
 	TALENT:COUNT:処女 = 0
 	CFLAG:COUNT:処女喪失相手 = 10
-	CSTR:COUNT:処女喪失の相手 = ？？？
+	CSTR:COUNT:処女喪失相手 = ？？？
 	EXP:COUNT:Ｖ経験 += V
 	EXP:COUNT:絶頂経験 += A
 	EXP:COUNT:性交経験 += V
@@ -357,19 +351,19 @@ PRINTW
 PRINTFORML そう言うと、どこかから戻ってきた歌音はどこかほっとした表情を浮かべてお茶を一口すすった
 PRINTFORML もしかしたら、%CALLNAME:COUNT%に恨まれることがなくてよかったと思っているのかもしれない……
 PRINTW
-IF CFLAG:COUNT:処女喪失相手 == 10
+IF CFLAG:COUNT:処女喪失相手 == 初相手_スタッフ
 	PRINTFORML 《%NAME:COUNT%の処女喪失相手の名前がオープンされました》
-		CSTR:COUNT:処女喪失の相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
+		CSTR:COUNT:処女喪失相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
 		CFLAG:COUNT:処女喪失相手 = 8
 		EXP:COUNT:彼氏性経験 += 10
 ENDIF
-IF CFLAG:COUNT:初キス相手 == 10
+IF CFLAG:COUNT:初キス相手 == 初相手_スタッフ
 	PRINTFORML 《%NAME:COUNT%のファーストキス相手の名前がオープンされました》
 		IF RAND:2 == 0
 			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
 		ELSE
 			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
-			CFLAG:COUNT:初キス喪失シチュ = 1
+			CFLAG:COUNT:初キス喪失状況 = 1
 		ENDIF
 ENDIF
 	CFLAG:COUNT:NTR進行 = 0
@@ -378,4 +372,4 @@ ENDIF
 	BASE:COUNT:魅力値 -= 10
 	EXP:COUNT:交際人数 += 1
 	;△暫定。消えたスタッフがカレシと出続けるのもどうかと思うので。
-	CFLAG:COUNT:初キス相手元カレ = 1
+	CFLAG:COUNT:交際終了 = 1

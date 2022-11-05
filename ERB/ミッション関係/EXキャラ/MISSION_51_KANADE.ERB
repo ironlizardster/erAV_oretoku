@@ -262,7 +262,7 @@ IF A:2 == 0
 	BASE:魅力値 -= 20 + RAND:11
 	IF TALENT:永遠の愛 == 1
 		IF TALENT:処女 == 1
-			CSTR:処女喪失の相手 = 小野寺恭司（クラスメイト）
+			CSTR:処女喪失相手 = 小野寺恭司（クラスメイト）
 			TALENT:処女 = 0
 			CFLAG:処女喪失相手 = 13
 			SETCOLOR 0xF58F98
@@ -276,26 +276,20 @@ IF A:2 == 0
 		TCVAR:性交経験 = TCVAR:絶頂経験
 		SIF TALENT:ふたなり || TALENT:オトコ 
 			TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
-		IF CFLAG:初キス相手 == -1
-			CFLAG:初キス相手 = 1
-			CSTR:初キス相手 = 小野寺恭司（クラスメイト）
+		IF !CFLAG:初キス相手
 			SETCOLOR 0xF58F98
 			PRINTL 【ファーストキス】
 			RESETCOLOR
+			CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"小野寺恭司（クラスメイト）")
 		ENDIF
 		CFLAG:処女喪失年齢 = BASE:実年齢
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 5
-		CFLAG:処女喪失シチュ = 0
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 5
-		CFLAG:初キス喪失シチュ = 0
+		CFLAG:処女喪失状況 = 0
 	ELSE
 		IF TALENT:処女 == 1
-			CSTR:処女喪失の相手 = 小野寺恭司（彼氏）
+			CSTR:処女喪失相手 = 小野寺恭司（彼氏）
 			TALENT:処女 = 0
 			CFLAG:処女喪失相手 = 8
 			SETCOLOR 0xF58F98
@@ -313,7 +307,7 @@ IF A:2 == 0
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 5
-		CFLAG:処女喪失シチュ = 0
+		CFLAG:処女喪失状況 = 0
 		
 		TCVAR:絶頂経験 += 15 + RAND:6
 		TCVAR:Ｖ経験 += 10 + RAND:6
@@ -323,8 +317,7 @@ IF A:2 == 0
 		TCVAR:性交経験 = TCVAR:絶頂経験
 		SIF TALENT:ふたなり || TALENT:オトコ 
 			TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
-		IF CFLAG:初キス相手 == -1
-			CFLAG:初キス相手 = 8
+		IF !CFLAG:初キス相手
 			IF TALENT:ギャル系 == 1
 				CSTR:初キス相手 = キョージ
 			ELSEIF TALENT:淫乱 == 1
@@ -335,11 +328,7 @@ IF A:2 == 0
 			SETCOLOR 0xF58F98
 			PRINTL 【ファーストキス】
 			RESETCOLOR
-			CFLAG:初キス喪失年齢 = BASE:実年齢
-			CFLAG:初キス喪失月 = DAY:日付_月
-			CFLAG:初キス喪失日 = DAY:日付_日
-			CFLAG:初キス喪失場所 = 5
-			CFLAG:初キス喪失シチュ = 1
+			CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_男性器,"%CSTR:初キス相手%の%CSTR:男性器呼び方%")
 		ENDIF
 		BASE:魅力値 -= RAND:6
 		LOCAL = 3

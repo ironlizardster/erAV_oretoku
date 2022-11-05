@@ -240,7 +240,7 @@ TFLAG:621 |= 1
 TFLAG:621 |= 2
 TFLAG:622 |= 1
 TFLAG:622 |= 2
-;IF CFLAG:初キス相手 == -1
+;IF !CFLAG:初キス相手
 ;	CFLAG:初キス相手 = 1
 ;	SETCOLOR 0xDDBBCC
 ;	PRINTFORML 初キス
@@ -267,7 +267,7 @@ TFLAG:622 |= 2
 ;	ENDIF	
 ;	TFLAG:初キス口以外 = 1
 ;ENDIF
-;IF CFLAG:初キス相手 == -1
+;IF !CFLAG:初キス相手
 ;	CFLAG:初キス相手 = 1
 ;	SETCOLOR 0xDDBBCC
 ;	PRINTFORML 初キス（%CALLNAME:ASSI%）

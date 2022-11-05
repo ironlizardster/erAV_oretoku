@@ -37,10 +37,10 @@ CFLAG:621”ÞŽ‚ª‚¢‚é‚©‚Ç‚¤‚©B0‚Å–³‚µA1‚Å—L‚èB’Pg•‹”C‚Åg‹ß‚É‚¢‚È‚¢ƒP[ƒX‚Í‘
 CFLAG:622”ÞŽ‚ÌE‹ÆB
 CFLAG:633Œì‰qB0‚Å–³‚µA1‚Å—L‚èBŒì‰q—L‚è‚¾‚Æ’sŠ¿‚É‘˜‚¤‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñ
 
-CSTR:0ˆ—‘rŽ¸‚Ì‘ŠŽè‚Ì–¼‘O (”„tŒn‚Íu’m‚ç‚È‚¢ƒIƒgƒR‚Ìlv‚È‚Ç‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚·)
+CSTR:0ˆ—‘rŽ¸‘ŠŽè‚Ì–¼‘O (”„tŒn‚Íu’m‚ç‚È‚¢ƒIƒgƒR‚Ìlv‚È‚Ç‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚·)
 CSTR:1‰ƒLƒX‘ŠŽè‚Ì–¼‘O‚¨‚æ‚Ñ•”ˆÊi—áF››‚ÌƒyƒjƒX‚Ìê‡‚Íu››‚ÌƒyƒjƒXv‚Æ“ü—Íj
-CSTR:2“¶’å‘rŽ¸‚Ì‘ŠŽè‚Ì–¼‘O
-CSTR:3ƒAƒiƒ‹ˆ—‘rŽ¸‘ŠŽè‚Ì–¼‘O
+CSTR:2“¶’å‘rŽ¸‘ŠŽè‚Ì–¼‘O
+CSTR:3‚`ˆ—‘rŽ¸‘ŠŽè‚Ì–¼‘O
 CSTR:4”ÞŽ‚Ì–¼‘Oi•\Ž¦–¢ŽÀ‘•j
 CSTR:5‚`‚uƒŒ[ƒxƒ‹–¼‚ÉŽg—p‚·‚é‚½‚ß‚¢‚¶‚ç‚È‚¢‚Å‚­‚¾‚³‚¢B
 CSTR:6ˆ¤‰Œ‚µ‚Ä‚¢‚éƒ^ƒoƒR‚Ì–Á•¿
@@ -59,7 +59,7 @@ EXP:101”ÞŽ‚Æ‚ÌƒZƒbƒNƒX‰ñ”
 ‚Ù‚Æ‚ñ‚Ç‚ªƒtƒŒ[ƒo[‘fŽ¿‚Å‚·‚ªˆê•”‹¥ˆ«‚È«”\‚Ì‚à‚ÌuˆÓ}“I‚Év—pˆÓ‚µ‚Ä‚ ‚é‚Ì‚ÅA—p–@E—e—Ê‚ðŽç‚Á‚Ä‚²Žg—p‚­‚¾‚³‚¢B
 ‚Ü‚½AŒø‰Ê‚â–¼‘O‚ª•Ï‚í‚Á‚Ä‚¢‚é‘fŽ¿‚à‚ ‚è‚Ü‚·‚Ì‚Å‚»‚ê‚à“¯Žž‚ÉB
 
-TALENT:2yƒAƒiƒ‹ˆ—zƒAƒiƒ‹ƒZƒbƒNƒX‚ÌŒoŒ±‚ª–³‚¢ó‘ÔBŒ»óAƒAƒCƒeƒ€‚ÅƒAƒiƒ‹ˆ—‘rŽ¸‚Í”»’è‚µ‚Ä‚¢‚Ü‚¹‚ñB
+TALENT:2y‚`ˆ—zƒAƒiƒ‹ƒZƒbƒNƒX‚ÌŒoŒ±‚ª–³‚¢ó‘ÔBŒ»óAƒAƒCƒeƒ€‚Å‚`ˆ—‘rŽ¸‚Í”»’è‚µ‚Ä‚¢‚Ü‚¹‚ñB
 TALENT:11yƒiƒ}ƒCƒLzŒ³‚Íy”½R“IzB–¼‘O‚ªˆá‚¤‚Ì‚Å¬—‚µ‚â‚·‚¢‚Å‚·‚ªŒø‰Ê‚Í‹Œy”½R“Iz‚Ì‚Ü‚Ü‚Å‚·B
 TALENT:16yŠˆ”­zŒ³‚Íy¶ˆÓ‹CzB–¼‘O‚ªˆá‚¤‚Ì‚Å¬—‚µ‚â‚·‚¢‚Å‚·‚ªŒø‰Ê‚Í‹Œy¶ˆÓ‹Cz‚Ì‚Ü‚Ü‚Å‚·B
 TALENT:50y‘fŽ¿zŒ³‚ÍyK“¾‘‚¢zBƒAƒCƒfƒBƒAŒ³‚Ìƒ^ƒŒƒ“ƒg‚Æˆê’v‚³‚¹‚Ü‚µ‚½B

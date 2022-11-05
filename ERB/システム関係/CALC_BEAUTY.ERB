@@ -4,7 +4,7 @@
 @CALC_BEAUTY
 IF TALENT:処女 == 0
 	BASE:魅力値 -= 10
-ELSEIF TALENT:アナル処女 == 0
+ELSEIF TALENT:Ａ処女 == 0
 	BASE:魅力値 -= 5
 ELSEIF TALENT:精愛味覚 == 1
 	BASE:魅力値 -= 5
@@ -24,7 +24,7 @@ ELSEIF TALENT:整形美人 == 1
 	BASE:魅力値 -= 5
 ELSEIF TALENT:喫煙者 == 1
 	BASE:魅力値 -= 10
-ELSEIF CFLAG:初キス相手 == 1
+ELSEIF CFLAG:初キス相手
 	BASE:魅力値 -= 5
 ENDIF
 
@@ -40,7 +40,7 @@ X += 5
 IF TFLAG:処女喪失 == 1
 	X += 10
 ENDIF
-IF TFLAG:アナル処女喪失 == 1
+IF TFLAG:Ａ処女喪失 == 1
 	X += 5
 ENDIF
 IF TFLAG:初キス == 1

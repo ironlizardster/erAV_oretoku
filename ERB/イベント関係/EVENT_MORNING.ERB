@@ -52,16 +52,16 @@ DRAWLINE
 PRINTFORMW 誰かが%CALLNAME:MASTER%を呼ぶ声がする……
 PRINTFORML 同時にどうやら揺すぶられているらしく、%CALLNAME:MASTER%が目を覚ますと、お願いした通り%NAME:TARGET%が起こしに来てくれたようだ
 PRINTFORM %CALLNAME:MASTER%が寝ぼけ眼をこすりながら感謝の言葉を述べると、%CALLNAME:TARGET%は
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	PRINTFORM 照れたようにはにかんで
 ELSE
 	PRINTFORM 軽く頬にキスをして微笑んで
 ENDIF
 PRINTFORML いる
 
-IF TALENT:小悪魔 == 1 && CFLAG:初キス相手 != -1
+IF TALENT:小悪魔 == 1 && CFLAG:初キス相手
 	PRINTFORML どうやらちょっとしたイタズラらしい……
-ELSEIF TALENT:恋心 == 1 && TALENT:小悪魔 == 0 && CFLAG:初キス相手 != -1
+ELSEIF TALENT:恋心 == 1 && TALENT:小悪魔 == 0 && CFLAG:初キス相手
 	PRINTFORML どうやら愛情表現のつもりらしい……
 ENDIF
 PRINTL
@@ -159,7 +159,7 @@ PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{X*30}
 PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{X*40}
 
 ;△SLANGとの整合性
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	IF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
 		CSTR:初キス相手 = アニキのチンポ
 	ELSEIF TALENT:淫乱 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
@@ -174,18 +174,12 @@ IF CFLAG:初キス相手 == -1
 		CSTR:初キス相手 = %CALLNAME:MASTER%のおちん○ん
 	;ここに来るのはどんなとき？
 	ELSE
-		CSTR:初キス相手 = %CALLNAME:MASTER%のオチンポ様ｖ
+		CSTR:初キス相手 = %CALLNAME:MASTER%のオチンポ様%UNICODE(0x2665)%
 	ENDIF
-	;△CFLAG諸々未設定　→　とりあえず日付まわりとか設定してしまおう
-	;できれば場所にあなたの部屋と入れたり自分からとか入れたりしたい
-	CFLAG:初キス相手 = 1
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
+	CALL 初キス実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_男性器,CSTR:初キス相手)
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
-	BASE:魅力値 -= 5
 ENDIF
 
 WAIT

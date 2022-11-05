@@ -1,4 +1,9 @@
 ﻿@キャラ追加, ARG
+#DIM DYNAMIC LCOUNT
+#DIMS DYNAMIC 相性設定用, 100
+#DIMS DYNAMIC 相性値, 200
+#DIMS DYNAMIC TMP相性値, 2
+
 ADDCHARA ARG
 
 ;名鑑用の処理
@@ -9,6 +14,42 @@ IF GETCHARA(ARG) != -1
 	TARGET = GETCHARA(ARG)
 	CALL CLEARBONUS_CALL
 ENDIF
+
+;相性の設定
+SPLIT CSTR:相性, "/", 相性設定用
+LOCAL:1 = RESULT
+FOR LOCAL, 0, LOCAL:1
+	;なぜか行連結で行頭にスペースが入るので削る
+	相性設定用:LOCAL = %SUBSTRINGU(相性設定用:LOCAL, 1)%
+	SIF 相性設定用:LOCAL == ""
+		BREAK
+	SPLIT 相性設定用:LOCAL, "*", TMP相性値
+	相性値:(LOCAL*2) '= TMP相性値, TMP相性値:1
+NEXT
+FOR LOCAL, 0, 固有キャラ最大ID
+	STRLENS 固有キャラ名前リスト:LOCAL 
+	IF RESULT && MATCH(相性値, 固有キャラ名前リスト:LOCAL)
+		FOR LOCAL:2, 0, LOCAL:1
+			IF 相性値:((LOCAL:2)*2) == 固有キャラ名前リスト:LOCAL
+				RELATION:LOCAL = TOINT(相性値:((LOCAL:2)*2+1))
+				BREAK
+			ENDIF
+		NEXT
+	ELSE
+		RELATION:LOCAL = 100
+	ENDIF
+NEXT
+
+STRLENS CSTR:男性器呼び方
+SIF !RESULT
+	CSTR:男性器呼び方 = おちんぽ
+STRLENS CSTR:女性器呼び方
+SIF !RESULT
+	CSTR:女性器呼び方 = おまんこ
+STRLENS CSTR:肛門呼び方
+SIF !RESULT
+	CSTR:肛門呼び方 = アナル
+
 
 @キャラ削除, ARG
 
@@ -82,4 +123,4 @@ FOR LOCAL, 0, 999
 	CFLAG:ARG:LOCAL = 0
 NEXT
 
-CFLAG:ARG:初キス相手 = -1
+CFLAG:ARG:初キス相手 = 0

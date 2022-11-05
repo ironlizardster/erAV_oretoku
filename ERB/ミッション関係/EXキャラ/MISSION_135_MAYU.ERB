@@ -100,13 +100,13 @@ DRAWLINE
 ;=================================================
 @MISSION_COND_135
 DRAWLINE
-PRINTL 　　　　ミッション達成条件：純粋な【処女】＋【童貞】＋【アナル処女】＋【ふたなり】＋【永遠の愛】＋最大体力3500以上
+PRINTL 　　　　ミッション達成条件：純粋な【処女】＋【童貞】＋【Ａ処女】＋【ふたなり】＋【永遠の愛】＋最大体力3500以上
 PRINTL 　　　　　　　　　　　　　　最大気力2500以上＋信頼LV10＋欲望LV3以下＋奉仕精神LV10＋レズっ気LV0＋自慰中毒LV0
 PRINTL 　　　　　　　　　　　　　　レズ中毒LV0＋異常経験1以下＋薬物経験0＋売春経験0＋Ａ経験0＋自慰経験0
 PRINTL 　　　　　　　　　　　　　　かつＡＶデビューしておらずキス未経験で【淫乱】【ギャル系】を所持していない
 PRINTL ミッション終了後の状態変化：ミッションに失敗した場合、雛見まゆの死亡
 PRINTL 　　　　　　　　　　　　　　ミッションに成功した場合【堕天使】【淫乱】【狂気】【褐色肌】の取得、
-PRINTL 　　　　　　　　　　　　　　【処女】【アナル処女】【永遠の愛】【童貞】の消去
+PRINTL 　　　　　　　　　　　　　　【処女】【Ａ処女】【永遠の愛】【童貞】の消去
 PRINTL 　　　　　　　　　　　　　　話術と技巧以外の全ての能力を初期化した後、欲望・レズっ気・サドっ気。マゾっ気
 PRINTL 　　　　　　　　　　　　　　性交中毒・精液中毒・レズ中毒がLV10に上昇
 PRINTL 　　　　　　　　　　　　　　全ての経験を初期化した後、Ｖ経験・Ａ経験・性交経験・異常経験の激増
@@ -139,7 +139,7 @@ SIF NO:TARGET == [[キャラ:雛見まゆ]]
 	LOCAL:1++
 SIF TALENT:処女 == 1
 	LOCAL:1++
-SIF TALENT:アナル処女 == 1
+SIF TALENT:Ａ処女 == 1
 	LOCAL:1++
 SIF TALENT:永遠の愛 == 1
 	LOCAL:1++
@@ -153,7 +153,7 @@ SIF TALENT:ギャル系 == 0
 	LOCAL:1++
 SIF CFLAG:処女喪失相手 == 0
 	LOCAL:1++
-SIF CFLAG:初キス相手 <= 0
+SIF !CFLAG:初キス相手
 	LOCAL:1++
 SIF MAXBASE:体力 >= 3500
 	LOCAL:1++
@@ -218,7 +218,7 @@ TCVAR:触手経験 +=  TCVAR:絶頂経験 / 3 + RAND:11
 TCVAR:緊縛経験 += TCVAR:触手経験
 TCVAR:射精経験 += TCVAR:絶頂経験 /3 - RAND:26
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = %CALLNAME:MASTER%
+	CSTR:処女喪失相手 = %CALLNAME:MASTER%
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 1
 	SETCOLOR 0xF58F98
@@ -226,46 +226,47 @@ IF TALENT:処女 == 1
 	RESETCOLOR
 ENDIF
 IF TALENT:MASTER:童貞 == 1
-	CSTR:MASTER:童貞喪失の相手 = 雛見まゆ
+	CSTR:MASTER:童貞喪失相手 = 雛見まゆ
 	TALENT:MASTER:童貞 = 0
 ENDIF
-IF CFLAG:初キス相手 == -1
+IF !CFLAG:初キス相手
 	CFLAG:初キス相手 = 1
 	CSTR:初キス相手 = ユーニス・パラディスス
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
+	CALL 初キス実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススの%CSTR:男性器呼び方%")
 ENDIF
 IF TALENT:童貞 == 1
 	TALENT:童貞 = 0
-	CSTR:童貞喪失の相手 = 知らない女のコの処女マンコｖ
+	CSTR:童貞喪失相手 = 知らない女のコの処女マンコｖ
 	SETCOLOR 0xF58F98
 	PRINTL 【童貞喪失】
 	RESETCOLOR
 ENDIF
-IF TALENT:アナル処女 == 1
-	CFLAG:アナル処女喪失相手 = 14
-	TALENT:アナル処女 = 0
-	CSTR:アナル処女喪失相手 = 触手生物
+IF TALENT:Ａ処女 == 1
+	CFLAG:Ａ処女喪失相手 = 14
+	TALENT:Ａ処女 = 0
+	CSTR:Ａ処女喪失相手 = 触手生物
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
 ENDIF
 CFLAG:処女喪失年齢 = BASE:実年齢
 CFLAG:処女喪失月 = DAY:日付_月
 CFLAG:処女喪失日 = DAY:日付_日
 CFLAG:処女喪失場所 = 12
-CFLAG:処女喪失シチュ = 5
+CFLAG:処女喪失状況 = 5
 CFLAG:初キス喪失年齢 = BASE:実年齢
 CFLAG:初キス喪失月 = DAY:日付_月
 CFLAG:初キス喪失日 = DAY:日付_日
 CFLAG:初キス喪失場所 = 12
-CFLAG:初キス喪失シチュ = 1
-CFLAG:アナル処女喪失年齢 = BASE:実年齢
-CFLAG:アナル処女喪失月 = DAY:日付_月
-CFLAG:アナル処女喪失日 = DAY:日付_日
-CFLAG:アナル処女喪失場所 = 12
-CFLAG:アナル処女喪失シチュ = 5
+CFLAG:初キス喪失状況 = 1
+CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+CFLAG:Ａ処女喪失月 = DAY:日付_月
+CFLAG:Ａ処女喪失日 = DAY:日付_日
+CFLAG:Ａ処女喪失場所 = 12
+CFLAG:Ａ処女喪失状況 = 5
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)
 CFLAG:腋毛 += 1

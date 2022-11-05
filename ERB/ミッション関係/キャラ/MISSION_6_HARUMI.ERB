@@ -86,7 +86,7 @@ LOCAL = GETCHARA([[キャラ:高屋敷春海]])
 LOCAL:1 = 0
 SIF TALENT:LOCAL:処女 == 0
 	LOCAL:1++
-SIF TALENT:LOCAL:アナル処女 == 0
+SIF TALENT:LOCAL:Ａ処女 == 0
 	LOCAL:1++
 ;技巧
 SIF ABL:LOCAL:技巧 == 10
@@ -104,7 +104,7 @@ SIF ABL:LOCAL:奉仕精神 >= 5
 SIF TALENT:LOCAL:マゾ == 1
 	LOCAL:1++
 ;キス経験済み
-SIF CFLAG:LOCAL:初キス相手 >= 1
+SIF CFLAG:LOCAL:初キス相手
 	LOCAL:1++
 ;異常経験
 SIF EXP:LOCAL:異常経験 >= 5

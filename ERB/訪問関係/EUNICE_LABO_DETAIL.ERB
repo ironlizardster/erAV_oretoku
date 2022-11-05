@@ -817,10 +817,10 @@ ELSEIF TALENT:RESULT:ミッション
 ELSEIF B == 100 && TALENT:RESULT:処女 == 1 && CFLAG:RESULT:処女喪失相手 == 0
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
-ELSEIF B == 150 && TALENT:RESULT:アナル処女 == 1
+ELSEIF B == 150 && TALENT:RESULT:Ａ処女 == 1
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
-ELSEIF B == 200 && CFLAG:RESULT:初キス相手 == -1
+ELSEIF B == 200 && !CFLAG:RESULT:初キス相手
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -863,14 +863,14 @@ ELSEIF RESULT == 0
 			CFLAG:処女喪失相手 = 0
 			JUEL:快Ｖ = 0
 		ELSEIF B == 150
-			PRINTFORM %CALLNAME:TARGET%は【アナル処女】になった
-			TALENT:アナル処女 = 1
+			PRINTFORM %CALLNAME:TARGET%は【Ａ処女】になった
+			TALENT:Ａ処女 = 1
 			EXP:Ａ経験 = 0
 			ABL:Ａ感覚 = 0
 			JUEL:快Ａ = 0
 		ELSEIF B == 200
 			PRINTFORM %CALLNAME:TARGET%はキス未経験になった
-			CFLAG:初キス相手 = -1
+			CFLAG:初キス相手 = 0
 		ENDIF
 	PRINTL 》
 	PRINTFORML
@@ -1080,7 +1080,7 @@ IF TALENT:淫乱 == 1
 ENDIF
 
 IF TALENT:処女 == 1
-	CSTR:処女喪失の相手 = %CALLNAME:MASTER%
+	CSTR:処女喪失相手 = %CALLNAME:MASTER%
 	TALENT:処女 = 0
 	CFLAG:処女喪失相手 = 16
 	CFLAG:処女喪失年齢 = BASE:実年齢
@@ -1092,38 +1092,35 @@ IF TALENT:処女 == 1
 ENDIF
 
 IF TALENT:MASTER:童貞 == 1
-	CSTR:MASTER:童貞喪失の相手 = %NAME:TARGET%
+	CSTR:MASTER:童貞喪失相手 = %NAME:TARGET%
 	TALENT:MASTER:童貞 = 0
 ENDIF
 
-IF CFLAG:初キス相手 == -1
-	CFLAG:初キス相手 = 1
-	CFLAG:初キス喪失年齢 = BASE:実年齢
-	CFLAG:初キス喪失月 = DAY:日付_月
-	CFLAG:初キス喪失日 = DAY:日付_日
+IF !CFLAG:初キス相手
 	CSTR:初キス相手 = ユーニス・パラディススのカリ高極太ふたなりチンポ
 	SETCOLOR 0xF58F98
 	PRINTL 【ファーストキス】
 	RESETCOLOR
+	CALL 初キス実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,CSTR:初キス相手)
 ENDIF
 
 IF TALENT:童貞 == 1
 	TALENT:童貞 = 0
-	CSTR:童貞喪失の相手 = 知らない女のコの処女マンコ
+	CSTR:童貞喪失相手 = 知らない女のコの処女マンコ
 	SETCOLOR 0xF58F98
 	PRINTL 【童貞喪失】
 	RESETCOLOR
 ENDIF
 
-IF TALENT:アナル処女 == 1
-	TALENT:アナル処女 = 0
-	CFLAG:アナル処女喪失相手 = 14
-	CFLAG:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:アナル処女喪失月 = DAY:日付_月
-	CFLAG:アナル処女喪失日 = DAY:日付_日
-	CSTR:アナル処女喪失相手 = 触手生物
+IF TALENT:Ａ処女 == 1
+	TALENT:Ａ処女 = 0
+	CFLAG:Ａ処女喪失相手 = 14
+	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CSTR:Ａ処女喪失相手 = 触手生物
 	SETCOLOR 0xF58F98
-	PRINTL 【アナル処女喪失】
+	PRINTL 【Ａ処女喪失】
 	RESETCOLOR
 ENDIF
 

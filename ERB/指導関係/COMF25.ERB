@@ -31,8 +31,8 @@ ENDIF
 
 ;調教者の処女を与えるどうかの確認
 $INPUT_LOOP_01
-IF TALENT:PLAYER:アナル処女
-	PRINTFORML %CALLNAME:PLAYER%のアナル処女を%CALLNAME:TARGET%に与えますか？
+IF TALENT:PLAYER:Ａ処女
+	PRINTFORML %CALLNAME:PLAYER%のＡ処女を%CALLNAME:TARGET%に与えますか？
 	PRINTL  [0] - はい
 	PRINTL  [1] - いいえ
 	INPUT
@@ -277,7 +277,7 @@ ENDIF
 
 Z = 0
 ;逆レイプで処女喪失の場合、調教者の異常経験に＋１
-SIF TALENT:PLAYER:アナル処女
+SIF TALENT:PLAYER:Ａ処女
 	Z += 1
 IF Z
 	EXP:PLAYER:異常経験 += Z
@@ -288,7 +288,7 @@ TFLAG:近親相姦 = 0
 
 ;愛情経験
 ;調教者が処女で調教対象が童貞
-IF TALENT:PLAYER:アナル処女
+IF TALENT:PLAYER:Ａ処女
 	E = 100
 ENDIF
 IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
@@ -301,19 +301,19 @@ E = 0
 TFLAG:近親相姦 = 0
 CALL INCEST
 
-;調教者がアナル処女なら処女喪失
-IF TALENT:PLAYER:アナル処女
-	CSTR:PLAYER:アナル処女喪失相手 = %NAME:TARGET%
-	TALENT:PLAYER:アナル処女 = 0
+;調教者がＡ処女なら処女喪失
+IF TALENT:PLAYER:Ａ処女
+	CSTR:PLAYER:Ａ処女喪失相手 = %NAME:TARGET%
+	TALENT:PLAYER:Ａ処女 = 0
 	SETCOLOR 0xF58F98
-	PRINTFORML 【アナル処女喪失】(%CALLNAME:PLAYER%)
+	PRINTFORML 【Ａ処女喪失】(%CALLNAME:PLAYER%)
 	RESETCOLOR
-	CFLAG:PLAYER:アナル処女喪失年齢 = BASE:実年齢
-	CFLAG:PLAYER:アナル処女喪失月 = DAY:日付_月
-	CFLAG:PLAYER:アナル処女喪失日 = DAY:日付_日
-	CFLAG:PLAYER:アナル処女喪失場所 = 14
-	CFLAG:PLAYER:アナル処女喪失シチュ = 1
-	CFLAG:PLAYER:アナル処女喪失相手 = 1
+	CFLAG:PLAYER:Ａ処女喪失年齢 = BASE:実年齢
+	CFLAG:PLAYER:Ａ処女喪失月 = DAY:日付_月
+	CFLAG:PLAYER:Ａ処女喪失日 = DAY:日付_日
+	CFLAG:PLAYER:Ａ処女喪失場所 = 14
+	CFLAG:PLAYER:Ａ処女喪失状況 = 1
+	CFLAG:PLAYER:Ａ処女喪失相手 = 1
 ENDIF
 
 TFLAG:近親相姦 = 0

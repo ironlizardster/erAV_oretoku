@@ -635,7 +635,7 @@ BASE:体重 += 脂肪 * 50 * BASE:身長 / 1000 / 100
 
 ;初キスを登録
 IF !キス経験決定(BASE:実年齢)
-	CFLAG:初キス相手 = -1
+	CFLAG:初キス相手 = 0
 ELSE
 	CFLAG:初キス相手 = 1
 
@@ -842,34 +842,34 @@ ELSE
 		LOCAL = RAND:10
 		IF LOCAL < 5			;半分の確率で恋人
 			IF TALENT:人妻
-				CSTR:処女喪失の相手 = 夫
+				CSTR:処女喪失相手 = 夫
 			ELSEIF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:処女喪失の相手 = 彼女
+				CSTR:処女喪失相手 = 彼女
 			ELSE
-				CSTR:処女喪失の相手 = 彼氏
+				CSTR:処女喪失相手 = 彼氏
 			ENDIF
 		ELSEIF LOCAL < 7 && CFLAG:性別 == 0		;2割が道具による喪失(女性のみ)
 			LOCAL = RAND:3
 			IF LOCAL == 0
-				CSTR:処女喪失の相手 = バイブ
+				CSTR:処女喪失相手 = バイブ
 			ELSEIF LOCAL == 1
-				CSTR:処女喪失の相手 = ディルドー
+				CSTR:処女喪失相手 = ディルドー
 			ELSE
-				CSTR:処女喪失の相手 = ローター
+				CSTR:処女喪失相手 = ローター
 			ENDIF
 		ELSEIF LOCAL < 7 && CFLAG:性別 != 0		;女性以外(童貞戻し)
 			TALENT:童貞 = 1
 		ELSEIF LOCAL == 7
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:処女喪失の相手 = 知らないオンナの人
+				CSTR:処女喪失相手 = 知らないオンナの人
 			ELSE
-				CSTR:処女喪失の相手 = 知らないオトコの人
+				CSTR:処女喪失相手 = 知らないオトコの人
 			ENDIF
 		ELSE
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:処女喪失の相手 = 元カノ
+				CSTR:処女喪失相手 = 元カノ
 			ELSE
-				CSTR:処女喪失の相手 = 元カレ
+				CSTR:処女喪失相手 = 元カレ
 			ENDIF
 		ENDIF
 	ELSEIF CFLAG:彼氏タイプ == 7				;背徳的肉体関係
@@ -877,128 +877,128 @@ ELSE
 		IF LOCAL == 0		;兄姉
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 兄
+					CSTR:処女喪失相手 = 兄
 				ELSE
-					CSTR:処女喪失の相手 = 義兄
+					CSTR:処女喪失相手 = 義兄
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 姉
+					CSTR:処女喪失相手 = 姉
 				ELSE
-					CSTR:処女喪失の相手 = 義姉
+					CSTR:処女喪失相手 = 義姉
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 1		;弟妹
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 弟
+					CSTR:処女喪失相手 = 弟
 				ELSE
-					CSTR:処女喪失の相手 = 義弟
+					CSTR:処女喪失相手 = 義弟
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 妹
+					CSTR:処女喪失相手 = 妹
 				ELSE
-					CSTR:処女喪失の相手 = 義妹
+					CSTR:処女喪失相手 = 義妹
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 2
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 父
+					CSTR:処女喪失相手 = 父
 				ELSE
-					CSTR:処女喪失の相手 = 養父
+					CSTR:処女喪失相手 = 養父
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 母
+					CSTR:処女喪失相手 = 母
 				ELSE
-					CSTR:処女喪失の相手 = 義母
+					CSTR:処女喪失相手 = 義母
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 3		;おじいちゃんおばあちゃん
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-				CSTR:処女喪失の相手 = 祖父
+				CSTR:処女喪失相手 = 祖父
 			ELSE
-				CSTR:処女喪失の相手 = 祖母
+				CSTR:処女喪失相手 = 祖母
 			ENDIF
 		;※息子/娘とか孫/孫娘とかは分岐がめんどくさいのでパス
 		ELSEIF LOCAL == 4		;おじおば
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 叔父さん
+					CSTR:処女喪失相手 = 叔父さん
 				ELSE
-					CSTR:処女喪失の相手 = 伯父さん
+					CSTR:処女喪失相手 = 伯父さん
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:処女喪失の相手 = 叔母さん
+					CSTR:処女喪失相手 = 叔母さん
 				ELSE
-					CSTR:処女喪失の相手 = 伯母さん
+					CSTR:処女喪失相手 = 伯母さん
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 5		;先生と呼ばれる相手
 			LOCAL = RAND:5
 			IF LOCAL == 0
-				CSTR:処女喪失の相手 = 元担任教師
+				CSTR:処女喪失相手 = 元担任教師
 			ELSEIF LOCAL == 1
-				CSTR:処女喪失の相手 = 体育教師
+				CSTR:処女喪失相手 = 体育教師
 			ELSEIF LOCAL == 2
-				CSTR:処女喪失の相手 = 校長先生
+				CSTR:処女喪失相手 = 校長先生
 			ELSEIF LOCAL == 3
-				CSTR:処女喪失の相手 = 用務員
+				CSTR:処女喪失相手 = 用務員
 			ELSEIF LOCAL == 4
 				IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-					CSTR:処女喪失の相手 = 家庭教師のお兄さん
+					CSTR:処女喪失相手 = 家庭教師のお兄さん
 				ELSE
-					CSTR:処女喪失の相手 = 家庭教師のお姉さん
+					CSTR:処女喪失相手 = 家庭教師のお姉さん
 				ENDIF
 			ELSEIF LOCAL == 5
 				IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-					CSTR:処女喪失の相手 = 家庭教師のおじさん
+					CSTR:処女喪失相手 = 家庭教師のおじさん
 				ELSE
-					CSTR:処女喪失の相手 = 家庭教師のおばさん
+					CSTR:処女喪失相手 = 家庭教師のおばさん
 				ENDIF
 			ELSEIF LOCAL == 6
 				IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 					IF RAND:2 == 0
-						CSTR:処女喪失の相手 = お医者さん
+						CSTR:処女喪失相手 = お医者さん
 					ELSE
-						CSTR:処女喪失の相手 = 医療器具
+						CSTR:処女喪失相手 = 医療器具
 					ENDIF
 				ELSE
 					LOCAL = RAND:5
 					IF LOCAL == 0
-						CSTR:処女喪失の相手 = 医療器具
+						CSTR:処女喪失相手 = 医療器具
 					ELSEIF LOCAL < 4
-						CSTR:処女喪失の相手 = 看護婦さん
+						CSTR:処女喪失相手 = 看護婦さん
 					ELSE
-						CSTR:処女喪失の相手 = 女医さん
+						CSTR:処女喪失相手 = 女医さん
 					ENDIF
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 6		;使用人
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-				CSTR:処女喪失の相手 = 使用人の執事
+				CSTR:処女喪失相手 = 使用人の執事
 			ELSE
-				CSTR:処女喪失の相手 = 使用人のメイドさん
+				CSTR:処女喪失相手 = 使用人のメイドさん
 			ENDIF
 		ELSE			;ペット、動物(現状犬のみ)
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				LOCAL = RAND:5
 				IF LOCAL == 0
-					CSTR:処女喪失の相手 = 野良犬(♂)
+					CSTR:処女喪失相手 = 野良犬(♂)
 				ELSE
-					CSTR:処女喪失の相手 = 飼い犬(♂)
+					CSTR:処女喪失相手 = 飼い犬(♂)
 				ENDIF
 			ELSE
 				LOCAL = RAND:10
 				IF LOCAL < 2
-					CSTR:処女喪失の相手 = 野良犬(♀)
+					CSTR:処女喪失相手 = 野良犬(♀)
 				ELSEIF LOCAL < 9
-					CSTR:処女喪失の相手 = 飼い犬(♀)
+					CSTR:処女喪失相手 = 飼い犬(♀)
 				ELSE
-					CSTR:処女喪失の相手 = 野良犬(♂)
+					CSTR:処女喪失相手 = 野良犬(♂)
 					;※ごめん、魔が差した
 				ENDIF
 				EXP:獣姦経験 = EXP:獣姦経験 + 1 + RAND:26
@@ -1008,21 +1008,21 @@ ELSE
 		;童貞の自慰での喪失扱いの判定はしない
 		LOCAL = RAND:3
 		IF LOCAL == 0			;日用品等
-			CSTR:処女喪失の相手 = 筆記用具
+			CSTR:処女喪失相手 = 筆記用具
 		ELSEIF LOCAL == 1			;野菜など
 			LOCAL = RAND:3
 			SIF LOCAL == 0
-				CSTR:処女喪失の相手 = まつたけ
+				CSTR:処女喪失相手 = まつたけ
 			SIF LOCAL == 1
-				CSTR:処女喪失の相手 = バナナ
+				CSTR:処女喪失相手 = バナナ
 			SIF LOCAL == 2
-				CSTR:処女喪失の相手 = きゅうり
+				CSTR:処女喪失相手 = きゅうり
 			SIF LOCAL == 3
-				CSTR:処女喪失の相手 = にんじん
+				CSTR:処女喪失相手 = にんじん
 			SIF LOCAL == 4
-				CSTR:処女喪失の相手 = 生たまご
+				CSTR:処女喪失相手 = 生たまご
 		ELSE
-			CSTR:処女喪失の相手 = 棒状の何か
+			CSTR:処女喪失相手 = 棒状の何か
 		ENDIF
 	ELSEIF ( LOCAL == 1 || 空想喪失 == 1 && LOCAL < 7 )		;妄想喪失
 		IF CFLAG:性別 == 0
@@ -1032,58 +1032,58 @@ ELSE
 				LOCAL = RAND:3
 				IF CFLAG:性別 == 0
 					IF LOCAL == 0
-						CSTR:処女喪失の相手 = 二次元男子(実は未経験)
+						CSTR:処女喪失相手 = 二次元男子(実は未経験)
 						TALENT:処女 = 1
 					ELSEIF LOCAL == 1
-						CSTR:処女喪失の相手 = 妄想彼氏(自慰：自分の指)
+						CSTR:処女喪失相手 = 妄想彼氏(自慰：自分の指)
 					ELSE
-						CSTR:処女喪失の相手 = 空想彼氏(自慰：棒状の何か)
+						CSTR:処女喪失相手 = 空想彼氏(自慰：棒状の何か)
 					ENDIF
 				ELSEIF CFLAG:性別 == 1
 					LOCAL = RAND:10
 					IF LOCAL == 0
-						CSTR:処女喪失の相手 = 妄想彼女(実は未経験)
+						CSTR:処女喪失相手 = 妄想彼女(実は未経験)
 						TALENT:童貞 = 1
 					ELSEIF LOCAL < 9
-						CSTR:処女喪失の相手 = 二次元彼女(自慰)
+						CSTR:処女喪失相手 = 二次元彼女(自慰)
 					ELSE
-						CSTR:処女喪失の相手 = ナマコ
+						CSTR:処女喪失相手 = ナマコ
 					ENDIF
 				ELSEIF CFLAG:性別 == 2
 					LOCAL = RAND:10
 					IF LOCAL == 0
 						IF RAND:3 == 0
-							CSTR:処女喪失の相手 = 妄想彼女(実は未経験)
+							CSTR:処女喪失相手 = 妄想彼女(実は未経験)
 						ELSE
-							CSTR:処女喪失の相手 = 妄想彼氏(実は未経験)
+							CSTR:処女喪失相手 = 妄想彼氏(実は未経験)
 						ENDIF
 						TALENT:童貞 = 1
 					ELSEIF LOCAL < 6
-						CSTR:処女喪失の相手 = 妄想彼女(自慰)
+						CSTR:処女喪失相手 = 妄想彼女(自慰)
 					ELSE
-						CSTR:処女喪失の相手 = 妄想彼氏(自慰)
+						CSTR:処女喪失相手 = 妄想彼氏(自慰)
 					ENDIF
 				ENDIF
 			ELSE
 				IF CFLAG:性別 == 0 && (CFLAG:性別 == 2 && RAND:3 == 0)
-					CSTR:処女喪失の相手 = 知らないオトコの人
+					CSTR:処女喪失相手 = 知らないオトコの人
 				ELSEIF CFLAG:性別 == 1
-					CSTR:処女喪失の相手 = 見知らぬオンナ
+					CSTR:処女喪失相手 = 見知らぬオンナ
 				ENDIF
 			ENDIF
 		ENDIF
 	ELSEIF LOCAL == 2
-		CSTR:処女喪失の相手 = 睡眠時につき喪失理由不明
+		CSTR:処女喪失相手 = 睡眠時につき喪失理由不明
 	ELSEIF LOCAL == 3
-		CSTR:処女喪失の相手 = 凌辱被害
+		CSTR:処女喪失相手 = 凌辱被害
 	ELSE
 		IF TALENT:人妻 && RAND:3 == 0		;主婦のうち1/3が夫にそれ以外は元恋人に捧げた
-			CSTR:処女喪失の相手 = 夫
+			CSTR:処女喪失相手 = 夫
 		ELSE						;主婦以外と上記に該当しなかった
 			IF CFLAG:性別 == 0 && (CFLAG:性別 == 2 && RAND:3 == 0)
-				CSTR:処女喪失の相手 = 元カレ
+				CSTR:処女喪失相手 = 元カレ
 			ELSEIF CFLAG:性別 == 1
-				CSTR:処女喪失の相手 = 元カノ
+				CSTR:処女喪失相手 = 元カノ
 			ENDIF
 		ENDIF
 	ENDIF
@@ -1091,7 +1091,7 @@ ENDIF
 
 ;アナル経験を登録
 IF !後経験決定()
-	TALENT:アナル処女 = 1
+	TALENT:Ａ処女 = 1
 ELSE
 	;経験が有る場合、回数を適当に決定
 	IF CFLAG:性別 == 0	;キャラが女性の場合
@@ -1102,32 +1102,32 @@ ELSE
 		LOCAL = RAND:10
 		IF LOCAL < 5			;半分の確率で恋人
 			IF TALENT:人妻
-				CSTR:童貞喪失の相手 = 夫
+				CSTR:童貞喪失相手 = 夫
 			ELSEIF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:童貞喪失の相手 = 彼女
+				CSTR:童貞喪失相手 = 彼女
 			ELSE
-				CSTR:童貞喪失の相手 = 彼氏
+				CSTR:童貞喪失相手 = 彼氏
 			ENDIF
 		ELSEIF LOCAL < 7 && CFLAG:性別 == 0		;2割が道具による喪失
 			LOCAL = RAND:3
 			IF LOCAL == 0
-				CSTR:童貞喪失の相手 = アナルバイブ
+				CSTR:童貞喪失相手 = アナルバイブ
 			ELSEIF LOCAL == 1
-				CSTR:童貞喪失の相手 = アナルビーズ
+				CSTR:童貞喪失相手 = アナルビーズ
 			ELSEIF LOCAL == 2
-				CSTR:童貞喪失の相手 = ビー玉
+				CSTR:童貞喪失相手 = ビー玉
 			ENDIF
 		ELSEIF LOCAL == 7
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:童貞喪失の相手 = 知らないオンナの人
+				CSTR:童貞喪失相手 = 知らないオンナの人
 			ELSE
-				CSTR:童貞喪失の相手 = 知らないオトコの人
+				CSTR:童貞喪失相手 = 知らないオトコの人
 			ENDIF
 		ELSE
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:童貞喪失の相手 = 元カノ
+				CSTR:童貞喪失相手 = 元カノ
 			ELSE
-				CSTR:童貞喪失の相手 = 元カレ
+				CSTR:童貞喪失相手 = 元カレ
 			ENDIF
 		ENDIF
 	ELSEIF CFLAG:彼氏タイプ == 7
@@ -1135,128 +1135,128 @@ ELSE
 		IF LOCAL == 0		;兄姉
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 兄
+					CSTR:Ａ処女喪失相手 = 兄
 				ELSE
-					CSTR:アナル処女喪失相手 = 義兄
+					CSTR:Ａ処女喪失相手 = 義兄
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 姉
+					CSTR:Ａ処女喪失相手 = 姉
 				ELSE
-					CSTR:アナル処女喪失相手 = 義姉
+					CSTR:Ａ処女喪失相手 = 義姉
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 1		;弟妹
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 弟
+					CSTR:Ａ処女喪失相手 = 弟
 				ELSE
-					CSTR:アナル処女喪失相手 = 義弟
+					CSTR:Ａ処女喪失相手 = 義弟
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 妹
+					CSTR:Ａ処女喪失相手 = 妹
 				ELSE
-					CSTR:アナル処女喪失相手 = 義妹
+					CSTR:Ａ処女喪失相手 = 義妹
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 2
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 父
+					CSTR:Ａ処女喪失相手 = 父
 				ELSE
-					CSTR:アナル処女喪失相手 = 養父
+					CSTR:Ａ処女喪失相手 = 養父
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 母
+					CSTR:Ａ処女喪失相手 = 母
 				ELSE
-					CSTR:アナル処女喪失相手 = 義母
+					CSTR:Ａ処女喪失相手 = 義母
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 3		;おじいちゃんおばあちゃん
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-				CSTR:アナル処女喪失相手 = 祖父
+				CSTR:Ａ処女喪失相手 = 祖父
 			ELSE
-				CSTR:アナル処女喪失相手 = 祖母
+				CSTR:Ａ処女喪失相手 = 祖母
 			ENDIF
 		;※息子/娘とか孫/孫娘とかは分岐がめんどくさいのでパス
 		ELSEIF LOCAL == 4		;おじおば
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 叔父さん
+					CSTR:Ａ処女喪失相手 = 叔父さん
 				ELSE
-					CSTR:アナル処女喪失相手 = 伯父さん
+					CSTR:Ａ処女喪失相手 = 伯父さん
 				ENDIF
 			ELSE
 				IF RAND:3 == 0
-					CSTR:アナル処女喪失相手 = 叔母さん
+					CSTR:Ａ処女喪失相手 = 叔母さん
 				ELSE
-					CSTR:アナル処女喪失相手 = 伯母さん
+					CSTR:Ａ処女喪失相手 = 伯母さん
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 5		;先生と呼ばれる相手
 			LOCAL = RAND:5
 			IF LOCAL == 0
-				CSTR:アナル処女喪失相手 = 元担任教師
+				CSTR:Ａ処女喪失相手 = 元担任教師
 			ELSEIF LOCAL == 1
-				CSTR:アナル処女喪失相手 = 体育教師
+				CSTR:Ａ処女喪失相手 = 体育教師
 			ELSEIF LOCAL == 2
-				CSTR:アナル処女喪失相手 = 校長先生
+				CSTR:Ａ処女喪失相手 = 校長先生
 			ELSEIF LOCAL == 3
-				CSTR:アナル処女喪失相手 = 用務員
+				CSTR:Ａ処女喪失相手 = 用務員
 			ELSEIF LOCAL == 4
 				IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-					CSTR:アナル処女喪失相手 = 家庭教師のお兄さん
+					CSTR:Ａ処女喪失相手 = 家庭教師のお兄さん
 				ELSE
-					CSTR:アナル処女喪失相手 = 家庭教師のお姉さん
+					CSTR:Ａ処女喪失相手 = 家庭教師のお姉さん
 				ENDIF
 			ELSEIF LOCAL == 5
 				IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-					CSTR:アナル処女喪失相手 = 家庭教師のおじさん
+					CSTR:Ａ処女喪失相手 = 家庭教師のおじさん
 				ELSE
-					CSTR:アナル処女喪失相手 = 家庭教師のおばさん
+					CSTR:Ａ処女喪失相手 = 家庭教師のおばさん
 				ENDIF
 			ELSEIF LOCAL == 6
 				IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 					IF RAND:2 == 0
-						CSTR:アナル処女喪失相手 = お医者さん
+						CSTR:Ａ処女喪失相手 = お医者さん
 					ELSE
-						CSTR:アナル処女喪失相手 = 医療器具
+						CSTR:Ａ処女喪失相手 = 医療器具
 					ENDIF
 				ELSE
 					LOCAL = RAND:5
 					IF LOCAL == 0
-						CSTR:アナル処女喪失相手 = 医療器具
+						CSTR:Ａ処女喪失相手 = 医療器具
 					ELSEIF LOCAL < 4
-						CSTR:アナル処女喪失相手 = 看護婦さん
+						CSTR:Ａ処女喪失相手 = 看護婦さん
 					ELSE
-						CSTR:アナル処女喪失相手 = 女医さん
+						CSTR:Ａ処女喪失相手 = 女医さん
 					ENDIF
 				ENDIF
 			ENDIF
 		ELSEIF LOCAL == 6		;使用人
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
-				CSTR:アナル処女喪失相手 = 使用人の執事
+				CSTR:Ａ処女喪失相手 = 使用人の執事
 			ELSE
-				CSTR:アナル処女喪失相手 = 使用人のメイドさん
+				CSTR:Ａ処女喪失相手 = 使用人のメイドさん
 			ENDIF
 		ELSE			;ペット、動物(現状犬のみ)
 			IF CFLAG:性別 == 0 || (CFLAG:性別 == 2 && RAND:2 == 0) 
 				LOCAL = RAND:5
 				IF LOCAL == 0
-					CSTR:アナル処女喪失相手 = 野良犬(♂)
+					CSTR:Ａ処女喪失相手 = 野良犬(♂)
 				ELSE
-					CSTR:アナル処女喪失相手 = 飼い犬(♂)
+					CSTR:Ａ処女喪失相手 = 飼い犬(♂)
 				ENDIF
 			ELSE
 				LOCAL = RAND:10
 				IF LOCAL < 2
-					CSTR:アナル処女喪失相手 = 野良犬(♀)
+					CSTR:Ａ処女喪失相手 = 野良犬(♀)
 				ELSEIF LOCAL < 9
-					CSTR:アナル処女喪失相手 = 飼い犬(♀)
+					CSTR:Ａ処女喪失相手 = 飼い犬(♀)
 				ELSE
-					CSTR:アナル処女喪失相手 = 野良犬(♂)
+					CSTR:Ａ処女喪失相手 = 野良犬(♂)
 					;※ごめん、魔が差した
 				ENDIF
 				EXP:獣姦経験 = EXP:獣姦経験 + 1 + RAND:26
@@ -1270,56 +1270,56 @@ ELSE
 				LOCAL = RAND:3
 				IF CFLAG:性別 == 0
 					IF LOCAL == 0
-						CSTR:アナル処女喪失相手 = 二次元男子(実は未経験)
-						TALENT:アナル処女 = 1
+						CSTR:Ａ処女喪失相手 = 二次元男子(実は未経験)
+						TALENT:Ａ処女 = 1
 					ELSEIF LOCAL == 1
-						CSTR:アナル処女喪失相手 = 妄想彼氏(自慰：自分の指)
+						CSTR:Ａ処女喪失相手 = 妄想彼氏(自慰：自分の指)
 					ELSE
-						CSTR:アナル処女喪失相手 = 空想彼氏(自慰：棒状の何か)
+						CSTR:Ａ処女喪失相手 = 空想彼氏(自慰：棒状の何か)
 					ENDIF
 				ELSEIF CFLAG:性別 == 1
 					LOCAL = RAND:10
 					IF LOCAL == 0
-						CSTR:アナル処女喪失相手 = 妄想彼女(実は未経験)
-						TALENT:アナル処女 = 1
+						CSTR:Ａ処女喪失相手 = 妄想彼女(実は未経験)
+						TALENT:Ａ処女 = 1
 						EXP:Ａ経験 = 0
 						EXP:絶頂経験 = 0
 					ELSE
-						CSTR:アナル処女喪失相手 = 二次元彼女(自慰)
+						CSTR:Ａ処女喪失相手 = 二次元彼女(自慰)
 					ENDIF
 				ELSEIF CFLAG:性別 == 2
 					LOCAL = RAND:10
 					IF LOCAL == 0
 						IF RAND:3 == 0
-							CSTR:アナル処女喪失相手 = 妄想彼女(実は未経験)
+							CSTR:Ａ処女喪失相手 = 妄想彼女(実は未経験)
 						ELSE
-							CSTR:アナル処女喪失相手 = 妄想彼氏(実は未経験)
+							CSTR:Ａ処女喪失相手 = 妄想彼氏(実は未経験)
 						ENDIF
-						TALENT:アナル処女 = 1
+						TALENT:Ａ処女 = 1
 						EXP:Ａ経験 = 0
 						EXP:絶頂経験 = 0
 					ELSEIF LOCAL < 6
-						CSTR:アナル処女喪失相手 = 妄想彼女(自慰)
+						CSTR:Ａ処女喪失相手 = 妄想彼女(自慰)
 					ELSE
-						CSTR:アナル処女喪失相手 = 妄想彼氏(自慰)
+						CSTR:Ａ処女喪失相手 = 妄想彼氏(自慰)
 					ENDIF
 				ENDIF
 			ELSE
 				IF CFLAG:性別 == 0 && (CFLAG:性別 == 2 && RAND:3 == 0)
-					CSTR:アナル処女喪失相手 = 知らないオトコの人
+					CSTR:Ａ処女喪失相手 = 知らないオトコの人
 				ELSEIF CFLAG:性別 == 1
-					CSTR:アナル処女喪失相手 = 見知らぬオンナ
+					CSTR:Ａ処女喪失相手 = 見知らぬオンナ
 				ENDIF
 			ENDIF
 		ENDIF
 	ELSE
 		IF TALENT:人妻 && RAND:3 == 0		;主婦のうち1/3が夫にそれ以外は元恋人に捧げた
-			CSTR:アナル処女喪失相手 = 夫
+			CSTR:Ａ処女喪失相手 = 夫
 		ELSE						;主婦以外と上記に該当しなかった
 			IF CFLAG:性別 == 0 && (CFLAG:性別 == 2 && RAND:3 == 0)
-				CSTR:アナル処女喪失相手 = 元カレ
+				CSTR:Ａ処女喪失相手 = 元カレ
 			ELSEIF CFLAG:性別 == 1
-				CSTR:アナル処女喪失相手 = 元カノ
+				CSTR:Ａ処女喪失相手 = 元カノ
 			ENDIF
 		ENDIF
 	ENDIF
@@ -1341,8 +1341,8 @@ ADDVOIDCHARA
 TARGET = CHARANUM - 1
 
 ;NOの設定
-NO = FLAG:汎用女優カウント + MIN_NO_RANDOM_CHARA
 FLAG:汎用女優カウント ++
+NO = FLAG:汎用女優カウント + MIN_NO_RANDOM_CHARA
 
 ;初期体力を格納
 MAXBASE:体力 = 1500
@@ -1808,21 +1808,21 @@ ENDIF
 ;助手が話術1以上あれば、より詳しい情報を表示する
 IF ASSI > 0 && ABL:ASSI:話術 >= 3
 	PRINTFORM 口のうまい%CALLNAME:ASSI%が緊張をほぐして詳しい話を聞くと、
-	IF CFLAG:初キス相手 == -1 && TALENT:処女 && TALENT:アナル処女
+	IF !CFLAG:初キス相手 && TALENT:処女 && TALENT:Ａ処女
 		PRINTL セックスどころかキスの経験すらないようだ。
-	ELSEIF CFLAG:初キス相手 == -1 && !TALENT:処女 && TALENT:アナル処女
+	ELSEIF !CFLAG:初キス相手 && !TALENT:処女 && TALENT:Ａ処女
 		PRINTL セックスの経験はあるがファーストキスはまだらしい。
-	ELSEIF CFLAG:初キス相手 == -1 && TALENT:処女 && !TALENT:アナル処女
+	ELSEIF !CFLAG:初キス相手 && TALENT:処女 && !TALENT:Ａ処女
 		PRINTL なぜかアナルでのみ経験があるらしい……
-	ELSEIF CFLAG:初キス相手 == -1 && !TALENT:処女 && !TALENT:アナル処女
+	ELSEIF !CFLAG:初キス相手 && !TALENT:処女 && !TALENT:Ａ処女
 		PRINTL キス以外は一通り経験しているようだ……
-	ELSEIF CFLAG:初キス相手 && TALENT:処女 && TALENT:アナル処女
+	ELSEIF CFLAG:初キス相手 && TALENT:処女 && TALENT:Ａ処女
 		PRINTL キスまでは行ったが、そこから先は未経験らしい。
-	ELSEIF CFLAG:初キス相手 && !TALENT:処女 && TALENT:アナル処女
+	ELSEIF CFLAG:初キス相手 && !TALENT:処女 && TALENT:Ａ処女
 		PRINTL 恋人とは普通にエッチをしていたようだ。
-	ELSEIF CFLAG:初キス相手 && TALENT:処女 && !TALENT:アナル処女
+	ELSEIF CFLAG:初キス相手 && TALENT:処女 && !TALENT:Ａ処女
 		PRINTL 前の貞操だけは頑なに守り続けていたようだ……
-	ELSEIF CFLAG:初キス相手 && !TALENT:処女 && !TALENT:アナル処女
+	ELSEIF CFLAG:初キス相手 && !TALENT:処女 && !TALENT:Ａ処女
 		PRINTL キスやセックスの経験はもちろん、アナルも貫通済みらしい。
 	ENDIF
 

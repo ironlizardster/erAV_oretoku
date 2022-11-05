@@ -79,7 +79,7 @@ PRINTL 　同じぐらい大好きなお姉様の初めてを、あたしにく�
 PRINTL 　
 PRINTL 報酬：なし
 PRINTL エクストラ報酬：期間延長50週＋ユーニス個人ラボ「事象改変：処女喪失」
-PRINTL 　　　　　　　「事象改変：アナル処女喪失」「事象改変：ファーストキス」の解禁
+PRINTL 　　　　　　　「事象改変：Ａ処女喪失」「事象改変：ファーストキス」の解禁
 DRAWLINE
 
 ;=================================================
@@ -149,7 +149,7 @@ SIF ABL:TARGET:性交技術 == 10
 	LOCAL:1++
 SIF ABL:TARGET:性交中毒 == 0
 	LOCAL:1++
-SIF CFLAG:TARGET:初キス相手 == -1
+SIF !CFLAG:TARGET:初キス相手
 	LOCAL:1++
 SIF TALENT:TARGET:ギャル系 == 0
 	LOCAL:1++
@@ -182,7 +182,7 @@ SIF EXP:ASSI:異常経験 >= 5
 	LOCAL:1++
 SIF CFLAG:ASSI:処女喪失相手 <= 0
 	LOCAL:1++
-SIF CFLAG:ASSI:初キス相手 >= 0
+SIF CFLAG:ASSI:初キス相手
 	LOCAL:1++
 
 
@@ -205,9 +205,10 @@ X = 0
 ;必ず起こる処理
 TALENT:ASSI:処女 = 0
 SIF CFLAG:ASSI:処女喪失相手 == 0
-	CSTR:ASSI:処女喪失の相手 = ユーニス・パラディスス
+	CSTR:ASSI:処女喪失相手 = ユーニス・パラディスス
 CFLAG:TARGET:初キス相手 = 1
 	CSTR:TARGET:初キス相手 = レイチェル・パラディスス
+CALL 初キス実行(TARGET,ASSI + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_口,CSTR:TARGET:初キス相手)
 
 ;ユーニス分の経験処理
 TCVAR:絶頂経験 += 10 + RAND:6
@@ -228,7 +229,7 @@ TCVAR:ASSI:レズ経験 += 15 + RAND:21
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)
 IF TALENT:童貞 == 1
-	CSTR:童貞喪失の相手 = レイチェル・パラディスス
+	CSTR:童貞喪失相手 = レイチェル・パラディスス
 	TALENT:童貞 = 0
 	SETCOLOR 0xF58F98
 	PRINTFORML 【童貞喪失】（%NAME:TARGET%）

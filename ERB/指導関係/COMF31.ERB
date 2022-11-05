@@ -376,12 +376,12 @@ ENDIF
 ;獣姦の場合はここで終了
 IF TEQUIP:獣姦プレイ
 	;犬の%CSTR:男性器呼び方%と初キス
-	IF CFLAG:初キス相手 == -1
+	IF !CFLAG:初キス相手
 		TFLAG:初キス口以外 = 1
-		CFLAG:初キス相手 = 1
 		CSTR:初キス相手 = 犬の%CSTR:男性器呼び方%
 		;屈服刻印３に相当
 		TFLAG:屈服刻印2 = 3
+		CALL 初キス実行(TARGET,初相手_犬,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,CSTR:初キス相手)
 	ENDIF
 
 	RETURN 1

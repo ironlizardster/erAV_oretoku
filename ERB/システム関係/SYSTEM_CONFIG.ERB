@@ -895,19 +895,19 @@ RETURN 0
 DRAWLINE
 PRINTL 初体験が記録されるコマンドの実行前に確認を挟むかどうかを設定します
 PRINT  [0] 処女フィルタ
-IF FLAG:処女初体験確認
+IF FLAG:処女確認
 	PRINTL - ON
 ELSE
 	PRINTL - OFF
 ENDIF
 PRINT  [1] Ａ処女フィルタ
-IF FLAG:Ａ処女初体験確認
+IF FLAG:Ａ処女確認
 	PRINTL - ON
 ELSE
 	PRINTL - OFF
 ENDIF
 PRINT  [2] ファーストキスフィルタ
-IF FLAG:初キス初体験確認
+IF FLAG:初キス確認
 	PRINTL - ON
 ELSE
 	PRINTL - OFF
@@ -915,13 +915,13 @@ ENDIF
 PRINTL [999] 戻る
 INPUT
 IF RESULT == 0
-	FLAG:処女初体験確認 = ~FLAG:処女初体験確認
+	FLAG:処女確認 = ~FLAG:処女確認
 	RESTART
 ELSEIF RESULT == 1
-	FLAG:Ａ処女初体験確認 = ~FLAG:Ａ処女初体験確認
+	FLAG:Ａ処女確認 = ~FLAG:Ａ処女確認
 	RESTART
 ELSEIF RESULT == 2
-	FLAG:初キス初体験確認 = ~FLAG:初キス初体験確認
+	FLAG:初キス確認 = ~FLAG:初キス確認
 	RESTART
 ELSEIF RESULT != 999
 	RESTART

@@ -217,7 +217,7 @@ WAIT
 IF TALENT:MASTER:童貞
 	TALENT:MASTER:童貞 = 0
 	;処女喪失相手（乱交）はここで記録
-		CSTR:MASTER:童貞喪失の相手 = 女性客
+		CSTR:MASTER:童貞喪失相手 = 女性客
 ENDIF
 
 
@@ -243,67 +243,66 @@ REPEAT CHARANUM
 				TALENT:COUNT:処女 = 0
 				CFLAG:COUNT:131 += RAND:6
 					IF CFLAG:131 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-						CSTR:COUNT:処女喪失の相手 = %CALLNAME:MASTER%
+						CSTR:COUNT:処女喪失相手 = %CALLNAME:MASTER%
 						CFLAG:COUNT:処女喪失相手 = 1
 					ELSEIF CFLAG:131 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-						CSTR:COUNT:処女喪失の相手 = お兄ちゃん
+						CSTR:COUNT:処女喪失相手 = お兄ちゃん
 						CFLAG:COUNT:処女喪失相手 = 1
 					ELSEIF CFLAG:131 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-						CSTR:COUNT:処女喪失の相手 = アニキ
+						CSTR:COUNT:処女喪失相手 = アニキ
 						CFLAG:COUNT:処女喪失相手 = 1
 					ELSEIF CFLAG:131 == 1
-						CSTR:COUNT:処女喪失の相手 = 知らないオトコの人
+						CSTR:COUNT:処女喪失相手 = 知らないオトコの人
 						CFLAG:COUNT:処女喪失相手 = 2
 					ELSEIF CFLAG:131 == 2
-						CSTR:COUNT:処女喪失の相手 = 知らないオンナの人
+						CSTR:COUNT:処女喪失相手 = 知らないオンナの人
 						CFLAG:COUNT:処女喪失相手 = 3
 					ELSEIF CFLAG:131 == 3
-						CSTR:COUNT:処女喪失の相手 = バイブ
+						CSTR:COUNT:処女喪失相手 = バイブ
 						CFLAG:COUNT:処女喪失相手 = 4
 					ELSEIF CFLAG:131 == 4
-						CSTR:COUNT:処女喪失の相手 = 極太バイブ
+						CSTR:COUNT:処女喪失相手 = 極太バイブ
 						CFLAG:COUNT:処女喪失相手 = 5
 					ELSE
-						CSTR:COUNT:処女喪失の相手 = 誰かわからない
+						CSTR:COUNT:処女喪失相手 = 誰かわからない
 						CFLAG:COUNT:処女喪失相手 = 6
 					ENDIF
 		ENDIF
 
 	ENDIF
-	IF TALENT:COUNT:アナル処女 == 1
-		TALENT:COUNT:アナル処女 = 0
+	IF TALENT:COUNT:Ａ処女 == 1
+		TALENT:COUNT:Ａ処女 = 0
 		CFLAG:COUNT:132 += RAND:3 
 			IF CFLAG:COUNT:132 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-				CSTR:COUNT:アナル処女喪失相手 = %CALLNAME:MASTER%
+				CSTR:COUNT:Ａ処女喪失相手 = %CALLNAME:MASTER%
 			ELSEIF CFLAG:COUNT:132 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-				CSTR:COUNT:アナル処女喪失相手 = お兄ちゃん
+				CSTR:COUNT:Ａ処女喪失相手 = お兄ちゃん
 			ELSEIF CFLAG:COUNT:132 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
-				CSTR:COUNT:アナル処女喪失相手 = アニキ
+				CSTR:COUNT:Ａ処女喪失相手 = アニキ
 			ELSEIF CFLAG:COUNT:132 == 1
-				CSTR:COUNT:アナル処女喪失相手 = 知らないオトコの人
+				CSTR:COUNT:Ａ処女喪失相手 = 知らないオトコの人
 			ELSEIF CFLAG:COUNT:132 == 2
-				CSTR:COUNT:アナル処女喪失相手 = 知らないオンナの人
+				CSTR:COUNT:Ａ処女喪失相手 = 知らないオンナの人
 			ELSE
-				CSTR:COUNT:アナル処女喪失相手 = 誰かわからない
+				CSTR:COUNT:Ａ処女喪失相手 = 誰かわからない
 			ENDIF
 	ENDIF
 	IF TALENT:COUNT:童貞 == 1
 		TALENT:童貞 = 0
 		CFLAG:COUNT:133 += RAND:3
 			IF CFLAG:COUNT:133 == 0
-				CSTR:COUNT:童貞喪失の相手 = 知らないオンナの人
+				CSTR:COUNT:童貞喪失相手 = 知らないオンナの人
 			ELSEIF CFLAG:COUNT:133 == 1 && TALENT:MASTER:オトコ == 0
-				CSTR:COUNT:童貞喪失の相手 = %CALLNAME:MASTER%
+				CSTR:COUNT:童貞喪失相手 = %CALLNAME:MASTER%
 					IF TALENT:MASTER:処女 == 1 && CFLAG:MASTER:処女喪失相手 == 0
 						CFLAG:MASTER:処女喪失相手 = 1
-						CSTR:MASTER:処女喪失の相手 = %CALLNAME:TARGET%
+						CSTR:MASTER:処女喪失相手 = %CALLNAME:TARGET%
 					ENDIF
 			ELSE
-				CSTR:COUNT:童貞喪失の相手 = 誰かわからない
+				CSTR:COUNT:童貞喪失相手 = 誰かわからない
 			ENDIF
 	ENDIF
-	IF CFLAG:COUNT:初キス相手 == -1
-		CFLAG:COUNT:初キス相手 = 0
+	IF !CFLAG:COUNT:初キス相手
 			CFLAG:COUNT:初キス相手 += RAND:8 
 				IF CFLAG:COUNT:初キス相手 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
 					CSTR:COUNT:初キス相手 = %CALLNAME:MASTER%
@@ -364,6 +363,26 @@ REPEAT CHARANUM
 				ELSEIF CFLAG:COUNT:初キス相手 == 8 && TALENT:COUNT:ギャル系 == 1
 					CSTR:COUNT:初キス相手 = 知らないオンナの人のケツ穴
 				ENDIF
+		SELECTCASE CFLAG:COUNT:初キス相手
+			CASE 0
+				CALL 初キス実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+			CASE 1
+				CALL 初キス実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+			CASE 2
+				CALL 初キス実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+			CASE 3
+				CALL 初キス実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
+			CASE 4
+				CALL 初キス実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
+			CASE 5
+				CALL 初キス実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_女性器,CSTR:COUNT:初キス相手)
+			CASE 6
+				CALL 初キス実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+			CASE 7
+				CALL 初キス実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+			CASE 8
+				CALL 初キス実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+		ENDSELECT
 	ENDIF
 REND
 

@@ -741,24 +741,24 @@ IF TALENT:ミッション == 1
 	SETFONT ""
 ENDIF
 
-SIF ( CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:初キス相手 >= 0 || TALENT:アナル処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
+SIF ( CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:初キス相手 || TALENT:Ａ処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
 DRAWLINE
 
-IF CFLAG:初キス相手 >= 0
+IF CFLAG:初キス相手
 	SETCOLOR 0xF58F98 
-	CALL FIRSTKISS_DETAIL
+	CALL PRINT_FIRSTKISS_DETAIL(TARGET)
 	RESETCOLOR
 ENDIF
 
 IF CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0
 	SETCOLOR 0xF58F98 
-	CALL LOSTVIRGIN_DETAIL
+	CALL PRINT_LOSTVIRGIN_DETAIL(TARGET)
 	RESETCOLOR
 ENDIF
 
-IF TALENT:アナル処女 == 0
+IF TALENT:Ａ処女 == 0
 	SETCOLOR 0xF58F98 
-	CALL LOSTANALVIRGIN_DETAIL
+	CALL PRINT_LOSTANALVIRGIN_DETAIL(TARGET)
 	RESETCOLOR
 ENDIF
 
@@ -770,7 +770,7 @@ IF ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0
 	IF ABL:信頼 < 3 && NO:TARGET != [[キャラ:あなた]]
 		PRINTL 済
 	ELSE
-		PRINTFORML %CSTR:童貞喪失の相手%
+		PRINTFORML %CSTR:童貞喪失相手%
 	ENDIF
 	RESETCOLOR
 ENDIF
@@ -1038,9 +1038,9 @@ CATCH
 			EXP:TARGET:レズ経験 -= 1200
 	ELSEIF RESULT == COMMAND_処女リセット
 		TALENT:処女 = 1 
-		CFLAG:初キス相手 = -1
+		CFLAG:初キス相手 = 0
 		CFLAG:処女喪失相手 = -1
-		TALENT:アナル処女 = 1
+		TALENT:Ａ処女 = 1
 	ENDIF
 ENDCATCH
 

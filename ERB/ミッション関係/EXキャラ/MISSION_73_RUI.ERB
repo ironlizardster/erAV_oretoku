@@ -75,7 +75,7 @@ PRINTL 報酬：１００万ポイント＋貢献度３０
 PRINTL エクストラ報酬：期間延長１０週
 SETCOLOR 0xF58F98
 FONTSTYLE 1
-PRINTL ※ミッション終了後、対象は【処女】【アナル処女】【キス未経験】ではなくなります！
+PRINTL ※ミッション終了後、対象は【処女】【Ａ処女】【キス未経験】ではなくなります！
 FONTSTYLE 0
 RESETCOLOR
 DRAWLINE
@@ -92,7 +92,7 @@ DRAWLINE
 PRINTL 　　　　ミッション達成条件：体力3000以上＋気力2000以上＋美容感覚・学力LV5以上＋運動能力Lv8以上
 PRINTL 　　　　　　　　　　　　　　被写・歌唱・舞踊・料理技能Lv5以上＋露出癖LV5以上でＡＶデビューしておらず
 PRINTL 　　　　　　　　　　　　　　職業系素質（【アイドル】【ファッションモデル】【キャバ嬢】）【淫乱】【オリジナルユニット】
-PRINTL 　　　　　　　　　　　　　　を持たず、かつ純粋な【処女】＋【アナル処女】を所持し、キス未経験の場合成功
+PRINTL 　　　　　　　　　　　　　　を持たず、かつ純粋な【処女】＋【Ａ処女】を所持し、キス未経験の場合成功
 PRINTL 　　　　　　　　　　　　　　
 PRINTL 　　　　　　　　　　　　　　【永遠の愛】＋信頼Lv10＋愛情経験5000以上の時、大成功となる
 PRINTL ミッション終了後の状態変化：ミッションに失敗した場合、ペナルティは特になし
@@ -167,9 +167,9 @@ SIF TALENT:オリジナルユニット == 0
 	LOCAL:1++
 SIF TALENT:処女 == 1
 	LOCAL:1++
-SIF TALENT:アナル処女 == 1
+SIF TALENT:Ａ処女 == 1
 	LOCAL:1++
-SIF CFLAG:初キス相手 == -1
+SIF !CFLAG:初キス相手
 	LOCAL:1++
 
 SIF TALENT:永遠の愛 == 1
@@ -206,8 +206,8 @@ IF ARG == 2
 	CALL RUI_MISSION_SS1
 	TCVAR:異常経験 += 50 * ARG
 	TALENT:処女 = 0
-	TALENT:アナル処女 = 0
-	CFLAG:初キス相手 = 0
+	TALENT:Ａ処女 = 0
+	CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"知らないオトコの人の%CSTR:LOCAL:男性器呼び方%")
 	ABL:舞踊技能 = 10
 	TALENT:解放 = 1
 	TALENT:人気者 = 1
@@ -225,25 +225,6 @@ IF ARG == 2
 	MAXBASE:魅力値 += 100
 	BASE:魅力値 += 100
 	BASE:ギャラ += 9700
-
-[IF_DEBUG]
-;PRINTFORML 「さてさてぇ、自己紹介がちょっと遅れちゃったけどぉ
-;PRINTFORML 　……私の名前は「操辻蜂香（あやつじ　ほうか）」、正真正銘１４歳、……本当に久しぶりね、『あなた』」
-;PRINTFORMW 
-;PRINTFORML 　少女の様子が急に変わった……どうやらさっきまでの態度は演技だったらしい……
-;PRINTFORMW 
-;PRINTFORML 「ふふ……、態度をコロコロと使い分ける女は信用できないかな？
-;PRINTFORML 　でも…『あなた』に対しては、私は誠実な女でいたいと思うのよ……！
-;PRINTFORML 　…………さっきから何度も仕掛けているけど、何の効果もない……
-;PRINTFORML 　やっぱり『あなた』は『あの領域』から来た人なのね……！
-;PRINTFORML 　この『宇宙』の支配者、【アークマスター】は『あなた』のことをかなり恐れているわ
-;PRINTFORML 　…『あなた』の傍にいたら、私は、私に敗北を教えた『あの親娘』に勝てる道が見つかるかもしれない…
-;PRINTFORML 　だから、『あなた』が嫌だと言っても、私は『あなた』と契約するわ……
-;PRINTFORML 　どんな扱いを受けたって、構わない……私を傍にいさせてね♪」
-;PRINTFORMW 
-;PRINTFORMW 《操辻蜂香が強引に契約をしてきました》
-;CALL キャラ追加([[キャラ:操辻蜂香]])
-[ENDIF]
 
 ELSEIF ARG == 1
 	CALL RUI_MISSION_SS0

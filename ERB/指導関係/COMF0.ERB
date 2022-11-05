@@ -86,7 +86,7 @@ ELSEIF TEQUIP:ボールギャグ
 	SOURCE:3 /= 4
 	SOURCE:10 /= 2
 ;初キス未体験だとキスを避けるので効果減
-ELSEIF CFLAG:初キス相手 == -1
+ELSEIF !CFLAG:初キス相手
 	SOURCE:8 = 0
 	SOURCE:0 /= 2
 	SOURCE:3 /= 4

@@ -453,12 +453,12 @@ IF TALENT:ASSI:処女 == 1
 	;助手の初体験を記録
 	IF CFLAG:ASSI:処女喪失相手 == 0
 		CFLAG:ASSI:処女喪失相手 = 1
-		CSTR:ASSI:処女喪失の相手 = %NAME:TARGET%
+		CSTR:ASSI:処女喪失相手 = %NAME:TARGET%
 		CFLAG:ASSI:処女喪失年齢 = BASE:実年齢
 		CFLAG:ASSI:処女喪失月 = DAY:日付_月
 		CFLAG:ASSI:処女喪失日 = DAY:日付_日
 		CFLAG:ASSI:処女喪失場所 = 14
-		CFLAG:ASSI:処女喪失シチュ = 1
+		CFLAG:ASSI:処女喪失状況 = 1
 	ENDIF
 ENDIF
 
@@ -527,12 +527,12 @@ IF TALENT:童貞
 	TALENT:童貞 = 0
 	PRINTFORML 【童貞喪失】
 	;処女喪失相手を記録
-	SIF CFLAG:初キス相手 == 0
-		CFLAG:初キス相手 = 1
+	SIF CFLAG:童貞喪失相手 == 0
+		CFLAG:童貞喪失相手 = 1
 	IF CFLAG:包皮状態 == 2
 		CFLAG:包皮状態 = 3
 	ENDIF
-	CSTR:童貞喪失の相手 = %NAME:ASSI%
+	CSTR:童貞喪失相手 = %NAME:ASSI%
 	TFLAG:童貞喪失 = 1
 ENDIF
 

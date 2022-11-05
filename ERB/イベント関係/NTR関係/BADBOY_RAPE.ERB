@@ -143,7 +143,7 @@ IF CFLAG:COUNT:処女喪失相手 == 0 && TALENT:COUNT:処女 == 1
 	PRINTFORML 【処女喪失】
 	CFLAG:COUNT:処女喪失相手 = 11
 	TALENT:COUNT:処女 = 0
-	CSTR:COUNT:処女喪失の相手 = 不良
+	CSTR:COUNT:処女喪失相手 = 不良
 	E += 1
 	RESETCOLOR
 	BASE:COUNT:魅力値 -= 10
@@ -151,24 +151,24 @@ IF CFLAG:COUNT:処女喪失相手 == 0 && TALENT:COUNT:処女 == 1
 	CFLAG:COUNT:処女喪失月 = DAY:日付_月
 	CFLAG:COUNT:処女喪失日 = DAY:日付_日
 	CFLAG:COUNT:処女喪失場所 = 6
-	CFLAG:COUNT:処女喪失シチュ = 4
+	CFLAG:COUNT:処女喪失状況 = 4
 ENDIF
 IF A > 0
 	PRINTFORML Ａ経験＋{A}
-	IF TALENT:COUNT:アナル処女 == 1
+	IF TALENT:COUNT:Ａ処女 == 1
 		SETCOLOR 0xF58F98
-		PRINTFORML 【アナル処女喪失】
-		TALENT:COUNT:アナル処女 = 0
-		CSTR:COUNT:アナル処女喪失相手 = 不良
+		PRINTFORML 【Ａ処女喪失】
+		TALENT:COUNT:Ａ処女 = 0
+		CSTR:COUNT:Ａ処女喪失相手 = 不良
 		RESETCOLOR
 		E += 1
 		BASE:COUNT:魅力値 -= 5
-		CFLAG:COUNT:アナル処女喪失相手 = 11
-		CFLAG:COUNT:アナル処女喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:アナル処女喪失月 = DAY:日付_月
-		CFLAG:COUNT:アナル処女喪失日 = DAY:日付_日
-		CFLAG:COUNT:アナル処女喪失場所 = 6
-		CFLAG:COUNT:アナル処女喪失シチュ = 4
+		CFLAG:COUNT:Ａ処女喪失相手 = 11
+		CFLAG:COUNT:Ａ処女喪失年齢 = BASE:COUNT:実年齢
+		CFLAG:COUNT:Ａ処女喪失月 = DAY:日付_月
+		CFLAG:COUNT:Ａ処女喪失日 = DAY:日付_日
+		CFLAG:COUNT:Ａ処女喪失場所 = 6
+		CFLAG:COUNT:Ａ処女喪失状況 = 4
 	ENDIF
 ENDIF
 ;初強姦で異常+1
@@ -176,18 +176,12 @@ SIF EXP:COUNT:強姦回数 == 0
 	E += 1 
 PRINTFORML 性交経験＋{S}
 PRINTFORML フェラ経験＋{F}
-IF CFLAG:COUNT:初キス相手 == -1
+IF !CFLAG:COUNT:初キス相手
 	SETCOLOR 0xDDBBCC
 	PRINTFORML 初キス
-	CFLAG:COUNT:初キス相手 = 11
-	CSTR:COUNT:初キス相手 = 不良
 	RESETCOLOR
-	BASE:COUNT:魅力値 -= 10
-	CFLAG:COUNT:初キス喪失年齢 = BASE:COUNT:実年齢
-	CFLAG:COUNT:初キス喪失月 = DAY:日付_月
-	CFLAG:COUNT:初キス喪失日 = DAY:日付_日
-	CFLAG:COUNT:初キス喪失場所 = 6
-	CFLAG:COUNT:初キス喪失シチュ = 1
+	CALL 初キス実行(TARGET,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_男性器,"不良")
+	BASE:COUNT:魅力値 -= 5
 ENDIF
 PRINTFORML 精液経験＋{A+S+F}
 PRINTFORML 薬物経験＋{D}

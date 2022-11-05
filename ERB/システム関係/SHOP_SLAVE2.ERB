@@ -1,23 +1,24 @@
 ﻿;-------------------------------------------------
 ;購入時に行うキャラの初期設定
 ;-------------------------------------------------
-@CHARA_BUY_SETTING
+@CHARA_BUY_SETTING(CHARA_NO)
+#DIM CHARA_NO
 
 ;陰毛を生やす設定の場合の処理
 IF FLAG:陰毛を生やす
 	;かなでは毛深いのがコンプレックスです
-	IF NO:TARGET == [[キャラ:宮間かなで]]
+	IF CHARA_NO == [[キャラ:宮間かなで]]
 		CFLAG:陰毛状態 = 14
 	;郁美はひどいことになっています
-	ELSEIF NO:TARGET == [[キャラ:須野郁美]]
+	ELSEIF CHARA_NO == [[キャラ:須野郁美]]
 		CFLAG:陰毛状態 = 18
 	;外人さんは下の毛の処理は常識です
-	ELSEIF NO:TARGET == [[キャラ:レイチェル・パラディスス]]
+	ELSEIF CHARA_NO == [[キャラ:レイチェル・パラディスス]]
 		CFLAG:陰毛状態 = 1
-	ELSEIF NO:TARGET == [[キャラ:恋歌・ロックウェル]]
+	ELSEIF CHARA_NO == [[キャラ:恋歌・ロックウェル]]
 		CFLAG:陰毛状態 = 1
 	;美乃里は下の毛の発育が悪いのがコンプレックスです
-	ELSEIF NO:TARGET == [[キャラ:佐々木美乃里]]
+	ELSEIF CHARA_NO == [[キャラ:佐々木美乃里]]
 		CFLAG:陰毛状態 = 7
 	;パイパンなら生えない
 	ELSEIF TALENT:パイパン
@@ -32,7 +33,7 @@ IF FLAG:陰毛を生やす
 ENDIF
 
 ;面接キャラ用
-IF NO:TARGET == [[キャラ:面接相手]]
+IF CHARA_NO == [[キャラ:面接相手]]
 	SIF FLAG:難易度 == GAME_MODE_ACHIEVEMENT_CHALLENGE
 		FLAG:求人広告回数++
 [IF_DEBUG]

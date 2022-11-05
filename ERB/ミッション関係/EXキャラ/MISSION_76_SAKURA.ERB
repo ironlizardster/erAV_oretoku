@@ -174,15 +174,15 @@ IF TALENT:永遠の愛 == 0
 	IF TALENT:彼氏あり == 0
 		CSTR:彼氏姓 = 神崎
 		CSTR:彼氏名 = 京一
-		IF CFLAG:初キス相手 == -1
-			CFLAG:初キス相手 = 8
+		IF !CFLAG:初キス相手
 			CSTR:初キス相手 = 神崎京一
 			SETCOLOR 0xF58F98
 			PRINTL 【ファーストキス】
 			RESETCOLOR
+			CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%の%CSTR:男性器呼び方%")
 		ENDIF
 		IF TALENT:処女 == 1
-			CSTR:処女喪失の相手 = 神崎京一（彼氏）
+			CSTR:処女喪失相手 = 神崎京一（彼氏）
 			TALENT:処女 = 0
 			CFLAG:処女喪失相手 = 8
 			SETCOLOR 0xF58F98
@@ -194,13 +194,7 @@ IF TALENT:永遠の愛 == 0
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
-		CFLAG:処女喪失シチュ = 3
-
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 3
-		CFLAG:初キス喪失シチュ = 1
+		CFLAG:処女喪失状況 = 3
 
 		CFLAG:彼氏有 = 1
 		CFLAG:彼氏タイプ = 0
@@ -214,7 +208,7 @@ IF TALENT:永遠の愛 == 0
 		PRINTFORML 神崎京一と付き合うことになったようだ……
 	ELSE
 		IF TALENT:処女 == 1
-			CSTR:処女喪失の相手 = 神崎京一（セフレ）
+			CSTR:処女喪失相手 = 神崎京一（セフレ）
 			TALENT:処女 = 0
 			CFLAG:処女喪失相手 = 9
 			SETCOLOR 0xF58F98
@@ -225,9 +219,8 @@ IF TALENT:永遠の愛 == 0
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
-		CFLAG:処女喪失シチュ = 3
-		IF CFLAG:初キス相手 == -1
-			CFLAG:初キス相手 = 9
+		CFLAG:処女喪失状況 = 3
+		IF !CFLAG:初キス相手
 			IF TALENT:淫乱 == 0
 				CSTR:初キス相手 = 神崎京一
 			ELSE
@@ -236,18 +229,14 @@ IF TALENT:永遠の愛 == 0
 			SETCOLOR 0xF58F98
 			PRINTL 【ファーストキス】
 			RESETCOLOR
-			CFLAG:初キス喪失年齢 = BASE:実年齢
-			CFLAG:初キス喪失月 = DAY:日付_月
-			CFLAG:初キス喪失日 = DAY:日付_日
-			CFLAG:初キス喪失場所 = 3
-			CFLAG:初キス喪失シチュ = 1
+			CALL 初キス実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"神崎京一の%CSTR:男性器呼び方%")
 		ENDIF
 		CSTR:セフレ姓 = 神崎
 		CSTR:セフレ名 = 京一	
 	ENDIF
 ELSE
 	IF TALENT:処女 == 1
-		CSTR:処女喪失の相手 = 神崎京一（セフレ）
+		CSTR:処女喪失相手 = 神崎京一（セフレ）
 		TALENT:処女 = 0
 		CFLAG:処女喪失相手 = 9
 		SETCOLOR 0xF58F98
@@ -257,10 +246,9 @@ ELSE
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 3
-		CFLAG:処女喪失シチュ = 3
+		CFLAG:処女喪失状況 = 3
 	ENDIF
-	IF CFLAG:初キス相手 == -1
-		CFLAG:初キス相手 = 9
+	IF !CFLAG:初キス相手
 		IF TALENT:淫乱 == 0
 			CSTR:初キス相手 = 神崎京一の%CSTR:男性器呼び方%
 		ELSE
@@ -269,11 +257,7 @@ ELSE
 		SETCOLOR 0xF58F98
 		PRINTL 【ファーストキス】
 		RESETCOLOR
-		CFLAG:初キス喪失年齢 = BASE:実年齢
-		CFLAG:初キス喪失月 = DAY:日付_月
-		CFLAG:初キス喪失日 = DAY:日付_日
-		CFLAG:初キス喪失場所 = 3
-		CFLAG:初キス喪失シチュ = 1
+		CALL 初キス実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"神崎京一の%CSTR:男性器呼び方%")
 	ENDIF
 	CSTR:セフレ姓 = 神崎
 	CSTR:セフレ名 = 京一

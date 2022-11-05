@@ -408,16 +408,7 @@ STAIN:0 |= STAIN:PLAYER:0
 STAIN:PLAYER:0 |= STAIN:0
 
 ;初キス
-IF CFLAG:初キス相手 == -1
-	TFLAG:初キス口以外 = 1
-	CFLAG:初キス相手 = 1
-	CSTR:初キス相手 = %CALLNAME:PLAYER%
-	TFLAG:初キス = 1
-ENDIF
-IF CFLAG:PLAYER:初キス相手 == -1
-	CFLAG:PLAYER:初キス相手 = 1
-	CSTR:PLAYER:初キス相手 = %CALLNAME:TARGET%
-ENDIF
+TFLAG:621 |= 1
 
 IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
 	PRINTS EXPNAME:[[EXP:レズ経験]]
