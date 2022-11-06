@@ -492,25 +492,10 @@ IF (FLAG:女子寮拡張 & 2)
 						RELATION:LOCAL:(NO:(LOCAL:1)) += 10
 						RELATION:(LOCAL:1):(NO:LOCAL) += 10
 [IF_NDEBUG]
-						IF !CFLAG:LOCAL:初キス相手
-							PRINTL
-							SETCOLOR 0xF58F98
-								PRINTFORM 【ファーストキス】
-							RESETCOLOR
-							PRINTFORML （%CALLNAME:LOCAL%）
-							CALL 初キス実行(LOCAL,LOCAL:1 + 1,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:(LOCAL:1)%")
-							;△そのうち場所に談話室とか突っ込んでおくこと
-							;ここに限らず日付を合わせる処理はどっかでしないと……
-							;どう考えても初キス関数作るべきなんですが今回はパス
-						ENDIF
-						IF !CFLAG:(LOCAL:1):初キス相手
-							PRINTL
-							SETCOLOR 0xF58F98
-								PRINTFORM 【ファーストキス】
-							RESETCOLOR
-							PRINTFORML （%CALLNAME:(LOCAL:1)%） 
-							CALL 初キス実行(LOCAL:1,LOCAL + 1,BASE:(LOCAL:1):実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:LOCAL%")					
-						ENDIF
+						;△そのうち場所に談話室とか突っ込んでおくこと
+						;ここに限らず日付を合わせる処理はどっかでしないと……
+						;どう考えても初キス関数作るべきなんですが今回はパス
+						CALL 初キス喪失実行(LOCAL,LOCAL:1 + 1,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_自室,初状況_口)
 						SIF !SKIP_DETAILS
 							PRINTL
 [ENDIF]

@@ -152,7 +152,7 @@ ELSE
 			SETFONT "あくびん"
 		ENDIF
 	SETCOLOR 0xDDBBCC
-	IF CFLAG:COUNT:処女喪失相手 == 0
+	IF !CFLAG:COUNT:処女喪失相手
 		PRINTFORM 「
 		IF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]) && TALENT:恋心 == 1 && TALENT:COUNT:ギャル系 == 1
 			PRINTFORM ホントは初体験はアイツがよかったんだけど……ま、いっか%UNICODE(0x2665)%　
@@ -212,7 +212,7 @@ ELSE
 	ENDIF
 			
 	PRINTFORML 「あっ♪あぁんっ%UNICODE(0x2665)%生ハメ%CSTR:COUNT:男性器呼び方%気持ちいいっ、もっと奥まで入れてぇ%UNICODE(0x2665)%」
-	IF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]) && CFLAG:COUNT:処女喪失相手 > 0 && TALENT:COUNT:ギャル系 == 1
+	IF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]) && CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:ギャル系 == 1
 		PRINTFORML 「アイツのよりぶっとい%CSTR:COUNT:男性器呼び方%で%CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
 		PRINTFORM 「えっ……？　アイツってアニキのことだよ♪%CSTR:COUNT:一人称%の
 		IF TALENT:COUNT:恋心 == 0
@@ -243,7 +243,7 @@ ELSE
 			PRINTFORM からガマンしてるだけだし
 		ENDIF
 		PRINTFORML %UNICODE(0x2665)%」
-	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && NO:COUNT != [[キャラ:槇原さち]] && CFLAG:COUNT:処女喪失相手  > 0 && TALENT:COUNT:ナマイキ && TALENT:COUNT:ギャル系 == 1
+	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && NO:COUNT != [[キャラ:槇原さち]] && CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:ナマイキ && TALENT:COUNT:ギャル系 == 1
 		PRINTFORML 「アイツのよりぶっとい%CSTR:COUNT:男性器呼び方%で%CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
 		PRINTFORM 「えっ……？　アイツって
 			IF TALENT:COUNT:恋心 == 0
@@ -257,7 +257,7 @@ ELSE
 		SIF ABL:MASTER:技巧 <= 6
 			PRINTFORML  「それにぃ……ヘタクソだから全然気持ちよくないの%UNICODE(0x2665)%」
 		PRINTFORML 「ねぇ……もういいでしょ%UNICODE(0x2665)%%CSTR:COUNT:女性器呼び方%がバカになるぐらいもっと激しく犯してぇ♪」
-	ELSEIF CFLAG:COUNT:処女喪失相手 != 0
+	ELSEIF CFLAG:COUNT:処女喪失相手
 		PRINTFORML 「カレのよりぶっとい%CSTR:COUNT:男性器呼び方%で%CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
 		PRINTFORM 「えっ……？　カレって
 		IF TALENT:COUNT:恋心 == 0
@@ -307,9 +307,9 @@ ELSE
 	ENDIF
 	
 	PRINTFORM 「イくイくイくぅーーーっ%UNICODE(0x2665)%%CSTR:COUNT:一人称%の
-	IF CFLAG:COUNT:処女喪失相手 == 0
+	IF !CFLAG:COUNT:処女喪失相手
 		PRINTFORM 処女%CSTR:COUNT:女性器呼び方%に生ハメ中出し
-	ELSEIF CFLAG:COUNT:処女喪失相手 > 0
+	ELSE
 		PRINTFORM %CSTR:COUNT:女性器呼び方%に生ハメ中出し種付け
 	ENDIF
 	PRINTFORML されてイっちゃうぅぅぅ～%UNICODE(0x2665)%」
@@ -320,9 +320,9 @@ ELSE
 	PRINTFORM しかしお世辞にも画質はあまり良くなく、音割れも酷いがそれでも画面の中でセックスに
 	PRINTFORML 興じているのが%CALLNAME:COUNT%であることは間違えようがない
 	PRINTFORM あまりプライベートのことには口出しすることはないが、
-	IF CFLAG:COUNT:処女喪失相手 == 0
+	IF !CFLAG:COUNT:処女喪失相手
 		PRINTFORM 自分の預かり知らないところで%CALLNAME:COUNT%が処女を散らしたことに、
-	ELSEIF CFLAG:COUNT:処女喪失相手 > 0
+	ELSE
 		PRINTFORM そこまで自信がないものの「粗チン」と%CALLNAME:COUNT%に断言されたことに、
 	ENDIF
 		PRINTFORML %CALLNAME:MASTER%は複雑な心境になってしまった……
@@ -336,27 +336,14 @@ ELSE
 	SIF TALENT:COUNT:一線越えない == 1
 		TALENT:COUNT:一線越えない = 0
 
-	IF CFLAG:COUNT:処女喪失相手 == 0 && TALENT:COUNT:処女 == 1
-		CFLAG:COUNT:処女喪失相手 = 9
-		SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-		RESETCOLOR
+	IF !CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:処女
+		CALL 処女喪失実行(COUNT,初相手_セフレ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"%CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）")
 		PRINTL 異常経験＋1
-		TALENT:COUNT:処女 = 0
 		EXP:COUNT:異常経験 += 1
-		CSTR:COUNT:処女喪失相手 = %CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）
-		CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
-		CFLAG:COUNT:処女喪失月 = DAY:日付_月
-		CFLAG:COUNT:処女喪失日 = DAY:日付_日
-		CFLAG:COUNT:処女喪失場所 = 3
-		CFLAG:COUNT:処女喪失状況 = 3
 	ENDIF
 			
 	IF !CFLAG:COUNT:初キス相手
-		CALL 初キス実行(COUNT,初相手_セフレ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）の極太%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%")
-		SETCOLOR 0xDDBBCC
-		PRINTL 【ファーストキス】
-		RESETCOLOR
+		CALL 初キス喪失実行(COUNT,初相手_セフレ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）の極太%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%")
 	ENDIF
 		
 	;性交回数

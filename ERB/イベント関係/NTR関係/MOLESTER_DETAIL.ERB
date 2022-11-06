@@ -232,9 +232,7 @@ PRINTFORM %CALLNAME:MASTER%が詳しい話を%CALLNAME:COUNT%に聞くと、
 				ENDIF
 			PRINTFORML %EXPNAME:[[EXP:Ｖ経験]]%+2
 				IF TALENT:COUNT:処女
-					TALENT:COUNT:処女 = 0
-					CFLAG:COUNT:処女喪失相手 = 7
-					CSTR:COUNT:処女喪失相手 = 痴漢
+					CALL 処女喪失実行(COUNT,初相手_痴漢,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_電車,初状況_無理犯,"痴漢")
 					PRINTFORML %EXPNAME:[[EXP:異常経験]]%+2
 					EXP:COUNT:異常経験 += 2
 				ENDIF

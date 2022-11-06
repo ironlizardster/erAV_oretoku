@@ -9,7 +9,7 @@ FLAG:特殊営業時のキャラの相性 = 0
 IF FLAG:特殊営業参加人数 >= 2
 	E = 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130
+		SIF CFLAG:COUNT:特殊営業参加
 			CALL WORK_SUB_RELATION_02
 		IF E == -1
 			E = 0
@@ -28,7 +28,7 @@ ENDIF
 @WORK_SUB_RELATION_02
 X = COUNT
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF X == COUNT
 		CONTINUE
@@ -53,7 +53,7 @@ COUNT = X
 ;メンバー全員が淫乱・娼婦持ちか
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF TALENT:COUNT:淫乱 == 0 || TALENT:COUNT:風俗嬢 == 0
 		E = 0
@@ -61,7 +61,7 @@ REND
 ;メンバー全員がＶ使用不可ならＶ使用なし
 F = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:COUNT:売春Ｖ不能
 		CONTINUE
@@ -87,7 +87,7 @@ PRINTL
 
 ;処女喪失
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:売春Ｖ不能
 		CONTINUE
@@ -123,7 +123,7 @@ TCVAR:性交経験 = TCVAR:Ｖ経験 + TCVAR:Ａ経験
 ;初キス
 IF !CFLAG:初キス相手
 	PRINTFORML %CALLNAME:TARGET%は見知らぬ男に初キスを奪われた……
-	CALL 初キス実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,"知らないオトコの人")
+	CALL 初キス喪失実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,"知らないオトコの人")
 	BASE:魅力値 -= 5
 	;異常体験に＋１
 	TCVAR:異常経験 += 1
@@ -134,11 +134,9 @@ IF CFLAG:売春処女喪失 == 1
 	SETCOLOR 0xF58F98
 	PRINTFORML 【処女喪失】
 	RESETCOLOR
-	TALENT:処女 = 0
 	;処女喪失相手（輪姦）を記録
-	IF CFLAG:処女喪失相手 == 0
-		CFLAG:処女喪失相手 = 1
-		CSTR:処女喪失相手 = 知らないオトコの人
+	IF !CFLAG:処女喪失相手
+		CALL 処女喪失実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_輪姦,"知らないオトコの人")
 		BASE:魅力値 -= 20
 	ENDIF
 	;異常体験に＋２
@@ -150,9 +148,8 @@ IF TALENT:Ａ処女 == 1
 	SETCOLOR 0xF58F98
 	PRINTFORML 【Ａ処女喪失】
 	RESETCOLOR
-	TALENT:Ａ処女 = 0
 	;処女喪失相手（輪姦）を記録
-		CSTR:Ａ処女喪失相手 = 知らないオトコの人
+	CALL Ａ処女喪失実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_輪姦,"知らないオトコの人")
 	;異常体験に＋２
 	TCVAR:異常経験 += 2
 	BASE:魅力値 -= 10
@@ -298,7 +295,7 @@ ENDIF
 @WORK_SP_AFTER
 ;処女喪失フラグ、Ａ・Ｖ経験判定フラグはここで消す
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	CFLAG:売春処女喪失 = 0
 	CFLAG:Ｖ売春否定 = 0
@@ -329,7 +326,7 @@ TFLAG:近親相姦 = 0
 @WORK_SUB_PRINT_FULLNAME
 S = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF S
 		PRINT と

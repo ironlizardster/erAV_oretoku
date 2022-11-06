@@ -532,10 +532,9 @@ IF CFLAG:MASTER:238 != 2
 ENDIF
 
 SIF FLAG:元カノ初キス経験済
-	CALL 初キス実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
+	CALL 初キス喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
 IF FLAG:元カノ性経験
-	CFLAG:処女喪失相手 = 1
-	TALENT:処女 = 0
+	CALL 処女喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_なし,"%NAME:MASTER%")
 ENDIF
 
 IF (FLAG:元カノ存在 & 2) && FLAG:今カノ存在 == 0
@@ -658,40 +657,39 @@ ENDIF
 						;****カノ設定改造追加ここまで****
 
 IF FLAG:元カノ初キス相手 == 1
-	CALL 初キス実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
+	CALL 初キス喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
 	;あなたの初キス相手が今カノor元カノで今カノはいない
 	SIF (FLAG:元カノ存在 & 2 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 2
 		CSTR:MASTER:初キス相手 = %CSTR:MASTER:彼氏名%
 ELSEIF FLAG:元カノ初キス相手 == 2
-	CALL 初キス実行(TARGET,初相手_今彼,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
 						;****カノ設定改造追加ここから****
 	IF (元カノ処女喪失相手 == 3) || (CFLAG:MASTER:240 == 3)
 		CSTR:初キス相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
+	CALL 初キス喪失実行(TARGET,初相手_今彼,0,0,0,初場所_あなたの部屋,初状況_口,CSTR:初キス相手)
 	CFLAG:交際終了 = 1	
 ELSEIF FLAG:元カノ初キス相手 == 3
-	CALL 初キス実行(TARGET,初相手_今彼,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
+	CALL 初キス喪失実行(TARGET,初相手_今彼,0,0,0,初場所_あなたの部屋,初状況_口,"%NAME:MASTER%")
 	CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 						;****カノ設定改造追加ここまで****
 ENDIF
 
 IF FLAG:元カノ処女喪失相手 == 1
-	CSTR:処女喪失相手 = %NAME:MASTER%
-	CFLAG:処女喪失相手 = 16
+	CALL 処女喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 	;あなたの童貞喪失相手が今カノor元カノで今カノはいない
 	SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4
-		CSTR:MASTER:童貞喪失相手 = %CSTR:MASTER:彼氏名%
+		CALL 童貞喪失実行(MASTER,NO:TARGET + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 ELSEIF FLAG:元カノ処女喪失相手 == 2
 						;****カノ設定改造追加ここから****
 	IF (元カノ初キス相手 == 3) || (CFLAG:MASTER:240 == 3)
-		CSTR:初キス相手 = %TMP_彼氏姓%%TMP_彼氏名%
+		CSTR:処女喪失相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
-		CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
+		CSTR:処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
 						;****カノ設定改造追加ここまで****
-	CFLAG:処女喪失相手 = 8
+	CALL 処女喪失実行(TARGET,初相手_今彼,0,0,0,初場所_彼部屋,初状況_なし,CSTR:処女喪失相手)
 	IF FLAG:元カノ性経験 == 1
 		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノ性経験 == 2
@@ -704,7 +702,7 @@ ELSEIF FLAG:元カノ処女喪失相手 == 2
 ELSEIF FLAG:元カノ処女喪失相手 == 3
 	CSTR:処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	CFLAG:彼氏タイプ += RAND:7
-	CFLAG:処女喪失相手 = 8
+	CALL 処女喪失実行(TARGET,初相手_今彼,0,0,0,初場所_彼部屋,初状況_なし,CSTR:処女喪失相手)
 	IF FLAG:元カノ性経験 == 1
 		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノ性経験 == 2
@@ -725,19 +723,6 @@ IF FLAG:元カノ性経験 == 1
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 1
-	CFLAG:処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	CFLAG:処女喪失月 = (1 + RAND:11)
-	SIF CFLAG:処女喪失月 <= 0
-		CFLAG:処女喪失月 = 12
-	IF CFLAG:処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:処女喪失月 >= BASE:誕生月
-			CFLAG:処女喪失年齢 -= 1
-	ENDIF	
-	SIF CFLAG:処女喪失月 == DAY:日付_月 && CFLAG:処女喪失日 >= DAY:日付_日
-		CFLAG:処女喪失月 = DAY:日付_日
-	CFLAG:処女喪失日 = 1 + RAND:5
-	CFLAG:処女喪失場所 = 3
-	CFLAG:処女喪失状況 = 3
 ELSEIF FLAG:元カノ性経験 == 2
 	EXP:Ｖ経験 += 20 + RAND:11
 	EXP:性交経験 += 15 + RAND:11
@@ -746,15 +731,6 @@ ELSEIF FLAG:元カノ性経験 == 2
 	ABL:Ｖ感覚 += 1 + RAND:3
 	ABL:欲望 += 1
 	ABL:性交技術 += 1
-	CFLAG:処女喪失年齢 = BASE:実年齢
-	CFLAG:処女喪失月 = (DAY:日付_月 - RAND:4)
-	SIF CFLAG:処女喪失月 <= 0
-		CFLAG:処女喪失月 = 12
-	CFLAG:処女喪失日 = 1 + RAND:5
-	SIF CFLAG:処女喪失月 == DAY:日付_月 && CFLAG:処女喪失日 >= DAY:日付_日
-		CFLAG:処女喪失月 = DAY:日付_日
-	CFLAG:処女喪失場所 = 3
-	CFLAG:処女喪失状況 = 0
 ELSEIF FLAG:元カノ性経験 == 3
 	EXP:Ｖ経験 += 1 + RAND:5
 	EXP:性交経験 += EXP:Ｖ経験 - RAND:3
@@ -765,15 +741,6 @@ ELSEIF FLAG:元カノ性経験 == 3
 		EXP:精液経験 = 0
 	EXP:絶頂経験 += RAND:2
 	ABL:Ｖ感覚 +=  RAND:2
-	CFLAG:処女喪失年齢 = BASE:実年齢
-	CFLAG:処女喪失月 = (DAY:日付_月 - RAND:2)
-	SIF CFLAG:処女喪失月 <= 0
-		CFLAG:処女喪失月 = 12
-	CFLAG:処女喪失日 = 1 + RAND:5
-	SIF CFLAG:処女喪失月 == DAY:日付_月 && CFLAG:処女喪失日 >= DAY:日付_日
-		CFLAG:処女喪失月 = DAY:日付_日
-	CFLAG:処女喪失場所 = 3
-	CFLAG:処女喪失状況 = 0
 ENDIF
 
 						;****カノ設定改造追加ここから****
@@ -789,17 +756,17 @@ ENDIF
 
 IF CFLAG:MASTER:240 == 1
 	CSTR:Ａ処女喪失相手 = %NAME:MASTER%
-	CFLAG:Ａ処女喪失相手 = 16
+	CALL Ａ処女喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 	;あなたの童貞喪失相手が今カノor元カノで今カノはいないかつ彼女が処女
 	SIF ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4) && FLAG:元カノ性経験 == 0
-		CSTR:MASTER:童貞喪失相手 = %CSTR:MASTER:彼氏名%
+		CALL 童貞喪失実行(MASTER,NO:TARGET + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 ELSEIF CFLAG:MASTER:240 == 2
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
 		CSTR:Ａ処女喪失相手 = %TMP_彼氏姓%%TMP_彼氏名%
 	ELSE
 		CSTR:Ａ処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	ENDIF
-	CFLAG:Ａ処女喪失相手 = 8
+	CALL Ａ処女喪失実行(TARGET,初相手_今彼,0,0,0,初場所_彼部屋,初状況_なし,CSTR:Ａ処女喪失相手)
 	IF FLAG:元カノアナル経験 == 1
 		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノアナル経験 == 2
@@ -811,7 +778,7 @@ ELSEIF CFLAG:MASTER:240 == 2
 ELSEIF CFLAG:MASTER:240 == 3
 	CSTR:Ａ処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
 	CFLAG:彼氏タイプ += RAND:7
-	CFLAG:Ａ処女喪失相手 = 8
+	CALL Ａ処女喪失実行(TARGET,初相手_今彼,0,0,0,初場所_彼部屋,初状況_なし,CSTR:Ａ処女喪失相手)
 	IF FLAG:元カノアナル経験 == 1
 		EXP:彼氏性経験 += 1 + RAND:30
 	ELSEIF FLAG:元カノアナル経験 == 2

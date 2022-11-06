@@ -741,7 +741,7 @@ IF TALENT:ミッション == 1
 	SETFONT ""
 ENDIF
 
-SIF ( CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:初キス相手 || TALENT:Ａ処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
+SIF ( CFLAG:処女喪失相手 && TALENT:処女 == 0 && TALENT:オトコ == 0 ) || CFLAG:初キス相手 || TALENT:Ａ処女 == 0 || ( ( TALENT:ふたなり == 1 || TALENT:オトコ == 1 ) && TALENT:童貞 == 0 ) 
 DRAWLINE
 
 IF CFLAG:初キス相手
@@ -750,7 +750,7 @@ IF CFLAG:初キス相手
 	RESETCOLOR
 ENDIF
 
-IF CFLAG:処女喪失相手 > 0 && TALENT:処女 == 0 && TALENT:オトコ == 0
+IF CFLAG:処女喪失相手 && TALENT:処女 == 0 && TALENT:オトコ == 0
 	SETCOLOR 0xF58F98 
 	CALL PRINT_LOSTVIRGIN_DETAIL(TARGET)
 	RESETCOLOR
@@ -1039,7 +1039,7 @@ CATCH
 	ELSEIF RESULT == COMMAND_処女リセット
 		TALENT:処女 = 1 
 		CFLAG:初キス相手 = 0
-		CFLAG:処女喪失相手 = -1
+		CFLAG:処女喪失相手 = 0
 		TALENT:Ａ処女 = 1
 	ENDIF
 ENDCATCH

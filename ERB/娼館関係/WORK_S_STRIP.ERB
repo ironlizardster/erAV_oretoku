@@ -72,13 +72,13 @@ ASSI = -1
 ;参加人数が一人の場合はTARGETにそのキャラを代入
 IF FLAG:特殊営業参加人数 == 1
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130
+		SIF CFLAG:COUNT:特殊営業参加
 			TARGET = COUNT
 	REND
 ;参加人数が二人の場合は調教自慰経験の高い方をTARGETに、もう一人をASSIに代入
 ELSEIF FLAG:特殊営業参加人数 == 2
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF TARGET == -1
 			TARGET = COUNT
@@ -93,7 +93,7 @@ ELSEIF FLAG:特殊営業参加人数 == 2
 ELSEIF FLAG:特殊営業参加人数 >= 3
 	E = -1
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF E < EXP:COUNT:調教自慰経験
 			TARGET = COUNT
@@ -120,7 +120,7 @@ E = 0
 ;参加者全員が自慰中毒3以上か自慰狂いならオナニーショー
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF ABL:COUNT:自慰中毒 < 3 && TALENT:COUNT:自慰狂い == 0
 		E = 0
@@ -131,7 +131,7 @@ E = 0
 ;参加者複数で全員がレズっ気2以上ならレズショー
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF ABL:COUNT:レズっ気 < 2
 		E = 0
@@ -147,7 +147,7 @@ CALL WORK_SUB_RELATION
 ;参加するキャラの人気の最大値に応じて客が来ます
 E = 0
 REPEAT CHARANUM
-	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:特殊営業参加
 		E = EXP:COUNT:人気
 REND
 C = E / 4
@@ -190,7 +190,7 @@ ENDIF
 
 ;参加者が特定の素質を持っていた場合ボーナス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;社会的ステータスが影響
 	;人気者
@@ -304,7 +304,7 @@ SIF G < 10
 ;参加者の調教自慰経験の平均値によって基礎値が決定
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	E += EXP:COUNT:調教自慰経験
 REND
@@ -341,7 +341,7 @@ E = 0
 
 ;参加者全員の技能・素質による修正値を加算
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 
 	;全員の露出癖をプラス
@@ -526,7 +526,7 @@ ELSEIF FLAG:特殊営業参加人数 == 2
 ELSE
 	S = 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF S
 			PRINT と
@@ -733,13 +733,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	IF E & 1 || E & 2
 		IF CFLAG:TARGET:処女喪失相手 == 0
 			CFLAG:TARGET:処女喪失相手 = NO:ASSI + 1
-			;初体験が近親相姦
-			;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
-			IF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ
-				CFLAG:処女喪失相手 = 306
-			ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ == 0
-				CFLAG:処女喪失相手 = 307
-			ENDIF
+			CALL 処女喪失実行(TARGET,NO:ASSI + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_ストリップ)
 		ENDIF
 	ENDIF
 	IF F
@@ -770,22 +764,11 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	ENDIF
 	IF E & 4 || E & 8
 		IF CFLAG:ASSI:処女喪失相手 == 0
-			CFLAG:ASSI:処女喪失相手 = NO:TARGET + 1
-			;初体験が近親相姦
-			;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
-			IF TFLAG:近親相姦 == 2 && TALENT:オトコ
-				CFLAG:ASSI:処女喪失相手 = 300
-			ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0
-				CFLAG:ASSI:処女喪失相手 = 301
-			ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ
-				CFLAG:ASSI:処女喪失相手 = 304
-			ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0
-				CFLAG:ASSI:処女喪失相手 = 305
-			ENDIF
+			CALL 処女喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_ストリップ)
 		ENDIF
 	ENDIF
-	CALL 初キス実行(TARGET,NO:ASSI + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,NAME:ASSI)
-	CALL 初キス実行(ASSI,NO:TARGET + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,NAME:TARGET)
+	CALL 初キス喪失実行(TARGET,NO:ASSI + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口)
+	CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口)
 	IF F
 		SIF F > 3
 			F = 3
@@ -894,7 +877,7 @@ ENDIF
 ;口上処理
 X = TARGET
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 	CALL SELF_KOJO
@@ -909,7 +892,7 @@ DRAWLINE
 
 ;パラメータ変化
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	
 	TARGET = COUNT
@@ -1224,7 +1207,7 @@ Q = 0
 ;バストの平均値を見る
 B = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		B += BASE:COUNT:バスト
 REND
 B /= FLAG:特殊営業参加人数
@@ -1232,7 +1215,7 @@ B /= FLAG:特殊営業参加人数
 ;ウエストの平均値を見る
 W = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		W += BASE:COUNT:ウェスト
 REND
 W /= FLAG:特殊営業参加人数
@@ -1240,7 +1223,7 @@ W /= FLAG:特殊営業参加人数
 ;ヒップの平均値を見る
 H = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		H += BASE:COUNT:ヒップ
 REND
 H /= FLAG:特殊営業参加人数
@@ -1248,7 +1231,7 @@ H /= FLAG:特殊営業参加人数
 ;体重の平均値を見る
 T = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		T += BASE:COUNT:体重
 REND
 T /= FLAG:特殊営業参加人数
@@ -1257,7 +1240,7 @@ T /= FLAG:特殊営業参加人数
 ;身長ボーナス重要
 S = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		S += BASE:COUNT:身長
 REND
 
@@ -1419,7 +1402,7 @@ ELSE
 ENDIF
 
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 ;技能・素質による修正値を加算
 	;巨乳
@@ -1467,7 +1450,7 @@ T = 0
 ;露出癖の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:露出癖
 REND
 E /= FLAG:特殊営業参加人数
@@ -1505,7 +1488,7 @@ V = 0
 ;被写技能の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:被写技能
 REND
 E /= FLAG:特殊営業参加人数
@@ -1543,7 +1526,7 @@ V = 0
 ;舞踊技能の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:舞踊技能
 REND
 E /= FLAG:特殊営業参加人数
@@ -1580,7 +1563,7 @@ V = 0
 
 ;参加キャラの素質補正
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	V = 100
 	;カリスマ
@@ -1600,7 +1583,7 @@ V = 0
 ;魅力値の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += BASE:COUNT:魅力値
 REND
 E /= FLAG:特殊営業参加人数
@@ -1619,7 +1602,7 @@ IF FLAG:特殊営業で夜の部を開催フラグ == 1
 	V = 150
 	;Ｖ使用不可キャラがいると減る
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF CFLAG:COUNT:売春Ｖ不能
 			TIMES V , 0.70
@@ -1645,7 +1628,7 @@ MONEY += Q
 ;昼の部だった場合客からの膣内射精フラグはクリア
 IF FLAG:特殊営業で夜の部を開催フラグ == 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		CFLAG:COUNT:客奴膣内精子量 = 0
 	REND
@@ -1655,7 +1638,7 @@ ENDIF
 ;ストリップ終了時に生きていて、技巧LV5以上、舞踊技能LV5以上で舞踊経験1000以上かつ【歌姫】【美姫】をもっていない場合に通常コンサートをした時に取得
 
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	IF BASE:COUNT:体力 > 0 && ABL:COUNT:技巧 >= 5 && ABL:COUNT:舞踊技能 >= 5 && EXP:COUNT:舞踊経験 >= 1000 && TALENT:COUNT:舞姫 == 0 && FLAG:特殊営業で夜の部を開催フラグ == 0
 		PRINTFORMW %CALLNAME:COUNT%の舞の素晴らしさは世間でも評判になっているようだ……

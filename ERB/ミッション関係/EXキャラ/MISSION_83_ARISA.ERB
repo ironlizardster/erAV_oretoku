@@ -121,7 +121,7 @@ SIF ABL:話術 >= 5
 	LOCAL:1++
 SIF TALENT:処女 == 1
 	LOCAL:1++
-SIF CFLAG:処女喪失相手 == 0
+SIF !CFLAG:処女喪失相手
 	LOCAL:1++
 ;再生処女ではない
 SIF CFLAG:処女膜再生回数 == 0
@@ -150,17 +150,7 @@ IF TALENT:永遠の愛 == 1
 	;処女＋Ａ処女＋初キス未経験で【永遠の愛】なら【天使】を得る
 	IF TALENT:処女 == 1
 		;閣下はこんなことしないよ！
-		CSTR:処女喪失相手 = 朝生太郎（元議員）
-		TALENT:処女 = 0
-		CFLAG:処女喪失相手 = 13
-		SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-		RESETCOLOR
-		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:日付_月
-		CFLAG:処女喪失日 = DAY:日付_日
-		CFLAG:処女喪失場所 = 13
-		CFLAG:処女喪失状況 = 0
+		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
 	ENDIF
 	TCVAR:絶頂経験 += 5 + RAND:6
 	TCVAR:Ｖ経験 += 3 + RAND:6
@@ -169,29 +159,16 @@ IF TALENT:永遠の愛 == 1
 	TCVAR:異常経験 += 1
 	TCVAR:性交経験 = TCVAR:絶頂経験
 	IF !CFLAG:初キス相手
-		CSTR:初キス相手 = 朝生太郎（元議員）
-		SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
-		RESETCOLOR
-		CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,CSTR:初キス相手)
+		CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,"朝生太郎（元議員）")
 	ENDIF
+	CALL ADD_ANGEL(TARGET)
 	MARK:反発刻印 = 3
 	PRINTFORML 元議員に気に入られた%CALLNAME:TARGET%は性処理用ペットとして飼われないかと打診されたようだが、
 	PRINTFORML 愛する%CALLNAME:MASTER%のところに戻ってきた……
 	PRINTFORML しかし、%CALLNAME:MASTER%に売られたことについては許すつもりはないようだ
 ELSE
 	IF TALENT:処女 == 1
-		CSTR:処女喪失相手 = 朝生太郎（元議員）
-		TALENT:処女 = 0
-		CFLAG:処女喪失相手 = 8
-		SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-		RESETCOLOR
-		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:日付_月
-		CFLAG:処女喪失日 = DAY:日付_日
-		CFLAG:処女喪失場所 = 13
-		CFLAG:処女喪失状況 = 0 
+		CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
 	ENDIF
 	CSTR:彼氏姓 = 朝生
 	CSTR:彼氏名 = 太郎
@@ -207,10 +184,7 @@ ELSE
 	TCVAR:性交経験 = TCVAR:絶頂経験
 	IF !CFLAG:初キス相手
 		CSTR:初キス相手 = 朝生太郎（元議員）
-		SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
-		RESETCOLOR
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,CSTR:初キス相手)
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,CSTR:初キス相手)
 	ENDIF
 	MARK:反発刻印 = 3
 	PRINTFORML 元議員に気に入られた%CALLNAME:TARGET%は性処理用看護婦として飼われることになった……

@@ -68,7 +68,7 @@ ENDIF
 
 IF !CFLAG:COUNT:初キス相手
 	PRINTFORMW %CALLNAME:COUNT%はもうすでに彼氏にファーストキスを捧げたらしい……
-	CALL 初キス実行(TARGET,初相手_今彼,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）")
+	CALL 初キス喪失実行(COUNT,初相手_今彼,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）")
 ENDIF
 DRAWLINE
 
@@ -315,7 +315,7 @@ ELSEIF LOCAL == 3
 ENDIF
 PRINTFORM で
 
-IF CFLAG:処女喪失相手 == 0
+IF !CFLAG:処女喪失相手
 	PRINTFORM 初えっちを済ませロストヴァージン
 ELSE
 	PRINTFORM らぶらぶなＳＥＸを
@@ -353,7 +353,7 @@ ENDIF
 
 PRINTFORML に嬉しそうにはにかみながら赤裸々に語っていた……
 
-IF CFLAG:処女喪失相手 == 0
+IF !CFLAG:処女喪失相手
 	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:TARGET%の横顔からは
 	PRINTFORML オトコを知ったオンナ特有の色香が漂っているのが感じられる
 	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]]
@@ -369,17 +369,11 @@ EXP:彼氏性経験 += 1
 
 SIF LOCAL:1 >= 8 && TALENT:処女
 	TCVAR:異常経験 += 1
-IF CFLAG:処女喪失相手 == 0
+IF !CFLAG:処女喪失相手
 	SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 	RESETCOLOR
-	CFLAG:処女喪失相手 = 8
-	TALENT:処女 = 0
-	CSTR:処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
-	CFLAG:処女喪失年齢 = BASE:実年齢
-	CFLAG:処女喪失月 = DAY:日付_月
-	CFLAG:処女喪失日 = DAY:日付_日
-
+	CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 ENDIF
 
 IF !CFLAG:初キス相手
@@ -387,9 +381,9 @@ IF !CFLAG:初キス相手
 		PRINTL 【ファーストキスキス】
 	RESETCOLOR
 	IF RAND:2 == 0
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 	ELSE
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%の%CSTR:男性器呼び方%")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		TCVAR:異常経験 += 1
 	ENDIF
 	
@@ -501,7 +495,7 @@ ELSEIF LOCAL == 3
 ENDIF
 PRINTFORM で
 
-IF CFLAG:処女喪失相手 == 8 && TALENT:Ａ処女 == 1
+IF CFLAG:処女喪失相手 == 初相手_今彼 && TALENT:Ａ処女
 	PRINTFORM 処女だけでなく指ぐらいしか挿入したことが無かったアナルの処女もカレシに捧げ
 ELSEIF TALENT:Ａ処女 == 1
 	PRINTFORM 指ぐらいしか挿入したことが無かったアナルの処女をカレシに捧げ
@@ -549,21 +543,17 @@ IF TALENT:Ａ処女 == 1
 	SETCOLOR 0xF58F98
 		PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	TALENT:Ａ処女 = 0
-	CSTR:Ａ処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%
-	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-	CFLAG:Ａ処女喪失月 = DAY:日付_月
-	CFLAG:Ａ処女喪失日 = DAY:日付_日
+	CALL Ａ処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 ENDIF
 
 IF !CFLAG:初キス相手
 	SETCOLOR 0xF58F98
-		PRINTL 【ファーストキスキス】
+		PRINTL 【ファーストキス】
 	RESETCOLOR
 	IF RAND:2 == 0
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 	ELSE
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%の%CSTR:男性器呼び方%")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		TCVAR:異常経験 += 1
 	ENDIF
 

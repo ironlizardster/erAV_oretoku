@@ -133,7 +133,7 @@ REND
 @EXP_NTR_STAFF
 IF EXP:COUNT:スタッフ寝取られ経験 == 0
 	CALL FIRSTKISS_NTR_STAFF
-ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 1 && TALENT:COUNT:処女 == 1 && CFLAG:COUNT:処女喪失相手 == 0
+ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 1 && TALENT:COUNT:処女 && !CFLAG:COUNT:処女喪失相手
 	CALL LOSTVIRGIN_NTR_STAFF
 ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 5
 	CALL CHANGECLOTH_NTR_STAFF
@@ -149,7 +149,7 @@ ENDIF
 ;=================================================
 @FIRSTKISS_NTR_STAFF
 IF !CFLAG:COUNT:初キス相手
-	CALL 初キス実行(TARGET,初相手_スタッフ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"？？？")
+	CALL 初キス喪失実行(COUNT,初相手_スタッフ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"？？？")
 ENDIF
 
 ;=================================================
@@ -164,15 +164,8 @@ V += RAND:3
 S += RAND:3
 A += RAND:2
 
-CFLAG:COUNT:処女喪失年齢 = BASE:COUNT:実年齢
-CFLAG:COUNT:処女喪失月 = DAY:日付_月
-CFLAG:COUNT:処女喪失日 = DAY:日付_日
-CFLAG:COUNT:処女喪失場所 = 3
-CFLAG:COUNT:処女喪失状況 = 3
+CALL 処女喪失実行(COUNT,初相手_スタッフ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"？？？")
 
-	TALENT:COUNT:処女 = 0
-	CFLAG:COUNT:処女喪失相手 = 10
-	CSTR:COUNT:処女喪失相手 = ？？？
 	EXP:COUNT:Ｖ経験 += V
 	EXP:COUNT:絶頂経験 += A
 	EXP:COUNT:性交経験 += V
@@ -354,7 +347,6 @@ PRINTW
 IF CFLAG:COUNT:処女喪失相手 == 初相手_スタッフ
 	PRINTFORML 《%NAME:COUNT%の処女喪失相手の名前がオープンされました》
 		CSTR:COUNT:処女喪失相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
-		CFLAG:COUNT:処女喪失相手 = 8
 		EXP:COUNT:彼氏性経験 += 10
 ENDIF
 IF CFLAG:COUNT:初キス相手 == 初相手_スタッフ
@@ -363,7 +355,6 @@ IF CFLAG:COUNT:初キス相手 == 初相手_スタッフ
 			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
 		ELSE
 			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
-			CFLAG:COUNT:初キス喪失状況 = 1
 		ENDIF
 ENDIF
 	CFLAG:COUNT:NTR進行 = 0

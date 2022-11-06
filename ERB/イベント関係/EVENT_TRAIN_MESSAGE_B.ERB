@@ -364,54 +364,6 @@ ELSEIF SELECTCOM == 7
 				PRINTL いる
 			ELSEIF CFLAG:性器 == 0 && TALENT:処女 == 0
 				PRINTFORML ヴァギナは新品同様の綺麗なサーモンピンク色をしている
-				PRINTFORM %CALLNAME:PLAYER%が初体験の経緯を聞くと%CALLNAME:TARGET%は
-					IF TALENT:恋心 == 0 || TALENT:淫乱 == 0
-						PRINTFORM 恥ずかしがりながら
-					ENDIF
-				PRINTFORM 
-					IF CFLAG:処女喪失相手 == 16
-						PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられたことを幸せそうにしている
-							ENDIF
-					ELSEIF CFLAG:処女喪失相手 == 2
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 3
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 4
-						PRINTFORM バイブで処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 5
-						PRINTFORM 極太バイブで処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 6
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 7
-						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 8
-						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
-							ENDIF
-					ELSEIF CFLAG:処女喪失相手 == 11
-						PRINTFORM 不良に無理矢理犯されて処女喪失したことを
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 14
-						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSE
-						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
-							ENDIF						
-					ENDIF
 			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 > 50 && TALENT:処女 == 0
 				PRINTFORM 度重なる性行為で肥大したラビアは
 				IF CFLAG:性器 == 2
@@ -420,54 +372,6 @@ ELSEIF SELECTCOM == 7
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTFORML おり、何度もペニスで貫かれた膣口も大きく拡がっている
-				PRINTFORM %CALLNAME:PLAYER%が初体験の経緯を聞くと%CALLNAME:TARGET%は
-					IF TALENT:恋心 == 0 || TALENT:淫乱 == 0
-						PRINTFORM 恥ずかしがりながら
-					ENDIF
-				PRINTFORM 
-					IF CFLAG:処女喪失相手 == 16
-						PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられたことを幸せそうにしている
-							ENDIF
-					ELSEIF CFLAG:処女喪失相手 == 2
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 3
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 4
-						PRINTFORM バイブで処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 5
-						PRINTFORM 極太バイブで処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 6
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 7
-						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 8
-						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
-							ENDIF
-					ELSEIF CFLAG:処女喪失相手 == 11
-						PRINTFORM 不良に無理矢理犯されて処女喪失したことを
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 14
-						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSE
-						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
-							ENDIF						
-					ENDIF
 			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 <= 50 && TALENT:処女 == 0
 				PRINTFORM 度重なる性行為で肥大したラビアは
 				IF CFLAG:性器 == 2
@@ -476,54 +380,56 @@ ELSEIF SELECTCOM == 7
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTFORML いる
+			ENDIF
+			IF TALENT:処女 == 0
 				PRINTFORM %CALLNAME:PLAYER%が初体験の経緯を聞くと%CALLNAME:TARGET%は
-					IF TALENT:恋心 == 0 || TALENT:淫乱 == 0
-						PRINTFORM 恥ずかしがりながら
-					ENDIF
+				IF TALENT:恋心 == 0 || TALENT:淫乱 == 0
+					PRINTFORM 恥ずかしがりながら
+				ENDIF
 				PRINTFORM 
-					IF CFLAG:処女喪失相手 == 16
-						PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられたことを幸せそうにしている
-							ENDIF
-					ELSEIF CFLAG:処女喪失相手 == 2
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 3
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 4
-						PRINTFORM バイブで処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 5
-						PRINTFORM 極太バイブで処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 6
-						PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
-						PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 7
-						PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 8
-						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
-							ENDIF
-					ELSEIF CFLAG:処女喪失相手 == 11
-						PRINTFORM 不良に無理矢理犯されて処女喪失したことを
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSEIF CFLAG:処女喪失相手 == 14
-						PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
-						PRINTFORML %CALLNAME:PLAYER%に告白した…
-					ELSE
-						PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
-							IF TALENT:恋心 == 1
-								PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
-								PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
-							ENDIF						
-					ENDIF
+				IF CFLAG:処女喪失相手 == NO:MASTER + 1
+					PRINTFORML %CALLNAME:MASTER%が初めての相手だと告白した…
+						IF TALENT:恋心
+							PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
+							PRINTFORML 捧げられたことを幸せそうにしている
+						ENDIF
+				ELSEIF CFLAG:処女喪失相手 == 初相手_売春客男
+					PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない男性客相手に
+					PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_売春客女
+					PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない女性客相手に
+					PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_バイブ
+					PRINTFORM バイブで処女喪失したこととその経緯を
+					PRINTFORML %CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_極太バイブ
+					PRINTFORM 極太バイブで処女喪失したこととその経緯を
+					PRINTFORML %CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_接待客
+					PRINTFORM %CALLNAME:MASTER%に指示され売春で名前も知らない客相手に
+					PRINTFORML 処女喪失したことを%CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_痴漢
+					PRINTFORM 痴漢に無理矢理犯されて処女喪失したことを
+					PRINTFORML %CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_今彼 || CFLAG:処女喪失相手 == 初相手_元彼
+					PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						IF TALENT:恋心
+							PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
+							PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
+						ENDIF
+				ELSEIF CFLAG:処女喪失相手 == 初相手_不良
+					PRINTFORM 不良に無理矢理犯されて処女喪失したことを
+					PRINTFORML %CALLNAME:PLAYER%に告白した…
+				ELSEIF CFLAG:処女喪失相手 == 初相手_触手
+					PRINTFORM 触手に貫かれて処女喪失したこととその経緯を
+					PRINTFORML %CALLNAME:PLAYER%に告白した…
+				ELSE
+					PRINTFORML %CSTR:処女喪失相手%の名前とその経緯を%CALLNAME:PLAYER%に告白した…
+						IF TALENT:恋心
+							PRINTFORM %CALLNAME:TARGET%は%CALLNAME:MASTER%に処女を
+							PRINTFORML 捧げられなかったことを申し訳なさそうにしていた
+						ENDIF						
+				ENDIF
 			ENDIF
 	ENDIF
 	

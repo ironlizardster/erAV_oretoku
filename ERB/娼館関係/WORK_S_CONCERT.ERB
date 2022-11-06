@@ -70,13 +70,13 @@ ASSI = -1
 ;参加人数が一人の場合はTARGETにそのキャラを代入
 IF FLAG:特殊営業参加人数 == 1
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130
+		SIF CFLAG:COUNT:特殊営業参加
 			TARGET = COUNT
 	REND
 ;参加人数が二人の場合は歌唱経験の高い方をTARGETに、もう一人をASSIに代入
 ELSEIF FLAG:特殊営業参加人数 == 2
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF TARGET == -1
 			TARGET = COUNT
@@ -91,7 +91,7 @@ ELSEIF FLAG:特殊営業参加人数 == 2
 ELSEIF FLAG:特殊営業参加人数 >= 3
 	E = -1
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF E < EXP:COUNT:歌唱経験
 			TARGET = COUNT
@@ -111,7 +111,7 @@ IF FLAG:特殊営業参加人数 >= 2 && FLAG:着衣使用
 	F = 0
 	S = 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF E == -1
 			S = CFLAG:COUNT:着衣状態
@@ -150,7 +150,7 @@ ENDIF
 ;参加するキャラの人気の最大値に応じて客が来ます
 E = 0
 REPEAT CHARANUM
-	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:特殊営業参加
 		E = EXP:COUNT:人気
 REND
 C = E / 4
@@ -193,7 +193,7 @@ ENDIF
 
 ;参加者が特定の素質を持っていた場合ボーナス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;社会的ステータスが影響
 	;人気者
@@ -338,7 +338,7 @@ WAIT
 L = 0
 K = 0
 REPEAT CHARANUM
-	SIF L < MAXBASE:COUNT:気力 && CFLAG:COUNT:130
+	SIF L < MAXBASE:COUNT:気力 && CFLAG:COUNT:特殊営業参加
 		L = MAXBASE:COUNT:気力 / 100
 REND
 ;
@@ -349,7 +349,7 @@ K = L / 10
 ;（※下手な歌い手は他のメンバーの足まで引っぱります）
 E = 0
 REPEAT CHARANUM
-	SIF E > EXP:COUNT:歌唱経験 && CFLAG:COUNT:130
+	SIF E > EXP:COUNT:歌唱経験 && CFLAG:COUNT:特殊営業参加
 		E = EXP:COUNT:歌唱経験
 REND
 
@@ -383,7 +383,7 @@ ENDIF
 
 ;参加者全員の技能・素質による修正値を加算
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 
 	;全員の歌唱技能をプラス
@@ -617,7 +617,7 @@ ENDIF
 ;口上処理
 X = TARGET
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 	CALL SELF_KOJO
@@ -632,7 +632,7 @@ DRAWLINE
 
 ;パラメータ変化
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	
 	TARGET = COUNT
@@ -901,7 +901,7 @@ Q = 0
 ;（※素人の歌を金を払って聞きに来る人はあまりいません）
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:歌唱技能
 REND
 E /= FLAG:特殊営業参加人数
@@ -937,7 +937,7 @@ V = 0
 
 ;参加キャラの素質補正
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;カリスマ
 	SIF TALENT:COUNT:カリスマ
@@ -956,7 +956,7 @@ REND
 ;話術の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:話術
 REND
 E /= FLAG:特殊営業参加人数
@@ -994,7 +994,7 @@ V = 0
 ;被写技能の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:被写技能
 REND
 E /= FLAG:特殊営業参加人数
@@ -1032,7 +1032,7 @@ V = 0
 ;舞踊技能の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:舞踊技能
 REND
 E /= FLAG:特殊営業参加人数
@@ -1070,7 +1070,7 @@ V = 0
 ;魅力値の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += BASE:COUNT:魅力値
 REND
 E /= FLAG:特殊営業参加人数
@@ -1089,7 +1089,7 @@ IF FLAG:特殊営業で夜の部を開催フラグ == 1
 	V = 150
 	;Ｖ使用不可キャラがいると減る
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF CFLAG:COUNT:売春Ｖ不能
 			TIMES V , 0.70
@@ -1116,7 +1116,7 @@ MONEY += Q
 ;コンサート終了時に生きていて、技巧LV5以上、歌唱技能LV5以上で歌唱経験1000以上かつ【舞姫】【美姫】をもっていない場合に通常コンサートをした時に取得
 
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	IF BASE:COUNT:体力 > 0 && ABL:COUNT:技巧 >= 5 && ABL:COUNT:歌唱技能 >= 5 && EXP:COUNT:歌唱経験 >= 1000 && TALENT:COUNT:歌姫 == 0 && FLAG:特殊営業で夜の部を開催フラグ == 0
 		PRINTFORMW %CALLNAME:COUNT%の歌の素晴らしさは世間でも評判になっているようだ……

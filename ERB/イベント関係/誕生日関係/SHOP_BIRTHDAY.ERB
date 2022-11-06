@@ -262,20 +262,7 @@ ELSEIF RESULT == 1
 	PRINTFORML 
 	PRINTFORML どうやら%CALLNAME:TARGET%とのデートは成功に終わったようだった
 	IF !CFLAG:初キス相手
-		SETCOLOR 0xDDBBCC
-		PRINTFORML ファーストキス
-		RESETCOLOR
-		IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
-			CSTR:初キス相手 = お兄ちゃん
-		ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-			CSTR:初キス相手 = お兄ぃ
-		ELSEIF NO:TARGET == [[キャラ:宮間カナ]] && NO:MASTER == [[キャラ:あなた]]
-			CSTR:初キス相手 = アニキ
-		ELSE
-			CSTR:初キス相手 = %NAME:MASTER%
-		ENDIF
-		CALL 初キス実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,CSTR:初キス相手)
-		CALL 初キス実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,NAME:TARGET)
+		CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 	ENDIF
 ELSE
 	GOTO INPUT_LOOP

@@ -37,13 +37,13 @@ ASSI = -1
 ;参加人数が一人の場合はTARGETにそのキャラを代入
 IF FLAG:特殊営業参加人数 == 1
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130
+		SIF CFLAG:COUNT:特殊営業参加
 			TARGET = COUNT
 	REND
 ;参加人数が二人の場合は性交経験の高い方をTARGETに、もう一人をASSIに代入
 ELSEIF FLAG:特殊営業参加人数 == 2
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF TARGET == -1
 			TARGET = COUNT
@@ -58,7 +58,7 @@ ELSEIF FLAG:特殊営業参加人数 == 2
 ELSEIF FLAG:特殊営業参加人数 >= 3
 	E = -1
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		IF E < EXP:COUNT:性交経験
 			TARGET = COUNT
@@ -96,7 +96,7 @@ CALL WORK_SUB_RELATION
 ;参加するキャラの人気の最大値に応じて客が来ます
 E = 0
 REPEAT CHARANUM
-	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:特殊営業参加
 		E = EXP:COUNT:人気
 REND
 C = E / 5
@@ -117,7 +117,7 @@ ENDIF
 
 ;参加者が特定の素質を持っていた場合ボーナス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;人気者
 	SIF TALENT:COUNT:人気者
@@ -162,7 +162,7 @@ PRINTFORML は身動きを取れないように縛り上げられ、{G}人の客
 ;メンバー全員が男性か貞操帯着用ならＶ使用なし
 F = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF TALENT:COUNT:オトコ
 		CONTINUE
@@ -181,7 +181,7 @@ PRINTFORMW の体からは、止めどなく精液があふれ出している
 ;処女喪失
 S = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:売春Ｖ不能
 		CONTINUE
@@ -212,7 +212,7 @@ ENDIF
 PRINT やがて
 S = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	IF TALENT:COUNT:淫乱 || ABL:COUNT:性交中毒 >= 4
 		SIF S
@@ -235,7 +235,7 @@ WAIT
 TFLAG:口上番号 = 116
 X = TARGET
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 	CALL SELF_KOJO
@@ -300,7 +300,7 @@ A = 5
 ;客の欲望Aをキャラの欲望の平均値が上回った場合は二倍、下回った場合は等倍が加算されます
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:欲望
 REND
 E /= FLAG:特殊営業参加人数
@@ -314,7 +314,7 @@ E = 0
 
 ;参加者全員の技能・素質による修正値を加算
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 
 	;全員の売春中毒を加算
@@ -440,7 +440,7 @@ DRAWLINE
 PLAYER = TARGET
 ;パラメータ変化
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	
 	TARGET = COUNT
@@ -682,7 +682,7 @@ ENDIF
 
 ;参加者による補正
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;処女喪失ならば増える
 	IF CFLAG:COUNT:売春処女喪失
@@ -731,7 +731,7 @@ MONEY += Q
 
 ;処女喪失フラグ、Ａ・Ｖ経験判定フラグ、公開浣腸ショー実行フラグはここで消す
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	CFLAG:売春処女喪失 = 0
 	CFLAG:Ｖ売春否定 = 0

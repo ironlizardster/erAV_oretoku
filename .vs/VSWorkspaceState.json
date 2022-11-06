@@ -4,13 +4,12 @@
     "\\CSV",
     "\\ERB",
     "\\ERB\\イベント関係",
-    "\\ERB\\イベント関係\\NTR関係",
-    "\\ERB\\イベント関係\\NTR関係\\カレシ関係",
     "\\ERB\\イベント関係\\初体験関係",
-    "\\ERB\\キャラ関数",
     "\\ERB\\システム関係",
-    "\\ERB\\ＡＶ撮影関係"
+    "\\ERB\\ミッション関係",
+    "\\ERB\\ミッション関係\\EXキャラ",
+    "\\ERB\\指導関係"
   ],
-  "SelectedNode": "\\CSV\\Chara040_庄野そら.csv",
+  "SelectedNode": "\\ERB\\指導関係\\COMF81.ERB",
   "PreviewInSolutionExplorer": false
 }

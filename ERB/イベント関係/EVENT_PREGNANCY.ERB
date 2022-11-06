@@ -978,8 +978,7 @@ DRAWLINE
 
 IF TALENT:C:処女 == 1
 	CSTR:C:処女喪失相手 = スライムの卵
-	TALENT:C:処女 = 0
-	CFLAG:C:処女喪失相手 = 4
+	CALL 処女喪失実行(C,初相手_産卵,BASE:C:実年齢,DAY:日付_月,DAY:日付_日,初場所_自室,初状況_なし,CSTR:C:処女喪失相手)
 	SETCOLOR 0xF58F98
 	PRINTL 【処女喪失】
 	RESETCOLOR

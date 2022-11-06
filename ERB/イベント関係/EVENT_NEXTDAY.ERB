@@ -803,7 +803,7 @@ ELSE
 	ENDIF
 	PRINTFORM %CALLNAME:MASTER%に抱かれたくて、
 	PRINTFORML アナルが疼いてどうしようもないらしい……
-	IF TALENT:TEMP_NUM:Ａ処女 == 1
+	IF TALENT:TEMP_NUM:Ａ処女
 		PRINTFORM %CALLNAME:TEMP_NUM%は未だ肉棒を受け入れたことがない、快楽を覚えるようになった窄まりを左右の手で拡げて
 		PRINTFORML %CALLNAME:MASTER%に後ろの処女を奪って欲しいと懇願してきた
 		PRINTFORML 左右に拡げられて薄く口を開いたアナルは、%CALLNAME:MASTER%のモノを待ち望んでヒクついている
@@ -812,18 +812,8 @@ ELSE
 		PRINTFORMW 慣らすようにゆっくりと挿入した……
 	ENDIF
 	PRINTFORML {S}回の交わりの後に、二人は繋がったまま抱き合い、深い眠りに落ちた
-	IF TALENT:TEMP_NUM:Ａ処女 == 1
-		SETCOLOR 0xF58F98
-		PRINTL 【Ａ処女喪失】
-		RESETCOLOR
-		TALENT:TEMP_NUM:Ａ処女 = 0
-		IF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 0
-			CSTR:TEMP_NUM:Ａ処女喪失相手 = お兄ちゃん
-		ELSEIF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 1
-			CSTR:TEMP_NUM:Ａ処女喪失相手 = アニキ
-		ELSE
-			CSTR:TEMP_NUM:Ａ処女喪失相手 = %CALLNAME:MASTER%
-		ENDIF
+	IF TALENT:TEMP_NUM:Ａ処女
+		CALL Ａ処女喪失実行(TEMP_NUM,NO:MASTER + 1,BASE:TEMP_NUM:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_夜這)
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
 	PRINTFORML %EXPNAME:[[EXP:性交経験]]%＋{S}
@@ -947,19 +937,6 @@ ELSEIF F == 0 && TALENT:TEMP_NUM:Ａ処女 == 0
 		ENDIF
 	PRINTFORML ながら、そのまま二回戦目に突入した……
 	PRINTFORML {S}回の交わりの後に、二人はようやく家を出た
-	IF TALENT:TEMP_NUM:Ａ処女 == 1
-		SETCOLOR 0xF58F98
-		PRINTL 【Ａ処女喪失】
-		RESETCOLOR
-		TALENT:TEMP_NUM:Ａ処女 = 0
-		IF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 0
-			CSTR:TEMP_NUM:Ａ処女喪失相手 = お兄ちゃん
-		ELSEIF NO:TEMP_NUM == [[キャラ:宮間かなで]] && TALENT:TEMP_NUM:ギャル系 == 1
-			CSTR:TEMP_NUM:Ａ処女喪失相手 = アニキ
-		ELSE
-			CSTR:TEMP_NUM:Ａ処女喪失相手 = %CALLNAME:MASTER%
-		ENDIF
-	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
 	PRINTFORML %EXPNAME:[[EXP:性交経験]]%＋{S}
 	EXP:TEMP_NUM:Ａ経験 += S

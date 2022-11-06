@@ -87,6 +87,7 @@
 #DIM CONST 初相手_売春客女 = -14
 #DIM CONST 初相手_痴漢 = -15
 #DIM CONST 初相手_接待客 = -16
+#DIM CONST 初相手_産卵 = -17
 #DIM CONST 初場所_あなたの部屋 = 0
 #DIM CONST 初場所_自室 = 1
 #DIM CONST 初場所_彼部屋 = 2
@@ -106,9 +107,16 @@
 #DIM CONST 初状況_男性器 = 1
 #DIM CONST 初状況_肛門 = 2
 #DIM CONST 初状況_女性器 = 3
+#DIM CONST 初状況_なし = 0
 #DIM CONST 初状況_指導 = 1
 #DIM CONST 初状況_撮影 = 2
 #DIM CONST 初状況_ハメ撮 = 3
 #DIM CONST 初状況_無理犯 = 4
 #DIM CONST 初状況_輪姦 = 5
 #DIM CONST 初状況_クスリ = 6
+#DIM CONST 初状況_夜這 = 7
+#DIM CONST 初状況_売春 = 8
+#DIM CONST 初状況_奴隷接待 = 9
+#DIM CONST 初状況_乱交 = 10
+#DIM CONST 初状況_ストリップ = 11
+#DIM CONST 初状況_オークション = 12

@@ -514,7 +514,7 @@ IF TALENT:彼氏あり == 1 && TALENT:貞操観念 == 0 && TALENT:淫乱 == 1 &&
 	SIF TALENT:ＡＶ女優 == 1
 		PRINTFORM も
 	PRINTFORMW ならないかと持ちかけてきた……
-	SIF CFLAG:処女喪失相手 == 8
+	SIF CFLAG:処女喪失相手 == 初相手_今彼 || CFLAG:処女喪失相手 == 初相手_元彼
 		PRINTFORM 彼氏に処女を捧げてから、何度もその肢体を貫かれ
 	PRINTFORML すっかりセックスの味を覚えてしまった%CALLNAME:TARGET%には、彼氏とのセックスだけでは満足できないらしい……
 	PRINTFORM プライベートでも%CALLNAME:TARGET%の肢体を味わえるという魅力的な提案に、%CALLNAME:MASTER%は黙って

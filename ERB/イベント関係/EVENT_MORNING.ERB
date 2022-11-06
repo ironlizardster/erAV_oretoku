@@ -160,26 +160,7 @@ PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{X*40}
 
 ;△SLANGとの整合性
 IF !CFLAG:初キス相手
-	IF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
-		CSTR:初キス相手 = アニキのチンポ
-	ELSEIF TALENT:淫乱 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
-		CSTR:初キス相手 = お兄ちゃんのオチ○ポ
-	ELSEIF TALENT:淫乱 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
-		CSTR:初キス相手 = お兄ちゃんのおちん○ん
-	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = %CALLNAME:MASTER%のチンポ
-	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:淫乱 == 1
-		CSTR:初キス相手 = %CALLNAME:MASTER%のオチ○ポ
-	ELSEIF NO:TARGET != [[キャラ:宮間かなで]] && NO:TARGET != [[キャラ:宮間カナ]] && TALENT:淫乱 == 0
-		CSTR:初キス相手 = %CALLNAME:MASTER%のおちん○ん
-	;ここに来るのはどんなとき？
-	ELSE
-		CSTR:初キス相手 = %CALLNAME:MASTER%のオチンポ様%UNICODE(0x2665)%
-	ENDIF
-	CALL 初キス実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_男性器,CSTR:初キス相手)
-	SETCOLOR 0xF58F98
-	PRINTL 【ファーストキス】
-	RESETCOLOR
+	CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_男性器)
 ENDIF
 
 WAIT

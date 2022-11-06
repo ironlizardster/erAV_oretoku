@@ -97,7 +97,7 @@ PRINTL 　　　　　　　　　　　　　　代わりにミスティ・ブ�
 PRINTL 　　　　　　　　　　　　　　
 PRINTL 　　　　　　　　　　　　　　ミッションに大成功した場合、りえが戻ってくるのに加え
 PRINTL 　　　　　　　　　　　　　　りえの美容感覚・歌唱技能Lv10、【魅惑】【カリスマ】【？？？？】
-PRINTL 　　　　　　　　　　　　　　【護身術】【AVALOKITESVARA】の取得、最大魅力値が80上昇
+PRINTL 　　　　　　　　　　　　　　【護身術】の取得、最大魅力値が80上昇
 PRINTL 　　　　　　　　　　　　　　
 PRINTL 　　　ミッション対象キャラ：富士川りえ
 DRAWLINE
@@ -182,9 +182,9 @@ ENDIF
 IF ARG == 2
 	CALL RIE_MISSION_SS1
 	TCVAR:異常経験 += 50 * ARG
-	TALENT:処女 = 0
-	TALENT:Ａ処女 = 0
-	CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"知らないオトコの人の%CSTR:LOCAL:男性器呼び方%")
+	CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"知らないオトコの人")
+	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_乱交,"知らないオトコの人")
+	CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_乱交,"知らないオトコの人")
 	ABL:美容感覚 = 10
 	ABL:歌唱技能 = 10
 	TALENT:魅惑 = 1
@@ -195,22 +195,6 @@ IF ARG == 2
 	MAXBASE:魅力値 += 80
 	BASE:魅力値 += 80
 	BASE:ギャラ += 10400
-
-[IF_DEBUG]
-;PRINTFORMW 
-;PRINTFORML 「私の名前はミスティ・ブラウン、以後よろしく…
-;PRINTFORML 　実を言うとね、『あなた』に用があって来たの
-;PRINTFORML 　「トト・ミュージーク」が近々日本に支社を立ち上げる予定なのは知ってるでしょう？
-;PRINTFORML 　…ちょっと調べれば、『あなた』の経営するレーベルが、今日本で一番ホットだってことは誰だって分かる
-;PRINTFORML 　だから単刀直入に言うと、『あなた』に支社立ち上げの協力をしてもらうため
-;PRINTFORML 　代表者の私が直々に『あなた』に「枕営業」をしに来たってわけ」
-;PRINTFORMW 
-;PRINTFORML 「言っておくけど、『あなた』が嫌だと言っても、私は契約させてもらうから…
-;PRINTFORML 　じゃあそういうわけで、よろしく…ふふふ……！」
-;PRINTFORMW 
-;PRINTFORMW 《ミスティ・ブラウンが強引に契約をしてきました》
-;CALL キャラ追加([[キャラ:ミスティ・ブラウン]])
-[ENDIF]
 
 ELSEIF ARG == 1
 	CALL RIE_MISSION_SS2

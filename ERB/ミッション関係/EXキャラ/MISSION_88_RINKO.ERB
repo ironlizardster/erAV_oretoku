@@ -318,18 +318,18 @@ RETURN 0
 
 BASE:TARGET:魅力値 -= 30
 BASE:TARGET:体力 = 1
-CFLAG:TARGET:130 = 1
+CFLAG:TARGET:特殊営業参加 = 1
 
 IF 桔梗 != -1
 	BASE:桔梗:魅力値 -= 30
 	BASE:桔梗:体力 = 1
-	CFLAG:桔梗:130 = 1
+	CFLAG:桔梗:特殊営業参加 = 1
 ENDIF
 
 IF 詩織 != -1
 	BASE:詩織:魅力値 -= 30
 	BASE:詩織:体力 = 1
-	CFLAG:詩織:130 = 1
+	CFLAG:詩織:特殊営業参加 = 1
 ENDIF
 
 ; 経験増加処理の呼び出し
@@ -339,7 +339,7 @@ TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
 TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
 TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
 IF !CFLAG:初キス相手
-	CALL 初キス実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,"%NAME:桔梗%")
+	CALL 初キス喪失実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 ENDIF
 CALL MISSION_ADD_EXP(TARGET)
 
@@ -355,7 +355,7 @@ IF 桔梗 != -1
 	CALL MISSION_ADD_EXP(TARGET)
 	B = TARGET
 	IF !CFLAG:初キス相手
-		CALL 初キス実行(TARGET,[[キャラ:闇崎燐子]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,"%NAME:燐子%")
+		CALL 初キス喪失実行(TARGET,[[キャラ:闇崎燐子]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 	ENDIF
 ENDIF
 
@@ -369,7 +369,7 @@ IF 詩織 != -1
 	CALL MISSION_ADD_EXP(TARGET)
 	C = TARGET
 	IF !CFLAG:初キス相手
-		CALL 初キス実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口,"%NAME:桔梗%")
+		CALL 初キス喪失実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 	ENDIF
 ENDIF
 
@@ -378,24 +378,19 @@ IF ARG == 0
 		TALENT:燐子:臆病 = 1
 		TALENT:燐子:ネガティブ = 1
 		TALENT:燐子:抑圧 = 1
-		CFLAG:燐子:130 = 0
+		CFLAG:燐子:特殊営業参加 = 0
 	;桔梗分
 		TALENT:桔梗:臆病 = 1
 		TALENT:桔梗:ネガティブ = 1
 		TALENT:桔梗:抑圧 = 1
-		CFLAG:桔梗:130 = 0
+		CFLAG:桔梗:特殊営業参加 = 0
 	;詩織分
 		TALENT:詩織:臆病 = 1
 		TALENT:詩織:ネガティブ = 1
 		TALENT:詩織:抑圧 = 1
-		CFLAG:詩織:130 = 0
+		CFLAG:詩織:特殊営業参加 = 0
 ELSE
-	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
-			CONTINUE
-		
-		TARGET = COUNT
-	REND
+
 	;燐子分
 	RELATION:燐子:(NO:桔梗) = 500
 	RELATION:燐子:(NO:詩織) = 500
@@ -419,7 +414,7 @@ ELSE
 	CFLAG:燐子:髪色 = 3
 	CFLAG:燐子:染髪済 = 1
 	CFLAG:燐子:髪型 = 11
-	CFLAG:燐子:130 = 0
+	CFLAG:燐子:特殊営業参加 = 0
 
 	;桔梗分
 	RELATION:桔梗:(NO:燐子) = 500
@@ -443,7 +438,7 @@ ELSE
 	CFLAG:桔梗:髪色 = 13
 	CFLAG:桔梗:染髪済 = 1
 	CFLAG:桔梗:髪型 = 2
-	CFLAG:桔梗:130 = 0
+	CFLAG:桔梗:特殊営業参加 = 0
 
 	;詩織分
 	RELATION:詩織:(NO:桔梗) = 500
@@ -469,7 +464,7 @@ ELSE
 	CFLAG:詩織:髪色 = 2
 	CFLAG:詩織:染髪済 = 1
 	CFLAG:詩織:髪型 = 5
-	CFLAG:詩織:130 = 0
+	CFLAG:詩織:特殊営業参加 = 0
 
 	PRINTL
 	PRINTFORML 　※ここから先の内容は能力変化に関係ありません

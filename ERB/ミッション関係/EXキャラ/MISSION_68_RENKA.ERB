@@ -150,40 +150,14 @@ RETURN 0
 ;  ARG 成否判定の結果(0:失敗, 1:成功, 2:大成功)
 ;=================================================
 @MISSION_REPORT_68(ARG)
-IF TALENT:処女 == 1
-	CSTR:処女喪失相手 = 知らないオトコの人
-	TALENT:処女 = 0
-	CFLAG:処女喪失相手 = 8
-	SETCOLOR 0xF58F98
-	PRINTL 【処女喪失】
-	RESETCOLOR
-		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:日付_月
-		CFLAG:処女喪失日 = DAY:日付_日
-		CFLAG:処女喪失場所 = 13
-		CFLAG:処女喪失状況 = 5
+IF TALENT:処女
+	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_輪姦,"知らないオトコの人")
 ENDIF
 IF !CFLAG:初キス相手
-	SIF TALENT:ギャル系 == 0
-		CSTR:初キス相手 = 知らないオトコの人
-	SIF TALENT:ギャル系 == 1
-		CSTR:初キス相手 = 知らないオトコの人
-	SETCOLOR 0xF58F98
-	PRINTL 【ファーストキス】
-	RESETCOLOR
-	CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,CSTR:初キス相手)
+	CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"知らないオトコの人")
 ENDIF
-IF TALENT:Ａ処女 == 1
-	TALENT:Ａ処女 = 0
-	CSTR:Ａ処女喪失相手 = 知らないオトコの人
-	SETCOLOR 0xF58F98
-	PRINTL 【Ａ処女喪失】
-	RESETCOLOR
-		CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-		CFLAG:Ａ処女喪失月 = DAY:日付_月
-		CFLAG:Ａ処女喪失日 = DAY:日付_日
-		CFLAG:Ａ処女喪失場所 = 13
-		CFLAG:Ａ処女喪失状況 = 5
+IF TALENT:Ａ処女
+	CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_輪姦,"知らないオトコの人")
 ENDIF
 TCVAR:絶頂経験 += 15 + RAND:11
 TCVAR:Ｖ経験 += 15 + RAND:11

@@ -7,7 +7,7 @@
 DRAWLINE
 
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;コンドーム使用フラグ外す
 	CFLAG:COUNT:営業コンドーム = 0
@@ -29,7 +29,7 @@ S = 0
 ;全員が自慰中毒レベル1以上ならオナニーコンテスト開催可
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 && ABL:COUNT:自慰中毒 == 0
+	SIF CFLAG:COUNT:特殊営業参加 && ABL:COUNT:自慰中毒 == 0
 		E = 0
 REND
 SIF E == 1
@@ -37,7 +37,7 @@ SIF E == 1
 ;全員が精液中毒レベル1以上で主人がオトコかふたなりならフェラチオコンテスト開催可
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 && ABL:COUNT:精液中毒 == 0
+	SIF CFLAG:COUNT:特殊営業参加 && ABL:COUNT:精液中毒 == 0
 		E = 0
 REND
 SIF TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
@@ -47,7 +47,7 @@ SIF E == 1
 ;全員がマゾっ気レベル1以上なら人間競馬開催可
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 && ABL:COUNT:マゾっ気 == 0
+	SIF CFLAG:COUNT:特殊営業参加 && ABL:COUNT:マゾっ気 == 0
 		E = 0
 REND
 SIF E == 1
@@ -132,7 +132,7 @@ CALL WORK_SUB_RELATION
 ;参加するキャラの人気の平均値に応じて客が来ます
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += EXP:COUNT:人気
 REND
 E /= FLAG:特殊営業参加人数
@@ -176,7 +176,7 @@ ENDIF
 
 ;参加者が特定の素質を持っていた場合ボーナス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;人気者
 	SIF TALENT:COUNT:人気者
@@ -215,9 +215,8 @@ WAIT
 
 ;主人公が童貞なら童貞喪失
 IF TALENT:MASTER:童貞
-	TALENT:MASTER:童貞 = 0
-	;処女喪失相手（乱交）はここで記録
-		CSTR:MASTER:童貞喪失相手 = 女性客
+	;童貞喪失相手（乱交）はここで記録
+	CALL 童貞喪失実行(MASTER,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,"女性客")
 ENDIF
 
 
@@ -225,7 +224,7 @@ ENDIF
 CALL WORK_MESSAGE_ORGY_01
 
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 
@@ -238,53 +237,43 @@ REPEAT CHARANUM
 	;処女喪失
 	IF CFLAG:COUNT:売春Ｖ不能 == 0 && TALENT:COUNT:処女
 		IF CFLAG:COUNT:処女喪失相手 == 0
-			CFLAG:COUNT:処女喪失相手 = 1
 			;処女喪失相手（乱交）はここで記録
 				TALENT:COUNT:処女 = 0
 				CFLAG:COUNT:131 += RAND:6
-					IF CFLAG:131 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-						CSTR:COUNT:処女喪失相手 = %CALLNAME:MASTER%
-						CFLAG:COUNT:処女喪失相手 = 1
-					ELSEIF CFLAG:131 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-						CSTR:COUNT:処女喪失相手 = お兄ちゃん
-						CFLAG:COUNT:処女喪失相手 = 1
-					ELSEIF CFLAG:131 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-						CSTR:COUNT:処女喪失相手 = アニキ
-						CFLAG:COUNT:処女喪失相手 = 1
+					IF CFLAG:131 == 0
+						CALL 処女喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
 					ELSEIF CFLAG:131 == 1
 						CSTR:COUNT:処女喪失相手 = 知らないオトコの人
-						CFLAG:COUNT:処女喪失相手 = 2
+						CALL 処女喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSEIF CFLAG:131 == 2
 						CSTR:COUNT:処女喪失相手 = 知らないオンナの人
-						CFLAG:COUNT:処女喪失相手 = 3
+						CALL 処女喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSEIF CFLAG:131 == 3
 						CSTR:COUNT:処女喪失相手 = バイブ
-						CFLAG:COUNT:処女喪失相手 = 4
+						CALL 処女喪失実行(COUNT,初相手_バイブ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSEIF CFLAG:131 == 4
 						CSTR:COUNT:処女喪失相手 = 極太バイブ
-						CFLAG:COUNT:処女喪失相手 = 5
+						CALL 処女喪失実行(COUNT,初相手_極太バイブ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSE
 						CSTR:COUNT:処女喪失相手 = 誰かわからない
-						CFLAG:COUNT:処女喪失相手 = 6
+						CALL 処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ENDIF
 		ENDIF
 
 	ENDIF
 	IF TALENT:COUNT:Ａ処女 == 1
-		TALENT:COUNT:Ａ処女 = 0
 		CFLAG:COUNT:132 += RAND:3 
-			IF CFLAG:COUNT:132 == 0 && NO:COUNT != [[キャラ:宮間かなで]]
-				CSTR:COUNT:Ａ処女喪失相手 = %CALLNAME:MASTER%
-			ELSEIF CFLAG:COUNT:132 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 0
-				CSTR:COUNT:Ａ処女喪失相手 = お兄ちゃん
-			ELSEIF CFLAG:COUNT:132 == 0 && NO:COUNT == [[キャラ:宮間かなで]] && TALENT:COUNT:ギャル系 == 1
-				CSTR:COUNT:Ａ処女喪失相手 = アニキ
+			IF CFLAG:COUNT:132 == 0 
+				CALL Ａ処女喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
 			ELSEIF CFLAG:COUNT:132 == 1
 				CSTR:COUNT:Ａ処女喪失相手 = 知らないオトコの人
+				CALL Ａ処女喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ELSEIF CFLAG:COUNT:132 == 2
 				CSTR:COUNT:Ａ処女喪失相手 = 知らないオンナの人
+				CALL Ａ処女喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ELSE
 				CSTR:COUNT:Ａ処女喪失相手 = 誰かわからない
+				CALL Ａ処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ENDIF
 	ENDIF
 	IF TALENT:COUNT:童貞 == 1
@@ -294,12 +283,13 @@ REPEAT CHARANUM
 				CSTR:COUNT:童貞喪失相手 = 知らないオンナの人
 			ELSEIF CFLAG:COUNT:133 == 1 && TALENT:MASTER:オトコ == 0
 				CSTR:COUNT:童貞喪失相手 = %CALLNAME:MASTER%
-					IF TALENT:MASTER:処女 == 1 && CFLAG:MASTER:処女喪失相手 == 0
-						CFLAG:MASTER:処女喪失相手 = 1
-						CSTR:MASTER:処女喪失相手 = %CALLNAME:TARGET%
-					ENDIF
+				IF TALENT:MASTER:処女 == 1 && CFLAG:MASTER:処女喪失相手 == 0
+					CALL 処女喪失実行(MASTER,NO:COUNT + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:COUNT)
+				ENDIF
+				CALL 童貞喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:MASTER)
 			ELSE
 				CSTR:COUNT:童貞喪失相手 = 誰かわからない
+				CALL 処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 			ENDIF
 	ENDIF
 	IF !CFLAG:COUNT:初キス相手
@@ -365,23 +355,23 @@ REPEAT CHARANUM
 				ENDIF
 		SELECTCASE CFLAG:COUNT:初キス相手
 			CASE 0
-				CALL 初キス実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
 			CASE 1
-				CALL 初キス実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
 			CASE 2
-				CALL 初キス実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
 			CASE 3
-				CALL 初キス実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
 			CASE 4
-				CALL 初キス実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
 			CASE 5
-				CALL 初キス実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_女性器,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_女性器,CSTR:COUNT:初キス相手)
 			CASE 6
-				CALL 初キス実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
 			CASE 7
-				CALL 初キス実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
 			CASE 8
-				CALL 初キス実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
 		ENDSELECT
 	ENDIF
 REND
@@ -401,7 +391,7 @@ ENDIF
 ;特別イベント口上
 IF FLAG:特殊営業で夜の部を開催フラグ != 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		TARGET = COUNT
 
@@ -426,7 +416,7 @@ A = 5
 ;客の欲望Aをキャラの欲望の平均値が上回った場合は二倍、下回った場合は等倍が加算されます
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:欲望
 REND
 E /= FLAG:特殊営業参加人数
@@ -440,7 +430,7 @@ E = 0
 
 ;参加者全員の技能・素質による修正値を加算
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 
 	;全員の売春中毒を加算
@@ -563,7 +553,7 @@ DRAWLINE
 PLAYER = TARGET
 ;パラメータ変化
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 	PRINTFORML %NAME:TARGET%のパラメータが以下の通り変化しました
@@ -815,7 +805,7 @@ ENDIF
 
 ;参加者による補正
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;処女喪失ならば増える
 	IF CFLAG:COUNT:売春処女喪失
@@ -877,7 +867,7 @@ $INPUT_LOOP_02
 PRINTFORML 誰に賭けますか？
 DRAWLINE
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	PRINTFORML  [{COUNT}] - %NAME:COUNT%
 	;ついでに達成回数をクリア
@@ -888,7 +878,7 @@ INPUT
 
 IF RESULT < 0 || RESULT >= CHARANUM
 	GOTO INPUT_LOOP_02
-ELSEIF CFLAG:RESULT:130 == 0
+ELSEIF CFLAG:RESULT:特殊営業参加 == 0
 	GOTO INPUT_LOOP_02
 ELSEIF RESULT == 100
 	RETURN 0
@@ -906,7 +896,7 @@ $LOOP_ONANY
 F = FLAG:特殊営業参加人数
 E = RAND:F
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	IF E == 0
 		TARGET = COUNT
@@ -1014,7 +1004,7 @@ $INPUT_LOOP_02
 PRINTFORML 誰に賭けますか？（ここで選んだ奴隷が%CALLNAME:MASTER%とペアを組みます）
 DRAWLINE
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	PRINTFORML  [{COUNT}] - %NAME:COUNT%
 	;ついでに達成回数をクリア
@@ -1025,7 +1015,7 @@ INPUT
 
 IF RESULT < 0 || RESULT >= CHARANUM
 	GOTO INPUT_LOOP_02
-ELSEIF CFLAG:RESULT:130 == 0
+ELSEIF CFLAG:RESULT:特殊営業参加 == 0
 	GOTO INPUT_LOOP_02
 ELSEIF RESULT == 100
 	RETURN 0
@@ -1048,7 +1038,7 @@ $LOOP_FELLATIO
 F = FLAG:特殊営業参加人数
 E = RAND:F
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	IF E == 0
 		TARGET = COUNT
@@ -1151,7 +1141,7 @@ $INPUT_LOOP_02
 PRINTFORML 誰に賭けますか？（ここで選んだ奴隷が%CALLNAME:MASTER%の乗る馬になります）
 DRAWLINE
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 	PRINTFORML  [{COUNT}] - %NAME:COUNT%
@@ -1164,7 +1154,7 @@ INPUT
 
 IF RESULT < 0 || RESULT >= CHARANUM
 	GOTO INPUT_LOOP_02
-ELSEIF CFLAG:RESULT:130 == 0
+ELSEIF CFLAG:RESULT:特殊営業参加 == 0
 	GOTO INPUT_LOOP_02
 ELSEIF RESULT == 100
 	RETURN 0
@@ -1230,7 +1220,7 @@ $LOOP_RACING
 REPEAT CHARANUM
 	TARGET = COUNT
 
-	SIF CFLAG:130 == 0
+	SIF CFLAG:特殊営業参加 == 0
 		CONTINUE
 	SIF BASE:体力 - CFLAG:55 < 100
 		CONTINUE
@@ -1373,7 +1363,7 @@ REND
 E = 0
 REPEAT CHARANUM
 	TARGET = COUNT
-	SIF CFLAG:130 == 0
+	SIF CFLAG:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:便所公開浣腸 >= 100
 		E = TARGET
@@ -1413,7 +1403,7 @@ E = 1
 REPEAT CHARANUM
 	SIF COUNT == TARGET
 		CONTINUE
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:COUNT:便所公開浣腸 >= CFLAG:便所公開浣腸
 		E += 1
@@ -1434,7 +1424,7 @@ F:1 = TARGET
 F:2 = 1
 $RACING_RESULT_LOOP
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	TARGET = COUNT
 	CALL HUMAN_RACING_ORDER_2
@@ -1452,7 +1442,7 @@ F:2 += 1
 SIF F:2 <= FLAG:特殊営業参加人数 - Z
 	GOTO RACING_RESULT_LOOP
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:COUNT:便所公開浣腸 >= 0
 		CONTINUE
@@ -1472,7 +1462,7 @@ E = 1
 REPEAT CHARANUM
 	SIF COUNT == TARGET
 		CONTINUE
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:COUNT:便所公開浣腸 >= CFLAG:便所公開浣腸
 		E += 1

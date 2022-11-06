@@ -205,9 +205,9 @@ IF ARG == 2
 	CALL RUI_MISSION_SS0
 	CALL RUI_MISSION_SS1
 	TCVAR:異常経験 += 50 * ARG
-	TALENT:処女 = 0
-	TALENT:Ａ処女 = 0
-	CALL 初キス実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"知らないオトコの人の%CSTR:LOCAL:男性器呼び方%")
+	CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"知らないオトコの人")
+	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_乱交,"知らないオトコの人")
+	CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_乱交,"知らないオトコの人")
 	ABL:舞踊技能 = 10
 	TALENT:解放 = 1
 	TALENT:人気者 = 1

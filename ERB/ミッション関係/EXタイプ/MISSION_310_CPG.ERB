@@ -16,7 +16,7 @@ RESULTS = ＣＰＧニュージェネレーション -BEGINING-
 ; 不可視なら0、可視なら1を戻す
 IF GETCHARA([[キャラ:新島みひろ]]) != -1
 	LOCAL = GETCHARA([[キャラ:新島みひろ]])
-	SIF CFLAG:LOCAL:処女喪失相手 == 12 && TALENT:LOCAL:ＡＶ女優 == 0
+	SIF CFLAG:LOCAL:処女喪失相手 == 初相手_接待客 && TALENT:LOCAL:ＡＶ女優 == 0
 		RETURN 1
 ELSE
 	RETURN 0

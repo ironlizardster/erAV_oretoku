@@ -85,7 +85,7 @@ CALL キャラ追加([[キャラ:鉢堂陽菜]])
 @MISSION_CALC_40
 ; 失敗なら0, 成功なら1, 大成功なら2をRETURNで戻す
 TARGET = GETCHARA([[キャラ:鉢堂陽菜]])
-RETURN (TALENT:処女 && TALENT:Ａ処女 && TALENT:永遠の愛 && TALENT:アイドル && TALENT:童貞 && CFLAG:処女喪失相手 == 0) * 2
+RETURN (TALENT:処女 && TALENT:Ａ処女 && TALENT:永遠の愛 && TALENT:アイドル && TALENT:童貞 && !CFLAG:処女喪失相手) * 2
 
 ;=================================================
 ; ミッション報告後処理

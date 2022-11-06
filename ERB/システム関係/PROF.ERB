@@ -30,15 +30,15 @@ IF EXP:彼氏性経験 >= 1
 		PRINTFORM 元カレと
 	ENDIF
 	PRINTFORM {EXP:彼氏性経験}回セックスしたことがあり
-			IF CFLAG:処女喪失相手 == 8 && CFLAG:167 == 1
+			IF CFLAG:処女喪失相手 == 初相手_元彼
 				PRINTFORM 、元カレが処女喪失相手です
-			ELSEIF CFLAG:処女喪失相手 == 8 && CFLAG:彼氏有 == 1
+			ELSEIF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏有 == 1
 				PRINT 、彼氏の
-				IF CFLAG:処女喪失相手 == 8 && CFLAG:彼氏タイプ == 0
+				IF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏タイプ == 0
 					PRINT 黒
-				ELSEIF CFLAG:処女喪失相手 == 8 && CFLAG:彼氏タイプ == 3
+				ELSEIF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏タイプ == 3
 					PRINT 包茎
-				ELSEIF CFLAG:処女喪失相手 == 8 && CFLAG:彼氏タイプ == 6
+				ELSEIF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏タイプ == 6
 					PRINT 極太
 				ENDIF
 				IF TALENT:淫乱 == 1
@@ -54,7 +54,7 @@ IF EXP:彼氏性経験 >= 1
 ENDIF
 IF EXP:セフレ性経験 >= 1
 	PRINTFORM  セフレと{EXP:セフレ性経験}回ゴム無しでセックスしたことがあり
-	IF CFLAG:処女喪失相手 == 9
+	IF CFLAG:処女喪失相手 == 初相手_セフレ
 		PRINT 、
 		PRINT セフレの
 		PRINT 極太黒チ○ポで処女喪失しました
@@ -84,7 +84,7 @@ ELSEIF TALENT:褐色肌 == 1 && TALENT:アイドル == 0 && TALENT:ColorfulPureG
 ENDIF
 IF EXP:痴漢経験 >= 1
 	PRINTFORM  痴漢に{EXP:痴漢経験}回遭ったことがあり
-	IF CFLAG:処女喪失相手 == 7
+	IF CFLAG:処女喪失相手 == 初相手_痴漢
 		PRINT 、
 		PRINT 痴漢の
 		PRINT ペニスでロストヴァージンしました

@@ -21,7 +21,7 @@ IF FLAG:特殊営業参加人数 >= 2
 	PRINTL 誰が料理を作りますか？
 	DRAWLINE
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		PRINTFORML  [{COUNT}] - %NAME:COUNT%
 	REND
@@ -32,7 +32,7 @@ IF FLAG:特殊営業参加人数 >= 2
 
 	IF RESULT < 0 || RESULT >= CHARANUM
 		GOTO INPUT_LOOP_01
-	ELSEIF CFLAG:RESULT:130 == 0
+	ELSEIF CFLAG:RESULT:特殊営業参加 == 0
 		GOTO INPUT_LOOP_01
 	;厨房担当には最低でも料理技能１必要
 	ELSEIF ABL:RESULT:料理技能 < 1
@@ -48,7 +48,7 @@ IF FLAG:特殊営業参加人数 >= 2
 ;一人だけならその一人が自動的に厨房担当に
 ELSE
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 	TARGET = COUNT
 	REND
@@ -57,7 +57,7 @@ ENDIF
 ;接客係の中に男性・絶壁が一人もいない
 F = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF TARGET == COUNT
 		CONTINUE
@@ -119,7 +119,7 @@ IF FLAG:特殊営業参加人数 >= 3 && FLAG:着衣使用
 	F = 0
 	S = 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF COUNT == TARGET
 			CONTINUE
@@ -160,7 +160,7 @@ ENDIF
 ;参加するキャラの人気の最大値に応じて客が来ます
 E = 0
 REPEAT CHARANUM
-	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:130
+	SIF E < EXP:COUNT:人気 && CFLAG:COUNT:特殊営業参加
 		E = EXP:COUNT:人気
 REND
 C = E / 4
@@ -212,7 +212,7 @@ ENDIF
 
 ;接客係が特定の素質を持っていた場合ボーナス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -308,7 +308,7 @@ REND
 
 ;接客係全員の接客技能をプラス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -359,7 +359,7 @@ D += ABL:料理技能 * 3
 
 ;接客係全員の話術と奉仕精神の1/2をプラス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -369,7 +369,7 @@ REND
 
 ;接客係全員の美容感覚をプラス
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -379,7 +379,7 @@ REND
 ;おっぱい屋台なら接客係全員のＢ感覚の1/2をプラス
 IF FLAG:特殊営業で夜の部を開催フラグ
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 			CONTINUE
@@ -428,7 +428,7 @@ SIF TALENT:狂気 || TALENT:崩壊
 
 ;接客係全員の素質に応じて加減
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -508,7 +508,7 @@ IF FLAG:特殊営業参加人数 >= 2
 	PRINTFORM を調理し、
 	X = TARGET
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF COUNT != X
 			TARGET = COUNT
@@ -532,7 +532,7 @@ IF FLAG:特殊営業参加人数 >= 2
 	TARGET = X
 	S = 0
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF COUNT == X && FLAG:特殊営業参加人数 >= 2
 			CONTINUE
@@ -598,7 +598,7 @@ DRAWLINE
 ;パラメータ変化
 X = TARGET
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	
 	TARGET = COUNT
@@ -857,7 +857,7 @@ V = 0
 
 ;参加キャラの素質補正
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	;カリスマ
 	SIF TALENT:COUNT:カリスマ
@@ -907,7 +907,7 @@ V = 0
 ;全員の奉仕精神の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130
+	SIF CFLAG:COUNT:特殊営業参加
 		E += ABL:COUNT:奉仕精神
 REND
 E /= FLAG:特殊営業参加人数
@@ -947,7 +947,7 @@ V = 0
 ;接客係の話術の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -993,7 +993,7 @@ V = 0
 ;接客係の魅力値の平均値を見る
 E = 0
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 		CONTINUE
@@ -1015,7 +1015,7 @@ E = 0
 IF FLAG:特殊営業で夜の部を開催フラグ == 1
 	;参加キャラのおっぱい補正
 	REPEAT CHARANUM
-		SIF CFLAG:COUNT:130 == 0
+		SIF CFLAG:COUNT:特殊営業参加 == 0
 			CONTINUE
 		SIF COUNT == TARGET && FLAG:特殊営業参加人数 >= 2
 			CONTINUE

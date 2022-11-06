@@ -129,7 +129,7 @@ PRINTL  [5] - BASE
 PRINTL  [6] - MAXBASE
 PRINTL  [7] - RELATION
 CALL PRINT_BUTTON(" [8] - アルバイトボーナス",!(TALENT:交渉上手&&TALENT:おしゃれ&&TALENT:献身的&&TALENT:巫女&&TALENT:舞姫&&TALENT:マネージャー),8,-1,1)
-CALL PRINT_BUTTON(" [9] - 処女リセット",!(TALENT:処女&&!CFLAG:初キス相手&&CFLAG:処女喪失相手 == -1&&TALENT:Ａ処女),9,-1,1)
+CALL PRINT_BUTTON(" [9] - 処女リセット",!(TALENT:処女&&!CFLAG:初キス相手&&!CFLAG:処女喪失相手&&TALENT:Ａ処女),9,-1,1)
 CALL PRINT_BUTTON(" [10] - 恋心GET",!(TALENT:恋心),10,-1,1)
 CALL PRINT_BUTTON(" [11] - 永遠の愛情経験",EXP:愛情経験 < 10000,11,-1,1)
 CALL PRINT_BUTTON(" [12] - 調教経験",CFLAG:好感度 < 5000,12,-1,1)

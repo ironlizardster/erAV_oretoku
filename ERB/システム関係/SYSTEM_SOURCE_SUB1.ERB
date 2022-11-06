@@ -281,101 +281,39 @@ TFLAG:処女喪失 = 1
 TFLAG:近親相姦 = 0
 CALL INCEST
 
-IF CFLAG:処女喪失相手 == 0
-	CFLAG:処女喪失年齢 = BASE:実年齢
-	CFLAG:処女喪失月 = DAY:日付_月
-	CFLAG:処女喪失日 = DAY:日付_日
+IF !CFLAG:処女喪失相手
 	IF TEQUIP:野外プレイ == 1
-		CFLAG:処女喪失場所 = 10
+		CFLAG:処女喪失場所 = 初場所_野外
 	ELSEIF TEQUIP:野外プレイ == 2
-		CFLAG:処女喪失場所 = 5
+		CFLAG:処女喪失場所 = 初場所_学校
 	ELSEIF TEQUIP:野外プレイ == 3
-		CFLAG:処女喪失場所 = 11
+		CFLAG:処女喪失場所 = 初場所_プール
 	ELSEIF TEQUIP:野外プレイ == 4
-		CFLAG:処女喪失場所 = 12
+		CFLAG:処女喪失場所 = 初場所_地下室
 	ELSE
-		CFLAG:処女喪失場所 = 0
+		CFLAG:処女喪失場所 = 初場所_スタジオ
 	ENDIF
 	IF (TFLAG:ビデオ撮影内容 & 1)
-		CFLAG:処女喪失状況 = 2
+		CFLAG:処女喪失状況 = 初状況_撮影
 	ELSEIF MARK:反発刻印 >= 2
-		CFLAG:処女喪失状況 = 4
+		CFLAG:処女喪失状況 = 初状況_無理犯
 	ELSE
-		CFLAG:処女喪失状況 = 1
+		CFLAG:処女喪失状況 = 初状況_指導
 	ENDIF
-ENDIF
 
-IF CFLAG:処女喪失相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]]
-	;処女喪失相手を記録
-	CFLAG:処女喪失相手 = 16
-	CSTR:処女喪失相手 = お兄ちゃん
 	;初体験がバイブの場合
 	IF SELECTCOM == 11
 		IF TALENT:淫乱 == 0
-			CSTR:処女喪失相手 = バイブ
-			CFLAG:処女喪失相手 = 4
+			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"バイブ")
 		ELSEIF TALENT:淫乱 == 1
-			CSTR:処女喪失相手 = 極太バイブ
-			CFLAG:処女喪失相手 = 5
+			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"極太バイブ")
 		ENDIF
+	ELSEIF SELECTCOM == 81
+		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"フィストファック")
 	ELSEIF TEQUIP:触手召喚 == 1
-			CSTR:処女喪失相手 = 触手生物
-			CFLAG:処女喪失相手 = 14
-	ENDIF
-ELSEIF CFLAG:処女喪失相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]]
-	;処女喪失相手を記録
-	CFLAG:処女喪失相手 = 16
-	CSTR:処女喪失相手 = アニキ
-	;初体験がバイブの場合
-	IF SELECTCOM == 11
-		IF TALENT:淫乱 == 0
-			CSTR:処女喪失相手 = バイブ
-			CFLAG:処女喪失相手 = 4
-		ELSEIF TALENT:淫乱 == 1
-			CSTR:処女喪失相手 = 極太バイブ
-			CFLAG:処女喪失相手 = 5
-		ENDIF
-	ELSEIF TEQUIP:触手召喚 == 1
-			CSTR:処女喪失相手 = 触手生物
-			CFLAG:処女喪失相手 = 14
-	ENDIF
-ELSEIF CFLAG:処女喪失相手 == 0
-	;処女喪失相手を記録
-	CFLAG:処女喪失相手 = 1
-	CSTR:処女喪失相手 = %NAME:PLAYER%
-	SIF NO:PLAYER == MASTER
-		CFLAG:処女喪失相手 = 16
-;erAVにおいてはCFLAG:15の役割が違うため封印
-;	;初体験が近親相姦
-;	;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
-;	IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
-;		CFLAG:処女喪失相手 = 300
-;	ELSEIF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
-;		CFLAG:処女喪失相手 = 301
-;	ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
-;		CFLAG:処女喪失相手 = 304
-;	ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
-;		CFLAG:処女喪失相手 = 305
-;	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
-;		CFLAG:処女喪失相手 = 306
-;	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
-;		CFLAG:処女喪失相手 = 307
-;	ELSEIF TFLAG:近親相姦 == 5 && TALENT:PLAYER:オトコ == 0
-;		CFLAG:処女喪失相手 = 308
-;	ELSEIF TFLAG:近親相姦 == 6 && TALENT:PLAYER:オトコ
-;		CFLAG:処女喪失相手 = 309
-	;初体験がバイブの場合
-	IF SELECTCOM == 11
-		IF TALENT:淫乱 == 0
-			CSTR:処女喪失相手 = バイブ
-			CFLAG:処女喪失相手 = 4
-		ELSEIF TALENT:淫乱 == 1
-			CSTR:処女喪失相手 = 極太バイブ
-			CFLAG:処女喪失相手 = 5
-		ENDIF
-	ELSEIF TEQUIP:触手召喚 == 1
-			CSTR:処女喪失相手 = 触手生物
-			CFLAG:処女喪失相手 = 14
+		CALL 処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"触手生物")
+	ELSE
+		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況)
 	ENDIF
 ENDIF
 
@@ -410,7 +348,7 @@ SIF !CFLAG:PLAYER:初キス相手 || TFLAG:620 == 0
 SETCOLOR 0xF58F98
 PRINTFORML 【ファーストキス】（%CALLNAME:PLAYER%）
 RESETCOLOR
-CALL 初キス実行(PLAYER,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
+CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
 
 ;フラグを折っておく
 TFLAG:620 = 0
@@ -428,7 +366,7 @@ SIF !CFLAG:ASSI:初キス相手 || TFLAG:622 == 0
 SETCOLOR 0xF58F98
 PRINTFORML 【ファーストキス】（%CALLNAME:ASSI%）
 RESETCOLOR
-CALL 初キス実行(ASSI,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
+CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
 
 
 ;-------------------------------------------------
@@ -439,54 +377,22 @@ CALL 初キス実行(ASSI,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付
 SIF !CFLAG:初キス相手 || TFLAG:621 == 0
 	RETURN 0
 
-SETCOLOR 0xF58F98
-PRINTL 【ファーストキス】
-RESETCOLOR
-CALL 初キス実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口,"%NAME:PLAYER%")
 
 ;CFLAG:初キス相手=16にするとこの辺の特殊処理をガン無視することになるんだなあと頭を抱えるなど
 IF (TFLAG:621 & 2)
-	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
-		CSTR:初キス相手 = お兄ちゃん
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = お兄ぃの
-	ELSE
-		CSTR:初キス相手 = %NAME:PLAYER%
-	ENDIF
-	CFLAG:初キス喪失状況 = 初状況_男性器
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器)
 ELSEIF (TFLAG:621 & 4)
-	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
-		CSTR:初キス相手 = お兄ちゃん
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = お兄ぃ
-	ELSE
-		CSTR:初キス相手 = %NAME:PLAYER%
-	ENDIF
-	CFLAG:初キス喪失状況 = 初状況_肛門
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_肛門)
 ELSEIF (TFLAG:621 & 8) 
-	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
-		CSTR:初キス相手 = お兄ちゃん
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = お兄ぃ
-	ELSE
-		CSTR:初キス相手 = %NAME:PLAYER%
-	ENDIF
-	CFLAG:初キス喪失状況 = 初状況_女性器
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_女性器)
 ELSEIF (TFLAG:621 & 16) 
-	CALL 初キス実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,"触手生物")
+	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,"触手生物")
 	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 32) 
-	CALL 初キス実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,"スライム")
+	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,"スライム")
 	TFLAG:初キス口以外 = 1	
 ELSE
-	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 0
-		CSTR:初キス相手 = お兄ちゃん
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
-		CSTR:初キス相手 = お兄ぃ
-	ELSE
-		CSTR:初キス相手 = %NAME:PLAYER%
-	ENDIF
-	CALL 初キス実行(PLAYER,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口,"%NAME:TARGET%")
+	CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口)
 ENDIF
 
 
@@ -516,91 +422,41 @@ R = NO:PLAYER
 TFLAG:近親相姦 = 0
 CALL INCEST
 
-CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-CFLAG:Ａ処女喪失月 = DAY:日付_月
-CFLAG:Ａ処女喪失日 = DAY:日付_日
-IF TEQUIP:撮影中
-	CFLAG:Ａ処女喪失状況 = 2
-ELSE
-	CFLAG:Ａ処女喪失状況 = 1
-ENDIF	
-
-IF TEQUIP:野外プレイ == 1
-	CFLAG:処女喪失場所 = 10
-ELSEIF TEQUIP:野外プレイ == 2
-	CFLAG:処女喪失場所 = 5
-ELSEIF TEQUIP:野外プレイ == 3
-	CFLAG:処女喪失場所 = 11
-ELSEIF TEQUIP:野外プレイ == 4
-	CFLAG:処女喪失場所 = 12
-ELSE
-	CFLAG:処女喪失場所 = 14
-ENDIF
-
-IF CFLAG:Ａ処女喪失相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]]
-	;処女喪失相手を記録（初期値が0のため、+1して記録）
-	IF SELECTCOM == 13
-		IF TALENT:淫乱 == 0
-			CSTR:Ａ処女喪失相手 = アナルバイブ
-			CFLAG:Ａ処女喪失相手 = 4
-		ELSEIF TALENT:淫乱 == 1
-			CSTR:Ａ処女喪失相手 = 極太アナルバイブ
-			CFLAG:Ａ処女喪失相手 = 5
-		ENDIF
-	ELSEIF SELECTCOM == 68
-		CSTR:Ａ処女喪失相手 = アナルフィスト
-		CFLAG:Ａ処女喪失相手 = 1
-	ELSEIF SELECTCOM == 76
-		CSTR:Ａ処女喪失相手 = 触手生物
-		CFLAG:Ａ処女喪失相手 = 14
+IF !CFLAG:Ａ処女喪失相手
+	IF TEQUIP:野外プレイ == 1
+		CFLAG:Ａ処女喪失場所 = 初場所_野外
+	ELSEIF TEQUIP:野外プレイ == 2
+		CFLAG:Ａ処女喪失場所 = 初場所_学校
+	ELSEIF TEQUIP:野外プレイ == 3
+		CFLAG:Ａ処女喪失場所 = 初場所_プール
+	ELSEIF TEQUIP:野外プレイ == 4
+		CFLAG:Ａ処女喪失場所 = 初場所_地下室
 	ELSE
-		CSTR:Ａ処女喪失相手 = お兄ちゃん
-		CFLAG:Ａ処女喪失相手 = 16
+		CFLAG:Ａ処女喪失場所 = 初場所_スタジオ
 	ENDIF
-ELSEIF CFLAG:Ａ処女喪失相手 == 0 && NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]]
-	;処女喪失相手を記録（初期値が0のため、+1して記録）
-	IF SELECTCOM == 13
-		IF TALENT:淫乱 == 0
-			CSTR:Ａ処女喪失相手 = アナルバイブ
-			CFLAG:Ａ処女喪失相手 = 4
-		ELSEIF TALENT:淫乱 == 1
-			CSTR:Ａ処女喪失相手 = 極太アナルバイブ
-			CFLAG:Ａ処女喪失相手 = 5
-		ENDIF
-	ELSEIF SELECTCOM == 68
-		CSTR:Ａ処女喪失相手 = アナルフィスト
-		CFLAG:Ａ処女喪失相手 = 1
-	ELSEIF SELECTCOM == 76
-		CSTR:Ａ処女喪失相手 = 触手生物
-		CFLAG:Ａ処女喪失相手 = 14
+	IF (TFLAG:ビデオ撮影内容 & 1)
+		CFLAG:Ａ処女喪失状況 = 初状況_撮影
+	ELSEIF MARK:反発刻印 >= 2
+		CFLAG:Ａ処女喪失状況 = 初状況_無理犯
 	ELSE
-		CSTR:Ａ処女喪失相手 = アニキ
-		CFLAG:Ａ処女喪失相手 = 16
+		CFLAG:Ａ処女喪失状況 = 初状況_指導
 	ENDIF
-ELSEIF CFLAG:Ａ処女喪失相手 == 0
-	;処女喪失相手を記録（初期値が0のため、+1して記録）
+
+	;初体験がバイブの場合
 	IF SELECTCOM == 13
 		IF TALENT:淫乱 == 0
-			CSTR:Ａ処女喪失相手 = アナルバイブ
-			CFLAG:Ａ処女喪失相手 = 4
+			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルバイブ")
 		ELSEIF TALENT:淫乱 == 1
-			CSTR:Ａ処女喪失相手 = 極太アナルバイブ
-			CFLAG:Ａ処女喪失相手 = 5
+			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"極太アナルバイブ")
 		ENDIF
-	ELSEIF SELECTCOM == 68
-		CSTR:Ａ処女喪失相手 = アナルフィスト
-		CFLAG:Ａ処女喪失相手 = 1
-	ELSEIF SELECTCOM == 76
-		CSTR:Ａ処女喪失相手 = 触手生物
-		CFLAG:Ａ処女喪失相手 = 14
+	ELSEIF SELECTCOM == 82
+		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルフィスト")
+	ELSEIF TEQUIP:触手召喚 == 1
+		CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"触手生物")
 	ELSE
-		CSTR:Ａ処女喪失相手 = %NAME:PLAYER%
-		CFLAG:Ａ処女喪失相手 = 1
+		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況)
 	ENDIF
 ENDIF
-
-SIF NO:PLAYER == MASTER && CFLAG:Ａ処女喪失相手 == 1
-	CFLAG:Ａ処女喪失相手 = 16
 
 ;処女喪失相手が主人で【恋心】
 IF PLAYER == MASTER && TALENT:恋心

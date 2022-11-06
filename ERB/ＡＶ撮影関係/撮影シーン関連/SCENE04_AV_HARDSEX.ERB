@@ -141,7 +141,7 @@ IF TALENT:処女 == 1
 	PRINTL 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-		IF CFLAG:処女喪失相手 == 0
+		IF !CFLAG:処女喪失相手
 			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
 			CFLAG:処女喪失相手 = 1
 		ENDIF
@@ -189,7 +189,7 @@ IF TALENT:処女 == 1
 	PRINTL 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-		IF CFLAG:処女喪失相手 == 0
+		IF !CFLAG:処女喪失相手
 			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
 			CFLAG:処女喪失相手 = 1
 		ENDIF
@@ -232,7 +232,7 @@ IF TALENT:処女 == 1
 	PRINTL 【処女喪失】
 	RESETCOLOR
 	TALENT:処女 = 0
-		IF CFLAG:処女喪失相手 == 0
+		IF !CFLAG:処女喪失相手
 			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
 			CFLAG:処女喪失相手 = 1
 		ENDIF

@@ -108,8 +108,7 @@ IF TALENT:MASTER:オトコ == 1 || TALENT:MASTER:ふたなり == 1 || TALENT:MAS
 
 	IF RESULT == 0
 	ELSEIF RESULT == 1
-		TALENT:MASTER:童貞 = 0
-		CSTR:MASTER:童貞喪失相手 = 元カノ
+		CALL 童貞喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カノ")
 		EXP:MASTER:射精経験 += 1
 		EXP:MASTER:挿入経験 += 1
 		EXP:MASTER:性交経験 += 1
@@ -117,16 +116,14 @@ IF TALENT:MASTER:オトコ == 1 || TALENT:MASTER:ふたなり == 1 || TALENT:MAS
 		FLAG:元カノ存在 |= 4
 						;****カノ設定改造追加ここまで****
 	ELSEIF RESULT == 2
-		TALENT:MASTER:童貞 = 0
-		CSTR:MASTER:童貞喪失相手 = 元カレ
+		CALL 童貞喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カレ")
 		EXP:MASTER:射精経験 += 1
 		EXP:MASTER:挿入経験 += 1
 		EXP:MASTER:性交経験 += 1
 		SIF TALENT:MASTER:オトコ == 1
 			EXP:MASTER:ＢＬ経験 += 3
 	ELSEIF RESULT == 3
-		TALENT:MASTER:童貞 = 0
-		CSTR:MASTER:童貞喪失相手 = 今カノ
+		CALL 童貞喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"今カレ")
 		EXP:MASTER:射精経験 += 1
 		EXP:MASTER:挿入経験 += 1
 		EXP:MASTER:性交経験 += 1
@@ -152,25 +149,19 @@ IF TALENT:MASTER:オトコ == 0
 
 	IF RESULT == 0
 	ELSEIF RESULT == 1
-		TALENT:MASTER:処女 = 0
-		CFLAG:MASTER:処女喪失相手 = 1
-		CSTR:MASTER:処女喪失相手 = 元カノ
+		CALL 処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カノ")
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
 		SIF TALENT:MASTER:オトコ == 0
 			EXP:MASTER:レズ経験 += 3
 	ELSEIF RESULT == 2
-		TALENT:MASTER:処女 = 0
-		CFLAG:MASTER:処女喪失相手 = 1
-		CSTR:MASTER:処女喪失相手 = 元カレ
+		CALL 処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カレ")
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
 		SIF TALENT:MASTER:オトコ == 1
 			EXP:MASTER:ＢＬ経験 += 3
 	ELSEIF RESULT == 3
-		TALENT:MASTER:処女 = 0
-		CFLAG:MASTER:処女喪失相手 = 1
-		CSTR:MASTER:処女喪失相手 = 今カノ
+		CALL 処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"今カレ")
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
 		SIF TALENT:MASTER:オトコ == 0
@@ -192,22 +183,19 @@ INPUT
 
 IF RESULT == 0
 ELSEIF RESULT == 1
-	TALENT:MASTER:Ａ処女 = 0
-	CSTR:MASTER:Ａ処女喪失相手 = 元カノ
+	CALL Ａ処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カノ")
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
 	SIF TALENT:MASTER:オトコ == 0
 		EXP:MASTER:レズ経験 += 3
 ELSEIF RESULT == 2
-	TALENT:MASTER:Ａ処女 = 0
-	CSTR:MASTER:Ａ処女喪失相手 = 元カレ
+	CALL Ａ処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カレ")
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
 	SIF TALENT:MASTER:オトコ == 1
 		EXP:MASTER:ＢＬ経験 += 3
 ELSEIF RESULT == 3
-	TALENT:MASTER:Ａ処女 = 0
-	CSTR:MASTER:Ａ処女喪失相手 = 今カノ
+	CALL Ａ処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"今カレ")
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
 	SIF TALENT:MASTER:オトコ == 1

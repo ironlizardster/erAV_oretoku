@@ -190,7 +190,7 @@ SIF TALENT:Ａ処女 == 1
 	LOCAL:11++
 SIF !CFLAG:初キス相手
 	LOCAL:11++
-SIF CFLAG:処女喪失相手 == 0
+SIF !CFLAG:処女喪失相手
 	LOCAL:11++
 
 
@@ -241,36 +241,13 @@ IF TALENT:永遠の愛 == 0 && TALENT:崩壊 == 0
 		ELSEIF TALENT:淫乱 == 1
 			CSTR:初キス相手 = 重村慎二
 		ENDIF
-		SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
-		RESETCOLOR
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"重村慎二の%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%")
+		CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"重村慎二")
 	ENDIF
 	IF TALENT:処女 == 1
-		CSTR:処女喪失相手 = 重村慎二（お笑い芸人）
-		TALENT:処女 = 0
-		CFLAG:処女喪失相手 = 12
-		SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-		RESETCOLOR
-		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:日付_月
-		CFLAG:処女喪失日 = DAY:日付_日
-		CFLAG:処女喪失場所 = 13
-		CFLAG:処女喪失状況 = 4
+		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"重村慎二（お笑い芸人）")
 	ENDIF
 	IF TALENT:Ａ処女 == 1
-		TALENT:Ａ処女 = 0
-		CFLAG:Ａ処女喪失相手 = 12
-		CSTR:Ａ処女喪失相手 = 中野敦史（お笑い芸人）
-		SETCOLOR 0xF58F98
-		PRINTL 【Ａ処女喪失】
-		RESETCOLOR
-		CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-		CFLAG:Ａ処女喪失月 = DAY:日付_月
-		CFLAG:Ａ処女喪失日 = DAY:日付_日
-		CFLAG:Ａ処女喪失場所 = 13
-		CFLAG:Ａ処女喪失状況 = 4
+		CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"中野敦史（お笑い芸人）")
 	ENDIF
 	REPEAT 110
 		JUEL:TARGET:COUNT = 0
@@ -289,42 +266,19 @@ IF TALENT:永遠の愛 == 0 && TALENT:崩壊 == 0
 	ABL:奉仕精神 = 0
 ELSE
 	IF TALENT:処女 == 1
-		CSTR:処女喪失相手 = 中野敦史（お笑い芸人）
-		TALENT:処女 = 0
-		CFLAG:処女喪失相手 = 12
-		SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-		RESETCOLOR
-		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:日付_月
-		CFLAG:処女喪失日 = DAY:日付_日
-		CFLAG:処女喪失場所 = 13
-		CFLAG:処女喪失状況 = 4
+		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"中野敦史（お笑い芸人）")
 	ENDIF
 	IF !CFLAG:初キス相手
-		CFLAG:初キス相手 = 1
 		IF TALENT:ギャル系 == 1
 			CSTR:初キス相手 = 敦史
 			;すまん……あっちゃん……
 		ELSEIF TALENT:淫乱 == 1
 			CSTR:初キス相手 = 中野敦史
 		ENDIF
-		SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
-		RESETCOLOR
-		CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"中野敦史の%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"中野敦史")
 	ENDIF
 	IF TALENT:Ａ処女 == 1
-		TALENT:Ａ処女 = 0
-		CSTR:Ａ処女喪失相手 = 重村慎二（お笑い芸人）
-		SETCOLOR 0xF58F98
-		PRINTL 【Ａ処女喪失】
-		RESETCOLOR
-		CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-		CFLAG:Ａ処女喪失月 = DAY:日付_月
-		CFLAG:Ａ処女喪失日 = DAY:日付_日
-		CFLAG:Ａ処女喪失場所 = 13
-		CFLAG:Ａ処女喪失状況 = 4
+		CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"重村慎二（お笑い芸人）")
 	ENDIF
 ENDIF
 TALENT:男性不信 = RAND:2

@@ -836,7 +836,7 @@ ELSE
 		EXP:Ｖ経験 += 1 + RAND:20
 		EXP:絶頂経験 += 1 + RAND:(EXP:Ｖ経験)
 ;	ENDIF
-	CFLAG:処女喪失相手 = 1
+	CFLAG:処女喪失相手 = 初相手_不明
 	LOCAL = RAND:10
 	IF CFLAG:彼氏タイプ >= 2 && CFLAG:彼氏タイプ <= 6		;彼氏/彼女が居る場合
 		LOCAL = RAND:10

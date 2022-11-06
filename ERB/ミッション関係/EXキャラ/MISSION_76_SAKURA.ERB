@@ -176,18 +176,10 @@ IF TALENT:永遠の愛 == 0
 		CSTR:彼氏名 = 京一
 		IF !CFLAG:初キス相手
 			CSTR:初キス相手 = 神崎京一
-			SETCOLOR 0xF58F98
-			PRINTL 【ファーストキス】
-			RESETCOLOR
-			CALL 初キス実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%の%CSTR:男性器呼び方%")
+			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		ENDIF
 		IF TALENT:処女 == 1
-			CSTR:処女喪失相手 = 神崎京一（彼氏）
-			TALENT:処女 = 0
-			CFLAG:処女喪失相手 = 8
-			SETCOLOR 0xF58F98
-			PRINTL 【処女喪失】
-			RESETCOLOR
+			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（彼氏）")
 		ENDIF
 
 		CFLAG:処女喪失年齢 = BASE:実年齢
@@ -208,12 +200,7 @@ IF TALENT:永遠の愛 == 0
 		PRINTFORML 神崎京一と付き合うことになったようだ……
 	ELSE
 		IF TALENT:処女 == 1
-			CSTR:処女喪失相手 = 神崎京一（セフレ）
-			TALENT:処女 = 0
-			CFLAG:処女喪失相手 = 9
-			SETCOLOR 0xF58F98
-			PRINTL 【処女喪失】
-			RESETCOLOR
+			CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"神崎京一（セフレ）")
 		ENDIF
 		CFLAG:処女喪失年齢 = BASE:実年齢
 		CFLAG:処女喪失月 = DAY:日付_月
@@ -226,27 +213,14 @@ IF TALENT:永遠の愛 == 0
 			ELSE
 				CSTR:初キス相手 = 神崎京一
 			ENDIF
-			SETCOLOR 0xF58F98
-			PRINTL 【ファーストキス】
-			RESETCOLOR
-			CALL 初キス実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"神崎京一の%CSTR:男性器呼び方%")
+			CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"神崎京一")
 		ENDIF
 		CSTR:セフレ姓 = 神崎
 		CSTR:セフレ名 = 京一	
 	ENDIF
 ELSE
 	IF TALENT:処女 == 1
-		CSTR:処女喪失相手 = 神崎京一（セフレ）
-		TALENT:処女 = 0
-		CFLAG:処女喪失相手 = 9
-		SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-		RESETCOLOR
-		CFLAG:処女喪失年齢 = BASE:実年齢
-		CFLAG:処女喪失月 = DAY:日付_月
-		CFLAG:処女喪失日 = DAY:日付_日
-		CFLAG:処女喪失場所 = 3
-		CFLAG:処女喪失状況 = 3
+		CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"神崎京一（セフレ）")
 	ENDIF
 	IF !CFLAG:初キス相手
 		IF TALENT:淫乱 == 0
@@ -254,10 +228,7 @@ ELSE
 		ELSE
 			CSTR:初キス相手 = 神崎京一の%CSTR:男性器呼び方%
 		ENDIF
-		SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
-		RESETCOLOR
-		CALL 初キス実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"神崎京一の%CSTR:男性器呼び方%")
+		CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"神崎京一")
 	ENDIF
 	CSTR:セフレ姓 = 神崎
 	CSTR:セフレ名 = 京一

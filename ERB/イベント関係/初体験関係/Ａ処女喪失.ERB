@@ -1,6 +1,6 @@
-﻿@Ａ処女喪失実行(CHARA_NO,PLAYER_NO,AGE,MONTH,DAY_,LOCATION,TYPE,NAME_STRING="")
+﻿@Ａ処女喪失実行(CHARA_NO,PLAYER_ID,AGE,MONTH,DAY_,LOCATION,TYPE,NAME_STRING="")
 #DIM CHARA_NO
-#DIM PLAYER_NO
+#DIM PLAYER_ID
 #DIM AGE
 #DIM MONTH
 #DIM DAY_
@@ -8,20 +8,50 @@
 #DIM TYPE
 #DIMS NAME_STRING
 
-SIF CFLAG:CHARA_NO:Ａ処女喪失相手
-	RETURN
+IF !CFLAG:CHARA_NO:Ａ処女喪失相手
 
-CFLAG:CHARA_NO:Ａ処女喪失相手 = PLAYER_NO
-CFLAG:CHARA_NO:Ａ処女喪失年齢 = AGE
-CFLAG:CHARA_NO:Ａ処女喪失月 = MONTH
-CFLAG:CHARA_NO:Ａ処女喪失日 = DAY_
-CFLAG:CHARA_NO:Ａ処女喪失場所 = LOCATION
-CFLAG:CHARA_NO:Ａ処女喪失状況 = TYPE
-CFLAG:CHARA_NO:Ａ処女喪失誕生日記念 = CFLAG:CHARA_NO:Ａ処女喪失日 == MAXBASE:CHARA_NO:誕生日 && CFLAG:CHARA_NO:Ａ処女喪失月 == MAXBASE:CHARA_NO:誕生月
+	CFLAG:CHARA_NO:Ａ処女喪失相手 = PLAYER_ID
+	CFLAG:CHARA_NO:Ａ処女喪失年齢 = AGE
+	CFLAG:CHARA_NO:Ａ処女喪失月 = MONTH
+	CFLAG:CHARA_NO:Ａ処女喪失日 = DAY_
+	CFLAG:CHARA_NO:Ａ処女喪失場所 = LOCATION
+	CFLAG:CHARA_NO:Ａ処女喪失状況 = TYPE
+	CFLAG:CHARA_NO:Ａ処女喪失誕生日記念 = CFLAG:CHARA_NO:Ａ処女喪失日 == MAXBASE:CHARA_NO:誕生日 && CFLAG:CHARA_NO:Ａ処女喪失月 == MAXBASE:CHARA_NO:誕生月
 
-STRLENS NAME_STRING
-SIF RESULT
-	CSTR:CHARA_NO:Ａ処女喪失相手 '= NAME_STRING
+	IF PLAYER_ID > 0 
+		IF (NO:CHARA_NO == [[キャラ:宮間かなで]] || NO:CHARA_NO == [[キャラ:宮間カナ]]) && NO:GETCHARA(PLAYER_ID - 1) == [[キャラ:あなた]]
+			IF !TALENT:CHARA_NO:ギャル系 && TALENT:GETCHARA(PLAYER_ID - 1):オトコ
+				CSTR:CHARA_NO:Ａ処女喪失相手 = お兄ちゃん
+			ELSEIF !TALENT:CHARA_NO:ギャル系 && !TALENT:GETCHARA(PLAYER_ID - 1):オトコ
+				CSTR:CHARA_NO:Ａ処女喪失相手 = お姉ちゃん
+			ELSEIF TALENT:CHARA_NO:ギャル系 && TALENT:GETCHARA(PLAYER_ID - 1):オトコ
+				CSTR:CHARA_NO:Ａ処女喪失相手 = アニキ
+			ELSEIF TALENT:CHARA_NO:ギャル系 && !TALENT:GETCHARA(PLAYER_ID - 1):オトコ
+				CSTR:CHARA_NO:Ａ処女喪失相手 = アネキ
+			ENDIF
+		ELSE
+			CSTR:CHARA_NO:Ａ処女喪失相手 = %NAME:GETCHARA(PLAYER_ID - 1)%
+		ENDIF
+		STRLENS NAME_STRING
+		SIF RESULT
+			CSTR:CHARA_NO:Ａ処女喪失相手 += "に%NAME_STRING%で"
+	ELSE
+		STRLENS NAME_STRING
+		SIF RESULT
+			CSTR:CHARA_NO:Ａ処女喪失相手 '= NAME_STRING
+	ENDIF
+
+	TALENT:CHARA_NO:Ａ処女 = 0
+	BASE:CHARA_NO:魅力値 -= 5
+
+	SETCOLOR 0xF58F98
+	PRINTFORML 【%CALLNAME:CHARA_NO%Ａ処女喪失】
+	RESETCOLOR
+
+ENDIF
+
+SIF (PLAYER_ID > 0)
+	CALL 童貞喪失実行(GETCHARA(PLAYER_ID - 1),NO:CHARA_NO + 1,BASE:GETCHARA(PLAYER_ID - 1):実年齢,MONTH,DAY_,LOCATION,TYPE,NAME:CHARA_NO)
 
 
 ;===========================================================
@@ -152,29 +182,30 @@ DEBUGPRINTFORML %STRING%
 	STRLENS TEMP_STR
 	IF RESULT && CFLAG:CHARA_NO:Ａ処女喪失状況
 		SELECTCASE CFLAG:CHARA_NO:Ａ処女喪失状況
-			CASE 初状況_ハメ撮
-				TEMP_STR += @"に"
-			CASE 初状況_無理犯
-				TEMP_STR += @"で"
-			CASE 初状況_輪姦
-				TEMP_STR += @"で"
-			CASE 初状況_クスリ
-				TEMP_STR += @"に"
-			CASEELSE
-		ENDSELECT
-		SELECTCASE CFLAG:CHARA_NO:Ａ処女喪失状況
 			CASE 初状況_指導
 				TEMP_STR += @"指導中に"
 			CASE 初状況_撮影
 				TEMP_STR += @"撮影中に"
 			CASE 初状況_ハメ撮
-				TEMP_STR += @"ハメ撮りされながら"
+				TEMP_STR += @"にハメ撮りされながら"
 			CASE 初状況_無理犯
-				TEMP_STR += @"無理やり犯されて"
+				TEMP_STR += @"で無理やり犯されて"
 			CASE 初状況_輪姦
-				TEMP_STR += @"輪姦されて"
+				TEMP_STR += @"で輪姦されて"
 			CASE 初状況_クスリ
-				TEMP_STR += @"クスリをキめさせられ、自ら%CSTR:CHARA_NO:男性器呼び方%をおねだり"
+				TEMP_STR += @"にクスリをキめさせられ、自ら%CSTR:CHARA_NO:男性器呼び方%をおねだり"
+			CASE 初状況_夜這
+				TEMP_STR += @"に夜這いをかけて"
+			CASE 初状況_売春
+				TEMP_STR += @"に売春で犯されて"
+			CASE 初状況_奴隷接待
+				TEMP_STR += @"に奴隷接待で犯されて"
+			CASE 初状況_乱交
+				TEMP_STR += @"に乱交で犯されて"
+			CASE 初状況_ストリップ
+				TEMP_STR += @"にストリップで犯されて"
+			CASE 初状況_夜這
+				TEMP_STR += @"にオークションで競り落とされて"
 			CASEELSE
 		ENDSELECT
 	ELSEIF RESULT && !CFLAG:CHARA_NO:Ａ処女喪失状況

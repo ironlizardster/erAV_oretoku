@@ -401,33 +401,9 @@ IF TALENT:ASSI:処女 == 1
 	TIMES SOURCE:14 , 3.00
 	TALENT:ASSI:処女 = 0
 
-	IF CFLAG:ASSI:処女喪失相手 == 0
+	IF !CFLAG:ASSI:処女喪失相手
 		;助手の処女喪失相手を記録（初期値が0のため、+1して記録）
-		CFLAG:ASSI:処女喪失相手 = 1
-		CSTR:ASSI:処女喪失相手 = %CALLNAME:PLAYER%
-		TFLAG:助手を犯す処女喪失 = 1
-		;助手の初体験が近親相姦
-		;処女喪失相手が自分の息子・娘という状況は生物学的にありえないので省く
-		IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
-			CFLAG:ASSI:処女喪失相手 = 300
-		ELSEIF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:処女喪失相手 = 301
-		ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
-			CFLAG:ASSI:処女喪失相手 = 304
-		ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:処女喪失相手 = 305
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
-			CFLAG:ASSI:処女喪失相手 = 306
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:処女喪失相手 = 307
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
-			CFLAG:ASSI:処女喪失相手 = 308
-		ENDIF
-		CFLAG:ASSI:処女喪失年齢 = BASE:実年齢
-		CFLAG:ASSI:処女喪失月 = DAY:日付_月
-		CFLAG:ASSI:処女喪失日 = DAY:日付_日
-		CFLAG:ASSI:処女喪失場所 = 14
-		CFLAG:ASSI:処女喪失状況 = 1
+		CALL 処女喪失実行(ASSI,NO:PLAYER + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	ENDIF
 
 	PRINTL ＜助手が処女＞

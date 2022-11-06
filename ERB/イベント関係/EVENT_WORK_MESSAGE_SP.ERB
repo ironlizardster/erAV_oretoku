@@ -13,7 +13,7 @@ SIF (FLAG:指導テキスト設定 & 1)
 ;メンバー全員が淫乱かつ娼婦持ちかのチェック
 E = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF TALENT:COUNT:淫乱 == 0 || TALENT:COUNT:風俗嬢 == 0
 		E = 0
@@ -21,7 +21,7 @@ REND
 ;メンバー全員がＶ使用不可かのチェック
 F = 1
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 	SIF CFLAG:COUNT:売春Ｖ不能
 		CONTINUE
@@ -53,7 +53,7 @@ SIF (FLAG:指導テキスト設定 & 1)
 	RETURN 0
 
 REPEAT CHARANUM
-	SIF CFLAG:COUNT:130 == 0
+	SIF CFLAG:COUNT:特殊営業参加 == 0
 		CONTINUE
 		IF TALENT:COUNT:淫乱 == 1
 			CHKFONT "あくびん"

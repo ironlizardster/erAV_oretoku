@@ -151,7 +151,7 @@ SIF TALENT:童貞 == 1
 	LOCAL:1++
 SIF TALENT:ギャル系 == 0
 	LOCAL:1++
-SIF CFLAG:処女喪失相手 == 0
+SIF !CFLAG:処女喪失相手
 	LOCAL:1++
 SIF !CFLAG:初キス相手
 	LOCAL:1++
@@ -218,39 +218,16 @@ TCVAR:触手経験 +=  TCVAR:絶頂経験 / 3 + RAND:11
 TCVAR:緊縛経験 += TCVAR:触手経験
 TCVAR:射精経験 += TCVAR:絶頂経験 /3 - RAND:26
 IF TALENT:処女 == 1
-	CSTR:処女喪失相手 = %CALLNAME:MASTER%
-	TALENT:処女 = 0
-	CFLAG:処女喪失相手 = 1
-	SETCOLOR 0xF58F98
-	PRINTL 【処女喪失】
-	RESETCOLOR
-ENDIF
-IF TALENT:MASTER:童貞 == 1
-	CSTR:MASTER:童貞喪失相手 = 雛見まゆ
-	TALENT:MASTER:童貞 = 0
+	CALL 処女喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦)
 ENDIF
 IF !CFLAG:初キス相手
-	CFLAG:初キス相手 = 1
-	CSTR:初キス相手 = ユーニス・パラディスス
-	SETCOLOR 0xF58F98
-	PRINTL 【ファーストキス】
-	RESETCOLOR
-	CALL 初キス実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススの%CSTR:男性器呼び方%")
+	CALL 初キス喪失実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススの%CSTR:男性器呼び方%")
 ENDIF
 IF TALENT:童貞 == 1
-	TALENT:童貞 = 0
-	CSTR:童貞喪失相手 = 知らない女のコの処女マンコｖ
-	SETCOLOR 0xF58F98
-	PRINTL 【童貞喪失】
-	RESETCOLOR
+	CALL 童貞喪失実行(TARGET,初相手_不明,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦,"知らない女のコの処女マンコ%UNICODE(0x2665)%")
 ENDIF
 IF TALENT:Ａ処女 == 1
-	CFLAG:Ａ処女喪失相手 = 14
-	TALENT:Ａ処女 = 0
-	CSTR:Ａ処女喪失相手 = 触手生物
-	SETCOLOR 0xF58F98
-	PRINTL 【Ａ処女喪失】
-	RESETCOLOR
+	CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦,"触手生物")
 ENDIF
 CFLAG:処女喪失年齢 = BASE:実年齢
 CFLAG:処女喪失月 = DAY:日付_月

@@ -359,41 +359,20 @@ IF TALENT:童貞
 	SETCOLOR 0xF58F98
 	PRINTFORML 【童貞喪失】
 	RESETCOLOR
-	IF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 1
-		CSTR:童貞喪失相手 = お兄ちゃん
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 0 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0
-		CSTR:童貞喪失相手 = お姉ちゃん
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 1
-		CSTR:童貞喪失相手 = アニキ
-	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && TALENT:ギャル系 == 1 && NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0
-		CSTR:童貞喪失相手 = アネキ
-	ELSE
-		CSTR:童貞喪失相手 = %NAME:PLAYER%
-	ENDIF
 	IF CFLAG:包皮状態 == 2
 		CFLAG:包皮状態 = 3
 	ENDIF
 	TFLAG:童貞喪失 = 1
-	SIF !CFLAG:初キス相手
-		CALL 初キス実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口,CSTR:童貞喪失相手)
+	SIF !CFLAG:童貞喪失相手
+		CALL 童貞喪失実行(PLAYER,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口)
 
 ENDIF
 
 ;調教者が処女なら処女喪失
 IF TALENT:PLAYER:処女
-	TALENT:PLAYER:処女 = 0
-	SETCOLOR 0xF58F98
-	PRINTFORML 【処女喪失(%CALLNAME:PLAYER%)】
-	RESETCOLOR
-	IF CFLAG:PLAYER:処女喪失相手 == 0
-		CFLAG:PLAYER:処女喪失相手 =  1
-		CSTR:PLAYER:処女喪失相手 = %NAME:TARGET%
+	IF !CFLAG:PLAYER:処女喪失相手
+		CALL 処女喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	ENDIF
-	CFLAG:PLAYER:処女喪失年齢 = BASE:実年齢
-	CFLAG:PLAYER:処女喪失月 = DAY:日付_月
-	CFLAG:PLAYER:処女喪失日 = DAY:日付_日
-	CFLAG:PLAYER:処女喪失場所 = 13
-	CFLAG:PLAYER:処女喪失状況 = 1
 ENDIF
 
 TFLAG:近親相姦 = 0

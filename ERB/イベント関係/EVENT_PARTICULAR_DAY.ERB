@@ -419,31 +419,9 @@ IF RESULT == COMMAND_はい
 
 		PRINTFORML 愛情経験＋{N / 3}
 		EXP:愛情経験 += N * ABL:信頼 / 2
-		IF !CFLAG:初キス相手
-			IF NO:TARGET != [[キャラ:宮間かなで]]
-				CSTR:初キス相手 = %CALLNAME:MASTER%
-			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 0
-				CSTR:初キス相手 = お兄ちゃん
-			ELSEIF (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) && TALENT:ナマイキ == 1
-				CSTR:初キス相手 = アニキ
-			ENDIF
-			CALL 初キス実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口,CSTR:初キス相手)
-			SETCOLOR 0xDDBBCC
-				PRINTFORML 【ファーストキス】
-			RESETCOLOR
-		ENDIF
-		IF !CFLAG:MASTER:初キス相手
-			CALL 初キス実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口,NAME:TARGET)
-			SETCOLOR 0xDDBBCC
-				PRINTFORML 【ファーストキス】（%CALLNAME:MASTER%）
-			RESETCOLOR
-		ENDIF
+		CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口)
 		IF TALENT:MASTER:童貞 == 1 && (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
-			TALENT:MASTER:童貞 = 0
-			CSTR:MASTER:童貞喪失相手 = %NAME:TARGET%
-			SETCOLOR 0xDDBBCC
-				PRINTFORML 【童貞喪失】（%CALLNAME:MASTER%）
-			RESETCOLOR
+			CALL 童貞喪失実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_なし)
 		ENDIF
 	ENDIF
 
