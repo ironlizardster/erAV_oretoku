@@ -25,7 +25,7 @@ SIF TEQUIP:獣姦プレイ
 B = 0
 
 ;正常位アナル
-IF SELECTCOM == 26
+IF SELECTCOM == [[TRAIN:正常位アナル]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -56,7 +56,7 @@ IF SELECTCOM == 26
 		TIMES B , 1.30
 	ENDIF
 ;後背位アナル
-ELSEIF SELECTCOM == 27
+ELSEIF SELECTCOM == [[TRAIN:後背位アナル]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 2700
@@ -72,7 +72,7 @@ ELSEIF SELECTCOM == 27
 		B = 3300
 	ENDIF
 ;対面座位アナル
-ELSEIF SELECTCOM == 28
+ELSEIF SELECTCOM == [[TRAIN:対面座位アナル]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 800
@@ -103,7 +103,7 @@ ELSEIF SELECTCOM == 28
 		TIMES B , 2.40
 	ENDIF
 ;背面座位アナル
-ELSEIF SELECTCOM == 29
+ELSEIF SELECTCOM == [[TRAIN:背面座位アナル]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 900
@@ -134,7 +134,7 @@ ELSEIF SELECTCOM == 29
 		TIMES B , 1.50
 	ENDIF
 ;騎乗位アナル
-ELSEIF SELECTCOM == 36
+ELSEIF SELECTCOM == [[TRAIN:騎乗位アナル]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1000
@@ -365,16 +365,16 @@ ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
 	EXP:ＢＬ経験 += 7
 ENDIF
 
-IF SELECTCOM == 29
+IF SELECTCOM == [[TRAIN:背面座位アナル]]
 	PRINTFORML %EXPNAME:[[EXP:Ｂ開発経験]]%+1
 	EXP:Ｂ開発経験 += 1
 ENDIF
 ;愛情経験
 ;正常位アナル
-IF SELECTCOM == 26
+IF SELECTCOM == [[TRAIN:正常位アナル]]
 	E = 3
 ;対面座位アナル
-SIF SELECTCOM == 28
+SIF SELECTCOM == [[TRAIN:対面座位アナル]]
 	E = 4
 ;その他
 ELSE

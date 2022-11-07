@@ -86,7 +86,7 @@ ELSE
 	PRINTL 　　　　 OFF
 ENDIF
 PRINT  [13] - 加齢システムの使用・誕生日などの読み込み　　　　　　 
-IF FLAG:加齢なしフラグ == 0
+IF FLAG:加齢フラグ
 	PRINTL 　　　　　ON
 ELSE
 	PRINTL 　　　　 OFF
@@ -588,10 +588,10 @@ RETURN 0
 	PRINTL  [999] - 戻る
 	INPUT
 	IF RESULT == 0
-		FLAG:加齢なしフラグ = 0
+		FLAG:加齢フラグ = 1
 		RETURN 0
 	ELSEIF RESULT == 1
-		FLAG:加齢なしフラグ = 1
+		FLAG:加齢フラグ = 0
 		RETURN 0
 	ELSEIF RESULT == 200
 		CALL MANUAL_SET_BIRTHDAY

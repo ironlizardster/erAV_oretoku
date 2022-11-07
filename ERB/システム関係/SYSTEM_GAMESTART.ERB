@@ -85,7 +85,8 @@ FLAG:陰毛を生やす = 1
 FLAG:着衣使用 = 1
 ;デフォルトでは妊娠設定使用
 FLAG:妊娠なし = 0
-
+;デフォルトでは加齢なし使用
+FLAG:加齢フラグ = 0
 FLAG:失神なし = 1
 FLAG:処女確認 = 1
 FLAG:Ａ処女確認 = 1
@@ -220,7 +221,7 @@ ENDIF
 ;オープニング表示
 @オープニングストーリー
 
-FOR LOCAL, 0, 実績最大ID + 1
+FOR LOCAL, 0, 実績最大ID
 	BASE:MASTER:メダル += 実績達成:LOCAL
 NEXT
 

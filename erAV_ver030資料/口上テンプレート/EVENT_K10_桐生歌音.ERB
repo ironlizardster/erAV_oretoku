@@ -372,7 +372,7 @@ RETURN 0
 ;SIF ASSI > 0 && ASSIPLAY
 ;	RETURN 0 
 ;ボールギャグ着用時には口上をスキップする
-SIF TEQUIP:ボールギャグ && SELECTCOM != 45
+SIF TEQUIP:ボールギャグ && SELECTCOM != [[TRAIN:ボールギャグ]]
 	RETURN 0
 
 ;-------------------------------------------------
@@ -381,7 +381,7 @@ SIF TEQUIP:ボールギャグ && SELECTCOM != 45
 ;-------------------------------------------------
 ;愛撫 CFLAG:301
 ;-------------------------------------------------
-IF SELECTCOM == 0
+IF SELECTCOM == [[TRAIN:愛撫]]
 	;初めて
 	IF CFLAG:301 == 0
 		;屈服刻印Lv2以上
@@ -419,7 +419,7 @@ ENDIF
 ;-------------------------------------------------
 ;クンニ CFLAG:302
 ;-------------------------------------------------
-IF SELECTCOM == 1
+IF SELECTCOM == [[TRAIN:クンニ]]
 	;初めて
 	IF CFLAG:302 == 0
 		;処女
@@ -453,7 +453,7 @@ ENDIF
 ;-------------------------------------------------
 ;アナル愛撫 CFLAG:303
 ;-------------------------------------------------
-IF SELECTCOM == 2
+IF SELECTCOM == [[TRAIN:アナル愛撫]]
 	;初めて
 	IF CFLAG:303 == 0
 		PRINTFORMW 
@@ -486,7 +486,7 @@ ENDIF
 ;-------------------------------------------------
 ;自慰 CFLAG304
 ;-------------------------------------------------
-IF SELECTCOM == 3
+IF SELECTCOM == [[TRAIN:オナニー]]
 	;初めて
 	IF CFLAG:304 == 0
 			PRINTFORMW 
@@ -544,7 +544,7 @@ ENDIF
 ;-------------------------------------------------
 ;胸愛撫 CFLAG:306
 ;-------------------------------------------------
-IF SELECTCOM == 5
+IF SELECTCOM == [[TRAIN:胸愛撫]]
 	;初めて
 	IF CFLAG:306 == 0
 		;愛
@@ -578,7 +578,7 @@ ENDIF
 ;-------------------------------------------------
 ;キスする CFLAG:307
 ;-------------------------------------------------
-IF SELECTCOM == 6
+IF SELECTCOM == [[TRAIN:キスする]]
 	;初キス
 	IF CFLAG:307 == 0 && TFLAG:初キス
 		;愛かつ主人
@@ -623,7 +623,7 @@ ENDIF
 ;-------------------------------------------------
 ;秘貝開帳 CFLAG:308
 ;-------------------------------------------------
-IF SELECTCOM == 7
+IF SELECTCOM == [[TRAIN:秘貝開帳]]
 	;初めて
 	IF CFLAG:308 == 0
 		;愛
@@ -657,7 +657,7 @@ ENDIF
 ;-------------------------------------------------
 ;指挿入れ CFLAG:309
 ;-------------------------------------------------
-IF SELECTCOM == 8
+IF SELECTCOM == [[TRAIN:指挿入れ]]
 	;初めて
 	IF CFLAG:TARGET:309 == 0
 		;屈服刻印Lv3+愛
@@ -691,7 +691,7 @@ ENDIF
 ;-------------------------------------------------
 ;アナル舐め CFLAG:310
 ;-------------------------------------------------
-IF SELECTCOM == 9
+IF SELECTCOM == [[TRAIN:アナル舐め]]
 	;初めて
 	IF CFLAG:310 == 0
 		;愛
@@ -725,7 +725,7 @@ ENDIF
 ;-------------------------------------------------
 ;ローター CFLAG:311
 ;-------------------------------------------------
-IF SELECTCOM == 10
+IF SELECTCOM == [[TRAIN:ローター]]
 	;初めて
 	IF CFLAG:TARGET:311 == 0
 		;屈服刻印Lv3+愛
@@ -760,7 +760,7 @@ ENDIF
 ;バイブ CFLAG:312　CFLAG:412
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 11 && TEQUIP:バイブ
+IF SELECTCOM == [[TRAIN:バイブ]] && TEQUIP:バイブ
 	;初めて
 	IF CFLAG:TARGET:312 == 0
 		;処女
@@ -802,7 +802,7 @@ IF SELECTCOM == 11 && TEQUIP:バイブ
 		RETURN 0
 	ENDIF
 ;脱着時
-ELSEIF SELECTCOM == 11 && TEQUIP:バイブ == 0
+ELSEIF SELECTCOM == [[TRAIN:バイブ]] && TEQUIP:バイブ == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1 && (CFLAG:412 < 2 || FLAG:口上使用 == 2)
 		PRINTFORMW 
@@ -818,7 +818,7 @@ ENDIF
 ;-------------------------------------------------
 ;Ｅマッサージャ CFLAG:313
 ;-------------------------------------------------
-IF SELECTCOM == 12
+IF SELECTCOM == [[TRAIN:Ｅマッサージャ]]
 	;初めて
 	IF CFLAG:314 == 0
 		;愛
@@ -853,7 +853,7 @@ ENDIF
 ;アナルバイブ CFLAG:314　CFLAG:414
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 13 && TEQUIP:アナルバイブ
+IF SELECTCOM == [[TRAIN:アナルバイブ]] && TEQUIP:アナルバイブ
 	;初めて
 	IF CFLAG:TARGET:314 == 0
 		;愛
@@ -887,7 +887,7 @@ IF SELECTCOM == 13 && TEQUIP:アナルバイブ
 		RETURN 0
 	ENDIF
 ;脱着時
-ELSEIF SELECTCOM == 13 && TEQUIP:アナルバイブ == 0
+ELSEIF SELECTCOM == [[TRAIN:アナルバイブ]] && TEQUIP:アナルバイブ == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1 && (CFLAG:414 < 3 || FLAG:口上使用 == 2)
 		PRINTFORMW 
@@ -908,7 +908,7 @@ ENDIF
 ;クリキャップ CFLAG:315　CFLAG:415
 ;-------------------------------------------------
 ;開始時
-;IF SELECTCOM == 14 && TEQUIP:クリキャップ
+;IF SELECTCOM == [[TRAIN:クリキャップ]] && TEQUIP:クリキャップ
 	;初めて
 ;	IF CFLAG:315 == 0
 		;愛
@@ -934,7 +934,7 @@ ENDIF
 ;		RETURN 0
 ;	ENDIF
 ;脱着時
-;ELSEIF SELECTCOM == 14 && TEQUIP:クリキャップ == 0
+;ELSEIF SELECTCOM == [[TRAIN:クリキャップ]] && TEQUIP:クリキャップ == 0
 	;愛
 ;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:415 < 2 || FLAG:口上使用 == 2)
 ;		PRINTFORMW 
@@ -951,7 +951,7 @@ ENDIF
 ;ニプルキャップ CFLAG:316　CFLAG:416
 ;-------------------------------------------------
 ;開始時
-;IF SELECTCOM == 15 && TEQUIP:二プルキャップ
+;IF SELECTCOM == [[TRAIN:ニプルキャップ]] && TEQUIP:二プルキャップ
 	;初めて
 ;	IF CFLAG:316 == 0
 		;愛
@@ -977,7 +977,7 @@ ENDIF
 ;		RETURN 0
 ;	ENDIF
 ;脱着時
-;ELSEIF SELECTCOM == 15 && TEQUIP:二プルキャップ == 0
+;ELSEIF SELECTCOM == [[TRAIN:ニプルキャップ]] && TEQUIP:二プルキャップ == 0
 	;愛
 ;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:416 < 2 || FLAG:口上使用 == 2)
 ;		PRINTFORMW 
@@ -994,7 +994,7 @@ ENDIF
 ;搾乳機(母乳体質のみ) CFLAG:317　CFLAG:417
 ;-------------------------------------------------
 ;開始時
-;IF SELECTCOM == 16 && TEQUIP:搾乳機
+;IF SELECTCOM == [[TRAIN:搾乳機]] && TEQUIP:搾乳機
 	;初めて
 ;	IF CFLAG:317 == 0
 		;愛
@@ -1020,7 +1020,7 @@ ENDIF
 ;		RETURN 0
 ;	ENDIF
 ;脱着時
-;ELSEIF SELECTCOM == 16 && TEQUIP:搾乳機 == 0
+;ELSEIF SELECTCOM == [[TRAIN:搾乳機]] && TEQUIP:搾乳機 == 0
 	;愛
 ;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:417 < 2 || FLAG:口上使用 == 2)
 ;		PRINTFORMW 
@@ -1037,7 +1037,7 @@ ENDIF
 ;オナホール(ふたなり/オトコのみ) CFLAG:318　CFLAG:418
 ;-------------------------------------------------
 ;開始時
-;IF SELECTCOM == 17 && TEQUIP:オナホール
+;IF SELECTCOM == [[TRAIN:オナホール]] && TEQUIP:オナホール
 	;初めて
 ;	IF CFLAG:318 == 0
 		;愛
@@ -1063,7 +1063,7 @@ ENDIF
 ;		RETURN 0
 ;	ENDIF
 ;終了時
-;ELSEIF SELECTCOM == 17 && TEQUIP:オナホール == 0
+;ELSEIF SELECTCOM == [[TRAIN:オナホール]] && TEQUIP:オナホール == 0
 	;愛
 ;	IF TALENT:TARGET:恋心 == 1 && (CFLAG:418 < 2 || FLAG:口上使用 == 2)
 ;		PRINTFORMW 
@@ -1080,7 +1080,7 @@ ENDIF
 ;アナルビーズ CFLAG:320　CFLAG:420
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 19 && TEQUIP:アナルビーズ
+IF SELECTCOM == [[TRAIN:アナルスティック]] && TEQUIP:アナルビーズ
 	;初めて
 	IF CFLAG:TARGET:320 == 0
 		;愛
@@ -1114,7 +1114,7 @@ IF SELECTCOM == 19 && TEQUIP:アナルビーズ
 		RETURN 0
 	ENDIF
 ;脱着時
-ELSEIF SELECTCOM == 19 && TEQUIP:アナルビーズ == 0
+ELSEIF SELECTCOM == [[TRAIN:アナルスティック]] && TEQUIP:アナルビーズ == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1 && (CFLAG:420 < 3 || FLAG:口上使用 == 2)
 		PRINTFORMW 
@@ -1134,7 +1134,7 @@ ENDIF
 ;-------------------------------------------------
 ;正常位 CFLAG:321
 ;-------------------------------------------------
-IF SELECTCOM == 20
+IF SELECTCOM == [[TRAIN:正常位]]
 	;初めて
 	IF CFLAG:TARGET:321 == 0
 		;処女
@@ -1184,7 +1184,7 @@ ENDIF
 ;-------------------------------------------------
 ;後背位 CFLAG:322
 ;-------------------------------------------------
-IF SELECTCOM == 21
+IF SELECTCOM == [[TRAIN:後背位]]
 	;初めて
 	IF CFLAG:TARGET:322 == 0
 		;処女
@@ -1242,7 +1242,7 @@ ENDIF
 ;-------------------------------------------------
 ;対面座位 CFLAG:323
 ;-------------------------------------------------
-IF SELECTCOM == 22
+IF SELECTCOM == [[TRAIN:対面座位]]
 	IF CFLAG:TARGET:323 == 0
 		;処女
 		IF TALENT:処女 == 1
@@ -1297,7 +1297,7 @@ ENDIF
 ;-------------------------------------------------
 ;背面座位 CFLAG:324
 ;-------------------------------------------------
-IF SELECTCOM == 23
+IF SELECTCOM == [[TRAIN:背面座位]]
 	IF CFLAG:TARGET:324 == 0
 		;処女
 		IF TALENT:処女 == 1
@@ -1352,7 +1352,7 @@ ENDIF
 ;-------------------------------------------------
 ;正常位アナル CFLAG:327
 ;-------------------------------------------------
-IF SELECTCOM == 26
+IF SELECTCOM == [[TRAIN:正常位アナル]]
 	;初めて
 	IF CFLAG:TARGET:327 == 0
 		;愛
@@ -1394,7 +1394,7 @@ ENDIF
 ;-------------------------------------------------
 ;後背位アナル CFLAG:328
 ;-------------------------------------------------
-IF SELECTCOM == 27
+IF SELECTCOM == [[TRAIN:後背位アナル]]
 	;初めて
 	IF CFLAG:TARGET:328 == 0
 		;愛
@@ -1436,7 +1436,7 @@ ENDIF
 ;-------------------------------------------------
 ;対面座位アナル CFLAG:329
 ;-------------------------------------------------
-IF SELECTCOM == 28
+IF SELECTCOM == [[TRAIN:対面座位アナル]]
 	;初めて
 	IF CFLAG:TARGET:329 == 0
 		;愛
@@ -1478,7 +1478,7 @@ ENDIF
 ;-------------------------------------------------
 ;背面座位アナル CFLAG:330
 ;-------------------------------------------------
-IF SELECTCOM == 29
+IF SELECTCOM == [[TRAIN:背面座位アナル]]
 	;初めて
 	IF CFLAG:TARGET:330 == 0
 		;愛
@@ -1520,7 +1520,7 @@ ENDIF
 ;-------------------------------------------------
 ;手淫 CFLAG:331
 ;-------------------------------------------------
-IF SELECTCOM == 30
+IF SELECTCOM == [[TRAIN:手淫]]
 	;初めて
 	IF CFLAG:TARGET:331 == 0
 		;奉仕精神Lv3以上
@@ -1562,7 +1562,7 @@ ENDIF
 ;-------------------------------------------------
 ;フェラチオ CFLAG:332
 ;-------------------------------------------------
-IF SELECTCOM == 31
+IF SELECTCOM == [[TRAIN:フェラチオ]]
 	;初めて
 	IF CFLAG:TARGET:332 == 0
 		;奉仕精神Lv3以上
@@ -1598,7 +1598,7 @@ ENDIF
 ;-------------------------------------------------
 ;パイズリ CFLAG:333
 ;-------------------------------------------------
-IF SELECTCOM == 32
+IF SELECTCOM == [[TRAIN:パイズリ]]
 	;初めて
 	IF CFLAG:TARGET:333 == 0
 		;奉仕精神Lv3以上
@@ -1636,7 +1636,7 @@ ENDIF
 ;-------------------------------------------------
 ;素股 CFLAG:334
 ;-------------------------------------------------
-IF SELECTCOM == 33
+IF SELECTCOM == [[TRAIN:素股]]
 	;初めて
 	IF CFLAG:TARGET:334 == 0
 		;愛有り
@@ -1672,7 +1672,7 @@ ENDIF
 ;-------------------------------------------------
 ;騎乗位 CFLAG:335
 ;-------------------------------------------------
-IF SELECTCOM == 34
+IF SELECTCOM == [[TRAIN:騎乗位]]
 	;初めて
 	IF CFLAG:TARGET:335 == 0
 		;愛＋処女
@@ -1727,7 +1727,7 @@ ENDIF
 ;-------------------------------------------------
 ;泡踊り CFLAG:336
 ;-------------------------------------------------
-IF SELECTCOM == 35
+IF SELECTCOM == [[TRAIN:泡踊り]]
 	;初めて
 	IF CFLAG:TARGET:336 == 0
 		;奉仕精神Lv3以上
@@ -1761,7 +1761,7 @@ ENDIF
 ;-------------------------------------------------
 ;騎乗位アナル CFLAG:337
 ;-------------------------------------------------
-IF SELECTCOM == 36
+IF SELECTCOM == [[TRAIN:騎乗位アナル]]
 	;初めて
 	IF CFLAG:TARGET:337 == 0
 		;愛
@@ -1803,7 +1803,7 @@ ENDIF
 ;-------------------------------------------------
 ;アナル奉仕 CFLAG:338
 ;-------------------------------------------------
-IF SELECTCOM == 37
+IF SELECTCOM == [[TRAIN:アナル奉仕]]
 	;初めて
 	IF CFLAG:TARGET:338 == 0
 		;奉仕精神Lv3以上
@@ -1837,7 +1837,7 @@ ENDIF
 ;-------------------------------------------------
 ;スパンキング CFLAG:341
 ;-------------------------------------------------
-IF SELECTCOM == 40
+IF SELECTCOM == [[TRAIN:スパンキング]]
 	;初めて
 	IF CFLAG:TARGET:341 == 0
 		PRINTFORMW 
@@ -1867,7 +1867,7 @@ ENDIF
 ;-------------------------------------------------
 ;鞭 CFLAG:342
 ;-------------------------------------------------
-IF SELECTCOM == 41
+IF SELECTCOM == [[TRAIN:鞭]]
 	;初めて
 	IF CFLAG:TARGET:342 == 0
 		;愛
@@ -1909,7 +1909,7 @@ ENDIF
 ;-------------------------------------------------
 ;針 CFLAG:343
 ;-------------------------------------------------
-IF SELECTCOM == 42
+IF SELECTCOM == [[TRAIN:針]]
 	;初めて
 	IF CFLAG:TARGET:343 == 0
 		;愛
@@ -1952,7 +1952,7 @@ ENDIF
 ;アイマスク CFLAG:344　CFLAG:444
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 43 && TEQUIP:アイマスク
+IF SELECTCOM == [[TRAIN:アイマスク]] && TEQUIP:アイマスク
 	;初めて
 	IF CFLAG:TARGET:344 == 0
 		;愛
@@ -1990,7 +1990,7 @@ IF SELECTCOM == 43 && TEQUIP:アイマスク
 		RETURN 0
 	ENDIF
 ;終了時
-ELSEIF SELECTCOM == 43 && TEQUIP:アイマスク == 0
+ELSEIF SELECTCOM == [[TRAIN:アイマスク]] && TEQUIP:アイマスク == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1 && (CFLAG:338 < 2 || FLAG:口上使用 == 2)
 		PRINTFORMW 
@@ -2007,7 +2007,7 @@ ENDIF
 ;縄 CFLAG345　CFLAG:445
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 44 && TEQUIP:縄
+IF SELECTCOM == [[TRAIN:縄]] && TEQUIP:縄
 	;初めて
 	IF CFLAG:TARGET:345 == 0
 		;愛
@@ -2045,7 +2045,7 @@ IF SELECTCOM == 44 && TEQUIP:縄
 		RETURN 0
 	ENDIF
 ;終了時
-ELSEIF SELECTCOM == 44 && TEQUIP:縄 == 0
+ELSEIF SELECTCOM == [[TRAIN:縄]] && TEQUIP:縄 == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1 && (CFLAG:445 < 2 || FLAG:口上使用 == 2)
 		PRINTFORMW 
@@ -2062,7 +2062,7 @@ ENDIF
 ;ボールギャグ CFLAG346　CFLAG:446
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 45 && TEQUIP:ボールギャグ
+IF SELECTCOM == [[TRAIN:ボールギャグ]] && TEQUIP:ボールギャグ
 	;初めて
 	IF CFLAG:TARGET:346 == 0
 		;愛
@@ -2100,7 +2100,7 @@ IF SELECTCOM == 45 && TEQUIP:ボールギャグ
 		RETURN 0
 	ENDIF
 ;終了時
-ELSEIF SELECTCOM == 45 && TEQUIP:ボールギャグ == 0
+ELSEIF SELECTCOM == [[TRAIN:ボールギャグ]] && TEQUIP:ボールギャグ == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1 && (CFLAG:446 < 2 || FLAG:口上使用 == 2)
 		PRINTFORMW 
@@ -2117,7 +2117,7 @@ ENDIF
 ;浣腸器＋プラグ CFLAG:347
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 46 && TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+IF SELECTCOM == [[TRAIN:浣腸]] && TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
 	;初めて
 	IF CFLAG:TARGET:347 == 0
 		;愛
@@ -2155,7 +2155,7 @@ ENDIF
 ;-------------------------------------------------
 ;何もしない CFLAG:356
 ;-------------------------------------------------
-IF SELECTCOM == 55
+IF SELECTCOM == [[TRAIN:何もしない]]
 	;初めて
 	IF CFLAG:356 == 0
 		;愛
@@ -2190,7 +2190,7 @@ ENDIF
 ;会話する CFLAG:357
 ;「会話」はある意味最も口上が生きるコマンドかも
 ;-------------------------------------------------
-IF SELECTCOM == 56
+IF SELECTCOM == [[TRAIN:会話する]]
 	;初めて
 	IF CFLAG:357 == 0
 		;愛
@@ -2220,7 +2220,7 @@ ENDIF
 ;-------------------------------------------------
 ;イラマチオ CFLAG:381
 ;-------------------------------------------------
-IF SELECTCOM == 80
+IF SELECTCOM == [[TRAIN:イラマチオ]]
 	;初めて
 	IF CFLAG:TARGET:381 == 0
 		;奉仕精神Lv3以上
@@ -2275,7 +2275,7 @@ IF P > PALAMLV:2 && CFLAG:TARGET:221 == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1
 		;ローションを使った場合
-		IF SELECTCOM == 50
+		IF SELECTCOM == [[TRAIN:ローション]]
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -2284,7 +2284,7 @@ IF P > PALAMLV:2 && CFLAG:TARGET:221 == 0
 	;それ以外
 	ELSE
 		;ローションを使った場合
-		IF SELECTCOM == 50
+		IF SELECTCOM == [[TRAIN:ローション]]
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -2302,7 +2302,7 @@ IF P > PALAMLV:2 && CFLAG:222 == 0
 	;愛
 	IF TALENT:TARGET:恋心 == 1
 		;しあわせ草を使った場合
-		IF SELECTCOM == 51
+		IF SELECTCOM == [[TRAIN:プリンセスポイズン]]
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -2311,7 +2311,7 @@ IF P > PALAMLV:2 && CFLAG:222 == 0
 	;それ以外
 	ELSE
 		;しあわせ草を使った場合
-		IF SELECTCOM == 51
+		IF SELECTCOM == [[TRAIN:プリンセスポイズン]]
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -2441,7 +2441,7 @@ ENDIF
 ;-------------------------------------------------
 IF TFLAG:セックスで射精 > 0
 	;アナルセックスか？（正常位アナル、後背位アナル、対面座位アナル、背面座位アナル、騎乗位アナル）
-	IF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29 || SELECTCOM == 36
+	IF SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位アナル]]
 		;愛
 		IF TALENT:TARGET:恋心 == 1 && (CFLAG:231 <= 3 || FLAG:口上使用 == 2)
 			PRINTFORMW 

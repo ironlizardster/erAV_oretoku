@@ -1,0 +1,335 @@
+﻿;-------------------------------------------------
+;スライム肛門進入
+;道具使用コマンド：調教対象のアナルをアナルバイブで刺激
+;-------------------------------------------------
+@COM152
+
+	PRINTL スライム肛門進入
+	SAVESTR:0 = スライム肛門進入
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 30
+LOSEBASE:気力 += 90
+
+SOURCE:14 = 300
+
+;ABL:Ａ感覚をみる
+IF ABL:Ａ感覚 == 0
+	SOURCE:2 = 40
+	SOURCE:13 = 150
+ELSEIF ABL:Ａ感覚 == 1
+	SOURCE:2 = 125
+	SOURCE:13 = 400
+ELSEIF ABL:Ａ感覚 == 2
+	SOURCE:2 = 300
+	SOURCE:13 = 700
+ELSEIF ABL:Ａ感覚 == 3
+	SOURCE:2 = 500
+	SOURCE:13 = 900
+ELSEIF ABL:Ａ感覚 == 4
+	SOURCE:2 = 650
+	SOURCE:13 = 1050
+ELSE
+	SOURCE:2 = 850
+	SOURCE:13 = 1200
+ENDIF
+
+;EXP:Ａ経験をみる
+IF EXP:Ａ経験 < EXPLV:1
+	TIMES SOURCE:2 , 0.50
+	SOURCE:6 = 1000
+	SOURCE:14 += 200
+ELSEIF EXP:Ａ経験 < EXPLV:2
+	TIMES SOURCE:2 , 1.00
+	SOURCE:6 = 150
+	SOURCE:14 += 100
+ELSEIF EXP:Ａ経験 < EXPLV:3
+	TIMES SOURCE:2 , 1.10
+	SOURCE:6 = 25
+	SOURCE:14 += 50
+ELSEIF EXP:Ａ経験 < EXPLV:4
+	TIMES SOURCE:2 , 1.20
+	SOURCE:6 = 5
+ELSEIF EXP:Ａ経験 < EXPLV:5
+	TIMES SOURCE:2 , 1.40
+	SOURCE:6 = 0
+ELSE
+	TIMES SOURCE:2 , 1.60
+	SOURCE:6 = 0
+ENDIF
+
+;PALAM:潤滑をみる
+IF PALAM:潤滑 < PALAMLV:1
+	TIMES SOURCE:2 , 0.40
+	SOURCE:6 += 400
+ELSEIF PALAM:潤滑 < PALAMLV:2
+	TIMES SOURCE:2 , 0.80
+	SOURCE:6 += 250
+ELSEIF PALAM:潤滑 < PALAMLV:3
+	TIMES SOURCE:2 , 1.00
+	SOURCE:6 += 150
+ELSEIF PALAM:潤滑 < PALAMLV:4
+	TIMES SOURCE:2 , 1.40
+	SOURCE:6 += 60
+ELSEIF PALAM:潤滑 >= PALAMLV:4
+	TIMES SOURCE:2 , 1.80
+	SOURCE:6 += 50
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES SOURCE:2 , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES SOURCE:2 , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES SOURCE:2 , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES SOURCE:2 , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES SOURCE:2 , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES SOURCE:2 , 0.80
+	TIMES SOURCE:14 , 2.00
+ELSEIF ABL:信頼 == 1
+	TIMES SOURCE:2 , 0.90
+	TIMES SOURCE:14 , 1.50
+ELSEIF ABL:信頼 == 2
+	TIMES SOURCE:14 , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES SOURCE:14 , 0.80
+ELSEIF ABL:信頼 == 4
+	TIMES SOURCE:14 , 0.60
+ELSE
+	TIMES SOURCE:14 , 0.30
+ENDIF
+
+;大柄
+SIF TALENT:大柄
+	TIMES SOURCE:6 , 0.80
+;小柄
+SIF TALENT:小柄
+	TIMES SOURCE:6 , 2.00
+;未熟
+SIF TALENT:未熟
+	TIMES SOURCE:6 , 2.00
+
+;Ａ敏感、鈍感をみる
+;快Ａ自体のチェックは後でまとめてやる
+IF TALENT:Ａ鈍感
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:14 , 1.50
+ELSEIF TALENT:Ａ敏感
+	TIMES SOURCE:6 , 0.60
+	TIMES SOURCE:13 , 0.60
+	TIMES SOURCE:14 , 0.60
+ENDIF
+
+IF EXP:Ｖ経験 == 0 && TALENT:貞操観念
+	SOURCE:13 /= 3
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+S = 0
+;Ａ感覚が高いほどＡ経験が入る
+IF ABL:Ａ感覚 <= 1
+	S = 1
+ELSEIF ABL:Ａ感覚 <= 4
+	S = 2
+ELSEIF ABL:Ａ感覚 <= 7
+	S = 3
+ELSE
+	S = 4
+ENDIF
+EXP:Ａ経験 += S
+PRINTFORML Ａ経験+{S}
+
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +1
+	EXP:レズ経験 += 1
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +1
+	EXP:ＢＬ経験 += 1
+ENDIF
+
+;-------------------------------------------------
+;アナルバイブの着脱
+;-------------------------------------------------
+TEQUIP:スライム肛門進入 = 1 - TEQUIP:スライム肛門進入
+
+RETURN 1
+
+;-------------------------------------------------
+;-------------------------------------------------
+;アナルバイブ挿入中
+;-------------------------------------------------
+@EQUIP_COM152
+
+	PRINTL ＜スライム肛門進入中＞
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 15
+LOSEBASE:気力 += 40
+
+SOURCE:14 = 100
+
+;ABL:Ａ感覚をみる
+IF ABL:Ａ感覚 == 0
+	A = 20
+	B = 150
+ELSEIF ABL:Ａ感覚 == 1
+	A = 60
+	B = 400
+ELSEIF ABL:Ａ感覚 == 2
+	A = 150
+	B = 700
+ELSEIF ABL:Ａ感覚 == 3
+	A = 250
+	B = 900
+ELSEIF ABL:Ａ感覚 == 4
+	A = 325
+	B = 1050
+ELSE
+	A = 425
+	B = 1200
+ENDIF
+
+;EXP:Ａ経験をみる
+IF EXP:Ａ経験 < EXPLV:1
+	TIMES A , 0.50
+	C = 1000
+ELSEIF EXP:Ａ経験 < EXPLV:2
+	TIMES A , 1.00
+	C = 150
+ELSEIF EXP:Ａ経験 < EXPLV:3
+	TIMES A , 1.10
+	C = 25
+ELSEIF EXP:Ａ経験 < EXPLV:4
+	TIMES A , 1.20
+	C = 5
+ELSEIF EXP:Ａ経験 < EXPLV:5
+	TIMES A , 1.40
+	C = 0
+ELSE
+	TIMES A , 1.60
+	C = 0
+ENDIF
+
+;PALAM:潤滑をみる
+IF PALAM:潤滑 < PALAMLV:1
+	TIMES A , 0.40
+	C += 400
+ELSEIF PALAM:潤滑 < PALAMLV:2
+	TIMES A , 0.80
+	C += 250
+ELSEIF PALAM:潤滑 < PALAMLV:3
+	TIMES A , 1.00
+	C += 150
+ELSEIF PALAM:潤滑 < PALAMLV:4
+	TIMES A , 1.40
+	C += 60
+ELSEIF PALAM:潤滑 >= PALAMLV:4
+	TIMES A , 1.80
+	C += 50
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES A , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES A , 0.90
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES A , 1.00
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES A , 1.10
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES A , 1.20
+ENDIF
+
+;ABL:従順をみる
+IF ABL:信頼 == 0
+	TIMES A , 0.80
+	TIMES SOURCE:14 , 2.00
+ELSEIF ABL:信頼 == 1
+	TIMES A , 0.90
+	TIMES SOURCE:14 , 1.50
+ELSEIF ABL:信頼 == 2
+	TIMES SOURCE:14 , 1.00
+ELSEIF ABL:信頼 == 3
+	TIMES SOURCE:14 , 0.80
+ELSEIF ABL:信頼 == 4
+	TIMES SOURCE:14 , 0.60
+ELSE
+	TIMES SOURCE:14 , 0.30
+ENDIF
+
+;大柄
+SIF TALENT:大柄
+	TIMES C , 0.80
+;小柄
+SIF TALENT:小柄
+	TIMES C , 2.00
+;未熟
+SIF TALENT:未熟
+	TIMES SOURCE:6 , 2.00
+
+;Ａ敏感、鈍感をみる
+;快Ａ自体のチェックは後でまとめてやる
+IF TALENT:Ａ鈍感
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:14 , 1.50
+ELSEIF TALENT:Ａ敏感
+	TIMES SOURCE:6 , 0.60
+	TIMES SOURCE:13 , 0.60
+	TIMES SOURCE:14 , 0.60
+ENDIF
+
+SOURCE:2 += A
+SOURCE:13 += B
+SOURCE:6 += C
+
+;処女で貞操観念
+IF TALENT:処女 && TALENT:貞操観念
+	TIMES SOURCE:13 , 0.80
+	TIMES SOURCE:14 , 0.50
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+S = 0
+;自慰実行時は経験＋１
+SIF SELECTCOM == [[TRAIN:オナニー]]
+	S = 1
+;Ａ感覚が高いほどＡ経験が入る
+IF ABL:Ａ感覚 <= 1
+	S += 1
+ELSEIF ABL:Ａ感覚 <= 4
+	S += 2
+ELSEIF ABL:Ａ感覚 <= 7
+	S += 3
+ELSE
+	S += 4
+ENDIF
+EXP:Ａ経験 += S
+PRINTFORML Ａ経験+{S}
+
+S = 0
+RETURN 1
+;
+;
+;

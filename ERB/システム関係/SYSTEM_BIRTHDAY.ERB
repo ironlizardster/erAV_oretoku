@@ -84,32 +84,16 @@ ENDIF
 @HAPPY_BIRTHDAY
 VARSET LOCAL
 FOR LOCAL,0,CHARANUM
-	IF DAY:日付_月 == BASE:LOCAL:誕生月
-		;3,5,8,10月は5日目がある
-		IF DAY:日付_月 == 3 || DAY:日付_月 == 5 || DAY:日付_月 == 8 || DAY:日付_月 == 10
-			IF (DAY:日付_日 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:日付_日 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:日付_日 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:日付_日 == 4 && 22 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 28) ||  (DAY:日付_日 == 5 && 29 <= BASE:LOCAL:誕生日)
-				PRINTL *****************************************************
-				PRINTFORML %CALLNAME:LOCAL%が誕生日を迎えました
-				PRINTW *****************************************************
-				SIF !FLAG:加齢なしフラグ
-					BASE:LOCAL:実年齢 += 1
-				;誕生日イベント（口上等）をする場合はここから呼び出して下さい
-				IF LOCAL != 0
-					TARGET = LOCAL
-					CALL EVENT_BIRTHDAY
-				ENDIF
-			ENDIF
-		ELSE
-			IF (DAY:日付_日 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:日付_日 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:日付_日 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:日付_日 == 4 && 22 <= BASE:LOCAL:誕生日)
-				PRINTL *****************************************************
-				PRINTFORML %CALLNAME:LOCAL%が誕生日を迎えました
-				PRINTW *****************************************************
-				SIF !FLAG:加齢なしフラグ
-					BASE:LOCAL:実年齢 += 1
-				;誕生日イベント（口上等）をする場合はここから呼び出して下さい
-				TARGET = LOCAL
-				CALL EVENT_BIRTHDAY
-			ENDIF
+	IF DAY:日付_月 == BASE:LOCAL:誕生月 && DAY:日付_日 == BASE:LOCAL:誕生日
+		PRINTL *****************************************************
+		PRINTFORML %CALLNAME:LOCAL%が誕生日を迎えました
+		PRINTW *****************************************************
+		SIF FLAG:加齢フラグ
+			BASE:LOCAL:実年齢 += 1
+		;誕生日イベント（口上等）をする場合はここから呼び出して下さい
+		IF LOCAL != 0
+			TARGET = LOCAL
+			CALL EVENT_BIRTHDAY
 		ENDIF
 	ENDIF
 NEXT
@@ -396,25 +380,25 @@ INPUT
 		REPEAT CHARANUM
 			;実年齢が0歳のキャラクター全員
 			IF BASE:COUNT:実年齢 == 0
-				BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, 7, 0)
-				BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, 8, 0)
-				BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, 9, 0)
+				BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, [[BASE:外見年齢]], 0)
+				BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, [[BASE:概算年齢]], 0)
+				BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, [[BASE:実年齢]], 0)
 			ENDIF
 			;誕生月が不明なキャラクター全員
 			IF BASE:COUNT:誕生月 == 0
-				BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, 11, 0)
-				BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, 12, 0)
-				BASE:COUNT:血液型 = CSVBASE(NO:COUNT, 13, 0)
+				BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, [[BASE:誕生月]], 0)
+				BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, [[BASE:誕生日]], 0)
+				BASE:COUNT:血液型 = CSVBASE(NO:COUNT, [[BASE:血液型]], 0)
 			ENDIF
 		REND
 	ELSEIF RESULT == 1	
 		REPEAT CHARANUM
-			BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, 7, 0)
-			BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, 8, 0)
-			BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, 9, 0)
-			BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, 11, 0)
-			BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, 12, 0)
-			BASE:COUNT:血液型 = CSVBASE(NO:COUNT, 13, 0)
+			BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, [[BASE:外見年齢]], 0)
+			BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, [[BASE:概算年齢]], 0)
+			BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, [[BASE:実年齢]], 0)
+			BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, [[BASE:誕生月]], 0)
+			BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, [[BASE:誕生日]], 0)
+			BASE:COUNT:血液型 = CSVBASE(NO:COUNT, [[BASE:血液型]], 0)
 		REND
 	ELSE
 			GOTO INPUT_LOOP
@@ -426,17 +410,7 @@ PRINTW 完了しました
 ;SYSTEM_IWS.ERBの構文をほぼ丸ごと使わせて頂きました
 ;-------------------------------------------------
 @ADD_CSV_BIRTHDAY
-IF DAY:日付_月 == BASE:LOCAL:誕生月
-	;3,5,8,10月は5日目がある
-	IF DAY:日付_月 == 3 || DAY:日付_月 == 5 || DAY:日付_月 == 8 || DAY:日付_月 == 10
-		IF (DAY:日付_日 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:日付_日 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:日付_日 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:日付_日 == 4 && 22 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 28) ||  (DAY:日付_日 == 5 && 29 <= BASE:LOCAL:誕生日)
-			SIF !FLAG:加齢なしフラグ
-				BASE:LOCAL:実年齢 += 1
-		ENDIF
-	ELSE
-		IF (DAY:日付_日 == 1 && 1 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 7) || (DAY:日付_日 == 2 && 8 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 14) || (DAY:日付_日 == 3 && 15 <= BASE:LOCAL:誕生日 && BASE:LOCAL:誕生日 <= 21) || (DAY:日付_日 == 4 && 22 <= BASE:LOCAL:誕生日)
-			SIF !FLAG:加齢なしフラグ
-				BASE:LOCAL:実年齢 += 1
-		ENDIF
-	ENDIF
+IF DAY:日付_月 == BASE:LOCAL:誕生月 && DAY:日付_日 == BASE:LOCAL:誕生日
+	SIF FLAG:加齢フラグ
+		BASE:LOCAL:実年齢 += 1
 ENDIF

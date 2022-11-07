@@ -89,11 +89,11 @@ DEBUGPRINTFORML %STRING%
 		CASE 初場所_自室
 			STRING += @"%CALLNAME:CHARA_NO%の部屋で、"
 		CASE 初場所_彼部屋
-			STRLENS CSTR:CHARA_NO:初キス相手
+			STRLENS CSTR:CHARA_NO:童貞喪失相手
 			IF RESULT
-				STRING += @"%CSTR:初キス相手%%\@CFLAG:CHARA_NO:初キス相手 == 初相手_今彼 ? （カレシ） # （元カレ） \@%の部屋で、"
+				STRING += @"%CSTR:童貞喪失相手%%\@CFLAG:CHARA_NO:童貞喪失相手 == 初相手_今彼 ? （カレシ） # （元カレ） \@%の部屋で、"
 			ELSE
-				STRING += @"%\@CFLAG:CHARA_NO:初キス相手 == 初相手_今彼 ? カレシ # 元カレ \@%の部屋で、"
+				STRING += @"%\@CFLAG:CHARA_NO:童貞喪失相手 == 初相手_今彼 ? カレシ # 元カレ \@%の部屋で、"
 			ENDIF
 		CASE 初場所_ラブホ
 			STRING += @"ラブホテルで、"
@@ -130,11 +130,11 @@ DEBUGPRINTFORML %STRING%
 DEBUGPRINTFORML %STRING%
 [ENDIF]
 
-	STRLENS CSTR:CHARA_NO:初キス相手
+	STRLENS CSTR:CHARA_NO:童貞喪失相手
 	IF RESULT
-		TEMP_STR '= @"%CSTR:CHARA_NO:初キス相手%"
-	ELSEIF CFLAG:CHARA_NO:初キス相手 < 0		
-		SELECTCASE CFLAG:CHARA_NO:初キス相手
+		TEMP_STR '= @"%CSTR:CHARA_NO:童貞喪失相手%"
+	ELSEIF CFLAG:CHARA_NO:童貞喪失相手 < 0		
+		SELECTCASE CFLAG:CHARA_NO:童貞喪失相手
 			CASE 初相手_不明
 				TEMP_STR += @"覚えていない誰か"
 			CASE 初相手_夫

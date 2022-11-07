@@ -1810,7 +1810,7 @@ ENDIF
 ;指しっぱなし判定 TFLAG60
 ;-------------------------------------------------
 TFLAG:挿しっぱなし = 0
-IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29 || SELECTCOM == 34 || SELECTCOM == 36 || SELECTCOM == 56 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位]] || SELECTCOM == [[TRAIN:騎乗位アナル]] || SELECTCOM == [[TRAIN:会話する]] || SELECTCOM == [[TRAIN:Ｇスポ責め]] || SELECTCOM == [[TRAIN:子宮口責め]] || SELECTCOM == [[TRAIN:正常位キス]] || SELECTCOM == [[TRAIN:正常位胸愛撫]] || SELECTCOM == [[TRAIN:正常位ＳＰ]] || SELECTCOM == [[TRAIN:後背位胸愛撫]] || SELECTCOM == [[TRAIN:後背位スパンキング]] || SELECTCOM == [[TRAIN:立ちバック]] || SELECTCOM == [[TRAIN:後背位ＳＰ]]
 	SIF TFLAG:セックスで射精 == 0 || PALAM:欲情 >= PALAMLV:4
 		TFLAG:挿しっぱなし = 1
 ENDIF
@@ -1840,7 +1840,7 @@ IF TFLAG:V経験を伴うコマンド
 		CFLAG:TARGET:主奴膣内精子量 += TFLAG:セックスで射精
 	ENDIF
 ;奴隷が助手に膣内射精	
-ELSEIF SELECTCOM == 65 && ASSI >= 1 && TFLAG:調教対象が射精
+ELSEIF SELECTCOM == [[TRAIN:助手を犯させる]] && ASSI >= 1 && TFLAG:調教対象が射精
 	CFLAG:TARGET:奴助膣内精子量 += TFLAG:調教対象が射精
 ENDIF
 

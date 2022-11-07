@@ -103,13 +103,13 @@ ENDIF
 ;それ以降
 IF TFLAG:失神中終了 > 1
 	IF TFLAG:口で射精 + TFLAG:助手が射精 >= 1
-		IF SELECTCOM == 80 || CFLAG:74 == 1 || CFLAG:74 == 2
+		IF SELECTCOM == [[TRAIN:イラマチオ]] || CFLAG:74 == 1 || CFLAG:74 == 2
 			IF TEQUIP:主人コンドーム == 0
 				TFLAG:868 += TFLAG:口で射精 + TFLAG:助手が射精
 			ELSE
 				TFLAG:868 += (TFLAG:口で射精 + TFLAG:助手が射精) - 1
 			ENDIF
-		ELSEIF SELECTCOM == 29 || CFLAG:74 == 3 || CFLAG:74 == 5
+		ELSEIF SELECTCOM == [[TRAIN:背面座位アナル]] || CFLAG:74 == 3 || CFLAG:74 == 5
 			IF TEQUIP:主人コンドーム == 0
 				TFLAG:869 += TFLAG:口で射精 + TFLAG:助手が射精
 			ELSE
@@ -125,17 +125,17 @@ IF TFLAG:失神中終了 > 1
 		ENDIF
 	ENDIF
 	IF TFLAG:セックスで射精 + TFLAG:助手が射精 >= 1
-		IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 ||SELECTCOM == 64 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+		IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:騎乗位]] ||SELECTCOM == [[TRAIN:３Ｐ]] || SELECTCOM == [[TRAIN:Ｇスポ責め]] || SELECTCOM == [[TRAIN:子宮口責め]] || SELECTCOM == [[TRAIN:正常位キス]] || SELECTCOM == [[TRAIN:正常位胸愛撫]] || SELECTCOM == [[TRAIN:正常位ＳＰ]] || SELECTCOM == [[TRAIN:後背位胸愛撫]] || SELECTCOM == [[TRAIN:後背位スパンキング]] || SELECTCOM == [[TRAIN:立ちバック]] || SELECTCOM == [[TRAIN:後背位ＳＰ]]
 			SIF TEQUIP:主人コンドーム == 0
 				TFLAG:871 += TFLAG:セックスで射精 + TFLAG:助手が射精
-		ELSEIF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29 || SELECTCOM == 36
+		ELSEIF SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位アナル]]
 			SIF TEQUIP:主人コンドーム == 0
 				TFLAG:872 += TFLAG:セックスで射精 + TFLAG:助手が射精
 		ENDIF
 	ENDIF
 	TFLAG:873 += TFLAG:処女喪失
 	IF TFLAG:セックスで射精 + TFLAG:助手が射精 >= 1
-		IF SELECTCOM == 33 || CFLAG:74 == 4 || CFLAG:74 == 6 || CFLAG:74 == 7
+		IF SELECTCOM == [[TRAIN:素股]] || CFLAG:74 == 4 || CFLAG:74 == 6 || CFLAG:74 == 7
 			IF TEQUIP:主人コンドーム == 0
 				TFLAG:874 += TFLAG:助手が射精
 			ELSE
@@ -146,9 +146,9 @@ IF TFLAG:失神中終了 > 1
 	SIF TFLAG:セックスで射精 >= 1
 		TFLAG:875 += TFLAG:セックスで射精
 	IF TFLAG:触手が射精 >= 1
-		IF SELECTCOM == 101
+		IF SELECTCOM == [[TRAIN:触手挿入]]
 			TFLAG:876 += 100
-		ELSEIF SELECTCOM == 102
+		ELSEIF SELECTCOM == [[TRAIN:アナル触手]]
 			TFLAG:876 += 1000
 		ELSE
 			TFLAG:876 += TFLAG:触手が射精
@@ -285,15 +285,15 @@ ENDIF
 
 IF TFLAG:挿しっぱなし == 1
 	PRINTFORM 知らぬ間に
-	SIF SELECTCOM == 101 || SELECTCOM == 102
+	SIF SELECTCOM == [[TRAIN:触手挿入]] || SELECTCOM == [[TRAIN:アナル触手]]
 		PRINT 触手に
-	IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 || SELECTCOM == 101 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+	IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:騎乗位]] || SELECTCOM == [[TRAIN:触手挿入]] || SELECTCOM == [[TRAIN:Ｇスポ責め]] || SELECTCOM == [[TRAIN:子宮口責め]] || SELECTCOM == [[TRAIN:正常位キス]] || SELECTCOM == [[TRAIN:正常位胸愛撫]] || SELECTCOM == [[TRAIN:正常位ＳＰ]] || SELECTCOM == [[TRAIN:後背位胸愛撫]] || SELECTCOM == [[TRAIN:後背位スパンキング]] || SELECTCOM == [[TRAIN:立ちバック]] || SELECTCOM == [[TRAIN:後背位ＳＰ]]
 		PRINT 膣内
 	ELSE
 		PRINT 尻穴
 	ENDIF
 	PRINTFORM を犯されていることに慌てふためく%CALLNAME:TARGET%をよそに、
-	IF SELECTCOM == 101 || SELECTCOM == 102
+	IF SELECTCOM == [[TRAIN:触手挿入]] || SELECTCOM == [[TRAIN:アナル触手]]
 		PRINT 触手
 	ELSE
 		PRINTFORM %CALLNAME:PLAYER%
@@ -303,9 +303,9 @@ ENDIF
 
 IF TFLAG:873 >= 1
 	IF TFLAG:挿しっぱなし == 1
-		IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+		IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:騎乗位]] || SELECTCOM == [[TRAIN:Ｇスポ責め]] || SELECTCOM == [[TRAIN:子宮口責め]] || SELECTCOM == [[TRAIN:正常位キス]] || SELECTCOM == [[TRAIN:正常位胸愛撫]] || SELECTCOM == [[TRAIN:正常位ＳＰ]] || SELECTCOM == [[TRAIN:後背位胸愛撫]] || SELECTCOM == [[TRAIN:後背位スパンキング]] || SELECTCOM == [[TRAIN:立ちバック]] || SELECTCOM == [[TRAIN:後背位ＳＰ]]
 			PRINT ペニスを捻じ込まれている
-		ELSEIF SELECTCOM == 101
+		ELSEIF SELECTCOM == [[TRAIN:触手挿入]]
 			PRINT 触手を捻じ込まれている
 		ENDIF
 	ENDIF
@@ -323,18 +323,18 @@ IF TFLAG:873 >= 1
 	PRINTFORMW 知らない間に処女を奪われたことに呆然としている…
 ELSEIF TFLAG:871 >= 1
 	IF TFLAG:挿しっぱなし == 1
-		IF SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34 || SELECTCOM == 120 || SELECTCOM == 121 || SELECTCOM == 128 || SELECTCOM == 129 || SELECTCOM == 130 || SELECTCOM == 131 || SELECTCOM == 132 || SELECTCOM == 133 || SELECTCOM == 134
+		IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:騎乗位]] || SELECTCOM == [[TRAIN:Ｇスポ責め]] || SELECTCOM == [[TRAIN:子宮口責め]] || SELECTCOM == [[TRAIN:正常位キス]] || SELECTCOM == [[TRAIN:正常位胸愛撫]] || SELECTCOM == [[TRAIN:正常位ＳＰ]] || SELECTCOM == [[TRAIN:後背位胸愛撫]] || SELECTCOM == [[TRAIN:後背位スパンキング]] || SELECTCOM == [[TRAIN:立ちバック]] || SELECTCOM == [[TRAIN:後背位ＳＰ]]
 			PRINT ペニスを捻じ込まれている
-		ELSEIF SELECTCOM == 101
+		ELSEIF SELECTCOM == [[TRAIN:触手挿入]]
 			PRINT 触手を捻じ込まれている
 		ENDIF
 	ENDIF
 	PRINT 秘所
 	IF TFLAG:872 >= 1
 		PRINT と
-		IF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29
+		IF SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]]
 			PRINT ペニスを捻じ込まれている
-		ELSEIF SELECTCOM == 102
+		ELSEIF SELECTCOM == [[TRAIN:アナル触手]]
 			PRINT 触手を捻じ込まれている
 		ENDIF
 		PRINT 尻穴
@@ -355,9 +355,9 @@ ELSEIF TFLAG:871 >= 1
 	ENDIF
 ELSEIF TFLAG:872 >= 1
 	IF TFLAG:挿しっぱなし == 1
-		IF SELECTCOM == 26 || SELECTCOM == 27 || SELECTCOM == 28 || SELECTCOM == 29
+		IF SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]]
 			PRINT ペニスを捻じ込まれている
-		ELSEIF SELECTCOM == 102
+		ELSEIF SELECTCOM == [[TRAIN:アナル触手]]
 			PRINT 触手を捻じ込まれている
 		ENDIF
 	ENDIF

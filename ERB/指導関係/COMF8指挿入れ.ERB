@@ -1,0 +1,170 @@
+﻿;-------------------------------------------------
+;指挿入れ
+;愛撫系コマンド：調教者が調教対象の%CSTR:女性器呼び方%を手で刺激
+;-------------------------------------------------
+@COM8
+
+;前回の調教が指挿入れかつプレイヤの技巧３以上だとＧスポット刺激に
+SIF PREVCOM == [[TRAIN:指挿入れ]] && ABL:PLAYER:技巧 >= 3
+	JUMP COM84
+;前回の調教がGスポットならさらにＧスポット刺激に
+SIF PREVCOM == [[TRAIN:Ｇスポット刺激]]
+	JUMP COM84
+
+PRINTL 指挿入れ
+SAVESTR:0 = 指挿入れ
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 30
+LOSEBASE:気力 += 80
+
+SOURCE:12 = 300
+SOURCE:14 = 200
+
+;ABL:Ｖ感覚をみる
+IF ABL:Ｖ感覚 == 0
+	SOURCE:1 = 10
+	SOURCE:13 = 150
+ELSEIF ABL:Ｖ感覚 == 1
+	SOURCE:1 = 50
+	SOURCE:13 = 250
+ELSEIF ABL:Ｖ感覚 == 2
+	SOURCE:1 = 250
+	SOURCE:13 = 400
+ELSEIF ABL:Ｖ感覚 == 3
+	SOURCE:1 = 600
+	SOURCE:13 = 700
+ELSEIF ABL:Ｖ感覚 == 4
+	SOURCE:1 = 1200
+	SOURCE:13 = 1300
+ELSE
+	SOURCE:1 = 1800
+	SOURCE:13 = 2000
+ENDIF
+
+;EXP:Ｖ経験をみる
+IF EXP:Ｖ経験 < EXPLV:1
+	TIMES SOURCE:1 , 0.20
+	TIMES SOURCE:13, 0.20
+	SOURCE:6 = 300
+ELSEIF EXP:Ｖ経験 < EXPLV:2
+	TIMES SOURCE:1 , 0.50
+	TIMES SOURCE:13, 0.50
+	SOURCE:6 = 180
+ELSEIF EXP:Ｖ経験 < EXPLV:3
+	TIMES SOURCE:1 , 1.00
+	TIMES SOURCE:13, 0.80
+	SOURCE:6 = 80
+ELSEIF EXP:Ｖ経験 < EXPLV:4
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:13, 1.00
+	SOURCE:6 = 30
+ELSEIF EXP:Ｖ経験 < EXPLV:5
+	TIMES SOURCE:1 , 1.60
+	TIMES SOURCE:13, 1.20
+	SOURCE:6 = 0
+ELSE
+	TIMES SOURCE:2 , 1.80
+	TIMES SOURCE:13, 1.50
+	SOURCE:6 = 0
+ENDIF
+
+;PALAM:潤滑をみる
+IF PALAM:潤滑 < PALAMLV:1
+	TIMES SOURCE:1 , 0.10
+	SOURCE:6 += 700
+	TIMES SOURCE:6 , 3.00
+ELSEIF PALAM:潤滑 < PALAMLV:2
+	TIMES SOURCE:1 , 0.20
+	SOURCE:6 += 200
+	TIMES SOURCE:6 , 1.00
+ELSEIF PALAM:潤滑 < PALAMLV:3
+	TIMES SOURCE:1 , 0.60
+	TIMES SOURCE:6 , 0.80
+ELSEIF PALAM:潤滑 < PALAMLV:4
+	TIMES SOURCE:1 , 1.00
+	TIMES SOURCE:6 , 0.50
+ELSEIF PALAM:潤滑 >= PALAMLV:4
+	TIMES SOURCE:1 , 2.00
+	TIMES SOURCE:6 , 0.10
+ENDIF
+
+;PALAM:欲情をみる
+IF PALAM:欲情 < PALAMLV:1
+	TIMES SOURCE:1 , 0.50
+ELSEIF PALAM:欲情 < PALAMLV:2
+	TIMES SOURCE:1 , 0.80
+ELSEIF PALAM:欲情 < PALAMLV:3
+	TIMES SOURCE:1 , 1.20
+ELSEIF PALAM:欲情 < PALAMLV:4
+	TIMES SOURCE:1 , 1.50
+ELSEIF PALAM:欲情 >= PALAMLV:4
+	TIMES SOURCE:1 , 1.80
+ENDIF
+
+
+;Ｖ敏感、鈍感をみる
+;快Ｖ自体のチェックは後でまとめてやる
+IF TALENT:Ｖ鈍感
+	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:13 , 1.50
+	TIMES SOURCE:14 , 1.50
+ELSEIF TALENT:Ｖ敏感
+	TIMES SOURCE:6 , 0.60
+	TIMES SOURCE:13 , 0.60
+	TIMES SOURCE:14 , 0.60
+ENDIF
+
+;処女で貞操観念
+SIF EXP:Ｖ経験 == 0 && TALENT:貞操観念
+	TIMES SOURCE:13 , 2.00
+;未熟
+SIF TALENT:未熟
+	TIMES SOURCE:6 , 2.00
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+IF TEQUIP:触手召喚
+	;奴隷のＶに触手の汚れがつく
+	STAIN:3 |= 2
+	STAIN:3 |= 4
+ELSE
+	;奴隷のＶ⇔調教者の指の汚れが移動
+	STAIN:3 |= STAIN:PLAYER:1
+	STAIN:PLAYER:1 |= STAIN:3
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+
+;レズ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +4
+	EXP:レズ経験 += 4
+ENDIF
+
+IF TALENT:処女 == 0
+	PRINTS EXPNAME:[[EXP:Ｖ経験]]
+	PRINTL +1
+	EXP:Ｖ経験 += 1
+ENDIF
+
+;愛情経験
+E = 1
+IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+
+RETURN 1

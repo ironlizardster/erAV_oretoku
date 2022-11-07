@@ -259,11 +259,6 @@ ENDIF
 SIF TALENT:処女 == 0 || TFLAG:V経験を伴うコマンド == 0
 	RETURN 0
 
-SETCOLOR 0xF58F98
-PRINTL 【処女喪失】
-RESETCOLOR
-
-TALENT:処女 = 0
 SIF RELATION:TARGET:(NO:PLAYER) <= 1000
 	RELATION:TARGET:(NO:PLAYER) += 20
 
@@ -274,8 +269,6 @@ TFLAG:今回の調教で処女喪失 = 1
 ;処女喪失フラグ(ビデオ撮影)
 SIF TEQUIP:撮影中
 	TFLAG:ビデオ撮影内容 |= 1
-
-TFLAG:処女喪失 = 1
 
 ;親族関係の判定
 TFLAG:近親相姦 = 0
@@ -302,13 +295,13 @@ IF !CFLAG:処女喪失相手
 	ENDIF
 
 	;初体験がバイブの場合
-	IF SELECTCOM == 11
+	IF SELECTCOM == [[TRAIN:バイブ]]
 		IF TALENT:淫乱 == 0
 			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"バイブ")
 		ELSEIF TALENT:淫乱 == 1
 			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"極太バイブ")
 		ENDIF
-	ELSEIF SELECTCOM == 81
+	ELSEIF SELECTCOM == [[TRAIN:フィストファック]]
 		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"フィストファック")
 	ELSEIF TEQUIP:触手召喚 == 1
 		CALL 処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"触手生物")
@@ -345,9 +338,6 @@ ENDIF
 SIF !CFLAG:PLAYER:初キス相手 || TFLAG:620 == 0
 	RETURN 0
 
-SETCOLOR 0xF58F98
-PRINTFORML 【ファーストキス】（%CALLNAME:PLAYER%）
-RESETCOLOR
 CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
 
 ;フラグを折っておく
@@ -363,10 +353,19 @@ SIF ASSIPLAY == 0
 SIF !CFLAG:ASSI:初キス相手 || TFLAG:622 == 0
 	RETURN 0
 
-SETCOLOR 0xF58F98
-PRINTFORML 【ファーストキス】（%CALLNAME:ASSI%）
-RESETCOLOR
-CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
+IF TEQUIP:野外プレイ == 1
+	CFLAG:ASSI:初キス喪失場所 = 初場所_野外
+ELSEIF TEQUIP:野外プレイ == 2
+	CFLAG:ASSI:初キス喪失場所 = 初場所_学校
+ELSEIF TEQUIP:野外プレイ == 3
+	CFLAG:ASSI:初キス喪失場所 = 初場所_プール
+ELSEIF TEQUIP:野外プレイ == 4
+	CFLAG:ASSI:初キス喪失場所 = 初場所_地下室
+ELSE
+	CFLAG:ASSI:初キス喪失場所 = 初場所_スタジオ
+ENDIF
+
+CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ASSI:初キス喪失場所,初状況_口,"%NAME:TARGET%")
 
 
 ;-------------------------------------------------
@@ -377,22 +376,46 @@ CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月
 SIF !CFLAG:初キス相手 || TFLAG:621 == 0
 	RETURN 0
 
+;Ａ処女喪失フラグ(ビデオ撮影)
+SIF TEQUIP:撮影中
+	TFLAG:ビデオ撮影内容2 |= 1
+
+R = NO:PLAYER
+
+;親族関係の判定
+TFLAG:近親相姦 = 0
+CALL INCEST
+
+IF TEQUIP:野外プレイ == 1
+	CFLAG:初キス喪失場所 = 初場所_野外
+ELSEIF TEQUIP:野外プレイ == 2
+	CFLAG:初キス喪失場所 = 初場所_学校
+ELSEIF TEQUIP:野外プレイ == 3
+	CFLAG:初キス喪失場所 = 初場所_プール
+ELSEIF TEQUIP:野外プレイ == 4
+	CFLAG:初キス喪失場所 = 初場所_地下室
+ELSE
+	CFLAG:初キス喪失場所 = 初場所_スタジオ
+ENDIF
 
 ;CFLAG:初キス相手=16にするとこの辺の特殊処理をガン無視することになるんだなあと頭を抱えるなど
 IF (TFLAG:621 & 2)
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器)
+	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 4)
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_肛門)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_肛門)
+	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 8) 
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_女性器)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_女性器)
+	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 16) 
-	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,"触手生物")
+	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器,"触手生物")
 	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 32) 
-	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_男性器,"スライム")
+	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器,"スライム")
 	TFLAG:初キス口以外 = 1	
 ELSE
-	CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_口)
 ENDIF
 
 
@@ -405,9 +428,6 @@ IF TALENT:Ａ処女 == 0 || TFLAG:Ａ挿入判定 == 0
 	RETURN 0
 ENDIF
 
-SETCOLOR 0xF58F98
-PRINTL 【Ａ処女喪失】
-RESETCOLOR
 TFLAG:Ａ処女喪失 = 1
 
 TALENT:Ａ処女 = 0
@@ -443,13 +463,13 @@ IF !CFLAG:Ａ処女喪失相手
 	ENDIF
 
 	;初体験がバイブの場合
-	IF SELECTCOM == 13
+	IF SELECTCOM == [[TRAIN:アナルバイブ]]
 		IF TALENT:淫乱 == 0
 			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルバイブ")
 		ELSEIF TALENT:淫乱 == 1
 			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"極太アナルバイブ")
 		ENDIF
-	ELSEIF SELECTCOM == 82
+	ELSEIF SELECTCOM == [[TRAIN:アナルフィスト]]
 		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルフィスト")
 	ELSEIF TEQUIP:触手召喚 == 1
 		CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"触手生物")
@@ -1039,7 +1059,7 @@ IF TALENT:常時発情
 ENDIF
 
 ;膣内射精による妊娠への恐怖（コンドーム使用中か【愛】持ちもしくは相性最高なら平気）
-IF TFLAG:セックスで射精 && (SELECTCOM == 20 || SELECTCOM == 21 || SELECTCOM == 22 || SELECTCOM == 23 || SELECTCOM == 34)
+IF TFLAG:セックスで射精 && (SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:騎乗位]])
 	IF ASSIPLAY == 0 && TEQUIP:主人コンドーム == 0 && TFLAG:セックスで射精 && TALENT:恋心 == 0
 		TIMES UP:10 , 2.00
 	ELSEIF ASSI > 0 && ASSIPLAY && TEQUIP:助手コンドーム == 0 

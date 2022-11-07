@@ -139,18 +139,12 @@ D += RAND:3
 
 PRINTFORML Ｖ経験＋{S}
 IF !CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:処女
-	SETCOLOR 0xF58F98
-	PRINTFORML 【処女喪失】
 	E += 1
-	RESETCOLOR
 	CALL 処女喪失実行(COUNT,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
 ENDIF
 IF A > 0
 	PRINTFORML Ａ経験＋{A}
 	IF TALENT:COUNT:Ａ処女
-		SETCOLOR 0xF58F98
-		PRINTFORML 【Ａ処女喪失】
-		RESETCOLOR
 		E += 1
 		CALL Ａ処女喪失実行(COUNT,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
 	ENDIF
@@ -161,9 +155,6 @@ SIF EXP:COUNT:強姦回数 == 0
 PRINTFORML 性交経験＋{S}
 PRINTFORML フェラ経験＋{F}
 IF !CFLAG:COUNT:初キス相手
-	SETCOLOR 0xDDBBCC
-	PRINTFORML 初キス
-	RESETCOLOR
 	CALL 初キス喪失実行(COUNT,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_男性器,"不良")
 ENDIF
 PRINTFORML 精液経験＋{A+S+F}

@@ -308,7 +308,7 @@ RETURN 0
 ;SIF ASSI > 0 && ASSIPLAY
 ;	RETURN 0 
 ;ボールギャグ着用時には口上をスキップする
-SIF TEQUIP:ボールギャグ && SELECTCOM != 45
+SIF TEQUIP:ボールギャグ && SELECTCOM != [[TRAIN:ボールギャグ]]
 	RETURN 0
 
 ;-------------------------------------------------
@@ -384,7 +384,7 @@ SIF TEQUIP:ボールギャグ && SELECTCOM != 45
 ;-------------------------------------------------
 ;キスする CFLAG:307
 ;-------------------------------------------------
-IF SELECTCOM == 6
+IF SELECTCOM == [[TRAIN:キスする]]
 	;初キスで愛かつ主人
 	IF CFLAG:307 == 0 && TFLAG:初キス && TALENT:恋心 && ASSIPLAY == 0
 		PRINTFORMW 
@@ -396,7 +396,7 @@ ENDIF
 ;-------------------------------------------------
 ;会話する CFLAG:357
 ;-------------------------------------------------
-IF SELECTCOM == 56
+IF SELECTCOM == [[TRAIN:会話する]]
 	;初めて
 	IF CFLAG:357 == 0
 		PRINTFORMW 
@@ -419,7 +419,7 @@ ENDIF
 ;			CFLAG:455(終了時)
 ;-------------------------------------------------
 ;開始時
-IF SELECTCOM == 54 && TEQUIP:野外プレイ
+IF SELECTCOM == [[TRAIN:撮影セット変更]] && TEQUIP:野外プレイ
 	;初めて
 	IF CFLAG:355 == 0
 		;愛、淫乱、露出狂
@@ -525,7 +525,7 @@ IF SELECTCOM == 54 && TEQUIP:野外プレイ
 		RETURN 0
 	ENDIF
 ;終了時
-ELSEIF SELECTCOM == 54 && TEQUIP:野外プレイ == 0
+ELSEIF SELECTCOM == [[TRAIN:撮影セット変更]] && TEQUIP:野外プレイ == 0
 	;初めて
 	IF CFLAG:455 == 0
 		PRINTFORMW 

@@ -23,7 +23,7 @@ SIF TEQUIP:獣姦プレイ
 B = 0
 
 ;正常位、後背位
-IF SELECTCOM == 20 || SELECTCOM == 21
+IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -54,7 +54,7 @@ IF SELECTCOM == 20 || SELECTCOM == 21
 		TIMES B , 1.30
 	ENDIF
 ;対面座位
-ELSEIF SELECTCOM == 22
+ELSEIF SELECTCOM == [[TRAIN:対面座位]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 800
@@ -85,7 +85,7 @@ ELSEIF SELECTCOM == 22
 		TIMES B , 2.40
 	ENDIF
 ;背面座位
-ELSEIF SELECTCOM == 23
+ELSEIF SELECTCOM == [[TRAIN:背面座位]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 500
@@ -116,7 +116,7 @@ ELSEIF SELECTCOM == 23
 		TIMES B , 1.50
 	ENDIF
 ;騎乗位
-ELSEIF SELECTCOM == 34
+ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1000
@@ -162,7 +162,7 @@ ELSEIF SELECTCOM == 34
 		TIMES B , 1.80
 	ENDIF
 ;挿入子宮口責め
-ELSEIF SELECTCOM == 121
+ELSEIF SELECTCOM == [[TRAIN:子宮口責め]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -193,7 +193,7 @@ ELSEIF SELECTCOM == 121
 		TIMES B , 1.30
 	ENDIF
 ;挿入Ｇスポ責め
-ELSEIF SELECTCOM == 120
+ELSEIF SELECTCOM == [[TRAIN:Ｇスポ責め]]
 	;ABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 500
@@ -224,7 +224,7 @@ ELSEIF SELECTCOM == 120
 		TIMES B , 1.50
 	ENDIF
 ;正常位・キス
-ELSEIF SELECTCOM == 128
+ELSEIF SELECTCOM == [[TRAIN:正常位キス]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -270,7 +270,7 @@ ELSEIF SELECTCOM == 128
 		TIMES B , 2.40
 	ENDIF
 ;正常位・胸愛撫
-ELSEIF SELECTCOM == 129
+ELSEIF SELECTCOM == [[TRAIN:正常位胸愛撫]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -301,7 +301,7 @@ ELSEIF SELECTCOM == 129
 		TIMES B , 1.30
 	ENDIF
 ;正常位SP
-ELSEIF SELECTCOM == 130
+ELSEIF SELECTCOM == [[TRAIN:正常位ＳＰ]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -347,7 +347,7 @@ ELSEIF SELECTCOM == 130
 		TIMES B , 2.40
 	ENDIF
 ;後背位・胸愛撫・スパンキング
-ELSEIF SELECTCOM == 131 || SELECTCOM == 132
+ELSEIF SELECTCOM == [[TRAIN:後背位胸愛撫]] || SELECTCOM == [[TRAIN:後背位スパンキング]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -378,7 +378,7 @@ ELSEIF SELECTCOM == 131 || SELECTCOM == 132
 		TIMES B , 1.30
 	ENDIF
 ;立ちバック
-ELSEIF SELECTCOM == 133
+ELSEIF SELECTCOM == [[TRAIN:立ちバック]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -424,7 +424,7 @@ ELSEIF SELECTCOM == 133
 		TIMES B , 2.40
 	ENDIF
 ;後背位ＳＰ
-ELSEIF SELECTCOM == 134
+ELSEIF SELECTCOM == [[TRAIN:後背位ＳＰ]]
 	;調教対象のABL:技巧をみる
 	IF ABL:技巧 == 0
 		B = 1500
@@ -678,7 +678,7 @@ SIF TALENT:処女 && TEQUIP:獣姦プレイ
 	Z = 2
 
 ;処女喪失が騎乗位なら異常経験に＋1
-SIF TALENT:処女 && SELECTCOM == 34
+SIF TALENT:処女 && SELECTCOM == [[TRAIN:騎乗位]]
 	Z += 1
 
 IF Z
@@ -705,22 +705,22 @@ IF TALENT:PLAYER:童貞 && TALENT:処女
 ELSEIF  TALENT:処女
 	E = 50
 ;正常位、正常位・胸愛撫
-ELSEIF SELECTCOM == 20 || SELECTCOM == 129
+ELSEIF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:正常位胸愛撫]]
 	E = 4
 ;正常位・キス
-ELSEIF SELECTCOM == 128
+ELSEIF SELECTCOM == [[TRAIN:正常位キス]]
 	E = 5
 ;正常位・極
-ELSEIF SELECTCOM == 130
+ELSEIF SELECTCOM == [[TRAIN:正常位ＳＰ]]
 	E = 8
 ;対面座位
-ELSEIF SELECTCOM == 22
+ELSEIF SELECTCOM == [[TRAIN:対面座位]]
 	E = 5
 ;その他
 ELSE
 	E = 3
 ENDIF
-IF SELECTCOM == 23
+IF SELECTCOM == [[TRAIN:背面座位]]
 	PRINTFORML %EXPNAME:[[EXP:Ｂ開発経験]]%+1
 	EXP:Ｂ開発経験 += 1
 ENDIF

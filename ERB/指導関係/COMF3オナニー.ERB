@@ -1,0 +1,1007 @@
+﻿;-------------------------------------------------
+;自慰
+;愛撫系コマンド：調教対象自身が自分のヴァギナを手で刺激する
+;-------------------------------------------------
+;>佐藤敏作成 06/04/10
+;-------------------------------------------------
+@COM3
+
+;前回と今回の調教者が同じ
+IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
+	;前回の調教がフェラかパイズリフェラかディープスロートか手コキフェラかバキュームフェラだとフェラ自慰に
+	IF PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:パイズリフェラ]] || PREVCOM == [[TRAIN:ディープスロート]] || PREVCOM == [[TRAIN:手コキフェラ]] || PREVCOM == [[TRAIN:バキュームフェラ]]
+		CALL COM_ABLE125
+		SIF RESULT == 1
+			JUMP COM125
+	ENDIF
+ENDIF
+
+;自慰
+;バイブ、アナルバイブ、ビデオ撮影の時に内容変化
+
+;ビデオ撮影中なら公開オナニー
+;シャワー使用中ならシャワーオナニー
+;バイブ、アナルバイブ、或いは両方装備でバイブオナニー
+SIF TEQUIP:撮影中
+	PRINT 公開
+SIF TEQUIP:野外プレイ
+	PRINT 野外
+SIF TEQUIP:シャワー
+	PRINT シャワー
+						;****スライムパッチ追加ここから****
+IF TEQUIP:スライム生成
+	PRINT スライム
+ELSEIF TEQUIP:スライム膣内進入 && TEQUIP:スライム肛門進入
+	PRINT スライム両穴
+ELSEIF TEQUIP:スライム膣内進入
+	PRINT スライム膣責め
+ELSEIF TEQUIP:スライム肛門進入
+	PRINT スライムアナル
+ENDIF
+						;****スライムパッチ追加ここまで****
+IF TEQUIP:バイブ && TEQUIP:アナルバイブ
+	PRINT 二穴バイブ
+ELSEIF TEQUIP:バイブ
+	PRINT バイブ
+ELSEIF TEQUIP:アナルバイブ
+	PRINT アナルバイブ
+ENDIF
+
+IF TEQUIP:撮影中 || TEQUIP:野外プレイ || TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:シャワー
+	PRINTL オナニー
+ELSE
+	PRINTL オナニー
+ENDIF
+
+;-------------------------------------------------
+;実行できるかの判定
+;-------------------------------------------------
+A = 0
+S = 0
+
+;すべての命令に共通の要素を考慮
+;(従順が高いと命令に従いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 3
+	PRINTS ABLNAME:[[ABL:欲望]]
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 3,')
+	S = 1
+ENDIF
+;ABL:露出癖
+IF ABL:露出癖
+	SIF S
+		PRINT  + 
+	A += ABL:露出癖 * 4
+	PRINTS ABLNAME:[[ABL:露出癖]]
+	PRINTV 'LV,ABL:露出癖,'(,ABL:露出癖 * 4,')
+	S = 1
+ENDIF
+;ABL:自慰中毒
+IF ABL:自慰中毒
+	SIF S
+		PRINT  + 
+	A += ABL:自慰中毒 * 3
+	PRINTS ABLNAME:[[ABL:自慰中毒]]
+	PRINTV 'LV,ABL:自慰中毒,'(,ABL:自慰中毒 * 3,')
+	S = 1
+ENDIF
+;MARK:快楽刻印
+IF MARK:快楽刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快楽刻印 * 3
+	PRINTS MARKNAME:[[MARK:快楽刻印]]
+	PRINTV 'LV,MARK:快楽刻印,'(,MARK:快楽刻印 * 3,')
+	S = 1
+ENDIF
+
+;PALAM:欲情
+IF PALAM:欲情 < PALAMLV:1
+	L = 0
+ELSEIF PALAM:欲情 < PALAMLV:2
+	L = 1
+ELSEIF PALAM:欲情 < PALAMLV:3
+	L = 2
+ELSEIF PALAM:欲情 < PALAMLV:4
+	L = 3
+ELSEIF PALAM:欲情 < PALAMLV:5
+	L = 4
+ELSE
+	L = 5
+ENDIF
+IF L
+	SIF S
+		PRINT  + 
+	A += L * 3
+	PRINTS PALAMNAME:[[PALAM:欲情]]
+	PRINTV 'LV,L,'(,L * 3,')
+	S = 1
+ENDIF
+
+;自制心
+IF TALENT:自制心
+	PRINT  - 
+	A -= 5
+	PRINTS TALENTNAME:[[TALENT:自制心]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;恥じらい
+IF TALENT:恥じらい
+	PRINT  - 
+	A -= 5
+	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;恥薄い
+IF TALENT:恥薄い
+	SIF S
+		PRINT  + 
+	A += 2
+	PRINTS TALENTNAME:[[TALENT:恥薄い]]
+	PRINTV '(,2,')
+	S = 1
+ENDIF
+;自慰しやすい
+IF TALENT:自慰しやすい
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINTS TALENTNAME:[[TALENT:自慰しやすい]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;快感に素直
+IF TALENT:快感に素直
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINTS TALENTNAME:[[TALENT:快感に素直]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;快感の否定
+IF TALENT:快感の否定
+	PRINT  - 
+	A -= 5
+	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+
+;露出狂
+IF TALENT:露出狂
+	SIF S
+		PRINT  + 
+	A += 10
+	PRINTS TALENTNAME:[[TALENT:露出狂]]
+	PRINTV '(,10,')
+	S = 1
+ENDIF
+
+;しあわせ草
+IF TEQUIP:媚薬効果
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINTS ITEMNAME:[[ITEM:プリンセスポイズン]]
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+;合計を表示(33以上で実行)
+PRINT  = 
+PRINTV A
+
+;難易度上昇
+;公開で+10、バイブで+5、アナルバイブで+5、シャワーで＋3
+V = 33
+SIF TEQUIP:撮影中
+	V += 10
+SIF TEQUIP:シャワー
+	V += 3
+SIF TEQUIP:バイブ
+	V += 5
+SIF TEQUIP:アナルバイブ
+	V += 5
+SIF TEQUIP:60
+	V += 5
+						;****スライムパッチ追加ここから****
+SIF TEQUIP:スライム生成
+	V -= 10
+SIF TEQUIP:スライム膣内進入
+	V += 5
+SIF TEQUIP:スライム肛門進入
+	V += 5
+						;****スライムパッチ追加ここまで****
+
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 実行値
+PRINTV V
+
+WAIT
+
+;実行できない
+SIF A < V
+	RETURN 0
+
+SAVESTR:0 = 自慰
+CALL TRAIN_MESSAGE_B
+
+;-------------------------------------------------
+;実行決定
+;-------------------------------------------------
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+LOSEBASE:体力 += 5
+LOSEBASE:気力 += 50
+
+SOURCE:14 = 400
+A = 0
+B = 0
+C = 0
+D = 0
+
+;ビデオ撮影中
+IF TEQUIP:撮影中
+	SOURCE:10 = 50
+	SOURCE:11 = 100
+ENDIF
+
+;ABL:Ｃ感覚をみる
+IF ABL:Ｃ感覚 == 0
+	SOURCE:0 = 15
+	SOURCE:12 = 2000
+	SOURCE:13 = 500
+ELSEIF ABL:Ｃ感覚 == 1
+	SOURCE:0 = 50
+	SOURCE:12 = 2300
+	SOURCE:13 = 800
+ELSEIF ABL:Ｃ感覚 == 2
+	SOURCE:0 = 300
+	SOURCE:12 = 2600
+	SOURCE:13 = 1200
+ELSEIF ABL:Ｃ感覚 == 3
+	SOURCE:0 = 700
+	SOURCE:12 = 2900
+	SOURCE:13 = 1900
+ELSEIF ABL:Ｃ感覚 == 4
+	SOURCE:0 = 1100
+	SOURCE:12 = 3200
+	SOURCE:13 = 2500
+ELSE
+	SOURCE:0 = 1600
+	SOURCE:12 = 3500
+	SOURCE:13 = 3000
+ENDIF
+
+;ABL:Ｂ感覚をみる
+IF ABL:Ｂ感覚 == 0
+	SOURCE:17 = 15
+ELSEIF ABL:Ｂ感覚 == 1
+	SOURCE:17 = 50
+ELSEIF ABL:Ｂ感覚 == 2
+	SOURCE:17 = 300
+ELSEIF ABL:Ｂ感覚 == 3
+	SOURCE:17 = 700
+ELSEIF ABL:Ｂ感覚 == 4
+	SOURCE:17 = 1100
+ELSE
+	SOURCE:17 = 1600
+ENDIF
+
+;バイブ挿入中の場合
+IF TEQUIP:バイブ
+	;ABL:Ｖ感覚をみる
+	IF ABL:Ｖ感覚 == 0
+		A += 40
+		D += 150
+	ELSEIF ABL:Ｖ感覚 == 1
+		A += 120
+		D += 400
+	ELSEIF ABL:Ｖ感覚 == 2
+		A += 300
+		D += 700
+	ELSEIF ABL:Ｖ感覚 == 3
+		A += 500
+		D += 900
+	ELSEIF ABL:Ｖ感覚 == 4
+		A += 650
+		D += 1000
+	ELSE
+		A += 850
+		D += 1200
+	ENDIF
+
+	;EXP:Ｖ経験をみる
+	;処女はありえない
+	IF EXP:Ｖ経験 < EXPLV:2
+		TIMES A , 0.60
+		C += 150
+	ELSEIF EXP:Ｖ経験 < EXPLV:3
+		TIMES A , 1.00
+		C += 20
+	ELSEIF EXP:Ｖ経験 < EXPLV:4
+		TIMES A , 1.20
+		C += 0
+	ELSEIF EXP:Ｖ経験 < EXPLV:5
+		TIMES A , 1.40
+		C += 0
+	ELSE
+		TIMES A , 1.60
+		C += 0
+	ENDIF
+	;Ｖ敏感、鈍感をみる
+	IF TALENT:Ｖ鈍感
+		TIMES C , 1.50
+		TIMES D , 1.50
+	ELSEIF TALENT:Ｖ敏感
+		TIMES C , 0.60
+		TIMES D , 0.60
+	ENDIF
+	;一度単独で計算
+	SOURCE:13 += D
+ENDIF
+
+;アナルバイブ挿入中の場合
+IF TEQUIP:アナルバイブ
+	LOSEBASE:体力 += 30
+	LOSEBASE:気力 += 80
+
+	;ABL:Ａ感覚をみる
+	IF ABL:Ａ感覚 == 0
+		B += 40
+		D += 150
+	ELSEIF ABL:Ａ感覚 == 1
+		B += 120
+		D += 400
+	ELSEIF ABL:Ａ感覚 == 2
+		B += 300
+		D += 700
+	ELSEIF ABL:Ａ感覚 == 3
+		B += 500
+		D += 900
+	ELSEIF ABL:Ａ感覚 == 4
+		B += 650
+		D += 1000
+	ELSE
+		B += 850
+		D += 1200
+	ENDIF
+
+	;EXP:Ａ経験をみる
+	IF EXP:Ａ経験 < EXPLV:1
+		TIMES B , 0.50
+		C += 1000
+	ELSEIF EXP:Ａ経験 < EXPLV:2
+		TIMES B , 1.00
+		C += 150
+	ELSEIF EXP:Ａ経験 < EXPLV:3
+		TIMES B , 1.10
+		C += 20
+	ELSEIF EXP:Ａ経験 < EXPLV:4
+		TIMES B , 1.20
+		C += 0
+	ELSEIF EXP:Ａ経験 < EXPLV:5
+		TIMES B , 1.40
+		C += 0
+	ELSE
+		TIMES B , 1.60
+		C += 0
+	ENDIF
+
+	;Ａ敏感、鈍感をみる
+	IF TALENT:Ａ鈍感
+		TIMES C , 1.50
+		TIMES D , 1.50
+	ELSEIF TALENT:Ａ敏感
+		TIMES C , 0.60
+		TIMES D , 0.60
+	ENDIF
+	;一度単独で計算
+	SOURCE:13 += D
+ENDIF
+
+;シャワー使用中の場合
+IF TEQUIP:シャワー
+	;ABL:Ｃ感覚をみる
+	IF ABL:Ｃ感覚 == 0
+		SOURCE:0 = 150
+		SOURCE:12 = 1000
+		SOURCE:13 = 50
+	ELSEIF ABL:Ｃ感覚 == 1
+		SOURCE:0 = 400
+		SOURCE:12 = 1300
+		SOURCE:13 = 80
+	ELSEIF ABL:Ｃ感覚 == 2
+		SOURCE:0 = 800
+		SOURCE:12 = 1600
+		SOURCE:13 = 120
+	ELSEIF ABL:Ｃ感覚 == 3
+		SOURCE:0 = 1200
+		SOURCE:12 = 1900
+		SOURCE:13 = 190
+	ELSEIF ABL:Ｃ感覚 == 4
+		SOURCE:0 = 1500
+		SOURCE:12 = 2200
+		SOURCE:13 = 250
+	ELSE
+		SOURCE:0 = 1800
+		SOURCE:12 = 2500
+		SOURCE:13 = 300
+	ENDIF
+
+	;ABL:Ｖ感覚をみる
+	IF ABL:Ｖ感覚 == 0
+		SOURCE:1 = 0
+		D = 0
+	ELSEIF ABL:Ｖ感覚 == 1
+		SOURCE:1 = 100
+		D = 300
+	ELSEIF ABL:Ｖ感覚 == 2
+		SOURCE:1 = 200
+		D = 400
+	ELSEIF ABL:Ｖ感覚 == 3
+		SOURCE:1 = 300
+		D = 500
+	ELSEIF ABL:Ｖ感覚 == 4
+		SOURCE:1 = 400
+		D = 600
+	ELSE
+		SOURCE:1 = 500
+		D = 700
+	ENDIF
+
+	;ABL:Ａ感覚をみる
+	IF ABL:Ａ感覚 == 0
+		B = 40
+		D += 150
+	ELSEIF ABL:Ａ感覚 == 1
+		B = 120
+		D += 400
+	ELSEIF ABL:Ａ感覚 == 2
+		B = 300
+		D += 700
+	ELSEIF ABL:Ａ感覚 == 3
+		B = 500
+		D += 900
+	ELSEIF ABL:Ａ感覚 == 4
+		B = 650
+		D += 1000
+	ELSE
+		B = 850
+		D += 1200
+	ENDIF
+
+	;Ｖ敏感、鈍感をみる
+	IF TALENT:Ｖ鈍感
+		TIMES SOURCE:6 , 1.50
+		TIMES D , 1.50
+	ELSEIF TALENT:Ｖ敏感
+		TIMES SOURCE:6 , 0.60
+		TIMES D , 0.60
+	ENDIF
+	;Ａ敏感、鈍感をみる
+	IF TALENT:Ａ鈍感
+		TIMES SOURCE:6 , 1.50
+		TIMES D , 1.50
+	ELSEIF TALENT:Ａ敏感
+		TIMES SOURCE:6 , 0.60
+		TIMES D , 0.60
+	ENDIF
+	;一度単独で計算
+	SOURCE:13 += D
+
+ELSE
+	B = 0
+	SOURCE:2 = 0
+	A = 0
+	SOURCE:1 = 0
+ENDIF
+
+						;****スライムパッチ追加ここから****
+;スライム膣内進入中の場合
+IF TEQUIP:スライム膣内進入
+	;ABL:Ｖ感覚をみる
+	IF ABL:Ｖ感覚 == 0
+		A += 20
+		D += 750
+	ELSEIF ABL:Ｖ感覚 == 1
+		A += 60
+		D += 200
+	ELSEIF ABL:Ｖ感覚 == 2
+		A += 150
+		D += 350
+	ELSEIF ABL:Ｖ感覚 == 3
+		A += 250
+		D += 450
+	ELSEIF ABL:Ｖ感覚 == 4
+		A += 325
+		D += 500
+	ELSE
+		A += 425
+		D += 600
+	ENDIF
+
+	;EXP:Ｖ経験をみる
+	;処女はありえない
+	IF EXP:Ｖ経験 < EXPLV:1
+		TIMES A , 0.40
+		C += 200
+	ELSEIF EXP:Ｖ経験 < EXPLV:2
+		TIMES A , 0.60
+		C += 150
+	ELSEIF EXP:Ｖ経験 < EXPLV:3
+		TIMES A , 1.00
+		C += 20
+	ELSEIF EXP:Ｖ経験 < EXPLV:4
+		TIMES A , 1.20
+		C += 0
+	ELSEIF EXP:Ｖ経験 < EXPLV:5
+		TIMES A , 1.40
+		C += 0
+	ELSE
+		TIMES A , 1.60
+		C += 0
+	ENDIF
+	;Ｖ敏感、鈍感をみる
+	IF TALENT:Ｖ鈍感
+		TIMES C , 1.50
+		TIMES D , 1.50
+	ELSEIF TALENT:Ｖ敏感
+		TIMES C , 0.60
+		TIMES D , 0.60
+	ENDIF
+	;一度単独で計算
+	SOURCE:13 += D
+ENDIF
+
+;スライム肛門進入中の場合
+IF TEQUIP:スライム肛門進入
+	LOSEBASE:体力 += 30
+	LOSEBASE:気力 += 80
+
+	;ABL:Ａ感覚をみる
+	IF ABL:Ａ感覚 == 0
+		B += 20
+		D += 750
+	ELSEIF ABL:Ａ感覚 == 1
+		B += 60
+		D += 200
+	ELSEIF ABL:Ａ感覚 == 2
+		B += 150
+		D += 350
+	ELSEIF ABL:Ａ感覚 == 3
+		B += 250
+		D += 450
+	ELSEIF ABL:Ａ感覚 == 4
+		B += 325
+		D += 500
+	ELSE
+		B += 425
+		D += 600
+	ENDIF
+
+	;EXP:Ａ経験をみる
+	IF EXP:Ａ経験 < EXPLV:1
+		TIMES B , 0.50
+		C += 1000
+	ELSEIF EXP:Ａ経験 < EXPLV:2
+		TIMES B , 1.00
+		C += 150
+	ELSEIF EXP:Ａ経験 < EXPLV:3
+		TIMES B , 1.10
+		C += 20
+	ELSEIF EXP:Ａ経験 < EXPLV:4
+		TIMES B , 1.20
+		C += 0
+	ELSEIF EXP:Ａ経験 < EXPLV:5
+		TIMES B , 1.40
+		C += 0
+	ELSE
+		TIMES B , 1.60
+		C += 0
+	ENDIF
+
+	;Ａ敏感、鈍感をみる
+	IF TALENT:Ａ鈍感
+		TIMES C , 1.50
+		TIMES D , 1.50
+	ELSEIF TALENT:Ａ敏感
+		TIMES C , 0.60
+		TIMES D , 0.60
+	ENDIF
+	;一度単独で計算
+	SOURCE:13 += D
+ENDIF
+						;****スライムパッチ追加ここまで****
+
+;ＶかＡが上昇するとき、上昇に従ってSOURCE:0、SOURCE:17を減らす
+IF TEQUIP:バイブ || TEQUIP:アナルバイブ
+	E = ABL:Ｖ感覚 + ABL:Ａ感覚
+	IF E <= 1
+		TIMES SOURCE:0 , 1.00
+		TIMES SOURCE:17 , 1.00
+	ELSEIF E <= 3
+		TIMES SOURCE:0 , 0.90
+		TIMES SOURCE:17 , 0.90
+	ELSEIF E <= 5
+		TIMES SOURCE:0 , 0.80
+		TIMES SOURCE:17 , 0.80
+	ELSEIF E <= 7
+		TIMES SOURCE:0 , 0.70
+		TIMES SOURCE:17 , 0.70
+	ELSEIF E <= 9
+		TIMES SOURCE:0 , 0.60
+		TIMES SOURCE:17 , 0.60
+	ELSE
+		TIMES SOURCE:0 , 0.50
+		TIMES SOURCE:17 , 0.50
+	ENDIF
+ENDIF
+
+;バイブ、アナルバイブだけ先に計算
+						;****スライムパッチ追加ここから****
+IF TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:スライム膣内進入 || TEQUIP:スライム肛門進入
+						;****スライムパッチ追加ここまで****
+	;PALAM:潤滑をみる
+	IF PALAM:潤滑 < PALAMLV:1
+		TIMES A , 0.40
+		TIMES B , 0.40
+		C += 800
+	ELSEIF PALAM:潤滑 < PALAMLV:2
+		TIMES A , 0.80
+		TIMES B , 0.80
+		C += 500
+	ELSEIF PALAM:潤滑 < PALAMLV:3
+		TIMES A , 1.00
+		TIMES B , 1.00
+		C += 300
+	ELSEIF PALAM:潤滑 < PALAMLV:4
+		TIMES A , 1.40
+		TIMES B , 1.40
+		C += 120
+	ELSEIF PALAM:潤滑 >= PALAMLV:4
+		TIMES A , 1.80
+		TIMES B , 1.80
+		C += 100
+	ENDIF
+
+	;PALAM:欲情をみる
+	IF PALAM:欲情 < PALAMLV:1
+		TIMES A , 0.80
+		TIMES B , 0.80
+	ELSEIF PALAM:欲情 < PALAMLV:2
+		TIMES A , 0.90
+		TIMES B , 0.90
+	ELSEIF PALAM:欲情 < PALAMLV:3
+		TIMES A , 1.00
+		TIMES B , 1.00
+	ELSEIF PALAM:欲情 < PALAMLV:4
+		TIMES A , 1.10
+		TIMES B , 1.10
+	ELSEIF PALAM:欲情 >= PALAMLV:4
+		TIMES A , 1.20
+		TIMES B , 1.20
+	ENDIF
+
+	;ABL:従順をみる
+	IF ABL:信頼 == 0
+		TIMES A , 0.80
+		TIMES B , 0.80
+	ELSEIF ABL:信頼 == 1
+		TIMES A , 0.90
+		TIMES B , 0.90
+	ELSEIF ABL:信頼 == 2
+		TIMES A , 1.00
+		TIMES B , 1.00
+	ELSEIF ABL:信頼 == 3
+		TIMES A , 1.10
+		TIMES B , 1.10
+	ELSEIF ABL:信頼 == 4
+		TIMES A , 1.20
+		TIMES B , 1.20
+	ELSE
+		TIMES A , 1.30
+		TIMES B , 1.30
+	ENDIF
+	
+	;大柄
+	SIF TALENT:大柄
+		TIMES C , 0.80
+	;小柄体形
+	SIF TALENT:小柄
+		TIMES C , 2.00
+
+	;貞操観念
+	IF TALENT:貞操観念
+		TIMES C, 3.00
+	ENDIF
+
+	SOURCE:1 = A
+	SOURCE:2 = B
+	SOURCE:6 = C
+
+ENDIF
+
+;シャワーだけ先に計算
+IF TEQUIP:シャワー
+	;PALAM:潤滑をみる
+	IF PALAM:潤滑 < PALAMLV:1
+		TIMES A , 0.40
+		TIMES B , 0.40
+		C += 800
+	ELSEIF PALAM:潤滑 < PALAMLV:2
+		TIMES A , 0.80
+		TIMES B , 0.80
+		C += 500
+	ELSEIF PALAM:潤滑 < PALAMLV:3
+		TIMES A , 1.00
+		TIMES B , 1.00
+		C += 300
+	ELSEIF PALAM:潤滑 < PALAMLV:4
+		TIMES A , 1.40
+		TIMES B , 1.40
+		C += 120
+	ELSEIF PALAM:潤滑 >= PALAMLV:4
+		TIMES A , 1.80
+		TIMES B , 1.80
+		C += 100
+	ENDIF
+
+	;PALAM:欲情をみる
+	IF PALAM:欲情 < PALAMLV:1
+		TIMES A , 0.80
+		TIMES B , 0.80
+	ELSEIF PALAM:欲情 < PALAMLV:2
+		TIMES A , 0.90
+		TIMES B , 0.90
+	ELSEIF PALAM:欲情 < PALAMLV:3
+		TIMES A , 1.00
+		TIMES B , 1.00
+	ELSEIF PALAM:欲情 < PALAMLV:4
+		TIMES A , 1.10
+		TIMES B , 1.10
+	ELSEIF PALAM:欲情 >= PALAMLV:4
+		TIMES A , 1.20
+		TIMES B , 1.20
+	ENDIF
+
+	;ABL:従順をみる
+	IF ABL:信頼 == 0
+		TIMES A , 0.80
+		TIMES B , 0.80
+	ELSEIF ABL:信頼 == 1
+		TIMES A , 0.90
+		TIMES B , 0.90
+	ELSEIF ABL:信頼 == 2
+		TIMES A , 1.00
+		TIMES B , 1.00
+	ELSEIF ABL:信頼 == 3
+		TIMES A , 1.10
+		TIMES B , 1.10
+	ELSEIF ABL:信頼 == 4
+		TIMES A , 1.20
+		TIMES B , 1.20
+	ELSE
+		TIMES A , 1.30
+		TIMES B , 1.30
+	ENDIF
+
+	SOURCE:1 += A
+	SOURCE:2 += B
+
+ENDIF
+
+;ABL:技巧をみる
+IF ABL:技巧 == 0
+	SOURCE:4 = 100
+	TIMES SOURCE:0 , 0.30
+	TIMES SOURCE:17 , 0.30
+	TIMES SOURCE:1 , 0.30
+	TIMES SOURCE:2 , 0.30
+ELSEIF ABL:技巧 == 1
+	SOURCE:4 = 160
+	TIMES SOURCE:0 , 0.70
+	TIMES SOURCE:17 , 0.70
+	TIMES SOURCE:1 , 0.70
+	TIMES SOURCE:2 , 0.70
+ELSEIF ABL:技巧 == 2
+	SOURCE:4 = 220
+	TIMES SOURCE:0 , 1.00
+	TIMES SOURCE:17 , 1.00
+	TIMES SOURCE:1 , 1.00
+	TIMES SOURCE:2 , 1.00
+ELSEIF ABL:技巧 == 3
+	SOURCE:4 = 280
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+ELSEIF ABL:技巧 == 4
+	SOURCE:4 = 340
+	TIMES SOURCE:0 , 1.40
+	TIMES SOURCE:17 , 1.40
+	TIMES SOURCE:1 , 1.40
+	TIMES SOURCE:2 , 1.40
+ELSE
+	SOURCE:4 = 400
+	TIMES SOURCE:0 , 1.60
+	TIMES SOURCE:17 , 1.60
+	TIMES SOURCE:1 , 1.60
+	TIMES SOURCE:2 , 1.60
+ENDIF
+
+;ABL:自慰中毒をみる
+IF ABL:自慰中毒 == 0
+	SOURCE:7 = 0
+	TIMES SOURCE:0 , 1.00
+	TIMES SOURCE:17 , 1.00
+	TIMES SOURCE:1 , 1.00
+	TIMES SOURCE:2 , 1.00
+ELSEIF ABL:自慰中毒 == 1
+	SOURCE:7 = 100
+	TIMES SOURCE:0 , 1.10
+	TIMES SOURCE:17 , 1.10
+	TIMES SOURCE:1 , 1.10
+	TIMES SOURCE:2 , 1.10
+ELSEIF ABL:自慰中毒 == 2
+	SOURCE:7 = 300
+	TIMES SOURCE:0 , 1.20
+	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:2 , 1.20
+ELSEIF ABL:自慰中毒 == 3
+	SOURCE:7 = 800
+	TIMES SOURCE:0 , 1.30
+	TIMES SOURCE:17 , 1.30
+	TIMES SOURCE:1 , 1.30
+	TIMES SOURCE:2 , 1.30
+ELSEIF ABL:自慰中毒 == 4
+	SOURCE:7 = 1500
+	TIMES SOURCE:0 , 1.50
+	TIMES SOURCE:17 , 1.50
+	TIMES SOURCE:1 , 1.50
+	TIMES SOURCE:2 , 1.50
+ELSE
+	SOURCE:7 = 2500
+	TIMES SOURCE:0 , 1.70
+	TIMES SOURCE:17 , 1.70
+	TIMES SOURCE:1 , 1.50
+	TIMES SOURCE:2 , 1.50
+ENDIF
+
+;公開や野外のときは、ABL:露出癖とTALENT:露出狂をみる
+IF TEQUIP:撮影中 || TEQUIP:野外プレイ
+	IF ABL:露出癖 == 0
+		SOURCE:7 += 0
+		TIMES SOURCE:0 , 1.00
+		TIMES SOURCE:17 , 1.00
+		TIMES SOURCE:1 , 1.00
+		TIMES SOURCE:2 , 1.00
+		TIMES SOURCE:12, 1.00
+	ELSEIF ABL:露出癖 == 1
+		SOURCE:7 += 100
+		TIMES SOURCE:0 , 1.10
+		TIMES SOURCE:17 , 1.10
+		TIMES SOURCE:1 , 1.10
+		TIMES SOURCE:2 , 1.10
+		TIMES SOURCE:12, 1.20
+	ELSEIF ABL:露出癖 == 2
+		SOURCE:7 += 300
+		TIMES SOURCE:0 , 1.20
+		TIMES SOURCE:17 , 1.20
+		TIMES SOURCE:1 , 1.20
+		TIMES SOURCE:2 , 1.20
+		TIMES SOURCE:12, 1.40
+	ELSEIF ABL:露出癖 == 3
+		SOURCE:7 += 800
+		TIMES SOURCE:0 , 1.30
+		TIMES SOURCE:17 , 1.30
+		TIMES SOURCE:1 , 1.30
+		TIMES SOURCE:2 , 1.30
+		TIMES SOURCE:12, 1.60
+	ELSEIF ABL:露出癖 == 4
+		SOURCE:7 += 1500
+		TIMES SOURCE:0 , 1.50
+		TIMES SOURCE:17 , 1.50
+		TIMES SOURCE:1 , 1.50
+		TIMES SOURCE:2 , 1.50
+		TIMES SOURCE:12, 2.00
+	ELSE
+		SOURCE:7 += 2500
+		TIMES SOURCE:0 , 1.70
+		TIMES SOURCE:17 , 1.70
+		TIMES SOURCE:1 , 1.70
+		TIMES SOURCE:2 , 1.70
+		TIMES SOURCE:12, 3.00
+	ENDIF
+
+	IF TALENT:露出狂
+		SOURCE:7 += 500
+		TIMES SOURCE:0 , 1.20
+		TIMES SOURCE:17 , 1.20
+		TIMES SOURCE:1 , 1.20
+		TIMES SOURCE:2 , 1.20
+		TIMES SOURCE:12, 1.50
+	ENDIF
+ENDIF
+
+;陰毛を生やす設定で剃毛状態
+SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛状態 <= 5
+	TIMES SOURCE:12 , 2.00
+
+;-------------------------------------------------
+;汚れの処理
+;-------------------------------------------------
+;奴隷の指⇔奴隷のＢの汚れが移動
+STAIN:1 |= STAIN:5
+STAIN:5 |= STAIN:1
+
+;奴隷の指⇔奴隷のＶの汚れが移動
+STAIN:1 |= STAIN:3
+STAIN:3 |= STAIN:1
+
+
+;シャワーオナニーの場合汚れをリセット、潤滑更に半分。
+IF TEQUIP:シャワー == 1
+	STAIN:1 = 0
+	STAIN:2 = 2
+	STAIN:3 = 1
+	STAIN:4 = 8
+
+	PALAM:潤滑 /= 2
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+;ビデオ撮影時・野外プレイ時は経験にプラス
+IF TEQUIP:撮影中 || TEQUIP:野外プレイ
+	EXP:自慰経験 += 2
+	PRINTL 自慰経験＋２
+	EXP:調教自慰経験 += 2
+	PRINTL 調教自慰経験＋２
+ELSE
+	EXP:自慰経験 += 1
+	PRINTL 自慰経験＋１
+	EXP:調教自慰経験 += 1
+	PRINTL 調教自慰経験＋１
+ENDIF
+PRINTFORML %EXPNAME:[[EXP:Ｂ開発経験]]%+1
+	EXP:Ｂ開発経験 += 1
+IF (TEQUIP:撮影中 || TEQUIP:野外プレイ) && CFLAG:公開自慰済 == 0
+	EXP:異常経験 += 1
+	PRINTL 異常経験＋１
+	CFLAG:公開自慰済 = 1
+ENDIF
+
+;レズ・ホモ経験
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +3
+	EXP:レズ経験 += 3
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +3
+	EXP:ＢＬ経験 += 3
+ENDIF
+;-------------------------------------------------
+;その他の処理
+;-------------------------------------------------
+;屈服刻印２に相当
+TFLAG:屈服刻印2 = 2
+
+RETURN 1

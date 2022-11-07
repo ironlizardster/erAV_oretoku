@@ -640,7 +640,6 @@ ENDIF
 
 ;処女だった場合、処女喪失フラグを点灯
 IF TALENT:処女
-	PRINTFORML 【売春で処女喪失】
 	CFLAG:売春処女喪失 = 2
 	;処女喪失相手を記録
 	SIF !CFLAG:処女喪失相手
@@ -650,7 +649,6 @@ IF TALENT:処女
 ENDIF
 ;初キス
 IF !CFLAG:初キス相手
-	PRINTFORML 初キス
 	IF TALENT:ギャル系 == 0
 		CSTR:初キス相手 = 常連のお客さん
 	ELSEIF TALENT:ギャル系 == 1

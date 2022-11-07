@@ -1,0 +1,69 @@
+﻿;-------------------------------------------------
+;スパンキング
+;SM系コマンド
+;-------------------------------------------------
+@COM40
+
+;前回と今回の調教者が同じ
+IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
+	;前回の調教が後背位、後背位・胸愛撫、立ちバック、後背位ＳＰだと後背位・スパンキングに
+	IF PREVCOM == [[TRAIN:後背位]] || PREVCOM == [[TRAIN:後背位胸愛撫]] || PREVCOM == [[TRAIN:立ちバック]] || PREVCOM == [[TRAIN:後背位ＳＰ]]
+		CALL COM_ABLE132
+		SIF RESULT == 1
+			JUMP COM132
+	ENDIF
+ENDIF
+
+PRINTL スパンキング
+SAVESTR:0 = スパンキング
+CALL TRAIN_MESSAGE_B
+
+;実際には苦痛があるためもっと体力気力をもっていかれる
+LOSEBASE:体力 += 80
+LOSEBASE:気力 += 40
+
+;-------------------------------------------------
+;ソースの計算
+;-------------------------------------------------
+SOURCE:12 = 200
+SOURCE:14 = 500
+
+;PALAM:苦痛をみる
+IF PALAM:苦痛 < PALAMLV:1
+	SOURCE:6 = 300
+ELSEIF PALAM:苦痛 < PALAMLV:2
+	SOURCE:6 = 500
+ELSEIF PALAM:苦痛 < PALAMLV:3
+	SOURCE:6 = 800
+ELSEIF PALAM:苦痛 < PALAMLV:4
+	SOURCE:6 = 1200
+ELSEIF PALAM:苦痛 >= PALAMLV:4
+	SOURCE:6 = 1800
+ENDIF
+
+;-------------------------------------------------
+;経験上昇
+;-------------------------------------------------
+IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+	PRINTS EXPNAME:[[EXP:レズ経験]]
+	PRINTL +2
+	EXP:レズ経験 += 2
+ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
+	PRINTL +2
+	EXP:ＢＬ経験 += 2
+ENDIF
+
+SIF ASSIPLAY == 0 && ABL:マゾっ気 >= 1
+	TFLAG:主人経験 += 1
+
+;愛情経験
+E = 1
+IF CFLAG:好感度 >= 1000 && (ABL:マゾっ気 >= 3 || TALENT:マゾ) && ASSIPLAY == 0
+	PRINTFORML %EXPNAME:[[EXP:愛情経験]]%+{E}
+	EXP:愛情経験 += E
+ENDIF
+E = 0
+
+RETURN 1
+;
