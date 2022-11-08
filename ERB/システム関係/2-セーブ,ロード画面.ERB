@@ -69,9 +69,12 @@ RETURN 0
 #DIM DYNAMIC データ番号
 データ番号 = 94+((DAY:日付_経過日数-1)*2%6+TIME)
 
+[IF_DEBUG]
+DEBUGPRINTFORML SYSTEM_AUTOSAVE:{データ番号}:%セーブデータ情報()%
+[ENDIF]
 SAVEDATA データ番号, セーブデータ情報()
 
-@セーブデータ情報, ARG
+@セーブデータ情報
 #FUNCTIONS
 #DIMS DYNAMIC REALTIMENOW
 #DIM DYNAMIC 年

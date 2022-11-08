@@ -238,8 +238,7 @@ REPEAT CHARANUM
 	IF CFLAG:COUNT:売春Ｖ不能 == 0 && TALENT:COUNT:処女
 		IF CFLAG:COUNT:処女喪失相手 == 0
 			;処女喪失相手（乱交）はここで記録
-				TALENT:COUNT:処女 = 0
-				CFLAG:COUNT:131 += RAND:6
+				CFLAG:COUNT:131 = RAND:6
 					IF CFLAG:131 == 0
 						CALL 処女喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
 					ELSEIF CFLAG:131 == 1
@@ -519,7 +518,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:高級娼婦
 		B += 10
 	;常連客
-	SIF TALENT:COUNT:常連客
+	SIF TALENT:COUNT:[[TALENT:常連客]]
 		B += 3
 	
 	;Ｖ使用不可キャラ

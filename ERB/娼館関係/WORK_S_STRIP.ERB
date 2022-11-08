@@ -209,7 +209,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:饒舌
 		G += 2
 	;常連客
-	SIF TALENT:COUNT:常連客
+	SIF TALENT:COUNT:[[TALENT:常連客]]
 		G += 2
 	;求愛
 	SIF TALENT:COUNT:彼氏あり
@@ -714,9 +714,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	;TARGETの処女・童貞喪失判定
 	F = 0
 	IF E & 1
-		TALENT:処女 = 0
 		CFLAG:売春処女喪失 = 1
-		PRINTFORML %NAME:TARGET%【処女喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
@@ -724,15 +722,12 @@ IF FLAG:特殊営業タイプ詳細 & 4
 			F += 1
 	ENDIF
 	IF E & 2
-		TALENT:童貞 = 0
-		PRINTFORML %NAME:TARGET%【童貞喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
 	ENDIF
 	IF E & 1 || E & 2
 		IF CFLAG:TARGET:処女喪失相手 == 0
-			CFLAG:TARGET:処女喪失相手 = NO:ASSI + 1
 			CALL 処女喪失実行(TARGET,NO:ASSI + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_ストリップ)
 		ENDIF
 	ENDIF
@@ -746,9 +741,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	;ASSIの処女・童貞喪失判定
 	F = 0
 	IF E & 4
-		TALENT:ASSI:処女 = 0
 		CFLAG:ASSI:売春処女喪失 = 1
-		PRINTFORML %NAME:ASSI%【処女喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
@@ -756,8 +749,6 @@ IF FLAG:特殊営業タイプ詳細 & 4
 			F += 1
 	ENDIF
 	IF E & 8
-		TALENT:ASSI:童貞 = 0
-		PRINTFORML %NAME:ASSI%【童貞喪失】
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1

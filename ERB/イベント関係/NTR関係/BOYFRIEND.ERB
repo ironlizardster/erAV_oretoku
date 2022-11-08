@@ -302,16 +302,16 @@ ENDIF
 
 IF LOCAL == 0
 	PRINTFORM カレシの部屋
-	CFLAG:処女喪失場所 = 2
+	CFLAG:処女喪失場所 = 初場所_彼部屋
 ELSEIF LOCAL == 1
 	PRINTFORM %CALLNAME:TARGET%の部屋
-	CFLAG:処女喪失場所 = 1
+	CFLAG:処女喪失場所 = 初場所_自室
 ELSEIF LOCAL == 2
 	PRINTFORM ラブホ
-	CFLAG:処女喪失場所 = 3
+	CFLAG:処女喪失場所 = 初場所_ラブホ
 ELSEIF LOCAL == 3
 	PRINTFORM 海
-	CFLAG:処女喪失場所 = 4
+	CFLAG:処女喪失場所 = 初場所_海
 ENDIF
 PRINTFORM で
 
@@ -373,7 +373,7 @@ IF !CFLAG:処女喪失相手
 	SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
 	RESETCOLOR
-	CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+	CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 ENDIF
 
 IF !CFLAG:初キス相手
@@ -381,9 +381,9 @@ IF !CFLAG:初キス相手
 		PRINTL 【ファーストキスキス】
 	RESETCOLOR
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 	ELSE
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		TCVAR:異常経験 += 1
 	ENDIF
 	
@@ -482,16 +482,16 @@ PRINTFORM 週が開けて月曜、昨日はオフだった%NAME:TARGET%は、
 
 IF LOCAL == 0
 	PRINTFORM カレシの部屋
-	CFLAG:Ａ処女喪失場所 = 2
+	CFLAG:処女喪失場所 = 初場所_彼部屋
 ELSEIF LOCAL == 1
 	PRINTFORM %CALLNAME:TARGET%の部屋
-	CFLAG:Ａ処女喪失場所 = 1
+	CFLAG:処女喪失場所 = 初場所_自室
 ELSEIF LOCAL == 2
 	PRINTFORM ラブホ
-	CFLAG:Ａ処女喪失場所 = 3
+	CFLAG:処女喪失場所 = 初場所_ラブホ
 ELSEIF LOCAL == 3
 	PRINTFORM 海
-	CFLAG:Ａ処女喪失場所 = 4
+	CFLAG:処女喪失場所 = 初場所_海
 ENDIF
 PRINTFORM で
 
@@ -543,7 +543,7 @@ IF TALENT:Ａ処女 == 1
 	SETCOLOR 0xF58F98
 		PRINTL 【Ａ処女喪失】
 	RESETCOLOR
-	CALL Ａ処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+	CALL Ａ処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 ENDIF
 
 IF !CFLAG:初キス相手
@@ -551,9 +551,9 @@ IF !CFLAG:初キス相手
 		PRINTL 【ファーストキス】
 	RESETCOLOR
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
 	ELSE
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		TCVAR:異常経験 += 1
 	ENDIF
 

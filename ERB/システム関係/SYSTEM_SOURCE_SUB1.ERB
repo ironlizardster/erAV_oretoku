@@ -335,7 +335,7 @@ ENDIF
 ;-------------------------------------------------
 @FIRSTKISS_PLAYER_CHECK
 ;処女でないかＶ経験を伴うコマンドフラグが立ってなければそのまま終了
-SIF !CFLAG:PLAYER:初キス相手 || TFLAG:620 == 0
+SIF CFLAG:PLAYER:初キス相手 || TFLAG:620 == 0
 	RETURN 0
 
 CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
@@ -350,7 +350,7 @@ TFLAG:620 = 0
 ;処女でないかＶ経験を伴うコマンドフラグが立ってなければそのまま終了
 SIF ASSIPLAY == 0
 	RETURN 0
-SIF !CFLAG:ASSI:初キス相手 || TFLAG:622 == 0
+SIF CFLAG:ASSI:初キス相手 || TFLAG:622 == 0
 	RETURN 0
 
 IF TEQUIP:野外プレイ == 1
@@ -373,7 +373,7 @@ CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月
 ;-------------------------------------------------
 @FIRSTKISS_TARGET_CHECK
 ;キス経験済か唇を使うコマンドフラグが立ってなければそのまま終了
-SIF !CFLAG:初キス相手 || TFLAG:621 == 0
+SIF CFLAG:初キス相手 || TFLAG:621 == 0
 	RETURN 0
 
 ;Ａ処女喪失フラグ(ビデオ撮影)

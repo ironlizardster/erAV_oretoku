@@ -3052,6 +3052,8 @@ SIF TFLAG:失神中終了 > 0
 ;主人じゃないとダメ
 SIF ASSIPLAY
 	RETURN 0
+SIF ASSI < 0
+	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
 SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
 	RETURN 0

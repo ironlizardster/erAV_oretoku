@@ -251,7 +251,7 @@ IF TALENT:オトコ == 0 && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:�
 		PRINTL  [5] - ＳＭ営業	
 ENDIF
 ;出張営業の条件：オトコでなく、常連客が付いており、護衛を拡張済み
-IF TALENT:オトコ == 0 && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
+IF TALENT:オトコ == 0 && TALENT:[[TALENT:常連客]] == 1 && (FLAG:娼館拡張 & 4) != 0
 	;貞操帯を付けているとダメ
 	SIF CFLAG:特別コスタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
 		PRINTL  [6] - 出張営業
@@ -305,7 +305,7 @@ ELSEIF RESULT == 5 && TALENT:オトコ == 0 && ABL:技巧 >=3 && MARK:屈服刻�
 	PRINTFORML 《%NAME:TARGET%にＳＭ営業で稼がせます》
 	WAIT
 	CFLAG:営業内容 = 5
-ELSEIF RESULT == 6 && TALENT:オトコ == 0 && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
+ELSEIF RESULT == 6 && TALENT:オトコ == 0 && TALENT:[[TALENT:常連客]] == 1 && (FLAG:娼館拡張 & 4) != 0
 	SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 		GOTO INPUT_LOOP_1
 	PRINTFORML 《%NAME:TARGET%に常連客への出張営業で稼がせます》

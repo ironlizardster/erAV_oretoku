@@ -284,9 +284,7 @@ MONEY += M
 
 WAIT
 
-PRINTFORML 【処女喪失】
 CFLAG:売春処女喪失 = 1
-TALENT:処女 = 0
 ;処女喪失相手（処女オークション）を記録
 IF !CFLAG:処女喪失相手
 	CALL 処女喪失実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_オークション,"知らないオトコの人")
