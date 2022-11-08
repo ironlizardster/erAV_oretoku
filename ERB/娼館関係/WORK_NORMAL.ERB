@@ -182,7 +182,7 @@ SIF TALENT:オトコ
 	TCVAR:ＢＬ経験 = G
 
 ;常連客がいれば営業愛情経験増加
-SIF TALENT:[[TALENT:常連客]] == 1
+SIF TALENT:常連客 == 1
 	TCVAR:営業愛情経験 = 2
 
 ;通常愛情経験が少なければ、得られる営業愛情経験増加
@@ -292,7 +292,7 @@ SIF TALENT:オトコ
 	TCVAR:ＢＬ経験 = G * 2
 
 ;常連客がいれば営業愛情経験増加
-SIF TALENT:[[TALENT:常連客]] == 1
+SIF TALENT:常連客 == 1
 		TCVAR:営業愛情経験 = 4
 
 ;通常愛情経験が少なければ、得られる営業愛情経験増加
@@ -408,7 +408,7 @@ TCVAR:精液経験 = G
 TCVAR:売春経験 = G
 
 ;常連客がいれば営業愛情経験増加
-SIF TALENT:[[TALENT:常連客]] == 1
+SIF TALENT:常連客 == 1
 	TCVAR:営業愛情経験 = 4
 
 ;通常愛情経験が少なければ、得られる営業愛情経験増加
@@ -547,7 +547,7 @@ ELSE
 ENDIF
 
 ;常連客がいれば営業愛情経験増加
-SIF TALENT:[[TALENT:常連客]] == 1
+SIF TALENT:常連客 == 1
 	TCVAR:営業愛情経験 = 4
 ;通常愛情経験が少なければ、得られる営業愛情経験増加
 IF EXP:愛情経験 <= 30
@@ -659,7 +659,7 @@ SIF EXP:Ｖ経験 <= 200
 	CFLAG:Ｖ売春否定 = 1
 
 ;素質『求愛』がついていた場合はCFLAG:50とCFLAG:51を消す(これらは体力の減少量と否定の珠の取得量の増加にのみ関わるため)
-IF TALENT:[[TALENT:常連客]] == 1
+IF TALENT:常連客 == 1
 	CFLAG:売春処女喪失 = 0
 	CFLAG:Ｖ売春否定 = 0
 ENDIF
@@ -672,7 +672,7 @@ TCVAR:売春経験 = G
 
 
 ;常連客がいれば営業愛情経験増加
-SIF TALENT:[[TALENT:常連客]] == 1
+SIF TALENT:常連客 == 1
 	TCVAR:営業愛情経験 = 8
 ;通常愛情経験が少なければ、得られる営業愛情経験増加
 IF EXP:愛情経験 <= 30
