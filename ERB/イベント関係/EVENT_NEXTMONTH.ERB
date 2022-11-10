@@ -31,7 +31,8 @@ IF FLAG:習い事人数 > 0
 	MONEY -= FLAG:習い事人数 * 10000
 ENDIF
 FLAG:治安悪化 += RAND:11
-FLAG:治安悪化 -= RAND:6
+SIF FLAG:治安巡回
+	FLAG:治安悪化 -= RAND:6
 
 SIF DAY:日付_月 == 3  || DAY:日付_月 == 6 || DAY:日付_月 == 10 || DAY:日付_月 == 12
 	FLAG:治安悪化 -= (10 + RAND:11)

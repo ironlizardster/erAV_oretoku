@@ -44,7 +44,7 @@ ELSEIF TALENT:売却不可
 ELSE
 	;死亡時口上
 	TFLAG:口上番号 = 999
-	CALL SELF_KOJO
+	CALL SELF_KOJO(TARGET)
 	DRAWLINE
 	PRINTL 
 	PRINTFORML %CALLNAME:TARGET%は逝ってしまった……
@@ -216,7 +216,7 @@ PRINTFORML {S}回ベッドの上でまぐわった…
 
 ;調教後セックス口上
 TFLAG:口上番号 = 4
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 
 PRINTFORML %EXPNAME:[[EXP:Ｖ経験]]%＋{S}
 PRINTFORML %EXPNAME:[[EXP:性交経験]]%＋{S}
@@ -326,7 +326,7 @@ PRINTFORML {S}回ベッドの上でまぐわった…
 ;;調教後Ａ口上
 ;△あとで解凍
 ;TFLAG:口上番号 = XX
-;CALL SELF_KOJO
+;CALL SELF_KOJO(TARGET)
 
 PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
 PRINTFORML %EXPNAME:[[EXP:性交経験]]%＋{S}
@@ -488,7 +488,7 @@ PRINTFORMW %CALLNAME:TARGET%と%CALLNAME:ASSI%は、{N}回レズプレイをし�
 
 ;調教後レズプレイ口上
 TFLAG:口上番号 = 2
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 
 PRINTFORML %EXPNAME:[[EXP:レズ経験]]%＋{N*2}
 SIF N*100*ABL:信頼/500 > 0
@@ -718,7 +718,7 @@ ENDIF
 
 ;調教後自慰口上
 TFLAG:口上番号 = 1
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 
 ;自慰経験
 PRINTFORML %EXPNAME:[[EXP:自慰経験]]%＋{A}
@@ -858,7 +858,7 @@ PRINTFORML {B}回の交尾を行ったらしい。
 ;;調教後交尾口上
 ;△あとで解凍
 ;TFLAG:口上番号 = XX
-;CALL SELF_KOJO
+;CALL SELF_KOJO(TARGET)
 
 ;獣姦経験
 PRINTFORML %EXPNAME:[[EXP:獣姦経験]]%＋{B}
@@ -1002,7 +1002,7 @@ PRINTFORML {B}回触手に襲われたようだ。
 ;;調教後触手プレイ口上
 ;△あとで解凍
 ;TFLAG:口上番号 = XX
-;CALL SELF_KOJO
+;CALL SELF_KOJO(TARGET)
 
 ;触手経験
 PRINTFORML %EXPNAME:[[EXP:触手経験]]%＋{B}

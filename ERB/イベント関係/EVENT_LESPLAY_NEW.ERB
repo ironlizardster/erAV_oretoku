@@ -58,12 +58,12 @@ PRINTFORM 明日は休日ということで
 ;ENDIF
 ;
 ;二人ともかなで、未依、カナのうちの誰かであれば、同じ家に住んでいる
-IF groupmatch(NO:f_actor,1,17,91) && groupmatch(NO:s_actor,1,17,91)
+IF groupmatch(NO:f_actor,[[キャラ:宮間かなで]],[[キャラ:宮間未依]],[[キャラ:宮間カナ]]) && groupmatch(NO:s_actor,[[キャラ:宮間かなで]],[[キャラ:宮間未依]],[[キャラ:宮間カナ]])
 	PRINTFORML %CALLNAME:f_actor%と%CALLNAME:s_actor%と遊ぶことにした
 ;どちらかだけかなで、未依、カナのうちの誰かであれば、その部屋に遊びに来る
-ELSEIF groupmatch(NO:f_actor,1,17,91)
+ELSEIF groupmatch(NO:f_actor,[[キャラ:宮間かなで]],[[キャラ:宮間未依]],[[キャラ:宮間カナ]])
 	PRINTFORML %CALLNAME:f_actor%の部屋に%NAME:s_actor%が遊びに来た
-ELSEIF groupmatch(NO:s_actor,1,17,91)
+ELSEIF groupmatch(NO:s_actor,[[キャラ:宮間かなで]],[[キャラ:宮間未依]],[[キャラ:宮間カナ]])
 	PRINTFORML %CALLNAME:s_actor%の部屋に%NAME:f_actor%が遊びに来た
 ELSE
 	PRINTFORML %NAME:f_actor%と%NAME:s_actor%が%CALLNAME:MASTER%の家に遊びに来た
@@ -102,195 +102,195 @@ ENDIF
 PRINTFORML 自ら慰めはじめた……
 PRINTL
 
-		;レズプレイ回数
-		NumofTimes = 0
+;レズプレイ回数
+NumofTimes = 0
 		
-		;レズ中毒
-		IF ABL:f_actor:レズ中毒 == 1
-			NumofTimes += 1
-		ELSEIF ABL:f_actor:レズ中毒 == 2
-			NumofTimes += 2
-		ELSEIF ABL:f_actor:レズ中毒 == 3
-			NumofTimes += 3
-		ELSEIF ABL:f_actor:レズ中毒 == 4
-			NumofTimes += 5
-		ELSEIF ABL:f_actor:レズ中毒 == 5
-			NumofTimes += 8
-		ELSEIF ABL:f_actor:レズ中毒 >= 6
-			NumofTimes += 13
-		ENDIF
+;レズ中毒
+IF ABL:f_actor:レズ中毒 == 1
+	NumofTimes += 1
+ELSEIF ABL:f_actor:レズ中毒 == 2
+	NumofTimes += 2
+ELSEIF ABL:f_actor:レズ中毒 == 3
+	NumofTimes += 3
+ELSEIF ABL:f_actor:レズ中毒 == 4
+	NumofTimes += 5
+ELSEIF ABL:f_actor:レズ中毒 == 5
+	NumofTimes += 8
+ELSEIF ABL:f_actor:レズ中毒 >= 6
+	NumofTimes += 13
+ENDIF
 		
-		;助手のレズ中毒
-		IF ABL:s_actor:レズ中毒 == 1
-			NumofTimes += 1
-		ELSEIF ABL:s_actor:レズ中毒 == 2
-			NumofTimes += 2
-		ELSEIF ABL:s_actor:レズ中毒 == 3
-			NumofTimes += 3
-		ELSEIF ABL:s_actor:レズ中毒 == 4
-			NumofTimes += 5
-		ELSEIF ABL:s_actor:レズ中毒 == 5
-			NumofTimes += 8
-		ELSEIF ABL:s_actor:レズ中毒 >= 6
-			NumofTimes += 13
-		ENDIF
+;助手のレズ中毒
+IF ABL:s_actor:レズ中毒 == 1
+	NumofTimes += 1
+ELSEIF ABL:s_actor:レズ中毒 == 2
+	NumofTimes += 2
+ELSEIF ABL:s_actor:レズ中毒 == 3
+	NumofTimes += 3
+ELSEIF ABL:s_actor:レズ中毒 == 4
+	NumofTimes += 5
+ELSEIF ABL:s_actor:レズ中毒 == 5
+	NumofTimes += 8
+ELSEIF ABL:s_actor:レズ中毒 >= 6
+	NumofTimes += 13
+ENDIF
 		
-		;レズっ気によるボーナス
-		SIF ABL:f_actor:レズっ気 >= 3
-			NumofTimes += 1
+;レズっ気によるボーナス
+SIF ABL:f_actor:レズっ気 >= 3
+	NumofTimes += 1
 		
-		;助手のレズっ気によるボーナス
-		SIF ABL:s_actor:レズっ気 >= 3
-			NumofTimes += 1
+;助手のレズっ気によるボーナス
+SIF ABL:s_actor:レズっ気 >= 3
+	NumofTimes += 1
 		
-		;欲望ＬＶ７以上で+1（%下と合わせて+2）
-		SIF ABL:f_actor:欲望 >= 7
-			NumofTimes += 1
-		;欲望ＬＶ４以上で+1
-		SIF ABL:f_actor:欲望 >= 4
-			NumofTimes += 1
+;欲望ＬＶ７以上で+1（%下と合わせて+2）
+SIF ABL:f_actor:欲望 >= 7
+	NumofTimes += 1
+;欲望ＬＶ４以上で+1
+SIF ABL:f_actor:欲望 >= 4
+	NumofTimes += 1
 		
-		;相性によるボーナス
-		IF RELATION:f_actor:(NO:s_actor) > 0
-			NumofTimes *= RELATION:f_actor:(NO:s_actor) * 3
-			NumofTimes /= 100
-		ENDIF
+;相性によるボーナス
+IF RELATION:f_actor:(NO:s_actor) > 0
+	NumofTimes *= RELATION:f_actor:(NO:s_actor) * 3
+	NumofTimes /= 100
+ENDIF
 
-		;保守的、一線越えないによるペナルティ
-		SIF TALENT:f_actor:保守的
-			NumofTimes -= 1
-		SIF TALENT:s_actor:保守的
-			NumofTimes -= 1
-		SIF TALENT:f_actor:一線越えない
-			NumofTimes -= 1
-		SIF TALENT:s_actor:一線越えない
-			NumofTimes -= 1
+;保守的、一線越えないによるペナルティ
+SIF TALENT:f_actor:保守的
+	NumofTimes -= 1
+SIF TALENT:s_actor:保守的
+	NumofTimes -= 1
+SIF TALENT:f_actor:一線越えない
+	NumofTimes -= 1
+SIF TALENT:s_actor:一線越えない
+	NumofTimes -= 1
 		
-		;両刀、淫乱によるボーナス
-		SIF TALENT:f_actor:両刀
-			NumofTimes += 2
-		SIF TALENT:s_actor:両刀
-			NumofTimes += 2
-		SIF TALENT:f_actor:淫乱
-			NumofTimes += 1
-		SIF TALENT:s_actor:淫乱
-			NumofTimes += 1
+;両刀、淫乱によるボーナス
+SIF TALENT:f_actor:両刀
+	NumofTimes += 2
+SIF TALENT:s_actor:両刀
+	NumofTimes += 2
+SIF TALENT:f_actor:淫乱
+	NumofTimes += 1
+SIF TALENT:s_actor:淫乱
+	NumofTimes += 1
 
-		;快感に素直、快感の否定
-		IF TALENT:f_actor:快感に素直
-			NumofTimes += 1
-		ELSEIF TALENT:f_actor:快感の否定
-			NumofTimes -= 2
-		ENDIF
-		IF TALENT:s_actor:快感に素直
-			NumofTimes += 1
-		ELSEIF TALENT:s_actor:快感の否定
-			NumofTimes -= 2
-		ENDIF
+;快感に素直、快感の否定
+IF TALENT:f_actor:快感に素直
+	NumofTimes += 1
+ELSEIF TALENT:f_actor:快感の否定
+	NumofTimes -= 2
+ENDIF
+IF TALENT:s_actor:快感に素直
+	NumofTimes += 1
+ELSEIF TALENT:s_actor:快感の否定
+	NumofTimes -= 2
+ENDIF
 
-		NumofTimes /= 10
+NumofTimes /= 10
 
-		IF NumofTimes <= 1
-			NumofTimes = 1
-		ENDIF
+IF NumofTimes <= 1
+	NumofTimes = 1
+ENDIF
 
 
-		PRINTFORML %EXPNAME:[[EXP:レズ経験]]%＋{NumofTimes*2}（%CALLNAME:f_actor%）
-		SIF NumofTimes*100*ABL:f_actor:欲望/500 > 0
-			PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%＋{NumofTimes*100*ABL:f_actor:欲望/500}（%CALLNAME:f_actor%）
-		PRINTFORML %PALAMNAME:[[PALAM:快Ｃ]]%の珠＋{NumofTimes*100*ABL:f_actor:欲望}（%CALLNAME:f_actor%）
-		PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*200}（%CALLNAME:f_actor%）
+PRINTFORML %EXPNAME:[[EXP:レズ経験]]%＋{NumofTimes*2}（%CALLNAME:f_actor%）
+SIF NumofTimes*100*ABL:f_actor:欲望/500 > 0
+	PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%＋{NumofTimes*100*ABL:f_actor:欲望/500}（%CALLNAME:f_actor%）
+PRINTFORML %PALAMNAME:[[PALAM:快Ｃ]]%の珠＋{NumofTimes*100*ABL:f_actor:欲望}（%CALLNAME:f_actor%）
+PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*200}（%CALLNAME:f_actor%）
 		
-		EXP:f_actor:レズ経験 += NumofTimes*2
-		EXP:f_actor:絶頂経験 += NumofTimes*100*ABL:f_actor:欲望/500
+EXP:f_actor:レズ経験 += NumofTimes*2
+EXP:f_actor:絶頂経験 += NumofTimes*100*ABL:f_actor:欲望/500
 		
-		JUEL:f_actor:快Ｃ += NumofTimes*100*ABL:f_actor:欲望
-		JUEL:f_actor:欲情 += NumofTimes*200
+JUEL:f_actor:快Ｃ += NumofTimes*100*ABL:f_actor:欲望
+JUEL:f_actor:欲情 += NumofTimes*200
 		
-		IF TALENT:s_actor:ふたなり
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{NumofTimes}（%CALLNAME:f_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
+IF TALENT:s_actor:ふたなり
+	PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{NumofTimes}（%CALLNAME:f_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
 		
-			EXP:f_actor:精液経験 += NumofTimes
-			JUEL:f_actor:屈服 += NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
-			JUEL:f_actor:習得 += NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
-		ELSE
-			PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
+	EXP:f_actor:精液経験 += NumofTimes
+	JUEL:f_actor:屈服 += NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
+	JUEL:f_actor:習得 += NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
+ELSE
+	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
 		
-			JUEL:f_actor:屈服 += NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
-			JUEL:f_actor:習得 += NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
-		ENDIF
-		IF TALENT:s_actor:サド
-			PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%＋{NumofTimes}
-			SIF NumofTimes*100*ABL:f_actor:マゾっ気 > 0
-				PRINTFORML %PALAMNAME:[[PALAM:苦痛]]%の珠＋{NumofTimes*100*ABL:f_actor:マゾっ気}（%CALLNAME:f_actor%）
-			JUEL:f_actor:19 += NumofTimes*100*ABL:f_actor:マゾっ気
-			EXP:f_actor:被虐快楽経験 += NumofTimes
-		ENDIF
-		IF TALENT:s_actor:マゾ == 1 && ABL:f_actor:サドっ気 >= 3
-			PRINTFORML %EXPNAME:[[EXP:嗜虐快楽経験]]%＋{NumofTimes}
-			SIF NumofTimes*100*ABL:f_actor:サドっ気 > 0
-			PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*100*ABL:f_actor:サドっ気}（%CALLNAME:f_actor%）
-			JUEL:f_actor:欲情 += NumofTimes*100*ABL:f_actor:サドっ気
-			EXP:f_actor:嗜虐快楽経験 += NumofTimes
-		ENDIF
-		IF TALENT:f_actor:ふたなり
-			PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{NumofTimes}（%CALLNAME:f_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{NumofTimes*100}（%CALLNAME:f_actor%）
-			EXP:f_actor:射精経験 += NumofTimes
-			JUEL:f_actor:恥情 += NumofTimes*100
-		ENDIF
+	JUEL:f_actor:屈服 += NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
+	JUEL:f_actor:習得 += NumofTimes*50*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)
+ENDIF
+IF TALENT:s_actor:サド
+	PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%＋{NumofTimes}
+	SIF NumofTimes*100*ABL:f_actor:マゾっ気 > 0
+		PRINTFORML %PALAMNAME:[[PALAM:苦痛]]%の珠＋{NumofTimes*100*ABL:f_actor:マゾっ気}（%CALLNAME:f_actor%）
+	JUEL:f_actor:19 += NumofTimes*100*ABL:f_actor:マゾっ気
+	EXP:f_actor:被虐快楽経験 += NumofTimes
+ENDIF
+IF TALENT:s_actor:マゾ == 1 && ABL:f_actor:サドっ気 >= 3
+	PRINTFORML %EXPNAME:[[EXP:嗜虐快楽経験]]%＋{NumofTimes}
+	SIF NumofTimes*100*ABL:f_actor:サドっ気 > 0
+	PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*100*ABL:f_actor:サドっ気}（%CALLNAME:f_actor%）
+	JUEL:f_actor:欲情 += NumofTimes*100*ABL:f_actor:サドっ気
+	EXP:f_actor:嗜虐快楽経験 += NumofTimes
+ENDIF
+IF TALENT:f_actor:ふたなり
+	PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{NumofTimes}（%CALLNAME:f_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{NumofTimes*100}（%CALLNAME:f_actor%）
+	EXP:f_actor:射精経験 += NumofTimes
+	JUEL:f_actor:恥情 += NumofTimes*100
+ENDIF
 		
-		PRINTL
+PRINTL
 		
-		PRINTFORML %EXPNAME:[[EXP:レズ経験]]%＋{NumofTimes*2}（%CALLNAME:s_actor%）
-		SIF NumofTimes*100*ABL:s_actor:欲望/500 > 0
-			PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%＋{NumofTimes*100*ABL:s_actor:欲望/500}（%CALLNAME:s_actor%）
-		PRINTFORML %PALAMNAME:[[PALAM:快Ｃ]]%の珠＋{NumofTimes*100*ABL:s_actor:欲望}（%CALLNAME:s_actor%）
-		PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*200}（%CALLNAME:s_actor%）
+PRINTFORML %EXPNAME:[[EXP:レズ経験]]%＋{NumofTimes*2}（%CALLNAME:s_actor%）
+SIF NumofTimes*100*ABL:s_actor:欲望/500 > 0
+	PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%＋{NumofTimes*100*ABL:s_actor:欲望/500}（%CALLNAME:s_actor%）
+PRINTFORML %PALAMNAME:[[PALAM:快Ｃ]]%の珠＋{NumofTimes*100*ABL:s_actor:欲望}（%CALLNAME:s_actor%）
+PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*200}（%CALLNAME:s_actor%）
 		
-		EXP:s_actor:レズ経験 += NumofTimes*2
-		EXP:s_actor:絶頂経験 += NumofTimes*100*ABL:s_actor:欲望/500
+EXP:s_actor:レズ経験 += NumofTimes*2
+EXP:s_actor:絶頂経験 += NumofTimes*100*ABL:s_actor:欲望/500
 		
-		JUEL:s_actor:快Ｃ += NumofTimes*100*ABL:s_actor:欲望
-		JUEL:s_actor:欲情 += NumofTimes*200
+JUEL:s_actor:快Ｃ += NumofTimes*100*ABL:s_actor:欲望
+JUEL:s_actor:欲情 += NumofTimes*200
 		
-		IF TALENT:f_actor:ふたなり
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{NumofTimes}（%CALLNAME:s_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
+IF TALENT:f_actor:ふたなり
+	PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{NumofTimes}（%CALLNAME:s_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
 		
-			EXP:s_actor:精液経験 += NumofTimes
-			JUEL:s_actor:屈服 += NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
-			JUEL:s_actor:習得 += NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
-		ELSE
-			PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
-			PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
+	EXP:s_actor:精液経験 += NumofTimes
+	JUEL:s_actor:屈服 += NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
+	JUEL:s_actor:習得 += NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
+ELSE
+	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
+	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
 		
-			JUEL:s_actor:屈服 += NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
-			JUEL:s_actor:習得 += NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
-		ENDIF
-		IF TALENT:f_actor:サド
-			PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%＋{NumofTimes}
-			SIF NumofTimes*100*ABL:s_actor:マゾっ気 > 0
-				PRINTFORML %PALAMNAME:[[PALAM:苦痛]]%の珠＋{NumofTimes*100*ABL:s_actor:マゾっ気}（%CALLNAME:s_actor%）
-			JUEL:s_actor:苦痛 += NumofTimes*100*ABL:s_actor:マゾっ気
-			EXP:s_actor:被虐快楽経験 += NumofTimes
-		ENDIF
-		IF TALENT:f_actor:マゾ == 1 && ABL:f_actor:サドっ気 >= 3
-			PRINTFORML %EXPNAME:[[EXP:嗜虐快楽経験]]%＋{NumofTimes}
-			SIF NumofTimes*100*ABL:f_actor:サドっ気 > 0
-				PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*100*ABL:f_actor:サドっ気}（%CALLNAME:s_actor%）
-			JUEL:f_actor:欲情 += NumofTimes*100*ABL:f_actor:サドっ気
-			EXP:f_actor:嗜虐快楽経験 += NumofTimes
-		ENDIF
-		IF TALENT:s_actor:ふたなり
-			PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{NumofTimes}
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{NumofTimes*100}（%CALLNAME:s_actor%）
-			EXP:s_actor:射精経験 += NumofTimes
-			JUEL:s_actor:恥情 += NumofTimes*100
-		ENDIF
-		RELATION:s_actor:(NO:f_actor) += 10
-		RELATION:f_actor:(NO:s_actor) += 10
+	JUEL:s_actor:屈服 += NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
+	JUEL:s_actor:習得 += NumofTimes*50*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)
+ENDIF
+IF TALENT:f_actor:サド
+	PRINTFORML %EXPNAME:[[EXP:被虐快楽経験]]%＋{NumofTimes}
+	SIF NumofTimes*100*ABL:s_actor:マゾっ気 > 0
+		PRINTFORML %PALAMNAME:[[PALAM:苦痛]]%の珠＋{NumofTimes*100*ABL:s_actor:マゾっ気}（%CALLNAME:s_actor%）
+	JUEL:s_actor:苦痛 += NumofTimes*100*ABL:s_actor:マゾっ気
+	EXP:s_actor:被虐快楽経験 += NumofTimes
+ENDIF
+IF TALENT:f_actor:マゾ == 1 && ABL:f_actor:サドっ気 >= 3
+	PRINTFORML %EXPNAME:[[EXP:嗜虐快楽経験]]%＋{NumofTimes}
+	SIF NumofTimes*100*ABL:f_actor:サドっ気 > 0
+		PRINTFORML %PALAMNAME:[[PALAM:欲情]]%の珠＋{NumofTimes*100*ABL:f_actor:サドっ気}（%CALLNAME:s_actor%）
+	JUEL:f_actor:欲情 += NumofTimes*100*ABL:f_actor:サドっ気
+	EXP:f_actor:嗜虐快楽経験 += NumofTimes
+ENDIF
+IF TALENT:s_actor:ふたなり
+	PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{NumofTimes}
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{NumofTimes*100}（%CALLNAME:s_actor%）
+	EXP:s_actor:射精経験 += NumofTimes
+	JUEL:s_actor:恥情 += NumofTimes*100
+ENDIF
+RELATION:s_actor:(NO:f_actor) += 10
+RELATION:f_actor:(NO:s_actor) += 10

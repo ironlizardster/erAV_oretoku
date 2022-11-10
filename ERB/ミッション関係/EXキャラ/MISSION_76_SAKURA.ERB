@@ -156,10 +156,10 @@ RETURN 0
 @MISSION_REPORT_76(ARG)
 BASE:魅力値 -= 40 + RAND:11
 TALENT:褐色肌 = 1
-CFLAG:614 = 4 + RAND:5
+CFLAG:日焼効果 = 4 + RAND:5
 TALENT:喫煙者 = 1
 TALENT:セフレあり = 1
-CALL CIGARETTES
+CALL CIGARETTES(TARGET)
 TCVAR:絶頂経験 += 50 + RAND:21
 TCVAR:Ｖ経験 += 35 + RAND:16
 TCVAR:性交経験 += TCVAR:Ｖ経験
@@ -176,10 +176,10 @@ IF TALENT:永遠の愛 == 0
 		CSTR:彼氏名 = 京一
 		IF !CFLAG:初キス相手
 			CSTR:初キス相手 = 神崎京一
-			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
+			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,@"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		ENDIF
 		IF TALENT:処女 == 1
-			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（彼氏）")
+			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,@"%CSTR:彼氏姓%%CSTR:彼氏名%（彼氏）")
 		ENDIF
 
 		CFLAG:処女喪失年齢 = BASE:実年齢

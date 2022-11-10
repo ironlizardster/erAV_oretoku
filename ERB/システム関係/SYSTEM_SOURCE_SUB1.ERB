@@ -338,7 +338,7 @@ ENDIF
 SIF CFLAG:PLAYER:初キス相手 || TFLAG:620 == 0
 	RETURN 0
 
-CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%NAME:TARGET%")
+CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,NAME:TARGET)
 
 ;フラグを折っておく
 TFLAG:620 = 0
@@ -365,7 +365,7 @@ ELSE
 	CFLAG:ASSI:初キス喪失場所 = 初場所_スタジオ
 ENDIF
 
-CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ASSI:初キス喪失場所,初状況_口,"%NAME:TARGET%")
+CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ASSI:初キス喪失場所,初状況_口,NAME:TARGET)
 
 
 ;-------------------------------------------------

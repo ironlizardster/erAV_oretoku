@@ -11,100 +11,99 @@
 ;===========================================================
 ;EVの後の数値をカレシ番号、末尾の数値を固有イベント番号に設定
 ;===========================================================
-;@BF_EV0_0
+@BF_EV0_0(ARG)
 
 
 ;SIF TALENT:セフレ == 0
 ;	RETURN
 
 VARSET LOCAL, 0
-CALL CALC_BFSEX
+CALL CALC_BFSEX(ARG)
 
-LOCAL = TARGET
 
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
-	ELSEIF COUNT == LOCAL
+	ELSEIF COUNT == ARG
 		CONTINUE
 	ELSEIF ABL:COUNT:レズっ気 <= 2
 		CONTINUE
-;	ELSEIF RELATION:COUNT:(NO:TARGET) < 250
+;	ELSEIF RELATION:COUNT:(NO:ARG) < 250
 ;		CONTINUE
 	ELSEIF TALENT:COUNT:処女 == 1 && TALENT:COUNT:好奇心 == 0 && ABL:COUNT:欲望 < 4
 		CONTINUE
 	ELSEIF CFLAG:COUNT:特別コスタイプ == 79 && CFLAG:COUNT:着衣状態 >= 64
 		CONTINUE
 	ELSE
-		ASSI = COUNT
+		LOCAL = COUNT
 		BREAK
 	ENDIF
 REND
 
-PRINTFORML %NAME:TARGET%から『お誘い』の電話があった……
+PRINTFORML %NAME:ARG%から『お誘い』の電話があった……
 PRINTW
-PRINTFORM %CALLNAME:TARGET%に指定されたとあるアパートの一室に赴くと、
+PRINTFORM %CALLNAME:ARG%に指定されたとあるアパートの一室に赴くと、
 PRINTFORM そこで待っていたのは無数の使用済みコンドームが散乱するベッドの上で
-SIF TALENT:褐色肌
+SIF TALENT:ARG:褐色肌
 	PRINTFORM 褐色の肌に
 PRINTFORM 珠のような汗を浮かべ、固くしこった
-SIF (CFLAG:ピアス状況 & 1)
+SIF (CFLAG:ARG:ピアス状況 & 1)
 	PRINTFORM 、鈍色のニプルピアスが輝く
-PRINTFORM 乳首を摘むように%CSTR:彼氏姓%に胸を揉みしだかれ、
-PRINTFORML バックで犯されながらも%CSTR:彼氏姓%と舌を絡め合う濃厚なキスをしている%CALLNAME:TARGET%だった
-PRINTFORML %CALLNAME:TARGET%の尻肉にはマジックで正の字が書かれてあり、その棒の数を数えると{TCVAR:Ｖ経験 - 2}本もあった
-PRINTFORML そしてそれが示すのは、今日一日で%CALLNAME:TARGET%がヴァギナで受け入れ射精させた肉棒の本数と同じだということだろう……
+PRINTFORM 乳首を摘むように%CSTR:ARG:彼氏姓%に胸を揉みしだかれ、
+PRINTFORML バックで犯されながらも%CSTR:ARG:彼氏姓%と舌を絡め合う濃厚なキスをしている%CALLNAME:ARG%だった
+PRINTFORML %CALLNAME:ARG%の尻肉にはマジックで正の字が書かれてあり、その棒の数を数えると{TCVAR:ARG:Ｖ経験 - 2}本もあった
+PRINTFORML そしてそれが示すのは、今日一日で%CALLNAME:ARG%がヴァギナで受け入れ射精させた肉棒の本数と同じだということだろう……
 
 PRINTFORM そして部屋の片隅でも二の腕にタトゥーを入れたスキンヘッドの黒人に背後から抱きすくめられ、結合部から
-IF ASSI > 0
-	SIF TALENT:ASSI:処女 == 1
+IF LOCAL > 0
+	SIF TALENT:LOCAL:処女 == 1
 		PRINTFORM 破瓜の血が交じり合った
 ENDIF
 PRINTFORM 大量の精液を滴らせながらも、壁に手をついたままなおも極太ペニスで秘部を貫かれている
-IF ASSI > 0
-	PRINTFORM %NAME:ASSI%
+IF LOCAL > 0
+	PRINTFORM %NAME:LOCAL%
 ELSE
 	PRINTFORM 少女
 ENDIF
 PRINTFORML が嬌声をあげていた
 PRINTFORML こちらも相当数を相手にしていたのか、足元のカーペットは愛液と精液で変色していた
 PRINTW
-PRINTFORML この部屋は%CSTR:彼氏姓%とその仲間が利用しているいわゆる『ヤリ部屋』で、定期的にこうして乱交パーティーが催されていた
-IF ASSI > 0
-	PRINTFORM ここにこうして%CALLNAME:TARGET%だけではなく%CALLNAME:ASSI%までいるのは恐らく、
+PRINTFORML この部屋は%CSTR:ARG:彼氏姓%とその仲間が利用しているいわゆる『ヤリ部屋』で、定期的にこうして乱交パーティーが催されていた
+IF LOCAL > 0
+	PRINTFORM ここにこうして%CALLNAME:ARG%だけではなく%CALLNAME:LOCAL%までいるのは恐らく、
 	PRINTFORM 不特定多数とのＳＥＸに対して強い好奇心
-	SIF TALENT:ASSI:処女 == 1
+	SIF TALENT:LOCAL:処女 == 1
 		PRINTFORM と、処女のまま度重なる指導で開発され強い肉欲
-	PRINTFORML を抱いていた%CALLNAME:ASSI%が%CALLNAME:TARGET%の『お誘い』に乗ったのだろう
-	IF TALENT:ASSI:処女 == 1
-		PRINTFORM 念願とも言える初ＳＥＸに、%CALLNAME:ASSI%は戸惑いと恍惚が交じり合った表情で黒人に壊れたかのように卑猥
+	PRINTFORML を抱いていた%CALLNAME:LOCAL%が%CALLNAME:ARG%の『お誘い』に乗ったのだろう
+	IF TALENT:LOCAL:処女 == 1
+		PRINTFORM 念願とも言える初ＳＥＸに、%CALLNAME:LOCAL%は戸惑いと恍惚が交じり合った表情で黒人に壊れたかのように卑猥
 		PRINTFORML な言葉でおねだりしている……
 	ENDIF
 ENDIF
-PRINTFORM %CALLNAME:TARGET%はあなたの姿を見ると、%CSTR:彼氏姓%に貫かれながらあなたの股間に手をかけ、
+PRINTFORM %CALLNAME:ARG%はあなたの姿を見ると、%CSTR:ARG:彼氏姓%に貫かれながらあなたの股間に手をかけ、
 PRINTFORML 既に勃起していたペニスを取り出して『ご挨拶』とばかりに口に含んだ
-PRINTFORM %CALLNAME:TARGET%のフェラは
-IF ABL:技巧 <= 3
-	PRINTFORM たどたどしく、%CSTR:彼氏姓%に腰を打ち付けられるたびにペニスから口を離してしまうほどだったが、それでも
+PRINTFORM %CALLNAME:ARG%のフェラは
+IF ABL:ARG:技巧 <= 3
+	PRINTFORM たどたどしく、%CSTR:ARG:彼氏姓%に腰を打ち付けられるたびにペニスから口を離してしまうほどだったが、それでも
 ELSE
 	PRINTFORML 熟練のもので、肉棒全体を包み込むようにしながらも裏筋やカリを舌で辿るように刺激してくる
 ENDIF
-PRINTFORM この部屋で不特定多数のオトコと交わったせいか、あるいは%CSTR:彼氏姓%に仕込まれたのかあなたが指導したよりも格段に巧くなってPRINTFORML いる……
-PRINTFORM 犯されながらも肉棒を頬張る%CALLNAME:TARGET%の淫猥な姿に興奮したあなたは、
+PRINTFORM この部屋で不特定多数のオトコと交わったせいか、あるいは%CSTR:ARG:彼氏姓%に仕込まれたのかあなたが指導したよりも格段に巧くなってPRINTFORML いる……
+PRINTFORM 犯されながらも肉棒を頬張る%CALLNAME:ARG%の淫猥な姿に興奮したあなたは、
 PRINTFORML 喉奥に亀頭を押し付けるかのようにその頭を掴んで腰を振り立てて快楽を貪り始めた
-PRINTFORML %CALLNAME:TARGET%は肢体を串刺しにされるような衝撃に目を白黒させ、ベッドシーツを強く握りしめながらも、
+PRINTFORML %CALLNAME:ARG%は肢体を串刺しにされるような衝撃に目を白黒させ、ベッドシーツを強く握りしめながらも、
 PRINTFORML 先ほどよりも激しくなったピストン運動に合わせるように自ら腰を動かしている
-PRINTFORM そして%CSTR:彼氏姓%が射精感を訴えると、尻を高く掲げて%CSTR:彼氏姓%と密着するような、子宮の奥で精液を受け止めるための体勢を取って
-PRINTFORML 膣内射精をおねだりした%CALLNAME:TARGET%は、一際深いストロークに全身を痙攣させて絶頂した
-PRINTFORM %CSTR:彼氏姓%が%CALLNAME:TARGET%のヴァギナから愛液と自身の精液でてらてらと光る黒ずんだペニスを引きぬくと、
-PRINTFORML %CALLNAME:TARGET%の肉棒の太さにぽっかりと口を拡げた膣穴から、受け止めきれなかった精液が溢れ始めた……
+PRINTFORM そして%CSTR:ARG:彼氏姓%が射精感を訴えると、尻を高く掲げて%CSTR:ARG:彼氏姓%と密着するような、子宮の奥で精液を受け止めるための体勢を取って
+PRINTFORML 膣内射精をおねだりした%CALLNAME:ARG%は、一際深いストロークに全身を痙攣させて絶頂した
+PRINTFORM %CSTR:ARG:彼氏姓%が%CALLNAME:ARG%のヴァギナから愛液と自身の精液でてらてらと光る黒ずんだペニスを引きぬくと、
+PRINTFORML %CALLNAME:ARG%の肉棒の太さにぽっかりと口を拡げた膣穴から、受け止めきれなかった精液が溢れ始めた……
 PRINTW
-PRINTFORM 中途半端なところでフェラを止められたあなたが痙攣も収まってきた%CALLNAME:TARGET%に挿れてもいいか尋ねる
-PRINTFORM と、%CALLNAME:TARGET%は無言でベッド脇に置いてあった未使用のコンドームの封を切り、
+PRINTFORM 中途半端なところでフェラを止められたあなたが痙攣も収まってきた%CALLNAME:ARG%に挿れてもいいか尋ねる
+PRINTFORM と、%CALLNAME:ARG%は無言でベッド脇に置いてあった未使用のコンドームの封を切り、
 PRINTFORML 唇と舌で器用にあなたのペニスに被せ、両の手で秘唇と一緒に膣口を左右に広げることで応えてくれた
-PRINTFORML どうやら撮影ならともかく、それ以外ではいくら割り切った関係とは言えども愛する%CSTR:彼氏姓%の精液以外は受け入れたくないらしい
-PRINTFORML あなたはそれでも%CALLNAME:TARGET%とＳＥＸできるなら、と気持ちを切り替えて期待にざわめく%CALLNAME:TARGET%の膣内へと肉棒を挿入し始めた……
-PRINTFORM これまでに{TCVAR:Ｖ経験 - 1}人もの欲望を受け止めたかなでの膣内は、膣内射精された仁科の精液と自身の愛液でとろとろにほぐれており、
+PRINTFORML どうやら撮影ならともかく、それ以外ではいくら割り切った関係とは言えども愛する%CSTR:ARG:彼氏姓%の精液以外は受け入れたくないらしい
+PRINTFORML あなたはそれでも%CALLNAME:ARG%とＳＥＸできるなら、と気持ちを切り替えて期待にざわめく%CALLNAME:ARG%の膣内へと肉棒を挿入し始めた……
+PRINTFORM これまでに{TCVAR:ARG:Ｖ経験 - 1}人もの欲望を受け止めたかなでの膣内は、膣内射精された仁科の精液と自身の愛液でとろとろにほぐれており、
 PRINTFORML すんなりとあなたの肉棒を飲み込んだ
 PRINTFORML 甘ったるい鼻にかかった吐息を漏らしながら、かなでは目を細めてコンドーム越しのあなたのペニスの形を確かめるように無意識のうちに膣襞を収縮させている
 PRINTFORML 
@@ -118,13 +117,13 @@ PRINTFORML
 ;渡すRANDの値を変更し、0～X個のイメチェンの内容を制作
 ;好みが分岐しない場合はLOCALへRAND:Xを渡す部分をコメントアウト
 ;===========================================================
-@PARSONAL_CHANGE_0
+@PERSONAL_CHANGE_0(ARG)
 
-SIF EXP:イメチェン回数 == 0
-	CFLAG:ラブホ = RAND:2
+SIF EXP:ARG:イメチェン回数 == 0
+	CFLAG:ARG:ラブホ = RAND:2
 ;LOCAL = CFLAG:ラブホ
 
-TRYCALLFORM PC_NUM{CFLAG:彼氏タイプ}_PT{LOCAL}
+TRYCALLFORM PC_NUM{CFLAG:ARG:彼氏タイプ}_PT{LOCAL}
 
 ;===========================================================
 ;イメチェンの内容
@@ -133,6 +132,6 @@ TRYCALLFORM PC_NUM{CFLAG:彼氏タイプ}_PT{LOCAL}
 ;【ニート】【影響されやすい】は一週間終了後必ずイメチェンする
 ;【影響されやすい】のみ10回までイメチェンし、それ以外は8回まで
 ;===========================================================
-@PC_NUM0_PT0
+@PC_NUM0_PT0(ARG)
 
-CALL PARSONAL_CHANGE
+CALL PERSONAL_CHANGE(ARG)

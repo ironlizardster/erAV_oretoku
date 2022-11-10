@@ -4,50 +4,50 @@
 ;===========================================================
 ;タバコの銘柄の決定
 ;===========================================================
-@CIGARETTES
-CFLAG:タバコ = RAND:21
-	IF CFLAG:タバコ == 0
-		CSTR:タバコの銘柄 = セブンスター
-	ELSEIF CFLAG:タバコ == 1
-		CSTR:タバコの銘柄 = ブラックストーン
-	ELSEIF CFLAG:タバコ == 2
-		CSTR:タバコの銘柄 = セーラムピアニッシモ
-	ELSEIF CFLAG:タバコ == 3
-		CSTR:タバコの銘柄 = ベヴェルフレアーメンソール
-	ELSEIF CFLAG:タバコ == 4
-		CSTR:タバコの銘柄 = マルボロメンソールライト
-	ELSEIF CFLAG:タバコ == 5
-		CSTR:タバコの銘柄 = セブンスターメンソール
-	ELSEIF CFLAG:タバコ == 6
-		CSTR:タバコの銘柄 = 赤ラーク
-	ELSEIF CFLAG:タバコ == 7
-		CSTR:タバコの銘柄 = ハイライト
-	ELSEIF CFLAG:タバコ == 8
-		CSTR:タバコの銘柄 = ラッキーストライク
-	ELSEIF CFLAG:タバコ == 9
-		CSTR:タバコの銘柄 = KENT
-	ELSEIF CFLAG:タバコ == 10
-		CSTR:タバコの銘柄 = KOOL
-	ELSEIF CFLAG:タバコ == 11
-		CSTR:タバコの銘柄 = アメリカンスピリット
-	ELSEIF CFLAG:タバコ == 12
-		CSTR:タバコの銘柄 = キースアロマメルティ
-	ELSEIF CFLAG:タバコ == 13
-		CSTR:タバコの銘柄 = ガラム
-	ELSEIF CFLAG:タバコ == 14
-		CSTR:タバコの銘柄 = 中南海
-	ELSEIF CFLAG:タバコ == 15
-		CSTR:タバコの銘柄 = ゴロワーズ
-	ELSEIF CFLAG:タバコ == 16
-		CSTR:タバコの銘柄 = JPS
-	ELSEIF CFLAG:タバコ == 17
-		CSTR:タバコの銘柄 = ブラックデビル
-	ELSEIF CFLAG:タバコ == 18
-		CSTR:タバコの銘柄 = DEATH
-	ELSEIF CFLAG:タバコ == 19
-		CSTR:タバコの銘柄 = わかば
+@CIGARETTES(ARG)
+CFLAG:ARG:タバコ = RAND:21
+	IF CFLAG:ARG:タバコ == 0
+		CSTR:ARG:タバコの銘柄 = セブンスター
+	ELSEIF CFLAG:ARG:タバコ == 1
+		CSTR:ARG:タバコの銘柄 = ブラックストーン
+	ELSEIF CFLAG:ARG:タバコ == 2
+		CSTR:ARG:タバコの銘柄 = セーラムピアニッシモ
+	ELSEIF CFLAG:ARG:タバコ == 3
+		CSTR:ARG:タバコの銘柄 = ベヴェルフレアーメンソール
+	ELSEIF CFLAG:ARG:タバコ == 4
+		CSTR:ARG:タバコの銘柄 = マルボロメンソールライト
+	ELSEIF CFLAG:ARG:タバコ == 5
+		CSTR:ARG:タバコの銘柄 = セブンスターメンソール
+	ELSEIF CFLAG:ARG:タバコ == 6
+		CSTR:ARG:タバコの銘柄 = 赤ラーク
+	ELSEIF CFLAG:ARG:タバコ == 7
+		CSTR:ARG:タバコの銘柄 = ハイライト
+	ELSEIF CFLAG:ARG:タバコ == 8
+		CSTR:ARG:タバコの銘柄 = ラッキーストライク
+	ELSEIF CFLAG:ARG:タバコ == 9
+		CSTR:ARG:タバコの銘柄 = KENT
+	ELSEIF CFLAG:ARG:タバコ == 10
+		CSTR:ARG:タバコの銘柄 = KOOL
+	ELSEIF CFLAG:ARG:タバコ == 11
+		CSTR:ARG:タバコの銘柄 = アメリカンスピリット
+	ELSEIF CFLAG:ARG:タバコ == 12
+		CSTR:ARG:タバコの銘柄 = キースアロマメルティ
+	ELSEIF CFLAG:ARG:タバコ == 13
+		CSTR:ARG:タバコの銘柄 = ガラム
+	ELSEIF CFLAG:ARG:タバコ == 14
+		CSTR:ARG:タバコの銘柄 = 中南海
+	ELSEIF CFLAG:ARG:タバコ == 15
+		CSTR:ARG:タバコの銘柄 = ゴロワーズ
+	ELSEIF CFLAG:ARG:タバコ == 16
+		CSTR:ARG:タバコの銘柄 = JPS
+	ELSEIF CFLAG:ARG:タバコ == 17
+		CSTR:ARG:タバコの銘柄 = ブラックデビル
+	ELSEIF CFLAG:ARG:タバコ == 18
+		CSTR:ARG:タバコの銘柄 = DEATH
+	ELSEIF CFLAG:ARG:タバコ == 19
+		CSTR:ARG:タバコの銘柄 = わかば
 	ELSE
-		CSTR:タバコの銘柄 = 赤マルボロ
+		CSTR:ARG:タバコの銘柄 = 赤マルボロ
 	ENDIF
 ;===========================================================
 ;彼氏による削除
@@ -82,55 +82,8 @@ CALL キャラ削除, G
 ;	SIF NO:COUNT == N
 ;		ASSI = COUNT
 ;REND
-;	
-;===========================================================
-;タバコの銘柄の決定
-;===========================================================
-@CIGARETTES_4COUNT
-CFLAG:COUNT:タバコ = RAND:21
-	IF CFLAG:COUNT:タバコ == 0
-		CSTR:COUNT:タバコの銘柄 = セブンスター
-	ELSEIF CFLAG:COUNT:タバコ == 1
-		CSTR:COUNT:タバコの銘柄 = ブラックストーン
-	ELSEIF CFLAG:COUNT:タバコ == 2
-		CSTR:COUNT:タバコの銘柄 = セーラムピアニッシモ
-	ELSEIF CFLAG:COUNT:タバコ == 3
-		CSTR:COUNT:タバコの銘柄 = ベヴェルフレアーメンソール
-	ELSEIF CFLAG:COUNT:タバコ == 4
-		CSTR:COUNT:タバコの銘柄 = マルボロメンソールライト
-	ELSEIF CFLAG:COUNT:タバコ == 5
-		CSTR:COUNT:タバコの銘柄 = セブンスターメンソール
-	ELSEIF CFLAG:COUNT:タバコ == 6
-		CSTR:COUNT:タバコの銘柄 = 赤ラーク
-	ELSEIF CFLAG:COUNT:タバコ == 7
-		CSTR:COUNT:タバコの銘柄 = ハイライト
-	ELSEIF CFLAG:COUNT:タバコ == 8
-		CSTR:COUNT:タバコの銘柄 = ラッキーストライク
-	ELSEIF CFLAG:COUNT:タバコ == 9
-		CSTR:COUNT:タバコの銘柄 = KENT
-	ELSEIF CFLAG:COUNT:タバコ == 10
-		CSTR:COUNT:タバコの銘柄 = KOOL
-	ELSEIF CFLAG:COUNT:タバコ == 11
-		CSTR:COUNT:タバコの銘柄 = アメリカンスピリット
-	ELSEIF CFLAG:COUNT:タバコ == 12
-		CSTR:COUNT:タバコの銘柄 = キースアロマメルティ
-	ELSEIF CFLAG:COUNT:タバコ == 13
-		CSTR:COUNT:タバコの銘柄 = ガラム
-	ELSEIF CFLAG:COUNT:タバコ == 14
-		CSTR:COUNT:タバコの銘柄 = 中南海
-	ELSEIF CFLAG:COUNT:タバコ == 15
-		CSTR:COUNT:タバコの銘柄 = ゴロワーズ
-	ELSEIF CFLAG:COUNT:タバコ == 16
-		CSTR:COUNT:タバコの銘柄 = JPS
-	ELSEIF CFLAG:COUNT:タバコ == 17
-		CSTR:COUNT:タバコの銘柄 = ブラックデビル
-	ELSEIF CFLAG:COUNT:タバコ == 18
-		CSTR:COUNT:タバコの銘柄 = DEATH
-	ELSEIF CFLAG:COUNT:タバコ == 19
-		CSTR:COUNT:タバコの銘柄 = わかば
-	ELSE
-		CSTR:COUNT:タバコの銘柄 = 赤マルボロ
-	ENDIF
+;
+
 ;===========================================================
 ;ＡＶパートの計算
 ;===========================================================

@@ -238,7 +238,7 @@ IF !CFLAG:初キス相手
 	ELSEIF TALENT:淫乱 == 1
 		CSTR:初キス相手 = アンドリュー・テイラー
 	ENDIF
-	CALL 初キス喪失実行(TARGET,初相手_枕営業,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"%CSTR:初キス相手%")
+	CALL 初キス喪失実行(TARGET,初相手_枕営業,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,@"%CSTR:初キス相手%")
 ENDIF
 IF TALENT:Ａ処女 == 1
 	CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_なし,"アンドリュー・テイラー")

@@ -142,9 +142,6 @@ ENDIF
 
 ;Ａ処女喪失
 IF TALENT:Ａ処女 == 1
-	SETCOLOR 0xF58F98
-	PRINTFORML 【Ａ処女喪失】
-	RESETCOLOR
 	;処女喪失相手（輪姦）を記録
 	CALL Ａ処女喪失実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_輪姦,"知らないオトコの人")
 	;異常体験に＋２

@@ -357,24 +357,8 @@ CALLFORM MISSION_REPORT_{ARG}(LOCAL)
 ;  要素番号はEXPに合わせる
 ;=================================================
 @MISSION_ADD_EXP(ARG)
-; 経験増加処理
-PRINTFORML %NAME:ARG%
-FOR LOCAL, 0, VARSIZE("EXP")
-	IF TCVAR:ARG:LOCAL
-		; 対象が淫乱なら経験2倍
-		SIF TALENT:ARG:淫乱 == 1
-			TCVAR:ARG:LOCAL *= 2
-		; 経験値の加算処理
-		; 経験名が定義されているのみ加算処理を行う
-		IF STRLENS(EXPNAME:LOCAL) > 0
-			EXP:ARG:LOCAL += TCVAR:ARG:LOCAL
-		ELSE
-			DEBUGPRINTFORML EXP:{LOCAL}は定義されていないため加算処理をスキップします
-		ENDIF
-		PRINTFORML 　%EXPNAME:LOCAL% + {TCVAR:ARG:LOCAL}
-	ENDIF
-NEXT
-VARSET TCVAR:ARG, 0
+CALL ADD_EXP(ARG, 0,[[TALENT:淫乱]])
+
 
 ;=================================================
 ; キャラ呼び出し

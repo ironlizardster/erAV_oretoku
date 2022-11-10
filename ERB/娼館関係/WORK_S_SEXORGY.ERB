@@ -230,7 +230,7 @@ REPEAT CHARANUM
 
 	;口上の判定
 	TFLAG:口上番号 = 114
-	CALL SELF_KOJO
+	CALL SELF_KOJO(TARGET)
 	;念のため口上用フラグを空に
 	TFLAG:口上番号 = 0
 
@@ -396,7 +396,7 @@ IF FLAG:特殊営業で夜の部を開催フラグ != 0
 
 		;口上の判定
 		TFLAG:口上番号 = 115
-		CALL SELF_KOJO
+		CALL SELF_KOJO(TARGET)
 		;念のため口上用フラグを空に
 		TFLAG:口上番号 = 0
 	REND

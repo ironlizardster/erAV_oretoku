@@ -178,7 +178,11 @@ DEBUGPRINTFORML %STRING%
 		TEMP_STR += @"の"
 		SELECTCASE CFLAG:CHARA_NO:初キス喪失状況
 			CASE 初状況_男性器
-				TEMP_STR += @"%CSTR:CHARA_NO:男性器呼び方%に"
+				IF CFLAG:CHARA_NO:初キス相手 == 初相手_セフレ
+				TEMP_STR += @"極太%CSTR:CHARA_NO:男性器呼び方%%UNICODE(0x2665)%"
+				ELSE
+					TEMP_STR += @"%CSTR:CHARA_NO:男性器呼び方%に"
+				ENDIF
 			CASE 初状況_肛門
 				TEMP_STR += @"%CSTR:CHARA_NO:肛門呼び方%に"
 			CASE 初状況_女性器

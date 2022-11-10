@@ -7,31 +7,29 @@ REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
 	ELSEIF CFLAG:COUNT:合コン参加 == 1 && CFLAG:COUNT:彼氏有 != 1 && TALENT:COUNT:彼氏あり == 0
-		CALL COMPA_MAIN
+		CALL COMPA_MAIN(COUNT)
 	ENDIF
 REND
 
 ;===========================================================
 ;合コン・本体
 ;===========================================================
-@COMPA_MAIN
-X = 5 + RAND:16
-Y = BASE:COUNT:魅力値
-P = 0
+@COMPA_MAIN(ARG)
+#DIM 参加人数 = 5
+#DIM 魅力
+#DIM タイプ
+#DIM 強姦薬物経験 = 1
+#DIM 強姦異常経験 = 0
 
-PRINTFORM %NAME:COUNT%を始めとして{X}人が
-IF RAND:2 == 0
-	PRINTFORM 大学のテニスサークル主催の合コン
-	P = 1
+参加人数 += RAND:16
+魅力 = BASE:ARG:魅力値
+タイプ = RAND:2
+
+PRINTFORMW %NAME:ARG%を始めとして{参加人数}人が\@ タイプ ? 大学のテニスサークル主催の合コン # 有名ＳＮＳのコミュニティ主催のオフ会 \@に参加した
+IF 魅力 >= 80
+	PRINTFORML %CALLNAME:ARG%はひっきりなしに様々な職業の異性からアプローチを受けている
 ELSE
-	PRINTFORM 有名ＳＮＳのコミュニティ主催のオフ会
-	P = 2
-ENDIF
-PRINTFORMW に参加した
-IF Y >= 80
-	PRINTFORML %CALLNAME:COUNT%はひっきりなしに様々な職業の異性からアプローチを受けている
-ELSE
-	PRINTFORML %CALLNAME:COUNT%は様々な職業の異性と楽しそうに談笑している
+	PRINTFORML %CALLNAME:ARG%は様々な職業の異性と楽しそうに談笑している
 ENDIF
 PRINTW
 PRINTW ………………
@@ -39,66 +37,103 @@ PRINTW …………
 PRINTL ……
 PRINTW
 
-;LOCAL = RAND:100
-;
-;IF LOCAL >= 90
-;	CALL COMPA_TAKEOUT
-;ELSE
-	IF P == 1
-		PRINTFORM 合コン
-	ELSEIF P == 2
-		PRINTFORM オフ会
-	ENDIF
-	PRINTFORM の結果、%CALLNAME:COUNT%は
+LOCAL = RAND:100
+
+IF FLAG:治安悪化レベル * LOCAL >= 90
+	CALL COMPA_TAKEOUT(ARG,タイプ)
+	FLAG:治安悪化 += RAND:5 + 1
+ELSE
+	PRINTFORM \@ タイプ ? 合コン # オフ会 \@の結果、%CALLNAME:ARG%は
 	SIF FLAG:チャラ男固定 == 1
-		X = 150
-	IF Y + RAND:100 + X >= 150
+		参加人数 = 150
+	IF 魅力 + RAND:100 + 参加人数 >= 150
 		IF FLAG:チャラ男固定 == 0
-			CFLAG:COUNT:彼氏タイプ = RAND:7
-			IF CFLAG:COUNT:彼氏タイプ == 1
-				CFLAG:COUNT:彼氏タイプ = 0
-			ELSEIF CFLAG:COUNT:彼氏タイプ == 3
-				CFLAG:COUNT:彼氏タイプ = 6
+			CFLAG:ARG:彼氏タイプ = RAND:7
+			IF CFLAG:ARG:彼氏タイプ == 1
+				CFLAG:ARG:彼氏タイプ = 0
+			ELSEIF CFLAG:ARG:彼氏タイプ == 3
+				CFLAG:ARG:彼氏タイプ = 6
 			ENDIF
+		ENDIF		
+		PRINTFORM \@ タイプ ? 合コン # オフ会 \@に参加していた
+		IF CFLAG:ARG:彼氏タイプ == 1
+			PRINT クラスメイト
+		ELSEIF CFLAG:ARG:彼氏タイプ == 2
+			PRINT 高校生
+		ELSEIF CFLAG:ARG:彼氏タイプ == 3
+			PRINT 中学生
+		ELSEIF CFLAG:ARG:彼氏タイプ == 4
+			PRINT 大学生
+		ELSEIF CFLAG:ARG:彼氏タイプ == 5
+			PRINT サラリーマン
+		ELSEIF CFLAG:ARG:彼氏タイプ == 6
+			PRINT ホスト
+		ELSE
+			PRINT チャラ男
 		ENDIF
-		IF P == 1
-			PRINTFORM 合コン
-		ELSEIF P == 2
-			PRINTFORM オフ会
-		ENDIF
-		PRINTFORM に参加していた
-			IF CFLAG:COUNT:彼氏タイプ == 1
-				PRINT クラスメイト
-			ELSEIF CFLAG:COUNT:彼氏タイプ == 2
-				PRINT 高校生
-			ELSEIF CFLAG:COUNT:彼氏タイプ == 3
-				PRINT 中学生
-			ELSEIF CFLAG:COUNT:彼氏タイプ == 4
-				PRINT 大学生
-			ELSEIF CFLAG:COUNT:彼氏タイプ == 5
-				PRINT サラリーマン
-			ELSEIF CFLAG:COUNT:彼氏タイプ == 6
-				PRINT ホスト
-			ELSE
-				PRINT チャラ男
-			ENDIF
 		PRINTFORML と付き合うことになったようだ……
-			CFLAG:COUNT:彼氏有 = 1
-			TALENT:COUNT:彼氏あり = 1
-			CALL DECIDE_BOYFRIEND,COUNT
-			CFLAG:COUNT:合コン参加 = 0
-			CFLAG:COUNT:ラブホ = 1
+		CFLAG:ARG:彼氏有 = 1
+		TALENT:ARG:彼氏あり = 1
+		CALL DECIDE_BOYFRIEND,ARG
+		CFLAG:ARG:合コン参加 = 0
+		CFLAG:ARG:ラブホ = 1
 	ELSE
 		PRINTFORML 特に誰からも声をかけられなかったようだ……
-			CFLAG:COUNT:合コン参加 = 0
+		CFLAG:ARG:合コン参加 = 0
 	ENDIF
 	DRAWLINE
-;ENDIF
+ENDIF
 
 ;===========================================================
 ;合コン・本体
 ;===========================================================
-@COMPA_TAKEOUT
+@COMPA_TAKEOUT(ARG,ARG:1)
+#DIM 強姦経験 = 1
+#DIM 強姦Ａ経験 = 0
+#DIM 強姦フェラ経験 = 5
+#DIM 強姦薬物経験 = 1
+#DIM 強姦異常経験 = 0
 
-TARGET = COUNT
+PRINTFORML どうやら%CALLNAME:ARG%が参加したのは\@ ARG:1 ? 合コン # オフ会 \@とは名ばかりのハメパに参加してしまったようだ
+PRINTFORMW 酔いつぶされた%CALLNAME:ARG%はラブホに連れ込まれて輪姦されてしまった……
+
+強姦経験 += RAND:5
+強姦フェラ経験 += RAND:10
+強姦Ａ経験 += RAND:3
+強姦薬物経験 += RAND:3
+
+PRINTFORML Ｖ経験＋{強姦経験}
+IF !CFLAG:ARG:処女喪失相手 && TALENT:ARG:処女
+	強姦異常経験 += 1
+	CALL 処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_クスリ,"不良")
+ENDIF
+IF 強姦Ａ経験 > 0
+	PRINTFORML Ａ経験＋{強姦Ａ経験}
+	IF TALENT:ARG:Ａ処女
+		強姦異常経験 += 1
+		CALL Ａ処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_クスリ,"不良")
+	ENDIF
+ENDIF
+;初強姦で異常+1
+SIF EXP:ARG:強姦回数 == 0
+	強姦異常経験 += 1 
+PRINTFORML 性交経験＋{強姦経験}
+PRINTFORML フェラ経験＋{強姦フェラ経験}
+IF !CFLAG:ARG:初キス相手
+	CALL 初キス喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"不良")
+ENDIF
+PRINTFORML 精液経験＋{強姦Ａ経験+強姦経験+強姦フェラ経験}
+PRINTFORML 薬物経験＋{強姦薬物経験}
+SIF 強姦異常経験
+	PRINTFORML 異常経験＋{強姦異常経験}
+
+EXP:ARG:Ｖ経験 += 強姦経験
+EXP:ARG:Ａ経験 += 強姦Ａ経験
+EXP:ARG:性交経験 += 強姦経験+強姦Ａ経験
+EXP:ARG:精液経験 += 強姦経験+強姦Ａ経験+強姦フェラ経験
+EXP:ARG:異常経験 += 強姦異常経験
+EXP:ARG:薬物経験 += 強姦薬物経験
+EXP:ARG:強姦回数 += 1
+BASE:ARG:魅力値 -= 5
+DRAWLINE
 

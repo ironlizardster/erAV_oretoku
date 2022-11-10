@@ -237,21 +237,4 @@ NEXT
 ;  TCVARの要素番号はEXPのものに合わせる
 ;=================================================
 @ARBEIT_ADD_EXP(ARG, ARG:1 = 0)
-; 経験増加処理
-PRINTFORML %NAME:ARG%
-FOR LOCAL, 0, VARSIZE("EXP")
-	IF TCVAR:ARG:LOCAL
-		; 経験値の加算処理
-		; 経験名が定義されているのみ加算処理を行う
-		SIF TALENT:ARG:優等生 == 1
-			TCVAR:ARG:LOCAL *= 2
-		IF STRLENS(EXPNAME:LOCAL) > 0
-			EXP:ARG:LOCAL += TCVAR:ARG:LOCAL
-		ELSE
-			DEBUGPRINTFORML NOTICE: EXP:{LOCAL}は定義されていないため加算処理をスキップします
-		ENDIF
-		SIF ARG:1 == 0
-			PRINTFORML 　%EXPNAME:LOCAL% + {TCVAR:ARG:LOCAL}
-	ENDIF
-NEXT
-VARSET TCVAR:ARG, 0
+CALL ADD_EXP(ARG, ARG:1,[[TALENT:優等生]])

@@ -221,7 +221,7 @@ IF TALENT:処女 == 1
 	CALL 処女喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦)
 ENDIF
 IF !CFLAG:初キス相手
-	CALL 初キス喪失実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススの%CSTR:男性器呼び方%")
+	CALL 初キス喪失実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,@"ユーニス・パラディススの%CSTR:男性器呼び方%")
 ENDIF
 IF TALENT:童貞 == 1
 	CALL 童貞喪失実行(TARGET,初相手_不明,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦,"知らない女のコの処女マンコ%UNICODE(0x2665)%")
@@ -229,21 +229,6 @@ ENDIF
 IF TALENT:Ａ処女 == 1
 	CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦,"触手生物")
 ENDIF
-CFLAG:処女喪失年齢 = BASE:実年齢
-CFLAG:処女喪失月 = DAY:日付_月
-CFLAG:処女喪失日 = DAY:日付_日
-CFLAG:処女喪失場所 = 12
-CFLAG:処女喪失状況 = 5
-CFLAG:初キス喪失年齢 = BASE:実年齢
-CFLAG:初キス喪失月 = DAY:日付_月
-CFLAG:初キス喪失日 = DAY:日付_日
-CFLAG:初キス喪失場所 = 12
-CFLAG:初キス喪失状況 = 1
-CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-CFLAG:Ａ処女喪失月 = DAY:日付_月
-CFLAG:Ａ処女喪失日 = DAY:日付_日
-CFLAG:Ａ処女喪失場所 = 12
-CFLAG:Ａ処女喪失状況 = 5
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)
 CFLAG:腋毛 += 1

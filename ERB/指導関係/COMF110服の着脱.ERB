@@ -74,31 +74,31 @@ ENDIF
 ;ワンピース脱衣
 IF T:1
 	PRINT  [1] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL を脱がせる
 ENDIF
 ;ワンピース装着
 IF W:1
 	PRINT    [1] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL を着せる
 ENDIF
 ;ツーピース上脱衣
 IF T:2
 	PRINT  [1] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL 上を脱がせる
 ENDIF
 ;ツーピース上装着
 IF W:2
 	PRINT    [1] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL 上を着せる
 ENDIF
 ;ツーピース下脱衣
 IF T:3
 	PRINT  [2] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 		PRINTL のスカートを脱がせる
 	ELSE
@@ -108,7 +108,7 @@ ENDIF
 ;ツーピース下装着
 IF W:3
 	PRINT    [2] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 		PRINTL のスカートを穿かせる
 	ELSE
@@ -205,7 +205,7 @@ ELSEIF RESULT == 1 && T:1
 	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 4
 		PRINT おしっこでびしょ濡れの
 	ENDIF
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL を脱がせた
 	SIF CFLAG:着衣状態 & 4
 		CFLAG:着衣状態 -= 4
@@ -223,7 +223,7 @@ ELSEIF RESULT == 1 && W:1
 		PRINTFORML おしっこでびしょ濡れで、着られる状態ではありません
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%に
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTL を着せた
 		SIF CFLAG:上着上状態 == 0
 			CFLAG:着衣状態 |= 4
@@ -238,13 +238,13 @@ ELSEIF RESULT == 1 && W:1
 ;ツーピース上脱衣
 ELSEIF RESULT == 1 && T:2
 	PRINTFORM %CALLNAME:TARGET%から
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL 上を脱がせた
 	CFLAG:着衣状態 -= 4
 ;ツーピース上装着
 ELSEIF RESULT == 1 && W:2
 	PRINTFORM %CALLNAME:TARGET%に
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL 上を着せた
 	CFLAG:着衣状態 |= 4
 ;ツーピース下脱衣
@@ -256,7 +256,7 @@ ELSEIF RESULT == 2 && T:3
 	ELSEIF TFLAG:下着着衣下が穿けない状態になっている & 4
 		PRINT 、おしっこでびしょ濡れの
 	ENDIF
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 		PRINTL のスカートを脱がせた
 	ELSE
@@ -276,7 +276,7 @@ ELSEIF RESULT == 2 && W:3
 		PRINTFORML おしっこでびしょ濡れで、はける状態ではありません
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%に
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		IF CFLAG:上着タイプ >= 1 && CFLAG:上着タイプ <= 100
 			PRINTL のスカートをはかせた
 		ELSE

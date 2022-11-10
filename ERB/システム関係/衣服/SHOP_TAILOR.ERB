@@ -82,7 +82,7 @@ SIF CFLAG:上着タイプ
 	DRAWLINE
 IF CFLAG:上着タイプ && (CFLAG:上着上状態 == 0 || CFLAG:上着下状態 == 0)
 	PRINT  [20] - 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL を処分する
 ENDIF
 
@@ -150,7 +150,7 @@ ELSEIF RESULT == 13 && ミッション結果:305 >= 3 && EXP:スペシャルエ�
 	CALL TAILOR_ESTHETIC
 ELSEIF RESULT == 20 && (CFLAG:上着上状態 == 0 || CFLAG:上着下状態 == 0)
 	PRINTFORM %CALLNAME:TARGET%の着ていた
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTL を焼却処分しました
 	CFLAG:上着タイプ = 0
 	CFLAG:上着上状態 = -3
@@ -183,7 +183,7 @@ ELSEIF RESULT == 22 && CFLAG:特別コス状態 == 0 && CFLAG:貞操帯鍵廃棄
 	GOTO INPUT_LOOP_02
 ELSEIF RESULT == 23 && CFLAG:予備衣装 != 0
 	PRINTFORM 《現在着ている
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 	PRINTFORM を予備の
 		CALL PRINT_CLOTHTYPE_CASUALWEAR
 	PRINTFORMW に着替えさせました》
@@ -268,7 +268,7 @@ ENDIF
 IF A <= 9 
 	PRINTFORM %NAME:TARGET%を
 	IF CFLAG:上着タイプ && (CFLAG:上着上状態 == 0 || CFLAG:上着下状態 == 0)
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORM から
 		CFLAG:179 = CFLAG:上着タイプ
 		CFLAG:予備衣装 = CFLAG:179
@@ -278,19 +278,19 @@ IF A <= 9
 	CFLAG:上着上状態 = 0
 	CFLAG:上着下状態 = 0
 	
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTFORML に着替えさせました。
 
 	IF F == 1
 		PRINT 買ったばかりの
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORML は上半身が破れて、
 		PRINTFORML %CALLNAME:TARGET%のおっぱいが丸見えになっています……
 		CFLAG:ブラジャー状態 = 0 - 3
 		CFLAG:上着上状態 = 0 - 3
 	ELSEIF F == 2
 		PRINT 買ったばかりの
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORML は下半身が破れて、
 		PRINTFORML %CALLNAME:TARGET%のお尻が丸見えになっています……
 		CFLAG:上着下状態 = 0 - 3
@@ -1403,12 +1403,12 @@ IF RESULT == 0 && TALENT:オトコ == 0
 	DRAWLINE
 	PRINTFORMW  日焼けサロンから戻ってきた%CALLNAME:TARGET%は《%TALENTNAME:[[TALENT:褐色肌]]%》になりました
 	TALENT:褐色肌 = 1
-	CFLAG:614 = 4 + RAND:4
+	CFLAG:日焼効果 = 4 + RAND:4
 ELSEIF RESULT == 0 && TALENT:オトコ == 1
 	DRAWLINE
 	PRINTFORMW  日焼けサロンから戻ってきた%CALLNAME:TARGET%は《%TALENTNAME:[[TALENT:褐色肌]]%》になりました
 	TALENT:褐色肌 = 1
-	CFLAG:614 = 4 + RAND:4
+	CFLAG:日焼効果 = 4 + RAND:4
 ELSE 
 	RETURN 1
 ENDIF
@@ -1469,7 +1469,7 @@ REPEAT CHARANUM
 	PRINTFORM  [{COUNT}] %NAME:COUNT% 
 	IF CFLAG:上着タイプ && (CFLAG:上着上状態 >= 0 || CFLAG:上着下状態 >= 0)
 		PRINT / 
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(COUNT)
 	ELSEIF CFLAG:上着タイプ && (CFLAG:パンツ状態 >= 0 || CFLAG:ブラジャー状態 >= 0)
 		PRINT / 下着
 	ELSE

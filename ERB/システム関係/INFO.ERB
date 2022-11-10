@@ -546,7 +546,7 @@ SIF (CFLAG:着衣状態 & 8) && (CFLAG:上着タイプ >= 240 && CFLAG:上着タ
 
 PRINT  
 IF (CFLAG:着衣状態 & 8) && (FLAG:陰毛を生やす || (CFLAG:ピアス状況 & 12)) 
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINT の裾を持ち上げさせると、
 ENDIF
 

@@ -2,6 +2,9 @@
 ;スタッフ寝取られ・準備
 ;=================================================
 @NTR_STAFF_BEGIN
+SIF FLAG:リーナスタッフ動向調査
+	RETURN
+
 REPEAT CHARANUM
 	IF COUNT == 0
 		CONTINUE
@@ -43,70 +46,68 @@ REPEAT CHARANUM
 		CONTINUE
 	ELSEIF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスタイプ == 79
 		CONTINUE
-	ELSEIF FLAG:リーナスタッフ動向調査
-		CONTINUE
 	ELSEIF DAY <= 1
 		CONTINUE
 	ELSE
 		LOCAL = RAND:100
-			IF TALENT:COUNT:惚れっぽい == 1
-				LOCAL += 20
+		IF TALENT:COUNT:惚れっぽい == 1
+			LOCAL += 20
+		ENDIF
+		IF TALENT:COUNT:保守的 == 1
+			LOCAL -= 5
+		ENDIF
+		IF TALENT:COUNT:一線越えない == 1
+			LOCAL -= 5
+		ENDIF
+		IF TALENT:COUNT:貞操観念 == 1
+			LOCAL -= 5
+		ENDIF
+		IF TALENT:COUNT:恋心 == 1
+			LOCAL -= 10
+		ENDIF
+		IF TALENT:COUNT:妄信 == 1
+			LOCAL -= 10
+		ENDIF
+		IF TALENT:COUNT:信仰心 == 1
+			LOCAL -= 5
+		ENDIF
+		IF TALENT:COUNT:ColorfulPureGirls == 1
+			LOCAL -= 10
+		ENDIF
+		IF TALENT:COUNT:貞操無頓着 == 1
+			LOCAL += 5
+		ENDIF
+		IF TALENT:COUNT:即落ち == 1
+			LOCAL += 50
+		ENDIF
+		IF TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:恋心 == 0
+			LOCAL += 15
+		ENDIF
+		IF TALENT:COUNT:心弱い == 1
+			LOCAL += 5
+		ENDIF
+		IF TALENT:COUNT:ギャル系 == 1
+			LOCAL += 10
+		ENDIF
+		IF TALENT:COUNT:流されやすい == 1
+			LOCAL += 20
+		ENDIF
+		IF NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]
+			LOCAL += 10
+		ENDIF
+		IF LOCAL >= 95
+			;進行緩やかに。
+			CFLAG:COUNT:スタッフNTR実行 += 1
+			IF CFLAG:COUNT:スタッフNTR実行 >= 5
+				CFLAG:COUNT:スタッフNTR進行度 = 1
+				CFLAG:COUNT:NTR進行 = 0
+				CFLAG:COUNT:彼氏有 = 1
+				CALL DECIDE_BOYFRIEND,COUNT
 			ENDIF
-			IF TALENT:COUNT:保守的 == 1
-				LOCAL -= 5
-			ENDIF
-			IF TALENT:COUNT:一線越えない == 1
-				LOCAL -= 5
-			ENDIF
-			IF TALENT:COUNT:貞操観念 == 1
-				LOCAL -= 5
-			ENDIF
-			IF TALENT:COUNT:恋心 == 1
-				LOCAL -= 10
-			ENDIF
-			IF TALENT:COUNT:妄信 == 1
-				LOCAL -= 10
-			ENDIF
-			IF TALENT:COUNT:信仰心 == 1
-				LOCAL -= 5
-			ENDIF
-			IF TALENT:COUNT:ColorfulPureGirls == 1
-				LOCAL -= 10
-			ENDIF
-			IF TALENT:COUNT:貞操無頓着 == 1
-				LOCAL += 5
-			ENDIF
-			IF TALENT:COUNT:即落ち == 1
-				LOCAL += 50
-			ENDIF
-			IF TALENT:COUNT:淫乱 == 1 && TALENT:COUNT:恋心 == 0
-				LOCAL += 15
-			ENDIF
-			IF TALENT:COUNT:心弱い == 1
-				LOCAL += 5
-			ENDIF
-			IF TALENT:COUNT:ギャル系 == 1
-				LOCAL += 10
-			ENDIF
-			IF TALENT:COUNT:流されやすい == 1
-				LOCAL += 20
-			ENDIF
-			IF NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]
-				LOCAL += 10
-			ENDIF
-			IF LOCAL >= 95
-				;進行緩やかに。
-				CFLAG:COUNT:スタッフNTR実行 += 1
-				IF CFLAG:COUNT:スタッフNTR実行 >= 5
-					CFLAG:COUNT:スタッフNTR進行度 = 1
-					CFLAG:COUNT:NTR進行 = 0
-					CFLAG:COUNT:彼氏有 = 1
-					CALL DECIDE_BOYFRIEND,COUNT
-				ENDIF
-				LOCAL = 0
-			ELSE
-				LOCAL = 0
-			ENDIF
+			LOCAL = 0
+		ELSE
+			LOCAL = 0
+		ENDIF
 	ENDIF
 REND
 	
@@ -122,7 +123,7 @@ REPEAT CHARANUM
 	ELSEIF CFLAG:COUNT:護衛 == 1
 		CONTINUE
 	ELSEIF CFLAG:COUNT:スタッフNTR進行度 == 1
-		CALL EXP_NTR_STAFF
+		CALL EXP_NTR_STAFF(COUNT)
 		EXP:COUNT:スタッフ寝取られ経験 += 1
 	ENDIF
 REND
@@ -130,32 +131,32 @@ REND
 ;=================================================
 ;スタッフ寝取られ・進行呼び出し
 ;=================================================
-@EXP_NTR_STAFF
-IF EXP:COUNT:スタッフ寝取られ経験 == 0
-	CALL FIRSTKISS_NTR_STAFF
-ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 1 && TALENT:COUNT:処女 && !CFLAG:COUNT:処女喪失相手
-	CALL LOSTVIRGIN_NTR_STAFF
-ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 5
-	CALL CHANGECLOTH_NTR_STAFF
-ELSEIF EXP:COUNT:スタッフ寝取られ経験 == 10
-	CALL NTR_STAFF_LAST
+@EXP_NTR_STAFF(ARG)
+IF EXP:ARG:スタッフ寝取られ経験 == 0
+	CALL FIRSTKISS_NTR_STAFF(ARG)
+ELSEIF EXP:ARG:スタッフ寝取られ経験 == 1 && TALENT:ARG:処女 && !CFLAG:ARG:処女喪失相手
+	CALL LOSTVIRGIN_NTR_STAFF(ARG)
+ELSEIF EXP:ARG:スタッフ寝取られ経験 == 5
+	CALL CHANGECLOTH_NTR_STAFF(ARG)
+ELSEIF EXP:ARG:スタッフ寝取られ経験 == 10
+	CALL NTR_STAFF_LAST(ARG)
 	DRAWLINE
 ELSE
-	CALL SEX_NTR_STAFF
+	CALL SEX_NTR_STAFF(ARG)
 ENDIF
 
 ;=================================================
 ;スタッフ寝取られ・初キス
 ;=================================================
-@FIRSTKISS_NTR_STAFF
-IF !CFLAG:COUNT:初キス相手
-	CALL 初キス喪失実行(COUNT,初相手_スタッフ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"？？？")
+@FIRSTKISS_NTR_STAFF(ARG)
+IF !CFLAG:ARG:初キス相手
+	CALL 初キス喪失実行(ARG,初相手_スタッフ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"？？？")
 ENDIF
 
 ;=================================================
 ;スタッフ寝取られ・処女喪失
 ;=================================================
-@LOSTVIRGIN_NTR_STAFF
+@LOSTVIRGIN_NTR_STAFF(ARG)
 V = 1
 S = 1
 A = 1
@@ -164,26 +165,23 @@ V += RAND:3
 S += RAND:3
 A += RAND:2
 
-CALL 処女喪失実行(COUNT,初相手_スタッフ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"？？？")
+CALL 処女喪失実行(ARG,初相手_スタッフ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"？？？")
 
-	EXP:COUNT:Ｖ経験 += V
-	EXP:COUNT:絶頂経験 += A
-	EXP:COUNT:性交経験 += V
-	EXP:COUNT:精液経験 += S
-	JUEL:COUNT:快Ｖ += 100*V
-	JUEL:COUNT:欲情 += 300*A
-	JUEL:COUNT:恭順 -= 200*(V+A)
-	IF JUEL:COUNT:恭順 < 0
-		ABL:COUNT:信頼 -= 1
-		JUEL:COUNT:恭順 = 0
-		IF ABL:COUNT:信頼 < 1
-			ABL:COUNT:信頼 = 0
-			BASE:COUNT:魅力値 -= 10
-		ENDIF
+EXP:ARG:Ｖ経験 += V
+EXP:ARG:絶頂経験 += A
+EXP:ARG:性交経験 += V
+EXP:ARG:精液経験 += S
+JUEL:ARG:快Ｖ += 100*V
+JUEL:ARG:欲情 += 300*A
+JUEL:ARG:恭順 -= 200*(V+A)
+IF JUEL:ARG:恭順 < 0
+	ABL:ARG:信頼 -= 1
+	JUEL:ARG:恭順 = 0
+	IF ABL:ARG:信頼 < 1
+		ABL:ARG:信頼 = 0
+		BASE:ARG:魅力値 -= 10
 	ENDIF
-;	IF CFLAG:初キス相手 != 10
-;		CALL DECIDE_BOYFRIEND
-;	ENDIF
+ENDIF
 
 ;=================================================
 ;スタッフ寝取られ・衣装チェンジ
@@ -192,63 +190,63 @@ CALL 処女喪失実行(COUNT,初相手_スタッフ,BASE:COUNT:実年齢,DAY:�
 ;マイクロミニタイトワンピース。
 ;ニーハイネットストッキング、パールピンクミュール。
 ;-------------------------------------------------
-@CHANGECLOTH_NTR_STAFF
-PRINTFORMW %NAME:COUNT%の様子がおかしい……
-	IF CFLAG:COUNT:髪色 != 2
-		PRINTFORM 髪の毛を急に染めたり、
-	ENDIF
+@CHANGECLOTH_NTR_STAFF(ARG)
+PRINTFORMW %NAME:ARG%の様子がおかしい……
+IF CFLAG:ARG:髪色 != 2
+	PRINTFORM 髪の毛を急に染めたり、
+ENDIF
 PRINTFORML 露出度の高い服装を好んで着るようになっている
-PRINTFORM %CALLNAME:COUNT%はイメチェンと言っていたが、聞くところによるとついこの間の休日に
-PRINTFORML スタッフの%CSTR:COUNT:彼氏姓%らしき人物と一緒にいるところを街で見かけたらしい
+PRINTFORM %CALLNAME:ARG%はイメチェンと言っていたが、聞くところによるとついこの間の休日に
+PRINTFORML スタッフの%CSTR:ARG:彼氏姓%らしき人物と一緒にいるところを街で見かけたらしい
 PRINTFORML それも妙に親密な空気だったらしく、声をかけるのもためらわれたとのことだ
-PRINTFORML 言われてみれば確かに、最近の%CALLNAME:COUNT%は%CSTR:COUNT:彼氏姓%のことばかり目で追っているような気がする
+PRINTFORML 言われてみれば確かに、最近の%CALLNAME:ARG%は%CSTR:ARG:彼氏姓%のことばかり目で追っているような気がする
 PRINTFORML しかし%CALLNAME:MASTER%以外のスタッフが女優たちに手を出すのは歌音から禁じられていたはずだ……
 DRAWLINE
 
-CFLAG:COUNT:着衣状態 = 13
-CFLAG:COUNT:上着タイプ = 205
-CFLAG:COUNT:靴下タイプ = 8
-CFLAG:COUNT:靴タイプ = 8
-IF CFLAG:COUNT:髪色 != 2
-	CFLAG:COUNT:髪色 = 2
-	CFLAG:COUNT:染髪済 = 1
+CFLAG:ARG:着衣状態 = 13
+CFLAG:ARG:上着タイプ = 205
+CFLAG:ARG:靴下タイプ = 8
+CFLAG:ARG:靴タイプ = 8
+IF CFLAG:ARG:髪色 != 2
+	CFLAG:ARG:髪色 = 2
+	CFLAG:ARG:染髪済 = 1
 ENDIF
-CFLAG:COUNT:髪型 = 7
-IF TALENT:COUNT:影響されやすい == 1
-	TALENT:COUNT:ギャル系 = 1
-	IF NO:COUNT != [[キャラ:宮間かなで]]
+CFLAG:ARG:髪型 = 7
+IF TALENT:ARG:影響されやすい == 1
+	TALENT:ARG:ギャル系 = 1
+	IF NO:ARG != [[キャラ:宮間かなで]]
 		IF RAND:2 == 0
-			CSTR:COUNT:一人称 = ウチ
+			CSTR:ARG:一人称 = ウチ
 		ELSE
-			CSTR:COUNT:一人称 = アタシ
+			CSTR:ARG:一人称 = アタシ
 		ENDIF
 		IF RAND:2 == 0
-			CSTR:COUNT:男性器呼び方 = チンポ
-			CSTR:COUNT:女性器呼び方 = マンコ
+			CSTR:ARG:男性器呼び方 = チンポ
+			CSTR:ARG:女性器呼び方 = マンコ
 		ELSE
-			CSTR:COUNT:男性器呼び方 = オチンポ
-			CSTR:COUNT:女性器呼び方 = オマンコ
+			CSTR:ARG:男性器呼び方 = オチンポ
+			CSTR:ARG:女性器呼び方 = オマンコ
 		ENDIF
 	ELSE
-		CSTR:COUNT:一人称 = ウチ
-		CSTR:COUNT:男性器呼び方 = チンポ
-		CSTR:COUNT:女性器呼び方 = マンコ
-		TALENT:COUNT:褐色肌 = 1
-		CFLAG:COUNT:ピアス状況 |= 2
-		CFLAG:COUNT:ピアス状況 |= 16
-		CFLAG:COUNT:ブラの色 = 11
-		CFLAG:COUNT:ブラタイプ = 6
-		CFLAG:COUNT:パンツの色 = 11
-		CFLAG:COUNT:パンツタイプ = 6
+		CSTR:ARG:一人称 = ウチ
+		CSTR:ARG:男性器呼び方 = チンポ
+		CSTR:ARG:女性器呼び方 = マンコ
+		TALENT:ARG:褐色肌 = 1
+		CFLAG:ARG:ピアス状況 |= 2
+		CFLAG:ARG:ピアス状況 |= 16
+		CFLAG:ARG:ブラの色 = 11
+		CFLAG:ARG:ブラタイプ = 6
+		CFLAG:ARG:パンツの色 = 11
+		CFLAG:ARG:パンツタイプ = 6
 	ENDIF
 ENDIF
 
-CFLAG:COUNT:スタッフNTR進行度 = 1
+CFLAG:ARG:スタッフNTR進行度 = 1
 
 ;=================================================
 ;スタッフ寝取られ・通常セックス
 ;=================================================
-@SEX_NTR_STAFF
+@SEX_NTR_STAFF(ARG)
 V = 5
 S = 5
 A = 8
@@ -259,66 +257,66 @@ S += RAND:5
 A += RAND:5
 F += RAND:3
 
-	EXP:COUNT:Ｖ経験 += V
-	EXP:COUNT:絶頂経験 += A
-	EXP:COUNT:性交経験 += V
-	EXP:COUNT:精液経験 += S
-	EXP:COUNT:フェラ経験 += F
-	JUEL:COUNT:快Ｖ += 400*V
-	JUEL:COUNT:欲情 += 300*A
-	JUEL:COUNT:欲情 += 300*F
-	JUEL:COUNT:恭順 -= 200*(V+A)
-	IF JUEL:COUNT:恭順 < 0
-		ABL:COUNT:信頼 -= 1
-		JUEL:COUNT:恭順 = 0
-		IF ABL:COUNT:信頼 < 1
-			ABL:COUNT:信頼 = 0
+EXP:ARG:Ｖ経験 += V
+EXP:ARG:絶頂経験 += A
+EXP:ARG:性交経験 += V
+EXP:ARG:精液経験 += S
+EXP:ARG:フェラ経験 += F
+JUEL:ARG:快Ｖ += 400*V
+JUEL:ARG:欲情 += 300*A
+JUEL:ARG:欲情 += 300*F
+JUEL:ARG:恭順 -= 200*(V+A)
+IF JUEL:ARG:恭順 < 0
+	ABL:ARG:信頼 -= 1
+	JUEL:ARG:恭順 = 0
+	IF ABL:ARG:信頼 < 1
+		ABL:ARG:信頼 = 0
+	ENDIF
+ENDIF
+IF TALENT:ARG:喫煙者 == 0
+	TALENT:ARG:喫煙者 += RAND:2
+	IF TALENT:ARG:喫煙者 >= 1
+		TALENT:ARG:喫煙者 = 1
+		CALL CIGARETTES(ARG)
+	ENDIF
+ENDIF
+IF TALENT:ARG:恋心 == 1
+	TALENT:ARG:恋心 = RAND:2
+		IF TALENT:ARG:恋心 >= 1
+			TALENT:ARG:恋心 = 1
 		ENDIF
-	ENDIF
-	IF TALENT:COUNT:喫煙者 == 0
-		TALENT:COUNT:喫煙者 += RAND:2
-		IF TALENT:COUNT:喫煙者 >= 1
-			TALENT:COUNT:喫煙者 = 1
-			CALL CIGARETTES_4COUNT
-		ENDIF
-	ENDIF
-	IF TALENT:COUNT:恋心 == 1
-		TALENT:COUNT:恋心 = RAND:2
-			IF TALENT:COUNT:恋心 >= 1
-				TALENT:COUNT:恋心 = 1
-			ENDIF
-	ENDIF
+ENDIF
 
 ;=================================================
 ;スタッフ寝取られ・ラスト
 ;=================================================
-@NTR_STAFF_LAST
+@NTR_STAFF_LAST(ARG)
 PRINTFORML 夜遅くまで事務所に残っていた%CALLNAME:MASTER%が事務所を後にしようとした時、一台のＰＣの電源ランプが点ったままなのに気づいた
-PRINTFORML 確かあれは……スタッフの%CSTR:COUNT:彼氏姓%のＰＣだったはずだ
+PRINTFORML 確かあれは……スタッフの%CSTR:ARG:彼氏姓%のＰＣだったはずだ
 PRINTFORM 恐らくなにか大容量のファイルを書き込んで、そのままにしていたのだろうか、
 PRINTFORML よく見るとＤＶＤドライブも開いたままで、中には一枚のＤＶＤ－Ｒが入っている
-PRINTFORML %CSTR:COUNT:彼氏姓%に限らずこうしてＰＣの電源を消し忘れたり、『参考』と称して他メーカーのＡＶをダウンロード購入したまま帰る者もいる
+PRINTFORML %CSTR:ARG:彼氏姓%に限らずこうしてＰＣの電源を消し忘れたり、『参考』と称して他メーカーのＡＶをダウンロード購入したまま帰る者もいる
 PRINTFORML そういう時はただの消し忘れだったら最後まで残っていた者が消したり、あるいは事情を言って付けっぱなしにしているならそのままにしておく
 PRINTFORMW 今回に限ってはそういう事情のようなものは聞いていなかったので、%CALLNAME:MASTER%はＰＣをスクリーンセーバーから復帰させ、電源を切ろうとした……
 PRINTL
 PRINTFORML 表示されたデスクトップにはいくつかのファイルが入ったフォルダが表示されており、
 PRINTFORML そのままフォルダを閉じようとして……%CALLNAME:MASTER%は動きを止めた
-PRINTFORML フォルダに入っていたファイルの名前は『%CALLNAME:COUNT% ハメ撮り Vol.{RAND:10+1}』や『%CALLNAME:COUNT% 精液垂れ流し』といったもの
-PRINTFORM 妙な胸騒ぎを覚えた%CALLNAME:MASTER%は、ここ最近%CALLNAME:COUNT%と%CSTR:COUNT:彼氏姓%の様子がどこかおかしかったことを思い出し、
+PRINTFORML フォルダに入っていたファイルの名前は『%CALLNAME:ARG% ハメ撮り Vol.{RAND:10+1}』や『%CALLNAME:ARG% 精液垂れ流し』といったもの
+PRINTFORM 妙な胸騒ぎを覚えた%CALLNAME:MASTER%は、ここ最近%CALLNAME:ARG%と%CSTR:ARG:彼氏姓%の様子がどこかおかしかったことを思い出し、
 PRINTFORML 疑惑をほぼ確信にしながらもドライブにセットされたままのＤＶＤ－Ｒを再生した……
 PRINTW
 
-CALL KOJO_NTR_STAFF,COUNT
+CALL KOJO_NTR_STAFF,ARG
 
-PRINTFORML ……やはり予想とファイル名の通り、ＤＶＤに記録されていたのは%CALLNAME:COUNT%のハメ撮りだった
+PRINTFORML ……やはり予想とファイル名の通り、ＤＶＤに記録されていたのは%CALLNAME:ARG%のハメ撮りだった
 PRINTFORML この事務所のスタッフは何らかの事情で歌音により手配された人員で、%CALLNAME:MASTER%を除いたスタッフたちが女優たちに手を出すのは禁じられている
 PRINTFORM そういえば、と歌音が『万が一スタッフがオンナに手を出したらすぐに連絡するといいよ』と言っていたのを思い出した%CALLNAME:MASTER%は
 PRINTFORML 呆然としながらも携帯で歌音を呼び出すことにした……
 PRINTW
-PRINTFORML 「おー……こりゃ見事なハメ撮りだねぇ……で、この声は間違いなく%CSTR:COUNT:彼氏姓%だ
+PRINTFORML 「おー……こりゃ見事なハメ撮りだねぇ……で、この声は間違いなく%CSTR:ARG:彼氏姓%だ
 PRINTFORML 　ま、女優たちは美少女・美女揃いだし手を出したくなるのもわからなくはないけどねぇ……
 PRINTFORML 　ただ、ここが真っ当な環境じゃないってことを忘れちまったのが大間違いさ
-PRINTFORML 　これがカタギの芸能事務所だったらクビになる程度で済むけどさ、%CSTR:COUNT:彼氏姓%は忘れてるんじゃないだろうかねぇ……
+PRINTFORML 　これがカタギの芸能事務所だったらクビになる程度で済むけどさ、%CSTR:ARG:彼氏姓%は忘れてるんじゃないだろうかねぇ……
 PRINTL
 PRINTFORML 　ウチらみたいな連中に莫大な借金を作っていて、それでもこうしてハメ撮りできるほど余裕があるのは、だ
 PRINTFORML 　あくまでも身の保証がされているのは『ここにいるから』であって、そうでなきゃ今頃どうなってるかってことをさ
@@ -331,36 +329,37 @@ PRINTFORMW 　この稼業を引き受けている以上、恨まれるのは…
 PRINTFORML 　ただ、これだけは言っておく……この件はウチのミスでもあるけど、それ以上にアンタのミスでもある
 PRINTFORML 　防ごうと思ったら防げたし、そもそもアンタに魅力が足りないからこうなったのは……重々理解しているかい？
 PRINTFORML 　ま、これに懲りたらアンタが漢を磨くしかないさ
-PRINTFORML 　じゃあアタシはこれから%CSTR:COUNT:彼氏姓%のトコに若いの連れて行くとするかねぇ……」
+PRINTFORML 　じゃあアタシはこれから%CSTR:ARG:彼氏姓%のトコに若いの連れて行くとするかねぇ……」
 PRINTW
-PRINTFORML 翌日、一向に姿を見せない%CSTR:COUNT:彼氏姓%を気にしているのか、そわそわと落ち着かない様子で他のスタッフと%CALLNAME:COUNT%は談笑していた
-PRINTFORM どこかぎこちないムードを破るかのように、黒服を伴って事務所にやって来た歌音は『%CSTR:COUNT:彼氏姓%を処分した』とだけ言い、
-PRINTFORML そして突然の報告に蒼白になっている%CALLNAME:COUNT%を呼び寄せ、事務所の外に出ていった……
+PRINTFORML 翌日、一向に姿を見せない%CSTR:ARG:彼氏姓%を気にしているのか、そわそわと落ち着かない様子で他のスタッフと%CALLNAME:ARG%は談笑していた
+PRINTFORM どこかぎこちないムードを破るかのように、黒服を伴って事務所にやって来た歌音は『%CSTR:ARG:彼氏姓%を処分した』とだけ言い、
+PRINTFORML そして突然の報告に蒼白になっている%CALLNAME:ARG%を呼び寄せ、事務所の外に出ていった……
 PRINTW 
 PRINTFORML 「さる『知り合い』のトコに連れて行ったんだけど、妊娠は１００％ありえないそうだ
 PRINTFORML 　医学的なアプローチじゃないから半信半疑になるかもしれないけど、その辺の医者よりよっぽど正確だよ
-PRINTFORML 　ついでにアフターフォローとして%CSTR:COUNT:彼氏姓%との記憶『だけ』を消させてもらったよ」
+PRINTFORML 　ついでにアフターフォローとして%CSTR:ARG:彼氏姓%との記憶『だけ』を消させてもらったよ」
 PRINTW
 PRINTFORML そう言うと、どこかから戻ってきた歌音はどこかほっとした表情を浮かべてお茶を一口すすった
-PRINTFORML もしかしたら、%CALLNAME:COUNT%に恨まれることがなくてよかったと思っているのかもしれない……
+PRINTFORML もしかしたら、%CALLNAME:ARG%に恨まれることがなくてよかったと思っているのかもしれない……
 PRINTW
-IF CFLAG:COUNT:処女喪失相手 == 初相手_スタッフ
-	PRINTFORML 《%NAME:COUNT%の処女喪失相手の名前がオープンされました》
-		CSTR:COUNT:処女喪失相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
-		EXP:COUNT:彼氏性経験 += 10
+IF CFLAG:ARG:処女喪失相手 == 初相手_スタッフ
+	PRINTFORML 《%NAME:ARG%の処女喪失相手の名前がオープンされました》
+		CSTR:ARG:処女喪失相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（元スタッフ）
+		EXP:ARG:彼氏性経験 += 10
 ENDIF
-IF CFLAG:COUNT:初キス相手 == 初相手_スタッフ
-	PRINTFORML 《%NAME:COUNT%のファーストキス相手の名前がオープンされました》
+IF CFLAG:ARG:初キス相手 == 初相手_スタッフ
+	PRINTFORML 《%NAME:ARG%のファーストキス相手の名前がオープンされました》
 		IF RAND:2 == 0
-			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
+			CSTR:ARG:初キス相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（元スタッフ）
 		ELSE
-			CSTR:COUNT:初キス相手 = %CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（元スタッフ）
+			CSTR:ARG:初キス相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（元スタッフ）
 		ENDIF
 ENDIF
-	CFLAG:COUNT:NTR進行 = 0
-	CFLAG:COUNT:彼氏有 = 0
-	CFLAG:COUNT:スタッフNTR進行度 = 0
-	BASE:COUNT:魅力値 -= 10
-	EXP:COUNT:交際人数 += 1
-	;△暫定。消えたスタッフがカレシと出続けるのもどうかと思うので。
-	CFLAG:COUNT:交際終了 = 1
+
+CFLAG:ARG:NTR進行 = 0
+CFLAG:ARG:彼氏有 = 0
+CFLAG:ARG:スタッフNTR進行度 = 0
+BASE:ARG:魅力値 -= 10
+EXP:ARG:交際人数 += 1
+;△暫定。消えたスタッフがカレシと出続けるのもどうかと思うので。
+CFLAG:ARG:交際終了 = 1

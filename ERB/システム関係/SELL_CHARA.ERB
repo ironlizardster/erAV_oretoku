@@ -336,7 +336,7 @@ INPUT
 IF RESULT == 0
 	;売却時口上
 	TFLAG:口上番号 = 6
-	CALL SELF_KOJO
+	CALL SELF_KOJO(TARGET)
 	CALL EVENT_SELL_AFTER
 	PRINTFORMW %NAME:TARGET%の引退作は{S}ポイントの売り上げになりました
 	IF ABL:信頼 < 5 && (TALENT:ボーイッシュ || TALENT:嫉妬)

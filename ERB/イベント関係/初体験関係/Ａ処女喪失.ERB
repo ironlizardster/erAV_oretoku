@@ -96,11 +96,11 @@ DEBUGPRINTFORML %STRING%
 		CASE 初場所_自室
 			STRING += @"%CALLNAME:CHARA_NO%の部屋で、"
 		CASE 初場所_彼部屋
-			STRLENS CSTR:CHARA_NO:初キス相手
+			STRLENS CSTR:CHARA_NO:Ａ処女喪失相手
 			IF RESULT
-				STRING += @"%CSTR:初キス相手%%\@CFLAG:CHARA_NO:初キス相手 == 初相手_今彼 ? （カレシ） # （元カレ） \@%の部屋で、"
+				STRING += @"%CSTR:Ａ処女喪失相手%%\@CFLAG:CHARA_NO:Ａ処女喪失相手 == 初相手_今彼 ? （カレシ） # （元カレ） \@%の部屋で、"
 			ELSE
-				STRING += @"%\@CFLAG:CHARA_NO:初キス相手 == 初相手_今彼 ? カレシ # 元カレ \@%の部屋で、"
+				STRING += @"%\@CFLAG:CHARA_NO:Ａ処女喪失相手 == 初相手_今彼 ? カレシ # 元カレ \@%の部屋で、"
 			ENDIF
 		CASE 初場所_ラブホ
 			STRING += @"ラブホテルで、"
@@ -188,9 +188,9 @@ DEBUGPRINTFORML %STRING%
 			CASE 初状況_ハメ撮
 				TEMP_STR += @"にハメ撮りされながら"
 			CASE 初状況_無理犯
-				TEMP_STR += @"で無理やり犯されて"
+				TEMP_STR += @"に無理やり犯されて"
 			CASE 初状況_輪姦
-				TEMP_STR += @"で輪姦されて"
+				TEMP_STR += @"に輪姦されて"
 			CASE 初状況_クスリ
 				TEMP_STR += @"にクスリをキめさせられ、自ら%CSTR:CHARA_NO:男性器呼び方%をおねだり"
 			CASE 初状況_夜這

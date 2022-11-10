@@ -530,7 +530,7 @@ EXP:MASTER:人気 += I
 IF A >= 4
 	IF !TALENT:常連客 && (C == 0 || CFLAG:営業内容 == 3 || CFLAG:営業内容 == 4 || CFLAG:営業内容 == 5) && TALENT:一線越えない == 0
 		PRINTFORML 客の一人は%CALLNAME:TARGET%を大変気に入ったようだ…
-		PRINTFORMW %CALLNAME:TARGET%に【%TALENTNAME:常連客%】がついた
+		PRINTFORMW %CALLNAME:TARGET%に【%TALENTNAME:[[TALENT:常連客]]%】がついた
 		TALENT:常連客 = 1
 	ENDIF
 ENDIF

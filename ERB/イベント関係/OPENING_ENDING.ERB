@@ -210,7 +210,7 @@ IF FLAG:今カノ存在 && CFLAG:MASTER:238 != 2
 	;今カノプロローグ介入のイベント口上
 	FLAG:口上使用 = 1
 	TFLAG:口上番号 = 125
-	CALL SELF_KOJO
+	CALL SELF_KOJO(TARGET)
 	PRINTFORML
 ENDIF
 WAIT

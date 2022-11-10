@@ -103,7 +103,7 @@ IF CFLAG:201 == 0
 				PRINTFORMW 身に着けた高校の制服の上からでも解る豊満な胸が否応なく目を引く。
 			;着衣設定　スカート
 			ELSEIF CFLAG:着衣状態 & 8
-				CALL PRINT_CLOTHTYPE_MAIN2
+				CALL PRINT_上着タイプ(TARGET)
 				PRINTFORMW の裾から覗くむっちりとした肉感的な太ももは瑞々しい美しさを感じさせる。
 			ELSE
 				PRINTFORMW 服の上からでも%CALLNAME:TARGET%の肉付きのよい肢体が伺える。

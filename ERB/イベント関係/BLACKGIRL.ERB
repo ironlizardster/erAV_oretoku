@@ -10,60 +10,60 @@ REPEAT CHARANUM
 	ELSEIF TALENT:LOCAL:育児中
 		CONTINUE
 	ELSEIF (TALENT:COUNT:褐色肌 && TALENT:COUNT:ギャル系 && !TALENT:COUNT:永遠の愛) || (TALENT:COUNT:褐色肌 && TALENT:COUNT:ギャル系 && TALENT:COUNT:永遠の愛 && FLAG:愛を誓った黒ギャルの遊びを許す)
-		CALL START_BGEVENT
+		CALL START_BGEVENT(COUNT)
 	ENDIF
 REND
 
 ;===========================================================
 ;イベント開始
 ;===========================================================
-@START_BGEVENT
+@START_BGEVENT(ARG)
 TEMP_NUM = RAND:8
 
 ;1/4で勝手にＳＥＸ
 IF TEMP_NUM <= 1 && !FLAG:寝取られなし
-	CALL EVENT_BGSEX
+	CALL EVENT_BGSEX(ARG)
 ;1/4で補導
 ELSEIF TEMP_NUM <= 3
-	CALL EVENT_BGGUIDANCE
+	CALL EVENT_BGGUIDANCE(ARG)
 ;1/8でタトゥー入れ
 ELSEIF TEMP_NUM <= 4
-	CALL EVENT_BGTATTO
+	CALL EVENT_BGTATTO(ARG)
 ENDIF
 
 ;===========================================================
 ;タトゥー入れ
 ;===========================================================
-@EVENT_BGTATTO
+@EVENT_BGTATTO(ARG)
 ;全部入れていたら起こらない
-IF CFLAG:COUNT:タトゥー < 15
+IF CFLAG:ARG:タトゥー < 15
 	CHKFONT "あくびん"
 		IF RESULT
 			SETFONT "あくびん"
 		ENDIF
 	SETCOLOR 0xDDBBCC
 	PRINTFORM 「
-	IF NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]
+	IF NO:ARG == [[キャラ:宮間かなで]] || NO:ARG == [[キャラ:宮間カナ]]
 		PRINTFORM どうよアニキ。マヂキマってっしょ、このタトゥー♪
-	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && TALENT:COUNT:ナマイキ
+	ELSEIF NO:ARG != [[キャラ:宮間かなで]] && NO:ARG != [[キャラ:宮間カナ]] && TALENT:ARG:ナマイキ
 		PRINTFORM マヂキマってっしょ、このタトゥー♪
-	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && TALENT:COUNT:ナマイキ == 0
+	ELSEIF NO:ARG != [[キャラ:宮間かなで]] && NO:ARG != [[キャラ:宮間カナ]] && TALENT:ARG:ナマイキ == 0
 		PRINTFORM タトゥーを入れてみたん
-			IF NO:COUNT == [[キャラ:御弦伊月]]
+			IF NO:ARG == [[キャラ:御弦伊月]]
 				PRINTFORM だが
-			ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+			ELSEIF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 				PRINTFORM ですけど
 			ELSE
 				PRINTFORM だけど
 			ENDIF
 		PRINTFORM ……キマって
-			IF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+			IF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 				PRINTFORM ますか？
-			ELSEIF NO:COUNT == [[キャラ:須野郁美]]
+			ELSEIF NO:ARG == [[キャラ:須野郁美]]
 				PRINTFORM るかなー？
-			ELSEIF NO:COUNT == [[キャラ:御弦伊月]]
+			ELSEIF NO:ARG == [[キャラ:御弦伊月]]
 				PRINTFORM るか？
-			ELSEIF NO:COUNT == [[キャラ:新島みひろ]]
+			ELSEIF NO:ARG == [[キャラ:新島みひろ]]
 				PRINTFORM るかなっ☆
 			ELSE
 				PRINTFORM るかな？
@@ -71,25 +71,25 @@ IF CFLAG:COUNT:タトゥー < 15
 	ENDIF
 	PRINTFORML 」
 	PRINTFORM 「
-	IF NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]
+	IF NO:ARG == [[キャラ:宮間かなで]] || NO:ARG == [[キャラ:宮間カナ]]
 		PRINTFORM もっとキメキメにタトゥー入れてくっから待ってなよ、アニキ
-	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && TALENT:COUNT:ナマイキ
+	ELSEIF NO:ARG != [[キャラ:宮間かなで]] && NO:ARG != [[キャラ:宮間カナ]] && TALENT:ARG:ナマイキ
 		PRINTFORM もっとキメキメにタトゥー入れてくっから待ってなよ
-	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && TALENT:COUNT:ナマイキ == 0
+	ELSEIF NO:ARG != [[キャラ:宮間かなで]] && NO:ARG != [[キャラ:宮間カナ]] && TALENT:ARG:ナマイキ == 0
 		PRINTFORM じゃあ、もっとキメキメにタトゥー入れて
-			IF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+			IF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 				PRINTFORM きますね
-			ELSEIF NO:COUNT == [[キャラ:須野郁美]]
+			ELSEIF NO:ARG == [[キャラ:須野郁美]]
 				PRINTFORM くるよー
-			ELSEIF NO:COUNT == [[キャラ:御弦伊月]]
+			ELSEIF NO:ARG == [[キャラ:御弦伊月]]
 				PRINTFORM くる
-			ELSEIF NO:COUNT == [[キャラ:新島みひろ]]
+			ELSEIF NO:ARG == [[キャラ:新島みひろ]]
 				PRINTFORM くるからねっ
 			ELSE
 				PRINTFORM くるからね
 			ENDIF
 	ENDIF
-	IF TALENT:COUNT:恋心 == 1
+	IF TALENT:ARG:恋心 == 1
 		PRINTFORM %UNICODE(0x2665)%
 	ELSE
 		PRINT ♪
@@ -98,53 +98,53 @@ IF CFLAG:COUNT:タトゥー < 15
 	RESETCOLOR
 	SETFONT ""
 
-	PRINTFORM 週が開けて月曜日。事務所のスタッフたちと談笑していた%NAME:COUNT%は、
+	PRINTFORM 週が開けて月曜日。事務所のスタッフたちと談笑していた%NAME:ARG%は、
 	PRINTFORM 遅れてやってきた%CALLNAME:MASTER%に駆け寄って、
-		IF CFLAG:COUNT:タトゥー == 0
+		IF CFLAG:ARG:タトゥー == 0
 			PRINTFORM 二の腕に彫ったトライバル柄のタトゥーを見せて
-			CFLAG:COUNT:タトゥー |= 1
-			CSTR:COUNT:タトゥー1場所 = 左の二の腕
-			CSTR:COUNT:タトゥー1モチーフ = トライバル柄の
-		ELSEIF CFLAG:COUNT:タトゥー == 1
+			CFLAG:ARG:タトゥー |= 1
+			CSTR:ARG:タトゥー1場所 = 左の二の腕
+			CSTR:ARG:タトゥー1モチーフ = トライバル柄の
+		ELSEIF CFLAG:ARG:タトゥー == 1
 			PRINTFORM 手首を一周するように彫ったツタを象ったタトゥーを見せて
-			CFLAG:COUNT:タトゥー |= 2
-			CSTR:COUNT:タトゥー2場所 = 右の手首
-			CSTR:COUNT:タトゥー2モチーフ = ローズアイヴィーモチーフ
-		ELSEIF CFLAG:COUNT:タトゥー == 3
+			CFLAG:ARG:タトゥー |= 2
+			CSTR:ARG:タトゥー2場所 = 右の手首
+			CSTR:ARG:タトゥー2モチーフ = ローズアイヴィーモチーフ
+		ELSEIF CFLAG:ARG:タトゥー == 3
 			PRINTFORM 太ももに彫ったサソリをモチーフにした柄のタトゥーを見せて
-			CFLAG:COUNT:タトゥー |= 4
-			CSTR:COUNT:タトゥー3場所 = 右太ももの外側
-			CSTR:COUNT:タトゥー3モチーフ = スコーピオンテイル
-		ELSEIF CFLAG:COUNT:タトゥー == 7
+			CFLAG:ARG:タトゥー |= 4
+			CSTR:ARG:タトゥー3場所 = 右太ももの外側
+			CSTR:ARG:タトゥー3モチーフ = スコーピオンテイル
+		ELSEIF CFLAG:ARG:タトゥー == 7
 			PRINTFORM いきなり上着を脱いで背中に彫った天使の羽をモチーフにした柄のタトゥーを見せて
-			CFLAG:COUNT:タトゥー |= 8
-			CSTR:COUNT:タトゥー4場所 = 背中
-			CSTR:COUNT:タトゥー4モチーフ = 天使の羽をモチーフにした
+			CFLAG:ARG:タトゥー |= 8
+			CSTR:ARG:タトゥー4場所 = 背中
+			CSTR:ARG:タトゥー4モチーフ = 天使の羽をモチーフにした
 		ENDIF
 	PRINTFORML %CALLNAME:MASTER%に似合ってるか尋ねてきた
 	PRINTFORM 監督、つまり雇用主であ
-	IF NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]
+	IF NO:ARG == [[キャラ:宮間かなで]] || NO:ARG == [[キャラ:宮間カナ]]
 		PRINTFORM り、唯一の肉親でもある
 	ELSE
 		PRINTFORM る
 	ENDIF
-	PRINTFORM %CALLNAME:MASTER%に何も言わずに勝手なことをした%CALLNAME:COUNT%に
-	PRINTFORM ひと通り説教した後、それでも似合っているのは確かなので、説教されてしょんぼりしている%CALLNAME:COUNT%
+	PRINTFORM %CALLNAME:MASTER%に何も言わずに勝手なことをした%CALLNAME:ARG%に
+	PRINTFORM ひと通り説教した後、それでも似合っているのは確かなので、説教されてしょんぼりしている%CALLNAME:ARG%
 	PRINTFORML を慰めながら「似合っている」とだけ伝えた……
 	PRINTL
-	CFLAG:COUNT:617 += 1
+	CFLAG:ARG:617 += 1
 	PRINTL 異常経験＋1
-	EXP:COUNT:異常経験 += 1
+	EXP:ARG:異常経験 += 1
 	DRAWLINE
 ENDIF
 
 ;===========================================================
 ;勝手にＳＥＸ
 ;===========================================================
-@EVENT_BGSEX
-IF CFLAG:COUNT:着衣状態 >= 64 && CFLAG:COUNT:特別コスタイプ == 79
+@EVENT_BGSEX(ARG)
+IF CFLAG:ARG:着衣状態 >= 64 && CFLAG:ARG:特別コスタイプ == 79
 	RETURN
-ELSEIF TALENT:COUNT:ギャル系 == 0 && CFLAG:COUNT:セフレ容認 == 0
+ELSEIF TALENT:ARG:ギャル系 == 0 && CFLAG:ARG:セフレ容認 == 0
 	RETURN
 ELSE
 	CHKFONT "あくびん"
@@ -152,56 +152,56 @@ ELSE
 			SETFONT "あくびん"
 		ENDIF
 	SETCOLOR 0xDDBBCC
-	IF !CFLAG:COUNT:処女喪失相手
+	IF !CFLAG:ARG:処女喪失相手
 		PRINTFORM 「
-		IF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]) && TALENT:恋心 == 1 && TALENT:COUNT:ギャル系 == 1
+		IF (NO:ARG == [[キャラ:宮間かなで]] || NO:ARG == [[キャラ:宮間カナ]]) && TALENT:恋心 == 1 && TALENT:ARG:ギャル系 == 1
 			PRINTFORM ホントは初体験はアイツがよかったんだけど……ま、いっか%UNICODE(0x2665)%　
 			PRINTFORM 処女なんてアイツもメンドーだろうし
-		ELSEIF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]) && TALENT:COUNT:恋心 == 0 && TALENT:COUNT:ギャル系 == 1
+		ELSEIF (NO:ARG == [[キャラ:宮間かなで]] || NO:ARG == [[キャラ:宮間カナ]]) && TALENT:ARG:恋心 == 0 && TALENT:ARG:ギャル系 == 1
 			PRINTFORM セフレで処女喪失とかヤバくね？　
 			PRINTFORM アタシもさっさと処女捨てたかったし、
 			PRINTFORM アンタも初物喰えるんだからいいじゃん♪
-		ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && TALENT:COUNT:ナマイキ == 1 && TALENT:COUNT:ギャル系 == 1
+		ELSEIF NO:ARG != [[キャラ:宮間かなで]] && NO:ARG != [[キャラ:宮間カナ]] && TALENT:ARG:ナマイキ == 1 && TALENT:ARG:ギャル系 == 1
 			PRINTFORM セフレで処女喪失とかヤバくね？　
 			PRINTFORM アタシもさっさと処女捨てたかったし、
 			PRINTFORM アンタも初物喰えるんだからいいじゃん♪
 		ELSE
 			PRINTFORM セフレで処女喪失
-				IF NO:COUNT == [[キャラ:御弦伊月]]
+				IF NO:ARG == [[キャラ:御弦伊月]]
 					PRINTFORM とは……まあいいか
-				ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+				ELSEIF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 					PRINTFORM だなんて……まあいいですよね
-				ELSEIF NO:COUNT == [[キャラ:須野郁美]]
+				ELSEIF NO:ARG == [[キャラ:須野郁美]]
 					PRINTFORM だなんて……まあいいやー
 				ELSE
 					PRINTFORM だなんて……まあいいや
 				ENDIF
 			PRINTFORM 。早く処女捨てたかったし、
-			IF NO:COUNT == [[キャラ:御弦伊月]]
+			IF NO:ARG == [[キャラ:御弦伊月]]
 				PRINTFORM お前も
-			ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+			ELSEIF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 				PRINTFORM あなたも
-			ELSEIF NO:COUNT == [[キャラ:桐生歌音]]
+			ELSEIF NO:ARG == [[キャラ:桐生歌音]]
 				PRINTFORM アンタも
 			ELSE
 				PRINTFORM キミも
 			ENDIF	
 			PRINTFORM 初物
-			IF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+			IF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 				PRINTFORM 頂ける
 			ELSE
 				PRINTFORM 喰える
 			ENDIF
 				PRINTFORM からいい
-			IF NO:COUNT == [[キャラ:御弦伊月]]
+			IF NO:ARG == [[キャラ:御弦伊月]]
 				PRINTFORM だろ
-			ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]]  || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+			ELSEIF NO:ARG == [[キャラ:レイチェル・パラディスス]]  || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 				PRINTFORM でしょう
-			ELSEIF NO:COUNT == [[キャラ:桐生歌音]]
+			ELSEIF NO:ARG == [[キャラ:桐生歌音]]
 				PRINTFORM じゃないか
-			ELSEIF NO:COUNT == [[キャラ:須野郁美]]
+			ELSEIF NO:ARG == [[キャラ:須野郁美]]
 				PRINTFORM じゃないー
-			ELSEIF NO:COUNT == [[キャラ:新島みひろ]]
+			ELSEIF NO:ARG == [[キャラ:新島みひろ]]
 				PRINTFORM じゃないっ
 			ELSE
 				PRINTFORM じゃない
@@ -211,91 +211,91 @@ ELSE
 			PRINTFORML 」
 	ENDIF
 			
-	PRINTFORML 「あっ♪あぁんっ%UNICODE(0x2665)%生ハメ%CSTR:COUNT:男性器呼び方%気持ちいいっ、もっと奥まで入れてぇ%UNICODE(0x2665)%」
-	IF (NO:COUNT == [[キャラ:宮間かなで]] || NO:COUNT == [[キャラ:宮間カナ]]) && CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:ギャル系 == 1
-		PRINTFORML 「アイツのよりぶっとい%CSTR:COUNT:男性器呼び方%で%CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
-		PRINTFORM 「えっ……？　アイツってアニキのことだよ♪%CSTR:COUNT:一人称%の
-		IF TALENT:COUNT:恋心 == 0
+	PRINTFORML 「あっ♪あぁんっ%UNICODE(0x2665)%生ハメ%CSTR:ARG:男性器呼び方%気持ちいいっ、もっと奥まで入れてぇ%UNICODE(0x2665)%」
+	IF (NO:ARG == [[キャラ:宮間かなで]] || NO:ARG == [[キャラ:宮間カナ]]) && CFLAG:ARG:処女喪失相手 && TALENT:ARG:ギャル系 == 1
+		PRINTFORML 「アイツのよりぶっとい%CSTR:ARG:男性器呼び方%で%CSTR:ARG:一人称%の%CSTR:ARG:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
+		PRINTFORM 「えっ……？　アイツってアニキのことだよ♪%CSTR:ARG:一人称%の
+		IF TALENT:ARG:恋心 == 0
 			PRINTFORM 肉バイブ♪
-		ELSEIF TALENT:COUNT:恋心 == 1
+		ELSEIF TALENT:ARG:恋心 == 1
 			PRINTFORM 大切なカレシ%UNICODE(0x2665)%
 		ENDIF
 		PRINTFORML 」
 		PRINTFORM 「
-		IF TALENT:COUNT:恋心 == 0
-		PRINTFORM %CSTR:COUNT:一人称%にハメられながら『昔のかなでに戻ってくれ』とか言いながら
-		PRINTFORM %CSTR:COUNT:男性器呼び方%ギンギンにボッキさせてんでやんの。
+		IF TALENT:ARG:恋心 == 0
+		PRINTFORM %CSTR:ARG:一人称%にハメられながら『昔のかなでに戻ってくれ』とか言いながら
+		PRINTFORM %CSTR:ARG:男性器呼び方%ギンギンにボッキさせてんでやんの。
 		PRINTFORML チョーウケるんですけどぉ♪」
 			IF FLAG:かなで相手童貞喪失
 				PRINTFORM 「しかもドーテーだったみたいでさぁ、
-				PRINTFORM %CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%に%CSTR:COUNT:男性器呼び方%ハメただけで射精してんでやんの。
+				PRINTFORM %CSTR:ARG:一人称%の%CSTR:ARG:女性器呼び方%に%CSTR:ARG:男性器呼び方%ハメただけで射精してんでやんの。
 				PRINTFORML ドーテーで早い、しかも粗チンとかマヂサイアク%UNICODE(0x2665)%」
 			ENDIF
-		ELSEIF TALENT:COUNT:恋心 == 1
+		ELSEIF TALENT:ARG:恋心 == 1
 			PRINTFORM カレシがアニキとかマジヤバっしょ♪粗チンだけど
 			PRINTFORML ケッコーイケメンだしカネ持ってるし%UNICODE(0x2665)%」
 		ENDIF
-		PRINTFORM 「うん、そう%UNICODE(0x2665)%アンタのに比べたらアニキの%CSTR:COUNT:男性器呼び方%なんか粗チンよ粗チン♪
+		PRINTFORM 「うん、そう%UNICODE(0x2665)%アンタのに比べたらアニキの%CSTR:ARG:男性器呼び方%なんか粗チンよ粗チン♪
 		PRINTFORM それでも生ハメＳＥＸしてくれる
-		IF TALENT:COUNT:恋心 == 1
-			PRINTFORM し、粗チンでも大好きなアニキの%CSTR:COUNT:男性器呼び方%だからケッコーイケてるし
+		IF TALENT:ARG:恋心 == 1
+			PRINTFORM し、粗チンでも大好きなアニキの%CSTR:ARG:男性器呼び方%だからケッコーイケてるし
 		ELSE
 			PRINTFORM からガマンしてるだけだし
 		ENDIF
 		PRINTFORML %UNICODE(0x2665)%」
-	ELSEIF NO:COUNT != [[キャラ:宮間かなで]] && NO:COUNT != [[キャラ:宮間カナ]] && NO:COUNT != [[キャラ:槇原さち]] && CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:ナマイキ && TALENT:COUNT:ギャル系 == 1
-		PRINTFORML 「アイツのよりぶっとい%CSTR:COUNT:男性器呼び方%で%CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
+	ELSEIF NO:ARG != [[キャラ:宮間かなで]] && NO:ARG != [[キャラ:宮間カナ]] && NO:ARG != [[キャラ:槇原さち]] && CFLAG:ARG:処女喪失相手 && TALENT:ARG:ナマイキ && TALENT:ARG:ギャル系 == 1
+		PRINTFORML 「アイツのよりぶっとい%CSTR:ARG:男性器呼び方%で%CSTR:ARG:一人称%の%CSTR:ARG:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
 		PRINTFORM 「えっ……？　アイツって
-			IF TALENT:COUNT:恋心 == 0
+			IF TALENT:ARG:恋心 == 0
 				PRINTFORM 肉バイブ君
-			ELSEIF TALENT:COUNT:恋心 == 1
+			ELSEIF TALENT:ARG:恋心 == 1
 				PRINTFORM カレシ
 			ENDIF
 		PRINTFORML のことだよ%UNICODE(0x2665)%」
-		PRINTFORM 「うん、そう%UNICODE(0x2665)%アンタのに比べたらアイツの%CSTR:COUNT:男性器呼び方%なんか粗チンよ粗チン♪
+		PRINTFORM 「うん、そう%UNICODE(0x2665)%アンタのに比べたらアイツの%CSTR:ARG:男性器呼び方%なんか粗チンよ粗チン♪
 		PRINTFORML それでも生ハメＳＥＸしてくれるからガマンしてるだけだし%UNICODE(0x2665)%」
 		SIF ABL:MASTER:技巧 <= 6
 			PRINTFORML  「それにぃ……ヘタクソだから全然気持ちよくないの%UNICODE(0x2665)%」
-		PRINTFORML 「ねぇ……もういいでしょ%UNICODE(0x2665)%%CSTR:COUNT:女性器呼び方%がバカになるぐらいもっと激しく犯してぇ♪」
-	ELSEIF CFLAG:COUNT:処女喪失相手
-		PRINTFORML 「カレのよりぶっとい%CSTR:COUNT:男性器呼び方%で%CSTR:COUNT:一人称%の%CSTR:COUNT:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
+		PRINTFORML 「ねぇ……もういいでしょ%UNICODE(0x2665)%%CSTR:ARG:女性器呼び方%がバカになるぐらいもっと激しく犯してぇ♪」
+	ELSEIF CFLAG:ARG:処女喪失相手
+		PRINTFORML 「カレのよりぶっとい%CSTR:ARG:男性器呼び方%で%CSTR:ARG:一人称%の%CSTR:ARG:女性器呼び方%犯されてるぅん%UNICODE(0x2665)%」
 		PRINTFORM 「えっ……？　カレって
-		IF TALENT:COUNT:恋心 == 0
+		IF TALENT:ARG:恋心 == 0
 			PRINTFORM 肉バイブ君
-		ELSEIF TALENT:COUNT:恋心 == 1
+		ELSEIF TALENT:ARG:恋心 == 1
 			PRINTFORM カレシ
 		ENDIF
 			PRINTFORM のこと
-		IF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+		IF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 			PRINTFORM ですよ
-		ELSEIF NO:COUNT == [[キャラ:御弦伊月]]
+		ELSEIF NO:ARG == [[キャラ:御弦伊月]]
 			PRINTFORM だ
 		ELSE
 			PRINTFORM だよ
 		ENDIF
 			PRINTFORML %UNICODE(0x2665)%」
 		PRINTFORM 「うん、そう%UNICODE(0x2665)%
-		IF NO:COUNT == [[キャラ:御弦伊月]]
+		IF NO:ARG == [[キャラ:御弦伊月]]
 			PRINTFORM お前
-		ELSEIF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+		ELSEIF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 			PRINTFORM あなた
-		ELSEIF NO:COUNT == [[キャラ:桐生歌音]]
+		ELSEIF NO:ARG == [[キャラ:桐生歌音]]
 			PRINTFORM アンタ
 		ELSE
 			PRINTFORM キミ
 		ENDIF
-		PRINTFORM のに比べたらカレの%CSTR:COUNT:男性器呼び方%なんか粗チン
-		IF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+		PRINTFORM のに比べたらカレの%CSTR:ARG:男性器呼び方%なんか粗チン
+		IF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 			PRINTFORM です
-		ELSEIF NO:COUNT == [[キャラ:御弦伊月]]
+		ELSEIF NO:ARG == [[キャラ:御弦伊月]]
 			PRINTFORM だ
 		ELSE
 			PRINTFORM よ
 		ENDIF
 		PRINTFORM 粗チン♪それでも生ハメＳＥＸしてくれるからガマンしてるだけ
-		IF NO:COUNT == [[キャラ:レイチェル・パラディスス]] || NO:COUNT == [[キャラ:槇原さち]] || NO:COUNT == [[キャラ:新堂あゆみ]]
+		IF NO:ARG == [[キャラ:レイチェル・パラディスス]] || NO:ARG == [[キャラ:槇原さち]] || NO:ARG == [[キャラ:新堂あゆみ]]
 			PRINTFORM です
-		ELSEIF NO:COUNT == [[キャラ:御弦伊月]]
+		ELSEIF NO:ARG == [[キャラ:御弦伊月]]
 			PRINTFORM だ
 		ELSE
 			PRINTFORM 
@@ -303,86 +303,86 @@ ELSE
 		PRINTFORML %UNICODE(0x2665)%」
 		SIF ABL:MASTER:技巧 <= 6
 			PRINTFORML  「それにぃ……ヘタクソだから全然気持ちよくないの%UNICODE(0x2665)%」
-		PRINTFORML 「ねぇ……もういいでしょ%UNICODE(0x2665)%%CSTR:COUNT:女性器呼び方%がバカになるぐらいもっと激しく犯してぇ♪」
+		PRINTFORML 「ねぇ……もういいでしょ%UNICODE(0x2665)%%CSTR:ARG:女性器呼び方%がバカになるぐらいもっと激しく犯してぇ♪」
 	ENDIF
 	
-	PRINTFORM 「イくイくイくぅーーーっ%UNICODE(0x2665)%%CSTR:COUNT:一人称%の
-	IF !CFLAG:COUNT:処女喪失相手
-		PRINTFORM 処女%CSTR:COUNT:女性器呼び方%に生ハメ中出し
+	PRINTFORM 「イくイくイくぅーーーっ%UNICODE(0x2665)%%CSTR:ARG:一人称%の
+	IF !CFLAG:ARG:処女喪失相手
+		PRINTFORM 処女%CSTR:ARG:女性器呼び方%に生ハメ中出し
 	ELSE
-		PRINTFORM %CSTR:COUNT:女性器呼び方%に生ハメ中出し種付け
+		PRINTFORM %CSTR:ARG:女性器呼び方%に生ハメ中出し種付け
 	ENDIF
 	PRINTFORML されてイっちゃうぅぅぅ～%UNICODE(0x2665)%」
 	SETFONT ""
 	RESETCOLOR
 			
-	PRINTFORML 週が開けて月曜。事務所のスタッフたちと%NAME:COUNT%がテレビでＡＶらしきものを見ていた
+	PRINTFORML 週が開けて月曜。事務所のスタッフたちと%NAME:ARG%がテレビでＡＶらしきものを見ていた
 	PRINTFORM しかしお世辞にも画質はあまり良くなく、音割れも酷いがそれでも画面の中でセックスに
-	PRINTFORML 興じているのが%CALLNAME:COUNT%であることは間違えようがない
+	PRINTFORML 興じているのが%CALLNAME:ARG%であることは間違えようがない
 	PRINTFORM あまりプライベートのことには口出しすることはないが、
-	IF !CFLAG:COUNT:処女喪失相手
-		PRINTFORM 自分の預かり知らないところで%CALLNAME:COUNT%が処女を散らしたことに、
+	IF !CFLAG:ARG:処女喪失相手
+		PRINTFORM 自分の預かり知らないところで%CALLNAME:ARG%が処女を散らしたことに、
 	ELSE
-		PRINTFORM そこまで自信がないものの「粗チン」と%CALLNAME:COUNT%に断言されたことに、
+		PRINTFORM そこまで自信がないものの「粗チン」と%CALLNAME:ARG%に断言されたことに、
 	ENDIF
 		PRINTFORML %CALLNAME:MASTER%は複雑な心境になってしまった……
 		PRINTFORML
 
-	IF TALENT:COUNT:セフレあり == 0
-		TALENT:COUNT:セフレあり = 1
-		CALL DECIDE_SEXFRIEND,COUNT
+	IF TALENT:ARG:セフレあり == 0
+		TALENT:ARG:セフレあり = 1
+		CALL DECIDE_SEXFRIEND,ARG
 	ENDIF	
 	
-	SIF TALENT:COUNT:一線越えない == 1
-		TALENT:COUNT:一線越えない = 0
+	SIF TALENT:ARG:一線越えない == 1
+		TALENT:ARG:一線越えない = 0
 
-	IF !CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:処女
-		CALL 処女喪失実行(COUNT,初相手_セフレ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"%CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）")
+	IF !CFLAG:ARG:処女喪失相手 && TALENT:ARG:処女
+		CALL 処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
 		PRINTL 異常経験＋1
-		EXP:COUNT:異常経験 += 1
+		EXP:ARG:異常経験 += 1
 	ENDIF
 			
-	IF !CFLAG:COUNT:初キス相手
-		CALL 初キス喪失実行(COUNT,初相手_セフレ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"%CSTR:COUNT:セフレ姓%%CSTR:COUNT:セフレ名%（セフレ）の極太%CSTR:COUNT:男性器呼び方%%UNICODE(0x2665)%")
+	IF !CFLAG:ARG:初キス相手
+		CALL 初キス喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
 	ENDIF
 		
 	;性交回数
 	S = 0
 	;V感覚
-	IF ABL:COUNT:Ｖ感覚 == 4
+	IF ABL:ARG:Ｖ感覚 == 4
 		S += 1
-	ELSEIF ABL:COUNT:Ｖ感覚 == 5
+	ELSEIF ABL:ARG:Ｖ感覚 == 5
 		S += 2
-	ELSEIF ABL:COUNT:Ｖ感覚 >= 6
+	ELSEIF ABL:ARG:Ｖ感覚 >= 6
 		S += 3
 	ENDIF
 	;性交中毒によるボーナス
-	SIF ABL:COUNT:性交中毒
-		S += ABL:COUNT:性交中毒 / 2 + 1
+	SIF ABL:ARG:性交中毒
+		S += ABL:ARG:性交中毒 / 2 + 1
 	;PALAM:欲情がLV4以上
 	;欲望Ｌ%UNICODE(0x2665)%５以上奉仕精神５以上で+1
-	SIF ABL:COUNT:欲望 >= 5 && ABL:COUNT:奉仕精神 >= 5
+	SIF ABL:ARG:欲望 >= 5 && ABL:ARG:奉仕精神 >= 5
 		S += 2
 	;欲望Ｌ%UNICODE(0x2665)%４以上奉仕精神４以上で+1
-	SIF ABL:COUNT:欲望 >= 3 && ABL:COUNT:奉仕精神 >= 3
+	SIF ABL:ARG:欲望 >= 3 && ABL:ARG:奉仕精神 >= 3
 		S += 1
 	;PALAM:欲情がLV3以上
 	;欲望Ｌ%UNICODE(0x2665)%７以上%UNICODE(0x2665)%感覚Ｌ%UNICODE(0x2665)%６以上で+1（下と合わせて+2）
-	SIF ABL:COUNT:欲望 >= 7 && ABL:COUNT:5 >= 6
+	SIF ABL:ARG:欲望 >= 7 && ABL:ARG:5 >= 6
 		S += 1
 	;欲望Ｌ%UNICODE(0x2665)%４以上%UNICODE(0x2665)%感覚Ｌ%UNICODE(0x2665)%３以上で+1
-	SIF ABL:COUNT:欲望 >= 4 && ABL:COUNT:Ｖ感覚 >= 3
+	SIF ABL:ARG:欲望 >= 4 && ABL:ARG:Ｖ感覚 >= 3
 		S += 1
 	;彼氏あり、淫乱によるボーナス
-	SIF TALENT:COUNT:貞操無頓着
+	SIF TALENT:ARG:貞操無頓着
 		S += 10
 	;セックス狂によるボーナス
-	SIF TALENT:COUNT:セックス狂
+	SIF TALENT:ARG:セックス狂
 		S *= 2
 	;快感に素直、快感の否定
-	IF TALENT:COUNT:快感に素直
+	IF TALENT:ARG:快感に素直
 		S += 1
-	SIF TALENT:COUNT:淫乱
+	SIF TALENT:ARG:淫乱
 		S *= 2
 	ENDIF
 	SIF S < 5
@@ -391,23 +391,23 @@ ELSE
 	PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%＋{S}
 	PRINTFORML %EXPNAME:[[EXP:性交経験]]%＋{S}
 	PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{S*2}
-	PRINTFORML %EXPNAME:[[EXP:フェラ経験]]%＋{S/2}
+	PRINTFORMW %EXPNAME:[[EXP:フェラ経験]]%＋{S/2}
 	;%UNICODE(0x2665)%経験
-	EXP:COUNT:Ｖ経験 += S
+	EXP:ARG:Ｖ経験 += S
 	;絶頂経験
-	EXP:COUNT:絶頂経験 += S / 2 + RAND:6
+	EXP:ARG:絶頂経験 += S / 2 + RAND:6
 	;精液経験
-	EXP:COUNT:精液経験 += S*2
+	EXP:ARG:精液経験 += S*2
 	;性交経験
-	EXP:COUNT:性交経験 += S
+	EXP:ARG:性交経験 += S
 	;性交経験
-	EXP:COUNT:フェラ経験 += S / 2
+	EXP:ARG:フェラ経験 += S / 2
 	;セフレとのＳＥＸ回数
-	EXP:COUNT:セフレ性経験 += 1
+	EXP:ARG:セフレ性経験 += 1
 	;セフレありを取得
 	DRAWLINE
-	SIF CFLAG:COUNT:セフレ容認 == 0
-		CFLAG:COUNT:セフレ容認 = 1
+	SIF CFLAG:ARG:セフレ容認 == 0
+		CFLAG:ARG:セフレ容認 = 1
 ENDIF
 
 RETURN
@@ -415,25 +415,25 @@ RETURN
 ;===========================================================
 ;補導
 ;===========================================================
-@EVENT_BGGUIDANCE
-IF BASE:COUNT:実年齢 < 19
+@EVENT_BGGUIDANCE(ARG)
+IF BASE:ARG:実年齢 < 19
 	PRINTFORMW のんびりと事務所の後片付けをしていた%CALLNAME:MASTER%の携帯に一本の電話が入った……
-	PRINTFORM 電話の主は警察で、%NAME:COUNT%が
+	PRINTFORM 電話の主は警察で、%NAME:ARG%が
 		IF RAND:2 == 0
 			PRINTFORML 深夜のファミレスで喫煙していたところを補導したという話だ
-			PRINTFORMW %CALLNAME:MASTER%はため息をつくと、%CALLNAME:COUNT%を警察署まで迎えに行くことにした……
-			IF TALENT:COUNT:喫煙者 == 0
-				TALENT:COUNT:喫煙者 = 1
-				CALL CIGARETTES_4COUNT
+			PRINTFORMW %CALLNAME:MASTER%はため息をつくと、%CALLNAME:ARG%を警察署まで迎えに行くことにした……
+			IF TALENT:ARG:喫煙者 == 0
+				TALENT:ARG:喫煙者 = 1
+				CALL CIGARETTES(ARG)
 			ENDIF
 		ELSE
 			PRINTFORML 深夜のカラオケで飲酒していたところを補導したという話だ
-			PRINTFORML %CALLNAME:MASTER%はため息をつくと、%CALLNAME:COUNT%を警察署まで迎えに行くことにした……
+			PRINTFORML %CALLNAME:MASTER%はため息をつくと、%CALLNAME:ARG%を警察署まで迎えに行くことにした……
 		ENDIF
 	PRINTL
 	PRINTFORML 補導経験＋1
 	PRINTW
-	EXP:COUNT:補導経験 += 1
+	EXP:ARG:補導経験 += 1
 	DRAWLINE
 ENDIF
 
@@ -453,8 +453,8 @@ REPEAT CHARANUM
 	ELSEIF NO:COUNT == [[キャラ:アイーシャ・アルハズラッド]]
 		CONTINUE
 	ELSEIF TALENT:COUNT:褐色肌 == 1
-		CFLAG:COUNT:614 -= 1
-		IF CFLAG:COUNT:614 <= 0
+		CFLAG:COUNT:日焼効果 -= 1
+		IF CFLAG:COUNT:日焼効果 <= 0
 			PRINTFORML 《%NAME:COUNT%は日焼けサロンの効果が切れて元の肌色に戻った》
 			TALENT:COUNT:褐色肌 = 0
 		ENDIF

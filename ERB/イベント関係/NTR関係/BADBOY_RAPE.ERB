@@ -86,7 +86,8 @@ REPEAT CHARANUM
 		SIF FLAG:治安悪化レベル == 3
 			LOCAL += 30
 		IF LOCAL >= 98 && FLAG:治安巡回 == 0
-			CALL BADBOY_RAPE
+			CALL BADBOY_RAPE(COUNT)
+			FLAG:治安悪化 += RAND:5 + 1
 		ELSE
 			LOCAL = 0
 		ENDIF
@@ -97,79 +98,68 @@ REND
 ;===========================================================
 ;不良のレイプ・本体
 ;===========================================================
-@BADBOY_RAPE
-S = 1
-F = 5
-A = 0
-D = 1
-E = 0
+@BADBOY_RAPE(ARG)
+#DIM 強姦経験 = 1
+#DIM 強姦Ａ経験 = 0
+#DIM 強姦フェラ経験 = 5
+#DIM 強姦薬物経験 = 1
+#DIM 強姦異常経験 = 0
 
-PRINTFORM 今日は%CALLNAME:COUNT%を指導する日だが……これまで一度も指導をサボったことがない%CALLNAME:COUNT%が、
-PRINTFORML 今日に限っていつまで経っても%CALLNAME:MASTER%が待つ事務所に姿を見せていない
-PRINTFORML 急病や急用ならメールの一通でも寄越しそうなものだが、それすらも無いのは%CALLNAME:COUNT%にしては珍しいことだった
-PRINTFORM そう言えば最近、最寄りの駅周辺にガラの悪い連中がたむろしているのを見かけたが……もしかしたら絡まれているのかも
-PRINTFORML しれない
-PRINTFORM 万が一のことを考え、腕っ節に自身のある事務所のスタッフを連れて、あなたはとりあえず駅まで%CALLNAME:COUNT%を
-PRINTFORML 迎えに行った……
+PRINTFORML 今日は%CALLNAME:ARG%を指導する日だが……これまで一度も指導をサボったことがない%CALLNAME:ARG%が、今日に限っていつまで経っても%CALLNAME:MASTER%が待つ事務所に姿を見せていない
+PRINTFORML 急病や急用ならメールの一通でも寄越しそうなものだが、それすらも無いのは%CALLNAME:ARG%にしては珍しいことだった
+PRINTFORML そう言えば最近、最寄りの駅周辺にガラの悪い連中がたむろしているのを見かけたが……もしかしたら絡まれているのかもしれない
+PRINTFORML 万が一のことを考え、腕っ節に自身のある事務所のスタッフを連れて、あなたはとりあえず駅まで%CALLNAME:ARG%を迎えに行った……
 PRINTW
-PRINTFORML 駅周辺には%CALLNAME:COUNT%の姿はなく、それどころかいつもの不良連中がいないのも気になった
-PRINTFORM あなたは近くの、%CALLNAME:COUNT%がよく事務所に来る前に差し入れのお菓子を買ってくるコンビニに足を運び、
-PRINTFORM 携帯に保存していた%CALLNAME:COUNT%の写真を店員に見せて、今日は
-PRINTFORMW %CALLNAME:COUNT%が寄っていないか聞いてみることにした……
-PRINTL
-PRINTFORM すると１時間以上前に%CALLNAME:COUNT%によく似た女性が店の前でたむろしていた不良に取り囲まれ、
-PRINTFORML その後どこかに強引に引っ張られていったのを見かけた、との証言を得られた
-PRINTFORM あなたは嫌な胸騒ぎがしてコンビニを飛び出し、不良たちが溜まり場にしてそうな場所をしらみ潰しに駆けずり回り……
-PRINTFORMW ここ最近不景気のあおりで潰れた町工場の中でようやく酷い有様の%CALLNAME:COUNT%を発見した
-PRINTL
-PRINTFORM 強引に脱がされたのだろうか、乱雑に床に捨てられていた%CALLNAME:COUNT%の服はところどころがほつれ、
-PRINTFORM 壁にもたれかかった%CALLNAME:COUNT%の目はうつろで、その身体のあちこちに精液をこびりつかせ、腕には
-PRINTFORML 痛々しい注射の痕が残っていた……
-PRINTFORM 赤く充血して腫れた、%CALLNAME:COUNT%の膣穴からは
-	IF TALENT:COUNT:処女 == 1
+PRINTFORML 駅周辺には%CALLNAME:ARG%の姿はなく、それどころかいつもの不良連中がいないのも気になった
+PRINTFORML あなたは近くの、%CALLNAME:ARG%がよく事務所に来る前に差し入れのお菓子を買ってくるコンビニに足を運び、携帯に保存していた%CALLNAME:ARG%の写真を店員に見せて、今日は%CALLNAME:ARG%が寄っていないか聞いてみることにした……
+PRINTW
+PRINTFORML すると１時間以上前に%CALLNAME:ARG%によく似た女性が店の前でたむろしていた不良に取り囲まれ、その後どこかに強引に引っ張られていったのを見かけた、との証言を得られた
+PRINTFORML あなたは嫌な胸騒ぎがしてコンビニを飛び出し、不良たちが溜まり場にしてそうな場所をしらみ潰しに駆けずり回り……ここ最近不景気のあおりで潰れた町工場の中でようやく酷い有様の%CALLNAME:ARG%を発見した
+PRINTW
+PRINTFORML 強引に脱がされたのだろうか、乱雑に床に捨てられていた%CALLNAME:ARG%の服はところどころがほつれ、壁にもたれかかった%CALLNAME:ARG%の目はうつろで、その身体のあちこちに精液をこびりつかせ、腕には痛々しい注射の痕が残っていた……
+PRINTFORM 赤く充血して腫れた、%CALLNAME:ARG%の膣穴からは
+	IF TALENT:ARG:処女 == 1
 		PRINTFORM 破瓜の血が混ざった
 	ENDIF
 PRINTFORML 精液が垂れ落ち、地面にシミを作っている……
-PRINTFORMW どうやら%CALLNAME:COUNT%は不良たちに強姦されたようだった……
+PRINTFORMW どうやら%CALLNAME:ARG%は不良たちに強姦されたようだった……
 
-S += RAND:5
-F += RAND:10
-A += RAND:3
-D += RAND:3
+強姦経験 += RAND:5
+強姦フェラ経験 += RAND:10
+強姦Ａ経験 += RAND:3
+強姦薬物経験 += RAND:3
 
-PRINTFORML Ｖ経験＋{S}
-IF !CFLAG:COUNT:処女喪失相手 && TALENT:COUNT:処女
-	E += 1
-	CALL 処女喪失実行(COUNT,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
+PRINTFORML Ｖ経験＋{強姦経験}
+IF !CFLAG:ARG:処女喪失相手 && TALENT:ARG:処女
+	強姦異常経験 += 1
+	CALL 処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
 ENDIF
-IF A > 0
-	PRINTFORML Ａ経験＋{A}
-	IF TALENT:COUNT:Ａ処女
-		E += 1
-		CALL Ａ処女喪失実行(COUNT,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
+IF 強姦Ａ経験 > 0
+	PRINTFORML Ａ経験＋{強姦Ａ経験}
+	IF TALENT:ARG:Ａ処女
+		強姦異常経験 += 1
+		CALL Ａ処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
 	ENDIF
 ENDIF
 ;初強姦で異常+1
-SIF EXP:COUNT:強姦回数 == 0
-	E += 1 
-PRINTFORML 性交経験＋{S}
-PRINTFORML フェラ経験＋{F}
-IF !CFLAG:COUNT:初キス相手
-	CALL 初キス喪失実行(COUNT,初相手_不良,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_男性器,"不良")
+SIF EXP:ARG:強姦回数 == 0
+	強姦異常経験 += 1 
+PRINTFORML 性交経験＋{強姦経験}
+PRINTFORML フェラ経験＋{強姦フェラ経験}
+IF !CFLAG:ARG:初キス相手
+	CALL 初キス喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_男性器,"不良")
 ENDIF
-PRINTFORML 精液経験＋{A+S+F}
-PRINTFORML 薬物経験＋{D}
-SIF E
-	PRINTFORML 異常経験＋{E}
+PRINTFORML 精液経験＋{強姦Ａ経験+強姦経験+強姦フェラ経験}
+PRINTFORML 薬物経験＋{強姦薬物経験}
+SIF 強姦異常経験
+	PRINTFORML 異常経験＋{強姦異常経験}
 
-LOCAL = 0 
-
-EXP:COUNT:Ｖ経験 += S
-EXP:COUNT:Ａ経験 += A
-EXP:COUNT:性交経験 += A
-EXP:COUNT:精液経験 += S+A+F
-EXP:COUNT:異常経験 += E
-EXP:COUNT:薬物経験 += D
-EXP:COUNT:強姦回数 += 1
-BASE:COUNT:魅力値 -= 5
+EXP:ARG:Ｖ経験 += 強姦経験
+EXP:ARG:Ａ経験 += 強姦Ａ経験
+EXP:ARG:性交経験 += 強姦経験+強姦Ａ経験
+EXP:ARG:精液経験 += 強姦経験+強姦Ａ経験+強姦フェラ経験
+EXP:ARG:異常経験 += 強姦異常経験
+EXP:ARG:薬物経験 += 強姦薬物経験
+EXP:ARG:強姦回数 += 1
+BASE:ARG:魅力値 -= 5
 DRAWLINE

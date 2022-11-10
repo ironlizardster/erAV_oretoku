@@ -835,11 +835,11 @@ ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64) && ((TFLAG
 ;服を着たまま放尿
 ELSEIF (CFLAG:着衣状態 & 16) && ((TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖))
 	PRINTFORM 快楽に堪えきれず、%CALLNAME:TARGET%は
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTFORML がびしょ濡れになるのも構わず、勢い良く放尿を始めた…
 ;服を着たまま失禁
 ELSEIF (CFLAG:着衣状態 & 16) && ((TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂の強度 >= 1 && TEQUIP:利尿剤効果))
-	CALL PRINT_CLOTHTYPE_MAIN2
+	CALL PRINT_上着タイプ(TARGET)
 	PRINTFORML の股間に湯気が立ち、黄色いシミが広がっていく…
 ;パンツをはいたまま放尿
 ELSEIF (CFLAG:着衣状態 & 1) && ((TFLAG:絶頂の強度 >= 5 && TEQUIP:利尿剤効果) || (TFLAG:絶頂の強度 >= 3 && TEQUIP:利尿剤効果 && TALENT:おもらし癖))

@@ -33,7 +33,7 @@ PRINTFORML 休日を利用して、%NAME:COUNT%のグラビア撮影が行われ
 ;グラビア撮影口上
 TARGET = COUNT
 TFLAG:口上番号 = 7
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 PRINTL
 ;実際にお外で水着になることも当然あるので…
 IF RAND:2 == 0
@@ -52,7 +52,7 @@ PRINTFORML 休日を利用して、%NAME:COUNT%の歌唱トレーニングが行
 ;歌唱練習口上
 TARGET = COUNT
 TFLAG:口上番号 = 8
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 PRINTL
 PRINTL 舞踊経験＋5
 PRINTL 歌唱経験＋5

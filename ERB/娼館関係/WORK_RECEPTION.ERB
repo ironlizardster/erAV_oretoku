@@ -1549,9 +1549,6 @@ IF S >= 30
 ELSE
 	IF TALENT:処女
 		PRINTFORMW 破瓜の痛みに耐えきれず、%CALLNAME:TARGET%は激しく身をよじり抵抗してしまった……
-		SETCOLOR 0xF58F98
-		PRINTL 【接待で処女喪失】
-		RESETCOLOR
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+{2+(FLAG:奴隷接待相手性癖 & 1)}
 		EXP:異常経験 += 2 + (FLAG:奴隷接待相手性癖 & 1)
 		;処女喪失相手を記録
@@ -1739,9 +1736,6 @@ ENDIF
 PRINTL Ａ経験　+1
 EXP:Ａ経験 += 1		
 IF TALENT:Ａ処女 == 1
-	SETCOLOR 0xF58F98
-	PRINTL 【Ａ処女喪失】
-	RESETCOLOR
 	IF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 0
 		CALL Ａ処女喪失実行(TARGET,初相手_売春客女,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_奴隷接待,"知らないオンナの人")
 	ELSEIF (FLAG:奴隷接待相手性癖 & 1) == 1 && TALENT:ギャル系 == 1

@@ -154,6 +154,70 @@ ELSE
 	RETURNF 0
 ENDIF
 
+;=================================================
+; 経験増加処理
+;--------------------------------------------
+; 引数
+;  ARG   増加処理を行うキャラ登録番号
+;  ARG:1 メッセージマスクフラグ(1の場合メッセージ非表示)
+;  ARG:2 経験値倍増する素質の番号
+;--------------------------------------------
+; 備考
+;  増加する経験は呼び出し前にTCVARに格納しておくこと
+;  TCVARの要素番号はEXPのものに合わせる
+;=================================================
+@ADD_EXP(ARG, ARG:1 = 0,ARG:2 = -1)
+; 経験増加処理
+PRINTFORML %NAME:ARG%
+FOR LOCAL, 0, VARSIZE("EXP")
+	IF TCVAR:ARG:LOCAL
+		; 経験値の加算処理
+		; 経験名が定義されているのみ加算処理を行う
+		SIF ARG:2 >= 0 && TALENT:ARG:(ARG:2)
+			TCVAR:ARG:LOCAL *= 2
+		IF STRLENS(EXPNAME:LOCAL) > 0
+			EXP:ARG:LOCAL += TCVAR:ARG:LOCAL
+		ELSE
+			DEBUGPRINTFORML NOTICE: EXP:{LOCAL}は定義されていないため加算処理をスキップします
+		ENDIF
+		SIF ARG:1 == 0
+			PRINTFORML 　%EXPNAME:LOCAL% + {TCVAR:ARG:LOCAL}
+	ENDIF
+NEXT
+VARSET TCVAR:ARG:Ｖ経験
+
+;=================================================
+; 経験増加処理
+;--------------------------------------------
+; 引数
+;  ARG   増加処理を行うキャラ登録番号
+;  ARG:1 メッセージマスクフラグ(1の場合メッセージ非表示)
+;  ARG:2 経験値倍増する素質の番号
+;--------------------------------------------
+; 備考
+;  増加する経験は呼び出し前にTCVARに格納しておくこと
+;  TCVARの要素番号はEXPのものに合わせる
+;=================================================
+@ADD_JUEL(ARG, ARG:1 = 0,ARG:2 = -1)
+; 経験増加処理
+PRINTFORML %NAME:ARG%
+FOR LOCAL, 0, VARSIZE("JUEL")
+	IF GOTJUEL:ARG:LOCAL
+		; 経験値の加算処理
+		; 経験名が定義されているのみ加算処理を行う
+		SIF ARG:2 >= 0 && TALENT:ARG:(ARG:2)
+			GOTJUEL:ARG:LOCAL *= 2
+		IF STRLENS(PALAMNAME:LOCAL) > 0
+			JUEL:ARG:LOCAL += GOTJUEL:ARG:LOCAL
+		ELSE
+			DEBUGPRINTFORML NOTICE: PALAMNAME:{LOCAL}は定義されていないため加算処理をスキップします
+		ENDIF
+		SIF ARG:1 == 0
+			PRINTFORML 　%PALAMNAME:LOCAL% + {GOTJUEL:ARG:LOCAL}
+	ENDIF
+NEXT
+VARSET GOTJUEL:ARG:0
+
 ;-------------------------
 ;トグル式のボタンを描画する関数
 ;ARGS:0=表示する文字列、ARG:1=ボタンの番号、ARG:2=選択されているか否か

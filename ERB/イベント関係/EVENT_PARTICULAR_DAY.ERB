@@ -362,7 +362,7 @@ IF RESULT == COMMAND_はい
 
 	;口上21番使用
 	TFLAG:口上番号 = 21
-	CALL SELF_KOJO
+	CALL SELF_KOJO(TARGET)
 	PRINTL
 
 	PRINTL 恭順の珠＋1000
@@ -387,7 +387,7 @@ IF RESULT == COMMAND_はい
 		PRINTL 
 		;口上22番使用
 		TFLAG:口上番号 = 22
-		CALL SELF_KOJO
+		CALL SELF_KOJO(TARGET)
 		PRINTL 
 		PRINTFORML %CALLNAME:MASTER%は満天の星空の下、%CALLNAME:TARGET%を夜通し抱き続けた……
 		N = 0
@@ -433,7 +433,7 @@ IF RESULT == COMMAND_はい
 	IF TFLAG:日焼けさせる == 1 || RAND:11 >= 8
 		PRINTFORML 《夏の海を満喫した%CALLNAME:TARGET%はすっかり日焼けしてしまったようだ……》
 		TALENT:褐色肌 = 1
-		CFLAG:614 = 4 + RAND:4
+		CFLAG:日焼効果 = 4 + RAND:4
 	ENDIF
 
 	RETURN 1

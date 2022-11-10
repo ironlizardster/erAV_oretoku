@@ -521,7 +521,7 @@ IF FLAG:特殊営業参加人数 >= 2
 		ELSE
 			SIF FLAG:特殊営業で夜の部を開催フラグ && (CFLAG:着衣状態 & 4)
 				PRINT 胸をはだけた
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			IF CFLAG:特別コスタイプ
 				PRINT に
 				CALL PRINT_CLOTHTYPE_SPECIAL
@@ -591,7 +591,7 @@ ELSE
 ENDIF
 
 ;口上
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 
 DRAWLINE
 

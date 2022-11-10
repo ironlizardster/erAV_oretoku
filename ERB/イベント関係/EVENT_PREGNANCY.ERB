@@ -786,7 +786,7 @@ ENDIF
 ;妊娠発覚時のイベント口上
 TARGET = T
 TFLAG:口上番号 = 11
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 
 DRAWLINE
 
@@ -839,7 +839,7 @@ WAIT
 ;出産時のイベント口上
 TARGET = C
 TFLAG:口上番号 = 12
-CALL SELF_KOJO
+CALL SELF_KOJO(TARGET)
 
 ;【恋心】持ちの奴隷に産ませた子供が3人以上でマスターに【父性】が付く
 SIF TALENT:C:恋心 && CFLAG:C:妊娠精子キャラ番号 == NO:MASTER
@@ -979,9 +979,6 @@ DRAWLINE
 IF TALENT:C:処女 == 1
 	CSTR:C:処女喪失相手 = スライムの卵
 	CALL 処女喪失実行(C,初相手_産卵,BASE:C:実年齢,DAY:日付_月,DAY:日付_日,初場所_自室,初状況_なし,CSTR:C:処女喪失相手)
-	SETCOLOR 0xF58F98
-	PRINTL 【処女喪失】
-	RESETCOLOR
 ENDIF
 EXP:C:Ｖ拡張経験 += 1
 EXP:C:産卵経験 += 1
@@ -993,7 +990,7 @@ WAIT
 ;出産時のイベント口上
 ;TARGET = C
 ;TFLAG:口上番号 = XX
-;CALL SELF_KOJO
+;CALL SELF_KOJO(TARGET)
 
 ;抱卵を失う
 TALENT:C:抱卵 = 0

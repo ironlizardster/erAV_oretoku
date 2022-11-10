@@ -1,11 +1,10 @@
 ﻿;===========================================================
 ;痴漢発生の処理
 ;===========================================================
-@MOLESTER_BRUNCH
+@MOLESTER_BRUNCH(ARG)
+
 LOCAL += RAND:6
-IF LOCAL == 0
-	TFLAG:口上番号 = 16
-ELSEIF LOCAL == 1
+IF LOCAL <= 1
 	TFLAG:口上番号 = 16
 ELSEIF LOCAL == 2
 	TFLAG:口上番号 = 17
@@ -16,243 +15,167 @@ ELSEIF LOCAL == 4
 ELSEIF LOCAL == 5
 	TFLAG:口上番号 = 20
 ENDIF
-						;****痴漢誘惑修正追加ここから****
-TARGET = COUNT
-						;****痴漢誘惑修正追加ここまで****
-CALL SELF_KOJO
-PRINTFORM %CALLNAME:MASTER%が事務所を出ようとした時、すでに帰宅したはずの%CALLNAME:COUNT%から
-PRINTFORML %CALLNAME:MASTER%の携帯電話に着信があった。
-PRINTFORM 何事かと思い慌てて%CALLNAME:MASTER%が電話に出ると、
-	IF TALENT:COUNT:淫乱 == 1
-		PRINTFORM 艶っぽい声で
-	ELSE
-		PRINTFORM 涙声で
+
+CALL SELF_KOJO(ARG)
+PRINTFORML %CALLNAME:MASTER%が事務所を出ようとした時、すでに帰宅したはずの%CALLNAME:ARG%から%CALLNAME:MASTER%の携帯電話に着信があった。
+PRINTFORMW 何事かと思い慌てて%CALLNAME:MASTER%が電話に出ると、\@ TALENT:ARG:淫乱 ? 艶っぽい声で # 涙声で \@帰りの電車で痴漢に遭ったことを報告してきた……
+PRINTFORM %CALLNAME:MASTER%が詳しい話を%CALLNAME:ARG%に聞くと、
+IF LOCAL <= 1
+	PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、勃起した痴漢のペニスを無理やり握らされたようだ。
+	PRINTFORMW そしてそのまま大量のザーメンを全身にぶっかけられたらしい……	  
+	PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋500
+	PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋100
+	IF TALENT:ARG:淫乱 == 0
+		PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋1000
+		JUEL:ARG:不快 += 1000
 	ENDIF
-PRINTFORML 帰りの電車で痴漢に遭ったことを報告してきた……
-PRINTW  
-PRINTFORM %CALLNAME:MASTER%が詳しい話を%CALLNAME:COUNT%に聞くと、
-		IF LOCAL == 0
-			PRINTFORM 尻や胸をイヤらしい手つきで撫で回され、
-			PRINTFORML 勃起した痴漢のペニスを無理やり握らされたようだ。
-			PRINTFORML そしてそのまま大量のザーメンを全身にぶっかけられたらしい……
-			PRINTFORMW  
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋500
-			PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋100
-				IF TALENT:COUNT:淫乱 == 0
-					PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋1000
-				ENDIF
-			EXP:COUNT:精液経験 += 2
-			EXP:COUNT:痴漢経験 += 1
-			JUEL:COUNT:恥情 += 500
-			JUEL:COUNT:恐怖 += 100
-				IF TALENT:COUNT:淫乱 == 0
-					JUEL:COUNT:不快 += 1000
-				ENDIF
-			BASE:COUNT:魅力値 -= 2
-		ELSEIF LOCAL == 1
-			PRINTFORM 尻や胸をイヤらしい手つきで撫で回され、
-			PRINTFORML 勃起した痴漢のペニスを無理やり握らされたようだ。
-			PRINTFORML そしてそのまま大量のザーメンを全身にぶっかけられたらしい……
-			PRINTFORMW  
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋500
-			PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋100
-				IF TALENT:COUNT:淫乱 == 0
-					PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋1000
-				ENDIF
-			EXP:COUNT:精液経験 += 2
-			EXP:COUNT:痴漢経験 += 1
-			JUEL:COUNT:恥情 += 500
-			JUEL:COUNT:恐怖 += 100
-				IF TALENT:COUNT:淫乱 == 0
-					JUEL:COUNT:不快 += 1000
-				ENDIF
-			LOCAL = 0
-			BASE:COUNT:魅力値 -= 2
-		ELSEIF LOCAL == 2
-			PRINTFORM 尻や胸をイヤらしい手つきで撫で回され、
-			PRINTFORML 勃起した痴漢のペニスを無理やり握らされたようだ。
-			PRINTFORM 手コキを強要されながら%CALLNAME:COUNT%は
-			PRINTFORM 下着越しにクリトリスや乳首を執拗にいじくり回され
-			PRINTFORM %CALLNAME:COUNT%が絶頂すると同時に
-			PRINTFORML 痴漢が大量のザーメンを%CALLNAME:COUNT%の手のひらに射精したらしい…
-			PRINTFORMW  
-			PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋800
-			PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋200
-				IF TALENT:COUNT:淫乱 == 0
-					PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋1500
-				ENDIF
-			EXP:COUNT:精液経験 += 2
-			EXP:COUNT:痴漢経験 += 1
-			EXP:COUNT:絶頂経験 += 1
-			JUEL:COUNT:恥情 += 800
-			JUEL:COUNT:恐怖 += 200
-				IF TALENT:COUNT:淫乱 == 0
-					JUEL:COUNT:不快 += 1500
-				ENDIF
-			LOCAL = 0
-			BASE:COUNT:魅力値 -= 3
-		ELSEIF LOCAL == 3
-			PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、
-			PRINTFORML 勃起した痴漢のペニスを無理やり握らされたようだ。
-			PRINTFORM 手コキを強要されながら%CALLNAME:COUNT%は
-			PRINTFORML 下着の中に手を突っ込まれ尻穴を指で弄られたらしい…
-			PRINTFORM %CALLNAME:COUNT%が
-				IF TALENT:COUNT:尻穴狂い
-					PRINTFORM とろけた表情で痴漢の指をアヌスでくわえ込み、
-					PRINTFORM 嬌声をあげて絶頂すると同時に
-				ELSEIF ABL:COUNT:Ａ感覚 >= 3
-					PRINTFORM 絶頂すると同時に
-				ELSEIF EXP:COUNT:Ａ経験 == 0
-					PRINTFORM 初めての異物感に抵抗している姿に興奮した
-				ELSE
-					PRINTFORM 異物感に抵抗している姿に興奮した
-				ENDIF
-			PRINTFORM 痴漢が大量のザーメンを%CALLNAME:COUNT%の手のひらに射精した
-			PRINTFORML とのことだ……
-			PRINTFORMW  
-				IF ABL:COUNT:Ａ感覚 >= 3
-					PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
-				ENDIF
-			PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%+1
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
-			PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋300
-				IF TALENT:COUNT:淫乱 == 0
-					PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋2000
-				ENDIF
-			EXP:COUNT:精液経験 += 2
-			EXP:COUNT:痴漢経験 += 1
-			EXP:COUNT:Ａ経験 += 1
-				IF ABL:COUNT:Ａ感覚 >= 3
-					EXP:COUNT:絶頂経験 += 1
-				ENDIF
-			JUEL:COUNT:恥情 += 1000
-			JUEL:COUNT:恐怖 += 300
-				IF TALENT:COUNT:淫乱 == 0
-					JUEL:COUNT:不快 += 2000
-				ENDIF
-			LOCAL = 0
-			BASE:COUNT:魅力値 -= 4
-		ELSEIF LOCAL == 4
-			PRINTFORM 尻や胸をイヤらしい手つきで撫で回され、
-			PRINTFORML 勃起した痴漢のペニスを無理やり握らされたようだ。
-			PRINTFORM 手コキを強要されながら%CALLNAME:COUNT%は
-			PRINTFORMW 下着の中に手を突っ込まれ膣穴を指で弄られたらしい…
-			PRINTFORM %CALLNAME:COUNT%が
-				IF TALENT:COUNT:淫壺
-					PRINTFORM とろけた表情で痴漢の指を膣穴でくわえ込み、
-					PRINTFORM 嬌声をあげて絶頂すると同時に
-				ELSEIF ABL:COUNT:Ｖ感覚 >= 3
-					PRINTFORM 絶頂すると同時に
-				ELSEIF EXP:COUNT:Ｖ経験 == 0
-					PRINTFORM 初めての異物感に抵抗している姿に興奮した
-				ELSE
-					PRINTFORM 異物感に抵抗している姿に興奮した
-				ENDIF
-			PRINTFORM 痴漢が大量のザーメンを%CALLNAME:COUNT%の手のひらに
-			PRINTFORML 射精したという……
-			PRINTFORMW  
-				IF ABL:COUNT:Ｖ感覚 >= 3
-					PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
-				ENDIF
-			PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
-			PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋300
-				IF TALENT:COUNT:淫乱 == 0
-					PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋2000
-				ENDIF
-			EXP:COUNT:精液経験 += 2
-			EXP:COUNT:痴漢経験 += 1
-				IF ABL:COUNT:Ｖ感覚 >= 3
-					EXP:COUNT:絶頂経験 += 1
-				ENDIF
-			JUEL:COUNT:恥情 += 1000
-			JUEL:COUNT:恐怖 += 300
-				IF TALENT:COUNT:淫乱 == 0
-					JUEL:COUNT:不快 += 2000
-				ENDIF
-			LOCAL = 0
-			BASE:COUNT:魅力値 -= 5
-		ELSEIF LOCAL >= 4
-			PRINTFORM 尻や胸をイヤらしい手つきで撫で回され、
-			PRINTFORML 勃起した痴漢のペニスを無理やり握らされたようだ。
-			PRINTFORM 手コキを強要されながら%CALLNAME:COUNT%は
-			PRINTFORMW 下着の中に手を突っ込まれ膣穴を指で弄られたらしい…
-			PRINTFORM そして%CALLNAME:COUNT%の膣穴が愛液でぬかるみほぐれてきたところで
-			PRINTFORM %CALLNAME:COUNT%の下着をずらし、%CALLNAME:COUNT%の手コキでいきり
-			PRINTFORM 立った肉棒が
-				IF TALENT:COUNT:処女 == 1
-					PRINTFORM 未開通の
-				ELSEIF TALENT:COUNT:常時発情 == 1
-					PRINTFORM 度重なる指導で発情しきった
-				ELSE
-					PRINTFORM 貫通済みの
-				ENDIF
-			PRINTFORML 膣穴に挿入された……
-			PRINTFORM %CALLNAME:COUNT%
-				IF TALENT:COUNT:処女 == 1
-					PRINTFORM が見ず知らずの男に処女を散らされ、泣きじゃくる姿
-				ELSEIF EXP:COUNT:Ａ経験 >= 10
-					PRINTFORM の膣穴はすんなりと肉棒を受け入れ、
-					PRINTFORM 確かな反応を示す%CALLNAME:COUNT%の姿
-				ELSE
-					PRINTFORM は処女ではないものの、未だに固い
-					PRINTFORM %CALLNAME:COUNT%の膣の感触
-				ENDIF
-			PRINTFORML に興奮した痴漢はピストンの速度を上げた……
-			PRINTFORM そして%CALLNAME:COUNT%
-				IF EXP:COUNT:Ｖ経験 == 0
-					PRINTFORM が初めての異物感に抵抗している姿に
-				ELSEIF TALENT:COUNT:淫乱
-					PRINTFORM がとろけた表情で痴漢のペニスを自ら腰を振って
-					PRINTFORM 膣穴でくわえ込み、嬌声をあげて絶頂すると同時に
-				ELSEIF EXP:COUNT:Ａ経験 >= 10
-					PRINTFORM が絶頂すると同時に
-				ELSE
-					PRINTFORM がまだ慣れない異物感に抵抗している姿に
-				ENDIF
-			PRINTFORM 限界を迎えた痴漢が大量のザーメンを%CALLNAME:COUNT%の
-			PRINTFORML 子宮めがけて中出ししたという……
-			PRINTFORM 満足した痴漢がペニスを引き抜くと、%CALLNAME:COUNT%の秘唇から
-				IF TALENT:COUNT:処女 == 1
-					PRINTFORM 破瓜の血が混ざった
-				ENDIF
-			PRINTFORM 精液がごぽりと音を立てて溢れるほど、
-			PRINTFORML 大量に膣内射精されたようだった……
-			PRINTFORMW  
-				IF TALENT:COUNT:処女
-					PRINTFORML 【処女喪失】
-				ENDIF
-				IF ABL:COUNT:Ｂ感覚 >= 10
-					PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
-				ENDIF
-			PRINTFORML %EXPNAME:[[EXP:Ｖ経験]]%+2
-				IF TALENT:COUNT:処女
-					CALL 処女喪失実行(COUNT,初相手_痴漢,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_電車,初状況_無理犯,"痴漢")
-					PRINTFORML %EXPNAME:[[EXP:異常経験]]%+2
-					EXP:COUNT:異常経験 += 2
-				ENDIF
-			PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
-			PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋300
-				IF TALENT:COUNT:淫乱 == 0
-					PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋2000
-				ENDIF
-			EXP:COUNT:精液経験 += 2
-			EXP:COUNT:痴漢経験 += 1
-			EXP:COUNT:Ｖ経験 += 2
-				IF ABL:COUNT:Ｖ感覚 >= 3
-					EXP:COUNT:絶頂経験 += 1
-				ENDIF
-			JUEL:COUNT:恥情 += 1000
-			JUEL:COUNT:恐怖 += 300
-				IF TALENT:COUNT:淫乱 == 0
-					JUEL:COUNT:不快 += 2000
-				ENDIF
-			LOCAL = 0
-			BASE:COUNT:魅力値 -= 15
-		ENDIF
-	DRAWLINE
+	EXP:ARG:精液経験 += 2
+	EXP:ARG:痴漢経験 += 1
+	JUEL:ARG:恥情 += 500
+	JUEL:ARG:恐怖 += 100
+	LOCAL = 0
+	BASE:ARG:魅力値 -= 2
+ELSEIF LOCAL == 2
+	PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、勃起した痴漢のペニスを無理やり握らされたようだ。
+	PRINTFORMW 手コキを強要されながら%CALLNAME:ARG%は下着越しにクリトリスや乳首を執拗にいじくり回され%CALLNAME:ARG%が絶頂すると同時に痴漢が大量のザーメンを%CALLNAME:ARG%の手のひらに射精したらしい…
+	PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
+	PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋800
+	PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋200
+	IF TALENT:ARG:淫乱 == 0
+		PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋1500
+		JUEL:ARG:不快 += 1500
+	ENDIF
+	EXP:ARG:精液経験 += 2
+	EXP:ARG:痴漢経験 += 1
+	EXP:ARG:絶頂経験 += 1
+	JUEL:ARG:恥情 += 800
+	JUEL:ARG:恐怖 += 200
+	LOCAL = 0
+	BASE:ARG:魅力値 -= 3
+ELSEIF LOCAL == 3
+	PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、勃起した痴漢のペニスを無理やり握らされたようだ。
+	PRINTFORMW 手コキを強要されながら%CALLNAME:ARG%は下着の中に手を突っ込まれ尻穴を指で弄られたらしい…
+	PRINTFORM %CALLNAME:ARG%が
+	IF TALENT:ARG:尻穴狂い
+		PRINTFORM とろけた表情で痴漢の指をアヌスでくわえ込み、嬌声をあげて絶頂すると同時に
+	ELSEIF ABL:ARG:Ａ感覚 >= 3
+		PRINTFORM 絶頂すると同時に
+	ELSEIF EXP:ARG:Ａ経験 == 0
+		PRINTFORM 初めての異物感に抵抗している姿に興奮した
+	ELSE
+		PRINTFORM 異物感に抵抗している姿に興奮した
+	ENDIF
+	PRINTFORMW 痴漢が大量のザーメンを%CALLNAME:ARG%の手のひらに射精したとのことだ……
+	IF ABL:ARG:Ａ感覚 >= 3
+		PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
+		EXP:ARG:絶頂経験 += 1
+	ENDIF
+	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%+1
+	PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
+	PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋300
+	IF TALENT:ARG:淫乱 == 0
+		PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋2000
+		JUEL:ARG:不快 += 2000
+	ENDIF
+	EXP:ARG:精液経験 += 2
+	EXP:ARG:痴漢経験 += 1
+	EXP:ARG:Ａ経験 += 1
+	JUEL:ARG:恥情 += 1000
+	JUEL:ARG:恐怖 += 300
+	LOCAL = 0
+	BASE:ARG:魅力値 -= 4
+ELSEIF LOCAL == 4
+	PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、勃起した痴漢のペニスを無理やり握らされたようだ。
+	PRINTFORMW 手コキを強要されながら%CALLNAME:ARG%は下着の中に手を突っ込まれ膣穴を指で弄られたらしい…
+	PRINTFORM %CALLNAME:ARG%が
+	IF TALENT:ARG:淫壺
+		PRINTFORM とろけた表情で痴漢の指を膣穴でくわえ込み、嬌声をあげて絶頂すると同時に
+	ELSEIF ABL:ARG:Ｖ感覚 >= 3
+		PRINTFORM 絶頂すると同時に
+	ELSEIF EXP:ARG:Ｖ経験 == 0
+		PRINTFORM 初めての異物感に抵抗している姿に興奮した
+	ELSE
+		PRINTFORM 異物感に抵抗している姿に興奮した
+	ENDIF
+	PRINTFORMW 痴漢が大量のザーメンを%CALLNAME:ARG%の手のひらに射精したという……
+	IF ABL:ARG:Ｖ感覚 >= 3
+		PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
+		EXP:ARG:絶頂経験 += 1
+	ENDIF
+	PRINTFORML %EXPNAME:[[EXP:精液経験]]%+2
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
+	PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋300
+	IF TALENT:ARG:淫乱 == 0
+		PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋2000
+		JUEL:ARG:不快 += 2000
+	ENDIF
+	EXP:ARG:精液経験 += 2
+	EXP:ARG:痴漢経験 += 1
+	JUEL:ARG:恥情 += 1000
+	JUEL:ARG:恐怖 += 300
+	LOCAL = 0
+	BASE:ARG:魅力値 -= 5
+ELSEIF LOCAL >= 4
+	PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、勃起した痴漢のペニスを無理やり握らされたようだ。
+	PRINTFORMW 手コキを強要されながら%CALLNAME:ARG%は下着の中に手を突っ込まれ膣穴を指で弄られたらしい…
+	PRINTFORM そして%CALLNAME:ARG%の膣穴が愛液でぬかるみほぐれてきたところで%CALLNAME:ARG%の下着をずらし、%CALLNAME:ARG%の手コキでいきり立った肉棒が
+	IF TALENT:ARG:処女 == 1
+		PRINTFORM 未開通の
+	ELSEIF TALENT:ARG:常時発情 == 1
+		PRINTFORM 度重なる指導で発情しきった
+	ELSE
+		PRINTFORM 貫通済みの
+	ENDIF
+	PRINTFORML 膣穴に挿入された……
+	PRINTFORM %CALLNAME:ARG%
+	IF TALENT:ARG:処女 == 1
+		PRINTFORM が見ず知らずの男に処女を散らされ、泣きじゃくる姿
+	ELSEIF EXP:ARG:Ｖ経験 >= 10
+		PRINTFORM の膣穴はすんなりと肉棒を受け入れ、
+		PRINTFORM 確かな反応を示す%CALLNAME:ARG%の姿
+	ELSE
+		PRINTFORM は処女ではないものの、未だに固い
+		PRINTFORM %CALLNAME:ARG%の膣の感触
+	ENDIF
+	PRINTFORML に興奮した痴漢はピストンの速度を上げた……
+	PRINTFORM そして%CALLNAME:ARG%
+	IF TALENT:ARG:処女 == 1
+		PRINTFORM が初めての異物感に抵抗している姿に
+	ELSEIF TALENT:ARG:淫乱
+		PRINTFORM がとろけた表情で痴漢のペニスを自ら腰を振って膣穴でくわえ込み、嬌声をあげて絶頂すると同時に
+	ELSEIF EXP:ARG:Ｖ経験 >= 10
+		PRINTFORM が絶頂すると同時に
+	ELSE
+		PRINTFORM がまだ慣れない異物感に抵抗している姿に
+	ENDIF
+	PRINTFORML 限界を迎えた痴漢が大量のザーメンを%CALLNAME:ARG%の子宮めがけて中出ししたという……
+	PRINTFORM 満足した痴漢がペニスを引き抜くと、%CALLNAME:ARG%の秘唇から\@ TALENT:ARG:処女 ? 破瓜の血が混ざった # \@精液がごぽりと音を立てて溢れるほど、大量に膣内射精されたようだった……
+	PRINTFORMW  
+	IF TALENT:ARG:処女
+		CALL 処女喪失実行(ARG,初相手_痴漢,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_電車,初状況_無理犯,"痴漢")
+		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+2
+		EXP:ARG:異常経験 += 2
+	ENDIF
+	IF ABL:ARG:Ｂ感覚 >= 10
+		PRINTFORML %EXPNAME:[[EXP:絶頂経験]]%+1
+		EXP:ARG:絶頂経験 += 1
+	ENDIF
+	PRINTFORML %EXPNAME:[[EXP:Ｖ経験]]%+2
+	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋1000
+	PRINTFORML %PALAMNAME:[[PALAM:恐怖]]%の珠＋300
+	IF TALENT:ARG:淫乱 == 0
+		PRINTFORMW %PALAMNAME:[[PALAM:不快]]%の珠＋2000
+		JUEL:ARG:不快 += 2000
+	ENDIF
+	EXP:ARG:精液経験 += 2
+	EXP:ARG:痴漢経験 += 1
+	EXP:ARG:Ｖ経験 += 2
+	JUEL:ARG:恥情 += 1000
+	JUEL:ARG:恐怖 += 300
+	LOCAL = 0
+	BASE:ARG:魅力値 -= 15
+ENDIF
+DRAWLINE

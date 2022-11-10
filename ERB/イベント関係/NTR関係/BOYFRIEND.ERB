@@ -7,21 +7,21 @@
 ;CFLAG:彼氏の好みの服装に変更したかどうか＝彼氏好みのファッションになったか
 ;CFLAG:服装変更の判定用＝ファッションを変えたい希望の度合い
 ;===========================================================
-@PRINT_BOYFRIEND
-IF CFLAG:彼氏有 >= 1
-	IF CFLAG:彼氏タイプ == 1
+@PRINT_BOYFRIEND(ARG)
+IF CFLAG:ARG:彼氏有 >= 1
+	IF CFLAG:ARG:彼氏タイプ == 1
 		PRINT クラスメイト
-	ELSEIF CFLAG:彼氏タイプ == 2
+	ELSEIF CFLAG:ARG:彼氏タイプ == 2
 		PRINT 高校生
-	ELSEIF CFLAG:彼氏タイプ == 3
+	ELSEIF CFLAG:ARG:彼氏タイプ == 3
 		PRINT 中学生
-	ELSEIF CFLAG:彼氏タイプ == 4
+	ELSEIF CFLAG:ARG:彼氏タイプ == 4
 		PRINT 大学生
-	ELSEIF CFLAG:彼氏タイプ == 5
+	ELSEIF CFLAG:ARG:彼氏タイプ == 5
 		PRINT サラリーマン
-	ELSEIF CFLAG:彼氏タイプ == 6
+	ELSEIF CFLAG:ARG:彼氏タイプ == 6
 		PRINT ホスト
-	ELSEIF CFLAG:彼氏タイプ == 99
+	ELSEIF CFLAG:ARG:彼氏タイプ == 99
 		PRINT 御主人様
 	ELSE
 		PRINT チャラ男
@@ -31,253 +31,194 @@ ENDIF
 ;===========================================================
 ;交際発覚
 ;===========================================================
-@EVENT_BOYFRIEND
-IF TALENT:COUNT:恋心 == 0 && TALENT:COUNT:永遠の愛 == 0 && CFLAG:COUNT:彼氏有 != 1
-	PRINTFORMW %CALLNAME:COUNT%の様子がおかしい……
-	PRINTFORML そのことについて問い質してみると%CALLNAME:COUNT%に彼氏ができたようだ。
-	PRINTFORMW %CALLNAME:COUNT%は頬を染めて彼氏との惚気話を%CALLNAME:MASTER%に語ってみせた……
-	CALL DECIDE_BOYFRIEND,COUNT
-		CFLAG:COUNT:彼氏有 = 1
-		IF FLAG:チャラ男固定 == 0 || TALENT:COUNT:ギャル系 == 0
-			CFLAG:COUNT:彼氏タイプ += RAND:7
-				IF CFLAG:COUNT:彼氏タイプ == 1 && BASE:COUNT:実年齢 > 18
-					CFLAG:COUNT:彼氏タイプ = 5
-				ENDIF
-			BASE:COUNT:魅力値 -= 5
-		ENDIF
-		TALENT:COUNT:彼氏あり = 1
+@EVENT_交際発覚(ARG)
+IF TALENT:ARG:恋心 == 0 && TALENT:ARG:永遠の愛 == 0 && CFLAG:ARG:彼氏有 != 1
+	PRINTFORMW %CALLNAME:ARG%の様子がおかしい……
+	PRINTFORML そのことについて問い質してみると%CALLNAME:ARG%に彼氏ができたようだ。
+	PRINTFORMW %CALLNAME:ARG%は頬を染めて彼氏との惚気話を%CALLNAME:MASTER%に語ってみせた……
+	CALL DECIDE_BOYFRIEND,ARG
+	CFLAG:ARG:彼氏有 = 1
+	IF FLAG:チャラ男固定 == 0 || TALENT:ARG:ギャル系 == 0
+		CFLAG:ARG:彼氏タイプ += RAND:7
+			IF CFLAG:ARG:彼氏タイプ == 1 && BASE:ARG:実年齢 > 18
+				CFLAG:ARG:彼氏タイプ = 5
+			ENDIF
+		BASE:ARG:魅力値 -= 5
+	ENDIF
+	TALENT:ARG:彼氏あり = 1
 
-ELSEIF TALENT:COUNT:恋心 == 1 && TALENT:COUNT:永遠の愛 == 0 && CFLAG:COUNT:彼氏有 != 1
-	PRINTFORMW %CALLNAME:COUNT%の様子がおかしい……
-	PRINTFORML そのことについて問い質してみると%CALLNAME:COUNT%は%CALLNAME:MASTER%よりも好きな男が出来たようだ。
-	PRINTFORML %CALLNAME:COUNT%は%CALLNAME:MASTER%に以前の関係に戻ろうと別れ話を切り出した……
-		CFLAG:COUNT:彼氏有 = 1 || TALENT:COUNT:ギャル系 == 0
-		IF FLAG:チャラ男固定 == 0
-			CFLAG:COUNT:彼氏タイプ += RAND:7
-				IF CFLAG:COUNT:彼氏タイプ == 1 && BASE:COUNT:実年齢 > 18
-					CFLAG:COUNT:彼氏タイプ = 5
-				ENDIF 
-		ELSE
-			CFLAG:COUNT:彼氏タイプ = 0
-		ENDIF
-		CALL DECIDE_BOYFRIEND,COUNT
-		TALENT:COUNT:恋心 = 0
-		TALENT:COUNT:彼氏あり = 1
-			BASE:COUNT:魅力値 -= 5
+ELSEIF TALENT:ARG:恋心 == 1 && TALENT:ARG:永遠の愛 == 0 && CFLAG:ARG:彼氏有 != 1
+	PRINTFORMW %CALLNAME:ARG%の様子がおかしい……
+	PRINTFORML そのことについて問い質してみると%CALLNAME:ARG%は%CALLNAME:MASTER%よりも好きな男が出来たようだ。
+	PRINTFORML %CALLNAME:ARG%は%CALLNAME:MASTER%に以前の関係に戻ろうと別れ話を切り出した……
+	CFLAG:ARG:彼氏有 = 1 || TALENT:ARG:ギャル系 == 0
+	IF FLAG:チャラ男固定 == 0
+		CFLAG:ARG:彼氏タイプ += RAND:7
+			IF CFLAG:ARG:彼氏タイプ == 1 && BASE:ARG:実年齢 > 18
+				CFLAG:ARG:彼氏タイプ = 5
+			ENDIF 
+	ELSE
+		CFLAG:ARG:彼氏タイプ = 0
+	ENDIF
+	CALL DECIDE_BOYFRIEND,ARG
+	TALENT:ARG:恋心 = 0
+	TALENT:ARG:彼氏あり = 1
+		BASE:ARG:魅力値 -= 5
 ENDIF
 
-IF !CFLAG:COUNT:初キス相手
-	PRINTFORMW %CALLNAME:COUNT%はもうすでに彼氏にファーストキスを捧げたらしい……
-	CALL 初キス喪失実行(COUNT,初相手_今彼,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,"%CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%（カレシ）")
+IF !CFLAG:ARG:初キス相手
+	PRINTFORMW %CALLNAME:ARG%はもうすでに彼氏にファーストキスを捧げたらしい……
+	CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 DRAWLINE
 
 ;===========================================================
 ;BFによる経験
 ;===========================================================
-@EVENT_BOYFRIEND2
+@EVENT_BF経験(ARG)
 
-REPEAT 100
-	J:COUNT = 0
-	J = 0
-REND
-VARSET LOCAL, 0
-VARSET TCVAR, 0
-FOR LOCAL, 0, CHARANUM
-	IF LOCAL == 0
-		CONTINUE
-	ELSEIF TALENT:LOCAL:彼氏あり == 0
-		CONTINUE
-	ELSEIF TALENT:LOCAL:妊娠 == 1
-		CONTINUE
-	ELSEIF TALENT:LOCAL:育児中 == 1
-		CONTINUE
-	ELSEIF CFLAG:LOCAL:入寮中 == 1 && (FLAG:女子寮拡張 & 128)
-		CONTINUE
-	ELSEIF TALENT:LOCAL:清い付き合い == 1
-		CONTINUE
-	ELSE
-		TARGET = LOCAL
-		LOCAL:1 = CFLAG:彼氏タイプ
-		LOCAL:2 = RAND:3
-		SIF CFLAG:ラブホ == 1
-			LOCAL:2 = 0
-			IF LOCAL:2 <= 1
-				TRYCALLFORM BF_COMMONEV_{LOCAL:2}
-			ELSE
-				LOCAL:2 = RAND:2
-				TRYCALLFORM BF_EV{LOCAL:1}_{LOCAL:2}
-			ENDIF
-		REPEAT 100
-			IF J:COUNT >= 1
-				PRINTL
-				BREAK
-			ENDIF
-		REND
-		FOR LOCAL:4, 0, 100
-			IF J:(LOCAL:4)
-				; 経験値の加算処理
-				; 経験名が定義されているのみ加算処理を行う
-				IF STRLENS(PALAMNAME:(LOCAL:4)) > 0
-					JUEL:(LOCAL:4) += J:(LOCAL:4)
-				ELSE
-					DEBUGPRINTFORML JUEL:{(LOCAL:4)}は定義されていないため加算処理をスキップします
-				ENDIF
-				SIF J:(LOCAL:4) > 0
-					PRINTFORML %PALAMNAME:(LOCAL:4)%の珠 + {J:(LOCAL:4)}
-			ENDIF
-		NEXT
-		FOR LOCAL:5, 0, 90
-			SIF TCVAR:(LOCAL:5)
-				LOCAL:6 = 1
-		NEXT
-		SIF LOCAL:6 == 1
-			PRINTL
-		FOR LOCAL:3, 0, 90
-			IF TCVAR:(LOCAL:3)
-				; 経験値の加算処理
-				; 経験名が定義されているのみ加算処理を行う
-				IF STRLENS(EXPNAME:(LOCAL:3)) > 0
-					EXP:(LOCAL:3) += TCVAR:(LOCAL:3)
-				ELSE
-					DEBUGPRINTFORML EXP:{(LOCAL:3)}は定義されていないため加算処理をスキップします
-				ENDIF
-				SIF TCVAR:(LOCAL:3) != 101
-					PRINTFORML %EXPNAME:(LOCAL:3)% + {TCVAR:(LOCAL:3)}
-			ENDIF
-		NEXT
+VARSET GOTJUEL:ARG:0
+VARSET TCVAR:ARG:Ｖ経験
+LOCAL = RAND:3
+SIF CFLAG:ARG:ラブホ == 1
+	LOCAL = 0
+IF LOCAL <= 1
+	PRINTFORML BF_COMMONEV_{LOCAL}(%NAME:ARG%({ARG}))
+	TRYCALLFORM BF_COMMONEV_{LOCAL}(ARG)
+ELSE
+	LOCAL:2 = RAND:2
+	PRINTFORML BF_EV{CFLAG:ARG:彼氏タイプ}_{LOCAL}(%NAME:ARG%({ARG}))
+	TRYCALLFORM BF_EV{CFLAG:ARG:彼氏タイプ}_{LOCAL}(ARG)
+ENDIF
 
-			IF TCVAR:性交経験 >= 1
-				DRAWLINE
-				WAIT
-			ENDIF
-		REPEAT 100
-			J:COUNT = 0
-			J = 0
-		REND
-		VARSET TCVAR:TARGET, 0
-	ENDIF
-NEXT
+PRINTW
+CALL ADD_JUEL(ARG)
+
+IF TCVAR:ARG:性交経験 >= 1
+	CALL ADD_EXP(ARG)
+	DRAWLINE
+ELSE
+	CALL ADD_EXP(ARG)
+ENDIF
+WAIT
 
 ;===========================================================
 ;BFの与える経験：V系
 ;===========================================================
-@CALC_BFSEX
+@CALC_BFSEX(ARG)
+#DIM 性交回数
 
-VARSET TCVAR:TARGET, 0
-VARSET LOCAL, 0
-
-;とりあえず1文字変数で経験を渡すようにする
-REPEAT 100
-	J:COUNT = 0
-REND
 ;性交回数
-S = 0
+性交回数 = 0
 ;V感覚
-IF ABL:Ｖ感覚 == 4
-	LOCAL += 1
-ELSEIF ABL:Ｖ感覚 == 5
-	LOCAL += 2
-ELSEIF ABL:Ｖ感覚 >= 6
-	LOCAL += 3
+IF ABL:ARG:Ｖ感覚 == 4
+	性交回数 += 1
+ELSEIF ABL:ARG:Ｖ感覚 == 5
+	性交回数 += 2
+ELSEIF ABL:ARG:Ｖ感覚 >= 6
+	性交回数 += 3
 ENDIF
 ;性交中毒によるボーナス
-SIF ABL:性交中毒
-	LOCAL += ABL:性交中毒 / 2 + 1
+SIF ABL:ARG:性交中毒
+	性交回数 += ABL:ARG:性交中毒 / 2 + 1
 ;PALAM:欲情がLV4以上
 ;欲望ＬＶ５以上奉仕精神５以上で+1
-SIF ABL:欲望 >= 5 && ABL:奉仕精神 >= 5
-	LOCAL += 2
+SIF ABL:ARG:欲望 >= 5 && ABL:ARG:奉仕精神 >= 5
+	性交回数 += 2
 ;欲望ＬＶ４以上奉仕精神４以上で+1
-SIF ABL:欲望 >= 3 && ABL:奉仕精神 >= 3
-	LOCAL += 1
-;PALAM:欲情がLV3以上
+SIF ABL:ARG:欲望 >= 3 && ABL:ARG:奉仕精神 >= 3
+	性交回数 += 1
+;PALAM:ARG:欲情がLV3以上
 ;欲望ＬＶ７以上Ｖ感覚ＬＶ６以上で+1（下と合わせて+2）
-SIF ABL:欲望 >= 7 && ABL:5 >= 6
-	LOCAL += 1
+SIF ABL:ARG:欲望 >= 7 && ABL:ARG:Ｖ感覚 >= 6
+	性交回数 += 1
 ;欲望ＬＶ４以上Ｖ感覚ＬＶ３以上で+1
-SIF ABL:欲望 >= 4 && ABL:Ｖ感覚 >= 3
-	LOCAL += 1
+SIF ABL:ARG:欲望 >= 4 && ABL:ARG:Ｖ感覚 >= 3
+	性交回数 += 1
 ;彼氏ありによるボーナス
-SIF TALENT:彼氏あり
-	LOCAL += 1
+SIF TALENT:ARG:彼氏あり
+	性交回数 += 1
 ;セックス狂によるボーナス
-SIF TALENT:セックス狂
-	LOCAL *= 2
+SIF TALENT:ARG:セックス狂
+	性交回数 *= 2
 ;快感に素直
-SIF TALENT:快感に素直
-	LOCAL += 1
+SIF TALENT:ARG:快感に素直
+	性交回数 += 1
 ;淫乱によるボーナス
-SIF TALENT:淫乱
-	LOCAL *= 2
+SIF TALENT:ARG:淫乱
+	性交回数 *= 2
 
-
-SIF TALENT:ギャル系 == 1 && TALENT:褐色肌 == 0
-	TIMES LOCAL, 1.50
-SIF TALENT:褐色肌 == 1 && TALENT:ギャル系 == 0
-	TIMES LOCAL, 1.50
-SIF TALENT:褐色肌 == 1 && TALENT:ギャル系 == 1
-	TIMES LOCAL, 2.00
+SIF TALENT:ARG:ギャル系 == 1 && TALENT:ARG:褐色肌 == 0
+	TIMES 性交回数, 1.50
+SIF TALENT:ARG:褐色肌 == 1 && TALENT:ARG:ギャル系 == 0
+	TIMES 性交回数, 1.50
+SIF TALENT:ARG:褐色肌 == 1 && TALENT:ARG:ギャル系 == 1
+	TIMES 性交回数, 2.00
 
 ;Ｖ経験
-TCVAR:Ｖ経験 += LOCAL
+TCVAR:ARG:Ｖ経験 += 性交回数
 ;精液経験
-TCVAR:精液経験 += LOCAL*2
+TCVAR:ARG:精液経験 += 性交回数*2
 ;性交経験
-TCVAR:性交経験 += LOCAL
+TCVAR:ARG:性交経験 += 性交回数
 
-IF TALENT:妊娠 == 0 && TALENT:育児中 == 0
-	LOCAL:1 += RAND:100
+IF TALENT:ARG:妊娠 == 0 && TALENT:ARG:育児中 == 0
+	LOCAL = RAND:100
 
-	IF CFLAG:排卵促進剤使用 >= 1
-		LOCAL:2 = CFLAG:排卵促進剤使用 * 2
-		LOCAL:1 *= LOCAL:2
-	ELSEIF CFLAG:排卵促進剤使用 == -1
-		LOCAL:1 = 0
+	IF CFLAG:ARG:排卵促進剤使用 >= 1
+		LOCAL *= CFLAG:ARG:排卵促進剤使用 * 2
+	ELSEIF CFLAG:ARG:排卵促進剤使用 == -1
+		LOCAL = 0
 	ENDIF
-	SIF TALENT:貞操観念 == 1
-		LOCAL:1 = 0
-	SIF TALENT:貞操観念 == 0 && TALENT:貞操無頓着 == 0
-		LOCAL:1 /= 2
-	SIF TALENT:避妊治療済 == 1
-		LOCAL:1 = 0
-	SIF TALENT:異界知識 == 1
-		LOCAL:1 = 0
-	SIF TALENT:最先端科学 == 1
-		LOCAL:1 = 0
-	SIF TALENT:アンドロイド == 1
-		LOCAL:1 = 0
-	SIF TALENT:淫魔 == 1
-		LOCAL:1 = 0
-	SIF TALENT:ダッチワイフ == 1
-		LOCAL:1 = 0
-	SIF TALENT:天使 == 1
-		LOCAL:1 = 0
-	SIF TALENT:性魔術 == 1
-		LOCAL:1 = 0
-	SIF TALENT:幽霊 == 1
-		LOCAL:1 = 0
-	IF LOCAL:1 >= 95
-		CFLAG:妊娠精子 = 7
-		CFLAG:出産日 = DAY:日付_経過日数 + 10 + RAND:3
-		CFLAG:妊娠精子キャラ番号 = -4
-		CSTR:妊娠精液 = %CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）
+	SIF TALENT:ARG:貞操観念 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:貞操観念 == 0 && TALENT:ARG:貞操無頓着 == 0
+		LOCAL /= 2
+	SIF TALENT:ARG:避妊治療済 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:異界知識 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:最先端科学 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:アンドロイド == 1
+		LOCAL = 0
+	SIF TALENT:ARG:淫魔 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:ダッチワイフ == 1
+		LOCAL = 0
+	SIF TALENT:ARG:天使 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:性魔術 == 1
+		LOCAL = 0
+	SIF TALENT:ARG:幽霊 == 1
+		LOCAL = 0
+	IF LOCAL >= 95
+		CFLAG:ARG:妊娠精子 = 7
+		CFLAG:ARG:出産日 = DAY:日付_経過日数 + 10 + RAND:3
+		CFLAG:ARG:妊娠精子キャラ番号 = -4
+		CSTR:ARG:妊娠精液 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（カレシ）
 	ENDIF
 ENDIF
 
-J:0 += LOCAL * 25
-J:1 += LOCAL * 250
-J:14 += LOCAL * 10
-J:5 += LOCAL * 500
-J:7 += LOCAL * 100
-J:8 += LOCAL * 20
+PRINTFORML 性交回数{性交回数}
+PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
+
+GOTJUEL:ARG:快Ｃ += 性交回数 * 25
+GOTJUEL:ARG:快Ｖ += 性交回数 * 250
+GOTJUEL:ARG:快Ｂ += 性交回数 * 10
+GOTJUEL:ARG:欲情 += 性交回数 * 500
+GOTJUEL:ARG:習得 += 性交回数 * 100
+GOTJUEL:ARG:恥情 += 性交回数 * 20
+
+PRINTFORML 性交回数{性交回数}
+PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
 
 ;===========================================================
 ;BF共通イベント：V
 ;===========================================================
-@BF_COMMONEV_0
+@BF_COMMONEV_0(ARG)
 
-SIF CFLAG:特別コスタイプ == 79 && CFLAG:着衣状態 >= 64
+SIF CFLAG:ARG:特別コスタイプ == 79 && CFLAG:ARG:着衣状態 >= 64
 	RETURN
 
 IF DAY:日付_月 >= 7 && DAY:日付_月 <= 8
@@ -286,36 +227,36 @@ ELSE
 	LOCAL = RAND:3
 ENDIF
 
-SIF CFLAG:ラブホ == 1
+SIF CFLAG:ARG:ラブホ == 1
 	LOCAL = 2
 
-CALL CALC_BFSEX
+CALL CALC_BFSEX(ARG)
 
 PRINTFORM 週が開けて月曜、
-IF CFLAG:ラブホ != 1
-	PRINTFORM 昨日はオフだった%NAME:TARGET%は、
+IF CFLAG:ARG:ラブホ != 1
+	PRINTFORM 昨日はオフだった%NAME:ARG%は、
 ELSE
-	PRINTFORM 週末に参加した合コンの後にそのまま『お持ち帰り』された%NAME:TARGET%は、
-	SIF TALENT:処女 == 1
-		TCVAR:異常経験 += 1
+	PRINTFORM 週末に参加した合コンの後にそのまま『お持ち帰り』された%NAME:ARG%は、
+	SIF TALENT:ARG:処女 == 1
+		TCVAR:ARG:異常経験 += 1
 ENDIF
 
 IF LOCAL == 0
 	PRINTFORM カレシの部屋
-	CFLAG:処女喪失場所 = 初場所_彼部屋
+	CFLAG:ARG:処女喪失場所 = 初場所_彼部屋
 ELSEIF LOCAL == 1
-	PRINTFORM %CALLNAME:TARGET%の部屋
-	CFLAG:処女喪失場所 = 初場所_自室
+	PRINTFORM %CALLNAME:ARG%の部屋
+	CFLAG:ARG:処女喪失場所 = 初場所_自室
 ELSEIF LOCAL == 2
 	PRINTFORM ラブホ
-	CFLAG:処女喪失場所 = 初場所_ラブホ
+	CFLAG:ARG:処女喪失場所 = 初場所_ラブホ
 ELSEIF LOCAL == 3
 	PRINTFORM 海
-	CFLAG:処女喪失場所 = 初場所_海
+	CFLAG:ARG:処女喪失場所 = 初場所_海
 ENDIF
 PRINTFORM で
 
-IF !CFLAG:処女喪失相手
+IF !CFLAG:ARG:処女喪失相手
 	PRINTFORM 初えっちを済ませロストヴァージン
 ELSE
 	PRINTFORM らぶらぶなＳＥＸを
@@ -324,150 +265,136 @@ ENDIF
 PRINTFORM し
 
 LOCAL:1 = RAND:10
-SIF CFLAG:彼氏タイプ == 0
+SIF CFLAG:ARG:彼氏タイプ == 0
 	LOCAL:1 = 9
 IF LOCAL:1 >= 8
 	PRINTFORM 、しかもその模様をハメ撮りまでしてい
-	CFLAG:処女喪失状況 = 3
-	J:8 *= 10
-	TCVAR:被写経験 += (TCVAR:Ｖ経験 / 10)
-	SIF TCVAR:被写経験 <= 0
-		TCVAR:被写経験 = 1
+	CFLAG:ARG:処女喪失状況 = 3
+	GOTJUEL:ARG:恥情 *= 10
+	TCVAR:ARG:被写経験 += (TCVAR:ARG:Ｖ経験 / 10)
+	SIF TCVAR:ARG:被写経験 <= 0
+		TCVAR:ARG:被写経験 = 1
 ENDIF
 PRINTFORM たことをスタッフ
 
 IF CHARANUM >= 2
 	PRINTFORM や他の女優
-	REPEAT CHARANUM
-		IF COUNT == 0
-			CONTINUE
-		ELSEIF COUNT == TARGET
-			CONTINUE
-		ELSEIF TALENT:COUNT:ＡＶ女優 == 1
-			LOCAL:2 += 1
-		ENDIF
-	REND
-	SIF LOCAL:2 == 0
+	LOCAL:2 = FINDCHARA(TALENT:ＡＶ女優, 1)
+	SIF LOCAL:2 < 0
 		PRINTFORM 候補
 ENDIF
 
 PRINTFORML に嬉しそうにはにかみながら赤裸々に語っていた……
 
-IF !CFLAG:処女喪失相手
-	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:TARGET%の横顔からは
+IF !CFLAG:ARG:処女喪失相手
+	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:ARG%の横顔からは
 	PRINTFORML オトコを知ったオンナ特有の色香が漂っているのが感じられる
-	IF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]]
-		PRINTFORM %CALLNAME:MASTER%にとって大事な、ただひとりの家族となった%CALLNAME:TARGET%が
+	IF NO:ARG == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]]
+		PRINTFORM %CALLNAME:MASTER%にとって大事な、ただひとりの家族となった%CALLNAME:ARG%が
 		PRINTFORM 自分のあずかり知らないところで
-		CALL PRINT_BOYFRIEND
+		CALL PRINT_BOYFRIEND(ARG)
 		PRINTFORM のカレシにオトナのオンナにされてしまったという事実――
 		PRINTFORML 他のオトコのモノになってしまったという事実に、%CALLNAME:MASTER%は強い嫉妬心を覚えていた
 	ENDIF
 ENDIF
 
-EXP:彼氏性経験 += 1
+EXP:ARG:彼氏性経験 += 1
 
-SIF LOCAL:1 >= 8 && TALENT:処女
-	TCVAR:異常経験 += 1
-IF !CFLAG:処女喪失相手
-	SETCOLOR 0xF58F98
-		PRINTL 【処女喪失】
-	RESETCOLOR
-	CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+SIF LOCAL:1 >= 8 && TALENT:ARG:処女
+	TCVAR:ARG:異常経験 += 1
+IF !CFLAG:ARG:処女喪失相手
+	CALL 処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,CFLAG:ARG:処女喪失状況,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 
-IF !CFLAG:初キス相手
-	SETCOLOR 0xF58F98
-		PRINTL 【ファーストキスキス】
-	RESETCOLOR
+IF !CFLAG:ARG:初キス相手
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	ELSE
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
-		TCVAR:異常経験 += 1
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		TCVAR:ARG:異常経験 += 1
 	ENDIF
 	
 ENDIF
 
-SIF CFLAG:ラブホ == 1
-	CFLAG:ラブホ = 0
+SIF CFLAG:ARG:ラブホ == 1
+	CFLAG:ARG:ラブホ = 0
 
 ;===========================================================
 ;BFの与える経験計算・A
 ;===========================================================
-@CALC_BFSEX2
-
-VARSET TCVAR:TARGET, 0
-VARSET LOCAL, 0
+@CALC_BFSEX2(ARG)
+#DIM 性交回数
 
 ;とりあえず1文字変数で経験を渡すようにする
 
 ;性交回数
-S = 0
+性交回数 = 0
 ;A感覚
-IF ABL:Ａ感覚 == 4
-	LOCAL += 1
-ELSEIF ABL:Ａ感覚 == 5
-	LOCAL += 2
-ELSEIF ABL:Ａ感覚 >= 6
-	LOCAL += 3
+IF ABL:ARG:Ａ感覚 == 4
+	性交回数 += 1
+ELSEIF ABL:ARG:Ａ感覚 == 5
+	性交回数 += 2
+ELSEIF ABL:ARG:Ａ感覚 >= 6
+	性交回数 += 3
 ENDIF
 ;性交中毒によるボーナス
-SIF ABL:性交中毒
-	LOCAL += ABL:性交中毒 / 2 + 1
+SIF ABL:ARG:性交中毒
+	性交回数 += ABL:ARG:性交中毒 / 2 + 1
 ;PALAM:欲情がLV4以上
 ;欲望ＬＶ５以上奉仕精神５以上で+1
-SIF ABL:欲望 >= 5 && ABL:奉仕精神 >= 5
-	LOCAL += 2
+SIF ABL:ARG:欲望 >= 5 && ABL:ARG:奉仕精神 >= 5
+	性交回数 += 2
 ;欲望ＬＶ４以上奉仕精神４以上で+1
-SIF ABL:欲望 >= 3 && ABL:奉仕精神 >= 3
-	LOCAL += 1
-;PALAM:欲情がLV3以上
-;欲望ＬＶ７以上Ｖ感覚ＬＶ６以上で+1（下と合わせて+2）
-SIF ABL:欲望 >= 7 && ABL:5 >= 6
-	LOCAL += 1
+SIF ABL:ARG:欲望 >= 3 && ABL:ARG:奉仕精神 >= 3
+	性交回数 += 1
+;PALAM:ARG:欲情がLV3以上
+;欲望ＬＶ７以上Ａ感覚ＬＶ６以上で+1（下と合わせて+2）
+SIF ABL:ARG:欲望 >= 7 && ABL:ARG:Ａ感覚 >= 6
+	性交回数 += 1
 ;欲望ＬＶ４以上Ｖ感覚ＬＶ３以上で+1
-SIF ABL:欲望 >= 4 && ABL:Ｖ感覚 >= 3
-	LOCAL += 1
+SIF ABL:ARG:欲望 >= 4 && ABL:ARG:Ａ感覚 >= 3
+	性交回数 += 1
 ;彼氏あり、淫乱によるボーナス
-SIF TALENT:彼氏あり
-	LOCAL += 1
+SIF TALENT:ARG:彼氏あり
+	性交回数 += 1
 ;セックス狂によるボーナス
-SIF TALENT:セックス狂
-	LOCAL *= 2
+SIF TALENT:ARG:セックス狂
+	性交回数 *= 2
 ;快感に素直
-SIF TALENT:快感に素直
-	LOCAL += 1
+SIF TALENT:ARG:快感に素直
+	性交回数 += 1
 ;淫乱によるボーナス
-SIF TALENT:淫乱
-	LOCAL *= 2
-
-
+SIF TALENT:ARG:淫乱
+	性交回数 *= 2
 
 ;Ａ経験
-TCVAR:Ａ経験 += LOCAL
+TCVAR:ARG:Ａ経験 += 性交回数
 ;精液経験
-TCVAR:精液経験 += LOCAL*2
+TCVAR:ARG:精液経験 += 性交回数*2
 ;性交経験
-TCVAR:性交経験 += LOCAL
+TCVAR:ARG:性交経験 += 性交回数
 
+PRINTFORML 性交回数{性交回数}
+PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
 
+GOTJUEL:ARG:快Ｃ += 性交回数 * 25
+GOTJUEL:ARG:快Ａ += 性交回数 * 250
+GOTJUEL:ARG:快Ｂ += 性交回数 * 10
+GOTJUEL:ARG:欲情 += 性交回数 * 500
+GOTJUEL:ARG:習得 += 性交回数 * 100
+GOTJUEL:ARG:恥情 += 性交回数 * 20
 
-J:0 += LOCAL * 25
-J:2 += LOCAL * 250
-J:14 += LOCAL * 10
-J:5 += LOCAL * 500
-J:7 += LOCAL * 100
-J:8 += LOCAL * 20
+PRINTFORML 性交回数{性交回数}
+PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
 
 ;===========================================================
 ;BF共通イベント：A
 ;===========================================================
-@BF_COMMONEV_1
+@BF_COMMONEV_1(ARG)
 
-SIF EXP:Ａ経験 == 0
+SIF EXP:ARG:Ａ経験 == 0
 	RETURN
-SIF CFLAG:特別コスタイプ == 79 && CFLAG:着衣状態 >= 64
+SIF CFLAG:ARG:特別コスタイプ == 79 && CFLAG:ARG:着衣状態 >= 64
 	RETURN
 
 IF DAY:日付_月 >= 7 && DAY:日付_月 <= 8
@@ -476,28 +403,31 @@ ELSE
 	LOCAL = RAND:3
 ENDIF
 
-CALL CALC_BFSEX2
+SIF CFLAG:ARG:ラブホ == 1
+	LOCAL = 2
 
-PRINTFORM 週が開けて月曜、昨日はオフだった%NAME:TARGET%は、
+CALL CALC_BFSEX2(ARG)
+
+PRINTFORM 週が開けて月曜、昨日はオフだった%NAME:ARG%は、
 
 IF LOCAL == 0
 	PRINTFORM カレシの部屋
-	CFLAG:処女喪失場所 = 初場所_彼部屋
+	CFLAG:ARG:処女喪失場所 = 初場所_彼部屋
 ELSEIF LOCAL == 1
-	PRINTFORM %CALLNAME:TARGET%の部屋
-	CFLAG:処女喪失場所 = 初場所_自室
+	PRINTFORM %CALLNAME:ARG%の部屋
+	CFLAG:ARG:処女喪失場所 = 初場所_自室
 ELSEIF LOCAL == 2
 	PRINTFORM ラブホ
-	CFLAG:処女喪失場所 = 初場所_ラブホ
+	CFLAG:ARG:処女喪失場所 = 初場所_ラブホ
 ELSEIF LOCAL == 3
 	PRINTFORM 海
-	CFLAG:処女喪失場所 = 初場所_海
+	CFLAG:ARG:処女喪失場所 = 初場所_海
 ENDIF
 PRINTFORM で
 
-IF CFLAG:処女喪失相手 == 初相手_今彼 && TALENT:Ａ処女
+IF CFLAG:ARG:処女喪失相手 == 初相手_今彼 && TALENT:ARG:Ａ処女
 	PRINTFORM 処女だけでなく指ぐらいしか挿入したことが無かったアナルの処女もカレシに捧げ
-ELSEIF TALENT:Ａ処女 == 1
+ELSEIF TALENT:ARG:Ａ処女 == 1
 	PRINTFORM 指ぐらいしか挿入したことが無かったアナルの処女をカレシに捧げ
 ELSE
 	PRINTFORM らぶらぶなＳＥＸをアナルでし
@@ -506,56 +436,39 @@ ENDIF
 LOCAL:1 = RAND:10
 IF LOCAL:1 >= 8
 	PRINTFORM 、しかもその模様をハメ撮りまでしてい
-	CFLAG:Ａ処女喪失状況 = 3
-	TCVAR:被写経験 += TCVAR:Ｖ経験
+	CFLAG:ARG:Ａ処女喪失状況 = 3
+	TCVAR:ARG:被写経験 += TCVAR:ARG:Ｖ経験
 ENDIF
 PRINTFORM たことをスタッフ
 
 IF CHARANUM >= 2
 	PRINTFORM や他の女優
-	REPEAT CHARANUM
-		IF COUNT == 0
-			CONTINUE
-		ELSEIF COUNT == TARGET
-			CONTINUE
-		ELSEIF TALENT:COUNT:ＡＶ女優 == 1
-			CONTINUE
-			LOCAL:2 = 1
-		ENDIF
-	REND
-	SIF LOCAL:2 == 0
+	LOCAL:2 = FINDCHARA(TALENT:ＡＶ女優, 1)
+	SIF LOCAL:2 < 0
 		PRINTFORM 候補
 ENDIF
 
 PRINTFORML に嬉しそうにはにかみながら赤裸々に語っていた……
 
-IF TALENT:Ａ処女 == 1
-	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:TARGET%の横顔からは、
+IF TALENT:ARG:Ａ処女 == 1
+	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:ARG%の横顔からは、
 	PRINTFORML 愛するカレシのためならアブノーマルなプレイも受け入れられる、オトナのオンナの余裕が感じられる
 ENDIF
 
-EXP:彼氏性経験 += 1
+EXP:ARG:彼氏性経験 += 1
 
-SIF LOCAL:1 >= 8 && TALENT:処女
-	TCVAR:異常経験 = 1
-IF TALENT:Ａ処女 == 1
-	CFLAG:Ａ処女喪失相手 = 8
-	SETCOLOR 0xF58F98
-		PRINTL 【Ａ処女喪失】
-	RESETCOLOR
-	CALL Ａ処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_なし,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+SIF LOCAL:1 >= 8 && TALENT:ARG:Ａ処女
+	TCVAR:ARG:異常経験 = 1
+IF TALENT:ARG:Ａ処女 == 1
+	CALL Ａ処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,CFLAG:ARG:Ａ処女喪失状況,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 
-IF !CFLAG:初キス相手
-	SETCOLOR 0xF58F98
-		PRINTL 【ファーストキス】
-	RESETCOLOR
+IF !CFLAG:ARG:初キス相手
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_口,"%CSTR:彼氏姓%%CSTR:彼氏名%（カレシ）")
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	ELSE
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,初状況_男性器,"%CSTR:彼氏姓%%CSTR:彼氏名%")
-		TCVAR:異常経験 += 1
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		TCVAR:ARG:異常経験 += 1
 	ENDIF
-
 ENDIF
 

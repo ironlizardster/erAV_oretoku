@@ -23,7 +23,7 @@ IF SELECTCOM == [[TRAIN:愛撫]]
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINT ごしに、
 	ELSEIF CFLAG:着衣状態 & 28
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINT ごしに、
 	ELSEIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 2)
 		PRINT 下着ごしに、
@@ -129,7 +129,7 @@ ELSEIF SELECTCOM == [[TRAIN:オナニー]]
 		PRINTFORM %CALLNAME:PLAYER%が自慰を命令すると、%CALLNAME:TARGET%は
 		;着衣設定
 		IF CFLAG:着衣状態 & 8
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
 		SIF TALENT:プライド高い
@@ -298,7 +298,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 		PRINT ビデオカメラの前で
 	;着衣設定
 	IF CFLAG:着衣状態 & 8 && ABL:露出癖 != 0
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINT の前を大きくめくり上げ、
 	ENDIF
 	;露出癖
@@ -316,7 +316,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 		ENDIF
 		;着衣設定
 		IF CFLAG:着衣状態 & 8
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			PRINT の裾を大きくめくり上げ、
 		ENDIF
 		PRINTFORML 自分の%SAVESTR:2%陰裂に指を挿し入れ、そっと左右に拡げて見せた
@@ -462,7 +462,7 @@ ELSEIF SELECTCOM == [[TRAIN:指挿入れ]]
 	;着衣設定
 	IF CFLAG:着衣状態 & 8 && ABL:露出癖 != 0
 		PRINT まとっている
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINT の裾をめくり上げ、
 	ENDIF
 	IF EXP:Ｖ経験 == 0
@@ -1070,7 +1070,7 @@ ELSEIF SELECTCOM == [[TRAIN:パイズリ]]
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINT ごしに、
 	ELSEIF CFLAG:着衣状態 & 28
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINT ごしに、
 	ELSEIF (CFLAG:着衣状態 & 2)
 		PRINT 下着ごしに、
@@ -1340,7 +1340,7 @@ ELSEIF SELECTCOM == [[TRAIN:ナイズリ]]
 		CALL PRINT_CLOTHTYPE_SPECIAL
 		PRINT ごしに、
 	ELSEIF CFLAG:着衣状態 & 28
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINT ごしに、
 	ELSEIF (CFLAG:着衣状態 & 2)
 		PRINT 下着ごしに、
@@ -1436,7 +1436,7 @@ ELSEIF SELECTCOM == [[TRAIN:腹パン]]
 	IF (CFLAG:着衣状態 & 4) == 0
 		PRINTFORM むき出しになった
 	ELSE
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORM の上から
 	ENDIF
 	PRINTFORML %CALLNAME:TARGET%のお腹を勢いよく殴りつけた…
@@ -1941,10 +1941,10 @@ ELSEIF SELECTCOM == [[TRAIN:放尿]]
 	;服を着たまま放尿
 	ELSEIF (CFLAG:着衣状態 & 8) && ABL:信頼 >= 3 && ABL:露出癖 >= 3 && TALENT:目立ちたがり && TEQUIP:縄 == 0
 		PRINTFORM %CALLNAME:TARGET%は何のためらいも見せずに、勢い良く
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORML の中へ尿を迸らせ始めた…
 		PRINTFORM こちらと視線が合ったかと思うと、いきなり
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORML の前をめくり上げ、
 		IF (CFLAG:着衣状態 & 1)
 			PRINT おしっこでぐしょぐしょになったパンツ
@@ -1955,11 +1955,11 @@ ELSEIF SELECTCOM == [[TRAIN:放尿]]
 		PRINTFORML 何を考えているのやら…
 	ELSEIF ((CFLAG:着衣状態 & 8) || (CFLAG:着衣状態 & 16)) && ABL:信頼 >= 3 && ABL:露出癖 >= 3
 		PRINTFORM %CALLNAME:TARGET%は何のためらいも見せずに、勢い良く
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORML を着たまま尿を迸らせ始めた…
 	ELSEIF (CFLAG:着衣状態 & 8) || (CFLAG:着衣状態 & 16)
 		PRINTFORM %CALLNAME:TARGET%はじっと俯いたまま、黙って
-		CALL PRINT_CLOTHTYPE_MAIN2
+		CALL PRINT_上着タイプ(TARGET)
 		PRINTFORML の中へ放尿した…
 	;パンツの中に放尿
 	ELSEIF (CFLAG:着衣状態 & 1) && ABL:信頼 >= 3 && ABL:露出癖 >= 3
@@ -2116,7 +2116,7 @@ ELSEIF SELECTCOM == [[TRAIN:ローター自慰]]
 		PRINTFORM %CALLNAME:PLAYER%が自慰を命令すると、%CALLNAME:TARGET%は
 		;着衣設定
 		IF CFLAG:着衣状態 & 8
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
 		SIF TALENT:プライド高い
@@ -2184,7 +2184,7 @@ ELSEIF SELECTCOM == [[TRAIN:電マ自慰]]
 		PRINTFORM %CALLNAME:PLAYER%が自慰を命令すると、%CALLNAME:TARGET%は
 		;着衣設定
 		IF CFLAG:着衣状態 & 8
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
 		SIF TALENT:プライド高い
@@ -2239,7 +2239,7 @@ ELSEIF SELECTCOM == [[TRAIN:乳首ローター]]
 			CALL PRINT_CLOTHTYPE_SPECIAL
 			PRINT ごしに、
 		ELSEIF CFLAG:着衣状態 & 28
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			PRINT ごしに、
 		ELSEIF (CFLAG:着衣状態 & 2)
 			PRINT 下着ごしに、
@@ -2921,7 +2921,7 @@ ELSEIF SELECTCOM == [[TRAIN:スライムオナニー]]
 		PRINTFORM %CALLNAME:PLAYER%が自慰を命令すると、%CALLNAME:TARGET%は
 		;着衣設定
 		IF CFLAG:着衣状態 & 8
-			CALL PRINT_CLOTHTYPE_MAIN2
+			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
 		SIF TALENT:プライド高い

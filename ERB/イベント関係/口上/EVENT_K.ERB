@@ -69,13 +69,14 @@ TRYCALLFORM KOJO_MESSAGE_MARKCNG_{NO:TARGET}
 ;@SELF_KOJO関係
 ;イベント時の口上、イベント開始時に出力します
 ;-------------------------------------------------
-@SELF_KOJO
+@SELF_KOJO(ARG)
+
 IF FLAG:口上使用 <= 0
 	RETURN 0
 ENDIF
 
 ;Kがついてるのは歴史的経緯かなんかだろうか。
-TRYCALLFORM SELF_KOJO_K{NO:TARGET}
+TRYCALLFORM SELF_KOJO_K{NO:ARG}
 
 ;-------------------------------------------------
 ;@SINGLE_ENDING関係

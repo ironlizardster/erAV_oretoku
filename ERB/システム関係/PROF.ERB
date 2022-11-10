@@ -17,7 +17,7 @@ ELSEIF EXP:ＡＶ出演経験 >= 30 && TALENT:ＡＶ女優 == 1
 ENDIF
 IF TALENT:彼氏あり
 	PRINT  現在
-	CALL PRINT_BOYFRIEND
+	CALL PRINT_BOYFRIEND(TARGET)
 	PRINTL と付き合っています。  
 ENDIF
 IF EXP:彼氏性経験 >= 1
@@ -68,7 +68,7 @@ IF EXP:交際人数 >= 1
 	PRINTFORM  以前に{EXP:交際人数}人の男性と交際したことがあり
 	IF CFLAG:彼氏有 == 1
 		PRINTFORM 、現在の
-		CALL PRINT_BOYFRIEND
+		CALL PRINT_BOYFRIEND(TARGET)
 		PRINTFORM の彼氏は{EXP:交際人数 + 1}人目の彼氏で
 	ELSE
 		PRINTFORM ま
