@@ -14,58 +14,58 @@ LOSEBASE:気力 += 10
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:14 = 50
-SOURCE:5 = 400
-SOURCE:16 = 200
+SOURCE:逸脱 = 50
+SOURCE:達成 = 400
+SOURCE:恭順 = 200
 
 ;PALAM:欲情をみる
 IF PALAM:欲情 < PALAMLV:1
-	SOURCE:12 = 10
+	SOURCE:露出 = 10
 ELSEIF PALAM:欲情 < PALAMLV:2
-	SOURCE:12 = 30
+	SOURCE:露出 = 30
 ELSEIF PALAM:欲情 < PALAMLV:3
-	SOURCE:12 = 60
+	SOURCE:露出 = 60
 ELSEIF PALAM:欲情 < PALAMLV:4
-	SOURCE:12 = 100
+	SOURCE:露出 = 100
 ELSEIF PALAM:欲情 >= PALAMLV:4
-	SOURCE:12 = 150
+	SOURCE:露出 = 150
 ENDIF
 
 ;奉仕精神をみる
 IF ABL:奉仕精神 == 0
-	SOURCE:3 = 0
+	SOURCE:情愛 = 0
 ELSEIF ABL:奉仕精神 == 1
-	SOURCE:3 = 20
+	SOURCE:情愛 = 20
 ELSEIF ABL:奉仕精神 == 2
-	SOURCE:3 = 40
+	SOURCE:情愛 = 40
 ELSEIF ABL:奉仕精神 == 3
-	SOURCE:3 = 70
+	SOURCE:情愛 = 70
 ELSEIF ABL:奉仕精神 == 4
-	SOURCE:3 = 110
+	SOURCE:情愛 = 110
 ELSE
-	SOURCE:3 = 150
+	SOURCE:情愛 = 150
 ENDIF
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
-	TIMES SOURCE:5 , 0.80
+	TIMES SOURCE:達成 , 0.80
 ELSEIF ABL:信頼 == 1
-	TIMES SOURCE:5 , 0.90
+	TIMES SOURCE:達成 , 0.90
 ELSEIF ABL:信頼 == 2
-	TIMES SOURCE:5 , 1.00
+	TIMES SOURCE:達成 , 1.00
 ELSEIF ABL:信頼 == 3
-	TIMES SOURCE:5 , 1.10
+	TIMES SOURCE:達成 , 1.10
 ELSEIF ABL:信頼 == 4
-	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:達成 , 1.20
 ELSE
-	TIMES SOURCE:5 , 1.30
+	TIMES SOURCE:達成 , 1.30
 ENDIF
 
 ;動物耳の場合
 IF TALENT:動物耳
-	TIMES SOURCE:14 , 1.60
-	TIMES SOURCE:13 , 1.50
-	TIMES SOURCE:15 , 2.00
+	TIMES SOURCE:逸脱 , 1.60
+	TIMES SOURCE:屈従 , 1.50
+	TIMES SOURCE:反感 , 2.00
 ENDIF
 
 ;-------------------------------------------------
@@ -116,61 +116,61 @@ LOSEBASE:気力 += 10
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:5 = 400
-SOURCE:16 = 300
+SOURCE:達成 = 400
+SOURCE:恭順 = 300
 
 ;PALAM:欲情をみる
 IF PALAM:欲情 < PALAMLV:1
-	SOURCE:12 = 10
+	SOURCE:露出 = 10
 ELSEIF PALAM:欲情 < PALAMLV:2
-	SOURCE:12 = 30
+	SOURCE:露出 = 30
 ELSEIF PALAM:欲情 < PALAMLV:3
-	SOURCE:12 = 60
+	SOURCE:露出 = 60
 ELSEIF PALAM:欲情 < PALAMLV:4
-	SOURCE:12 = 100
+	SOURCE:露出 = 100
 ELSEIF PALAM:欲情 >= PALAMLV:4
-	SOURCE:12 = 150
+	SOURCE:露出 = 150
 ENDIF
 
 ;奉仕精神をみる
 IF ABL:奉仕精神 == 0
-	SOURCE:3 = 0
+	SOURCE:情愛 = 0
 ELSEIF ABL:奉仕精神 == 1
-	SOURCE:3 = 20
+	SOURCE:情愛 = 20
 ELSEIF ABL:奉仕精神 == 2
-	SOURCE:3 = 40
+	SOURCE:情愛 = 40
 ELSEIF ABL:奉仕精神 == 3
-	SOURCE:3 = 70
+	SOURCE:情愛 = 70
 ELSEIF ABL:奉仕精神 == 4
-	SOURCE:3 = 110
+	SOURCE:情愛 = 110
 ELSE
-	SOURCE:3 = 150
+	SOURCE:情愛 = 150
 ENDIF
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
-	TIMES SOURCE:5 , 0.80
+	TIMES SOURCE:達成 , 0.80
 ELSEIF ABL:信頼 == 1
-	TIMES SOURCE:5 , 0.90
+	TIMES SOURCE:達成 , 0.90
 ELSEIF ABL:信頼 == 2
-	TIMES SOURCE:5 , 1.00
+	TIMES SOURCE:達成 , 1.00
 ELSEIF ABL:信頼 == 3
-	TIMES SOURCE:5 , 1.10
+	TIMES SOURCE:達成 , 1.10
 ELSEIF ABL:信頼 == 4
-	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:達成 , 1.20
 ELSE
-	TIMES SOURCE:5 , 1.30
+	TIMES SOURCE:達成 , 1.30
 ENDIF
 
-SOURCE:11 += 50
-SOURCE:12 += 50
+SOURCE:欲情 += 50
+SOURCE:露出 += 50
 
 ;動物耳の場合
 IF TALENT:動物耳
-	SOURCE:15 = 150
-	TIMES SOURCE:14 , 1.60
-	TIMES SOURCE:13 , 1.50
-	TIMES SOURCE:15 , 2.00
+	SOURCE:反感 = 150
+	TIMES SOURCE:逸脱 , 1.60
+	TIMES SOURCE:屈従 , 1.50
+	TIMES SOURCE:反感 , 2.00
 ENDIF
 
 ;-------------------------------------------------

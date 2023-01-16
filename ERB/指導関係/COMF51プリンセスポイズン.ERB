@@ -39,19 +39,19 @@ ELSE
 	LOSEBASE:体力 -= 100
 ENDIF
 
-SOURCE:14 = 2000
+SOURCE:逸脱 = 2000
 
 ;しあわせ草中毒なら体力消費を抑えかつ効果も上げる
 IF TALENT:薬物中毒
 	LOSEBASE:体力 -= 100
-	SOURCE:7 = 500
-	SOURCE:14 = 1000
+	SOURCE:中毒充足 = 500
+	SOURCE:逸脱 = 1000
 	;媚薬効果で欲情のアップが2倍になるので実際には+20000
-	SOURCE:11 = 10000
+	SOURCE:欲情 = 10000
 ELSE
-	SOURCE:14 = 2000
+	SOURCE:逸脱 = 2000
 	;媚薬効果で欲情のアップが2倍になるので実際には+10000
-	SOURCE:11 = 5000
+	SOURCE:欲情 = 5000
 ENDIF
 
 ;体力消費が0以下になるという事はない

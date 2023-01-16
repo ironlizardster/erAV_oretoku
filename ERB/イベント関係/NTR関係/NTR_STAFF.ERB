@@ -344,15 +344,15 @@ PRINTFORML もしかしたら、%CALLNAME:ARG%に恨まれることがなくて�
 PRINTW
 IF CFLAG:ARG:処女喪失相手 == 初相手_スタッフ
 	PRINTFORML 《%NAME:ARG%の処女喪失相手の名前がオープンされました》
-		CSTR:ARG:処女喪失相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（元スタッフ）
+		CSTR:ARG:処女喪失相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%
 		EXP:ARG:彼氏性経験 += 10
 ENDIF
 IF CFLAG:ARG:初キス相手 == 初相手_スタッフ
 	PRINTFORML 《%NAME:ARG%のファーストキス相手の名前がオープンされました》
 		IF RAND:2 == 0
-			CSTR:ARG:初キス相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（元スタッフ）
+			CSTR:ARG:初キス相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%
 		ELSE
-			CSTR:ARG:初キス相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%（元スタッフ）
+			CSTR:ARG:初キス相手 = %CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%
 		ENDIF
 ENDIF
 

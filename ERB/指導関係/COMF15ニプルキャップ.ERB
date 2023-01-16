@@ -19,8 +19,8 @@ CALL TRAIN_MESSAGE_B
 LOSEBASE:体力 += 20
 LOSEBASE:気力 += 70
 
-SOURCE:12 = 120
-SOURCE:14 = 70
+SOURCE:露出 = 120
+SOURCE:逸脱 = 70
 
 ;ABL:Ｂ感覚をみる
 IF ABL:Ｂ感覚 == 0
@@ -39,11 +39,11 @@ ENDIF
 
 ;助手が幼児退行
 SIF TALENT:PLAYER:幼児退行
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 
 ;助手が幼稚
 SIF TALENT:PLAYER:幼稚
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 
 IF TALENT:巨乳
 	TIMES A , 1.50
@@ -54,7 +54,7 @@ ELSEIF TALENT:Ｂ鈍感
 	TIMES A , 0.60
 ENDIF
 
-SOURCE:17 += A
+SOURCE:快Ｂ += A
 
 IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
 	PRINTS EXPNAME:[[EXP:レズ経験]]
@@ -70,9 +70,9 @@ ENDIF
 IF ITEM:魔術式ニプルキャップ >= 1 && TEQUIP:触手召喚 == 0
 	TIMES LOSEBASE:体力 , 0.80
 	TIMES LOSEBASE:気力 , 0.80
-	TIMES SOURCE:12 , 1.20
-	TIMES SOURCE:14 , 0.80
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:露出 , 1.20
+	TIMES SOURCE:逸脱 , 0.80
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------
@@ -152,17 +152,17 @@ ELSE
 	TIMES A , 1.30
 ENDIF
 
-SOURCE:17 += A
-SOURCE:11 += 50
-SOURCE:12 += 50
+SOURCE:快Ｂ += A
+SOURCE:欲情 += 50
+SOURCE:露出 += 50
 
 						;****スライムパッチ追加ここから****
 IF ITEM:魔術式ニプルキャップ >= 1 && TEQUIP:触手召喚 == 0
 	LOSEBASE:体力 -= 1
 	LOSEBASE:気力 -= 4
-	TIMES SOURCE:11 , 1.20
-	TIMES SOURCE:12 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:欲情 , 1.20
+	TIMES SOURCE:露出 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------

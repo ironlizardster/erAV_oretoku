@@ -34,29 +34,29 @@ CALL TRAIN_MESSAGE_B
 LOSEBASE:体力 += 5
 LOSEBASE:気力 += 50
 
-SOURCE:4 = 60
-SOURCE:8 = 20
-SOURCE:12 = 100
+SOURCE:性行動 = 60
+SOURCE:不潔 = 20
+SOURCE:露出 = 100
 
 ;ABL:Ｂ感覚をみる
 IF ABL:Ｂ感覚 == 0
-	SOURCE:17 = 20
-	SOURCE:3 = 50
+	SOURCE:快Ｂ = 20
+	SOURCE:情愛 = 50
 ELSEIF ABL:Ｂ感覚 == 1
-	SOURCE:17 = 100
-	SOURCE:3 = 100
+	SOURCE:快Ｂ = 100
+	SOURCE:情愛 = 100
 ELSEIF ABL:Ｂ感覚 == 2
-	SOURCE:17 = 500
-	SOURCE:3 = 160
+	SOURCE:快Ｂ = 500
+	SOURCE:情愛 = 160
 ELSEIF ABL:Ｂ感覚 == 3
-	SOURCE:17 = 1200
-	SOURCE:3 = 200
+	SOURCE:快Ｂ = 1200
+	SOURCE:情愛 = 200
 ELSEIF ABL:Ｂ感覚 == 4
-	SOURCE:17 = 2000
-	SOURCE:3 = 230
+	SOURCE:快Ｂ = 2000
+	SOURCE:情愛 = 230
 ELSE
-	SOURCE:17 = 2800
-	SOURCE:3 = 250
+	SOURCE:快Ｂ = 2800
+	SOURCE:情愛 = 250
 ENDIF
 
 ;獣姦の場合はここで終了
@@ -65,14 +65,14 @@ SIF TEQUIP:獣姦プレイ
 
 ;調教者が［幼児退行］
 IF TALENT:PLAYER:幼児退行 && TEQUIP:獣姦プレイ == 0
-	TIMES SOURCE:17 , 1.20
-	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
+	TIMES SOURCE:情愛 , 1.20
 ENDIF
 
 ;調教者が［幼稚］
 IF TALENT:PLAYER:幼稚 && TEQUIP:獣姦プレイ == 0
-	TIMES SOURCE:17 , 1.20
-	TIMES SOURCE:3 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
+	TIMES SOURCE:情愛 , 1.20
 ENDIF
 
 ;-------------------------------------------------
@@ -87,8 +87,8 @@ ELSE
 	IF STAIN:5 < 2 || STAIN:5 == 16 || STAIN:5 == 17 || ASSIPLAY == 1 || TALENT:MASTER:汚れ無視 == 1
 		;調教者のTALENT:舌使いをみる
 		IF TALENT:PLAYER:舌使い
-			TIMES SOURCE:17 , 1.40
-			SOURCE:16 += SOURCE:17/20
+			TIMES SOURCE:快Ｂ , 1.40
+			SOURCE:恭順 += SOURCE:快Ｂ/20
 		ENDIF
 
 		;奴隷のＢ⇔調教者の口の汚れが移動

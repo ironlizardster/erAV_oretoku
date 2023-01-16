@@ -22,7 +22,7 @@ IF TALENT:彼氏あり
 ENDIF
 IF EXP:彼氏性経験 >= 1
 	PRINT  
-	IF CFLAG:彼氏有 == 1
+	IF CFLAG:彼氏有
 		PRINTFORM 彼氏と
 			SIF EXP:交際人数 >= 1
 				PRINTFORM 元カレで合計
@@ -32,7 +32,7 @@ IF EXP:彼氏性経験 >= 1
 	PRINTFORM {EXP:彼氏性経験}回セックスしたことがあり
 			IF CFLAG:処女喪失相手 == 初相手_元彼
 				PRINTFORM 、元カレが処女喪失相手です
-			ELSEIF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏有 == 1
+			ELSEIF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏有
 				PRINT 、彼氏の
 				IF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏タイプ == 0
 					PRINT 黒
@@ -66,7 +66,7 @@ ENDIF
 
 IF EXP:交際人数 >= 1
 	PRINTFORM  以前に{EXP:交際人数}人の男性と交際したことがあり
-	IF CFLAG:彼氏有 == 1
+	IF CFLAG:彼氏有
 		PRINTFORM 、現在の
 		CALL PRINT_BOYFRIEND(TARGET)
 		PRINTFORM の彼氏は{EXP:交際人数 + 1}人目の彼氏で

@@ -16,31 +16,31 @@ CALL TRAIN_MESSAGE_B
 LOSEBASE:体力 += 30
 LOSEBASE:気力 += 150
 
-SOURCE:12 = 120
-SOURCE:14 = 400
+SOURCE:露出 = 120
+SOURCE:逸脱 = 400
 
 ;ABL:Ｃ感覚をみる
 IF ABL:Ｃ感覚 == 0
-	SOURCE:0 = 2000
+	SOURCE:快Ｃ = 2000
 ELSEIF ABL:Ｃ感覚 == 1
-	SOURCE:0 = 2500
+	SOURCE:快Ｃ = 2500
 ELSEIF ABL:Ｃ感覚 == 2
-	SOURCE:0 = 3000
+	SOURCE:快Ｃ = 3000
 ELSEIF ABL:Ｃ感覚 == 3
-	SOURCE:0 = 3300
+	SOURCE:快Ｃ = 3300
 ELSEIF ABL:Ｃ感覚 == 4
-	SOURCE:0 = 3600
+	SOURCE:快Ｃ = 3600
 ELSE
-	SOURCE:0 = 3800
+	SOURCE:快Ｃ = 3800
 ENDIF
 
 						;****スライムパッチ追加ここから****
 IF ITEM:魔術式Ｅマッサージャ >= 1
 	TIMES LOSEBASE:体力 , 0.80
 	TIMES LOSEBASE:気力 , 0.80
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:12 , 1.20
-	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:露出 , 1.20
+	TIMES SOURCE:逸脱 , 0.80
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------

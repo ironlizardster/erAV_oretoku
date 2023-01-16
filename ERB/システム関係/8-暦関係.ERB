@@ -46,6 +46,10 @@ ENDSELECT
 
 ;曜日計算
 FLAG:曜日 = ZELLER(DAY:日付_年,DAY:日付_月,DAY:日付_日)
+END_OF_WEEK = DOW(FLAG:曜日) == "日"
+
+;祝日・記念日の設定
+CALL HOLIDAY
 
 @年繰り上げ(YEAR,MONTH,DAYS)
 #FUNCTION

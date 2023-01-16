@@ -28,66 +28,66 @@ ENDIF
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:6 = 800
-SOURCE:10 = 800
-SOURCE:13 = 500
-SOURCE:14 = 500
+SOURCE:痛覚 = 800
+SOURCE:愛液分泌 = 800
+SOURCE:屈従 = 500
+SOURCE:逸脱 = 500
 
 ;PALAM:欲情をみる
 IF PALAM:欲情 < PALAMLV:1
-	TIMES SOURCE:10 , 0.80
+	TIMES SOURCE:愛液分泌 , 0.80
 ELSEIF PALAM:欲情 < PALAMLV:2
-	TIMES SOURCE:10 , 0.90
+	TIMES SOURCE:愛液分泌 , 0.90
 ELSEIF PALAM:欲情 < PALAMLV:3
-	TIMES SOURCE:10 , 1.00
+	TIMES SOURCE:愛液分泌 , 1.00
 ELSEIF PALAM:欲情 < PALAMLV:4
-	TIMES SOURCE:10 , 1.10
+	TIMES SOURCE:愛液分泌 , 1.10
 ELSEIF PALAM:欲情 >= PALAMLV:4
-	TIMES SOURCE:10 , 1.20
+	TIMES SOURCE:愛液分泌 , 1.20
 ENDIF
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
-	TIMES SOURCE:10 , 0.40
+	TIMES SOURCE:愛液分泌 , 0.40
 ELSEIF ABL:信頼 == 1
-	TIMES SOURCE:10 , 0.60
+	TIMES SOURCE:愛液分泌 , 0.60
 ELSEIF ABL:信頼 == 2
-	TIMES SOURCE:10 , 0.80
+	TIMES SOURCE:愛液分泌 , 0.80
 ELSEIF ABL:信頼 == 3
-	TIMES SOURCE:10 , 1.00
+	TIMES SOURCE:愛液分泌 , 1.00
 ELSEIF ABL:信頼 == 4
-	TIMES SOURCE:10 , 1.10
+	TIMES SOURCE:愛液分泌 , 1.10
 ELSE
-	TIMES SOURCE:10 , 1.20
+	TIMES SOURCE:愛液分泌 , 1.20
 ENDIF
 
 ;ABL:マゾっ気をみる
 IF ABL:マゾっ気 == 0
-	TIMES SOURCE:10 , 0.80
+	TIMES SOURCE:愛液分泌 , 0.80
 ELSEIF ABL:マゾっ気 == 1
-	TIMES SOURCE:10 , 1.00
+	TIMES SOURCE:愛液分泌 , 1.00
 ELSEIF ABL:マゾっ気 == 2
-	TIMES SOURCE:10 , 1.30
+	TIMES SOURCE:愛液分泌 , 1.30
 ELSEIF ABL:マゾっ気 == 3
-	TIMES SOURCE:10 , 1.60
+	TIMES SOURCE:愛液分泌 , 1.60
 ELSEIF ABL:マゾっ気 == 4
-	TIMES SOURCE:10 , 2.00
+	TIMES SOURCE:愛液分泌 , 2.00
 ELSE
-	TIMES SOURCE:10 , 3.00
+	TIMES SOURCE:愛液分泌 , 3.00
 ENDIF
 
 ;倒錯的
 SIF TALENT:倒錯的
-	TIMES SOURCE:10 , 2.00
+	TIMES SOURCE:愛液分泌 , 2.00
 
 						;****スライムパッチ追加ここから****
 IF ITEM:生きている縄 >= 1 && TEQUIP:触手召喚 == 0
 	TIMES LOSEBASE:体力 , 0.80
 	TIMES LOSEBASE:気力 , 0.80
-	TIMES SOURCE:6 , 1.50
-	TIMES SOURCE:10 , 1.20
-	TIMES SOURCE:13 , 1.20
-	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:痛覚 , 1.50
+	TIMES SOURCE:愛液分泌 , 1.20
+	TIMES SOURCE:屈従 , 1.20
+	TIMES SOURCE:逸脱 , 0.80
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------
@@ -169,19 +169,19 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 	TIMES A , 1.20
 ENDIF
 
-SOURCE:6 += A
-SOURCE:12 += A
-SOURCE:13 += A
-SOURCE:14 += A
+SOURCE:痛覚 += A
+SOURCE:露出 += A
+SOURCE:屈従 += A
+SOURCE:逸脱 += A
 
 						;****スライムパッチ追加ここから****
 IF ITEM:生きている縄 >= 1 && TEQUIP:触手召喚 == 0
 	TIMES LOSEBASE:体力 , 0.80
 	TIMES LOSEBASE:気力 , 0.80
-	TIMES SOURCE:6 , 1.50
-	TIMES SOURCE:12 , 1.20
-	TIMES SOURCE:13 , 1.20
-	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:痛覚 , 1.50
+	TIMES SOURCE:露出 , 1.20
+	TIMES SOURCE:屈従 , 1.20
+	TIMES SOURCE:逸脱 , 0.80
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------

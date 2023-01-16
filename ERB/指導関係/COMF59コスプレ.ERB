@@ -34,41 +34,41 @@ ENDIF
 
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
-	SOURCE:11 += 0
-	SOURCE:10 += 0
-	SOURCE:12 += 100
-	SOURCE:14 += 100
-	SOURCE:15 += 100
+	SOURCE:欲情 += 0
+	SOURCE:愛液分泌 += 0
+	SOURCE:露出 += 100
+	SOURCE:逸脱 += 100
+	SOURCE:反感 += 100
 	TIMES A, 0.60
 ELSEIF ABL:露出癖 == 1
-	SOURCE:11 += 50
-	SOURCE:10 += 150
-	SOURCE:12 += 500
-	SOURCE:14 += 300
+	SOURCE:欲情 += 50
+	SOURCE:愛液分泌 += 150
+	SOURCE:露出 += 500
+	SOURCE:逸脱 += 300
 	TIMES A, 1.00
 ELSEIF ABL:露出癖 == 2
-	SOURCE:11 += 100
-	SOURCE:10 += 300
-	SOURCE:12 += 100
-	SOURCE:14 += 50
+	SOURCE:欲情 += 100
+	SOURCE:愛液分泌 += 300
+	SOURCE:露出 += 100
+	SOURCE:逸脱 += 50
 	TIMES A, 1.60
 ELSEIF ABL:露出癖 == 3
-	SOURCE:11 += 150
-	SOURCE:10 += 600
-	SOURCE:12 += 50
-	SOURCE:14 += 0
+	SOURCE:欲情 += 150
+	SOURCE:愛液分泌 += 600
+	SOURCE:露出 += 50
+	SOURCE:逸脱 += 0
 	TIMES A, 2.00
 ELSEIF ABL:露出癖 == 4
-	SOURCE:11 += 200
-	SOURCE:10 += 1000
-	SOURCE:12 += 0
-	SOURCE:14 += 0
+	SOURCE:欲情 += 200
+	SOURCE:愛液分泌 += 1000
+	SOURCE:露出 += 0
+	SOURCE:逸脱 += 0
 	TIMES A, 2.60
 ELSE
-	SOURCE:11 += 300
-	SOURCE:10 += 2000
-	SOURCE:12 += 0
-	SOURCE:14 += 0
+	SOURCE:欲情 += 300
+	SOURCE:愛液分泌 += 2000
+	SOURCE:露出 += 0
+	SOURCE:逸脱 += 0
 	TIMES A, 3.80
 ENDIF
 ;ABL:従順をみる
@@ -135,9 +135,9 @@ SIF TALENT:淫乱
 SIF TALENT:人妻
 	TIMES A , 0.50
 
-SOURCE:3 += A
-SOURCE:14 += B
-SOURCE:16 += A
+SOURCE:情愛 += A
+SOURCE:逸脱 += B
+SOURCE:恭順 += A
 
 TEQUIP:コスプレ = 1
 
@@ -192,41 +192,41 @@ ENDIF
 
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
-	SOURCE:11 += 0
-	SOURCE:10 += 0
-	SOURCE:12 += 100
-	SOURCE:14 += 100
-	SOURCE:15 += 100
+	SOURCE:欲情 += 0
+	SOURCE:愛液分泌 += 0
+	SOURCE:露出 += 100
+	SOURCE:逸脱 += 100
+	SOURCE:反感 += 100
 	TIMES A, 0.60
 ELSEIF ABL:露出癖 == 1
-	SOURCE:11 += 50
-	SOURCE:10 += 150
-	SOURCE:12 += 500
-	SOURCE:14 += 300
+	SOURCE:欲情 += 50
+	SOURCE:愛液分泌 += 150
+	SOURCE:露出 += 500
+	SOURCE:逸脱 += 300
 	TIMES A, 1.00
 ELSEIF ABL:露出癖 == 2
-	SOURCE:11 += 100
-	SOURCE:10 += 300
-	SOURCE:12 += 100
-	SOURCE:14 += 50
+	SOURCE:欲情 += 100
+	SOURCE:愛液分泌 += 300
+	SOURCE:露出 += 100
+	SOURCE:逸脱 += 50
 	TIMES A, 1.60
 ELSEIF ABL:露出癖 == 3
-	SOURCE:11 += 150
-	SOURCE:10 += 600
-	SOURCE:12 += 50
-	SOURCE:14 += 0
+	SOURCE:欲情 += 150
+	SOURCE:愛液分泌 += 600
+	SOURCE:露出 += 50
+	SOURCE:逸脱 += 0
 	TIMES A, 2.00
 ELSEIF ABL:露出癖 == 4
-	SOURCE:11 += 200
-	SOURCE:10 += 1000
-	SOURCE:12 += 0
-	SOURCE:14 += 0
+	SOURCE:欲情 += 200
+	SOURCE:愛液分泌 += 1000
+	SOURCE:露出 += 0
+	SOURCE:逸脱 += 0
 	TIMES A, 2.60
 ELSEIF ABL:露出癖 >= 5
-	SOURCE:11 += 300
-	SOURCE:10 += 2000
-	SOURCE:12 += 0
-	SOURCE:14 += 0
+	SOURCE:欲情 += 300
+	SOURCE:愛液分泌 += 2000
+	SOURCE:露出 += 0
+	SOURCE:逸脱 += 0
 	TIMES A, 3.80
 ENDIF
 ;ABL:従順をみる
@@ -290,9 +290,9 @@ SIF TALENT:恋心
 SIF TALENT:淫乱
 	TIMES A , 1.80
 
-SOURCE:3 += A
-SOURCE:14 += B
-SOURCE:16 += A
+SOURCE:情愛 += A
+SOURCE:逸脱 += B
+SOURCE:恭順 += A
 
 IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
 	PRINTS EXPNAME:[[EXP:レズ経験]]

@@ -986,8 +986,8 @@ ENDIF
 ;愛撫
 ;--------------------------------------------------------
 IF SELECTCOM == [[TRAIN:愛撫]] && TEQUIP:縄 == 0 && TFLAG:失神中終了 <= 1
-	A = UP:0
-	B = UP:14
+	A = UP:[[UP:快Ｃ]]
+	B = UP:[[UP:快Ｂ]]
 	C = A + B
 
 	IF C < 100
@@ -1043,7 +1043,7 @@ IF SELECTCOM == [[TRAIN:愛撫]] && TEQUIP:縄 == 0 && TFLAG:失神中終了 <= 
 ;クンニ
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:クンニ]]  && TFLAG:失神中終了 <= 1
-	A = UP:0
+	A = UP:[[UP:快Ｃ]]
 
 	IF A < 300
 		PRINTFORML %CALLNAME:TARGET%のそこはまだしっとりと閉じたままだ。快楽を感じるにはもう少しかかるかもしれない。
@@ -1076,7 +1076,7 @@ ELSEIF SELECTCOM == [[TRAIN:クンニ]]  && TFLAG:失神中終了 <= 1
 ;アナル愛撫
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:アナル愛撫]] && TFLAG:失神中終了 <= 1
-	A = UP:2
+	A = UP:[[UP:快Ａ]]
 
 	IF A < 300
 		PRINTFORM %CALLNAME:TARGET%は悲鳴を上げて体をよじる。
@@ -1121,9 +1121,9 @@ ELSEIF SELECTCOM == [[TRAIN:アナル愛撫]] && TFLAG:失神中終了 <= 1
 ;自慰
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:オナニー]]
-	A = UP:0
-	B = UP:1
-	C = UP:2
+	A = UP:[[UP:快Ｃ]]
+	B = UP:[[UP:快Ｖ]]
+	C = UP:[[UP:快Ａ]]
 	D = UP:17
 	E = A + B + C + D
 
@@ -1182,7 +1182,7 @@ ELSEIF SELECTCOM == [[TRAIN:胸愛撫]] && TEQUIP:獣姦プレイ == 0 && TFLAG:
 	SIF TALENT:爆乳
 		PRINTFORML %CALLNAME:PLAYER%の手は、%CALLNAME:TARGET%の乳にすっぽりと潜り込みそうになっている…… 
 
-	A = UP:14
+	A = UP:[[UP:快Ｂ]]
 
 	IF TALENT:母乳体質 && TEQUIP:搾乳機 == 0 && TEQUIP:触手召喚 == 0
 		SAVESTR:2 = 吸い
@@ -1216,7 +1216,7 @@ ELSEIF SELECTCOM == [[TRAIN:胸愛撫]] && TEQUIP:獣姦プレイ == 0 && TFLAG:
 ;ローター
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:ローター]] && TFLAG:失神中終了 <= 1
-	A = UP:0
+	A = UP:[[UP:快Ｃ]]
 	IF TALENT:ふたなり || TALENT:オトコ
 		SAVESTR:2 = ペニス
 	ELSE
@@ -1248,7 +1248,7 @@ ELSEIF SELECTCOM == [[TRAIN:ローター]] && TFLAG:失神中終了 <= 1
 ;バイブ
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:バイブ]] && TFLAG:失神中終了 <= 1
-	A = UP:1
+	A = UP:[[UP:快Ｖ]]
 
 	IF TEQUIP:バイブ
 		IF A < 300
@@ -1291,7 +1291,7 @@ ELSEIF SELECTCOM == [[TRAIN:バイブ]] && TFLAG:失神中終了 <= 1
 ;Ｅマッサージャ
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:Ｅマッサージャ]] && TFLAG:失神中終了 <= 1
-	A = UP:0
+	A = UP:[[UP:快Ｃ]]
 	IF TALENT:ふたなり || TALENT:オトコ
 		SAVESTR:2 = ペニス
 	ELSE
@@ -1320,7 +1320,7 @@ ELSEIF SELECTCOM == [[TRAIN:Ｅマッサージャ]] && TFLAG:失神中終了 <= 
 ;アナルバイブ
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:アナルバイブ]] && TFLAG:失神中終了 <= 1
-	A = UP:2
+	A = UP:[[UP:快Ａ]]
 
 	IF TEQUIP:アナルバイブ
 		IF A < 300
@@ -1364,7 +1364,7 @@ ELSEIF SELECTCOM == [[TRAIN:アナルバイブ]] && TFLAG:失神中終了 <= 1
 ;電動クリキャップ
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:クリキャップ]] && TFLAG:失神中終了 <= 1
-	A = UP:0
+	A = UP:[[UP:快Ｃ]]
 
 	IF A < 300
 		PRINTFORML %CALLNAME:TARGET%はクリトリスへの刺激に目を閉じて耐えている。
@@ -1405,7 +1405,7 @@ ELSEIF SELECTCOM == [[TRAIN:逆アナルレイプ]] || SELECTCOM == [[TRAIN:背�
 ;騎乗位
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
-	A = UP:1
+	A = UP:[[UP:快Ｖ]]
 
 	IF A < 299 
 		PRINTFORML %CALLNAME:TARGET%は苦しそうにしながら命令に従って腰を振る。だが、まだ快楽を得るには遠いようだ。
@@ -1440,7 +1440,7 @@ ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
 ;スパンキング、針、鞭
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:スパンキング]] || SELECTCOM == [[TRAIN:鞭]] || SELECTCOM == [[TRAIN:針]] && TFLAG:失神中終了 <= 1
-	A = UP:9
+	A = UP:[[UP:苦痛]]
 
 	IF A < 300
 		B = 0
@@ -1476,7 +1476,7 @@ ELSEIF SELECTCOM == [[TRAIN:スパンキング]] || SELECTCOM == [[TRAIN:鞭]] |
 			PRINT 泣きじゃくりながら
 		PRINTL 必死で許しを請うている。
 	ENDIF
-	IF UP:5 > 1000
+	IF UP:[[UP:欲情]] > 1000
 		PRINTFORM しかしながら、%CALLNAME:TARGET%は苦痛に身をよじりつつも
 		IF TALENT:ふたなり || TALENT:オトコ
 			PRINTFORML ペニスを勃起させている……

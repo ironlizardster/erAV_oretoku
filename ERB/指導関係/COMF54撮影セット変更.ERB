@@ -48,28 +48,28 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 ENDIF
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
-	SOURCE:7 += 0
-	SOURCE:10 += 0
+	SOURCE:中毒充足 += 0
+	SOURCE:愛液分泌 += 0
 	TIMES A, 1.00
 ELSEIF ABL:露出癖 == 1
-	SOURCE:7 += 50
-	SOURCE:10 += 50
+	SOURCE:中毒充足 += 50
+	SOURCE:愛液分泌 += 50
 	TIMES A, 1.20
 ELSEIF ABL:露出癖 == 2
-	SOURCE:7 += 150
-	SOURCE:10 += 150
+	SOURCE:中毒充足 += 150
+	SOURCE:愛液分泌 += 150
 	TIMES A, 1.40
 ELSEIF ABL:露出癖 == 3
-	SOURCE:7 += 400
-	SOURCE:10 += 400
+	SOURCE:中毒充足 += 400
+	SOURCE:愛液分泌 += 400
 	TIMES A, 1.60
 ELSEIF ABL:露出癖 == 4
-	SOURCE:7 += 750
-	SOURCE:10 += 750
+	SOURCE:中毒充足 += 750
+	SOURCE:愛液分泌 += 750
 	TIMES A, 2.00
 ELSE
-	SOURCE:7 += 1300
-	SOURCE:10 += 1300
+	SOURCE:中毒充足 += 1300
+	SOURCE:愛液分泌 += 1300
 	TIMES A, 3.00
 ENDIF
 ;ABL:マゾっ気をみる
@@ -107,9 +107,9 @@ IF TALENT:露出狂
 	TIMES B , 0.50
 ENDIF
 
-SOURCE:12 += A
-SOURCE:14 += B
-SOURCE:16 += A/2
+SOURCE:露出 += A
+SOURCE:逸脱 += B
+SOURCE:恭順 += A/2
 
 $INPUT_LOOP_00
 IF TEQUIP:野外プレイ == 0
@@ -195,28 +195,28 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 ENDIF
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
-	SOURCE:7 += 0
-	SOURCE:10 += 0
+	SOURCE:中毒充足 += 0
+	SOURCE:愛液分泌 += 0
 	TIMES A, 1.00
 ELSEIF ABL:露出癖 == 1
-	SOURCE:7 += 50
-	SOURCE:10 += 50
+	SOURCE:中毒充足 += 50
+	SOURCE:愛液分泌 += 50
 	TIMES A, 1.20
 ELSEIF ABL:露出癖 == 2
-	SOURCE:7 += 150
-	SOURCE:10 += 150
+	SOURCE:中毒充足 += 150
+	SOURCE:愛液分泌 += 150
 	TIMES A, 1.40
 ELSEIF ABL:露出癖 == 3
-	SOURCE:7 += 400
-	SOURCE:10 += 400
+	SOURCE:中毒充足 += 400
+	SOURCE:愛液分泌 += 400
 	TIMES A, 1.60
 ELSEIF ABL:露出癖 == 4
-	SOURCE:7 += 750
-	SOURCE:10 += 750
+	SOURCE:中毒充足 += 750
+	SOURCE:愛液分泌 += 750
 	TIMES A, 2.00
 ELSE
-	SOURCE:7 += 1300
-	SOURCE:10 += 1300
+	SOURCE:中毒充足 += 1300
+	SOURCE:愛液分泌 += 1300
 	TIMES A, 3.00
 ENDIF
 ;ABL:マゾっ気をみる
@@ -253,9 +253,9 @@ IF TALENT:露出狂
 	TIMES B , 0.50
 ENDIF
 
-SOURCE:12 += A
-SOURCE:14 += B
-SOURCE:16 += A/2
+SOURCE:露出 += A
+SOURCE:逸脱 += B
+SOURCE:恭順 += A/2
 
 ;---------------------------------------------
 ;レズ・ホモ経験の追加

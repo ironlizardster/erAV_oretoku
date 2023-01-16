@@ -31,17 +31,17 @@ IF MARK:反発刻印 == 0
 		;淫魔アンドロ天使は
 		IF TALENT:淫魔 == 1 || TALENT:アンドロイド == 1 || TALENT:天使 == 1
 			;従順3以上、奉仕快楽経験200以上で【彼氏あり】がなければ【恋心】を獲得
-			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= 200 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏有 != 1
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= 200 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && !CFLAG:彼氏有
 				CALL 恋心GET
 			ENDIF
 		ELSE
 			;普通はこっち
 			;信頼3以上、奉仕快楽経験200以上でレズ経験が1200以下であり、【淫乱】【彼氏あり】がなければ【恋心】を獲得
-			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && EXP:レズ経験 <= 1200 && CFLAG:彼氏有 != 1 && FLAG:恋心レズ経験無視 == 0
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && EXP:レズ経験 <= 1200 && !CFLAG:彼氏有 && FLAG:恋心レズ経験無視 == 0
 				CALL 恋心GET
 			ENDIF
 			;実績ボーナスによるレズ経験の無視
-			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && CFLAG:彼氏有 != 1 && FLAG:恋心レズ経験無視 == 1
+			IF ABL:信頼 >= 3 && EXP:奉仕快楽経験 >= EXPLV:5 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && TALENT:彼氏あり == 0 && !CFLAG:彼氏有 && FLAG:恋心レズ経験無視 == 1
 				CALL 恋心GET
 			ENDIF
 		ENDIF

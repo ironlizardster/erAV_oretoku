@@ -15,27 +15,27 @@ LOSEBASE:気力 += 80
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:14 = 1000
+SOURCE:逸脱 = 1000
 
 ;PALAM:苦痛をみる
 IF PALAM:苦痛 < PALAMLV:1
-	SOURCE:6 = 1000
+	SOURCE:痛覚 = 1000
 ELSEIF PALAM:苦痛 < PALAMLV:2
-	SOURCE:6 = 1500
+	SOURCE:痛覚 = 1500
 ELSEIF PALAM:苦痛 < PALAMLV:3
-	SOURCE:6 = 2200
+	SOURCE:痛覚 = 2200
 ELSEIF PALAM:苦痛 < PALAMLV:4
-	SOURCE:6 = 3000
+	SOURCE:痛覚 = 3000
 ELSEIF PALAM:苦痛 >= PALAMLV:4
-	SOURCE:6 = 4000
+	SOURCE:痛覚 = 4000
 ENDIF
 
 						;****スライムパッチ追加ここから****
 IF ITEM:高性能鞭 >= 1 && TEQUIP:触手召喚 == 0
 	TIMES LOSEBASE:体力 , 0.80
 	TIMES LOSEBASE:気力 , 0.80
-	TIMES SOURCE:6 , 1.50
-	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:痛覚 , 1.50
+	TIMES SOURCE:逸脱 , 0.80
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------

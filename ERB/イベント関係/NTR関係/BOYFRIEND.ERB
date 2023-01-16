@@ -4,25 +4,15 @@
 ;CFLAG:彼氏タイプ＝彼氏の仕事
 ;CFLAG:ラブホ＝彼氏とラブホに寄る度合い
 ;CFLAG:彼氏とのセックスの有無＝彼氏とセックスしたかどうか
-;CFLAG:彼氏の好みの服装に変更したかどうか＝彼氏好みのファッションになったか
+;CFLAG:彼氏好みファッション＝彼氏好みのファッションになったか
 ;CFLAG:服装変更の判定用＝ファッションを変えたい希望の度合い
 ;===========================================================
 @PRINT_BOYFRIEND(ARG)
-IF CFLAG:ARG:彼氏有 >= 1
-	IF CFLAG:ARG:彼氏タイプ == 1
-		PRINT クラスメイト
-	ELSEIF CFLAG:ARG:彼氏タイプ == 2
-		PRINT 高校生
-	ELSEIF CFLAG:ARG:彼氏タイプ == 3
-		PRINT 中学生
-	ELSEIF CFLAG:ARG:彼氏タイプ == 4
-		PRINT 大学生
-	ELSEIF CFLAG:ARG:彼氏タイプ == 5
-		PRINT サラリーマン
-	ELSEIF CFLAG:ARG:彼氏タイプ == 6
-		PRINT ホスト
-	ELSEIF CFLAG:ARG:彼氏タイプ == 99
-		PRINT 御主人様
+IF CFLAG:ARG:彼氏有
+	RESULTS = ""
+	TRYCALLFORM BOYFRIEND_STRING_{CFLAG:ARG:彼氏タイプ}
+	IF RESULTS != ""
+		PRINTFORM %RESULTS%
 	ELSE
 		PRINT チャラ男
 	ENDIF
@@ -32,7 +22,7 @@ ENDIF
 ;交際発覚
 ;===========================================================
 @EVENT_交際発覚(ARG)
-IF TALENT:ARG:恋心 == 0 && TALENT:ARG:永遠の愛 == 0 && CFLAG:ARG:彼氏有 != 1
+IF TALENT:ARG:恋心 == 0 && TALENT:ARG:永遠の愛 == 0 && !CFLAG:ARG:彼氏有
 	PRINTFORMW %CALLNAME:ARG%の様子がおかしい……
 	PRINTFORML そのことについて問い質してみると%CALLNAME:ARG%に彼氏ができたようだ。
 	PRINTFORMW %CALLNAME:ARG%は頬を染めて彼氏との惚気話を%CALLNAME:MASTER%に語ってみせた……
@@ -47,12 +37,12 @@ IF TALENT:ARG:恋心 == 0 && TALENT:ARG:永遠の愛 == 0 && CFLAG:ARG:彼氏有
 	ENDIF
 	TALENT:ARG:彼氏あり = 1
 
-ELSEIF TALENT:ARG:恋心 == 1 && TALENT:ARG:永遠の愛 == 0 && CFLAG:ARG:彼氏有 != 1
+ELSEIF TALENT:ARG:恋心 == 1 && TALENT:ARG:永遠の愛 == 0 && !CFLAG:ARG:彼氏有
 	PRINTFORMW %CALLNAME:ARG%の様子がおかしい……
 	PRINTFORML そのことについて問い質してみると%CALLNAME:ARG%は%CALLNAME:MASTER%よりも好きな男が出来たようだ。
 	PRINTFORML %CALLNAME:ARG%は%CALLNAME:MASTER%に以前の関係に戻ろうと別れ話を切り出した……
-	CFLAG:ARG:彼氏有 = 1 || TALENT:ARG:ギャル系 == 0
-	IF FLAG:チャラ男固定 == 0
+	CFLAG:ARG:彼氏有 = 1
+	IF FLAG:チャラ男固定 == 0 || TALENT:ARG:ギャル系 == 0
 		CFLAG:ARG:彼氏タイプ += RAND:7
 			IF CFLAG:ARG:彼氏タイプ == 1 && BASE:ARG:実年齢 > 18
 				CFLAG:ARG:彼氏タイプ = 5
@@ -77,30 +67,39 @@ DRAWLINE
 ;===========================================================
 @EVENT_BF経験(ARG)
 
-VARSET GOTJUEL:ARG:0
+VARSET GOTJUEL:ARG:快Ｃ
 VARSET TCVAR:ARG:Ｖ経験
 LOCAL = RAND:3
 SIF CFLAG:ARG:ラブホ == 1
 	LOCAL = 0
 IF LOCAL <= 1
-	PRINTFORML BF_COMMONEV_{LOCAL}(%NAME:ARG%({ARG}))
 	TRYCALLFORM BF_COMMONEV_{LOCAL}(ARG)
 ELSE
-	LOCAL:2 = RAND:2
-	PRINTFORML BF_EV{CFLAG:ARG:彼氏タイプ}_{LOCAL}(%NAME:ARG%({ARG}))
-	TRYCALLFORM BF_EV{CFLAG:ARG:彼氏タイプ}_{LOCAL}(ARG)
+;彼氏タイプでイベント番号ごとに違う展開にしたり確率つけたりする
+	IF EXISTFUNCTION(@"BOYFRIEND_EVENT_COUNT_{CFLAG:ARG:彼氏タイプ}") == 2
+		CALLFORMF BOYFRIEND_EVENT_COUNT_{CFLAG:ARG:彼氏タイプ}
+		SIF RESULT > 0
+			LOCAL:1 = RAND:RESULT
+		;イベント番号に対応する関数がない場合はBF_COMMONEV_0になる
+		TRYCCALLFORM BF_EV{CFLAG:ARG:彼氏タイプ}_{LOCAL:1}(ARG)
+		CATCH
+			TRYCALL BF_COMMONEV_0(ARG)
+		ENDCATCH
+	ELSE
+		TRYCALL BF_COMMONEV_0(ARG)
+	ENDIF
 ENDIF
 
-PRINTW
-CALL ADD_JUEL(ARG)
+IF SUMARRAY(GOTJUEL:ARG:快Ｃ) || SUMARRAY(TCVAR:ARG:Ｖ経験)
+	SIF SUMARRAY(GOTJUEL:ARG:快Ｃ)
+		CALL ADD_JUEL(ARG)
 
-IF TCVAR:ARG:性交経験 >= 1
-	CALL ADD_EXP(ARG)
+	SIF SUMARRAY(TCVAR:ARG:Ｖ経験)
+		CALL ADD_EXP(ARG)
+
 	DRAWLINE
-ELSE
-	CALL ADD_EXP(ARG)
+	WAIT
 ENDIF
-WAIT
 
 ;===========================================================
 ;BFの与える経験：V系
@@ -200,9 +199,6 @@ IF TALENT:ARG:妊娠 == 0 && TALENT:ARG:育児中 == 0
 	ENDIF
 ENDIF
 
-PRINTFORML 性交回数{性交回数}
-PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
-
 GOTJUEL:ARG:快Ｃ += 性交回数 * 25
 GOTJUEL:ARG:快Ｖ += 性交回数 * 250
 GOTJUEL:ARG:快Ｂ += 性交回数 * 10
@@ -210,13 +206,12 @@ GOTJUEL:ARG:欲情 += 性交回数 * 500
 GOTJUEL:ARG:習得 += 性交回数 * 100
 GOTJUEL:ARG:恥情 += 性交回数 * 20
 
-PRINTFORML 性交回数{性交回数}
-PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
-
 ;===========================================================
 ;BF共通イベント：V
 ;===========================================================
 @BF_COMMONEV_0(ARG)
+#DIM 喪失場所 = 0
+#DIM ハメ撮り = 0
 
 SIF CFLAG:ARG:特別コスタイプ == 79 && CFLAG:ARG:着衣状態 >= 64
 	RETURN
@@ -243,16 +238,16 @@ ENDIF
 
 IF LOCAL == 0
 	PRINTFORM カレシの部屋
-	CFLAG:ARG:処女喪失場所 = 初場所_彼部屋
+	喪失場所 = 初場所_彼部屋
 ELSEIF LOCAL == 1
 	PRINTFORM %CALLNAME:ARG%の部屋
-	CFLAG:ARG:処女喪失場所 = 初場所_自室
+	喪失場所 = 初場所_自室
 ELSEIF LOCAL == 2
 	PRINTFORM ラブホ
-	CFLAG:ARG:処女喪失場所 = 初場所_ラブホ
+	喪失場所 = 初場所_ラブホ
 ELSEIF LOCAL == 3
 	PRINTFORM 海
-	CFLAG:ARG:処女喪失場所 = 初場所_海
+	喪失場所 = 初場所_海
 ENDIF
 PRINTFORM で
 
@@ -269,7 +264,7 @@ SIF CFLAG:ARG:彼氏タイプ == 0
 	LOCAL:1 = 9
 IF LOCAL:1 >= 8
 	PRINTFORM 、しかもその模様をハメ撮りまでしてい
-	CFLAG:ARG:処女喪失状況 = 3
+	ハメ撮り = 1
 	GOTJUEL:ARG:恥情 *= 10
 	TCVAR:ARG:被写経験 += (TCVAR:ARG:Ｖ経験 / 10)
 	SIF TCVAR:ARG:被写経験 <= 0
@@ -303,14 +298,14 @@ EXP:ARG:彼氏性経験 += 1
 SIF LOCAL:1 >= 8 && TALENT:ARG:処女
 	TCVAR:ARG:異常経験 += 1
 IF !CFLAG:ARG:処女喪失相手
-	CALL 処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,CFLAG:ARG:処女喪失状況,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL 処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 
 IF !CFLAG:ARG:初キス相手
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	ELSE
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 		TCVAR:ARG:異常経験 += 1
 	ENDIF
 	
@@ -374,9 +369,6 @@ TCVAR:ARG:精液経験 += 性交回数*2
 ;性交経験
 TCVAR:ARG:性交経験 += 性交回数
 
-PRINTFORML 性交回数{性交回数}
-PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
-
 GOTJUEL:ARG:快Ｃ += 性交回数 * 25
 GOTJUEL:ARG:快Ａ += 性交回数 * 250
 GOTJUEL:ARG:快Ｂ += 性交回数 * 10
@@ -384,13 +376,12 @@ GOTJUEL:ARG:欲情 += 性交回数 * 500
 GOTJUEL:ARG:習得 += 性交回数 * 100
 GOTJUEL:ARG:恥情 += 性交回数 * 20
 
-PRINTFORML 性交回数{性交回数}
-PRINTFORML GOTJUEL:ARG:快Ｃ{GOTJUEL:ARG:快Ｃ}
-
 ;===========================================================
 ;BF共通イベント：A
 ;===========================================================
 @BF_COMMONEV_1(ARG)
+#DIM 喪失場所 = 0
+#DIM ハメ撮り = 0
 
 SIF EXP:ARG:Ａ経験 == 0
 	RETURN
@@ -412,16 +403,16 @@ PRINTFORM 週が開けて月曜、昨日はオフだった%NAME:ARG%は、
 
 IF LOCAL == 0
 	PRINTFORM カレシの部屋
-	CFLAG:ARG:処女喪失場所 = 初場所_彼部屋
+	喪失場所 = 初場所_彼部屋
 ELSEIF LOCAL == 1
 	PRINTFORM %CALLNAME:ARG%の部屋
-	CFLAG:ARG:処女喪失場所 = 初場所_自室
+	喪失場所 = 初場所_自室
 ELSEIF LOCAL == 2
 	PRINTFORM ラブホ
-	CFLAG:ARG:処女喪失場所 = 初場所_ラブホ
+	喪失場所 = 初場所_ラブホ
 ELSEIF LOCAL == 3
 	PRINTFORM 海
-	CFLAG:ARG:処女喪失場所 = 初場所_海
+	喪失場所 = 初場所_海
 ENDIF
 PRINTFORM で
 
@@ -436,8 +427,10 @@ ENDIF
 LOCAL:1 = RAND:10
 IF LOCAL:1 >= 8
 	PRINTFORM 、しかもその模様をハメ撮りまでしてい
-	CFLAG:ARG:Ａ処女喪失状況 = 3
+	ハメ撮り = 1
 	TCVAR:ARG:被写経験 += TCVAR:ARG:Ｖ経験
+	SIF TCVAR:ARG:被写経験 <= 0
+		TCVAR:ARG:被写経験 = 1
 ENDIF
 PRINTFORM たことをスタッフ
 
@@ -460,14 +453,14 @@ EXP:ARG:彼氏性経験 += 1
 SIF LOCAL:1 >= 8 && TALENT:ARG:Ａ処女
 	TCVAR:ARG:異常経験 = 1
 IF TALENT:ARG:Ａ処女 == 1
-	CALL Ａ処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,CFLAG:ARG:Ａ処女喪失状況,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL Ａ処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 
 IF !CFLAG:ARG:初キス相手
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	ELSE
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ARG:処女喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 		TCVAR:ARG:異常経験 += 1
 	ENDIF
 ENDIF

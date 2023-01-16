@@ -55,8 +55,8 @@ ELSE
 	LOSEBASE:体力 += A
 	LOSEBASE:気力 += A * 2
 
-	UP:10 += A * 20
-	SOURCE:14 += A * 5
+	UP:[[UP:恐怖]] += A * 20
+	SOURCE:逸脱 += A * 5
 ENDIF
 T = 0
 RETURN 1
@@ -95,11 +95,11 @@ SIF TALENT:淫乱
 
 ;苗床なら効果増大
 IF TALENT:苗床
-	TIMES SOURCE:1 , 1.20
-	TIMES SOURCE:4 , 1.20
-	TIMES SOURCE:5 , 1.20
-	TIMES SOURCE:7 , 2.00
-	TIMES SOURCE:10 , 3.00
+	TIMES SOURCE:快Ｖ , 1.20
+	TIMES SOURCE:性行動 , 1.20
+	TIMES SOURCE:達成 , 1.20
+	TIMES SOURCE:中毒充足 , 2.00
+	TIMES SOURCE:愛液分泌 , 3.00
 ENDIF
 
 IF ABL:触手中毒 <= 1
@@ -119,18 +119,18 @@ ENDIF
 LOSEBASE:体力 += A
 LOSEBASE:気力 += A * 2
 
-UP:10 += A * 20
-SOURCE:8 += A * 10
-SOURCE:14 += A * 5
+UP:[[UP:恐怖]] += A * 20
+SOURCE:不潔 += A * 10
+SOURCE:逸脱 += A * 5
 
 ;触手のぬめりと判断
-SOURCE:9 += 2000
+SOURCE:液体追加 += 2000
 
-TIMES SOURCE:0 , 2.00
-TIMES SOURCE:1 , 2.00
-TIMES SOURCE:2 , 2.00
-TIMES SOURCE:17 , 2.00
-TIMES SOURCE:13 , 1.80
+TIMES SOURCE:快Ｃ , 2.00
+TIMES SOURCE:快Ｖ , 2.00
+TIMES SOURCE:快Ａ , 2.00
+TIMES SOURCE:快Ｂ , 2.00
+TIMES SOURCE:屈従 , 1.80
 
 ;-------------------------------------------------
 ;射精チェック
@@ -329,42 +329,42 @@ TFLAG:621 |= 16
 ;	TFLAG:初キス口以外 = 1
 ;ABL:奉仕精神をみる
 IF ABL:奉仕精神 == 0
-	SOURCE:4 += 200
+	SOURCE:性行動 += 200
 	 A = 100
 ELSEIF ABL:奉仕精神 == 1
-	SOURCE:4 += 300
+	SOURCE:性行動 += 300
 	A = 200
 ELSEIF ABL:奉仕精神 == 2
-	SOURCE:4 += 400
+	SOURCE:性行動 += 400
 	A = 400
 ELSEIF ABL:奉仕精神 == 3
-	SOURCE:4 += 500
+	SOURCE:性行動 += 500
 	A = 600
 ELSEIF ABL:奉仕精神 == 4
-	SOURCE:4 += 600
+	SOURCE:性行動 += 600
 	A = 800
 ELSE
-	SOURCE:4 += 800
+	SOURCE:性行動 += 800
 	A = 1100
 ENDIF
 
 ;ABL:技巧をみる
 IF ABL:技巧 == 0
-	TIMES SOURCE:4 , 0.50
+	TIMES SOURCE:性行動 , 0.50
 ELSEIF ABL:技巧 == 1
-	TIMES SOURCE:4 , 0.80
+	TIMES SOURCE:性行動 , 0.80
 ELSEIF ABL:技巧 == 2
-	TIMES SOURCE:4 , 1.00
+	TIMES SOURCE:性行動 , 1.00
 ELSEIF ABL:技巧 == 3
-	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:性行動 , 1.20
 ELSEIF ABL:技巧 == 4
-	TIMES SOURCE:4 , 1.50
+	TIMES SOURCE:性行動 , 1.50
 ELSE
-	TIMES SOURCE:4 , 2.00
+	TIMES SOURCE:性行動 , 2.00
 ENDIF
 
-SOURCE:13 += A
-SOURCE:16 += A
+SOURCE:屈従 += A
+SOURCE:恭順 += A
 
 ;触手の抜き挿し
 IF TEQUIP:触手口辱
@@ -394,42 +394,42 @@ ENDIF
 
 ;ABL:奉仕精神をみる
 IF ABL:奉仕精神 == 0
-	SOURCE:4 += 200
+	SOURCE:性行動 += 200
 	 A = 100
 ELSEIF ABL:奉仕精神 == 1
-	SOURCE:4 += 300
+	SOURCE:性行動 += 300
 	A = 200
 ELSEIF ABL:奉仕精神 == 2
-	SOURCE:4 += 400
+	SOURCE:性行動 += 400
 	A = 400
 ELSEIF ABL:奉仕精神 == 3
-	SOURCE:4 += 500
+	SOURCE:性行動 += 500
 	A = 600
 ELSEIF ABL:奉仕精神 == 4
-	SOURCE:4 += 600
+	SOURCE:性行動 += 600
 	A = 800
 ELSE
-	SOURCE:4 += 800
+	SOURCE:性行動 += 800
 	A = 1100
 ENDIF
 
 ;ABL:技巧をみる
 IF ABL:技巧 == 0
-	TIMES SOURCE:4 , 0.50
+	TIMES SOURCE:性行動 , 0.50
 ELSEIF ABL:技巧 == 1
-	TIMES SOURCE:4 , 0.80
+	TIMES SOURCE:性行動 , 0.80
 ELSEIF ABL:技巧 == 2
-	TIMES SOURCE:4 , 1.00
+	TIMES SOURCE:性行動 , 1.00
 ELSEIF ABL:技巧 == 3
-	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:性行動 , 1.20
 ELSEIF ABL:技巧 == 4
-	TIMES SOURCE:4 , 1.50
+	TIMES SOURCE:性行動 , 1.50
 ELSE
-	TIMES SOURCE:4 , 2.00
+	TIMES SOURCE:性行動 , 2.00
 ENDIF
 
-SOURCE:13 += A
-SOURCE:16 += A
+SOURCE:屈従 += A
+SOURCE:恭順 += A
 
 EXP:フェラ経験 += 1
 PRINTL フェラ経験＋１

@@ -216,7 +216,7 @@ FOR LOCAL, 0, VARSIZE("JUEL")
 			PRINTFORML 　%PALAMNAME:LOCAL% + {GOTJUEL:ARG:LOCAL}
 	ENDIF
 NEXT
-VARSET GOTJUEL:ARG:0
+VARSET GOTJUEL:ARG:快Ｃ
 
 ;-------------------------
 ;トグル式のボタンを描画する関数
@@ -437,7 +437,7 @@ SIF !LINEISEMPTY()
 
 @萌フォントチェック
 #FUNCTIONS
-#DIMS 萌フォント = "まきばフォント太Ｐ",  "えり字"
+#DIMS 萌フォント = "あくびん", "まきばフォント太Ｐ",  "えり字"
 
 FOR LOCAL, 0, VARSIZE("萌フォント")
 	CHKFONT 萌フォント:LOCAL
@@ -455,5 +455,4 @@ CALLF メモリ解放, "RESET_DATA"
 @メモリ解放, ARGS
 #FUNCTION
 ;DEBUGPRINTにメッセージを添えてCLEARMEMORYする関数
-;SIF !SP
-;	DEBUGPRINTFORML メモリ解放:%ARGS%:{CLEARMEMORY()/1024/1024}MB
+DEBUGPRINTFORML メモリ解放:%ARGS%:{CLEARMEMORY()/1024/1024}MB

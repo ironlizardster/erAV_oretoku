@@ -35,19 +35,19 @@ PRINTFORM あいにく%CALLNAME:COUNT%は指名を受けているらしく、%CA
 IF EXP:MASTER:交際人数 == 0 || FLAG:キャバ嬢契約
 	PRINTFORM 他のキャスト
 ELSEIF FLAG:キャバ嬢契約 < 0
-	PRINTFORM %CSTR:MASTER:キャバ嬢名%
+	PRINTFORM %RESULTS:1%
 ENDIF
 PRINTFORML が%CALLNAME:MASTER%の相手をしてくれるという
 IF EXP:MASTER:交際人数 == 0
 	PRINTFORM 同席してくれたキャストが差し出した名刺に書かれた
 	CALL C_CLUBGIRL_NAMEDECIDE
-	PRINTFORML %CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%という名前は源氏名ではなく本名らしい
+	PRINTFORML %RESULTS%%RESULTS:1%という名前は源氏名ではなく本名らしい
 	PRINTFORML なんでも特別会員にのみ渡している名刺だという
 ENDIF
 PRINTFORM ゲストに酌をしたりタバコに火をつけたりする、露出度の高いドレスを身にまとった%CALLNAME:COUNT%を横目に見ながら
 PRINTFORM %CALLNAME:MASTER%は
 IF FLAG:キャバ嬢契約 < 0
-	PRINTFORM %CSTR:MASTER:キャバ嬢名%に
+	PRINTFORM %RESULTS:1%に
 ELSE
 	PRINTFORM キャストに
 ENDIF
@@ -95,34 +95,34 @@ PRINTFORML 「それでオーナーに『借金を早く返したかったらア
 PRINTL
 	RESETCOLOR
 	SETFONT ""
-PRINTFORML そろそろ帰ろうかと思った%CALLNAME:MASTER%に、相手をしてくれていた%CSTR:MASTER:キャバ嬢名%が話があるという……
+PRINTFORML そろそろ帰ろうかと思った%CALLNAME:MASTER%に、相手をしてくれていた%RESULTS:1%が話があるという……
 PRINTFORML なんでも彼女も桐生組に莫大な借金があるらしく、それでオーナー、つまり歌音に%CALLNAME:MASTER%を紹介されたらしい
 PRINTFORML この店に勤めてそれなりになるにしては未だに垢抜けてはいないが、確かに歌音の目利き通りなかなかの素材であると言える
 PRINTFORML 事務所の経営も安定してきたし、ひとりぐらいは女優を増やしても問題はないはずだ……
 PRINTL
 $INPUT_LOOP_C_GIRL
-PRINTFORML %CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%と契約しますか？
+PRINTFORML %RESULTS%%RESULTS:1%と契約しますか？
 PRINTL [0] - はい
 PRINTL [1] - いいえ
 INPUT
 IF RESULT == 0
-	PRINTFORML 契約することにした%CALLNAME:MASTER%は、%CSTR:MASTER:キャバ嬢名%に指定した日に事務所に来るように告げた
-	PRINTFORM 嬉しそうな、それでいてどことなくほっとしたような表情で%CSTR:MASTER:キャバ嬢名%は、%CALLNAME:MASTER%に頭を下げながら感謝の言葉を
+	PRINTFORML 契約することにした%CALLNAME:MASTER%は、%RESULTS:1%に指定した日に事務所に来るように告げた
+	PRINTFORM 嬉しそうな、それでいてどことなくほっとしたような表情で%RESULTS:1%は、%CALLNAME:MASTER%に頭を下げながら感謝の言葉を
 	PRINTFORML 述べ続けていた……
 	PRINTL
-	PRINTFORML 《%CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%と契約しました》
+	PRINTFORML 《%RESULTS%%RESULTS:1%と契約しました》
 	CALL キャラ追加([[キャラ:キャバ嬢]])
 	FLAG:キャバ嬢契約 = 1
-	NAME:TARGET = %CSTR:MASTER:キャバ嬢姓%%CSTR:MASTER:キャバ嬢名%
-	CALLNAME:TARGET = %CSTR:MASTER:キャバ嬢名%
+	NAME:TARGET = %RESULTS%%RESULTS:1%
+	CALLNAME:TARGET = %RESULTS:1%
 	BASE:実年齢 += RAND:5
 	CFLAG:髪色 = RAND:10
 	CFLAG:地毛色 = RAND:10
 	CFLAG:染髪済 = RAND:1
 	CFLAG:髪型 = RAND:8
 ELSEIF RESULT == 1
-	PRINTFORM しばし考え込んでいた%CALLNAME:MASTER%だったが、諸事情から今のところ専属女優を増やす予定はないと%CSTR:MASTER:キャバ嬢名%に告げると、
-	PRINTFORML %CSTR:MASTER:キャバ嬢名%は残念そうにしながらも、%CALLNAME:MASTER%に笑顔を浮かべて営業トークを始めた……
+	PRINTFORM しばし考え込んでいた%CALLNAME:MASTER%だったが、諸事情から今のところ専属女優を増やす予定はないと%RESULTS:1%に告げると、
+	PRINTFORML %RESULTS:1%は残念そうにしながらも、%CALLNAME:MASTER%に笑顔を浮かべて営業トークを始めた……
 ELSE
 	GOTO INPUT_LOOP_C_GIRL
 ENDIF

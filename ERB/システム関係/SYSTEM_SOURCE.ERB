@@ -157,12 +157,12 @@ CALL MASTER_SKILL_CHECK
 ;-------------------------------------------------
 ;ズーコの着ぐるみを着ている
 IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
-	TIMES SOURCE:6 , 0.10
+	TIMES SOURCE:痛覚 , 0.10
 	IF TEQUIP:触手召喚 == 0
-		TIMES SOURCE:0 , 0.10
-		TIMES SOURCE:1 , 0.10
-		TIMES SOURCE:2 , 0.10
-		TIMES SOURCE:17 , 0.10
+		TIMES SOURCE:快Ｃ , 0.10
+		TIMES SOURCE:快Ｖ , 0.10
+		TIMES SOURCE:快Ａ , 0.10
+		TIMES SOURCE:快Ｂ , 0.10
 	ENDIF
 ENDIF
 
@@ -196,11 +196,11 @@ CALL LOST_ANALVIRGIN_CHECK
 ;-------------------------------------------------
 ;Ｃ敏感とＣ鈍感はここで処理
 SIF TALENT:Ｃ鈍感
-	TIMES SOURCE:0 , 0.50
+	TIMES SOURCE:快Ｃ , 0.50
 SIF TALENT:Ｃ敏感
-	TIMES SOURCE:0 , 2.00
+	TIMES SOURCE:快Ｃ , 2.00
 
-A = SOURCE:0
+A = SOURCE:快Ｃ
 
 ;PALAM:欲情をみる
 IF TFLAG:201 == 1
@@ -217,7 +217,7 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 	TIMES A , 1.80
 ENDIF
 
-B = SOURCE:0
+B = SOURCE:快Ｃ
 
 ;ABL:欲望をみる
 IF ABL:欲望 == 0
@@ -238,7 +238,7 @@ ENDIF
 
 ;快感の否定、抑圧、抵抗
 IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
-	C = SOURCE:0 / 3
+	C = SOURCE:快Ｃ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
 		TIMES C , 1.00
@@ -272,22 +272,22 @@ IF TALENT:淫核
 ENDIF
 
 ;PALAM:快Ｃの上昇
-UP:0 += A
+UP:[[UP:快Ｃ]] += A
 ;PALAM:欲情の上昇
-UP:5 += B
+UP:[[UP:欲情]] += B
 ;PALAM:抑鬱の上昇
-UP:13 += C
+UP:[[UP:抑鬱]] += C
 
 ;-------------------------------------------------
 ;快Ｖのソース
 ;-------------------------------------------------
 ;Ｖ敏感とＶ鈍感はここで処理
 SIF TALENT:Ｖ鈍感
-	TIMES SOURCE:1 , 0.50
+	TIMES SOURCE:快Ｖ , 0.50
 SIF TALENT:Ｖ敏感
-	TIMES SOURCE:1 , 2.00
+	TIMES SOURCE:快Ｖ , 2.00
 
-A = SOURCE:1
+A = SOURCE:快Ｖ
 
 ;PALAM:欲情をみる
 IF TFLAG:201 == 1
@@ -304,7 +304,7 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 	TIMES A , 2.00
 ENDIF
 
-B = SOURCE:1
+B = SOURCE:快Ｖ
 
 ;ABL:欲望をみる
 IF ABL:欲望 == 0
@@ -325,7 +325,7 @@ ENDIF
 
 ;快感の否定、抑圧、抵抗
 IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
-	C = SOURCE:1 / 3
+	C = SOURCE:快Ｖ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
 		TIMES C , 1.00
@@ -359,24 +359,24 @@ IF TALENT:淫壺
 ENDIF
 
 ;PALAM:快Ｖの上昇
-UP:1 += A
+UP:[[UP:快Ｖ]] += A
 ;PALAM:恭順の上昇
-UP:4 += B
+UP:[[UP:恭順]] += B
 ;PALAM:欲情の上昇
-UP:5 += B
+UP:[[UP:欲情]] += B
 ;PALAM:抑鬱の上昇
-UP:13 += C
+UP:[[UP:抑鬱]] += C
 
 ;-------------------------------------------------
 ;快Ａのソース
 ;-------------------------------------------------
 ;Ａ敏感とＡ鈍感はここで処理
 SIF TALENT:Ａ鈍感
-	TIMES SOURCE:2 , 0.50
+	TIMES SOURCE:快Ａ , 0.50
 SIF TALENT:Ａ敏感
-	TIMES SOURCE:2 , 2.00
+	TIMES SOURCE:快Ａ , 2.00
 
-A = SOURCE:2
+A = SOURCE:快Ａ
 
 ;PALAM:欲情をみる
 ;快ＡはあまりPALAM:欲情では差が出ない
@@ -394,7 +394,7 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 	TIMES A , 1.40
 ENDIF
 
-B = SOURCE:2
+B = SOURCE:快Ａ
 
 ;ABL:欲望をみる
 IF ABL:欲望 == 0
@@ -415,7 +415,7 @@ ENDIF
 
 ;快感の否定、抑圧、抵抗
 IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
-	C = SOURCE:2 / 3
+	C = SOURCE:快Ａ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
 		TIMES C , 1.00
@@ -449,41 +449,41 @@ IF TALENT:淫肛
 ENDIF
 
 ;PALAM:快Ａの上昇
-UP:2 += A
+UP:[[UP:快Ａ]] += A
 ;PALAM:欲情の上昇
-UP:5 += B
+UP:[[UP:欲情]] += B
 ;PALAM:屈服の上昇
-UP:6 += B
+UP:[[UP:屈服]] += B
 ;PALAM:抑鬱の上昇
-UP:13 += C
+UP:[[UP:抑鬱]] += C
 
 ;-------------------------------------------------
 ;快Ｂのソース
 ;-------------------------------------------------
 ;Ｂ敏感とＢ鈍感はここで処理
 SIF TALENT:Ｂ鈍感
-	TIMES SOURCE:17 , 0.50
+	TIMES SOURCE:快Ｂ , 0.50
 SIF TALENT:Ｂ敏感
-	TIMES SOURCE:17 , 2.00
+	TIMES SOURCE:快Ｂ , 2.00
 
 ;絶壁、貧乳、巨乳、爆乳はここで処理
 IF TALENT:神乳
-	TIMES SOURCE:1 , 2.50
+	TIMES SOURCE:快Ｖ , 2.50
 ELSEIF TALENT:魔乳
-	TIMES SOURCE:1 , 2.15
+	TIMES SOURCE:快Ｖ , 2.15
 ELSEIF TALENT:超乳
-	TIMES SOURCE:1 , 1.80
+	TIMES SOURCE:快Ｖ , 1.80
 ELSEIF TALENT:絶壁
-	TIMES SOURCE:1 , 1.50
+	TIMES SOURCE:快Ｖ , 1.50
 ELSEIF TALENT:貧乳
-	TIMES SOURCE:1 , 1.20
+	TIMES SOURCE:快Ｖ , 1.20
 ELSEIF TALENT:巨乳
-	TIMES SOURCE:1 , 0.90
+	TIMES SOURCE:快Ｖ , 0.90
 ELSEIF TALENT:爆乳
-	TIMES SOURCE:1 , 0.80
+	TIMES SOURCE:快Ｖ , 0.80
 ENDIF
 
-A = SOURCE:17
+A = SOURCE:快Ｂ
 
 ;PALAM:欲情をみる
 IF TFLAG:201 == 1
@@ -500,7 +500,7 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 	TIMES A , 1.80
 ENDIF
 
-B = SOURCE:17
+B = SOURCE:快Ｂ
 
 ;ABL:欲望をみる
 IF ABL:欲望 == 0
@@ -521,7 +521,7 @@ ENDIF
 
 ;快感の否定、抑圧、抵抗
 IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
-	C = SOURCE:17 / 3
+	C = SOURCE:快Ｂ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
 		TIMES C , 1.00
@@ -555,32 +555,32 @@ IF TALENT:淫乳
 ENDIF
 
 ;PALAM:快Ｂの上昇
-UP:14 += A
+UP:[[UP:快Ｂ]] += A
 ;PALAM:欲情の上昇
-UP:5 += B
+UP:[[UP:欲情]] += B
 ;PALAM:抑鬱の上昇
-UP:13 += C
+UP:[[UP:抑鬱]] += C
 
 ;-------------------------------------------------
 ;同じコマンドの連続実行による上下の処理（快楽系）
 ;-------------------------------------------------
 IF SELECTCOM == PREVCOM && TFLAG:201 != 1
-	;UP:0,1,2は絶頂に絡むので先に処理してある
-	UP:0 /= 2
-	UP:1 /= 2
-	UP:2 /= 2
-	UP:14 /= 2
+	;UP:[[UP:快Ｃ]],1,2は絶頂に絡むので先に処理してある
+	UP:[[UP:快Ｃ]] /= 2
+	UP:[[UP:快Ｖ]] /= 2
+	UP:[[UP:快Ａ]] /= 2
+	UP:[[UP:快Ｂ]] /= 2
 ENDIF
 
 ;-------------------------------------------------
 ;気力０による上下の処理（快楽系）
 ;-------------------------------------------------
 IF BASE:気力 <= 0 && TFLAG:201 != 1
-	;UP:0,1,2は絶頂に絡むので先に処理してある
-	UP:0 /= 2
-	UP:1 /= 2
-	UP:2 /= 2
-	UP:14 /= 2
+	;UP:[[UP:快Ｃ]],1,2は絶頂に絡むので先に処理してある
+	UP:[[UP:快Ｃ]] /= 2
+	UP:[[UP:快Ｖ]] /= 2
+	UP:[[UP:快Ａ]] /= 2
+	UP:[[UP:快Ｂ]] /= 2
 ENDIF
 
 ;-------------------------------------------------
@@ -588,14 +588,14 @@ ENDIF
 ;-------------------------------------------------
 R = NO:PLAYER
 IF RELATION:R != 0 && TFLAG:201 != 1
-	UP:0 *= RELATION:R
-	UP:0 /= 100
-	UP:1 *= RELATION:R
-	UP:1 /= 100
-	UP:2 *= RELATION:R
-	UP:2 /= 100
-	UP:14 *= RELATION:R
-	UP:14 /= 100
+	UP:[[UP:快Ｃ]] *= RELATION:R
+	UP:[[UP:快Ｃ]] /= 100
+	UP:[[UP:快Ｖ]] *= RELATION:R
+	UP:[[UP:快Ｖ]] /= 100
+	UP:[[UP:快Ａ]] *= RELATION:R
+	UP:[[UP:快Ａ]] /= 100
+	UP:[[UP:快Ｂ]] *= RELATION:R
+	UP:[[UP:快Ｂ]] /= 100
 ENDIF
 
 ;-------------------------------------------------
@@ -606,7 +606,7 @@ CALL UP_TALENT_CVA_CHECK
 ;-------------------------------------------------
 ;愛液処理
 ;-------------------------------------------------
-A = UP:0 + UP:1 + UP:2 + UP:14
+A = UP:[[UP:快Ｃ]] + UP:[[UP:快Ｖ]] + UP:[[UP:快Ａ]] + UP:[[UP:快Ｂ]]
 ;快Ｃ＋快Ｖ＋快Ａ＋快Ｂが合わせて100以上上昇ならその20%の液体のソースが加わる（オトコはダメ）
 IF A > 100 && TALENT:オトコ == 0
 	;濡れやすいと濡れにくいはここで処理
@@ -616,7 +616,7 @@ IF A > 100 && TALENT:オトコ == 0
 		TIMES A , 0.40
 	SIF TALENT:170
 		TIMES A , 0.10
-	SOURCE:10 += A / 5
+	SOURCE:愛液分泌 += A / 5
 ENDIF
 
 ;-------------------------------------------------
@@ -630,160 +630,160 @@ B = 0
 M = 0
 						;****追加ここまで****
 ;絶頂Ｃ
-IF UP:0 + PALAM:快Ｃ >= PALAMLV:4 * 32
+IF UP:[[UP:快Ｃ]] + PALAM:快Ｃ >= PALAMLV:4 * 32
 	C = 9
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 9
 						;****追加ここまで****
-	DOWN:0 = (PALAMLV:4 * 32 - 1000)
+	DOWN:[[DOWN:快Ｃ]] = (PALAMLV:4 * 32 - 1000)
 	PRINTL 最強絶頂Ｃ
-ELSEIF UP:0 + PALAM:快Ｃ >= PALAMLV:4 * 8
+ELSEIF UP:[[UP:快Ｃ]] + PALAM:快Ｃ >= PALAMLV:4 * 8
 	C = 4
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 4
 						;****追加ここまで****
-	DOWN:0 = (PALAMLV:4 * 8 - 1000)
+	DOWN:[[DOWN:快Ｃ]] = (PALAMLV:4 * 8 - 1000)
 	PRINTL 超絶頂Ｃ
-ELSEIF UP:0 + PALAM:快Ｃ >= PALAMLV:4 * 2
+ELSEIF UP:[[UP:快Ｃ]] + PALAM:快Ｃ >= PALAMLV:4 * 2
 	C = 2
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 2
 						;****追加ここまで****
-	DOWN:0 = (PALAMLV:4 * 2 - 1000)
+	DOWN:[[DOWN:快Ｃ]] = (PALAMLV:4 * 2 - 1000)
 	PRINTL 強絶頂Ｃ
-ELSEIF UP:0 + PALAM:快Ｃ >= PALAMLV:4
+ELSEIF UP:[[UP:快Ｃ]] + PALAM:快Ｃ >= PALAMLV:4
 	C = 1
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 1
 						;****追加ここまで****
-	DOWN:0 = (PALAMLV:4 - 1000)
+	DOWN:[[DOWN:快Ｃ]] = (PALAMLV:4 - 1000)
 	PRINTL 絶頂Ｃ
 ENDIF
 ;DOWN:0で下げても絶頂以上なら
 ;その値-1になるように調整（10000で絶頂なら9999）
-SIF UP:0 + PALAM:快Ｃ - DOWN:0 >= PALAMLV:4
-	DOWN:0 = UP:0 + PALAM:快Ｃ - PALAMLV:4 + 1
+SIF UP:[[UP:快Ｃ]] + PALAM:快Ｃ - DOWN:[[DOWN:快Ｃ]] >= PALAMLV:4
+	DOWN:[[DOWN:快Ｃ]] = UP:[[UP:快Ｃ]] + PALAM:快Ｃ - PALAMLV:4 + 1
 
 ;絶頂Ｖ
-IF UP:1 + PALAM:快Ｖ >= PALAMLV:4 * 32
+IF UP:[[UP:快Ｖ]] + PALAM:快Ｖ >= PALAMLV:4 * 32
 	V = 9
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 9
 						;****追加ここまで****
-	DOWN:1 = (PALAMLV:4 * 32 - 1000)
+	DOWN:[[DOWN:快Ｖ]] = (PALAMLV:4 * 32 - 1000)
 	PRINTL 最強絶頂Ｖ
-ELSEIF UP:1 + PALAM:快Ｖ >= PALAMLV:4 * 8
+ELSEIF UP:[[UP:快Ｖ]] + PALAM:快Ｖ >= PALAMLV:4 * 8
 	V = 4
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 4
 						;****追加ここまで****
-	DOWN:1 = (PALAMLV:4 * 8 - 1000)
+	DOWN:[[DOWN:快Ｖ]] = (PALAMLV:4 * 8 - 1000)
 	PRINTL 超絶頂Ｖ
-ELSEIF UP:1 + PALAM:快Ｖ >= PALAMLV:4 * 2
+ELSEIF UP:[[UP:快Ｖ]] + PALAM:快Ｖ >= PALAMLV:4 * 2
 	V = 2
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 2
 						;****追加ここまで****
-	DOWN:1 = (PALAMLV:4 * 2 - 1000)
+	DOWN:[[DOWN:快Ｖ]] = (PALAMLV:4 * 2 - 1000)
 	PRINTL 強絶頂Ｖ
-ELSEIF UP:1 + PALAM:快Ｖ >= PALAMLV:4
+ELSEIF UP:[[UP:快Ｖ]] + PALAM:快Ｖ >= PALAMLV:4
 	V = 1
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 1
 						;****追加ここまで****
-	DOWN:1 = (PALAMLV:4 - 1000)
+	DOWN:[[DOWN:快Ｖ]] = (PALAMLV:4 - 1000)
 	PRINTL 絶頂Ｖ
 ENDIF
 ;DOWN:1で下げても絶頂以上なら
 ;その値-1になるように調整（10000で絶頂なら9999）
-SIF UP:1 + PALAM:快Ｖ - DOWN:1 >= PALAMLV:4
-	DOWN:1 = UP:1 + PALAM:快Ｖ - PALAMLV:4 + 1
+SIF UP:[[UP:快Ｖ]] + PALAM:快Ｖ - DOWN:[[DOWN:快Ｖ]] >= PALAMLV:4
+	DOWN:[[DOWN:快Ｖ]] = UP:[[UP:快Ｖ]] + PALAM:快Ｖ - PALAMLV:4 + 1
 
 ;絶頂Ａ
-IF UP:2 + PALAM:快Ａ >= PALAMLV:4 * 32
+IF UP:[[UP:快Ａ]] + PALAM:快Ａ >= PALAMLV:4 * 32
 	A = 9
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 9
 						;****追加ここまで****
-	DOWN:2 = (PALAMLV:4 * 32 - 1000)
+	DOWN:[[DOWN:快Ａ]] = (PALAMLV:4 * 32 - 1000)
 	PRINTL 最強絶頂Ａ
-ELSEIF UP:2 + PALAM:快Ａ >= PALAMLV:4 * 8
+ELSEIF UP:[[UP:快Ａ]] + PALAM:快Ａ >= PALAMLV:4 * 8
 	A = 4
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 4
 						;****追加ここまで****
-	DOWN:2 = (PALAMLV:4 * 8 - 1000)
+	DOWN:[[DOWN:快Ａ]] = (PALAMLV:4 * 8 - 1000)
 	PRINTL 超絶頂Ａ
-ELSEIF UP:2 + PALAM:快Ａ >= PALAMLV:4 * 2
+ELSEIF UP:[[UP:快Ａ]] + PALAM:快Ａ >= PALAMLV:4 * 2
 	A = 2
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 2
 						;****追加ここまで****
-	DOWN:2 = (PALAMLV:4 * 2 - 1000)
+	DOWN:[[DOWN:快Ａ]] = (PALAMLV:4 * 2 - 1000)
 	PRINTL 強絶頂Ａ
-ELSEIF UP:2 + PALAM:快Ａ >= PALAMLV:4
+ELSEIF UP:[[UP:快Ａ]] + PALAM:快Ａ >= PALAMLV:4
 	A = 1
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 1
 						;****追加ここまで****
-	DOWN:2 = (PALAMLV:4 - 1000)
+	DOWN:[[DOWN:快Ａ]] = (PALAMLV:4 - 1000)
 	PRINTL 絶頂Ａ
 ENDIF
 ;DOWN:2で下げても絶頂以上なら
 ;その値-1になるように調整（10000で絶頂なら9999）
-SIF UP:2 + PALAM:快Ａ - DOWN:2 >= PALAMLV:4
-	DOWN:2 = UP:2 + PALAM:快Ａ - PALAMLV:4 + 1
+SIF UP:[[UP:快Ａ]] + PALAM:快Ａ - DOWN:[[DOWN:快Ａ]] >= PALAMLV:4
+	DOWN:[[DOWN:快Ａ]] = UP:[[UP:快Ａ]] + PALAM:快Ａ - PALAMLV:4 + 1
 
 ;絶頂Ｂ
-IF UP:14 + PALAM:快Ｂ >= PALAMLV:4 * 32
+IF UP:[[UP:快Ｂ]] + PALAM:快Ｂ >= PALAMLV:4 * 32
 	B = 9
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 9
 						;****追加ここまで****
-	DOWN:14 = (PALAMLV:4 * 32 - 1000)
+	DOWN:[[DOWN:快Ｂ]] = (PALAMLV:4 * 32 - 1000)
 	PRINTL 最強絶頂Ｂ
-ELSEIF UP:14 + PALAM:快Ｂ >= PALAMLV:4 * 8
+ELSEIF UP:[[UP:快Ｂ]] + PALAM:快Ｂ >= PALAMLV:4 * 8
 	B = 4
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 4
 						;****追加ここまで****
-	DOWN:14 = (PALAMLV:4 * 8 - 1000)
+	DOWN:[[DOWN:快Ｂ]] = (PALAMLV:4 * 8 - 1000)
 	PRINTL 超絶頂Ｂ
-ELSEIF UP:14 + PALAM:快Ｂ >= PALAMLV:4 * 2
+ELSEIF UP:[[UP:快Ｂ]] + PALAM:快Ｂ >= PALAMLV:4 * 2
 	B = 2
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 2
 						;****追加ここまで****
-	DOWN:14 = (PALAMLV:4 * 2 - 1000)
+	DOWN:[[DOWN:快Ｂ]] = (PALAMLV:4 * 2 - 1000)
 	PRINTL 強絶頂Ｂ
-ELSEIF UP:14 + PALAM:快Ｂ >= PALAMLV:4
+ELSEIF UP:[[UP:快Ｂ]] + PALAM:快Ｂ >= PALAMLV:4
 	B = 1
 						;****追加ここから****
 	SIF TALENT:性魔術
 		M += 1
 						;****追加ここまで****
-	DOWN:14 = (PALAMLV:4 - 1000)
+	DOWN:[[DOWN:快Ｂ]] = (PALAMLV:4 - 1000)
 	PRINTL 絶頂Ｂ
 ENDIF
 ;DOWN:14で下げても絶頂以上なら
 ;その値-1になるように調整（10000で絶頂なら9999）
-SIF UP:14 + PALAM:快Ｂ - DOWN:14 >= PALAMLV:4
-	DOWN:14 = UP:14 + PALAM:快Ｂ - PALAMLV:4 + 1
+SIF UP:[[UP:快Ｂ]] + PALAM:快Ｂ - DOWN:[[DOWN:快Ｂ]] >= PALAMLV:4
+	DOWN:[[DOWN:快Ｂ]] = UP:[[UP:快Ｂ]] + PALAM:快Ｂ - PALAMLV:4 + 1
 
 CALL ECST_CHECK
 
@@ -899,8 +899,8 @@ ENDIF
 
 
 IF C
-	SOURCE:12 += 500 * C
-	SOURCE:13 += 200 * C
+	SOURCE:露出 += 500 * C
+	SOURCE:屈従 += 200 * C
 	IF TALENT:淫核
 		LOSEBASE:体力 += 10
 		LOSEBASE:気力 += 5
@@ -916,10 +916,10 @@ IF C
 	ENDIF
 ENDIF
 IF V
-	SOURCE:12 += 700 * V
-	SOURCE:13 += 400 * V
-	SOURCE:11 += 800 * V
-	SOURCE:16 += 500 * V
+	SOURCE:露出 += 700 * V
+	SOURCE:屈従 += 400 * V
+	SOURCE:欲情 += 800 * V
+	SOURCE:恭順 += 500 * V
 	IF TALENT:淫壺
 		LOSEBASE:体力 += 20
 		LOSEBASE:気力 += 10
@@ -939,10 +939,10 @@ IF V
 	ENDIF
 ENDIF
 IF A
-	SOURCE:12 += 1200 * A
-	SOURCE:13 += 4500 * A
-	SOURCE:11 += 3500 * A
-	SOURCE:16 += 1500 * A
+	SOURCE:露出 += 1200 * A
+	SOURCE:屈従 += 4500 * A
+	SOURCE:欲情 += 3500 * A
+	SOURCE:恭順 += 1500 * A
 	IF TALENT:淫肛
 		LOSEBASE:体力 += 30
 		LOSEBASE:気力 += 15
@@ -956,8 +956,8 @@ IF A
 		TFLAG:屈服刻印2 = 3
 ENDIF
 IF B
-	SOURCE:12 += 500 * B
-	SOURCE:13 += 200 * B
+	SOURCE:露出 += 500 * B
+	SOURCE:屈従 += 200 * B
 	IF TALENT:淫乳
 		LOSEBASE:体力 += 10
 		LOSEBASE:気力 += 5
@@ -1048,8 +1048,8 @@ SIF FLAG:ＩＷＳなし > 0
 ;-------------------------------------------------
 ;情愛のソース
 ;-------------------------------------------------
-A = SOURCE:3
-B = SOURCE:3
+A = SOURCE:情愛
+B = SOURCE:情愛
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
@@ -1103,14 +1103,14 @@ ELSE
 ENDIF
 
 ;PALAM:恭順の上昇
-UP:4 += A
+UP:[[UP:恭順]] += A
 ;PALAM:欲情の上昇
-UP:5 += B
+UP:[[UP:欲情]] += B
 
 ;-------------------------------------------------
 ;性行動のソース
 ;-------------------------------------------------
-A = SOURCE:4
+A = SOURCE:性行動
 
 ;ABL:奉仕精神をみる
 IF ABL:奉仕精神 == 0
@@ -1152,7 +1152,7 @@ SIF TALENT:PLAYER:プロデューサー
 
 ;抑圧か抵抗がある場合はPALAM:抑鬱が上がる
 IF TALENT:抑圧 || TALENT:抵抗
-	B = SOURCE:4 / 5
+	B = SOURCE:性行動 / 5
 	;ABL:奉仕精神をみる
 	IF ABL:奉仕精神 == 0
 		TIMES B , 1.80
@@ -1174,14 +1174,14 @@ ELSE
 ENDIF
 
 ;PALAM:習得の上昇
-UP:7 += A
+UP:[[UP:習得]] += A
 ;PALAM:抑鬱の上昇
-UP:13 += B
+UP:[[UP:抑鬱]] += B
 
 ;-------------------------------------------------
 ;達成のソース
 ;-------------------------------------------------
-A = SOURCE:5
+A = SOURCE:達成
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
@@ -1237,15 +1237,15 @@ ELSE
 ENDIF
 
 ;PALAM:恭順の上昇
-UP:4 += A
+UP:[[UP:恭順]] += A
 
 ;-------------------------------------------------
 ;痛覚のソース
 ;-------------------------------------------------
-A = SOURCE:6
-B = SOURCE:6
-C = SOURCE:6
-D = SOURCE:6
+A = SOURCE:痛覚
+B = SOURCE:痛覚
+C = SOURCE:痛覚
+D = SOURCE:痛覚
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
@@ -1341,21 +1341,21 @@ SIF ASSIPLAY
 	TIMES C , 0.40
 
 ;PALAM:苦痛の上昇
-UP:9 += A
+UP:[[UP:苦痛]] += A
 ;PALAM:恐怖の上昇
-UP:10 += B
+UP:[[UP:恐怖]] += B
 ;PALAM:反感の上昇
-UP:11 += C
+UP:[[UP:反感]] += C
 ;PALAM:欲情の上昇
 ;マゾっ気があるとPALAM:欲情も上がる
 ;そのとき調教者が【サド】だと効果的
-UP:5 += D
+UP:[[UP:欲情]] += D
 
 ;-------------------------------------------------
 ;中毒充足のソース
 ;-------------------------------------------------
-A = SOURCE:7
-B = SOURCE:7
+A = SOURCE:中毒充足
+B = SOURCE:中毒充足
 
 ;ABL:欲望を見る
 IF ABL:欲望 == 0
@@ -1388,15 +1388,15 @@ ELSE
 ENDIF
 
 ;PALAM:恭順の上昇
-UP:4 += A
+UP:[[UP:恭順]] += A
 ;PALAM:欲情の上昇
-UP:5 += B
+UP:[[UP:欲情]] += B
 
 ;-------------------------------------------------
 ;不潔のソース
 ;-------------------------------------------------
-A = SOURCE:8
-B = SOURCE:8
+A = SOURCE:不潔
+B = SOURCE:不潔
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
@@ -1420,47 +1420,47 @@ ELSE
 ENDIF
 
 ;PALAM:反感の上昇
-UP:11 += A
+UP:[[UP:反感]] += A
 ;PALAM:不快の上昇
-UP:12 += B
+UP:[[UP:不快]] += B
 
 ;-------------------------------------------------
 ;液体追加のソース
 ;-------------------------------------------------
-A = SOURCE:9
+A = SOURCE:液体追加
 
-UP:3 += A
+UP:[[UP:潤滑]] += A
 
 ;-------------------------------------------------
 ;愛液分泌のソース
 ;-------------------------------------------------
-A = SOURCE:10
+A = SOURCE:愛液分泌
 
-UP:3 += A
+UP:[[UP:潤滑]] += A
 
 ;-------------------------------------------------
 ;欲情追加のソース
 ;-------------------------------------------------
-A = SOURCE:11
+A = SOURCE:欲情
 
-UP:5 += A
+UP:[[UP:欲情]] += A
 
 ;-------------------------------------------------
 ;露出のソース
 ;-------------------------------------------------
 ;恥じらいと恥薄いはここで処理
 SIF TALENT:恥じらい
-	TIMES SOURCE:12 , 2.00
+	TIMES SOURCE:露出 , 2.00
 SIF TALENT:恥薄い
-	TIMES SOURCE:12 , 0.50
+	TIMES SOURCE:露出 , 0.50
 
 ;潤滑アップの50％を露出のソースに加える
 ;ただし液体追加のソースのぶんは引く
-SOURCE:12 += (UP:3-SOURCE:9) / 2
+SOURCE:露出 += (UP:[[UP:潤滑]]-SOURCE:液体追加) / 2
 
-A = SOURCE:12
-B = SOURCE:12
-C = SOURCE:12
+A = SOURCE:露出
+B = SOURCE:露出
+C = SOURCE:露出
 
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
@@ -1514,17 +1514,17 @@ ELSE
 ENDIF
 
 ;PALAM:欲情の上昇
-UP:5 += A
+UP:[[UP:欲情]] += A
 ;PALAM:恥情の上昇
-UP:8 += B
+UP:[[UP:恥情]] += B
 ;PALAM:反感の上昇
-UP:11 += C
+UP:[[UP:反感]] += C
 
 ;-------------------------------------------------
 ;屈従のソース
 ;-------------------------------------------------
-A = SOURCE:13
-B = SOURCE:13
+A = SOURCE:屈従
+B = SOURCE:屈従
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
@@ -1571,20 +1571,20 @@ ELSE
 ENDIF
 
 ;PALAM:抑鬱の上昇
-UP:13 += A
+UP:[[UP:抑鬱]] += A
 ;PALAM:屈服の上昇
-UP:6 += B
+UP:[[UP:屈服]] += B
 
 ;-------------------------------------------------
 ;逸脱のソース
 ;-------------------------------------------------
 ;好奇心と保守的はここで処理
 SIF TALENT:好奇心
-	TIMES SOURCE:14 , 0.30
+	TIMES SOURCE:逸脱 , 0.30
 SIF TALENT:保守的
-	TIMES SOURCE:14 , 3.00
+	TIMES SOURCE:逸脱 , 3.00
 
-A = SOURCE:14
+A = SOURCE:逸脱
 
 ;ABL:従順をみる
 IF ABL:信頼 == 0
@@ -1617,23 +1617,23 @@ ELSE
 ENDIF
 
 ;PALAM:反感の上昇
-UP:11 += A
+UP:[[UP:反感]] += A
 
 ;-------------------------------------------------
 ;反感追加のソース
 ;-------------------------------------------------
-A = SOURCE:15
+A = SOURCE:反感
 
 ;PALAM:反感の上昇
-UP:11 += A
+UP:[[UP:反感]] += A
 
 ;-------------------------------------------------
 ;恭順追加のソース
 ;-------------------------------------------------
-A = SOURCE:16
+A = SOURCE:恭順
 
 ;PALAM:恭順の上昇
-UP:4 += A
+UP:[[UP:恭順]] += A
 
 ;-------------------------------------------------
 ;素質などによる上下の処理
@@ -1647,31 +1647,31 @@ R = NO:PLAYER
 IF RELATION:R != 0
 	;PRINTFORML ＜相性{RELATION:R/100}.{RELATION:R%100}倍＞
 
-	UP:4 *= RELATION:R
-	UP:4 /= 100
-	UP:5 *= RELATION:R
-	UP:5 /= 100
-	UP:7 *= RELATION:R
-	UP:7 /= 100
-	UP:11 *= 100
-	UP:11 /= RELATION:R
-	UP:12 *= 100
-	UP:12 /= RELATION:R
-	UP:13 *= 100
-	UP:13 /= RELATION:R
+	UP:[[UP:恭順]] *= RELATION:R
+	UP:[[UP:恭順]] /= 100
+	UP:[[UP:欲情]] *= RELATION:R
+	UP:[[UP:欲情]] /= 100
+	UP:[[UP:習得]] *= RELATION:R
+	UP:[[UP:習得]] /= 100
+	UP:[[UP:反感]] *= 100
+	UP:[[UP:反感]] /= RELATION:R
+	UP:[[UP:不快]] *= 100
+	UP:[[UP:不快]] /= RELATION:R
+	UP:[[UP:抑鬱]] *= 100
+	UP:[[UP:抑鬱]] /= RELATION:R
 ENDIF
 
 ;-------------------------------------------------
 ;同じコマンドの連続実行による上下の処理
 ;-------------------------------------------------
 IF SELECTCOM == PREVCOM
-	;UP:0,1,2は絶頂に絡むので先に処理してある
+	;UP:[[UP:快Ｃ]],1,2は絶頂に絡むので先に処理してある
 	;PRINTL ＜同一コマンド連続実行＞
-	UP:4 /= 2
-	UP:5 /= 2
-	UP:6 /= 2
-	UP:7 /= 2
-	UP:8 /= 2
+	UP:[[UP:恭順]] /= 2
+	UP:[[UP:欲情]] /= 2
+	UP:[[UP:屈服]] /= 2
+	UP:[[UP:習得]] /= 2
+	UP:[[UP:恥情]] /= 2
 ENDIF
 
 ;「前回のコマンド」をTFLAG:59「前々回のコマンド」に入力
@@ -1697,13 +1697,13 @@ SIF LOCAL:3 <= 50
 	LOCAL:3 = 50
 
 IF BASE:気力 <= 0
-	;UP:0,1,2は絶頂に絡むので先に処理してある
-	UP:3 /= 2
-	UP:4 /= 2
-	UP:5 /= 2
-	UP:7 /= 2
-	UP:9 /= 2
-	UP:13 /= 2
+	;UP:[[UP:快Ｃ]],1,2は絶頂に絡むので先に処理してある
+	UP:[[UP:潤滑]] /= 2
+	UP:[[UP:恭順]] /= 2
+	UP:[[UP:欲情]] /= 2
+	UP:[[UP:習得]] /= 2
+	UP:[[UP:苦痛]] /= 2
+	UP:[[UP:抑鬱]] /= 2
 	LOSEBASE:体力 += LOCAL:3
 	LOSEBASE:体力 += 80
 ENDIF
@@ -1719,7 +1719,7 @@ SIF TEQUIP:野外プレイ && TFLAG:失神中終了 > 0
 ;-------------------------------------------------
 ;苦痛からくる体力・気力の減少
 ;-------------------------------------------------
-D = UP:9/16
+D = UP:[[UP:苦痛]]/16
 ;ABL:マゾっ気をみる
 IF ABL:マゾっ気 == 0
 	TIMES D , 1.00
@@ -1961,42 +1961,42 @@ CALL PALAM_UP_CHECK
 ;-------------------------------------------------
 @SHOW_SOURCE
 ;PRINTL 　
-SIF SOURCE:0 > 0
-	PRINTFORM 快Ｃ({SOURCE:0})
-SIF SOURCE:1 > 0
-	PRINTFORM 快Ｖ({SOURCE:1})
-SIF SOURCE:2 > 0
-	PRINTFORM 快Ａ({SOURCE:2})
-SIF SOURCE:17 > 0
-	PRINTFORM 快Ｂ({SOURCE:17})
-SIF SOURCE:3 > 0
-	PRINTFORM 情愛({SOURCE:3})
-SIF SOURCE:4 > 0
-	PRINTFORM 性行動({SOURCE:4})
-SIF SOURCE:5 > 0
-	PRINTFORM 達成感({SOURCE:5})
-SIF SOURCE:6 > 0
-	PRINTFORM 痛み({SOURCE:6})
-SIF SOURCE:7 > 0
-	PRINTFORM 中毒充足({SOURCE:7})
-SIF SOURCE:8 > 0
-	PRINTFORM 不潔({SOURCE:8})
-SIF SOURCE:10 > 0
-	PRINTFORM 愛液分泌({SOURCE:10})
-SIF SOURCE:9 > 0
-	PRINTFORM 液体追加({SOURCE:9})
-SIF SOURCE:11 > 0
-	PRINTFORM 欲情追加({SOURCE:11})
-SIF SOURCE:16 > 0
-	PRINTFORM 恭順追加({SOURCE:16})
-SIF SOURCE:12 > 0
-	PRINTFORM 露出({SOURCE:12})
-SIF SOURCE:13 > 0
-	PRINTFORM 屈従({SOURCE:13})
-SIF SOURCE:14 > 0
-	PRINTFORM 逸脱({SOURCE:14})
-SIF SOURCE:15 > 0
-	PRINTFORM 反感追加({SOURCE:15})
+SIF SOURCE:快Ｃ > 0
+	PRINTFORM 快Ｃ({SOURCE:快Ｃ})
+SIF SOURCE:快Ｖ > 0
+	PRINTFORM 快Ｖ({SOURCE:快Ｖ})
+SIF SOURCE:快Ａ > 0
+	PRINTFORM 快Ａ({SOURCE:快Ａ})
+SIF SOURCE:快Ｂ > 0
+	PRINTFORM 快Ｂ({SOURCE:快Ｂ})
+SIF SOURCE:情愛 > 0
+	PRINTFORM 情愛({SOURCE:情愛})
+SIF SOURCE:性行動 > 0
+	PRINTFORM 性行動({SOURCE:性行動})
+SIF SOURCE:達成 > 0
+	PRINTFORM 達成感({SOURCE:達成})
+SIF SOURCE:痛覚 > 0
+	PRINTFORM 痛み({SOURCE:痛覚})
+SIF SOURCE:中毒充足 > 0
+	PRINTFORM 中毒充足({SOURCE:中毒充足})
+SIF SOURCE:不潔 > 0
+	PRINTFORM 不潔({SOURCE:不潔})
+SIF SOURCE:愛液分泌 > 0
+	PRINTFORM 愛液分泌({SOURCE:愛液分泌})
+SIF SOURCE:液体追加 > 0
+	PRINTFORM 液体追加({SOURCE:液体追加})
+SIF SOURCE:欲情 > 0
+	PRINTFORM 欲情追加({SOURCE:欲情})
+SIF SOURCE:恭順 > 0
+	PRINTFORM 恭順追加({SOURCE:恭順})
+SIF SOURCE:露出 > 0
+	PRINTFORM 露出({SOURCE:露出})
+SIF SOURCE:屈従 > 0
+	PRINTFORM 屈従({SOURCE:屈従})
+SIF SOURCE:逸脱 > 0
+	PRINTFORM 逸脱({SOURCE:逸脱})
+SIF SOURCE:反感 > 0
+	PRINTFORM 反感追加({SOURCE:反感})
 PRINTL 　
 ;
 ;
@@ -2045,9 +2045,9 @@ REPEAT 15
 		;CALL PALAM_MESSAGE
 		PRINTL 
 	ENDIF
-	SIF C == 14 && (UP:0 > 0 || UP:1 > 0 || UP:2 > 0 || UP:14 > 0) 
+	SIF C == 14 && (UP:[[UP:快Ｃ]] > 0 || UP:[[UP:快Ｖ]] > 0 || UP:[[UP:快Ａ]] > 0 || UP:[[UP:快Ｂ]] > 0) 
 		PRINTL -------------------------------
-	SIF C == 3 && UP:3 > 0
+	SIF C == 3 && UP:[[UP:潤滑]] > 0
 		PRINTL -------------------------------
 	SIF C == 10
 		PRINTL -------------------------------

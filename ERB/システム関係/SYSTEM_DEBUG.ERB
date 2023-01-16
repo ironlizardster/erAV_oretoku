@@ -15,6 +15,7 @@ PRINTL  [6] - キャラ追加
 PRINTL  [7] - 全ＡＶ女優を人気ＡＶ女優にする
 PRINTL  [8] - みんな仲良し
 PRINTL  [9] - みんな黒ギャル
+PRINTL  [10] - みんなカレシチャラ男
 DRAWLINE
 PRINTL  [999] - 戻る
 
@@ -120,6 +121,10 @@ ELSEIF RESULT == 9
 	FOR LOCAL,1,CHARANUM
 		TALENT:LOCAL:ギャル系 = 1
 		TALENT:LOCAL:褐色肌 = 1
+	NEXT
+ELSEIF RESULT == 10
+	FOR LOCAL,1,CHARANUM
+		CFLAG:LOCAL:彼氏タイプ = 0
 	NEXT
 ELSEIF RESULT == 999
 	RETURN 0

@@ -1033,22 +1033,21 @@ ELSEIF RESULT == 0
 		SIF COUNT == 0
 			CONTINUE
 			LOCAL = RAND:3
-				IF LOCAL == 2 && TALENT:COUNT:彼氏あり == 1 && CFLAG:COUNT:彼氏有 == 1
+				IF LOCAL == 2 && TALENT:COUNT:彼氏あり == 1 && CFLAG:COUNT:彼氏有
 					PRINTFORMW 《ＲＢ団の妨害工作により%NAME:COUNT%は%CSTR:COUNT:彼氏姓%%CSTR:COUNT:彼氏名%と別れました》
 					TALENT:COUNT:彼氏あり = 0
 					TALENT:COUNT:清い付き合い = 0
 					CFLAG:COUNT:NTR進行 = 0
-					CFLAG:COUNT:彼氏有 = 2
+					CFLAG:COUNT:彼氏有 = 0
 					IF CFLAG:処女喪失相手 == 初相手_今彼 && CFLAG:彼氏とのセックスの有無 == 0
 						CSTR:処女喪失相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
-						CFLAG:彼氏とのセックスの有無 += 1
 					ENDIF
 
 					IF CFLAG:初キス相手 == 初相手_今彼 && CFLAG:交際終了 == 0
 						CSTR:初キス相手 = %CSTR:彼氏姓%%CSTR:彼氏名%（元カレ）
 						CFLAG:初キス相手 = 初相手_元彼
-						CFLAG:交際終了 = 1
 					ENDIF
+					CFLAG:交際終了 = 1
 					EXP:COUNT:交際人数 += 1
 				ELSEIF LOCAL == 1
 					PRINTFORMW 《ＲＢ団の妨害工作により%NAME:COUNT%へちょっかいをかけている男を追い払いました》

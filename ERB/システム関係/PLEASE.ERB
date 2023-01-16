@@ -95,9 +95,9 @@ ENDIF
 IF CFLAG:腋毛 == 0
 	PRINTL  [ 5] - ムダ毛の処理をやめてもらう（恭順の珠×5000）
 ENDIF
-IF CFLAG:合コン参加 == 0 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+IF CFLAG:合コン参加 == 0 && !CFLAG:彼氏有 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTL  [ 6] - 合コンに参加してもらう
-ELSEIF CFLAG:合コン参加 == 1 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+ELSEIF CFLAG:合コン参加 == 1 && !CFLAG:彼氏有 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTL  [ 6] - 合コンの参加を取りやめてもらう
 ENDIF
 IF CFLAG:アニメチェック == 0
@@ -221,11 +221,11 @@ ELSEIF RESULT == 5 && CFLAG:腋毛 == 0 && JUEL:恭順 > 4999
 ELSEIF RESULT == 5 && (CFLAG:腋毛 == 1 || JUEL:恭順 < 5000)
 	PRINTFORMW  あなたのお願いは断られました……
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 6 && CFLAG:合コン参加 == 0 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+ELSEIF RESULT == 6 && CFLAG:合コン参加 == 0 && !CFLAG:彼氏有 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTFORMW 《%CALLNAME:TARGET%に合コンに参加してもらうようにお願いしました》
 	CFLAG:合コン参加 = 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 6 && CFLAG:合コン参加 == 1 && CFLAG:彼氏有 != 1 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
+ELSEIF RESULT == 6 && CFLAG:合コン参加 == 1 && !CFLAG:彼氏有 && TALENT:彼氏あり == 0 && TALENT:恋心 == 0 && FLAG:寝取られなし == 0
 	PRINTFORMW 《%CALLNAME:TARGET%に合コンの参加を取りやめてもらうようにお願いしました》
 	CFLAG:合コン参加 = 0
 	GOTO INPUT_LOOP_02

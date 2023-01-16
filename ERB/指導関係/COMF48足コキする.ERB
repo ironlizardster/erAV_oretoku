@@ -14,43 +14,43 @@ LOSEBASE:気力 += 60
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:12 = 150
-SOURCE:14 = 400
+SOURCE:露出 = 150
+SOURCE:逸脱 = 400
 
 ;ABL:Ｃ感覚をみる
 IF ABL:Ｃ感覚 == 0
-	SOURCE:0 = 30
+	SOURCE:快Ｃ = 30
 ELSEIF ABL:Ｃ感覚 == 1
-	SOURCE:0 = 100
+	SOURCE:快Ｃ = 100
 ELSEIF ABL:Ｃ感覚 == 2
-	SOURCE:0 = 200
+	SOURCE:快Ｃ = 200
 ELSEIF ABL:Ｃ感覚 == 3
-	SOURCE:0 = 500
+	SOURCE:快Ｃ = 500
 ELSEIF ABL:Ｃ感覚 == 4
-	SOURCE:0 = 1000
+	SOURCE:快Ｃ = 1000
 ELSE
-	SOURCE:0 = 1500
+	SOURCE:快Ｃ = 1500
 ENDIF
 
 ;ABL:マゾっ気をみる
 IF ABL:マゾっ気 == 1
-	TIMES SOURCE:0 , 1.00
-	TIMES SOURCE:14 , 1.00
+	TIMES SOURCE:快Ｃ , 1.00
+	TIMES SOURCE:逸脱 , 1.00
 ELSEIF ABL:マゾっ気 == 1
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:逸脱 , 0.80
 ELSEIF ABL:マゾっ気 == 2
-	TIMES SOURCE:0 , 1.50
-	TIMES SOURCE:14 , 0.60
+	TIMES SOURCE:快Ｃ , 1.50
+	TIMES SOURCE:逸脱 , 0.60
 ELSEIF ABL:マゾっ気 == 3
-	TIMES SOURCE:0 , 1.80
-	TIMES SOURCE:14 , 0.40
+	TIMES SOURCE:快Ｃ , 1.80
+	TIMES SOURCE:逸脱 , 0.40
 ELSEIF ABL:マゾっ気 == 4
-	TIMES SOURCE:0 , 2.20
-	TIMES SOURCE:14 , 0.20
+	TIMES SOURCE:快Ｃ , 2.20
+	TIMES SOURCE:逸脱 , 0.20
 ELSE
-	TIMES SOURCE:0 , 3.00
-	TIMES SOURCE:14 , 0.00
+	TIMES SOURCE:快Ｃ , 3.00
+	TIMES SOURCE:逸脱 , 0.00
 ENDIF
 
 ;-------------------------------------------------

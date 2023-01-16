@@ -13,52 +13,52 @@ CALL TRAIN_MESSAGE_B
 ;-------------------------------------------------
 LOSEBASE:体力 += 0
 LOSEBASE:気力 += 20
-SOURCE:14 = 1000
+SOURCE:逸脱 = 1000
 
 ;ABL:Ｃ感覚をみる
 IF ABL:Ｃ感覚 == 0
-	SOURCE:0 = 400
+	SOURCE:快Ｃ = 400
 ELSEIF ABL:Ｃ感覚 == 1
-	SOURCE:0 = 800
+	SOURCE:快Ｃ = 800
 ELSEIF ABL:Ｃ感覚 == 2
-	SOURCE:0 = 1800
+	SOURCE:快Ｃ = 1800
 ELSEIF ABL:Ｃ感覚 == 3
-	SOURCE:0 = 3200
+	SOURCE:快Ｃ = 3200
 ELSEIF ABL:Ｃ感覚 == 4
-	SOURCE:0 = 4800
+	SOURCE:快Ｃ = 4800
 ELSE
-	SOURCE:0 = 6000
+	SOURCE:快Ｃ = 6000
 ENDIF
 
 ;PALAM:苦痛をみる
 IF PALAM:苦痛 < PALAMLV:1
-	SOURCE:6 = 3000
+	SOURCE:痛覚 = 3000
 ELSEIF PALAM:苦痛 < PALAMLV:2
-	SOURCE:6 = 3300
+	SOURCE:痛覚 = 3300
 ELSEIF PALAM:苦痛 < PALAMLV:3
-	SOURCE:6 = 3600
+	SOURCE:痛覚 = 3600
 ELSEIF PALAM:苦痛 < PALAMLV:4
-	SOURCE:6 = 4000
+	SOURCE:痛覚 = 4000
 ELSEIF PALAM:苦痛 >= PALAMLV:4
-	SOURCE:6 = 4500
+	SOURCE:痛覚 = 4500
 ENDIF
 
 ;大きいと重いので食い込みが強くなる
 ;大柄
 IF TALENT:大柄
-	TIMES SOURCE:0 , 1.80
-	TIMES SOURCE:6 , 1.80
+	TIMES SOURCE:快Ｃ , 1.80
+	TIMES SOURCE:痛覚 , 1.80
 ENDIF
 ;小柄
 IF TALENT:小柄
-	TIMES SOURCE:0 , 0.80
-	TIMES SOURCE:6 , 0.80
+	TIMES SOURCE:快Ｃ , 0.80
+	TIMES SOURCE:痛覚 , 0.80
 ENDIF
 
 						;****スライムパッチ追加ここから****
 IF ITEM:魔術式三角木馬 >= 1
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:痛覚 , 1.50
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------
@@ -119,7 +119,7 @@ ELSE
 	A = 600 + 100 * TEQUIP:三角木馬騎乗
 ENDIF
 
-SOURCE:14 = 100
+SOURCE:逸脱 = 100
 
 ;PALAM:苦痛をみる
 IF PALAM:苦痛 < PALAMLV:1
@@ -146,14 +146,14 @@ IF TALENT:小柄
 	TIMES B , 0.80
 ENDIF
 
-SOURCE:0 += A
-SOURCE:6 += B
+SOURCE:快Ｃ += A
+SOURCE:痛覚 += B
 
 						;****スライムパッチ追加ここから****
 IF ITEM:魔術式三角木馬 >= 1
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:6 , 1.50
-	TIMES SOURCE:11 , 1.50
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:痛覚 , 1.50
+	TIMES SOURCE:欲情 , 1.50
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------

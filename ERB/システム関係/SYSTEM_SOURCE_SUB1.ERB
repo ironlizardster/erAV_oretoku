@@ -43,120 +43,120 @@ ENDIF
 @PLAYER_SKILL_CHECK
 ;調教者のTALENT:解放をみる
 IF TALENT:PLAYER:解放
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:1 , 1.20
-	TIMES SOURCE:2 , 1.20
-	TIMES SOURCE:3 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:快Ｖ , 1.20
+	TIMES SOURCE:快Ａ , 1.20
+	TIMES SOURCE:情愛 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 ;調教者のTALENT:小悪魔をみる
 IF TALENT:PLAYER:小悪魔
-	TIMES SOURCE:12 , 1.60
+	TIMES SOURCE:露出 , 1.60
 ENDIF
 ;調教者のTALENT:魅惑をみる
 IF TALENT:PLAYER:魅惑
-	TIMES SOURCE:8 , 0.50
-	TIMES SOURCE:14 , 0.50
+	TIMES SOURCE:不潔 , 0.50
+	TIMES SOURCE:逸脱 , 0.50
 
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:1 , 1.20
-	TIMES SOURCE:2 , 1.20
-	TIMES SOURCE:5 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:快Ｖ , 1.20
+	TIMES SOURCE:快Ａ , 1.20
+	TIMES SOURCE:達成 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 ;調教者のTALENT:謎の魅力をみる
 IF TALENT:PLAYER:謎の魅力
-	TIMES SOURCE:8 , 0.50
-	TIMES SOURCE:14 , 0.50
+	TIMES SOURCE:不潔 , 0.50
+	TIMES SOURCE:逸脱 , 0.50
 
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:1 , 1.20
-	TIMES SOURCE:2 , 1.20
-	TIMES SOURCE:5 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:快Ｖ , 1.20
+	TIMES SOURCE:快Ａ , 1.20
+	TIMES SOURCE:達成 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 ;調教者が【母性】で調教対象が【マザコン】
 IF TALENT:PLAYER:母性 && TALENT:TARGET:マザコン
-	TIMES SOURCE:8 , 0.50
-	TIMES SOURCE:14 , 0.50
+	TIMES SOURCE:不潔 , 0.50
+	TIMES SOURCE:逸脱 , 0.50
 
-	TIMES SOURCE:3 , 1.20
-	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:情愛 , 1.20
+	TIMES SOURCE:達成 , 1.20
 ENDIF
 ;調教者が【父性】で調教対象が【ファザコン】
 IF TALENT:PLAYER:父性 && TALENT:TARGET:ファザコン
-	TIMES SOURCE:8 , 0.50
-	TIMES SOURCE:14 , 0.50
+	TIMES SOURCE:不潔 , 0.50
+	TIMES SOURCE:逸脱 , 0.50
 
-	TIMES SOURCE:3 , 1.20
-	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:情愛 , 1.20
+	TIMES SOURCE:達成 , 1.20
 ENDIF
 ;調教者が【妹】で調教対象が【妹想い】
 IF TALENT:PLAYER:妹 && TALENT:TARGET:妹想い
-	TIMES SOURCE:8 , 0.50
-	TIMES SOURCE:14 , 0.50
+	TIMES SOURCE:不潔 , 0.50
+	TIMES SOURCE:逸脱 , 0.50
 
-	TIMES SOURCE:3 , 1.20
-	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:情愛 , 1.20
+	TIMES SOURCE:達成 , 1.20
 ENDIF
 ;調教者が【巫女】で調教対象が【精霊】か【幽霊】
 IF TALENT:PLAYER:巫女 && (TALENT:TARGET:ボーイッシュ || TALENT:TARGET:嫉妬)
-	TIMES SOURCE:8 , 0.50
-	TIMES SOURCE:14 , 0.50
+	TIMES SOURCE:不潔 , 0.50
+	TIMES SOURCE:逸脱 , 0.50
 
-	TIMES SOURCE:3 , 1.20
-	TIMES SOURCE:5 , 1.20
+	TIMES SOURCE:情愛 , 1.20
+	TIMES SOURCE:達成 , 1.20
 ENDIF
 ;調教者が【ロリコン】で調教対象が【中学生】
 IF TALENT:PLAYER:ロリコン && TALENT:TARGET:中学生
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:1 , 1.20
-	TIMES SOURCE:2 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:快Ｖ , 1.20
+	TIMES SOURCE:快Ａ , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 		
-	TIMES SOURCE:14 , 0.80
+	TIMES SOURCE:逸脱 , 0.80
 ENDIF
 ;調教者が【ロリコン】で調教対象が【中学生】でも【高校生】でもない
 IF TALENT:PLAYER:ロリコン && TALENT:TARGET:中学生 == 0 && TALENT:TARGET:高校生 == 0
-	TIMES SOURCE:0 , 0.80
-	TIMES SOURCE:1 , 0.80
-	TIMES SOURCE:2 , 0.80
-	TIMES SOURCE:17 , 0.80
+	TIMES SOURCE:快Ｃ , 0.80
+	TIMES SOURCE:快Ｖ , 0.80
+	TIMES SOURCE:快Ａ , 0.80
+	TIMES SOURCE:快Ｂ , 0.80
 	
-	TIMES SOURCE:14 , 1.20
+	TIMES SOURCE:逸脱 , 1.20
 ENDIF
 
 ;調教者のABL:技巧
 IF ABL:PLAYER:技巧 == 0
-	TIMES SOURCE:0 , 0.50
-	TIMES SOURCE:1 , 0.50
-	TIMES SOURCE:2 , 0.50
-	TIMES SOURCE:17 , 0.50
+	TIMES SOURCE:快Ｃ , 0.50
+	TIMES SOURCE:快Ｖ , 0.50
+	TIMES SOURCE:快Ａ , 0.50
+	TIMES SOURCE:快Ｂ , 0.50
 ELSEIF ABL:PLAYER:技巧 == 1
-	TIMES SOURCE:0 , 0.80
-	TIMES SOURCE:1 , 0.80
-	TIMES SOURCE:2 , 0.80
-	TIMES SOURCE:17 , 0.80
+	TIMES SOURCE:快Ｃ , 0.80
+	TIMES SOURCE:快Ｖ , 0.80
+	TIMES SOURCE:快Ａ , 0.80
+	TIMES SOURCE:快Ｂ , 0.80
 ELSEIF ABL:PLAYER:技巧 == 2
-	TIMES SOURCE:0 , 1.00
-	TIMES SOURCE:1 , 1.00
-	TIMES SOURCE:2 , 1.00
-	TIMES SOURCE:17 , 1.00
+	TIMES SOURCE:快Ｃ , 1.00
+	TIMES SOURCE:快Ｖ , 1.00
+	TIMES SOURCE:快Ａ , 1.00
+	TIMES SOURCE:快Ｂ , 1.00
 ELSEIF ABL:PLAYER:技巧 == 3
-	TIMES SOURCE:0 , 1.20
-	TIMES SOURCE:1 , 1.20
-	TIMES SOURCE:2 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:快Ｃ , 1.20
+	TIMES SOURCE:快Ｖ , 1.20
+	TIMES SOURCE:快Ａ , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ELSEIF ABL:PLAYER:技巧 == 4
-	TIMES SOURCE:0 , 1.50
-	TIMES SOURCE:1 , 1.50
-	TIMES SOURCE:2 , 1.50
-	TIMES SOURCE:17 , 1.50
+	TIMES SOURCE:快Ｃ , 1.50
+	TIMES SOURCE:快Ｖ , 1.50
+	TIMES SOURCE:快Ａ , 1.50
+	TIMES SOURCE:快Ｂ , 1.50
 ELSEIF ABL:PLAYER:技巧 >= 5
-	TIMES SOURCE:0 , 2.00
-	TIMES SOURCE:1 , 2.00
-	TIMES SOURCE:2 , 2.00
-	TIMES SOURCE:17 , 2.00
+	TIMES SOURCE:快Ｃ , 2.00
+	TIMES SOURCE:快Ｖ , 2.00
+	TIMES SOURCE:快Ａ , 2.00
+	TIMES SOURCE:快Ｂ , 2.00
 ENDIF
 ;-------------------------------------------------
 ;主人による調教のボーナス
@@ -165,48 +165,48 @@ ENDIF
 ;主人による調教経験
 IF ASSIPLAY == 0
 	IF CFLAG:好感度 >= 500
-		TIMES SOURCE:8 , 0.70
-		TIMES SOURCE:14 , 0.70
+		TIMES SOURCE:不潔 , 0.70
+		TIMES SOURCE:逸脱 , 0.70
 
-		TIMES SOURCE:0 , 1.20
-		TIMES SOURCE:1 , 1.20
-		TIMES SOURCE:2 , 1.20
-		TIMES SOURCE:3 , 1.30
-		TIMES SOURCE:17 , 1.20
+		TIMES SOURCE:快Ｃ , 1.20
+		TIMES SOURCE:快Ｖ , 1.20
+		TIMES SOURCE:快Ａ , 1.20
+		TIMES SOURCE:情愛 , 1.30
+		TIMES SOURCE:快Ｂ , 1.20
 	ELSEIF CFLAG:好感度 >= 300
-		TIMES SOURCE:8 , 0.80
-		TIMES SOURCE:14 , 0.80
+		TIMES SOURCE:不潔 , 0.80
+		TIMES SOURCE:逸脱 , 0.80
 
-		TIMES SOURCE:0 , 1.10
-		TIMES SOURCE:1 , 1.10
-		TIMES SOURCE:2 , 1.10
-		TIMES SOURCE:3 , 1.20
-		TIMES SOURCE:17 , 1.10
+		TIMES SOURCE:快Ｃ , 1.10
+		TIMES SOURCE:快Ｖ , 1.10
+		TIMES SOURCE:快Ａ , 1.10
+		TIMES SOURCE:情愛 , 1.20
+		TIMES SOURCE:快Ｂ , 1.10
 	ELSEIF CFLAG:好感度 >= 100
-		TIMES SOURCE:8 , 0.90
-		TIMES SOURCE:14 , 0.90
+		TIMES SOURCE:不潔 , 0.90
+		TIMES SOURCE:逸脱 , 0.90
 
-		TIMES SOURCE:3 , 1.10
+		TIMES SOURCE:情愛 , 1.10
 	ENDIF
 ENDIF
 
 ;淫乱
 ;主人経験との重複前提で計算
 IF TALENT:淫乱 && ASSIPLAY == 0
-	TIMES SOURCE:0 , 1.80
-	TIMES SOURCE:1 , 1.80
-	TIMES SOURCE:2 , 1.80
-	TIMES SOURCE:17 , 1.80
+	TIMES SOURCE:快Ｃ , 1.80
+	TIMES SOURCE:快Ｖ , 1.80
+	TIMES SOURCE:快Ａ , 1.80
+	TIMES SOURCE:快Ｂ , 1.80
 ENDIF
 
 ;愛
 ;主人経験との重複前提で計算
 IF TALENT:恋心 && ASSIPLAY == 0
-	TIMES SOURCE:0 , 1.30
-	TIMES SOURCE:1 , 1.30
-	TIMES SOURCE:2 , 1.30
-	TIMES SOURCE:3 , 1.80
-	TIMES SOURCE:17 , 1.30
+	TIMES SOURCE:快Ｃ , 1.30
+	TIMES SOURCE:快Ｖ , 1.30
+	TIMES SOURCE:快Ａ , 1.30
+	TIMES SOURCE:情愛 , 1.80
+	TIMES SOURCE:快Ｂ , 1.30
 ENDIF
 ;-------------------------------------------------
 ;近親相姦のチェック
@@ -241,13 +241,13 @@ IF TFLAG:近親相姦 && TFLAG:V経験を伴うコマンド
 	ENDIF
 
 	IF TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2
-		TIMES SOURCE:3 , 2.00
-		TIMES SOURCE:14 , 2.00
-		TIMES SOURCE:16 , 2.00
+		TIMES SOURCE:情愛 , 2.00
+		TIMES SOURCE:逸脱 , 2.00
+		TIMES SOURCE:恭順 , 2.00
 	ELSEIF TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4
-		TIMES SOURCE:3 , 1.50
-		TIMES SOURCE:14 , 1.50
-		TIMES SOURCE:16 , 1.50
+		TIMES SOURCE:情愛 , 1.50
+		TIMES SOURCE:逸脱 , 1.50
+		TIMES SOURCE:恭順 , 1.50
 	ENDIF
 ENDIF
 
@@ -314,15 +314,15 @@ ENDIF
 IF PLAYER == MASTER && TALENT:恋心
 	;反発刻印回避
 	TFLAG:反発刻印の回避 = 1
-	TIMES SOURCE:3 , 2.00
-	TIMES SOURCE:15 , 0.30
+	TIMES SOURCE:情愛 , 2.00
+	TIMES SOURCE:反感 , 0.30
 ;初体験の時点で既に【淫乱】
 ELSEIF TALENT:淫乱
 	;反発刻印回避
 	TFLAG:反発刻印の回避 = 1
-	TIMES SOURCE:3 , 2.00
-	TIMES SOURCE:6 , 0.50
-	TIMES SOURCE:15 , 0.30
+	TIMES SOURCE:情愛 , 2.00
+	TIMES SOURCE:痛覚 , 0.50
+	TIMES SOURCE:反感 , 0.30
 ;処女喪失相手が助手で相性最高で親族でない
 ELSEIF ASSIPLAY && RELATION:R >= 200 && TFLAG:近親相姦 == 0
 	;反発刻印回避
@@ -482,15 +482,15 @@ ENDIF
 IF PLAYER == MASTER && TALENT:恋心
 	;反発刻印回避
 	TFLAG:反発刻印の回避 = 1
-	TIMES SOURCE:3 , 2.00
-	TIMES SOURCE:15 , 0.30
+	TIMES SOURCE:情愛 , 2.00
+	TIMES SOURCE:反感 , 0.30
 ;初体験の時点で既に【淫乱】
 ELSEIF TALENT:淫乱
 	;反発刻印回避
 	TFLAG:反発刻印の回避 = 1
-	TIMES SOURCE:3 , 2.00
-	TIMES SOURCE:6 , 0.50
-	TIMES SOURCE:15 , 0.30
+	TIMES SOURCE:情愛 , 2.00
+	TIMES SOURCE:痛覚 , 0.50
+	TIMES SOURCE:反感 , 0.30
 ;処女喪失相手が助手で相性最高で親族でない
 ELSEIF ASSIPLAY && RELATION:R >= 200 && TFLAG:近親相姦 == 0
 	;反発刻印回避
@@ -505,7 +505,7 @@ SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
 SIF TALENT:未熟
 	RETURN 0
 
-A = UP:0 + UP:1 + UP:2 + UP:14
+A = UP:[[UP:快Ｃ]] + UP:[[UP:快Ｖ]] + UP:[[UP:快Ａ]] + UP:[[UP:快Ｂ]]
 
 ;自制心
 SIF TALENT:自制心
@@ -555,23 +555,23 @@ IF E == 2
 	LOSEBASE:気力 += 100
 
 	IF EXP:射精経験 < EXPLV:1
-		SOURCE:12 += 20000
-		SOURCE:13 += 10000
+		SOURCE:露出 += 20000
+		SOURCE:屈従 += 10000
 	ELSEIF EXP:射精経験 < EXPLV:2
-		SOURCE:12 += 10000
-		SOURCE:13 += 8000
+		SOURCE:露出 += 10000
+		SOURCE:屈従 += 8000
 	ELSEIF EXP:射精経験 < EXPLV:3
-		SOURCE:12 += 7000
-		SOURCE:13 += 6000
+		SOURCE:露出 += 7000
+		SOURCE:屈従 += 6000
 	ELSEIF EXP:射精経験 < EXPLV:4
-		SOURCE:12 += 5000
-		SOURCE:13 += 4000
+		SOURCE:露出 += 5000
+		SOURCE:屈従 += 4000
 	ELSEIF EXP:射精経験 < EXPLV:5
-		SOURCE:12 += 3000
-		SOURCE:13 += 2000
+		SOURCE:露出 += 3000
+		SOURCE:屈従 += 2000
 	ELSE
-		SOURCE:12 += 1800
-		SOURCE:13 += 1200
+		SOURCE:露出 += 1800
+		SOURCE:屈従 += 1200
 	ENDIF
 
 	PRINTS NAME:TARGET
@@ -601,23 +601,23 @@ ELSEIF E == 1
 	LOSEBASE:気力 += 40
 
 	IF EXP:射精経験 < EXPLV:1
-		SOURCE:12 += 10000
-		SOURCE:13 += 5000
+		SOURCE:露出 += 10000
+		SOURCE:屈従 += 5000
 	ELSEIF EXP:射精経験 < EXPLV:2
-		SOURCE:12 += 5000
-		SOURCE:13 += 4000
+		SOURCE:露出 += 5000
+		SOURCE:屈従 += 4000
 	ELSEIF EXP:射精経験 < EXPLV:3
-		SOURCE:12 += 2500
-		SOURCE:13 += 2000
+		SOURCE:露出 += 2500
+		SOURCE:屈従 += 2000
 	ELSEIF EXP:射精経験 < EXPLV:4
-		SOURCE:12 += 1600
-		SOURCE:13 += 1400
+		SOURCE:露出 += 1600
+		SOURCE:屈従 += 1400
 	ELSEIF EXP:射精経験 < EXPLV:5
-		SOURCE:12 += 800
-		SOURCE:13 += 500
+		SOURCE:露出 += 800
+		SOURCE:屈従 += 500
 	ELSE
-		SOURCE:12 += 200
-		SOURCE:13 += 250
+		SOURCE:露出 += 200
+		SOURCE:屈従 += 250
 	ENDIF
 
 	PRINTS NAME:TARGET
@@ -649,7 +649,7 @@ ENDIF
 SIF TALENT:母乳体質 == 0
 	RETURN 0
 
-A = UP:0 / 5 + UP:1 / 5 + UP:2 / 5 + UP:14 * 3
+A = UP:[[UP:快Ｃ]] / 5 + UP:[[UP:快Ｖ]] / 5 + UP:[[UP:快Ａ]] / 5 + UP:[[UP:快Ｂ]] * 3
 
 ;自制心
 SIF TALENT:自制心
@@ -715,23 +715,23 @@ IF E == 2
 	LOSEBASE:気力 += 100
 
 	IF EXP:噴乳経験 < EXPLV:1
-		SOURCE:12 += 20000
-		SOURCE:13 += 10000
+		SOURCE:露出 += 20000
+		SOURCE:屈従 += 10000
 	ELSEIF EXP:噴乳経験 < EXPLV:2
-		SOURCE:12 += 10000
-		SOURCE:13 += 8000
+		SOURCE:露出 += 10000
+		SOURCE:屈従 += 8000
 	ELSEIF EXP:噴乳経験 < EXPLV:3
-		SOURCE:12 += 7000
-		SOURCE:13 += 6000
+		SOURCE:露出 += 7000
+		SOURCE:屈従 += 6000
 	ELSEIF EXP:噴乳経験 < EXPLV:4
-		SOURCE:12 += 5000
-		SOURCE:13 += 4000
+		SOURCE:露出 += 5000
+		SOURCE:屈従 += 4000
 	ELSEIF EXP:噴乳経験 < EXPLV:5
-		SOURCE:12 += 3000
-		SOURCE:13 += 2000
+		SOURCE:露出 += 3000
+		SOURCE:屈従 += 2000
 	ELSE
-		SOURCE:12 += 1800
-		SOURCE:13 += 1200
+		SOURCE:露出 += 1800
+		SOURCE:屈従 += 1200
 	ENDIF
 
 	PRINTFORML %NAME:TARGET%は乳首から大量の母乳を噴出した。
@@ -761,23 +761,23 @@ ELSEIF E == 1
 	LOSEBASE:気力 += 40
 
 	IF EXP:噴乳経験 < EXPLV:1
-		SOURCE:12 += 10000
-		SOURCE:13 += 5000
+		SOURCE:露出 += 10000
+		SOURCE:屈従 += 5000
 	ELSEIF EXP:噴乳経験 < EXPLV:2
-		SOURCE:12 += 5000
-		SOURCE:13 += 4000
+		SOURCE:露出 += 5000
+		SOURCE:屈従 += 4000
 	ELSEIF EXP:噴乳経験 < EXPLV:3
-		SOURCE:12 += 2500
-		SOURCE:13 += 2000
+		SOURCE:露出 += 2500
+		SOURCE:屈従 += 2000
 	ELSEIF EXP:噴乳経験 < EXPLV:4
-		SOURCE:12 += 1600
-		SOURCE:13 += 1400
+		SOURCE:露出 += 1600
+		SOURCE:屈従 += 1400
 	ELSEIF EXP:噴乳経験 < EXPLV:5
-		SOURCE:12 += 800
-		SOURCE:13 += 500
+		SOURCE:露出 += 800
+		SOURCE:屈従 += 500
 	ELSE
-		SOURCE:12 += 200
-		SOURCE:13 += 250
+		SOURCE:露出 += 200
+		SOURCE:屈従 += 250
 	ENDIF
 
 	PRINTFORML %NAME:TARGET%は乳首から母乳を垂れ流した。
@@ -810,55 +810,55 @@ ENDIF
 @UP_TALENT_CVA_CHECK
 ;媚薬
 IF TEQUIP:媚薬効果
-	TIMES UP:0 , 2.00
-	TIMES UP:1 , 2.00
-	TIMES UP:2 , 2.00
-	TIMES UP:14 , 2.00
+	TIMES UP:[[UP:快Ｃ]] , 2.00
+	TIMES UP:[[UP:快Ｖ]] , 2.00
+	TIMES UP:[[UP:快Ａ]] , 2.00
+	TIMES UP:[[UP:快Ｂ]] , 2.00
 ENDIF
 
 ;利尿剤
 IF TEQUIP:利尿剤効果
-	TIMES UP:0 , 0.70
-	TIMES UP:1 , 0.70
-	TIMES UP:2 , 0.70
-	TIMES UP:14 , 0.70
+	TIMES UP:[[UP:快Ｃ]] , 0.70
+	TIMES UP:[[UP:快Ｖ]] , 0.70
+	TIMES UP:[[UP:快Ａ]] , 0.70
+	TIMES UP:[[UP:快Ｂ]] , 0.70
 ENDIF
 
 ;失神中
 IF TFLAG:失神中終了 > 0
-	TIMES UP:0 , 0.20
-	TIMES UP:1 , 0.20
-	TIMES UP:2 , 0.20
-	TIMES UP:14 , 0.20
+	TIMES UP:[[UP:快Ｃ]] , 0.20
+	TIMES UP:[[UP:快Ｖ]] , 0.20
+	TIMES UP:[[UP:快Ａ]] , 0.20
+	TIMES UP:[[UP:快Ｂ]] , 0.20
 ENDIF
 
 ;自制心
 IF TALENT:自制心
-	TIMES UP:0 , 0.30
-	TIMES UP:1 , 0.50
-	TIMES UP:2 , 0.70
-	TIMES UP:14 , 0.30
+	TIMES UP:[[UP:快Ｃ]] , 0.30
+	TIMES UP:[[UP:快Ｖ]] , 0.50
+	TIMES UP:[[UP:快Ａ]] , 0.70
+	TIMES UP:[[UP:快Ｂ]] , 0.30
 ENDIF
 
 ;オトコ
 IF TALENT:オトコ
-	TIMES UP:2 , 1.30
+	TIMES UP:[[UP:快Ａ]] , 1.30
 ENDIF
 
 ;肥満
 IF TALENT:肥満
-	TIMES UP:0 , 0.50
-	TIMES UP:1 , 0.50
-	TIMES UP:2 , 0.50
-	TIMES UP:14 , 0.50
+	TIMES UP:[[UP:快Ｃ]] , 0.50
+	TIMES UP:[[UP:快Ｖ]] , 0.50
+	TIMES UP:[[UP:快Ａ]] , 0.50
+	TIMES UP:[[UP:快Ｂ]] , 0.50
 ENDIF
 
 ;性豪
 IF TALENT:性豪
-	TIMES UP:0 , 1.20
-	TIMES UP:1 , 1.20
-	TIMES UP:2 , 1.20
-	TIMES UP:14 , 1.20
+	TIMES UP:[[UP:快Ｃ]] , 1.20
+	TIMES UP:[[UP:快Ｖ]] , 1.20
+	TIMES UP:[[UP:快Ａ]] , 1.20
+	TIMES UP:[[UP:快Ｂ]] , 1.20
 ENDIF
 
 ;-------------------------------------------------
@@ -868,214 +868,214 @@ ENDIF
 
 ;媚薬
 IF TEQUIP:媚薬効果
-	TIMES UP:4 , 1.20
-	TIMES UP:5 , 2.00
-	TIMES UP:6 , 1.20
-	TIMES UP:11 , 0.75
-	TIMES UP:12 , 0.50
+	TIMES UP:[[UP:恭順]] , 1.20
+	TIMES UP:[[UP:欲情]] , 2.00
+	TIMES UP:[[UP:屈服]] , 1.20
+	TIMES UP:[[UP:反感]] , 0.75
+	TIMES UP:[[UP:不快]] , 0.50
 ENDIF
 
 ;利尿剤
 IF TEQUIP:利尿剤効果
-	TIMES UP:4 , 0.80
-	TIMES UP:5 , 1.50
-	TIMES UP:6 , 0.80
-	TIMES UP:11 , 0.50
-	TIMES UP:12 , 1.20
-	TIMES UP:13 , 1.50
-;	TIMES UP:14 , 2.00
-	TIMES UP:15 , 1.20
+	TIMES UP:[[UP:恭順]] , 0.80
+	TIMES UP:[[UP:欲情]] , 1.50
+	TIMES UP:[[UP:屈服]] , 0.80
+	TIMES UP:[[UP:反感]] , 0.50
+	TIMES UP:[[UP:不快]] , 1.20
+	TIMES UP:[[UP:抑鬱]] , 1.50
+;	TIMES UP:[[UP:快Ｂ]] , 2.00
+	TIMES UP:[[UP:享楽]] , 1.20
 ENDIF
 
 ;失神中
 IF TFLAG:失神中終了 > 0
-	TIMES UP:4 , 0.50
-	TIMES UP:5 , 0.75
-	TIMES UP:6 , 0.10
-	TIMES UP:8 , 0.10
-	TIMES UP:10 , 0.00
-	TIMES UP:11 , 0.00
-	TIMES UP:12 , 0.10
-	TIMES UP:13 , 0.00
+	TIMES UP:[[UP:恭順]] , 0.50
+	TIMES UP:[[UP:欲情]] , 0.75
+	TIMES UP:[[UP:屈服]] , 0.10
+	TIMES UP:[[UP:恥情]] , 0.10
+	TIMES UP:[[UP:恐怖]] , 0.00
+	TIMES UP:[[UP:反感]] , 0.00
+	TIMES UP:[[UP:不快]] , 0.10
+	TIMES UP:[[UP:抑鬱]] , 0.00
 ENDIF
 
 ;臆病
 IF TALENT:臆病
-	TIMES UP:10 , 2.00
-	TIMES UP:11 , 0.50
-	TIMES UP:13 , 0.25
+	TIMES UP:[[UP:恐怖]] , 2.00
+	TIMES UP:[[UP:反感]] , 0.50
+	TIMES UP:[[UP:抑鬱]] , 0.25
 ENDIF
 ;反抗的
 IF TALENT:ナマイキ
-	TIMES UP:4 , 0.25
-	TIMES UP:5 , 0.50
-	TIMES UP:11 , 1.50
+	TIMES UP:[[UP:恭順]] , 0.25
+	TIMES UP:[[UP:欲情]] , 0.50
+	TIMES UP:[[UP:反感]] , 1.50
 ENDIF
 ;気丈
 IF TALENT:気丈
-	TIMES UP:4 , 0.30
-	TIMES UP:5 , 0.75
-	TIMES UP:10 , 0.80
-	TIMES UP:11 , 2.00
-	TIMES UP:13 , 2.00
+	TIMES UP:[[UP:恭順]] , 0.30
+	TIMES UP:[[UP:欲情]] , 0.75
+	TIMES UP:[[UP:恐怖]] , 0.80
+	TIMES UP:[[UP:反感]] , 2.00
+	TIMES UP:[[UP:抑鬱]] , 2.00
 ENDIF
 ;素直
 IF TALENT:素直
-	TIMES UP:4 , 2.00
-	TIMES UP:11 , 0.60
+	TIMES UP:[[UP:恭順]] , 2.00
+	TIMES UP:[[UP:反感]] , 0.60
 ENDIF
 ;大人しい
 IF TALENT:大人しい
-	TIMES UP:11 , 0.30
+	TIMES UP:[[UP:反感]] , 0.30
 ENDIF
 ;プライド高い
 IF TALENT:プライド高い
-	TIMES UP:6 , 0.50
-	TIMES UP:10 , 0.60
-	TIMES UP:11 , 1.20
+	TIMES UP:[[UP:屈服]] , 0.50
+	TIMES UP:[[UP:恐怖]] , 0.60
+	TIMES UP:[[UP:反感]] , 1.20
 ENDIF
 ;プライド低い
 IF TALENT:プライド低い
-	TIMES UP:6 , 2.00
-	TIMES UP:10 , 1.50
-	TIMES UP:11 , 0.80
+	TIMES UP:[[UP:屈服]] , 2.00
+	TIMES UP:[[UP:恐怖]] , 1.50
+	TIMES UP:[[UP:反感]] , 0.80
 ENDIF
 
 ;無関心
 IF TALENT:クール
-	TIMES UP:4 , 0.50
-	TIMES UP:5 , 0.50
-	TIMES UP:6 , 0.50
-	TIMES UP:10 , 0.80
-	TIMES UP:11 , 0.80
+	TIMES UP:[[UP:恭順]] , 0.50
+	TIMES UP:[[UP:欲情]] , 0.50
+	TIMES UP:[[UP:屈服]] , 0.50
+	TIMES UP:[[UP:恐怖]] , 0.80
+	TIMES UP:[[UP:反感]] , 0.80
 ENDIF
 ;感情乏しい
 IF TALENT:感情乏しい
-	TIMES UP:4 , 0.60
-	TIMES UP:5 , 0.60
-	TIMES UP:6 , 0.60
-	TIMES UP:8 , 0.60
-	TIMES UP:10 , 0.60
-	TIMES UP:11 , 0.60
-	TIMES UP:12 , 0.60
-	TIMES UP:13 , 0.60
+	TIMES UP:[[UP:恭順]] , 0.60
+	TIMES UP:[[UP:欲情]] , 0.60
+	TIMES UP:[[UP:屈服]] , 0.60
+	TIMES UP:[[UP:恥情]] , 0.60
+	TIMES UP:[[UP:恐怖]] , 0.60
+	TIMES UP:[[UP:反感]] , 0.60
+	TIMES UP:[[UP:不快]] , 0.60
+	TIMES UP:[[UP:抑鬱]] , 0.60
 ENDIF
 ;好奇心
 SIF TALENT:好奇心
-	TIMES UP:7 , 1.20
+	TIMES UP:[[UP:習得]] , 1.20
 
 ;保守的
 SIF TALENT:保守的
-	TIMES UP:7 , 0.80
+	TIMES UP:[[UP:習得]] , 0.80
 
 ;楽観的
 SIF TALENT:ポジティブ
-	TIMES UP:13 , 0.30
+	TIMES UP:[[UP:抑鬱]] , 0.30
 
 ;悲観的
 SIF TALENT:ネガティブ
-	TIMES UP:13 , 2.50
+	TIMES UP:[[UP:抑鬱]] , 2.50
 
 ;抑圧
 IF TALENT:抑圧
-	TIMES UP:5 , 0.50
-	TIMES UP:11 , 2.00
-	TIMES UP:13 , 1.50
+	TIMES UP:[[UP:欲情]] , 0.50
+	TIMES UP:[[UP:反感]] , 2.00
+	TIMES UP:[[UP:抑鬱]] , 1.50
 ENDIF
 ;解放
 IF TALENT:解放
-	TIMES UP:5 , 2.00
-	TIMES UP:6 , 2.00
+	TIMES UP:[[UP:欲情]] , 2.00
+	TIMES UP:[[UP:屈服]] , 2.00
 ENDIF
 ;抵抗
 IF TALENT:抵抗
-	TIMES UP:5 , 0.50
-	TIMES UP:11 , 2.00
+	TIMES UP:[[UP:欲情]] , 0.50
+	TIMES UP:[[UP:反感]] , 2.00
 ENDIF
 
 ;痛みに弱い
 IF TALENT:痛みに弱い
-	TIMES UP:10 , 2.00
-	TIMES UP:11 , 1.50
+	TIMES UP:[[UP:恐怖]] , 2.00
+	TIMES UP:[[UP:反感]] , 1.50
 ENDIF
 ;痛みに強い
 IF TALENT:痛みに強い
-	TIMES UP:10 , 0.50
-	TIMES UP:11 , 0.75
+	TIMES UP:[[UP:恐怖]] , 0.50
+	TIMES UP:[[UP:反感]] , 0.75
 ENDIF
 
 ;習得早い
 SIF TALENT:素質
-	TIMES UP:7 , 2.00
+	TIMES UP:[[UP:習得]] , 2.00
 ;習得遅い
 SIF TALENT:習得遅い
-	TIMES UP:7 , 0.50
+	TIMES UP:[[UP:習得]] , 0.50
 
 ;献身的
 SIF TALENT:献身的
-	TIMES UP:6 , 2.00
+	TIMES UP:[[UP:屈服]] , 2.00
 
 ;快感に素直
 SIF TALENT:快感に素直
-	TIMES UP:5 , 2.00
+	TIMES UP:[[UP:欲情]] , 2.00
 ;快感の否定
 SIF TALENT:快感の否定
-	TIMES UP:5 , 0.50
+	TIMES UP:[[UP:欲情]] , 0.50
 
 ;恋心
 IF TALENT:恋心 && ASSIPLAY == 0
-	TIMES UP:4 , 1.20
-	TIMES UP:6 , 2.00
-	TIMES UP:11 , 0.50
-	TIMES UP:12 , 0.50
+	TIMES UP:[[UP:恭順]] , 1.20
+	TIMES UP:[[UP:屈服]] , 2.00
+	TIMES UP:[[UP:反感]] , 0.50
+	TIMES UP:[[UP:不快]] , 0.50
 ENDIF
 
 ;妄信
 IF TALENT:妄信
-	TIMES UP:6 , 4.00
-	TIMES UP:11 , 0.50
+	TIMES UP:[[UP:屈服]] , 4.00
+	TIMES UP:[[UP:反感]] , 0.50
 ENDIF
 
 ;肥満
 IF TALENT:肥満
-	TIMES UP:13 , 0.20
+	TIMES UP:[[UP:抑鬱]] , 0.20
 ENDIF
 
 ;調教者がTALENT:威圧感
 IF TALENT:PLAYER:カリスマ
-	TIMES UP:10 , 2.00
-	TIMES UP:11 , 0.50
+	TIMES UP:[[UP:恐怖]] , 2.00
+	TIMES UP:[[UP:反感]] , 0.50
 ENDIF
 
 ;性豪
 IF TALENT:性豪
-	TIMES UP:5 , 1.20
+	TIMES UP:[[UP:欲情]] , 1.20
 ENDIF
 
 ;常時発情
 IF TALENT:常時発情
-	TIMES UP:5 , 1.20
-	TIMES UP:3 , 1.20
+	TIMES UP:[[UP:欲情]] , 1.20
+	TIMES UP:[[UP:潤滑]] , 1.20
 ENDIF
 
 ;膣内射精による妊娠への恐怖（コンドーム使用中か【愛】持ちもしくは相性最高なら平気）
 IF TFLAG:セックスで射精 && (SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:対面座位]] || SELECTCOM == [[TRAIN:背面座位]] || SELECTCOM == [[TRAIN:騎乗位]])
 	IF ASSIPLAY == 0 && TEQUIP:主人コンドーム == 0 && TFLAG:セックスで射精 && TALENT:恋心 == 0
-		TIMES UP:10 , 2.00
+		TIMES UP:[[UP:恐怖]] , 2.00
 	ELSEIF ASSI > 0 && ASSIPLAY && TEQUIP:助手コンドーム == 0 
 		R = NO:ASSI
 		SIF RELATION:TARGET:R < 200
-			TIMES UP:10 , 2.00
+			TIMES UP:[[UP:恐怖]] , 2.00
 	ENDIF
 ENDIF
 
 ;反発刻印
 IF MARK:反発刻印 == 3
-	TIMES UP:4 , 0.10
+	TIMES UP:[[UP:恭順]] , 0.10
 ELSEIF MARK:反発刻印 == 2
-	TIMES UP:4 , 0.40
+	TIMES UP:[[UP:恭順]] , 0.40
 ELSEIF MARK:反発刻印 == 1
-	TIMES UP:4 , 0.70
+	TIMES UP:[[UP:恭順]] , 0.70
 ENDIF
 
 ;-------------------------------------------------
@@ -1087,7 +1087,7 @@ ENDIF
 ;------------------------------------------------- 
 
 ;PALAM:反感+PALAM:不快の上昇量に応じて反発刻印を取得
-A = UP:11 + UP:12
+A = UP:[[UP:反感]] + UP:[[UP:不快]]
 IF A >= 500 && A < 1200 && MARK:4 <= 0 && TFLAG:反発刻印の回避 == 0
 	MARK:反発刻印 = 1
 	MARK:4 = 1
@@ -1125,11 +1125,11 @@ TFLAG:反発刻印の回避 = 0
 ;苦痛刻印
 ;-------------------------------------------------
 ;PALAM:苦痛の上昇量に応じて反発刻印を取得
-IF UP:9 >= 500 && UP:9 < 1500 && MARK:苦痛刻印 <= 0
+IF UP:[[UP:苦痛]] >= 500 && UP:[[UP:苦痛]] < 1500 && MARK:苦痛刻印 <= 0
 	MARK:苦痛刻印 = 1
 	TFLAG:苦痛刻印 = 1
 	PRINTL 苦痛刻印LV1を取得
-ELSEIF UP:9 >= 1500 && UP:9 < 3000 && MARK:苦痛刻印 <= 1
+ELSEIF UP:[[UP:苦痛]] >= 1500 && UP:[[UP:苦痛]] < 3000 && MARK:苦痛刻印 <= 1
 	MARK:苦痛刻印 = 2
 	TFLAG:苦痛刻印 = 2
 	PRINTL 苦痛刻印LV2を取得
@@ -1139,7 +1139,7 @@ ELSEIF UP:9 >= 1500 && UP:9 < 3000 && MARK:苦痛刻印 <= 1
 		ABL:信頼 = 1
 		CALL JUJUN_UP_CHECK
 	ENDIF
-ELSEIF UP:9 >= 3000 && MARK:苦痛刻印 <= 2
+ELSEIF UP:[[UP:苦痛]] >= 3000 && MARK:苦痛刻印 <= 2
 	MARK:苦痛刻印 = 3
 	TFLAG:苦痛刻印 = 3
 	PRINTL 苦痛刻印LV3を取得
@@ -1161,7 +1161,7 @@ ENDIF
 ;快楽刻印
 ;-------------------------------------------------
 ;PALAM:快ＣＶＡＢの上昇量に応じて快楽刻印を取得
-A = UP:0 + UP:1 + UP:2 + UP:14
+A = UP:[[UP:快Ｃ]] + UP:[[UP:快Ｖ]] + UP:[[UP:快Ａ]] + UP:[[UP:快Ｂ]]
 
 IF A >= 500 && A < 1500 && MARK:快楽刻印 <= 0
 	MARK:快楽刻印 = 1
@@ -1251,18 +1251,18 @@ ENDIF
 ;-------------------------------------------------
 @EXP_GOT_CHECK
 
-A = UP:0 + UP:1 + UP:2 + UP:14
+A = UP:[[UP:快Ｃ]] + UP:[[UP:快Ｖ]] + UP:[[UP:快Ａ]] + UP:[[UP:快Ｂ]]
 
 ;奉仕快楽経験のチェック
 E = 0
 
-IF UP:7 < 100
+IF UP:[[UP:習得]] < 100
 	A = 0
-ELSEIF UP:7 < 300
+ELSEIF UP:[[UP:習得]] < 300
 	A *= 1
-ELSEIF UP:7 < 700
+ELSEIF UP:[[UP:習得]] < 700
 	A *= 2
-ELSEIF UP:7 < 1500
+ELSEIF UP:[[UP:習得]] < 1500
 	A *= 3
 ELSE
 	A *= 4
@@ -1271,28 +1271,28 @@ ENDIF
 IF TFLAG:快楽経験
 	IF A >= 12000
 		E = 16
-		TIMES UP:11 , 0.65
-		TIMES UP:12 , 0.30
+		TIMES UP:[[UP:反感]] , 0.65
+		TIMES UP:[[UP:不快]] , 0.30
 	ELSEIF A >= 8000
 		E = 12
-		TIMES UP:11 , 0.70
-		TIMES UP:12 , 0.40
+		TIMES UP:[[UP:反感]] , 0.70
+		TIMES UP:[[UP:不快]] , 0.40
 	ELSEIF A >= 5000
 		E = 8
-		TIMES UP:11 , 0.75
-		TIMES UP:12 , 0.50
+		TIMES UP:[[UP:反感]] , 0.75
+		TIMES UP:[[UP:不快]] , 0.50
 	ELSEIF A >= 3000
 		E = 4
-		TIMES UP:11 , 0.80
-		TIMES UP:12 , 0.60
+		TIMES UP:[[UP:反感]] , 0.80
+		TIMES UP:[[UP:不快]] , 0.60
 	ELSEIF A >= 2000
 		E = 2
-		TIMES UP:11 , 0.85
-		TIMES UP:12 , 0.70
+		TIMES UP:[[UP:反感]] , 0.85
+		TIMES UP:[[UP:不快]] , 0.70
 	ELSEIF A >= 1000
 		E = 1
-		TIMES UP:11 , 0.90
-		TIMES UP:12 , 0.80
+		TIMES UP:[[UP:反感]] , 0.90
+		TIMES UP:[[UP:不快]] , 0.80
 	ENDIF
 	IF E
 		PRINT 奉仕快楽経験+
@@ -1304,16 +1304,16 @@ ENDIF
 
 
 ;Ａ快楽経験のチェック
-A = UP:2
+A = UP:[[UP:快Ａ]]
 E = 0
 
-IF UP:2 < 300
+IF UP:[[UP:快Ａ]] < 300
 	A = 0
-ELSEIF UP:2 < 1000
+ELSEIF UP:[[UP:快Ａ]] < 1000
 	A *= 1
-ELSEIF UP:2 < 5000
+ELSEIF UP:[[UP:快Ａ]] < 5000
 	A *= 2
-ELSEIF UP:2 < 10000
+ELSEIF UP:[[UP:快Ａ]] < 10000
 	A *= 3
 ELSE
 	A *= 4
@@ -1321,34 +1321,34 @@ ENDIF
 
 IF A >= 12000
 	E = 16
-	TIMES UP:11 , 0.80
-	TIMES UP:12 , 0.90
-	TIMES UP:6 , 1.20
+	TIMES UP:[[UP:反感]] , 0.80
+	TIMES UP:[[UP:不快]] , 0.90
+	TIMES UP:[[UP:屈服]] , 1.20
 ELSEIF A >= 8000
 	E = 12
-	TIMES UP:11 , 0.85
-	TIMES UP:12 , 0.90
-	TIMES UP:6 , 1.15
+	TIMES UP:[[UP:反感]] , 0.85
+	TIMES UP:[[UP:不快]] , 0.90
+	TIMES UP:[[UP:屈服]] , 1.15
 ELSEIF A >= 5000
 	E = 8
-	TIMES UP:11 , 0.85
-	TIMES UP:12 , 0.95
-	TIMES UP:6 , 1.10
+	TIMES UP:[[UP:反感]] , 0.85
+	TIMES UP:[[UP:不快]] , 0.95
+	TIMES UP:[[UP:屈服]] , 1.10
 ELSEIF A >= 3000
 	E = 4
-	TIMES UP:11 , 0.90
-	TIMES UP:12 , 0.95
-	TIMES UP:6 , 1.05
+	TIMES UP:[[UP:反感]] , 0.90
+	TIMES UP:[[UP:不快]] , 0.95
+	TIMES UP:[[UP:屈服]] , 1.05
 ELSEIF A >= 2000
 	E = 2
-	TIMES UP:11 , 0.90
-	TIMES UP:12 , 1.00
-	TIMES UP:6 , 1.00
+	TIMES UP:[[UP:反感]] , 0.90
+	TIMES UP:[[UP:不快]] , 1.00
+	TIMES UP:[[UP:屈服]] , 1.00
 ELSEIF A >= 1000
 	E = 1
-	TIMES UP:11 , 0.95
-	TIMES UP:12 , 1.00
-	TIMES UP:6 , 1.00
+	TIMES UP:[[UP:反感]] , 0.95
+	TIMES UP:[[UP:不快]] , 1.00
+	TIMES UP:[[UP:屈服]] , 1.00
 ENDIF
 
 IF E
@@ -1359,30 +1359,30 @@ IF E
 ENDIF
 
 ;被虐・嗜虐快楽経験のチェック
-A = UP:0 + UP:1 + UP:2 + UP:14
+A = UP:[[UP:快Ｃ]] + UP:[[UP:快Ｖ]] + UP:[[UP:快Ａ]] + UP:[[UP:快Ｂ]]
 SIF A == 0
-	A = UP:5
+	A = UP:[[UP:欲情]]
 
 E = 0
 F = 0
-IF A >= 3000 && UP:9 >= 2000
+IF A >= 3000 && UP:[[UP:苦痛]] >= 2000
 	E = 16
-	TIMES UP:11 , 0.65
-ELSEIF A >= 2500 && UP:9 >= 1500
+	TIMES UP:[[UP:反感]] , 0.65
+ELSEIF A >= 2500 && UP:[[UP:苦痛]] >= 1500
 	E = 12
-	TIMES UP:11 , 0.70
-ELSEIF A >= 1500 && UP:9 >= 1000
+	TIMES UP:[[UP:反感]] , 0.70
+ELSEIF A >= 1500 && UP:[[UP:苦痛]] >= 1000
 	E = 8
-	TIMES UP:11 , 0.75
-ELSEIF A >= 1000 && UP:9 >= 500
+	TIMES UP:[[UP:反感]] , 0.75
+ELSEIF A >= 1000 && UP:[[UP:苦痛]] >= 500
 	E = 4
-	TIMES UP:11 , 0.80
-ELSEIF A >= 600 && UP:9 >= 300
+	TIMES UP:[[UP:反感]] , 0.80
+ELSEIF A >= 600 && UP:[[UP:苦痛]] >= 300
 	E = 2
-	TIMES UP:11 , 0.85
-ELSEIF A >= 300 && UP:9 >= 100
+	TIMES UP:[[UP:反感]] , 0.85
+ELSEIF A >= 300 && UP:[[UP:苦痛]] >= 100
 	E = 1
-	TIMES UP:11 , 0.90
+	TIMES UP:[[UP:反感]] , 0.90
 ENDIF
 IF E
 	PRINT 被虐快楽経験+
@@ -1426,172 +1426,172 @@ ENDIF
 SIF TALENT:即落ち == 0
 	RETURN 0
 
-IF UP:0 > 1 && ABL:Ｃ感覚 < 1
+IF UP:[[UP:快Ｃ]] > 1 && ABL:Ｃ感覚 < 1
 	ABL:Ｃ感覚 = 1
 	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV1になった
-ELSEIF UP:0 > 30 && ABL:Ｃ感覚 < 2
+ELSEIF UP:[[UP:快Ｃ]] > 30 && ABL:Ｃ感覚 < 2
 	ABL:Ｃ感覚 = 2
 	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV2になった
-ELSEIF UP:0 > 60 && ABL:Ｃ感覚 < 3
+ELSEIF UP:[[UP:快Ｃ]] > 60 && ABL:Ｃ感覚 < 3
 	ABL:Ｃ感覚 = 3
 	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV3になった
-ELSEIF UP:0 > 200 && ABL:Ｃ感覚 < 4
+ELSEIF UP:[[UP:快Ｃ]] > 200 && ABL:Ｃ感覚 < 4
 	ABL:Ｃ感覚 = 4
 	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV4になった
-ELSEIF UP:0 > 1000 && ABL:Ｃ感覚 < 5
+ELSEIF UP:[[UP:快Ｃ]] > 1000 && ABL:Ｃ感覚 < 5
 	ABL:Ｃ感覚 = 5
 	PRINTFORML %ABLNAME:[[ABL:Ｃ感覚]]%LV5になった
 ENDIF
 
-IF UP:1 > 1 && ABL:Ｖ感覚 < 1
+IF UP:[[UP:快Ｖ]] > 1 && ABL:Ｖ感覚 < 1
 	ABL:Ｖ感覚 = 1
 	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV1になった
-ELSEIF UP:1 > 30 && ABL:Ｖ感覚 < 2
+ELSEIF UP:[[UP:快Ｖ]] > 30 && ABL:Ｖ感覚 < 2
 	ABL:Ｖ感覚 = 2
 	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV2になった
-ELSEIF UP:1 > 60 && ABL:Ｖ感覚 < 3
+ELSEIF UP:[[UP:快Ｖ]] > 60 && ABL:Ｖ感覚 < 3
 	ABL:Ｖ感覚 = 3
 	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV3になった
-ELSEIF UP:1 > 200 && ABL:Ｖ感覚 < 4
+ELSEIF UP:[[UP:快Ｖ]] > 200 && ABL:Ｖ感覚 < 4
 	ABL:Ｖ感覚 = 4
 	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV4になった
-ELSEIF UP:1 > 1000 && ABL:Ｖ感覚 < 5
+ELSEIF UP:[[UP:快Ｖ]] > 1000 && ABL:Ｖ感覚 < 5
 	ABL:Ｖ感覚 = 5
 	PRINTFORML %ABLNAME:[[ABL:Ｖ感覚]]%LV5になった
 ENDIF
 
-IF UP:2 > 1 && ABL:Ａ感覚 < 1
+IF UP:[[UP:快Ａ]] > 1 && ABL:Ａ感覚 < 1
 	ABL:Ａ感覚 = 1
 	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV1になった
-ELSEIF UP:2 > 30 && ABL:Ａ感覚 < 2
+ELSEIF UP:[[UP:快Ａ]] > 30 && ABL:Ａ感覚 < 2
 	ABL:Ａ感覚 = 2
 	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV2になった
-ELSEIF UP:2 > 60 && ABL:Ａ感覚 < 3
+ELSEIF UP:[[UP:快Ａ]] > 60 && ABL:Ａ感覚 < 3
 	ABL:Ａ感覚 = 3
 	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV3になった
-ELSEIF UP:2 > 200 && ABL:Ａ感覚 < 4
+ELSEIF UP:[[UP:快Ａ]] > 200 && ABL:Ａ感覚 < 4
 	ABL:Ａ感覚 = 4
 	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV4になった
-ELSEIF UP:2 > 1000 && ABL:Ａ感覚 < 5
+ELSEIF UP:[[UP:快Ａ]] > 1000 && ABL:Ａ感覚 < 5
 	ABL:Ａ感覚 = 5
 	PRINTFORML %ABLNAME:[[ABL:Ａ感覚]]%LV5になった
 ENDIF
 
-IF UP:14 > 1 && ABL:Ｂ感覚 < 1
+IF UP:[[UP:快Ｂ]] > 1 && ABL:Ｂ感覚 < 1
 	ABL:Ｂ感覚 = 1
 	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV1になった
-ELSEIF UP:14 > 30 && ABL:Ｂ感覚 < 2
+ELSEIF UP:[[UP:快Ｂ]] > 30 && ABL:Ｂ感覚 < 2
 	ABL:Ｂ感覚 = 2
 	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV2になった
-ELSEIF UP:14 > 60 && ABL:Ｂ感覚 < 3
+ELSEIF UP:[[UP:快Ｂ]] > 60 && ABL:Ｂ感覚 < 3
 	ABL:Ｂ感覚 = 3
 	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV3になった
-ELSEIF UP:14 > 200 && ABL:Ｂ感覚 < 4
+ELSEIF UP:[[UP:快Ｂ]] > 200 && ABL:Ｂ感覚 < 4
 	ABL:Ｂ感覚 = 4
 	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV4になった
-ELSEIF UP:14 > 1000 && ABL:Ｂ感覚 < 5
+ELSEIF UP:[[UP:快Ｂ]] > 1000 && ABL:Ｂ感覚 < 5
 	ABL:Ｂ感覚 = 5
 	PRINTFORML %ABLNAME:[[ABL:Ｂ感覚]]%LV5になった
 ENDIF
 
-IF UP:4 > 1 && ABL:信頼 < 1
+IF UP:[[UP:恭順]] > 1 && ABL:信頼 < 1
 	ABL:信頼 = 1
 	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV1になった
-ELSEIF UP:4 > 30 && ABL:信頼 < 2
+ELSEIF UP:[[UP:恭順]] > 30 && ABL:信頼 < 2
 	ABL:信頼 = 2
 	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV2になった
-ELSEIF UP:4 > 60 && ABL:信頼 < 3
+ELSEIF UP:[[UP:恭順]] > 60 && ABL:信頼 < 3
 	ABL:信頼 = 3
 	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV3になった
-ELSEIF UP:4 > 200 && ABL:信頼 < 4
+ELSEIF UP:[[UP:恭順]] > 200 && ABL:信頼 < 4
 	ABL:信頼 = 4
 	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV4になった
-ELSEIF UP:4 > 1000 && ABL:信頼 < 5
+ELSEIF UP:[[UP:恭順]] > 1000 && ABL:信頼 < 5
 	ABL:信頼 = 5
 	PRINTFORML %ABLNAME:[[ABL:信頼]]%LV5になった
 ENDIF
 
-IF UP:5 > 1 && ABL:欲望 < 1
+IF UP:[[UP:欲情]] > 1 && ABL:欲望 < 1
 	ABL:欲望 = 1
 	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV1になった
-ELSEIF UP:5 > 30 && ABL:欲望 < 2
+ELSEIF UP:[[UP:欲情]] > 30 && ABL:欲望 < 2
 	ABL:欲望 = 2
 	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV2になった
-ELSEIF UP:5 > 60 && ABL:欲望 < 3
+ELSEIF UP:[[UP:欲情]] > 60 && ABL:欲望 < 3
 	ABL:欲望 = 3
 	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV3になった
-ELSEIF UP:5 > 200 && ABL:欲望 < 4
+ELSEIF UP:[[UP:欲情]] > 200 && ABL:欲望 < 4
 	ABL:欲望 = 4
 	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV4になった
-ELSEIF UP:5 > 1000 && ABL:欲望 < 5
+ELSEIF UP:[[UP:欲情]] > 1000 && ABL:欲望 < 5
 	ABL:欲望 = 5
 	PRINTFORML %ABLNAME:[[ABL:欲望]]%LV5になった
 ENDIF
 
-IF UP:7 > 1 && ABL:技巧 < 1
+IF UP:[[UP:習得]] > 1 && ABL:技巧 < 1
 	ABL:技巧 = 1
 	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV1になった
-ELSEIF UP:7 > 30 && ABL:技巧 < 2
+ELSEIF UP:[[UP:習得]] > 30 && ABL:技巧 < 2
 	ABL:技巧 = 2
 	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV2になった
-ELSEIF UP:7 > 60 && ABL:技巧 < 3
+ELSEIF UP:[[UP:習得]] > 60 && ABL:技巧 < 3
 	ABL:技巧 = 3
 	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV3になった
-ELSEIF UP:7 > 200 && ABL:技巧 < 4
+ELSEIF UP:[[UP:習得]] > 200 && ABL:技巧 < 4
 	ABL:技巧 = 4
 	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV4になった
-ELSEIF UP:7 > 1000 && ABL:技巧 < 5
+ELSEIF UP:[[UP:習得]] > 1000 && ABL:技巧 < 5
 	ABL:技巧 = 5
 	PRINTFORML %ABLNAME:[[ABL:技巧]]%LV5になった
 ENDIF
 
-IF UP:6 > 1 && ABL:奉仕精神 < 1 && ABL:Ｃ感覚 >= 1
+IF UP:[[UP:屈服]] > 1 && ABL:奉仕精神 < 1 && ABL:Ｃ感覚 >= 1
 	ABL:奉仕精神 = 1
 	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV1になった
-ELSEIF UP:6 > 30 && ABL:奉仕精神 < 2 && ABL:Ｃ感覚 >= 2
+ELSEIF UP:[[UP:屈服]] > 30 && ABL:奉仕精神 < 2 && ABL:Ｃ感覚 >= 2
 	ABL:奉仕精神 = 2
 	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV2になった
-ELSEIF UP:6 > 60 && ABL:奉仕精神 < 3 && ABL:Ｃ感覚 >= 3
+ELSEIF UP:[[UP:屈服]] > 60 && ABL:奉仕精神 < 3 && ABL:Ｃ感覚 >= 3
 	ABL:奉仕精神 = 3
 	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV3になった
-ELSEIF UP:6 > 200 && ABL:奉仕精神 < 4 && ABL:Ｃ感覚 >= 4
+ELSEIF UP:[[UP:屈服]] > 200 && ABL:奉仕精神 < 4 && ABL:Ｃ感覚 >= 4
 	ABL:奉仕精神 = 4
 	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV4になった
-ELSEIF UP:6 > 1000 && ABL:奉仕精神 < 5 && ABL:Ｃ感覚 >= 5
+ELSEIF UP:[[UP:屈服]] > 1000 && ABL:奉仕精神 < 5 && ABL:Ｃ感覚 >= 5
 	ABL:奉仕精神 = 5
 	PRINTFORML %ABLNAME:[[ABL:奉仕精神]]%LV5になった
 ENDIF
 
-IF UP:8 > 1 && ABL:露出癖 < 1 && ABL:Ｂ感覚 >= 1
+IF UP:[[UP:恥情]] > 1 && ABL:露出癖 < 1 && ABL:Ｂ感覚 >= 1
 	ABL:露出癖 = 1
 	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV1になった
-ELSEIF UP:8 > 30 && ABL:露出癖 < 2 && ABL:Ｂ感覚 >= 2
+ELSEIF UP:[[UP:恥情]] > 30 && ABL:露出癖 < 2 && ABL:Ｂ感覚 >= 2
 	ABL:露出癖 = 2
 	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV2になった
-ELSEIF UP:8 > 60 && ABL:露出癖 < 3 && ABL:Ｂ感覚 >= 3
+ELSEIF UP:[[UP:恥情]] > 60 && ABL:露出癖 < 3 && ABL:Ｂ感覚 >= 3
 	ABL:露出癖 = 3
 	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV3になった
-ELSEIF UP:8 > 200 && ABL:露出癖 < 4 && ABL:Ｂ感覚 >= 4
+ELSEIF UP:[[UP:恥情]] > 200 && ABL:露出癖 < 4 && ABL:Ｂ感覚 >= 4
 	ABL:露出癖 = 4
 	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV4になった
-ELSEIF UP:8 > 1000 && ABL:露出癖 < 5 && ABL:Ｂ感覚 >= 5
+ELSEIF UP:[[UP:恥情]] > 1000 && ABL:露出癖 < 5 && ABL:Ｂ感覚 >= 5
 	ABL:露出癖 = 5
 	PRINTFORML %ABLNAME:[[ABL:露出癖]]%LV5になった
 ENDIF
 
-IF UP:9 > 1 && ABL:マゾっ気 < 1 && ABL:欲望 >= 1
+IF UP:[[UP:苦痛]] > 1 && ABL:マゾっ気 < 1 && ABL:欲望 >= 1
 	ABL:マゾっ気 = 1
 	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV1になった
-ELSEIF UP:9 > 30 && ABL:マゾっ気 < 2 && ABL:欲望 >= 2
+ELSEIF UP:[[UP:苦痛]] > 30 && ABL:マゾっ気 < 2 && ABL:欲望 >= 2
 	ABL:マゾっ気 = 2
 	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV2になった
-ELSEIF UP:9 > 60 && ABL:マゾっ気 < 3 && ABL:欲望 >= 3
+ELSEIF UP:[[UP:苦痛]] > 60 && ABL:マゾっ気 < 3 && ABL:欲望 >= 3
 	ABL:マゾっ気 = 3
 	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV3になった
-ELSEIF UP:9 > 200 && ABL:マゾっ気 < 4 && ABL:欲望 >= 4
+ELSEIF UP:[[UP:苦痛]] > 200 && ABL:マゾっ気 < 4 && ABL:欲望 >= 4
 	ABL:マゾっ気 = 4
 	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV4になった
-ELSEIF UP:9 > 1000 && ABL:マゾっ気 < 5 && ABL:欲望 >= 5
+ELSEIF UP:[[UP:苦痛]] > 1000 && ABL:マゾっ気 < 5 && ABL:欲望 >= 5
 	ABL:マゾっ気 = 5
 	PRINTFORML %ABLNAME:[[ABL:マゾっ気]]%LV5になった
 ENDIF

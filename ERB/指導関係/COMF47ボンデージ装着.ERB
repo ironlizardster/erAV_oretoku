@@ -69,32 +69,32 @@ ENDIF
 
 ;ABL:マゾっ気をみる
 IF ABL:マゾっ気 == 0
-	SOURCE:11 += 0
-	SOURCE:10 += 0
-	SOURCE:15 += 100
+	SOURCE:欲情 += 0
+	SOURCE:愛液分泌 += 0
+	SOURCE:反感 += 100
 	TIMES A, 0.60
 ELSEIF ABL:マゾっ気 == 1
-	SOURCE:11 += 50
-	SOURCE:10 += 150
-	SOURCE:15 += 0
+	SOURCE:欲情 += 50
+	SOURCE:愛液分泌 += 150
+	SOURCE:反感 += 0
 	TIMES A, 1.00
 ELSEIF ABL:マゾっ気 == 2
-	SOURCE:11 += 100
-	SOURCE:10 += 300
-	SOURCE:15 += 0
+	SOURCE:欲情 += 100
+	SOURCE:愛液分泌 += 300
+	SOURCE:反感 += 0
 	TIMES A, 1.60
 ELSEIF ABL:マゾっ気 == 3
-	SOURCE:11 += 150
-	SOURCE:10 += 600
-	SOURCE:15 += 0
+	SOURCE:欲情 += 150
+	SOURCE:愛液分泌 += 600
+	SOURCE:反感 += 0
 ELSEIF ABL:マゾっ気 == 4
-	SOURCE:11 += 200
-	SOURCE:10 += 1000
-	SOURCE:15 += 0
+	SOURCE:欲情 += 200
+	SOURCE:愛液分泌 += 1000
+	SOURCE:反感 += 0
 ELSEIF ABL:マゾっ気 >= 5
-	SOURCE:11 += 300
-	SOURCE:10 += 2000
-	SOURCE:15 += 0
+	SOURCE:欲情 += 300
+	SOURCE:愛液分泌 += 2000
+	SOURCE:反感 += 0
 ENDIF
 
 ;ASSIのABL:サドっ気をみる
@@ -116,9 +116,9 @@ ENDIF
 SIF TALENT:臆病
 	TIMES A , 2.00
 
-SOURCE:14 += A
+SOURCE:逸脱 += A
 
-UP:10 += SOURCE:14
+UP:[[UP:恐怖]] += SOURCE:逸脱
 
 ;-------------------------------------------------
 ;経験上昇

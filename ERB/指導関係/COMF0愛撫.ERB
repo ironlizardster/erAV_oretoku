@@ -15,58 +15,58 @@ LOSEBASE:体力 += 5
 LOSEBASE:気力 += 50
 
 ;快ｃのソース
-SOURCE:0 = 0
+SOURCE:快Ｃ = 0
 ;快ｂのソース
-SOURCE:17 = 0
+SOURCE:快Ｂ = 0
 ;情愛のソース
-SOURCE:3 = 0
+SOURCE:情愛 = 0
 ;性行動のソース
-SOURCE:4 = 60
+SOURCE:性行動 = 60
 ;不潔のソース
-SOURCE:8 = 30
+SOURCE:不潔 = 30
 ;露出のソース
-SOURCE:12 = 100
+SOURCE:露出 = 100
 
 ;ABL:Ｃ感覚をみる
 IF ABL:Ｃ感覚 == 0
-	SOURCE:0 = 20
-	SOURCE:3 = 25
+	SOURCE:快Ｃ = 20
+	SOURCE:情愛 = 25
 ELSEIF ABL:Ｃ感覚 == 1
-	SOURCE:0 = 100
-	SOURCE:3 = 50
+	SOURCE:快Ｃ = 100
+	SOURCE:情愛 = 50
 ELSEIF ABL:Ｃ感覚 == 2
-	SOURCE:0 = 500
-	SOURCE:3 = 80
+	SOURCE:快Ｃ = 500
+	SOURCE:情愛 = 80
 ELSEIF ABL:Ｃ感覚 == 3
-	SOURCE:0 = 1200
-	SOURCE:3 = 100
+	SOURCE:快Ｃ = 1200
+	SOURCE:情愛 = 100
 ELSEIF ABL:Ｃ感覚 == 4
-	SOURCE:0 = 2000
-	SOURCE:3 = 115
+	SOURCE:快Ｃ = 2000
+	SOURCE:情愛 = 115
 ELSE
-	SOURCE:0 = 2800
-	SOURCE:3 = 125
+	SOURCE:快Ｃ = 2800
+	SOURCE:情愛 = 125
 ENDIF
 
 ;ABL:Ｂ感覚をみる
 IF ABL:Ｂ感覚 == 0
-	SOURCE:17 = 15
-	SOURCE:3 += 25
+	SOURCE:快Ｂ = 15
+	SOURCE:情愛 += 25
 ELSEIF ABL:Ｂ感覚 == 1
-	SOURCE:17 = 50
-	SOURCE:3 += 50
+	SOURCE:快Ｂ = 50
+	SOURCE:情愛 += 50
 ELSEIF ABL:Ｂ感覚 == 2
-	SOURCE:17 = 300
-	SOURCE:3 += 80
+	SOURCE:快Ｂ = 300
+	SOURCE:情愛 += 80
 ELSEIF ABL:Ｂ感覚 == 3
-	SOURCE:17 = 700
-	SOURCE:3 += 100
+	SOURCE:快Ｂ = 700
+	SOURCE:情愛 += 100
 ELSEIF ABL:Ｂ感覚 == 4
-	SOURCE:17 = 1100
-	SOURCE:3 += 115
+	SOURCE:快Ｂ = 1100
+	SOURCE:情愛 += 115
 ELSE
-	SOURCE:17 = 1600
-	SOURCE:3 += 125
+	SOURCE:快Ｂ = 1600
+	SOURCE:情愛 += 125
 ENDIF
 
 ;△キスを避けると快C半分に減るの……？
@@ -74,42 +74,42 @@ ENDIF
 ;汚臭敏感で従順3以下のASSIの場合キスはしない（汚れ無視なら問題なし）
 IF  (STAIN:0 & 1 || STAIN:0 & 4 || STAIN:0 & 8 || STAIN:0 & 32) && ASSIPLAY
 	IF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
-		SOURCE:8 = 0
-		SOURCE:0 /= 2
-		SOURCE:3 /= 4
-		SOURCE:10 /= 2
+		SOURCE:不潔 = 0
+		SOURCE:快Ｃ /= 2
+		SOURCE:情愛 /= 4
+		SOURCE:愛液分泌 /= 2
 	ENDIF
 ;ボールギャグ使用中もキスはなし
 ELSEIF TEQUIP:ボールギャグ
-	SOURCE:8 = 0
-	SOURCE:0 /= 2
-	SOURCE:3 /= 4
-	SOURCE:10 /= 2
+	SOURCE:不潔 = 0
+	SOURCE:快Ｃ /= 2
+	SOURCE:情愛 /= 4
+	SOURCE:愛液分泌 /= 2
 ;初キス未体験だとキスを避けるので効果減
 ELSEIF !CFLAG:初キス相手
-	SOURCE:8 = 0
-	SOURCE:0 /= 2
-	SOURCE:3 /= 4
-	SOURCE:10 /= 2
+	SOURCE:不潔 = 0
+	SOURCE:快Ｃ /= 2
+	SOURCE:情愛 /= 4
+	SOURCE:愛液分泌 /= 2
 ELSE
 	;汚臭鈍感
 	SIF TALENT:汚臭鈍感
-		SOURCE:8 /= 4
+		SOURCE:不潔 /= 4
 	;汚臭敏感
 	SIF TALENT:汚臭敏感
-		SOURCE:8 *= 3
+		SOURCE:不潔 *= 3
 	;自尊心
 	SIF TALENT:プライド高い
-		SOURCE:8 *= 2
+		SOURCE:不潔 *= 2
 	;愛
 	IF TALENT:恋心 && ASSIPLAY == 0
-		SOURCE:3 *= 2
-		SOURCE:8 /= 10
+		SOURCE:情愛 *= 2
+		SOURCE:不潔 /= 10
 	ENDIF
 	IF STAIN:PLAYER:0
 	;主人の口の汚れがあると不潔150%
-		SOURCE:8 *= 3
-		SOURCE:8 /= 2
+		SOURCE:不潔 *= 3
+		SOURCE:不潔 /= 2
 	ENDIF
 
 	;奴隷の口⇔調教者の口の汚れが移動

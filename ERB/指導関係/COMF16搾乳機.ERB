@@ -19,13 +19,13 @@ LOSEBASE:気力 += 100
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:4 = 100
-SOURCE:5 = 100
-SOURCE:6 = 100
-SOURCE:7 = 100
-SOURCE:12 = 100
-SOURCE:13 = 100
-SOURCE:16 = 100
+SOURCE:性行動 = 100
+SOURCE:達成 = 100
+SOURCE:痛覚 = 100
+SOURCE:中毒充足 = 100
+SOURCE:露出 = 100
+SOURCE:屈従 = 100
+SOURCE:恭順 = 100
 
 
 ;ABL:Ｂ感覚をみる
@@ -54,25 +54,25 @@ ENDIF
 
 ;絶壁
 SIF TALENT:絶壁
-	TIMES SOURCE:6 , 1.80
+	TIMES SOURCE:痛覚 , 1.80
 ;貧乳
 SIF TALENT:貧乳
-	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:痛覚 , 1.50
 
-SOURCE:17 += A
+SOURCE:快Ｂ += A
 
 						;****スライムパッチ追加ここから****
 IF ITEM:魔術式搾乳器 >= 1 && TEQUIP:触手召喚 == 0
 	TIMES LOSEBASE:体力 , 0.80
 	TIMES LOSEBASE:気力 , 0.80
-	TIMES SOURCE:4 , 1.20
-	TIMES SOURCE:5 , 1.20
-	TIMES SOURCE:6 , 0.80
-	TIMES SOURCE:7 , 1.20
-	TIMES SOURCE:12 , 1.20
-	TIMES SOURCE:13 , 1.20
-	TIMES SOURCE:16 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:性行動 , 1.20
+	TIMES SOURCE:達成 , 1.20
+	TIMES SOURCE:痛覚 , 0.80
+	TIMES SOURCE:中毒充足 , 1.20
+	TIMES SOURCE:露出 , 1.20
+	TIMES SOURCE:屈従 , 1.20
+	TIMES SOURCE:恭順 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------
@@ -193,33 +193,33 @@ ENDIF
 
 ;絶壁
 SIF TALENT:絶壁
-	TIMES SOURCE:6 , 1.80
+	TIMES SOURCE:痛覚 , 1.80
 ;貧乳
 SIF TALENT:貧乳
-	TIMES SOURCE:6 , 1.50
+	TIMES SOURCE:痛覚 , 1.50
 
-SOURCE:17 += A
-SOURCE:4 += 150
-SOURCE:6 += 100
-SOURCE:7 += 100
-SOURCE:11 += 50
-SOURCE:12 += 50
-SOURCE:13 += 50
-SOURCE:14 += 50
-SOURCE:16 += 50
+SOURCE:快Ｂ += A
+SOURCE:性行動 += 150
+SOURCE:痛覚 += 100
+SOURCE:中毒充足 += 100
+SOURCE:欲情 += 50
+SOURCE:露出 += 50
+SOURCE:屈従 += 50
+SOURCE:逸脱 += 50
+SOURCE:恭順 += 50
 
 						;****スライムパッチ追加ここから****
 IF ITEM:魔術式搾乳器 >= 1 && TEQUIP:触手召喚 == 0
 	LOSEBASE:体力 -= 3
 	LOSEBASE:気力 -= 3
-	TIMES SOURCE:4 , 1.20
-	TIMES SOURCE:5 , 1.20
-	TIMES SOURCE:6 , 0.80
-	TIMES SOURCE:7 , 1.20
-	TIMES SOURCE:12 , 1.20
-	TIMES SOURCE:13 , 1.20
-	TIMES SOURCE:16 , 1.20
-	TIMES SOURCE:17 , 1.20
+	TIMES SOURCE:性行動 , 1.20
+	TIMES SOURCE:達成 , 1.20
+	TIMES SOURCE:痛覚 , 0.80
+	TIMES SOURCE:中毒充足 , 1.20
+	TIMES SOURCE:露出 , 1.20
+	TIMES SOURCE:屈従 , 1.20
+	TIMES SOURCE:恭順 , 1.20
+	TIMES SOURCE:快Ｂ , 1.20
 ENDIF
 						;****スライムパッチ追加ここまで****
 ;-------------------------------------------------

@@ -15,19 +15,19 @@ LOSEBASE:気力 += 100
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-SOURCE:14 = 1000
+SOURCE:逸脱 = 1000
 
 ;PALAM:苦痛をみる
 IF PALAM:苦痛 < PALAMLV:1
-	SOURCE:6 = 5000
+	SOURCE:痛覚 = 5000
 ELSEIF PALAM:苦痛 < PALAMLV:2
-	SOURCE:6 = 5300
+	SOURCE:痛覚 = 5300
 ELSEIF PALAM:苦痛 < PALAMLV:3
-	SOURCE:6 = 5600
+	SOURCE:痛覚 = 5600
 ELSEIF PALAM:苦痛 < PALAMLV:4
-	SOURCE:6 = 6000
+	SOURCE:痛覚 = 6000
 ELSEIF PALAM:苦痛 >= PALAMLV:4
-	SOURCE:6 = 6500
+	SOURCE:痛覚 = 6500
 ENDIF
 
 ;-------------------------------------------------

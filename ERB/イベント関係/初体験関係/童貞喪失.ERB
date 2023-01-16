@@ -133,6 +133,23 @@ DEBUGPRINTFORML %STRING%
 	STRLENS CSTR:CHARA_NO:童貞喪失相手
 	IF RESULT
 		TEMP_STR '= @"%CSTR:CHARA_NO:童貞喪失相手%"
+		SELECTCASE CFLAG:CHARA_NO:童貞喪失相手
+			CASE 初相手_夫
+				TEMP_STR += @"（夫）"
+			CASE 初相手_元彼
+				TEMP_STR += @"（元カレ）"
+			CASE 初相手_今彼
+				TEMP_STR += @"（カレシ）"
+			CASE 初相手_セフレ
+				TEMP_STR += @"（セフレ）"
+			CASE 初相手_不良
+				TEMP_STR += @"（不良）"
+			CASE 初相手_枕営業
+				TEMP_STR += @"（枕営業のお相手）"
+			CASE 初相手_接待客
+				TEMP_STR += @"（『接待』客）"
+			CASEELSE
+		ENDSELECT
 	ELSEIF CFLAG:CHARA_NO:童貞喪失相手 < 0		
 		SELECTCASE CFLAG:CHARA_NO:童貞喪失相手
 			CASE 初相手_不明
@@ -154,7 +171,11 @@ DEBUGPRINTFORML %STRING%
 			CASE 初相手_セフレ
 				TEMP_STR += @"セフレ"
 			CASE 初相手_スタッフ
-				TEMP_STR += @"スタッフ"
+				IF CSTR:CHARA_NO:童貞喪失相手 == "？？？"
+					TEMP_STR += @"スタッフ"
+				ELSE
+					TEMP_STR += @"元スタッフ"
+				ENDIF
 			CASE 初相手_不良
 				TEMP_STR += @"不良"
 			CASE 初相手_枕営業

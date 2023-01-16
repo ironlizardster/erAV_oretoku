@@ -4,7 +4,20 @@
 ;末尾の数値＝CFLAG:622の数値
 ;編集の際を考えてファイル名と同一に
 ;===========================================================
-@PRINT_BOYFRIEND_PERSONAL_0
+@BOYFRIEND_STRING_0
+
+RESULTS = チャラ男
+
+;===========================================================
+;カレシ固有イベント番号上限
+;===========================================================
+;最大固有イベント番号を返す
+;===========================================================
+@BOYFRIEND_EVENT_COUNT_0
+#FUNCTION
+
+RESULT = 10
+RETURNF RESULT
 
 ;===========================================================
 ;カレシ固有イベント
@@ -13,32 +26,46 @@
 ;===========================================================
 @BF_EV0_0(ARG)
 
-
-;SIF TALENT:セフレ == 0
-;	RETURN
-
 VARSET LOCAL, 0
 CALL CALC_BFSEX(ARG)
+CALL CALC_BFSEX2(ARG)
 
+FOR LOCAL, 0, VARSIZE("EXP")
+	IF TCVAR:ARG:LOCAL
+		TIMES TCVAR:ARG:LOCAL, 2
+	ENDIF
+NEXT
+FOR LOCAL, 0, VARSIZE("JUEL")
+	IF GOTJUEL:ARG:LOCAL
+		TIMES GOTJUEL:ARG:LOCAL, 2
+	ENDIF
+NEXT
 
-REPEAT CHARANUM
-	IF COUNT == 0
+CALL CLEARRANDCHOOSE
+
+FOR LOCAL,1,CHARANUM
+	IF LOCAL == ARG
 		CONTINUE
-	ELSEIF COUNT == ARG
+	ELSEIF ABL:LOCAL:レズっ気 <= 2
 		CONTINUE
-	ELSEIF ABL:COUNT:レズっ気 <= 2
+	ELSEIF RELATION:LOCAL:(NO:ARG) < 250
 		CONTINUE
-;	ELSEIF RELATION:COUNT:(NO:ARG) < 250
-;		CONTINUE
-	ELSEIF TALENT:COUNT:処女 == 1 && TALENT:COUNT:好奇心 == 0 && ABL:COUNT:欲望 < 4
+	ELSEIF TALENT:LOCAL:清い付き合い && TALENT:LOCAL:好奇心 == 0 && ABL:LOCAL:欲望 < 9
 		CONTINUE
-	ELSEIF CFLAG:COUNT:特別コスタイプ == 79 && CFLAG:COUNT:着衣状態 >= 64
+	ELSEIF TALENT:LOCAL:処女 == 1 && TALENT:LOCAL:好奇心 == 0 && ABL:LOCAL:欲望 < 4
+		CONTINUE
+	ELSEIF CFLAG:LOCAL:特別コスタイプ == 79 && CFLAG:LOCAL:着衣状態 >= 64
 		CONTINUE
 	ELSE
-		LOCAL = COUNT
-		BREAK
+		CALL ADDRANDCHOOSE(LOCAL)
 	ENDIF
-REND
+NEXT
+
+IF CHOICECOUNT_F() > 0
+	CALL RANDCHOOSE
+	SIF RESULT > 0 && RESULT < CHARANUM
+		LOCAL = RESULT
+ENDIF
 
 PRINTFORML %NAME:ARG%から『お誘い』の電話があった……
 PRINTW
@@ -88,7 +115,7 @@ IF ABL:ARG:技巧 <= 3
 ELSE
 	PRINTFORML 熟練のもので、肉棒全体を包み込むようにしながらも裏筋やカリを舌で辿るように刺激してくる
 ENDIF
-PRINTFORM この部屋で不特定多数のオトコと交わったせいか、あるいは%CSTR:ARG:彼氏姓%に仕込まれたのかあなたが指導したよりも格段に巧くなってPRINTFORML いる……
+PRINTFORM この部屋で不特定多数のオトコと交わったせいか、あるいは%CSTR:ARG:彼氏姓%に仕込まれたのかあなたが指導したよりも格段に巧くなっている……
 PRINTFORM 犯されながらも肉棒を頬張る%CALLNAME:ARG%の淫猥な姿に興奮したあなたは、
 PRINTFORML 喉奥に亀頭を押し付けるかのようにその頭を掴んで腰を振り立てて快楽を貪り始めた
 PRINTFORML %CALLNAME:ARG%は肢体を串刺しにされるような衝撃に目を白黒させ、ベッドシーツを強く握りしめながらも、
@@ -103,10 +130,36 @@ PRINTFORM と、%CALLNAME:ARG%は無言でベッド脇に置いてあった未�
 PRINTFORML 唇と舌で器用にあなたのペニスに被せ、両の手で秘唇と一緒に膣口を左右に広げることで応えてくれた
 PRINTFORML どうやら撮影ならともかく、それ以外ではいくら割り切った関係とは言えども愛する%CSTR:ARG:彼氏姓%の精液以外は受け入れたくないらしい
 PRINTFORML あなたはそれでも%CALLNAME:ARG%とＳＥＸできるなら、と気持ちを切り替えて期待にざわめく%CALLNAME:ARG%の膣内へと肉棒を挿入し始めた……
-PRINTFORM これまでに{TCVAR:ARG:Ｖ経験 - 1}人もの欲望を受け止めたかなでの膣内は、膣内射精された仁科の精液と自身の愛液でとろとろにほぐれており、
+PRINTFORM これまでに{TCVAR:ARG:Ｖ経験 - 1}人もの欲望を受け止めた%CALLNAME:ARG%の膣内は、膣内射精された%CSTR:ARG:彼氏姓%の精液と自身の愛液でとろとろにほぐれており、
 PRINTFORML すんなりとあなたの肉棒を飲み込んだ
-PRINTFORML 甘ったるい鼻にかかった吐息を漏らしながら、かなでは目を細めてコンドーム越しのあなたのペニスの形を確かめるように無意識のうちに膣襞を収縮させている
+PRINTFORML 甘ったるい鼻にかかった吐息を漏らしながら、%CALLNAME:ARG%は目を細めてコンドーム越しのあなたのペニスの形を確かめるように無意識のうちに膣襞を収縮させている
 PRINTFORML 
+
+CALL 初キス喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+CALL 処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+CALL Ａ処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+
+IF LOCAL > 0
+	VARSET GOTJUEL:LOCAL:快Ｃ
+	VARSET TCVAR:LOCAL:Ｖ経験
+	CALL CALC_BFSEX(LOCAL)
+	CALL CALC_BFSEX2(LOCAL)
+	FOR LOCAL:1, 0, VARSIZE("EXP")
+		IF TCVAR:LOCAL:(LOCAL:1)
+			TIMES TCVAR:ARG:(LOCAL:1), 2
+		ENDIF
+	NEXT
+	FOR LOCAL:1, 0, VARSIZE("JUEL")
+		IF GOTJUEL:ARG:(LOCAL:1)
+			TIMES GOTJUEL:ARG:(LOCAL:1), 2
+		ENDIF
+	NEXT
+	CALL 初キス喪失実行(LOCAL,初相手_セフレ,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL 処女喪失実行(LOCAL,初相手_セフレ,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL Ａ処女喪失実行(LOCAL,初相手_セフレ,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL ADD_JUEL(LOCAL)
+	CALL ADD_EXP(LOCAL)
+ENDIF
 
 ;===========================================================
 ;イメチェンの呼び出し
@@ -119,11 +172,28 @@ PRINTFORML
 ;===========================================================
 @PERSONAL_CHANGE_0(ARG)
 
-SIF EXP:ARG:イメチェン回数 == 0
-	CFLAG:ARG:ラブホ = RAND:2
-;LOCAL = CFLAG:ラブホ
+SIF EXISTFUNCTION(@"PC_NUM{CFLAG:ARG:彼氏タイプ}_PT{EXP:ARG:イメチェン回数}") < 1
+	RETURN
 
-TRYCALLFORM PC_NUM{CFLAG:ARG:彼氏タイプ}_PT{LOCAL}
+VARSET TCVAR:ARG:Ｖ経験
+
+PRINTFORMW 休み明けの月曜日、事務所にやってきた%NAME:ARG%に%CALLNAME:MASTER%は違和感を覚えた……
+PRINTFORM %CALLNAME:ARG%を注意深く観察してみると、
+
+CALLFORM PC_NUM{CFLAG:ARG:彼氏タイプ}_PT{EXP:ARG:イメチェン回数}(ARG)
+
+PRINTFORML が違和感の原因だった
+PRINTFORML %CALLNAME:ARG%に話を聞くと、付き合っている彼氏の%CSTR:ARG:彼氏姓%の好みに合わせたものらしい
+PRINTFORM %CALLNAME:ARG%は%CALLNAME:MASTER%に似合っているかどうか尋ねてきたが、あなたはどう返答していいものか分からず
+PRINTFORML 言葉に詰まってしまった……
+
+EXP:ARG:イメチェン回数 += 1
+
+SIF SUMARRAY(TCVAR:ARG:Ｖ経験)
+	CALL ADD_EXP(ARG)
+
+WAIT
+DRAWLINE
 
 ;===========================================================
 ;イメチェンの内容
@@ -134,4 +204,182 @@ TRYCALLFORM PC_NUM{CFLAG:ARG:彼氏タイプ}_PT{LOCAL}
 ;===========================================================
 @PC_NUM0_PT0(ARG)
 
-CALL PERSONAL_CHANGE(ARG)
+IF CFLAG:ARG:髪色 != 1 && CFLAG:ARG:髪色 != 10
+	PRINTFORM %HAIRCOLOR_STRING(CFLAG:ARG:髪色,CFLAG:ARG:染髪済)%だった髪が茶髪に染められているの
+	CFLAG:ARG:髪色 = 1
+ELSEIF CFLAG:ARG:髪色 == 1
+	PRINTFORM %HAIRCOLOR_STRING(CFLAG:ARG:髪色,CFLAG:ARG:染髪済)%だった髪がより明るい栗色に染められているの
+	CFLAG:ARG:髪色 = 10
+ELSEIF CFLAG:ARG:髪色 == 10
+	PRINTFORM %HAIRCOLOR_STRING(CFLAG:ARG:髪色,CFLAG:ARG:染髪済)%の髪を脱色したのか人工的なプラチナブラウンに変わっていたの
+	CFLAG:ARG:髪色 = 9
+ENDIF
+CFLAG:ARG:染髪済 = 1
+
+@PC_NUM0_PT1(ARG)
+
+IF CFLAG:ARG:髪型 != 1 && CFLAG:ARG:髪型 != 8 && CFLAG:ARG:髪型 != 5
+	PRINTFORM %CHARA_HAIRSTYLE_STRING(ARG)%
+	PRINTFORM だった髪型が肩のあたりで切りそろえたセミロングに変わっているの
+	CFLAG:ARG:髪型 = 1
+ELSEIF (CFLAG:ARG:髪型 == 1 || CFLAG:ARG:髪型 == 5) && CFLAG:ARG:髪型 != 8 
+	PRINTFORM %CHARA_HAIRSTYLE_STRING(ARG)%
+	PRINTFORM だった髪型にふんわりと緩やかなパーマがかかっているの
+	CFLAG:ARG:髪型 = 7
+ELSEIF CFLAG:ARG:髪型 == 8
+	PRINTFORM 腰に届きそうなほどの
+	PRINTFORM %CHARA_HAIRSTYLE_STRING(ARG)%
+	PRINTFORM の髪をカットし背中の中ほどまでの、ふんわりと緩やかなパーマがかかった長さに変わっているの
+	CFLAG:ARG:髪型 = 7
+ENDIF
+
+@PC_NUM0_PT2(ARG)
+
+IF CFLAG:ARG:上着タイプ != 30
+	PRINTFORM いつも事務所に来る時は
+	PRINTFORM %GET_上着タイプ(ARG)%だった服装が肌の露出の多いパンクロリータファッションになっているの
+	CFLAG:ARG:上着タイプ = 30
+ELSE
+	PRINTFORM いつも事務所に来る時は
+	PRINTFORM %GET_上着タイプ(ARG)%だった服装が肌の露出の多いキャミとデニムミニという服装になっているの
+	CFLAG:ARG:上着タイプ = 40
+ENDIF
+
+@PC_NUM0_PT3(ARG)
+
+IF CFLAG:ARG:髪色 != 9
+	PRINTFORM %HAIRCOLOR_STRING(CFLAG:ARG:髪色,CFLAG:ARG:染髪済)%色に染めたはずの髪を脱色したのか、人工的なプラチナブラウンに変わった
+	PRINTFORM 毛先をつまんでいじっているの
+	CFLAG:ARG:髪色 = 9
+ELSE
+	PRINTFORM 脱色した髪にうっすらと明るいピンクでメッシュを入れた毛先をつまんでいじっているの
+ENDIF
+CFLAG:ARG:染髪済 = 1
+
+@PC_NUM0_PT4(ARG)
+
+IF (CFLAG:ARG:ピアス状況 & 2) == 0
+	PRINTFORM %GET_上着タイプ(ARG)%から覗くへそに淡いピンク色のジュエリーが嵌めこまれたピアスが、鈍い輝きを放っているの
+	CFLAG:ARG:ピアス状況 |= 2
+ELSE
+	PRINTFORM %GET_上着タイプ(ARG)%から覗くへそを貫くピアスをぐるりと一周するようにクロムメッキのベリーチェーンが追加されていたの
+ENDIF
+
+@PC_NUM0_PT5(ARG)
+
+IF CFLAG:ARG:タトゥー != 15
+	PRINTFORM %GET_上着タイプ(ARG)%から覗く右の二の腕にアゲハ蝶のタトゥーが彫られていたの
+	IF CFLAG:ARG:タトゥー == 0
+		CSTR:ARG:タトゥー1場所 = 右の二の腕
+		CSTR:ARG:タトゥー1モチーフ = アゲハ蝶をモチーフにした
+		CFLAG:ARG:タトゥー |= 1
+	ELSEIF CFLAG:ARG:タトゥー == 1
+		CSTR:ARG:タトゥー2場所 = 右の二の腕
+		CSTR:ARG:タトゥー2モチーフ = アゲハ蝶をモチーフにした
+		CFLAG:ARG:タトゥー |= 2
+	ELSEIF CFLAG:ARG:タトゥー == 3
+		CSTR:ARG:タトゥー3場所 = 右の二の腕
+		CSTR:ARG:タトゥー3モチーフ = アゲハ蝶をモチーフにした
+		CFLAG:ARG:タトゥー |= 4
+	ELSEIF CFLAG:ARG:タトゥー == 7
+		CSTR:ARG:タトゥー4場所 = 右の二の腕
+		CSTR:ARG:タトゥー4モチーフ = アゲハ蝶をモチーフにした
+		CFLAG:ARG:タトゥー |= 8
+	ENDIF
+	TCVAR:ARG:異常経験 = 1
+ELSE
+	PRINTFORM %GET_上着タイプ(ARG)%から覗くタトゥーが増えているような気がするの
+ENDIF
+
+@PC_NUM0_PT6(ARG)
+
+IF !TALENT:ARG:ギャル系
+	PRINTFORM これまでメイクに費やす時間は短く、化粧自体も自然な感じだったのが
+	PRINTFORM マスカラやリップグロスを使うようになっており、いわゆる【ギャル系】のメイクになっているの
+	TALENT:ARG:ギャル系 = 1
+	TALENT:ARG:大和撫子 = 0
+ELSE
+	PRINTFORM これまで以上にメイクに費やす時間が増え、化粧もよりキツくなっているの
+ENDIF
+
+@PC_NUM0_PT7(ARG)
+
+IF !TALENT:ARG:褐色肌
+	PRINTFORM どうやら日焼けサロンに通うようになったのか、瑞々しい肌が褐色に日焼けしているの
+	TALENT:ARG:褐色肌 = 1
+ELSE
+	PRINTFORM 日焼けした肌を惜しげもなく晒しているの
+ENDIF
+
+@PC_NUM0_PT8(ARG)
+
+IF CFLAG:ARG:上着タイプ != 205
+	PRINTFORM %GET_上着タイプ(ARG)%から更に露出の多いボディコン風のマイクロミニのタイトワンピース、蛍光色のネットストッキングに
+	PRINTFORM 腕にはバングルとリングブレスレットといった服装に変わっているの
+	CFLAG:ARG:上着タイプ = 205
+	CFLAG:ARG:特別コスタイプ = 74
+	CFLAG:ARG:靴下タイプ = 8
+ELSE
+	PRINTFORM ただでさえ大胆な
+	PRINTFORM %GET_上着タイプ(ARG)%が更に際どいデザインのモノに変わっているの
+ENDIF
+
+@PC_NUM0_PT9(ARG)
+
+IF CFLAG:ARG:タトゥー != 15
+	PRINTFORM %GET_上着タイプ(ARG)%から覗く左の太ももの内側にトライバルパターンのタトゥーが彫られていたの
+	IF CFLAG:ARG:タトゥー == 0
+		CSTR:ARG:タトゥー1場所 = 左の太ももの内側
+		CSTR:ARG:タトゥー1モチーフ = トライバルパターンの
+		CFLAG:ARG:タトゥー |= 1
+	ELSEIF CFLAG:ARG:タトゥー == 1
+		CSTR:ARG:タトゥー2場所 = 左の太ももの内側
+		CSTR:ARG:タトゥー2モチーフ = トライバルパターンの
+		CFLAG:ARG:タトゥー |= 2
+	ELSEIF CFLAG:ARG:タトゥー == 3
+		CSTR:ARG:タトゥー3場所 = 左の太ももの内側
+		CSTR:ARG:タトゥー3モチーフ = トライバルパターンの
+		CFLAG:ARG:タトゥー |= 4
+	ELSEIF CFLAG:ARG:タトゥー == 7
+		CSTR:ARG:タトゥー4場所 = 左の太ももの内側
+		CSTR:ARG:タトゥー4モチーフ = トライバルパターンの
+		CFLAG:ARG:タトゥー |= 8
+	ENDIF
+	TCVAR:ARG:異常経験 = 1
+ELSE
+	PRINTFORM %GET_上着タイプ(ARG)%から覗くタトゥーが増えているような気がするの
+ENDIF
+
+@PC_NUM0_PT10(ARG)
+
+PRINTFORM 彼氏の%CSTR:ARG:彼氏姓%にだいぶ染められたのか、口調も頭の悪そうな感じになり、
+PRINTFORM 刹那的な悦楽を求めるような典型的な【ギャル系】そのものになっていたの
+TALENT:ARG:大人しい = 0
+TALENT:ARG:好奇心 = 1
+TALENT:ARG:保守的 = 0
+TALENT:ARG:ポジティブ = 1
+TALENT:ARG:ネガティブ = 0
+TALENT:ARG:一線越えない = 0
+TALENT:ARG:目立ちたがり = 1
+TALENT:ARG:貞操観念 = 0
+TALENT:ARG:貞操無頓着 = 1
+TALENT:ARG:解放 = 1
+TALENT:ARG:恥じらい = 0
+TALENT:ARG:恥薄い = 1
+TALENT:ARG:小悪魔 = 1
+TALENT:ARG:魅力 = 0
+TALENT:ARG:幼稚 = 0
+TALENT:ARG:心弱い = 0
+TALENT:ARG:大和撫子 = 0
+TALENT:ARG:惚れっぽい = 1
+IF ABL:ARG:欲望 < 3
+	ABL:ARG:欲望 = 3
+ENDIF
+BASE:ARG:ギャラ *= 3
+CSTR:ARG:男性器呼び方 = チンポ
+IF RAND:2 == 0
+	CSTR:ARG:一人称 = ウチ
+ELSE
+	CSTR:ARG:一人称 = アタシ
+ENDIF
+

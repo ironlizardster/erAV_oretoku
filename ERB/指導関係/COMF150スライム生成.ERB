@@ -14,7 +14,7 @@ IF TEQUIP:スライム生成
 	TEQUIP:スライム肛門進入 = 0
 	;スライム口辱
 	TEQUIP:スライム口辱 = 0
-	UP:3 -= 8000
+	UP:[[UP:潤滑]] -= 8000
 ELSE
 	TEQUIP:スライム生成 = 1
 
@@ -23,55 +23,55 @@ ELSE
 
 ;ABL:Ｃ感覚をみる
 IF ABL:Ｃ感覚 == 0
-	SOURCE:0 = 20
-	SOURCE:3 = 25
+	SOURCE:快Ｃ = 20
+	SOURCE:情愛 = 25
 ELSEIF ABL:Ｃ感覚 == 1
-	SOURCE:0 = 100
-	SOURCE:3 = 50
+	SOURCE:快Ｃ = 100
+	SOURCE:情愛 = 50
 ELSEIF ABL:Ｃ感覚 == 2
-	SOURCE:0 = 500
-	SOURCE:3 = 80
+	SOURCE:快Ｃ = 500
+	SOURCE:情愛 = 80
 ELSEIF ABL:Ｃ感覚 == 3
-	SOURCE:0 = 1200
-	SOURCE:3 = 100
+	SOURCE:快Ｃ = 1200
+	SOURCE:情愛 = 100
 ELSEIF ABL:Ｃ感覚 == 4
-	SOURCE:0 = 2000
-	SOURCE:3 = 115
+	SOURCE:快Ｃ = 2000
+	SOURCE:情愛 = 115
 ELSE
-	SOURCE:0 = 2800
-	SOURCE:3 = 125
+	SOURCE:快Ｃ = 2800
+	SOURCE:情愛 = 125
 ENDIF
 
 ;ABL:Ｂ感覚をみる
 IF ABL:Ｂ感覚 == 0
-	SOURCE:17 = 15
-	SOURCE:3 += 25
+	SOURCE:快Ｂ = 15
+	SOURCE:情愛 += 25
 ELSEIF ABL:Ｂ感覚 == 1
-	SOURCE:17 = 50
-	SOURCE:3 += 50
+	SOURCE:快Ｂ = 50
+	SOURCE:情愛 += 50
 ELSEIF ABL:Ｂ感覚 == 2
-	SOURCE:17 = 300
-	SOURCE:3 += 80
+	SOURCE:快Ｂ = 300
+	SOURCE:情愛 += 80
 ELSEIF ABL:Ｂ感覚 == 3
-	SOURCE:17 = 700
-	SOURCE:3 += 100
+	SOURCE:快Ｂ = 700
+	SOURCE:情愛 += 100
 ELSEIF ABL:Ｂ感覚 == 4
-	SOURCE:17 = 1100
-	SOURCE:3 += 115
+	SOURCE:快Ｂ = 1100
+	SOURCE:情愛 += 115
 ELSE
-	SOURCE:17 = 1600
-	SOURCE:3 += 125
+	SOURCE:快Ｂ = 1600
+	SOURCE:情愛 += 125
 ENDIF
 
-	SOURCE:9 = 5000
-	SOURCE:14 = 200
+	SOURCE:液体追加 = 5000
+	SOURCE:逸脱 = 200
 	
 	;臆病
 	SIF TALENT:臆病
-		TIMES SOURCE:14 , 2.00
+		TIMES SOURCE:逸脱 , 2.00
 	;感情乏しい
 	SIF TALENT:感情乏しい
-		TIMES SOURCE:14 , 0.60
+		TIMES SOURCE:逸脱 , 0.60
 ENDIF
 T = 0
 RETURN 1
@@ -99,53 +99,53 @@ LOSEBASE:気力 += 80
 
 ;ABL:Ｃ感覚をみる
 IF ABL:Ｃ感覚 == 0
-	SOURCE:0 += 20
-	SOURCE:3 = 25
+	SOURCE:快Ｃ += 20
+	SOURCE:情愛 = 25
 ELSEIF ABL:Ｃ感覚 == 1
-	SOURCE:0 += 100
-	SOURCE:3 += 50
+	SOURCE:快Ｃ += 100
+	SOURCE:情愛 += 50
 ELSEIF ABL:Ｃ感覚 == 2
-	SOURCE:0 += 500
-	SOURCE:3 += 80
+	SOURCE:快Ｃ += 500
+	SOURCE:情愛 += 80
 ELSEIF ABL:Ｃ感覚 == 3
-	SOURCE:0 += 1200
-	SOURCE:3 += 100
+	SOURCE:快Ｃ += 1200
+	SOURCE:情愛 += 100
 ELSEIF ABL:Ｃ感覚 == 4
-	SOURCE:0 += 2000
-	SOURCE:3 += 115
+	SOURCE:快Ｃ += 2000
+	SOURCE:情愛 += 115
 ELSE
-	SOURCE:0 += 2800
-	SOURCE:3 += 125
+	SOURCE:快Ｃ += 2800
+	SOURCE:情愛 += 125
 ENDIF
 
 ;ABL:Ｂ感覚をみる
 IF ABL:Ｂ感覚 == 0
-	SOURCE:17 += 15
-	SOURCE:3 += 25
+	SOURCE:快Ｂ += 15
+	SOURCE:情愛 += 25
 ELSEIF ABL:Ｂ感覚 == 1
-	SOURCE:17 += 50
-	SOURCE:3 += 50
+	SOURCE:快Ｂ += 50
+	SOURCE:情愛 += 50
 ELSEIF ABL:Ｂ感覚 == 2
-	SOURCE:17 += 300
-	SOURCE:3 += 80
+	SOURCE:快Ｂ += 300
+	SOURCE:情愛 += 80
 ELSEIF ABL:Ｂ感覚 == 3
-	SOURCE:17 += 700
-	SOURCE:3 += 100
+	SOURCE:快Ｂ += 700
+	SOURCE:情愛 += 100
 ELSEIF ABL:Ｂ感覚 == 4
-	SOURCE:17 += 1100
-	SOURCE:3 += 115
+	SOURCE:快Ｂ += 1100
+	SOURCE:情愛 += 115
 ELSE
-	SOURCE:17 += 1600
-	SOURCE:3 += 125
+	SOURCE:快Ｂ += 1600
+	SOURCE:情愛 += 125
 ENDIF
 
-UP:10 += A * 20
-SOURCE:8 += A * 10
-SOURCE:14 += A * 5
+UP:[[UP:恐怖]] += A * 20
+SOURCE:不潔 += A * 10
+SOURCE:逸脱 += A * 5
 
-SOURCE:9 += 2000
+SOURCE:液体追加 += 2000
 
-TIMES SOURCE:13 , 1.80
+TIMES SOURCE:屈従 , 1.80
 
 ;-------------------------------------------------
 ;射精チェック
@@ -211,10 +211,10 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 	BASE:PLAYER:異種射精ゲージ += B
 
 	;スライムの快感が高いとキャラの快感のソースも増える
-	SOURCE:0 = SOURCE:0 * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
-	SOURCE:1 = SOURCE:1 * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
-	SOURCE:2 = SOURCE:2 * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
-	SOURCE:17 = SOURCE:17 * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
+	SOURCE:快Ｃ = SOURCE:快Ｃ * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
+	SOURCE:快Ｖ = SOURCE:快Ｖ * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
+	SOURCE:快Ａ = SOURCE:快Ａ * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
+	SOURCE:快Ｂ = SOURCE:快Ｂ * (BASE:PLAYER:異種射精ゲージ + 20000) / 20000
 
 	S = BASE:PLAYER:異種射精ゲージ
 	EJAC = MAXBASE:PLAYER:異種射精ゲージ
@@ -238,10 +238,10 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 		SIF BASE:PLAYER:異種射精ゲージ >= EJAC
 			BASE:PLAYER:異種射精ゲージ = EJAC-1
 		
-		TIMES SOURCE:0 , 2.00
-		TIMES SOURCE:1 , 2.00
-		TIMES SOURCE:2 , 2.00
-		TIMES SOURCE:17 , 2.00
+		TIMES SOURCE:快Ｃ , 2.00
+		TIMES SOURCE:快Ｖ , 2.00
+		TIMES SOURCE:快Ａ , 2.00
+		TIMES SOURCE:快Ｂ , 2.00
 	;通常の絶頂
 	ELSEIF E == 1
 		SIF TEQUIP:スライム膣内進入
@@ -252,10 +252,10 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 		SIF BASE:PLAYER:異種射精ゲージ >= EJAC
 			BASE:PLAYER:異種射精ゲージ = EJAC-1
 			
-		TIMES SOURCE:0 , 1.50
-		TIMES SOURCE:1 , 1.50
-		TIMES SOURCE:2 , 1.50
-		TIMES SOURCE:17 , 1.50
+		TIMES SOURCE:快Ｃ , 1.50
+		TIMES SOURCE:快Ｖ , 1.50
+		TIMES SOURCE:快Ａ , 1.50
+		TIMES SOURCE:快Ｂ , 1.50
 	ENDIF
 
 
@@ -288,42 +288,42 @@ TFLAG:621 |= 32
 
 ;ABL:奉仕精神をみる
 IF ABL:奉仕精神 == 0
-	SOURCE:4 += 200
+	SOURCE:性行動 += 200
 	 A = 100
 ELSEIF ABL:奉仕精神 == 1
-	SOURCE:4 += 300
+	SOURCE:性行動 += 300
 	A = 200
 ELSEIF ABL:奉仕精神 == 2
-	SOURCE:4 += 400
+	SOURCE:性行動 += 400
 	A = 400
 ELSEIF ABL:奉仕精神 == 3
-	SOURCE:4 += 500
+	SOURCE:性行動 += 500
 	A = 600
 ELSEIF ABL:奉仕精神 == 4
-	SOURCE:4 += 600
+	SOURCE:性行動 += 600
 	A = 800
 ELSE
-	SOURCE:4 += 800
+	SOURCE:性行動 += 800
 	A = 1100
 ENDIF
 
 ;ABL:技巧をみる
 IF ABL:技巧 == 0
-	TIMES SOURCE:4 , 0.50
+	TIMES SOURCE:性行動 , 0.50
 ELSEIF ABL:技巧 == 1
-	TIMES SOURCE:4 , 0.80
+	TIMES SOURCE:性行動 , 0.80
 ELSEIF ABL:技巧 == 2
-	TIMES SOURCE:4 , 1.00
+	TIMES SOURCE:性行動 , 1.00
 ELSEIF ABL:技巧 == 3
-	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:性行動 , 1.20
 ELSEIF ABL:技巧 == 4
-	TIMES SOURCE:4 , 1.50
+	TIMES SOURCE:性行動 , 1.50
 ELSE
-	TIMES SOURCE:4 , 2.00
+	TIMES SOURCE:性行動 , 2.00
 ENDIF
 
-SOURCE:13 += A
-SOURCE:16 += A
+SOURCE:屈従 += A
+SOURCE:恭順 += A
 
 ;触手の抜き挿し
 IF TEQUIP:スライム口辱
@@ -351,42 +351,42 @@ ENDIF
 
 ;ABL:奉仕精神をみる
 IF ABL:奉仕精神 == 0
-	SOURCE:4 += 200
+	SOURCE:性行動 += 200
 	 A = 100
 ELSEIF ABL:奉仕精神 == 1
-	SOURCE:4 += 300
+	SOURCE:性行動 += 300
 	A = 200
 ELSEIF ABL:奉仕精神 == 2
-	SOURCE:4 += 400
+	SOURCE:性行動 += 400
 	A = 400
 ELSEIF ABL:奉仕精神 == 3
-	SOURCE:4 += 500
+	SOURCE:性行動 += 500
 	A = 600
 ELSEIF ABL:奉仕精神 == 4
-	SOURCE:4 += 600
+	SOURCE:性行動 += 600
 	A = 800
 ELSE
-	SOURCE:4 += 800
+	SOURCE:性行動 += 800
 	A = 1100
 ENDIF
 
 ;ABL:技巧をみる
 IF ABL:技巧 == 0
-	TIMES SOURCE:4 , 0.50
+	TIMES SOURCE:性行動 , 0.50
 ELSEIF ABL:技巧 == 1
-	TIMES SOURCE:4 , 0.80
+	TIMES SOURCE:性行動 , 0.80
 ELSEIF ABL:技巧 == 2
-	TIMES SOURCE:4 , 1.00
+	TIMES SOURCE:性行動 , 1.00
 ELSEIF ABL:技巧 == 3
-	TIMES SOURCE:4 , 1.20
+	TIMES SOURCE:性行動 , 1.20
 ELSEIF ABL:技巧 == 4
-	TIMES SOURCE:4 , 1.50
+	TIMES SOURCE:性行動 , 1.50
 ELSE
-	TIMES SOURCE:4 , 2.00
+	TIMES SOURCE:性行動 , 2.00
 ENDIF
 
-SOURCE:13 += A
-SOURCE:16 += A
+SOURCE:屈従 += A
+SOURCE:恭順 += A
 
 EXP:フェラ経験 += 1
 PRINTL フェラ経験＋１

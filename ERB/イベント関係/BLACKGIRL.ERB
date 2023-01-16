@@ -21,7 +21,7 @@ REND
 TEMP_NUM = RAND:8
 
 ;1/4で勝手にＳＥＸ
-IF TEMP_NUM <= 1 && !FLAG:寝取られなし
+IF TEMP_NUM <= 1 && !FLAG:寝取られなし && CFLAG:COUNT:調教回数
 	CALL EVENT_BGSEX(ARG)
 ;1/4で補導
 ELSEIF TEMP_NUM <= 3
@@ -132,7 +132,6 @@ IF CFLAG:ARG:タトゥー < 15
 	PRINTFORM ひと通り説教した後、それでも似合っているのは確かなので、説教されてしょんぼりしている%CALLNAME:ARG%
 	PRINTFORML を慰めながら「似合っている」とだけ伝えた……
 	PRINTL
-	CFLAG:ARG:617 += 1
 	PRINTL 異常経験＋1
 	EXP:ARG:異常経験 += 1
 	DRAWLINE
@@ -223,9 +222,9 @@ ELSE
 		PRINTFORML 」
 		PRINTFORM 「
 		IF TALENT:ARG:恋心 == 0
-		PRINTFORM %CSTR:ARG:一人称%にハメられながら『昔のかなでに戻ってくれ』とか言いながら
-		PRINTFORM %CSTR:ARG:男性器呼び方%ギンギンにボッキさせてんでやんの。
-		PRINTFORML チョーウケるんですけどぉ♪」
+			PRINTFORM %CSTR:ARG:一人称%にハメられながら『昔のかなでに戻ってくれ』とか言いながら
+			PRINTFORM %CSTR:ARG:男性器呼び方%ギンギンにボッキさせてんでやんの。
+			PRINTFORML チョーウケるんですけどぉ♪」
 			IF FLAG:かなで相手童貞喪失
 				PRINTFORM 「しかもドーテーだったみたいでさぁ、
 				PRINTFORM %CSTR:ARG:一人称%の%CSTR:ARG:女性器呼び方%に%CSTR:ARG:男性器呼び方%ハメただけで射精してんでやんの。
@@ -302,7 +301,7 @@ ELSE
 		ENDIF
 		PRINTFORML %UNICODE(0x2665)%」
 		SIF ABL:MASTER:技巧 <= 6
-			PRINTFORML  「それにぃ……ヘタクソだから全然気持ちよくないの%UNICODE(0x2665)%」
+			PRINTFORML 「それにぃ……ヘタクソだから全然気持ちよくないの%UNICODE(0x2665)%」
 		PRINTFORML 「ねぇ……もういいでしょ%UNICODE(0x2665)%%CSTR:ARG:女性器呼び方%がバカになるぐらいもっと激しく犯してぇ♪」
 	ENDIF
 	
