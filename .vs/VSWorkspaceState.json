@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\CSV",
     "\\ERB",
     "\\ERB\\イベント関係",
-    "\\ERB\\イベント関係\\NTR関係",
-    "\\ERB\\イベント関係\\NTR関係\\カレシ関係",
-    "\\ERB\\イベント関係\\初体験関係",
+    "\\ERB\\イベント関係\\職業素質系",
     "\\ERB\\システム関係",
     "\\ERB\\指導関係",
     "\\ERB\\組み込み関数",
     "\\ERB\\組み込み関数\\汎用関数",
     "\\ERB\\組み込み関数\\汎用関数\\RANDCHOOSE"
   ],
+  "SelectedNode": "\\CSV\\GameBase.csv",
   "PreviewInSolutionExplorer": false
 }

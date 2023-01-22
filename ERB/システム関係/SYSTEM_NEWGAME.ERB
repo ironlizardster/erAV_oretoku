@@ -59,26 +59,22 @@ CALL GET_はいいいえ()
 IF RESULT == COMMAND_はい
 	;所持アイテム及びアイテム購入履歴のリセット
 	REPEAT 99
-		SIF COUNT == 60
+		SIF COUNT == [[ITEM:コスプレ衣装・ライトノベルパック]]
 			CONTINUE
-		SIF COUNT == 61
+		SIF COUNT == [[ITEM:コスプレ衣装・アニメパック]]
 			CONTINUE
-		SIF COUNT == 62
+		SIF COUNT == [[ITEM:コスプレ衣装・マンガパック]]
 			CONTINUE
-		SIF COUNT == 63
+		SIF COUNT == [[ITEM:コスプレ衣装・美少女ゲームパック]]
 			CONTINUE
-		SIF COUNT == 90
+		SIF COUNT == [[ITEM:触手生物]]
 			CONTINUE
-		SIF COUNT == 22
+		SIF COUNT == [[ITEM:犬]]
 			CONTINUE
 		ITEM:COUNT = 0
 		ITEMSALES:COUNT = 1
 	REND
 ENDIF
-
-;ビデオ撮影バリアントなので、開始時入手できるのと同じだけ残す(20120724望崎)
-	ITEM:ビデオカメラ = 1
-;	ITEM:ビデオテープ = 1
 
 ;ロリコンフラグの引継ぎ
 IF FLAG:ロリコンなし == 0

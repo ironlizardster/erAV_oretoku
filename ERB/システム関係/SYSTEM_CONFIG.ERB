@@ -754,7 +754,7 @@ IF RESULT == 0
 		FLAG:薬品自動投与 |= 1
 	ENDIF
 	RESTART
-ELSEIF RESULT == 1 && ITEM:ビデオカメラ
+ELSEIF RESULT == 1
 	IF (FLAG:薬品自動投与 & 2)
 		FLAG:薬品自動投与 -= 2
 	ELSE

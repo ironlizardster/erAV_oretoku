@@ -4,8 +4,6 @@ LOCAL:1 = 0
 FOR LOCAL, 0, VARSIZE("TALENT")
 	SIF CHARACTER_EDIT_IGNORE_TALENT(対象, LOCAL)
 		CONTINUE
-	SIF TALENTNAME:LOCAL == ""
-		CONTINUE
 	CALL PRINT_TOGGLE_BUTTON(@"%"[" + TALENTNAME:(LOCAL) + "]" , 20, LEFT%", LOCAL, TALENT:対象:LOCAL == 1)
 	PRINT  
 	LOCAL:1 ++
@@ -19,7 +17,7 @@ PRINTL
 #DIM 対象
 #DIM 入力値
 ;ガード節
-SIF CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値) || TALENTNAME:入力値 == ""
+SIF CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値)
 	RETURN 0
 
 TALENT:対象:入力値 = !TALENT:対象:入力値
@@ -246,6 +244,12 @@ ENDSELECT
 #FUNCTION
 #DIM 対象
 #DIM 入力値
-{
-RETURNF GROUPMATCH(入力値, [[TALENT:身体特徴素質]], [[TALENT:陥落素質]], [[TALENT:性格素質]], [[TALENT:性的関心素質]], [[TALENT:技能素質]], [[TALENT:職業素質]], [[TALENT:特技素質]], [[TALENT:秘密素質]], [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:ギャル系]])) || (!TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:チャラ男]]))
-}
+
+SIF TALENTNAME:入力値 == ""
+	RETURNF 1
+
+STRFIND TALENTNAME:入力値, "／／／"
+SIF RESULT > -1
+	RETURNF 1
+
+RETURNF GROUPMATCH(入力値, [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:ギャル系]])) || (!TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:チャラ男]]))

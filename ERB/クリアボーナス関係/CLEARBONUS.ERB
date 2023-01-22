@@ -92,7 +92,7 @@ ELSE
 	PRINTL [ -] - －－－－－－－－－－
 ENDIF
 DRAWLINE
-PRINTL [999] - 戻る 
+PRINTL [999] - ボーナスを確定して進む
 INPUT
 IF RESULT == 0 && LOCAL:0 == 0 && POINT >= 2
 	PRINTL ゲーム期間を倍にした状態でゲームを開始します
@@ -227,7 +227,7 @@ ELSEIF RESULT == 5 && LOCAL:5 == 0 && POINT >= 30
 			POINT -= 30
 
 			REPEAT 25
-				SIF COUNT == 22
+				SIF COUNT == [[ITEM:犬]]
 					CONTINUE
 				ITEM:COUNT = 1
 			REND
@@ -495,7 +495,7 @@ ELSEIF RESULT == 8826 && LOCAL:0 == 0 && LOCAL:0 == 0 && LOCAL:1 == 0 && LOCAL:2
 	FLAG:ミッションモード解禁 = 1
 	LOCAL:4 = 1
 	REPEAT 25
-		SIF COUNT == 22
+		SIF COUNT == [[ITEM:犬]]
 			CONTINUE
 		ITEM:COUNT = 1
 	REND

@@ -1,5 +1,5 @@
 ﻿;-------------------------------------------------
-;浣腸器＋プラグ
+;浣腸セット
 ;SM系コマンド
 ;-------------------------------------------------
 @COM46
@@ -9,7 +9,7 @@ IF TEQUIP:触手召喚
 	SAVESTR:0 = 触手浣腸
 ELSE
 	PRINTL 浣腸器＋プラグ
-	SAVESTR:0 = 浣腸器＋プラグ
+	SAVESTR:0 = 浣腸セット
 ENDIF
 CALL TRAIN_MESSAGE_B
 
@@ -159,7 +159,7 @@ EXP:Ａ経験 += 5
 PRINTL Ａ経験＋5
 
 ;調教時の排泄が始めてだった場合、
-IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] && CFLAG:浣腸経験 == 0
+IF TEQUIP:浣腸セット && CFLAG:浣腸経験 == 0
 	X = 1
 	;ビデオ録画中なら異常経験+2、そうでなければ+1
 	IF TEQUIP:撮影中
@@ -171,7 +171,7 @@ IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] && CFLAG:浣腸経験 == 0
 	PRINTFORML 異常経験+{X}
 	EXP:異常経験 += X
 ;初めてではないが、ビデオ録画中だった場合
-ELSEIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] && CFLAG:浣腸経験 == 1 && TEQUIP:撮影中
+ELSEIF TEQUIP:浣腸セット && CFLAG:浣腸経験 == 1 && TEQUIP:撮影中
 	PRINTL 異常経験+1
 	EXP:異常経験 += 1
 	CFLAG:浣腸経験 = 2
@@ -180,17 +180,17 @@ ENDIF
 ;触手浣腸処理
 SIF TEQUIP:触手召喚
 	T = 0
-IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 0 && TEQUIP:触手召喚 
+IF TEQUIP:浣腸セット == 0 && TEQUIP:触手召喚 
 	STAIN:4 |= 2
 	STAIN:4 |= 4
 ENDIF
 
 ;着衣おもらし処理
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] && FLAG:着衣使用
+SIF TEQUIP:浣腸セット && FLAG:着衣使用
 	CALL SOILING_CLOTH_NO2
 
 ;浣腸プラグの着脱
-TEQUIP:[[TEQUIP:浣腸器＋プラグ]] = 1 - TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+TEQUIP:浣腸セット = 1 - TEQUIP:浣腸セット
 
 RETURN 1
 

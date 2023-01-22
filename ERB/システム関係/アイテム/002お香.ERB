@@ -1,0 +1,41 @@
+﻿@ITEM_EFFECT_お香
+RESULTS = 否定の珠を半減します
+
+@ITEM_CAN_BUY_お香
+;お香はHARDでは1日3個、POWERFULでは1個まで
+ITEMSALES:お香 = 調合知識持ち && (!(FLAG:難易度 == 3 && FLAG:１日あたりにお香を購入した数 >= 3) || !(FLAG:難易度 == 4 && FLAG:１日あたりにお香を購入した数 >= 1))
+
+@ITEM_CAN_USE_お香
+PRINTFORML %ITEMNAME:BOUGHT%を誰に使いますか？　所持金：{MONEY}ポイント
+						;****使用アイテム連続購入改造ここまで****
+CALL LIFE_LIST_NEW,LL_MODE_全部
+
+SELECTCASE RESULT
+	CASE COMMAND_GO_BACK
+		RETURN COMMAND_GO_BACK
+	CASE IS < 0, IS >= CHARANUM, 0, 
+		;主人公、番号外は排除
+		RESTART
+	CASEELSE
+		;臨死中のキャラは排除
+		SIF BASE:RESULT:体力 < 1
+			RESTART
+
+		IF JUEL:RESULT:否定 < 1
+			PRINTFORMW %NAME:RESULT%は%PALAMNAME:[[PALAM:否定]]%の珠を持っていません
+			RESTART
+		ENDIF
+
+		RETURN RESULT
+ENDSELECT
+
+@ITEM_USE_お香(ARG=-1)
+SIF ARG < 0
+	RETURN
+
+PRINTFORML 《%NAME:ARG%の否定の珠が半分になりました》
+PRINTFORMW  否定の珠:{JUEL:ARG:否定} -> {JUEL:ARG:否定 / 2}
+JUEL:ARG:否定 /= 2
+FLAG:１日あたりにお香を購入した数 += 1
+
+MONEY -= ITEMPRICE:BOUGHT

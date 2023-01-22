@@ -180,7 +180,7 @@ IF TFLAG:失神中終了 == 1
 		TFLAG:864 = TEQUIP:縄
 	SIF TEQUIP:ボールギャグ == 1
 		TFLAG:865 = TEQUIP:ボールギャグ
-	SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 1 || TEQUIP:アナル電極 == 1
+	SIF TEQUIP:浣腸セット == 1 || TEQUIP:アナル電極 == 1
 		TFLAG:879 = 1
 	;媚薬・利尿剤使用判定
 	TFLAG:880 = 0
@@ -221,7 +221,7 @@ ELSE
 		TFLAG:864 = (-1)
 	SIF TEQUIP:ボールギャグ == 1 && TFLAG:865 != TEQUIP:ボールギャグ
 		TFLAG:865 = (-1)
-	SIF (TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 1 || TEQUIP:アナル電極 == 1) && (TFLAG:879 != 1)
+	SIF (TEQUIP:浣腸セット == 1 || TEQUIP:アナル電極 == 1) && (TFLAG:879 != 1)
 		TFLAG:879 = (-1)
 	;媚薬・利尿剤使用判定
 	SIF (TEQUIP:媚薬効果 && TFLAG:880 != 21) || (TEQUIP:利尿剤効果 && TFLAG:880 != 22)
@@ -422,7 +422,7 @@ ELSEIF TFLAG:879 < 0 || TFLAG:864 < 0 || TFLAG:865 < 0
 		SIF TFLAG:878 < 0 || TFLAG:866 < 0
 			PRINT た上、異様な器具を取り付けられ
 		PRINTFORM ていること
-	ELSEIF TEQUIP:ボールギャグ == 1 || TEQUIP:アナル電極 == 1 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]] == 1
+	ELSEIF TEQUIP:ボールギャグ == 1 || TEQUIP:アナル電極 == 1 || TEQUIP:浣腸セット == 1
 		PRINT 異様な器具を取り付けられていること
 	ENDIF
 	PRINTFORMW に気付き戸惑い怯えているようだ…	

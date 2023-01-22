@@ -1,0 +1,24 @@
+﻿@ITEM_CAN_BUY_【技巧Lv】
+ITEMSALES:【技巧Lv】 = ABL:MASTER:技巧 < 10 && ABL:MASTER:技巧 < FLAG:陥落人数 + 1
+TEMP_NUM = ITEMPRICE:【技巧Lv】 * ITEM_PRICE_MULTIPLIER_【技巧Lv】()
+
+@ITEM_PRICE_MULTIPLIER_【技巧Lv】
+#FUNCTION
+;NORMAL/EXTRAならLv3までは1つで1Lv上がり、それ以降は技巧Lv-1分必要になる
+SIF (FLAG:難易度 == 難易度NORMAL || FLAG:難易度 == 難易度EXTRA) && ABL:MASTER:技巧 >= 3
+	RETURNF ABL:MASTER:技巧 - 1
+
+;HARDならLv2までは1つで1Lv上がり、それ以降は技巧Lv*2分必要になる
+SIF FLAG:難易度 == 難易度HARD && ABL:MASTER:技巧 >= 2
+	RETURNF ABL:MASTER:技巧 * 2
+
+;POWERFULならLv1までは1つで1Lv上がり、それ以降は技巧Lv*5分必要になる
+SIF FLAG:難易度 == 難易度POWERFUL && ABL:MASTER:技巧 >= 1
+	RETURNF ABL:MASTER:技巧 * 5
+;PHANTASM以上なら技巧Lv*100分必要になる
+SIF FLAG:難易度 == 難易度PHANTASM
+	RETURNF ABL:MASTER:技巧 * 100
+
+;撮影可能シーン数らしいよ
+;それ以外の難易度やレベルなら1つで1Lv上がる
+RETURNF 1

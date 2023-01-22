@@ -342,7 +342,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -541,7 +541,7 @@ IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
 		RETURN 0
 ENDIF
 ;浣腸＋アナルプラグ使用中はダメ
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;アナルビーズ使用中は不可
 SIF TEQUIP:アナルビーズ
@@ -826,7 +826,7 @@ SIF ITEM:アナルビーズ == 0 && NOITEM == 0
 SIF TEQUIP:アナルバイブ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -1241,7 +1241,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -1303,7 +1303,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;浣腸＋アナルプラグ使用中はダメ
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
 SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
@@ -1359,7 +1359,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -1420,7 +1420,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -1778,7 +1778,7 @@ SIF TEQUIP:ボールギャグ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -1808,7 +1808,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;電極使用中は不可
 SIF TEQUIP:アナル電極
@@ -2167,10 +2167,10 @@ SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;解除はいつでも可能
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 1
 ;アイテムを持っているか、アイテムなし設定でないとダメ
-SIF ITEM:[[ITEM:浣腸器＋プラグ]] == 0 && NOITEM == 0
+SIF ITEM:[[ITEM:浣腸セット]] == 0 && NOITEM == 0
 	RETURN 0
 ;アナルバイブ使用中は不可
 SIF TEQUIP:アナルバイブ
@@ -2296,7 +2296,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:アナルビーズ
 	RETURN 0
 ;普通の浣腸使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;お風呂場プレイ中はダメ
 SIF TEQUIP:お風呂場プレイ
@@ -2359,11 +2359,7 @@ RETURN 1
 ;解除はいつでも可能
 SIF TEQUIP:撮影中
 	RETURN 1
-;カメラとテープのアイテムを持っているか、アイテムなし設定でないとダメ
-;SIF ( ITEM:ビデオカメラ == 0 || ITEM:ビデオテープ == 0 ) && NOITEM == 0
-;テープという概念の抹消
-SIF ITEM:ビデオカメラ == 0 && NOITEM == 0
-	RETURN 0
+
 RETURN 1
 
 ;-------------------------------------------------
@@ -3290,7 +3286,7 @@ SIF TEQUIP:アナルバイブ
 SIF EXP:Ａ経験 < 75
 	RETURN 0
 ;浣腸＋アナルプラグ使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;ASSIの場合、従順3以上かサドじゃないとできない。
 IF ASSIPLAY
@@ -3357,7 +3353,7 @@ SIF TEQUIP:バイブ
 SIF TEQUIP:アナルバイブ
 	RETURN 0
 ;浣腸＋アナルプラグ使用中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 ;オトコだとダメ
 SIF TALENT:オトコ
@@ -3540,7 +3536,7 @@ SIF ITEM:犬 == 0 && NOITEM == 0
 SIF TEQUIP:三角木馬騎乗
 	RETURN 0
 ;道具使用中はダメ（野外プレイのみ可）
-SIF TEQUIP:獣姦プレイ == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]]|| TEQUIP:アナル電極 || TEQUIP:触手召喚)
+SIF TEQUIP:獣姦プレイ == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:浣腸セット|| TEQUIP:アナル電極 || TEQUIP:触手召喚)
 	RETURN 0
 ;お風呂場プレイ中はダメ
 SIF TEQUIP:お風呂場プレイ
@@ -3711,7 +3707,7 @@ SIF TEQUIP:スライム生成
 SIF TEQUIP:三角木馬騎乗
 	RETURN 0
 ;道具使用中はダメ
-SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]]|| TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:獣姦プレイ)
+SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:浣腸セット|| TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:獣姦プレイ)
 	RETURN 0
 ;お風呂場プレイ中はダメ
 SIF TEQUIP:お風呂場プレイ
@@ -3741,7 +3737,7 @@ RETURN 1
 SIF TEQUIP:触手召喚 == 0
 	RETURN 0
 ;触手浣腸中は不可
-SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+SIF TEQUIP:浣腸セット
 	RETURN 0
 RETURN 1
 
@@ -4877,7 +4873,7 @@ IF ASSIPLAY
 		RETURN 0
 ENDIF
 ;道具使用中はダメ(縄、アイマスク、ボールギャグ、コスプレ以外)
-SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:[[TEQUIP:浣腸器＋プラグ]]|| TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:羞恥大鏡プレイ || TEQUIP:お風呂場プレイ || TEQUIP:獣姦プレイ || TEQUIP:触手召喚)
+SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:浣腸セット|| TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:羞恥大鏡プレイ || TEQUIP:お風呂場プレイ || TEQUIP:獣姦プレイ || TEQUIP:触手召喚)
 	RETURN 0
 ;縄使用中でないと不可
 SIF TEQUIP:縄 == 0
@@ -5133,7 +5129,7 @@ SIF TEQUIP:触手召喚
 SIF TEQUIP:三角木馬騎乗
 	RETURN 0
 ;道具使用中はダメ
-SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:[[TEQUIP:浣腸器＋プラグ]] || TEQUIP:ボールギャグ || TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:獣姦プレイ)
+SIF TEQUIP:触手召喚 == 0 && (TEQUIP:バイブ || TEQUIP:アナルバイブ || TEQUIP:クリキャップ || TEQUIP:ニプルキャップ || TEQUIP:搾乳機 || TEQUIP:オナホール || TEQUIP:アナルビーズ || TEQUIP:縄 || TEQUIP:浣腸セット || TEQUIP:ボールギャグ || TEQUIP:アナル電極 || TEQUIP:野外プレイ || TEQUIP:獣姦プレイ)
 	RETURN 0
 ;お風呂場プレイ中はダメ
 SIF TEQUIP:お風呂場プレイ

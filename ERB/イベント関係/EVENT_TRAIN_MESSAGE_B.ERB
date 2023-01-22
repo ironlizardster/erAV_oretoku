@@ -97,7 +97,7 @@ ELSEIF SELECTCOM == [[TRAIN:アナル愛撫]]
 		PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差しした…
 	ELSEIF TEQUIP:アナルビーズ
 		PRINTFORML アナルスティックを軽く出し入れしてやった…
-	ELSEIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	ELSEIF TEQUIP:浣腸セット
 		PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじってやった…
 	ELSEIF TEQUIP:アナル電極
 		PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわした…
@@ -1479,10 +1479,10 @@ ELSEIF SELECTCOM == [[TRAIN:ボールギャグ]]
 		PRINTFORML %CALLNAME:TARGET%にボールギャグを嵌めさせた
 	ENDIF
 ;--------------------------------------------------------
-;浣腸器＋プラグ
+;浣腸セット
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:浣腸]]
-	IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	IF TEQUIP:浣腸セット
 		PRINTFORML %CALLNAME:TARGET%は肛門栓を抜かれ、腸内の汚物を肛門から撒き散らした。
 		IF TFLAG:失神中終了 == 0
 			IF ABL:マゾっ気 == 0
@@ -2361,7 +2361,7 @@ ELSEIF SELECTCOM == [[TRAIN:触手緊縛]]
 ;触手浣腸
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:触手浣腸]]
-	IF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	IF TEQUIP:浣腸セット
 		PRINTFORML 触手が抜き取られると、%CALLNAME:TARGET%は汚物を肛門から撒き散らした
 	ELSE
 		IF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)

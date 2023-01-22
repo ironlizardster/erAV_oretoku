@@ -23,7 +23,7 @@ IF TEQUIP:触手召喚
 	;触手緊縛(縄)
 	TEQUIP:縄 = 0
 	;触手浣腸(浣腸器)
-	TEQUIP:[[TEQUIP:浣腸器＋プラグ]] = 0
+	TEQUIP:浣腸セット = 0
 	;触手口辱
 	TEQUIP:触手口辱 = 0
 
@@ -209,7 +209,7 @@ IF MAXBASE:PLAYER:異種射精ゲージ != 0
 	SIF TEQUIP:縄
 		TIMES B , 1.20
 	;触手浣腸
-	SIF TEQUIP:[[TEQUIP:浣腸器＋プラグ]]
+	SIF TEQUIP:浣腸セット
 		TIMES B , 1.30
 	;触手口辱
 	SIF TEQUIP:触手口辱

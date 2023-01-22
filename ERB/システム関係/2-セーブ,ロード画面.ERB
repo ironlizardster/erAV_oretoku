@@ -95,7 +95,6 @@ DETAIL = %DETAIL%(%DOW(ZELLER(年, 月, 日))%) %DETAIL:1%
 ;ここからゲーム内の時間や情報
 DETAIL = %DETAIL% | {DAY:日付_年}/%TOSTR(DAY:日付_月, "D2")%/%TOSTR(DAY:日付_日, "D2")%(%DOW(FLAG:曜日)%)
 
-
 SELECTCASE FLAG:難易度
 	CASE 1
 		DETAIL += " EASY"
@@ -127,6 +126,8 @@ SIF FLAG:前回助手 >= 0
 
 SIF TARGET >= 1
 	DETAIL += @" 前回:%NAME:TARGET%指導"
+
+DETAIL += " " + VERS_STRING()
 
 RETURNF DETAIL
 

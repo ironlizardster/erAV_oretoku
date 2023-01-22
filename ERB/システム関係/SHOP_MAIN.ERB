@@ -11,12 +11,6 @@
 ;BEGIN SHOP後最初に呼び出される関数
 ;=================================================
 @EVENTSHOP
-;一旦購入可能アイテムを空に
-REPEAT 100
-	ITEMSALES:COUNT = 0
-REND
-
-BOUGHT = -1
 
 ;=================================================
 ;関数EVENT SHOP終了後に自動的に呼び出される関数
@@ -29,9 +23,6 @@ BOUGHT = -1
 ;SIF FLAG:事務所規模 < 120
 ;	FLAG:事務所規模 = 120
 [ENDIF]
-
-SIF BOUGHT >= 0
-	JUMP ITEM_SHOP
 
 $INPUT_LOOP
 DRAWLINE
@@ -189,18 +180,12 @@ PRINT [500] - 実績　　　　　　
 PRINT [600] - 情報　　　　　　
 PRINTL [700] - 女優名鑑
 PRINTL [750] - ＴＩＰＳ
+
 ;=================================================
 ;関数SHOW_SHOP終了時に入力された
 ;0-99（アイテム）以外の番号を処理する関数
 ;=================================================
 @USERSHOP
-;店にいる場合は買い物中フラグを外す
-IF RESULT == 999 && BOUGHT >= 0
-	CALL CLEAR_SHOP
-	BOUGHT = -1
-ELSEIF BOUGHT >= 0
-	RETURN 0
-ENDIF
 
 ;調教可能なキャラ数の確認
 E = 0
@@ -235,8 +220,7 @@ ELSEIF RESULT == 101
 	CALL CHARA_BUY_NEW
 ;アイテムショップ
 ELSEIF RESULT == 102
-	;アイテム購入中フラグを立てる
-	BOUGHT = 1
+	CALL ITEM_SHOP
 ;娼館営業
 ELSEIF RESULT == 103 && E >= 1
 	CALL YUUKAKU_TOP
@@ -900,16 +884,17 @@ IF RESULT == COMMAND_GO_BACK
 ELSEIF RESULT == COMMAND_TOGGLE_TALENT
 	PRINTL 切り替える素質の番号を入力してください
 	INPUT
-		
-	IF RESULT >= 0 && TALENT:(RESULT)
-		TALENT:(RESULT) = 0
-		PRINTFORML %NAME:TARGET%は【%TALENTNAME:(RESULT)%】を失った
-	ELSEIF RESULT >= 0 && TALENT:(RESULT) == 0
-		TALENT:(RESULT) = 1
-		PRINTFORML %NAME:TARGET%は【%TALENTNAME:(RESULT)%】を得た
+	TEMP_NUM = RESULT
+	IF !CHARACTER_EDIT_IGNORE_TALENT(TARGET, TEMP_NUM)
+		IF TALENT:TEMP_NUM
+			TALENT:TEMP_NUM = 0
+			PRINTFORML %NAME:TARGET%は【%TALENTNAME:TEMP_NUM%】を失った
+		ELSEIF TALENT:TEMP_NUM == 0
+			TALENT:TEMP_NUM = 1
+			PRINTFORML %NAME:TARGET%は【%TALENTNAME:TEMP_NUM%】を得た
+		ENDIF
+		RETURN COMMAND_GO_BACK
 	ENDIF
-
-	RETURN COMMAND_GO_BACK
 ELSEIF RESULT == COMMAND_GO_BACK_TO_MAIN
 	RETURN 0
 ELSEIF RESULT == COMMAND_PREV_CHARA && T > 0
