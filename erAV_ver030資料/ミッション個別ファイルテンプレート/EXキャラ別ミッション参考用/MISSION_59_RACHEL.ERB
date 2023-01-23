@@ -141,9 +141,9 @@ SIF MAXBASE:体力 >= 3000
 	LOCAL:1++
 SIF MAXBASE:気力 >= 2500
 	LOCAL:1++
-SIF TALENT:処女 == 1
+SIF IS処女(TARGET)
 	LOCAL:1++
-SIF TALENT:Ａ処女 == 1
+SIF ISＡ処女(TARGET)
 	LOCAL:1++
 SIF TALENT:一線越えない == 0
 	LOCAL:1++
@@ -213,9 +213,9 @@ TCVAR:触手経験 = TCVAR:性交経験 + TCVAR:フェラ経験 + TCVAR:乳姦�
 TCVAR:緊縛経験 = TCVAR:触手経験
 SIF TALENT:ふたなり || TALENT:オトコ 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
-IF TALENT:処女 == 1
+IF IS処女(TARGET)
 	CSTR:処女喪失相手 = 触手生物
-	TALENT:処女 = 0
+	IS処女(TARGET) = 0
 	CFLAG:処女喪失相手 = 8
 	SETCOLOR 0xF58F98
 	PRINTL 【処女喪失】
@@ -228,8 +228,8 @@ IF !CFLAG:初キス相手
 	PRINTL 【ファーストキス】
 	RESETCOLOR
 ENDIF
-IF TALENT:Ａ処女 == 1
-	TALENT:Ａ処女 = 0
+IF ISＡ処女(TARGET)
+	ISＡ処女(TARGET) = 0
 	CSTR:Ａ処女喪失相手 = 触手生物
 	SETCOLOR 0xF58F98
 	PRINTL 【Ａ処女喪失】

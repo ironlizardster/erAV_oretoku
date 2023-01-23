@@ -141,7 +141,7 @@ LOCAL:11 = 0
 
 SIF NO:TARGET == [[キャラ:多々良ひな]]
 	LOCAL:1++
-IF TALENT:処女 == 1 && TALENT:Ａ処女 == 1 && EXP:レズ経験 >= 3000
+IF IS処女(TARGET) && ISＡ処女(TARGET) && EXP:レズ経験 >= 3000
 	LOCAL:1++
 ELSEIF EXP:レズ経験 >= 5000
 	LOCAL:1++
@@ -157,7 +157,7 @@ SIF TALENT:キャバ嬢 == 0
 
 SIF NO:ASSI == [[キャラ:多々良ゆな]]
 	LOCAL:1++
-IF TALENT:ASSI:処女 == 1 && TALENT:ASSI:Ａ処女 == 1 && EXP:ASSI:レズ経験 >= 3000
+IF IS処女(ASSI) && ISＡ処女(ASSI) && EXP:ASSI:レズ経験 >= 3000
 	LOCAL:1++
 ELSEIF EXP:ASSI:レズ経験 >= 5000
 	LOCAL:1++
@@ -216,9 +216,9 @@ ENDIF
 TCVAR:レズ経験 += 150 + RAND:51
 TCVAR:絶頂経験 += 75 + RAND:26
 
-SIF TALENT:処女 == 0
+SIF !IS処女(TARGET)
 	TCVAR:Ｖ経験 += (TCVAR:絶頂経験 / 3)
-SIF TALENT:Ａ処女 == 0
+SIF !ISＡ処女(TARGET)
 	TCVAR:Ａ経験 += (TCVAR:絶頂経験 / 3)
 SIF (TCVAR:Ｖ経験 + TCVAR:絶頂経験) >= 1
 	TCVAR:性交経験 += (TCVAR:Ａ経験 + TCVAR:絶頂経験) / 2
@@ -226,9 +226,9 @@ SIF (TCVAR:Ｖ経験 + TCVAR:絶頂経験) >= 1
 TCVAR:ASSI:レズ経験 += TCVAR:レズ経験
 TCVAR:ASSI:絶頂経験 += TCVAR:絶頂経験
 
-SIF TALENT:ASSI:処女 == 0
+SIF IS処女(ASSI) == 0
 	TCVAR:ASSI:Ｖ経験 += (TCVAR:絶頂経験 / 3)
-SIF TALENT:ASSI:Ａ処女 == 0
+SIF !ISＡ処女(ASSI)
 	TCVAR:ASSI:Ａ経験 += (TCVAR:絶頂経験 / 3)
 SIF (TCVAR:ASSI:Ｖ経験 + TCVAR:ASSI:絶頂経験) >= 1
 	TCVAR:ASSI:性交経験 += (TCVAR:Ａ経験 + TCVAR:絶頂経験) / 2

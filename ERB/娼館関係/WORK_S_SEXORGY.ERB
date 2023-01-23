@@ -214,7 +214,7 @@ PRINTL
 WAIT
 
 ;主人公が童貞なら童貞喪失
-IF TALENT:MASTER:童貞
+IF IS童貞(MASTER)
 	;童貞喪失相手（乱交）はここで記録
 	CALL 童貞喪失実行(MASTER,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,"女性客")
 ENDIF
@@ -235,7 +235,7 @@ REPEAT CHARANUM
 	TFLAG:口上番号 = 0
 
 	;処女喪失
-	IF CFLAG:COUNT:売春Ｖ不能 == 0 && TALENT:COUNT:処女
+	IF CFLAG:COUNT:売春Ｖ不能 == 0 && IS処女(COUNT)
 		IF CFLAG:COUNT:処女喪失相手 == 0
 			;処女喪失相手（乱交）はここで記録
 				CFLAG:COUNT:131 = RAND:6
@@ -260,7 +260,7 @@ REPEAT CHARANUM
 		ENDIF
 
 	ENDIF
-	IF TALENT:COUNT:Ａ処女 == 1
+	IF ISＡ処女(COUNT)
 		CFLAG:COUNT:132 += RAND:3 
 			IF CFLAG:COUNT:132 == 0 
 				CALL Ａ処女喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
@@ -275,14 +275,13 @@ REPEAT CHARANUM
 				CALL Ａ処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ENDIF
 	ENDIF
-	IF TALENT:COUNT:童貞 == 1
-		TALENT:童貞 = 0
+	IF IS童貞(COUNT)
 		CFLAG:COUNT:133 += RAND:3
 			IF CFLAG:COUNT:133 == 0
 				CSTR:COUNT:童貞喪失相手 = 知らないオンナの人
 			ELSEIF CFLAG:COUNT:133 == 1 && TALENT:MASTER:オトコ == 0
 				CSTR:COUNT:童貞喪失相手 = %CALLNAME:MASTER%
-				IF TALENT:MASTER:処女 == 1 && CFLAG:MASTER:処女喪失相手 == 0
+				IF IS処女(MASTER) && CFLAG:MASTER:処女喪失相手 == 0
 					CALL 処女喪失実行(MASTER,NO:COUNT + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:COUNT)
 				ENDIF
 				CALL 童貞喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:MASTER)

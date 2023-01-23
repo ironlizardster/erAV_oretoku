@@ -69,15 +69,15 @@ ENDIF
 
 ;ここから各営業内容の関数へ飛びます
 ;会話営業の場合
-IF CFLAG:営業内容 == 1 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:Ａ処女 && !CFLAG:初キス相手)
+IF CFLAG:営業内容 == 1 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && ISＡ処女(TARGET) && !CFLAG:初キス相手)
 	CALL WORK_1ST
 
 ;奉仕営業の場合
-ELSEIF CFLAG:営業内容 == 2 || CFLAG:営業内容 == 7 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && TALENT:Ａ処女)
+ELSEIF CFLAG:営業内容 == 2 || CFLAG:営業内容 == 7 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && ISＡ処女(TARGET))
 	CALL WORK_2ND
 
 ;Ａ営業の場合
-ELSEIF CFLAG:営業内容 == 3 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && !TALENT:Ａ処女)
+ELSEIF CFLAG:営業内容 == 3 || (CAN_GET_PREGNANT(TARGET) && CFLAG:労役妊娠回避 && !ISＡ処女(TARGET))
 	CALL WORK_3RD
 
 ;Ｖ営業の場合

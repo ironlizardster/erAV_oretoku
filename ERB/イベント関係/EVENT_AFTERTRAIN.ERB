@@ -101,7 +101,7 @@ ENDIF
 						;****触手中毒パッチ追加ここまで****
 ;調教後の性交渉チェック
 ;奴隷がオトコか、女かつＶ感覚よりＡ感覚の方が高いか、処女でもＡ感覚が3以上ある場合はアナルセックス
-IF TALENT:オトコ || (TALENT:オトコ == 0 && ABL:Ｖ感覚 < ABL:Ａ感覚) || (TALENT:処女 && ABL:Ａ感覚 >= 3 && TALENT:Ａ処女 == 0)
+IF TALENT:オトコ || (TALENT:オトコ == 0 && ABL:Ｖ感覚 < ABL:Ａ感覚) || (IS処女(TARGET) && ABL:Ａ感覚 >= 3 && !ISＡ処女(TARGET))
 	CALL AFTERTRAIN_ANALSEX_CHECK
 ;それ以外なら通常のセックス
 ELSE
@@ -141,7 +141,7 @@ SIF TALENT:恋心 == 0 && TALENT:淫乱 == 0
 SIF EXP:性交経験 < 30
 	RETURN 0
 ;処女やオトコだとダメ
-SIF TALENT:処女 || TALENT:オトコ == 1
+SIF IS処女(TARGET) || TALENT:オトコ == 1
 	RETURN 0
 ;貞操帯だとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
@@ -763,7 +763,7 @@ SIF TALENT:未熟
 SIF EXP:獣姦経験 < 50
 	RETURN 0
 ;処女やオトコだとダメ
-SIF TALENT:処女 || TALENT:オトコ == 1
+SIF IS処女(TARGET) || TALENT:オトコ == 1
 	RETURN 0
 ;貞操帯だとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
@@ -902,7 +902,7 @@ SIF TALENT:未熟
 SIF EXP:触手経験 < 50
 	RETURN 0
 ;処女やオトコだとダメ
-SIF TALENT:処女 || TALENT:オトコ == 1
+SIF IS処女(TARGET) || TALENT:オトコ == 1
 	RETURN 0
 ;貞操帯だとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)

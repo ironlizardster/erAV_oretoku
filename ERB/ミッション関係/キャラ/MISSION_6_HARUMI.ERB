@@ -84,9 +84,9 @@ CALL キャラ追加([[キャラ:高屋敷春海]])
 ; 失敗なら0, 成功なら1, 大成功なら2をRETURNで戻す
 LOCAL = GETCHARA([[キャラ:高屋敷春海]])
 LOCAL:1 = 0
-SIF TALENT:LOCAL:処女 == 0
+SIF !IS処女(LOCAL)
 	LOCAL:1++
-SIF TALENT:LOCAL:Ａ処女 == 0
+SIF !ISＡ処女(LOCAL)
 	LOCAL:1++
 ;技巧
 SIF ABL:LOCAL:技巧 == 10

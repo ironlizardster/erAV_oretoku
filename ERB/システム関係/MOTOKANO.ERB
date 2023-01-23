@@ -374,14 +374,14 @@ ENDIF
 						;****カノ設定改造追加ここから****
 IF 元カノ性経験
 	PRINTFORML %CSTR:MASTER:彼氏名%のロストヴァージンの相手は……
-	SIF TALENT:MASTER:童貞 == 0
+	SIF !IS童貞(MASTER)
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
 	SIF FLAG:今カノ存在 == 0
 		PRINTFORML [2] - 今カレ
 	$INPUT_LOOP_LOSTVIRGIN
 	INPUT
-	IF RESULT == 0 && TALENT:MASTER:童貞 == 0
+	IF RESULT == 0 && !IS童貞(MASTER)
 		PRINTFORML 《ロストヴァージンの相手をあなたに設定しました》
 		元カノ処女喪失相手 = 1
 	ELSEIF RESULT == 1
@@ -423,14 +423,14 @@ ENDIF
 
 IF 元カノアナル経験
 	PRINTFORML %CSTR:MASTER:彼氏名%のＡ処女喪失相手は……
-	SIF TALENT:MASTER:童貞 == 0
+	SIF !IS童貞(MASTER)
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
 	SIF FLAG:今カノ存在 == 0
 		PRINTFORML [2] - 今カレ
 	$INPUT_LOOP_LOSTANALVIRGIN
 	INPUT
-	IF RESULT == 0 && TALENT:MASTER:童貞 == 0
+	IF RESULT == 0 && !IS童貞(MASTER)
 		PRINTFORML 《Ａ処女喪失相手をあなたに設定しました》
 		CFLAG:MASTER:240 = 1
 	ELSEIF RESULT == 1
@@ -454,7 +454,7 @@ IF 元カノ性経験
 	INPUT
 	IF RESULT == 1
 		PRINTFORML %CSTR:MASTER:彼氏名%の子供の父親は……
-		SIF TALENT:MASTER:童貞 == 0
+		SIF !IS童貞(MASTER)
 			PRINTFORML [0] - %CALLNAME:MASTER%
 		PRINTFORML [1] - 元カレ
 		SIF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
@@ -464,7 +464,7 @@ IF 元カノ性経験
 		PRINTFORML [5] - スライム
 		$INPUT_LOOP_MOTOKANO_FATHER
 		INPUT
-		IF RESULT == 0 && TALENT:MASTER:童貞 == 0
+		IF RESULT == 0 && !IS童貞(MASTER)
 			PRINTFORML 《子供の父親をあなたに設定しました》
 			CFLAG:MASTER:236 = 1
 		ELSEIF RESULT == 1
@@ -747,9 +747,9 @@ ENDIF
 
 						;****カノ設定改造追加ここから****
 IF 元カノアナル経験
-	TALENT:Ａ処女 = 0
+	SETBIT TALENT:性経験, 1
 ELSE
-	TALENT:Ａ処女 = 1
+	CLEARBIT TALENT:性経験, 1
 	EXP:性交経験 -= EXP:Ａ経験
 	EXP:Ａ経験 = 0
 ENDIF
@@ -1021,14 +1021,14 @@ ENDIF
 
 IF 元カノ性経験
 	PRINTFORML %CALLNAME:TARGET%のロストヴァージンの相手は……
-	SIF TALENT:MASTER:童貞 == 0
+	SIF !IS童貞(MASTER)
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
 	SIF FLAG:今カノ存在 == 0
 		PRINTFORML [2] - 今カレ
 	$INPUT_LOOP_LOSTVIRGIN
 	INPUT
-	IF RESULT == 0 && TALENT:MASTER:童貞 == 0
+	IF RESULT == 0 && !IS童貞(MASTER)
 		PRINTFORML 《ロストヴァージンの相手をあなたに設定しました》
 		元カノ処女喪失相手 = 1
 	ELSEIF RESULT == 1
@@ -1069,14 +1069,14 @@ ENDIF
 
 IF 元カノアナル経験
 	PRINTFORML %CALLNAME:TARGET%のＡ処女喪失相手は……
-	SIF TALENT:MASTER:童貞 == 0
+	SIF !IS童貞(MASTER)
 		PRINTFORML [0] - %CALLNAME:MASTER%
 	PRINTFORML [1] - 元カレ
 	SIF FLAG:今カノ存在 == 0
 		PRINTFORML [2] - 今カレ
 	$INPUT_LOOP_LOSTANALVIRGIN
 	INPUT
-	IF RESULT == 0 && TALENT:MASTER:童貞 == 0
+	IF RESULT == 0 && !IS童貞(MASTER)
 		PRINTFORML 《Ａ処女喪失相手をあなたに設定しました》
 		CFLAG:MASTER:240 = 1
 	ELSEIF RESULT == 1
@@ -1099,7 +1099,7 @@ IF 元カノ性経験
 	INPUT
 	IF RESULT == 1
 		PRINTFORML %NAME:TARGET%の子供の父親は……
-		SIF TALENT:MASTER:童貞 == 0
+		SIF !IS童貞(MASTER)
 			PRINTFORML [0] - %CALLNAME:MASTER%
 		PRINTFORML [1] - 元カレ
 		SIF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
@@ -1109,7 +1109,7 @@ IF 元カノ性経験
 		PRINTFORML [5] - スライム
 		$INPUT_LOOP_MOTOKANO_FATHER
 		INPUT
-		IF RESULT == 0 && TALENT:MASTER:童貞 == 0
+		IF RESULT == 0 && !IS童貞(MASTER)
 			PRINTFORML 《子供の父親をあなたに設定しました》
 			CFLAG:MASTER:236 = 1
 		ELSEIF RESULT == 1
@@ -1143,10 +1143,10 @@ ELSE
 ENDIF
 IF 元カノ性経験
 	CFLAG:処女喪失相手 = 1
-	TALENT:処女 = 0
+	CALL 処女喪失(TARGET)
 ELSE
 	CFLAG:処女喪失相手 = 0
-	TALENT:処女 = 1
+	CLEARBIT TALENT:性経験, 0
 	EXP:性交経験 -= EXP:Ｖ経験
 	EXP:Ｖ経験 = 0
 ENDIF
@@ -1382,9 +1382,9 @@ ENDIF
 
 						;****カノ設定改造追加ここから****
 IF 元カノアナル経験
-	TALENT:Ａ処女 = 0
+	SETBIT TALENT:性経験, 1
 ELSE
-	TALENT:Ａ処女 = 1
+	CLEARBIT TALENT:性経験, 1
 	EXP:性交経験 -= EXP:Ａ経験
 	EXP:Ａ経験 = 0
 ENDIF

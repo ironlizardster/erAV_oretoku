@@ -233,7 +233,7 @@ SIF TALENT:オトコ
 SIF ABL:信頼 < 2
 	RETURN 0
 ;処女の場合、従順3以上または露出癖3以上ないとダメ
-SIF TALENT:処女 && ABL:信頼 < 3 && ABL:露出癖 < 3
+SIF IS処女(TARGET) && ABL:信頼 < 3 && ABL:露出癖 < 3
 	RETURN 0
 ;バイブ使用中は不可
 SIF TEQUIP:バイブ

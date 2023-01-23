@@ -52,7 +52,7 @@ FOR LOCAL,1,CHARANUM
 		CONTINUE
 	ELSEIF TALENT:LOCAL:清い付き合い && TALENT:LOCAL:好奇心 == 0 && ABL:LOCAL:欲望 < 9
 		CONTINUE
-	ELSEIF TALENT:LOCAL:処女 == 1 && TALENT:LOCAL:好奇心 == 0 && ABL:LOCAL:欲望 < 4
+	ELSEIF IS処女(LOCAL) && TALENT:LOCAL:好奇心 == 0 && ABL:LOCAL:欲望 < 4
 		CONTINUE
 	ELSEIF CFLAG:LOCAL:特別コスタイプ == 79 && CFLAG:LOCAL:着衣状態 >= 64
 		CONTINUE
@@ -83,7 +83,7 @@ PRINTFORML そしてそれが示すのは、今日一日で%CALLNAME:ARG%がヴ�
 
 PRINTFORM そして部屋の片隅でも二の腕にタトゥーを入れたスキンヘッドの黒人に背後から抱きすくめられ、結合部から
 IF LOCAL > 0
-	SIF TALENT:LOCAL:処女 == 1
+	SIF IS処女(LOCAL)
 		PRINTFORM 破瓜の血が交じり合った
 ENDIF
 PRINTFORM 大量の精液を滴らせながらも、壁に手をついたままなおも極太ペニスで秘部を貫かれている
@@ -99,10 +99,10 @@ PRINTFORML この部屋は%CSTR:ARG:彼氏姓%とその仲間が利用してい�
 IF LOCAL > 0
 	PRINTFORM ここにこうして%CALLNAME:ARG%だけではなく%CALLNAME:LOCAL%までいるのは恐らく、
 	PRINTFORM 不特定多数とのＳＥＸに対して強い好奇心
-	SIF TALENT:LOCAL:処女 == 1
+	SIF IS処女(LOCAL)
 		PRINTFORM と、処女のまま度重なる指導で開発され強い肉欲
 	PRINTFORML を抱いていた%CALLNAME:LOCAL%が%CALLNAME:ARG%の『お誘い』に乗ったのだろう
-	IF TALENT:LOCAL:処女 == 1
+	IF IS処女(LOCAL)
 		PRINTFORM 念願とも言える初ＳＥＸに、%CALLNAME:LOCAL%は戸惑いと恍惚が交じり合った表情で黒人に壊れたかのように卑猥
 		PRINTFORML な言葉でおねだりしている……
 	ENDIF

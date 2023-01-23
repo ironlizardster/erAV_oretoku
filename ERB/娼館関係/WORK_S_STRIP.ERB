@@ -642,13 +642,13 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	IF TALENT:TARGET:ふたなり && CFLAG:TARGET:売春Ｖ不能 == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%と%CALLNAME:ASSI%は
 		PRINTFORMW お互いのペニスでお互いのヴァギナを交互に貫きあった
-		SIF TALENT:処女
+		SIF IS処女(TARGET)
 			E |= 1
-		SIF TALENT:童貞
+		SIF IS童貞(TARGET)
 			E |= 2
-		SIF TALENT:ASSI:処女
+		SIF IS処女(ASSI)
 			E |= 4
-		SIF TALENT:ASSI:童貞
+		SIF IS童貞(ASSI)
 			E |= 8
 		;助手→奴隷の妊娠フラグを加算
 		SIF CFLAG:営業コンドーム == 0
@@ -660,9 +660,9 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	ELSEIF (TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり) && CFLAG:ASSI:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%は勃起した自分のペニスを
 		PRINTFORMW %CALLNAME:ASSI%の陰唇に出し入れする様子を観客に見せつけた
-		SIF TALENT:童貞
+		SIF IS童貞(TARGET)
 			E |= 2
-		SIF TALENT:ASSI:処女
+		SIF IS処女(ASSI)
 			E |= 4
 		;奴隷→助手の妊娠フラグを加算
 		SIF CFLAG:営業コンドーム == 0
@@ -671,9 +671,9 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	ELSEIF  (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%は自分のヴァギナが
 		PRINTFORMW %CALLNAME:ASSI%の陰茎で貫かれる様子を観客に見せつけた
-		SIF TALENT:処女
+		SIF IS処女(TARGET)
 			E |= 1
-		SIF TALENT:ASSI:童貞
+		SIF IS童貞(ASSI)
 			E |= 8
 		;助手→奴隷の妊娠フラグを加算
 		SIF CFLAG:営業コンドーム == 0

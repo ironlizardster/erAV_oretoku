@@ -147,41 +147,30 @@ ELSE
 	ENDIF
 ENDIF
 
+TALENT:性経験 = 0
 SELECTCASE LOCAL:0
 	CASE 0
 		;男性
 		TALENT:オトコ = 1
 		TALENT:オトコの娘 = 0
-		TALENT:童貞 = 1
-		TALENT:Ａ処女 = 1
 	CASE 1
 		;女性
 		TALENT:オトコ = 0
 		TALENT:オトコの娘 = 0
-		TALENT:処女 = 1
-		TALENT:Ａ処女 = 1
 	CASE 2
 		;女性ふたなり
 		TALENT:オトコ = 0
 		TALENT:オトコの娘 = 0
-		TALENT:童貞 = 1
-		TALENT:処女 = 1
-		TALENT:Ａ処女 = 1
 		TALENT:ふたなり = 1
 	CASE 3
 		;男の娘ふたなり
 		TALENT:オトコ = 1
 		TALENT:オトコの娘 = 1
-		TALENT:童貞 = 1
-		TALENT:処女 = 1
-		TALENT:Ａ処女 = 1
 		TALENT:ふたなり = 1
 	CASE 4
 		;男の娘
 		TALENT:オトコ = 1
 		TALENT:オトコの娘 = 1
-		TALENT:童貞 = 1
-		TALENT:Ａ処女 = 1
 ENDSELECT
 
 ;■BASE値の決定
@@ -328,7 +317,7 @@ CALL SET_TALENT_FILTER(TARGET)
 
 ;■性的能力の決定
 ;処女・童貞の場合
-IF TALENT:処女 && TALENT:童貞
+IF IS処女(TARGET) && IS童貞(TARGET)
 	;1/7の確率で完全無垢に(全ての性経験・性知識が0)
 	IF RAND:7 != 0
 		LOCAL:0 = RAND:10

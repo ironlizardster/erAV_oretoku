@@ -327,7 +327,7 @@ EXP:獣姦経験 += T
 T = 0
 
 ;獣姦で処女喪失だと異常経験が２付く（【動物耳】除く）
-IF TALENT:処女 && TFLAG:V経験を伴うコマンド && TALENT:動物耳 == 0
+IF IS処女(TARGET) && TFLAG:V経験を伴うコマンド && TALENT:動物耳 == 0
 	EXP:異常経験 += 2
 	PRINTL 異常経験＋２
 ENDIF

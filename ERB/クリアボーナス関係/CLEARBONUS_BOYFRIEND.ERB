@@ -110,7 +110,7 @@ IF !CFLAG:LOCAL:初キス相手
 	ENDIF	
 ENDIF
 
-IF !CFLAG:LOCAL:処女喪失相手 && TALENT:LOCAL:処女
+IF !CFLAG:LOCAL:処女喪失相手 && IS処女(LOCAL)
 	PRINTFORML %CALLNAME:LOCAL%のロストヴァージンのお相手は……
 	PRINTL  [0] - カレシ
 	PRINTL  [1] - まだ処女のようです
@@ -125,7 +125,7 @@ IF !CFLAG:LOCAL:処女喪失相手 && TALENT:LOCAL:処女
 	ENDIF		
 ENDIF
 
-IF TALENT:LOCAL:処女 == 0
+IF !IS処女(LOCAL)
 	PRINTFORML %CALLNAME:LOCAL%は……
 	PRINTL  [0] - カレシとヤりまくりで経験豊富
 	PRINTL  [1] - ＳＥＸに慣れてきたぐらい
@@ -166,7 +166,7 @@ IF TALENT:LOCAL:処女 == 0
 	ENDIF		
 ENDIF
 
-IF TALENT:LOCAL:Ａ処女
+IF ISＡ処女(LOCAL)
 	PRINTFORML %CALLNAME:LOCAL%は……
 	IF CFLAG:LOCAL:処女喪失相手 == 初相手_今彼
 		PRINTL  [0] - Ａ処女もカレシに捧げました
@@ -174,7 +174,7 @@ IF TALENT:LOCAL:Ａ処女
 		PRINTL  [0] - Ａ処女をカレシに捧げました
 	ENDIF
 
-	IF !TALENT:LOCAL:処女
+	IF !IS処女(LOCAL)
 		PRINTL  [1] - まだアナルは処女のようです
 	ELSE
 		PRINTL  [1] - まだアナルも処女のようです
@@ -191,7 +191,7 @@ IF TALENT:LOCAL:Ａ処女
 	ENDIF		
 ENDIF
 
-IF TALENT:LOCAL:Ａ処女 == 0
+IF !ISＡ処女(LOCAL)
 	PRINTFORML %CALLNAME:LOCAL%は……
 	IF CFLAG:LOCAL:処女喪失相手 == 初相手_今彼
 		PRINTL  [0] - カレシとアナルでもヤりまくりで経験豊富

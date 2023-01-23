@@ -359,7 +359,7 @@ IF SELECTCOM == [[TRAIN:クンニ]]
 	;初めて
 	IF CFLAG:302 == 0
 		;処女
-		IF TALENT:TARGET:処女 == 1
+		IF IS処女(TARGET)
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -431,7 +431,7 @@ IF SELECTCOM == [[TRAIN:オナニー]]
 	;二回目以降
 	ELSE
 		;愛＋処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			CFLAG:304 = 6
 		;愛＋自慰中毒Lv3以上
@@ -700,7 +700,7 @@ IF SELECTCOM == [[TRAIN:バイブ]] && TEQUIP:バイブ
 	;初めて
 	IF CFLAG:TARGET:312 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1074,7 +1074,7 @@ IF SELECTCOM == [[TRAIN:正常位]]
 	;初めて
 	IF CFLAG:TARGET:321 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛＋従順Lv5
 			IF TALENT:恋心 == 1 && ABL:信頼 >= 5
 				PRINTFORMW 
@@ -1124,7 +1124,7 @@ IF SELECTCOM == [[TRAIN:後背位]]
 	;初めて
 	IF CFLAG:TARGET:322 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1181,7 +1181,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:対面座位]]
 	IF CFLAG:TARGET:323 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1236,7 +1236,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:背面座位]]
 	IF CFLAG:TARGET:324 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1587,7 +1587,7 @@ IF SELECTCOM == [[TRAIN:素股]]
 	;二回目以降
 	ELSE
 		;愛有り+処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			PRINTFORMW 
 			CFLAG:334 = 4
@@ -2222,7 +2222,7 @@ IF SELECTCOM == [[TRAIN:触手生物]]
 	;初めて
 	IF CFLAG:402 == 0
 		IF EXP:TARGET:触手経験 >= 100
-			IF TALENT:処女 == 1
+			IF IS処女(TARGET)
 				PRINTFORML 「ワタクシ、初めてですの」
 				PRINTFORMW 「その触手でワタクシの初めて、貰ってほしいですの」
 			ELSE
@@ -2230,7 +2230,7 @@ IF SELECTCOM == [[TRAIN:触手生物]]
 				PRINTFORMW 「いっぱい気持ちよくして欲しいですの」
 			ENDIF
 		ELSE
-			IF TALENT:処女 == 1
+			IF IS処女(TARGET)
 				PRINTFORMW 「嫌っ、こんな気持ち悪い生物が初めては嫌ですの」
 			ELSE
 				PRINTFORMW 「嫌っ、膣内に、膣内で蠢いて」
@@ -2781,21 +2781,21 @@ ENDIF
 ;-------------------------------------------------
 IF TFLAG:口上番号 == 20
 	IF TALENT:COUNT:淫乱
-		IF TALENT:COUNT:処女
+		IF IS処女(COUNT)
 			PRINTFORML 「処女お○んこイク%UNICODE(0x2661)%痴漢チ○ポに初めて奪われてイカされるですの%UNICODE(0x2661)%」
 		ELSE
 			PRINTFORML 「痴漢チ○ポ%UNICODE(0x2661)%痴漢チ○ポもっと欲しいですの」
 		ENDIF
 	;欲望Lv5以上
 	ELSEIF ABL:COUNT:欲望 >= 5
-		IF TALENT:COUNT:処女
+		IF IS処女(COUNT)
 			PRINTFORML 
 		ELSE
 			PRINTFORML 「あんっ%UNICODE(0x2661)%痴漢なんかに膣内射精されるなんて…」
 		ENDIF
 	;それ以外
 	ELSE
-		IF TALENT:COUNT:処女
+		IF IS処女(COUNT)
 			PRINTFORML 「イヤァァァ、痛い、痛いですの」
 		ELSE
 			PRINTFORML 「嫌っ、痛い、やめるですの」

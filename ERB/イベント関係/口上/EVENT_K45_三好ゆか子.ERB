@@ -21,9 +21,9 @@
 ;
 ;攻略
 ;一日目：鞭/苦痛刻印Lv2、従順Lv1→パイズリ/屈服Lv2→ローター自慰→パイズリ→ローター⇔ローター自慰
-;Ｃ感覚L%UNICODE(0x2665)%0→2/Ｂ感覚Lv0→1/信頼Lv1→2/技巧Lv0→1/奉仕技術Lv0→1
+;Ｃ感覚Lv0→2/Ｂ感覚Lv0→1/信頼Lv1→2/技巧Lv0→1/奉仕技術Lv0→1
 ;二日目：ローター/快楽刻印Lv1→ローター自慰→ローター/快楽刻印Lv2→ローター自慰⇔ローター
-;Ｃ感覚L%UNICODE(0x2665)%2→3/欲望Lv0→2/技巧Lv1→2/露出癖Lv0→2
+;Ｃ感覚Lv2→3/欲望Lv0→2/技巧Lv1→2/露出癖Lv0→2
 ;三日目：パイズリ⇔縦パイズリ
 ;信頼Lv2→3/技巧Lv2→3/奉仕精神Lv3
 ;四日目：ローター自慰⇔アナル愛撫/交互
@@ -770,7 +770,7 @@ IF SELECTCOM == [[TRAIN:クンニ]]
 	;初めて
 	IF CFLAG:302 == 0
 		;処女
-		IF TALENT:TARGET:処女 == 1
+		IF IS処女(TARGET)
 			PRINTFORML 「あっ…そんな所、汚いです」
 			IF TEQUIP:縄 == 0
 				PRINTFORMW 恥ずかしそうに%CALLNAME:PLAYER%を遠ざけようと%CALLNAME:TARGET%は抵抗を見せる。
@@ -910,7 +910,7 @@ IF SELECTCOM == [[TRAIN:オナニー]]
 	;二回目以降
 	ELSE
 		;愛＋処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			CFLAG:304 = 6
 		;愛＋自慰中毒Lv3以上
@@ -1195,7 +1195,7 @@ IF SELECTCOM == [[TRAIN:秘貝開帳]]
 			CFLAG:306 = 3
 		;それ以外（愛無し、露出癖Lv3未満）
 		ELSEIF CFLAG:306 <= 1 || FLAG:口上使用 == 2
-			IF TALENT:処女 == 1
+			IF IS処女(TARGET)
 				IF RAND:2 == 0
 					PRINTFORML 「%CSTR:一人称%の…処女マ○コをご覧ください」
 				ELSE
@@ -1379,7 +1379,7 @@ IF SELECTCOM == [[TRAIN:バイブ]] && TEQUIP:バイブ
 	;初めて
 	IF CFLAG:TARGET:312 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1753,7 +1753,7 @@ IF SELECTCOM == [[TRAIN:正常位]]
 	;初めて
 	IF CFLAG:TARGET:321 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛＋従順Lv5
 			IF TALENT:恋心 == 1 && ABL:信頼 >= 5
 				PRINTFORMW 
@@ -1803,7 +1803,7 @@ IF SELECTCOM == [[TRAIN:後背位]]
 	;初めて
 	IF CFLAG:TARGET:322 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1860,7 +1860,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:対面座位]]
 	IF CFLAG:TARGET:323 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1915,7 +1915,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:背面座位]]
 	IF CFLAG:TARGET:324 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -2510,7 +2510,7 @@ IF SELECTCOM == [[TRAIN:素股]]
 	;二回目以降
 	ELSE
 		;愛有り+処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			PRINTFORMW 
 			CFLAG:334 = 4
@@ -2535,7 +2535,7 @@ IF SELECTCOM == [[TRAIN:騎乗位]]
 	;初めて
 	IF CFLAG:TARGET:335 == 0
 		;愛＋処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET)
 			PRINTFORMW 
 		;それ以外（愛無し）
 		ELSE
@@ -2624,7 +2624,7 @@ IF SELECTCOM == [[TRAIN:騎乗位アナル]]
 	;初めて
 	IF CFLAG:TARGET:327 == 0 && CFLAG:TARGET:328 == 0  && CFLAG:TARGET:329 == 0 && CFLAG:TARGET:330 == 0 && CFLAG:TARGET:337 == 0
 		;企画その1　ビデオ＆デビュー作品
-		IF TALENT:ＡＶ女優 == 0 && TEQUIP:撮影中 && TALENT:TARGET:処女 == 1
+		IF TALENT:ＡＶ女優 == 0 && TEQUIP:撮影中 && IS処女(TARGET)
 			PRINTFORMW 「今から…お尻の処女を奪ってもらいます。少し怖いけど%CSTR:一人称%っ頑張りますね……」
 			PRINTFORMW カメラに向かって微笑みかけると、%CALLNAME:TARGET%はおそるおそると言った様子で%CALLNAME:PLAYER%の肉棒に指先をそえて尻穴にあてがった。
 			PRINTFORMW 「ん…くぅ……」
@@ -3202,7 +3202,7 @@ IF SELECTCOM == [[TRAIN:会話する]]
 		;それ以外
 		ELSEIF TALENT:ＡＶ女優 == 0 && TEQUIP:撮影中
 			PRINTFORMW 「あ、あのっ…%CSTR:一人称%、初めてなんです」
-			IF TALENT:TARGET:処女 == 1
+			IF IS処女(TARGET)
 				PRINTFORMW 「処女なのに…こんなエッチでごめんなさい」
 				PRINTFORMW %CALLNAME:TARGET%は恥ずかしそうに頬を染めて目を伏せる。
 			ELSE

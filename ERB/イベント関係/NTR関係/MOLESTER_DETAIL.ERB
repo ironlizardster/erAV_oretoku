@@ -122,7 +122,7 @@ ELSEIF LOCAL >= 4
 	PRINTFORML 尻や胸をイヤらしい手つきで撫で回され、勃起した痴漢のペニスを無理やり握らされたようだ。
 	PRINTFORMW 手コキを強要されながら%CALLNAME:ARG%は下着の中に手を突っ込まれ膣穴を指で弄られたらしい…
 	PRINTFORM そして%CALLNAME:ARG%の膣穴が愛液でぬかるみほぐれてきたところで%CALLNAME:ARG%の下着をずらし、%CALLNAME:ARG%の手コキでいきり立った肉棒が
-	IF TALENT:ARG:処女 == 1
+	IF IS処女(ARG)
 		PRINTFORM 未開通の
 	ELSEIF TALENT:ARG:常時発情 == 1
 		PRINTFORM 度重なる指導で発情しきった
@@ -131,7 +131,7 @@ ELSEIF LOCAL >= 4
 	ENDIF
 	PRINTFORML 膣穴に挿入された……
 	PRINTFORM %CALLNAME:ARG%
-	IF TALENT:ARG:処女 == 1
+	IF IS処女(ARG)
 		PRINTFORM が見ず知らずの男に処女を散らされ、泣きじゃくる姿
 	ELSEIF EXP:ARG:Ｖ経験 >= 10
 		PRINTFORM の膣穴はすんなりと肉棒を受け入れ、
@@ -142,7 +142,7 @@ ELSEIF LOCAL >= 4
 	ENDIF
 	PRINTFORML に興奮した痴漢はピストンの速度を上げた……
 	PRINTFORM そして%CALLNAME:ARG%
-	IF TALENT:ARG:処女 == 1
+	IF IS処女(ARG)
 		PRINTFORM が初めての異物感に抵抗している姿に
 	ELSEIF TALENT:ARG:淫乱
 		PRINTFORM がとろけた表情で痴漢のペニスを自ら腰を振って膣穴でくわえ込み、嬌声をあげて絶頂すると同時に
@@ -152,9 +152,9 @@ ELSEIF LOCAL >= 4
 		PRINTFORM がまだ慣れない異物感に抵抗している姿に
 	ENDIF
 	PRINTFORML 限界を迎えた痴漢が大量のザーメンを%CALLNAME:ARG%の子宮めがけて中出ししたという……
-	PRINTFORM 満足した痴漢がペニスを引き抜くと、%CALLNAME:ARG%の秘唇から\@ TALENT:ARG:処女 ? 破瓜の血が混ざった # \@精液がごぽりと音を立てて溢れるほど、大量に膣内射精されたようだった……
+	PRINTFORM 満足した痴漢がペニスを引き抜くと、%CALLNAME:ARG%の秘唇から\@ IS処女(ARG) ? 破瓜の血が混ざった # \@精液がごぽりと音を立てて溢れるほど、大量に膣内射精されたようだった……
 	PRINTFORMW  
-	IF TALENT:ARG:処女
+	IF IS処女(ARG)
 		CALL 処女喪失実行(ARG,初相手_痴漢,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_電車,初状況_無理犯,"痴漢")
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+2
 		EXP:ARG:異常経験 += 2

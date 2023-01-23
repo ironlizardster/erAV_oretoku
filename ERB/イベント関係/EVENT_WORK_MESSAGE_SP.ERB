@@ -61,7 +61,7 @@ REPEAT CHARANUM
 				SETFONT "あくびん"
 			ENDIF
 			SETCOLOR 0xDDBBCC
-				IF TALENT:COUNT:処女 == 1
+				IF IS処女(COUNT)
 					PRINTFORML 「%CALLNAME:COUNT%の処女膜、お客さんのぶっといオチンポで破ってぇｖ」
 				ENDIF
 			PRINTFORML  「%CALLNAME:COUNT%のオマンコでもアナルでもおクチでも、好きなトコにい～っぱい射精してね♪」
@@ -70,7 +70,7 @@ REPEAT CHARANUM
 		ENDIF
 	PRINTFORM %CALLNAME:COUNT%は
 	IF CFLAG:COUNT:売春Ｖ不能 == 0
-		SIF TALENT:COUNT:処女
+		SIF IS処女(COUNT)
 			PRINT 汚れを知らない
 		PRINTFORM 膣と
 	ENDIF
@@ -273,20 +273,20 @@ REPEAT CHARANUM
 	PRINTL
 
 	;処女喪失
-	IF CFLAG:COUNT:売春Ｖ不能 == 0 && TALENT:COUNT:処女
+	IF CFLAG:COUNT:売春Ｖ不能 == 0 && IS処女(COUNT)
 		PRINTFORML 犯される%CALLNAME:COUNT%の膣からは、白く泡立った愛液と精液に混じって破瓜の鮮血が流れ出していた
 		SETCOLOR 0xF58F98
 		PRINTFORMW 【処女喪失】
 		RESETCOLOR
 	ENDIF
-	IF TALENT:COUNT:Ａ処女 == 1
+	IF ISＡ処女(COUNT)
 		PRINTFORM 初めて肉棒を受け入れ、肉棒の太さにぽっかりと口を開けていた%CALLNAME:COUNT%のアヌスは、
 		PRINTFORML 元に戻ろうとしながらも黄ばんだ腸液混じりの精液を垂れ流していた
 		SETCOLOR 0xF58F98
 		PRINTFORMW 【Ａ処女喪失】
 		RESETCOLOR
 	ENDIF
-	IF TALENT:COUNT:童貞 == 1
+	IF IS童貞(COUNT)
 		PRINTFORM たっぷりと愛液を含んだ女性客の膣肉への挿入で、包皮が剥けたばかりの%CALLNAME:COUNT%の
 			IF TALENT:COUNT:ふたなり == 1
 				PRINTFORM ふたなりペニス

@@ -5,7 +5,7 @@
 SIF !FLAG:処女確認
 	RETURN 1
 $INPUT_LOOP_01
-IF TALENT:処女
+IF IS処女(TARGET)
 	PRINTFORML %CALLNAME:TARGET%の処女を奪いますか？
 	CALL GET_はいいいえ()
 	RETURN RESULT == COMMAND_はい
@@ -664,21 +664,21 @@ TFLAG:近親相姦 = 0
 CALL INCEST
 
 ;処女喪失相手が女性なら異常経験に＋1
-SIF TALENT:処女 && TALENT:PLAYER:オトコ == 0
+SIF IS処女(TARGET) && TALENT:PLAYER:オトコ == 0
 	Z += 1
 ;処女喪失相手が父親か母親なら異常経験に＋２
-IF TALENT:処女 && TFLAG:近親相姦 == 1
+IF IS処女(TARGET) && TFLAG:近親相姦 == 1
 	Z += 2
 ;処女喪失相手が兄弟姉妹なら異常経験に＋１
-ELSEIF TALENT:処女 && (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4)
+ELSEIF IS処女(TARGET) && (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4)
 	Z += 1
 ENDIF
 ;処女喪失が獣姦なら異常経験は基本値２
-SIF TALENT:処女 && TEQUIP:獣姦プレイ
+SIF IS処女(TARGET) && TEQUIP:獣姦プレイ
 	Z = 2
 
 ;処女喪失が騎乗位なら異常経験に＋1
-SIF TALENT:処女 && SELECTCOM == [[TRAIN:騎乗位]]
+SIF IS処女(TARGET) && SELECTCOM == [[TRAIN:騎乗位]]
 	Z += 1
 
 IF Z
@@ -699,10 +699,10 @@ ENDIF
 
 ;愛情経験
 ;調教者が童貞で調教対象が処女
-IF TALENT:PLAYER:童貞 && TALENT:処女
+IF IS童貞(PLAYER) && IS処女(TARGET)
 	E = 100
 ;調教対象が処女
-ELSEIF  TALENT:処女
+ELSEIF IS処女(TARGET)
 	E = 50
 ;正常位、正常位・胸愛撫
 ELSEIF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:正常位胸愛撫]]
@@ -735,12 +735,12 @@ E = 0
 IF ASSI > 0 && ASSIPLAY
 	R = NO:ASSI
 	;助手が童貞で調教対象が処女
-	IF TALENT:ASSI:童貞 && TALENT:処女
+	IF IS童貞(ASSI) && IS処女(TARGET)
 		RELATION:R += 30
 		SIF RELATION:R == 30
 			RELATION:R = 130
 	;調教対象が処女
-	ELSEIF TALENT:処女
+	ELSEIF IS処女(TARGET)
 		RELATION:TARGET:R += 20
 		SIF RELATION:TARGET:R == 20
 			RELATION:R = 120
@@ -748,7 +748,7 @@ IF ASSI > 0 && ASSIPLAY
 		SIF RELATION:ASSI:(NO:TARGET) == 20
 			RELATION:ASSI:(NO:TARGET) = 120
 	;助手が童貞
-	ELSEIF TALENT:ASSI:童貞
+	ELSEIF IS童貞(ASSI)
 		RELATION:R += 10
 		SIF RELATION:R == 10
 			RELATION:R = 110
@@ -770,16 +770,13 @@ ENDIF
 TFLAG:近親相姦 = 0
 CALL INCEST
 ;調教者が童貞なら童貞喪失
-IF TALENT:PLAYER:童貞 == 1
-	SETCOLOR 0xF58F98
-	TALENT:PLAYER:童貞 = 0
-	CSTR:PLAYER:童貞喪失相手 = %NAME:TARGET%
-	PRINTFORML 【童貞喪失】（%CALLNAME:PLAYER%）
-	SIF CFLAG:PLAYER:包皮状態 == 2
+IF IS童貞(PLAYER) && HAVE_PENIS(PLAYER)
+	IF CFLAG:PLAYER:包皮状態 == 2
 		CFLAG:PLAYER:包皮状態 = 3
-	SIF !CFLAG:童貞喪失相手
-		CFLAG:童貞喪失相手 = 1
-	RESETCOLOR
+	ENDIF
+	TFLAG:童貞喪失 = 1
+	SIF !CFLAG:PLAYER:童貞喪失相手
+		CALL 童貞喪失実行(PLAYER,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	SIF NO:PLAYER == [[キャラ:あなた]] && NO:TARGET == [[キャラ:宮間かなで]]
 		FLAG:かなで相手童貞喪失 = 1
 ENDIF

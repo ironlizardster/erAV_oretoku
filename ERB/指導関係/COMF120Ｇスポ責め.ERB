@@ -117,7 +117,7 @@ SIF TALENT:小柄
 
 ;貞操観念
 IF TALENT:貞操観念
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		TIMES SOURCE:情愛 , 0.60
 		TIMES SOURCE:逸脱, 5.00
 		SOURCE:反感 = 2000
@@ -127,12 +127,12 @@ IF TALENT:貞操観念
 	ENDIF
 ;貞操無頓着
 ELSEIF TALENT:貞操無頓着
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		TIMES SOURCE:情愛 , 0.60
 		SOURCE:反感 = 300
 	ENDIF
 ELSE
-	SIF TALENT:処女 == 1
+	SIF IS処女(TARGET)
 		SOURCE:反感 = 3000
 ENDIF
 

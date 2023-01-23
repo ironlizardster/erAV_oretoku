@@ -31,7 +31,7 @@ ENDIF
 
 ;調教者の処女を与えるどうかの確認
 $INPUT_LOOP_01
-IF TALENT:PLAYER:処女
+IF IS処女(PLAYER)
 	PRINTFORML %CALLNAME:PLAYER%の処女を%CALLNAME:TARGET%に与えますか？
 	PRINTL  [0] - はい
 	PRINTL  [1] - いいえ
@@ -247,7 +247,7 @@ IF TALENT:オトコ == 0
 ENDIF
 
 ;調教者が処女
-IF TALENT:PLAYER:処女
+IF IS処女(PLAYER)
 	TIMES SOURCE:屈従 , 20.00
 	TIMES SOURCE:逸脱 , 3.00
 ENDIF
@@ -302,16 +302,16 @@ Z = 0
 TFLAG:近親相姦 = 0
 CALL INCEST
 ;逆レイプで童貞喪失場合異常経験に＋１
-SIF TALENT:童貞
+SIF IS童貞(TARGET)
 	Z += 1
 ;童貞喪失相手が母親なら異常経験に＋２
-IF TALENT:童貞 && TFLAG:近親相姦 == 1
+IF IS童貞(TARGET) && TFLAG:近親相姦 == 1
 	Z += 2
 ;童貞喪失相手が祖母なら異常経験に＋１
-ELSEIF TALENT:童貞 && TFLAG:近親相姦 == 5
+ELSEIF IS童貞(TARGET) && TFLAG:近親相姦 == 5
 	Z += 1
 ;童貞喪失相手が姉妹なら異常経験に＋１
-ELSEIF TALENT:童貞 && (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4)
+ELSEIF IS童貞(TARGET) && (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4)
 	Z += 1
 ENDIF
 IF Z
@@ -321,7 +321,7 @@ ENDIF
 
 Z = 0
 ;逆レイプで処女喪失の場合、調教者の異常経験に＋１
-SIF TALENT:PLAYER:処女
+SIF IS処女(PLAYER)
 	Z += 1
 IF Z
 	EXP:PLAYER:異常経験 += Z
@@ -332,10 +332,10 @@ TFLAG:近親相姦 = 0
 
 ;愛情経験
 ;調教者が処女で調教対象が童貞
-IF TALENT:PLAYER:処女 && TALENT:童貞
+IF IS処女(PLAYER) && IS童貞(TARGET)
 	E = 100
 ;調教対象が童貞
-ELSEIF TALENT:童貞
+ELSEIF IS童貞(TARGET)
 	E = 50
 ;調教対象がオトコ
 ELSEIF TALENT:オトコ
@@ -354,22 +354,18 @@ TFLAG:近親相姦 = 0
 CALL INCEST
 
 ;調教対象が童貞なら童貞喪失
-IF TALENT:童貞
-	TALENT:童貞 = 0
-	SETCOLOR 0xF58F98
-	PRINTFORML 【童貞喪失】
-	RESETCOLOR
+IF IS処女(PLAYER) && IS童貞(TARGET)
 	IF CFLAG:包皮状態 == 2
 		CFLAG:包皮状態 = 3
 	ENDIF
 	TFLAG:童貞喪失 = 1
 	SIF !CFLAG:童貞喪失相手
-		CALL 童貞喪失実行(PLAYER,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_口)
+		CALL 童貞喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 
 ENDIF
 
 ;調教者が処女なら処女喪失
-IF TALENT:PLAYER:処女
+IF IS処女(PLAYER)
 	IF !CFLAG:PLAYER:処女喪失相手
 		CALL 処女喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	ENDIF
@@ -403,7 +399,7 @@ PRINTFORM %NAME:PLAYER%の
 SIF TALENT:PLAYER:淫壺
 	PRINTFORM 淫猥に%CALLNAME:TARGET%の肉棒に吸い付く
 PRINTFORM 膣肉で
-SIF TALENT:童貞
+SIF IS童貞(TARGET)
 	PRINTFORM 童貞
 
 PRINTFORML ペニスを刺激されて、%CALLNAME:TARGET%は精通を迎えた…

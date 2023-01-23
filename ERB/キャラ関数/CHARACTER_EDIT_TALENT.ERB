@@ -24,21 +24,13 @@ TALENT:対象:入力値 = !TALENT:対象:入力値
 SELECTCASE 入力値
 	CASE [[TALENT:オトコ]]
 		IF TALENT:対象:オトコ
-			TALENT:対象:処女 = 0
 			TALENT:対象:ギャル系 = 0
 		ELSE
 			TALENT:対象:オトコの娘 = 0
 			TALENT:対象:チャラ男 = 0
-			SIF !TALENT:対象:ふたなり
-				TALENT:対象:童貞 = 0
 		ENDIF
 	CASE [[TALENT:ふたなり]]
 		IF !TALENT:対象:ふたなり
-			IF TALENT:対象:オトコ
-				TALENT:対象:処女 = 0
-			ELSE
-				TALENT:対象:童貞 = 0
-			ENDIF
 		ENDIF
 	CASE [[TALENT:絶壁]]
 		IF TALENT:対象:絶壁

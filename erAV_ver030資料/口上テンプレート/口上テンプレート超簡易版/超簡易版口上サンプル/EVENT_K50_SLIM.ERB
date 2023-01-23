@@ -722,7 +722,7 @@ IF TFLAG:初キス == 6
 		PRINTFORMW  　
 		PRINTFORML  わたしには、既に新しい肉体が与えられていた。
 		PRINTFORMW  あの星で受けた体の傷や肉体の変化は、どこにも残されていない。
-		SIF TALENT:処女 == 0
+		SIF !IS処女(TARGET)
 			PRINTFORMW  処女膜すら、再生されているようだった。
 		PRINTFORML  地上での思い出がもはや記憶の中にしか残されていないことが、
 		PRINTFORML  なぜか、無性に寂しかった。
@@ -831,7 +831,7 @@ IF TFLAG:初キス == 999
 		PRINTFORMW  　
 		PRINTFORML  わたしには、既に新しい肉体が与えられていた。
 		PRINTFORMW  あの星で受けた体の傷や肉体の変化は、どこにも残されていない。
-		SIF TALENT:処女 == 0
+		SIF !IS処女(TARGET)
 			PRINTFORMW  処女膜すら、再生されているようだった。
 		PRINTFORML  地上での思い出がもはや記憶の中にしか残されていないことが、
 		PRINTFORML  なぜか、無性に寂しかった。

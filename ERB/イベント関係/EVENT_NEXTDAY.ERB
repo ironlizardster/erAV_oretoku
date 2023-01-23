@@ -676,7 +676,7 @@ REPEAT CHARANUM
 		SIF MARK:COUNT:反発刻印 > 0
 			CONTINUE
 		;処女の場合は従順+欲望+Ａ感覚+14以下だとダメ
-		SIF TALENT:COUNT:処女 && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
+		SIF IS処女(COUNT) && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
 			CONTINUE
 		;オトコでない場合は「従順+欲望+V感覚+12以下」かつ「従順+欲望+Ａ感覚+14以下」だとダメ
 		SIF !TALENT:COUNT:オトコ && (ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ｖ感覚 <= 12 && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14)
@@ -704,13 +704,13 @@ REPEAT CHARANUM
 		SIF TALENT:COUNT:快感の否定
 			A -= 1
 		;セックス狂
-		SIF TALENT:COUNT:セックス狂 && TALENT:COUNT:処女 == 0 && ABL:COUNT:Ｖ感覚 >= ABL:COUNT:Ａ感覚
+		SIF TALENT:COUNT:セックス狂 && !IS処女(COUNT) && ABL:COUNT:Ｖ感覚 >= ABL:COUNT:Ａ感覚
 			A += 1
 		;尻穴狂い
-		SIF TALENT:COUNT:尻穴狂い && (TALENT:COUNT:処女 || ABL:COUNT:Ａ感覚 > ABL:COUNT:Ｖ感覚)
+		SIF TALENT:COUNT:尻穴狂い && (IS処女(COUNT) || ABL:COUNT:Ａ感覚 > ABL:COUNT:Ｖ感覚)
 			A += 1
 		;淫乱
-		SIF TALENT:COUNT:淫乱 && TALENT:COUNT:処女
+		SIF TALENT:COUNT:淫乱 && IS処女(COUNT)
 			A += 1
 		SIF A > 0
 			CALL ADDRANDCHOOSE(COUNT)
@@ -758,7 +758,7 @@ F = 1
 SIF TALENT:TEMP_NUM:オトコ
 	F = 0
 ;処女だとダメ
-SIF TALENT:TEMP_NUM:処女
+SIF IS処女(TEMP_NUM)
 	F = 0
 ;貞操帯だとダメ
 SIF CFLAG:TEMP_NUM:特別コスタイプ == 79 && (CFLAG:TEMP_NUM:着衣状態 & 64)
@@ -803,7 +803,7 @@ ELSE
 	ENDIF
 	PRINTFORM %CALLNAME:MASTER%に抱かれたくて、
 	PRINTFORML アナルが疼いてどうしようもないらしい……
-	IF TALENT:TEMP_NUM:Ａ処女
+	IF ISＡ処女(TEMP_NUM)
 		PRINTFORM %CALLNAME:TEMP_NUM%は未だ肉棒を受け入れたことがない、快楽を覚えるようになった窄まりを左右の手で拡げて
 		PRINTFORML %CALLNAME:MASTER%に後ろの処女を奪って欲しいと懇願してきた
 		PRINTFORML 左右に拡げられて薄く口を開いたアナルは、%CALLNAME:MASTER%のモノを待ち望んでヒクついている
@@ -812,7 +812,7 @@ ELSE
 		PRINTFORMW 慣らすようにゆっくりと挿入した……
 	ENDIF
 	PRINTFORML {S}回の交わりの後に、二人は繋がったまま抱き合い、深い眠りに落ちた
-	IF TALENT:TEMP_NUM:Ａ処女
+	IF ISＡ処女(TEMP_NUM)
 		CALL Ａ処女喪失実行(TEMP_NUM,NO:MASTER + 1,BASE:TEMP_NUM:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_夜這)
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
@@ -854,7 +854,7 @@ F = 1
 SIF TALENT:TEMP_NUM:オトコ
 	F = 0
 ;処女だとダメ
-SIF TALENT:TEMP_NUM:処女
+SIF IS処女(TEMP_NUM)
 	F = 0
 ;貞操帯だとダメ
 SIF CFLAG:TEMP_NUM:特別コスタイプ == 79 && (CFLAG:TEMP_NUM:着衣状態 & 64)
@@ -905,7 +905,7 @@ IF F == 1
 	JUEL:TEMP_NUM:快Ｖ += S*400
 	JUEL:TEMP_NUM:恭順 += S*250
 	JUEL:TEMP_NUM:欲情 += S*250
-ELSEIF F == 0 && TALENT:TEMP_NUM:Ａ処女 == 0
+ELSEIF F == 0 && !ISＡ処女(TEMP_NUM)
 	;アナルセックス回数
 	S = ABL:TEMP_NUM:性交中毒
 	;Ａ感覚

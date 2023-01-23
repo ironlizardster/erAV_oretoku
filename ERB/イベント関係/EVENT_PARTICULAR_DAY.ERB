@@ -378,7 +378,7 @@ IF RESULT == COMMAND_はい
 
 	;お楽しみはこれからだ
 	;処女ではなく、露出癖4以上、性交中毒2以上
-	IF TALENT:処女 == 0 && ABL:性交中毒 >= 2 && ABL:露出癖 >= 4
+	IF !IS処女(TARGET) && ABL:性交中毒 >= 2 && ABL:露出癖 >= 4
 		DRAWLINE
 		PRINTFORML 陽もだいぶ暮れてきたようだが
 		PRINTFORML %CALLNAME:TARGET%はまだ帰ろうとしない……
@@ -420,7 +420,7 @@ IF RESULT == COMMAND_はい
 		PRINTFORML 愛情経験＋{N / 3}
 		EXP:愛情経験 += N * ABL:信頼 / 2
 		CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口)
-		IF TALENT:MASTER:童貞 == 1 && (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
+		IF IS童貞(MASTER) && HAVE_PENIS(MASTER)
 			CALL 童貞喪失実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_なし)
 		ENDIF
 	ENDIF

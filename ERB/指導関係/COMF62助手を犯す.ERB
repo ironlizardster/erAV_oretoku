@@ -385,18 +385,18 @@ TARGET = ASSI
 TFLAG:近親相姦 = 0
 CALL INCEST
 ;調教者が童貞なら童貞喪失
-IF TALENT:PLAYER:童貞
-	TALENT:PLAYER:童貞 = 0
-	SIF CFLAG:PLAYER:童貞喪失相手 == 0
-		CFLAG:PLAYER:童貞喪失相手 = 1
+IF IS童貞(PLAYER) && HAVE_PENIS(PLAYER)
 	IF CFLAG:PLAYER:包皮状態 == 2
 		CFLAG:PLAYER:包皮状態 = 3
 	ENDIF
+	TFLAG:童貞喪失 = 1
+	SIF !CFLAG:PLAYER:童貞喪失相手
+		CALL 童貞喪失実行(PLAYER,NO:ASSI + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 ENDIF
 TARGET = C
 
 ;助手が処女
-IF TALENT:ASSI:処女 == 1
+IF IS処女(ASSI)
 	TIMES SOURCE:屈従 , 20.00
 	TIMES SOURCE:逸脱 , 3.00
 

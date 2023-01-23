@@ -390,7 +390,7 @@ IF SELECTCOM == [[TRAIN:クンニ]]
 	;初めて
 	IF CFLAG:302 == 0
 		;処女
-		IF TALENT:TARGET:処女 == 1
+		IF IS処女(TARGET)
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -490,7 +490,7 @@ IF SELECTCOM == [[TRAIN:オナニー]]
 	;二回目以降
 	ELSE
 		;愛＋処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			CFLAG:304 = 6
 		;愛＋自慰中毒Lv3以上
@@ -790,7 +790,7 @@ IF SELECTCOM == [[TRAIN:バイブ]] && TEQUIP:バイブ
 	;初めて
 	IF CFLAG:TARGET:312 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1164,7 +1164,7 @@ IF SELECTCOM == [[TRAIN:正常位]]
 	;初めて
 	IF CFLAG:TARGET:321 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛＋従順Lv5
 			IF TALENT:恋心 == 1 && ABL:信頼 >= 5
 				PRINTFORMW 
@@ -1232,7 +1232,7 @@ IF SELECTCOM == [[TRAIN:後背位]]
 	;初めて
 	IF CFLAG:TARGET:322 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1304,7 +1304,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:対面座位]]
 	IF CFLAG:TARGET:323 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1369,7 +1369,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:背面座位]]
 	IF CFLAG:TARGET:324 == 0
 		;処女
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1429,7 +1429,7 @@ IF SELECTCOM == [[TRAIN:正常位アナル]]
 		IF TALENT:TARGET:恋心 == 1
 			PRINTFORMW 
 		;それ以外（愛無し）
-		ELSEIF TALENT:TARGET:Ａ処女 == 1
+		ELSEIF ISＡ処女(TARGET)
 			PRINTFORML 「え……そ、そっちに入れるの……」
 			PRINTFORMW %CALLNAME:PLAYER%の肉棒の先端がアナルへとあてがわれたのを感じると%CALLNAME:TARGET%は身動ぎした
 			PRINTFORML 「や…あああっ！！」
@@ -1482,7 +1482,7 @@ IF SELECTCOM == [[TRAIN:後背位アナル]]
 		IF TALENT:TARGET:恋心 == 1
 			PRINTFORMW 
 		;それ以外（愛無し）
-		ELSEIF TALENT:TARGET:Ａ処女 == 1
+		ELSEIF ISＡ処女(TARGET)
 			PRINTFORML 「ま…待って…そ、そこは違う穴」
 			PRINTFORMW 尻穴へと%CALLNAME:PLAYER%が肉棒をあてがうと%CALLNAME:TARGET%は怯えた様子で抵抗を示した
 			PRINTFORML 「や、やめてっ…いやあっ！！」
@@ -1770,7 +1770,7 @@ IF SELECTCOM == [[TRAIN:素股]]
 	;二回目以降
 	ELSE
 		;愛有り+処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			PRINTFORMW 
 			CFLAG:334 = 4

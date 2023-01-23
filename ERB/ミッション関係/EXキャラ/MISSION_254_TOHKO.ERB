@@ -127,9 +127,9 @@ SIF ABL:信頼 >= 4
 	LOCAL:1++
 SIF ABL:欲望 <= 3
 	LOCAL:1++
-SIF TALENT:処女 == 1
+SIF IS処女(TARGET)
 	LOCAL:1++
-SIF TALENT:Ａ処女 == 1
+SIF ISＡ処女(TARGET)
 	LOCAL:1++
 SIF MARK:快楽刻印 <= 1
 	LOCAL:1++
@@ -153,13 +153,13 @@ RETURN 0
 ;  ARG 成否判定の結果(0:失敗, 1:成功, 2:大成功)
 ;=================================================
 @MISSION_REPORT_254(ARG)
-IF TALENT:処女
+IF IS処女(TARGET)
 	CALL 処女喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_指導,"楠谷響子")
 ENDIF
 IF !CFLAG:初キス相手
 	CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_肛門,"楠谷響子")
 ENDIF
-IF TALENT:Ａ処女
+IF ISＡ処女(TARGET)
 	CALL Ａ処女喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_指導,"楠谷響子")
 ENDIF
 TCVAR:絶頂経験 += 20 + RAND:11

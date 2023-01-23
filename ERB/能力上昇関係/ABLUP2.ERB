@@ -14,7 +14,7 @@ DRAWLINE
 ;PRINTL Ｖ感覚が高まると、通常のセックスやバイブからより大きな快楽が得られます
 ;DRAWLINE
 ;最大Lvは5、[セックス狂]が付いている場合はLv10まで解放
-IF ABL:Ｖ感覚 >= 2 && TALENT:処女 == 1
+IF ABL:Ｖ感覚 >= 2 && IS処女(TARGET)
 	PRINTW これ以上UPするには非処女である必要があります
 	RETURN 0
 ELSEIF ABL:Ｖ感覚 >= 5 && TALENT:セックス狂 == 0
@@ -78,7 +78,7 @@ RETURN 0
 ;オトコは却下
 SIF TALENT:オトコ
 	RETURN 0
-SIF ABL:Ｖ感覚 >= 3 && TALENT:処女 == 1
+SIF ABL:Ｖ感覚 >= 3 && IS処女(TARGET)
 	RETURN 0
 
 ;Ｖ感覚はLv5が上限、[セックス狂]が付いている場合はLv10まで解放

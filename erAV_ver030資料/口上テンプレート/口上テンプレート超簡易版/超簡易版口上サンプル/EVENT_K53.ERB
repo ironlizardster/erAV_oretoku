@@ -588,7 +588,7 @@ IF SELECTCOM == [[TRAIN:クンニ]] && TEQUIP:獣姦プレイ == 0
 	;初めて
 	IF CFLAG:302 == 0
 		;処女
-		IF TALENT:TARGET:処女 == 1
+		IF IS処女(TARGET)
 			PRINTFORMW 
 		;それ以外
 		ELSE
@@ -660,7 +660,7 @@ IF SELECTCOM == [[TRAIN:オナニー]]
 	;二回目以降
 	ELSE
 		;愛＋処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:304 <= 5 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			CFLAG:304 = 6
 		;愛＋自慰中毒Lv3以上
@@ -971,7 +971,7 @@ IF SELECTCOM == [[TRAIN:バイブ]] && TEQUIP:バイブ
 	;初めて
 	IF CFLAG:TARGET:312 == 0
 		;処女
-		IF TALENT:処女 == 1 && EXP:Ｖ経験 == 1
+		IF IS処女(TARGET) && EXP:Ｖ経験 == 1
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 「」
@@ -1401,7 +1401,7 @@ IF SELECTCOM == [[TRAIN:正常位]]
 	;初めて
 	IF CFLAG:TARGET:321 == 0
 		;処女
-		IF TALENT:処女 == 1 && EXP:Ｖ経験 == 1
+		IF IS処女(TARGET) && EXP:Ｖ経験 == 1
 			;愛＋従順Lv5
 			IF TALENT:恋心 == 1 && ABL:信頼 >= 5
 				PRINTFORMW 
@@ -1451,7 +1451,7 @@ IF SELECTCOM == [[TRAIN:後背位]] && TEQUIP:獣姦プレイ == 0
 	;初めて
 	IF CFLAG:TARGET:322 == 0
 		;処女
-		IF TALENT:処女 == 1 && EXP:Ｖ経験 == 1
+		IF IS処女(TARGET) && EXP:Ｖ経験 == 1
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1508,7 +1508,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:対面座位]]
 	IF CFLAG:TARGET:323 == 0
 		;処女
-		IF TALENT:処女 == 1 && EXP:Ｖ経験 == 1
+		IF IS処女(TARGET) && EXP:Ｖ経験 == 1
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1563,7 +1563,7 @@ ENDIF
 IF SELECTCOM == [[TRAIN:背面座位]]
 	IF CFLAG:TARGET:324 == 0
 		;処女
-		IF TALENT:処女 == 1 && EXP:Ｖ経験 == 1
+		IF IS処女(TARGET) && EXP:Ｖ経験 == 1
 			;愛
 			IF TALENT:恋心 == 1
 				PRINTFORMW 
@@ -1914,7 +1914,7 @@ IF SELECTCOM == [[TRAIN:素股]]
 	;二回目以降
 	ELSE
 		;愛有り+処女
-		IF TALENT:TARGET:恋心 == 1 && TALENT:TARGET:処女 == 1 && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
+		IF TALENT:TARGET:恋心 == 1 && IS処女(TARGET) && (CFLAG:334 <= 3 || FLAG:口上使用 == 2)
 			PRINTFORMW 
 			PRINTFORMW 
 			CFLAG:334 = 4
@@ -3018,7 +3018,7 @@ ENDIF
 ;				;助手が特定のキャラA（Y1）
 ;				IF NO:ASSI == Y1
 ;					;特定のキャラAが処女
-;					IF TALENT:ASSI:処女 == 1 && EXP:ASSI:Ｖ経験 == 1
+;					IF IS処女(ASSI) && EXP:ASSI:Ｖ経験 == 1
 ;						;特定のキャラAに愛あり
 ;						IF TALENT:ASSI:恋心 == 1
 ;							PRINTFORMW 
@@ -3039,7 +3039,7 @@ ENDIF
 ;				;助手が特定のキャラB（Y2）
 ;				ELSEIF NO:ASSI == Y2
 ;					;特定のキャラBが処女
-;					IF TALENT:ASSI:処女 == 1 && EXP:ASSI:Ｖ経験 == 1
+;					IF IS処女(ASSI) && EXP:ASSI:Ｖ経験 == 1
 ;						;特定のキャラBに愛あり
 ;						IF TALENT:ASSI:恋心 == 1
 ;							PRINTFORMW 
@@ -3065,7 +3065,7 @@ ENDIF
 ;				;助手が特定のキャラA(Y1)
 ;				IF NO:ASSI == Y1
 ;					;特定のキャラが処女
-;					IF TALENT:ASSI:処女 == 1 && EXP:ASSI:Ｖ経験 == 1
+;					IF IS処女(ASSI) && EXP:ASSI:Ｖ経験 == 1
 ;						;特定のキャラに愛あり
 ;						IF TALENT:ASSI:恋心 == 1
 ;							PRINTFORMW 
@@ -3086,7 +3086,7 @@ ENDIF
 ;				;助手が特定のキャラB(Y2)
 ;				ELSEIF NO:ASSI == Y2
 ;					;特定のキャラBが処女
-;					IF TALENT:ASSI:処女 == 1 && EXP:ASSI:Ｖ経験 == 1
+;					IF IS処女(ASSI) && EXP:ASSI:Ｖ経験 == 1
 ;						;特定のキャラBに愛あり
 ;						IF TALENT:ASSI:恋心 == 1
 ;							PRINTFORMW 

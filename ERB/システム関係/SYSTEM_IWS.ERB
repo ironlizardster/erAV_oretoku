@@ -29,24 +29,19 @@
 IF BASE:身長 == 0 
 	PRINTFORM 身長：不明
 ELSE 
-	PRINTFORM 身長：{BASE:身長}cm
+	PRINTFORM 身長：%TEXTS("0.01", BASE:身長)%cm
 ENDIF
 
 IF BASE:体重 == 0 
 	PRINTFORM   体重：不明
 ELSE 
-	PRINTFORM   体重：{BASE:体重}kg
+	PRINTFORM   体重：%TEXTS("0.01", BASE:体重)%kg
 ENDIF
 
 IF BASE:バスト == 0 
 	PRINTFORM   Ｂ：不明
-ELSEIF FLAG:ＩＷＳなし == 0
-	PRINTFORM   Ｂ：{BASE:バスト}cm
 ELSE
-	PRINTFORM   Ｂ：{BASE:バスト}.
-		SIF BASE:[[BASE:バスト（小数）]] < 10
-		PRINT 0
-	PRINTFORM {BASE:[[BASE:バスト（小数）]]}cm
+	PRINTFORM   Ｂ：%TEXTS("0.01", BASE:バスト)%cm
 ENDIF
 PRINT (
 CALL SHOW_CUPSIZE
@@ -55,13 +50,13 @@ PRINT )
 IF BASE:ウェスト == 0 
 	PRINTFORM   Ｗ：不明
 ELSE 
-	PRINTFORM   Ｗ：{BASE:ウェスト}cm
+	PRINTFORM   Ｗ：%TEXTS("0.01", BASE:ウェスト)%cm
 ENDIF
 
 IF BASE:ヒップ == 0 
 	PRINTFORM   Ｈ：不明
 ELSE 
-	PRINTFORM   Ｈ：{BASE:ヒップ}cm
+	PRINTFORM   Ｈ：%TEXTS("0.01", BASE:ヒップ)%cm
 ENDIF
 PRINTL
 IF TALENT:ふたなり == 1 || TALENT:オトコ == 1
@@ -181,12 +176,8 @@ IF B
 		;絶壁持ちは成長しない。それが自然の摂理。
 		SIF TALENT:絶壁
 			U = 0
-	BASE:[[BASE:バスト（小数）]] += U
 ;バスト成長処理
-	IF BASE:[[BASE:バスト（小数）]] >= 100
-			BASE:バスト += BASE:[[BASE:バスト（小数）]] /100
-			BASE:[[BASE:バスト（小数）]] = BASE:[[BASE:バスト（小数）]] % 100
-	ENDIF
+	BASE:バスト += U
 ;バスト成長表示
 	DRAWLINE
 	IF U % 100 < 10
@@ -314,11 +305,7 @@ ELSEIF RESULT == 0
 		CALL CHECK_CUPSIZE
 		GOTO LOOP_BUSTUP
 	ELSE
-		IF BASE:[[BASE:バスト（小数）]] < 10 
-			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.0{BASE:[[BASE:バスト（小数）]]}cm(
-		ELSE
-			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.{BASE:[[BASE:バスト（小数）]]}cm(
-		ENDIF
+		PRINTFORM 《%NAME:TARGET%のバストは%TEXTS("0.01", BASE:バスト)%cm(
 		CALL SHOW_CUPSIZE
 		PRINTFORMW カップ)になった》
 		CALL BUST_RANKUP
@@ -376,11 +363,7 @@ ELSEIF RESULT == 0
 		CALL CHECK_CUPSIZE
 		GOTO LOOP_BUSTDOWN
 	ELSE
-		IF BASE:[[BASE:バスト（小数）]] < 10 
-			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.0{BASE:[[BASE:バスト（小数）]]}cm(
-		ELSE
-			PRINTFORM 《%NAME:TARGET%のバストは{BASE:バスト}.{BASE:[[BASE:バスト（小数）]]}cm(
-		ENDIF
+		PRINTFORM 《%NAME:TARGET%のバストは%TEXTS("0.01", BASE:バスト)%cm(
 		CALL SHOW_CUPSIZE
 		PRINTFORMW カップ)になった》
 		CALL BUST_RANKDOWN
@@ -403,46 +386,30 @@ TARGET = COUNT
 ;体重増加
 IF TALENT:妊娠
 	U = 10 + RAND:5
-	BASE:[[BASE:体重（小数）]] += U
+	BASE:体重 += U
 	CFLAG:妊娠増加体重 += U
-	IF BASE:[[BASE:体重（小数）]] >= 100
-		BASE:体重 += BASE:[[BASE:体重（小数）]] / 100
-		BASE:[[BASE:体重（小数）]] = BASE:[[BASE:体重（小数）]] % 100
-	ENDIF
 ENDIF
 
 ;バスト成長
 U = 15 + RAND:5
 ;IWSがオンの場合成長値にボーナスが付く。
 ;ボーナス分は出産育児後にも維持される。
-BASE:[[BASE:バスト（小数）]] += U + (FLAG:ＩＷＳなし * (RAND:5 + 5))
+BASE:バスト += U + (FLAG:ＩＷＳなし * (RAND:5 + 5))
 CFLAG:妊娠増加バストIWS除く += U
-IF BASE:[[BASE:バスト（小数）]] >= 100
-		BASE:バスト += BASE:[[BASE:バスト（小数）]] /100
-		BASE:[[BASE:バスト（小数）]] = BASE:[[BASE:バスト（小数）]] % 100
-ENDIF
 CALL BUST_RANKUP
 
 ;ウェスト成長
 IF TALENT:妊娠
 	U = 70 + RAND:20
-	BASE:[[BASE:ウェスト（小数）]] += U
+	BASE:ウェスト += U
 	CFLAG:妊娠増加ウェスト += U
-	IF BASE:[[BASE:ウェスト（小数）]] >= 100
-		BASE:ウェスト += BASE:[[BASE:ウェスト（小数）]] /100
-		BASE:[[BASE:ウェスト（小数）]] = BASE:[[BASE:ウェスト（小数）]] % 100
-	ENDIF
 ENDIF
 
 ;ヒップ成長
 IF TALENT:妊娠
 	U = 10 + RAND:5
-	BASE:[[BASE:ヒップ（小数）]] += U
+	BASE:ヒップ += U
 	CFLAG:妊娠増加ヒップ += U
-	IF BASE:[[BASE:ヒップ（小数）]] >= 100
-		BASE:ヒップ += BASE:[[BASE:ヒップ（小数）]] /100
-		BASE:[[BASE:ヒップ（小数）]] = BASE:[[BASE:ヒップ（小数）]] % 100
-	ENDIF
 ENDIF
 
 TARGET = A
@@ -454,21 +421,13 @@ A= TARGET
 TARGET = C
 
 ;体重減少
-BASE:[[BASE:体重（小数）]] -= CFLAG:妊娠増加体重
-IF BASE:[[BASE:体重（小数）]] < 0
-	BASE:体重 += BASE:[[BASE:体重（小数）]] / 100
-	BASE:[[BASE:体重（小数）]] = 0 - (BASE:[[BASE:体重（小数）]] % 100)
-ENDIF
+BASE:体重 -= CFLAG:妊娠増加体重
 CFLAG:妊娠増加体重 = 0
 
 ;バスト縮小
 IF TALENT:育児中 == 1
 ELSE
-	BASE:[[BASE:バスト（小数）]] -= CFLAG:妊娠増加バストIWS除く
-	IF BASE:[[BASE:バスト（小数）]] < 0
-		BASE:バスト += BASE:[[BASE:バスト（小数）]] / 100
-		BASE:[[BASE:バスト（小数）]] = 0 - (BASE:[[BASE:バスト（小数）]] % 100)
-	ENDIF
+	BASE:バスト -= CFLAG:妊娠増加バストIWS除く
 	CFLAG:妊娠増加バストIWS除く = 0
 	;複数ランクダウンが有り得る
 	CALL BUST_RANKDOWN
@@ -476,19 +435,11 @@ ELSE
 
 ENDIF
 ;ウェスト縮小
-BASE:[[BASE:ウェスト（小数）]] -= CFLAG:妊娠増加ウェスト
-IF BASE:[[BASE:ウェスト（小数）]] < 0
-	BASE:ウェスト += BASE:[[BASE:ウェスト（小数）]] / 100
-	BASE:[[BASE:ウェスト（小数）]] = 0 - (BASE:[[BASE:ウェスト（小数）]] % 100)
-ENDIF
+BASE:ウェスト -= CFLAG:妊娠増加ウェスト
 CFLAG:妊娠増加ウェスト = 0
 
 ;ヒップ縮小
-BASE:[[BASE:ヒップ（小数）]] -= CFLAG:妊娠増加ヒップ
-IF BASE:[[BASE:ヒップ（小数）]] < 0
-	BASE:ヒップ += BASE:[[BASE:ヒップ（小数）]] / 100
-	BASE:[[BASE:ヒップ（小数）]] = 0 - (BASE:[[BASE:ヒップ（小数）]] % 100)
-ENDIF
+BASE:ヒップ -= CFLAG:妊娠増加ヒップ
 CFLAG:妊娠増加ヒップ = 0
 
 TARGET = A

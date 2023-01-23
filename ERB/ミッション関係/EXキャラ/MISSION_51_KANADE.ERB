@@ -181,7 +181,7 @@ IF A:2 == 0
 		LOCAL:1++
 	SIF TALENT:優等生 == 1
 		LOCAL:1++
-	SIF TALENT:処女 == 1
+	SIF IS処女(TARGET)
 		LOCAL:1++
 	SIF TALENT:大人しい == 1
 		LOCAL:1++
@@ -261,7 +261,7 @@ IF A:2 == 0
 	MARK:反発刻印 = 3
 	BASE:魅力値 -= 20 + RAND:11
 	IF TALENT:永遠の愛
-		IF TALENT:処女
+		IF IS処女(TARGET)
 			CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_無理犯,"小野寺恭司（クラスメイト）")
 		ENDIF
 		TCVAR:絶頂経験 += 5 + RAND:6
@@ -280,7 +280,7 @@ IF A:2 == 0
 		CFLAG:処女喪失場所 = 5
 		CFLAG:処女喪失状況 = 0
 	ELSE
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_無理犯,"小野寺恭司（クラスメイト）")
 		ENDIF
 		CSTR:彼氏姓 = 小野寺

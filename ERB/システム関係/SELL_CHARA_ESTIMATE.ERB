@@ -561,17 +561,18 @@ ENDIF
 S *= E:60
 S /= 100
 
-;TALENT:処女をみる
-IF TALENT:処女
+;性経験をみる
+T:[[TALENT:性経験]] = 100
+IF IS処女(TARGET)
 	IF CFLAG:処女膜再生回数 == 0
-		T:[[TALENT:処女]] = 200
+		T:[[TALENT:性経験]] += 100
 	ELSE
-		T:[[TALENT:処女]] = 150
+		T:[[TALENT:性経験]] += 50
 	ENDIF
 ENDIF
-;TALENT:処女をみる
-IF TALENT:Ａ処女 == 1
-	T:[[TALENT:Ａ処女]] = 150
+IF ISＡ処女(TARGET)
+	T:[[TALENT:性経験]] *= 150
+	T:[[TALENT:性経験]] /= 100
 ENDIF
 ;TALENT:気丈をみる
 SIF TALENT:気丈 && ABL:信頼 >= 3

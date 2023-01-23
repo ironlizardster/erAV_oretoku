@@ -273,7 +273,7 @@ IF (FLAG:指導テキスト設定 & 2) == 0
 		PRINTFORML しかしながら、%CALLNAME:TARGET%のアナルでは客たちの欲求を満たす事は出来なかった
 	ENDIF
 ENDIF
-IF TALENT:Ａ処女 && !CFLAG:Ａ処女喪失相手
+IF ISＡ処女(TARGET) && !CFLAG:Ａ処女喪失相手
 	PRINTFORMW 【売春でＡ処女喪失】
 	CALL Ａ処女喪失実行(TARGET,初相手_売春客男,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_売春,"知らないオトコの人")
 	;異常体験に＋１
@@ -391,7 +391,7 @@ IF (FLAG:指導テキスト設定 & 2) == 0
 ENDIF
 
 ;処女だった場合、処女喪失フラグを点灯
-IF TALENT:処女
+IF IS処女(TARGET)
 	CFLAG:売春処女喪失 = 2
 	;処女喪失相手を記録
 	IF !CFLAG:処女喪失相手
@@ -576,7 +576,7 @@ ENDIF
 F = 8
 
 ;処女だった場合、処女喪失フラグを点灯
-IF TALENT:処女
+IF IS処女(TARGET)
 	CFLAG:売春処女喪失 = 2
 	;処女喪失相手を記録
 	SIF !CFLAG:処女喪失相手
@@ -636,7 +636,7 @@ IF (FLAG:指導テキスト設定 & 2) == 0
 ENDIF
 
 ;処女だった場合、処女喪失フラグを点灯
-IF TALENT:処女
+IF IS処女(TARGET)
 	CFLAG:売春処女喪失 = 2
 	;処女喪失相手を記録
 	SIF !CFLAG:処女喪失相手

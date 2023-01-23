@@ -169,17 +169,16 @@ RETURN 0
 ;=================================================
 @MISSION_REPORT_67(ARG)
 
-TALENT:ASSI:童貞 = 1
 TALENT:ASSI:ふたなり = 1
 BASE:ASSI:ペニスサイズ = 15 + RAND:5
 CFLAG:ASSI:包皮状態 = 3
 
 
-IF TALENT:処女 == 1
+IF IS処女(TARGET)
 	CALL 処女喪失実行(TARGET,NO:ASSI + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦)
 ENDIF
 
-IF TALENT:Ａ処女 == 1
+IF ISＡ処女(TARGET)
 	CALL Ａ処女喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_輪姦)
 ENDIF
 

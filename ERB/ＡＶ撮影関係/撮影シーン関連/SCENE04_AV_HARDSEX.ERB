@@ -60,7 +60,7 @@ LOCAL:1 += ABL:性交技術
 LOCAL:1 += ABL:性交中毒
 LOCAL:1 += ABL:被写技能
 
-SIF TALENT:処女
+SIF IS処女(TARGET)
 	LOCAL:1 += 10
 SIF TALENT:貞操無頓着
 	LOCAL:1 += 5
@@ -134,32 +134,21 @@ ENDIF
 PRINTL で突かれた…… 
 PRINTL
 
-IF TALENT:処女 == 1
+IF IS処女(TARGET)
 	TFLAG:ビデオ撮影内容 |= 1
 	PRINTFORML 汗に濡れたベッドのシーツには%CALLNAME:TARGET%の破瓜の血が染みを作っている……
-	SETCOLOR 0xF58F98
-	PRINTL 【処女喪失】
-	RESETCOLOR
-	TALENT:処女 = 0
-		IF !CFLAG:処女喪失相手
-			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
-			CFLAG:処女喪失相手 = 1
-		ENDIF
+	CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影)
 ENDIF
 
 IF !CFLAG:初キス相手
-	CFLAG:初キス相手 = 1
-	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
-	RESETCOLOR
-	CFLAG:初キス相手 = 1
-		IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
-			CSTR:初キス相手 = %CALLNAME:PLAYER%のおちん○ん
-		ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
-			CSTR:初キス相手 = %CALLNAME:PLAYER%のオチ○ポ
-		ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
-			CSTR:初キス相手 = %CALLNAME:PLAYER%のチンポ
-		ENDIF
+	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+		LOCALS = %CALLNAME:PLAYER%のおちん○ん
+	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+		LOCALS = %CALLNAME:PLAYER%のオチ○ポ
+	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+		LOCALS = %CALLNAME:PLAYER%のチンポ
+	ENDIF
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影,LOCALS)
 ENDIF
 
 TIMES (P:10) , 1.25
@@ -182,33 +171,23 @@ ENDIF
 PRINTL で突かれた…… 
 PRINTL
 
-IF TALENT:処女 == 1
+IF IS処女(TARGET)
 	TFLAG:ビデオ撮影内容 |= 1
 	PRINTFORML 汗に濡れたベッドのシーツには%CALLNAME:TARGET%の破瓜の血が染みを作っている……
-	SETCOLOR 0xF58F98
-	PRINTL 【処女喪失】
-	RESETCOLOR
-	TALENT:処女 = 0
-		IF !CFLAG:処女喪失相手
-			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
-			CFLAG:処女喪失相手 = 1
-		ENDIF
+	CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影)
 ENDIF
 
 IF !CFLAG:初キス相手
-	CFLAG:初キス相手 = 1
-	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
-	RESETCOLOR
-	CFLAG:初キス相手 = 1
 	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
-		CSTR:初キス相手 = %CALLNAME:PLAYER%のおちん○ん
+		LOCALS = %CALLNAME:PLAYER%のおちん○ん
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%のオチ○ポ
+		LOCALS = %CALLNAME:PLAYER%のオチ○ポ
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%のチンポ
+		LOCALS = %CALLNAME:PLAYER%のチンポ
 	ENDIF
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影,LOCALS)
 ENDIF
+
 PRINTL
 
 ;=================================================
@@ -226,32 +205,23 @@ ENDIF
 PRINTFORML %CALLNAME:PLAYER%に抱かれていたが、その動きはぎこちなく魅力に乏しい……
 PRINTL
 
-IF TALENT:処女 == 1
+IF IS処女(TARGET)
+	TFLAG:ビデオ撮影内容 |= 1
 	PRINTFORML 汗に濡れたベッドのシーツには%CALLNAME:TARGET%の破瓜の血が染みを作っている……
-	SETCOLOR 0xF58F98
-	PRINTL 【処女喪失】
-	RESETCOLOR
-	TALENT:処女 = 0
-		IF !CFLAG:処女喪失相手
-			CSTR:処女喪失相手 = %CALLNAME:PLAYER%
-			CFLAG:処女喪失相手 = 1
-		ENDIF
+	CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影)
 ENDIF
 
 IF !CFLAG:初キス相手
-	CFLAG:初キス相手 = 1
-	SETCOLOR 0xDDBBCC
-	PRINTFORML ファーストキス
-	RESETCOLOR
-	CFLAG:初キス相手 = 1
 	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
-		CSTR:初キス相手 = %CALLNAME:PLAYER%のおちん○ん
+		LOCALS = %CALLNAME:PLAYER%のおちん○ん
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%のオチ○ポ
+		LOCALS = %CALLNAME:PLAYER%のオチ○ポ
 	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
-		CSTR:初キス相手 = %CALLNAME:PLAYER%のチンポ
+		LOCALS = %CALLNAME:PLAYER%のチンポ
 	ENDIF
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影,LOCALS)
 ENDIF
+
 PRINTL
 
 

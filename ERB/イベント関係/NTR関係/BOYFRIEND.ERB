@@ -232,7 +232,7 @@ IF CFLAG:ARG:ラブホ != 1
 	PRINTFORM 昨日はオフだった%NAME:ARG%は、
 ELSE
 	PRINTFORM 週末に参加した合コンの後にそのまま『お持ち帰り』された%NAME:ARG%は、
-	SIF TALENT:ARG:処女 == 1
+	SIF IS処女(ARG)
 		TCVAR:ARG:異常経験 += 1
 ENDIF
 
@@ -295,7 +295,7 @@ ENDIF
 
 EXP:ARG:彼氏性経験 += 1
 
-SIF LOCAL:1 >= 8 && TALENT:ARG:処女
+SIF LOCAL:1 >= 8 && IS処女(ARG)
 	TCVAR:ARG:異常経験 += 1
 IF !CFLAG:ARG:処女喪失相手
 	CALL 処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
@@ -416,9 +416,9 @@ ELSEIF LOCAL == 3
 ENDIF
 PRINTFORM で
 
-IF CFLAG:ARG:処女喪失相手 == 初相手_今彼 && TALENT:ARG:Ａ処女
+IF CFLAG:ARG:処女喪失相手 == 初相手_今彼 && ISＡ処女(ARG)
 	PRINTFORM 処女だけでなく指ぐらいしか挿入したことが無かったアナルの処女もカレシに捧げ
-ELSEIF TALENT:ARG:Ａ処女 == 1
+ELSEIF ISＡ処女(ARG)
 	PRINTFORM 指ぐらいしか挿入したことが無かったアナルの処女をカレシに捧げ
 ELSE
 	PRINTFORM らぶらぶなＳＥＸをアナルでし
@@ -443,16 +443,16 @@ ENDIF
 
 PRINTFORML に嬉しそうにはにかみながら赤裸々に語っていた……
 
-IF TALENT:ARG:Ａ処女 == 1
+IF ISＡ処女(ARG)
 	PRINTFORM 言われてみればスタッフ達と談笑する%CALLNAME:ARG%の横顔からは、
 	PRINTFORML 愛するカレシのためならアブノーマルなプレイも受け入れられる、オトナのオンナの余裕が感じられる
 ENDIF
 
 EXP:ARG:彼氏性経験 += 1
 
-SIF LOCAL:1 >= 8 && TALENT:ARG:Ａ処女
+SIF LOCAL:1 >= 8 && ISＡ処女(ARG)
 	TCVAR:ARG:異常経験 = 1
-IF TALENT:ARG:Ａ処女 == 1
+IF ISＡ処女(ARG)
 	CALL Ａ処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 

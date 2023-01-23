@@ -352,9 +352,9 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 				PRINTFORM 愛液で濡れて妖しく光る
 			ENDIF
 
-			IF CFLAG:性器 == 0 && TALENT:処女 == 1
+			IF CFLAG:性器 == 0 && IS処女(TARGET)
 				PRINTFORML ヴァギナは新品そのものの綺麗なサーモンピンク色をしている
-			ELSEIF CFLAG:性器 >= 1 && TALENT:処女 == 1
+			ELSEIF CFLAG:性器 >= 1 && IS処女(TARGET)
 				PRINTFORM 度重なる性行為で肥大したラビアは
 				IF CFLAG:性器 == 2
 					PRINTFORM 淫水焼けして黒ずんで
@@ -362,9 +362,9 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTL いる
-			ELSEIF CFLAG:性器 == 0 && TALENT:処女 == 0
+			ELSEIF CFLAG:性器 == 0 && !IS処女(TARGET)
 				PRINTFORML ヴァギナは新品同様の綺麗なサーモンピンク色をしている
-			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 > 50 && TALENT:処女 == 0
+			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 > 50 && !IS処女(TARGET)
 				PRINTFORM 度重なる性行為で肥大したラビアは
 				IF CFLAG:性器 == 2
 					PRINTFORM 淫水焼けして黒ずんで
@@ -372,7 +372,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 					PRINTFORM 新品そのものの綺麗なサーモンピンク色をして
 				ENDIF
 				PRINTFORML おり、何度もペニスで貫かれた膣口も大きく拡がっている
-			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 <= 50 && TALENT:処女 == 0
+			ELSEIF CFLAG:性器 >= 1 && EXP:Ｖ経験 <= 50 && !IS処女(TARGET)
 				PRINTFORM 度重なる性行為で肥大したラビアは
 				IF CFLAG:性器 == 2
 					PRINTFORM 淫水焼けして黒ずんで
@@ -381,7 +381,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 				ENDIF
 				PRINTFORML いる
 			ENDIF
-			IF TALENT:処女 == 0
+			IF !IS処女(TARGET)
 				PRINTFORM %CALLNAME:PLAYER%が初体験の経緯を聞くと%CALLNAME:TARGET%は
 				IF TALENT:恋心 == 0 || TALENT:淫乱 == 0
 					PRINTFORM 恥ずかしがりながら
@@ -593,17 +593,17 @@ ELSEIF SELECTCOM == [[TRAIN:バイブ]]
 		PRINTL バイブの先端をあてがい馴染ませていく…
 		IF TFLAG:失神中終了 == 0
 			PRINTFORM %CALLNAME:TARGET%は
-			IF TALENT:処女 && TALENT:恋心 && TALENT:淫乱
+			IF IS処女(TARGET) && TALENT:恋心 && TALENT:淫乱
 				PRINT 自分が処女である事を忘れているかのような笑みを見せ
-			ELSEIF TALENT:処女 && TALENT:恋心
+			ELSEIF IS処女(TARGET) && TALENT:恋心
 				PRINTFORM 少し寂しそうな目で%CALLNAME:PLAYER%を見
-			ELSEIF TALENT:処女 && TALENT:淫乱
+			ELSEIF IS処女(TARGET) && TALENT:淫乱
 				PRINT 処女である事もお構いなしに、腰を揺らしておねだりをし
-			ELSEIF TALENT:処女 && TALENT:一線越えない
+			ELSEIF IS処女(TARGET) && TALENT:一線越えない
 				PRINT 何かを諦めた表情で
 				SIF !TALENT:泣かない 
 					PRINT 目にうっすら涙を浮かべ
-			ELSEIF TALENT:処女
+			ELSEIF IS処女(TARGET)
 				PRINT ガタガタと震え、喪失の恐怖に怯え
 			ELSEIF EXP:Ｖ経験 >= 201 && TALENT:恋心
 				PRINT 挿入への期待だけでガクガクと腰を震わせてイきそうになっ

@@ -2,9 +2,9 @@
 ;キャラ契約時の処理
 ;===========================================================
 @CALC_BEAUTY
-IF TALENT:処女 == 0
+IF !IS処女(TARGET)
 	BASE:魅力値 -= 10
-ELSEIF TALENT:Ａ処女 == 0
+ELSEIF !ISＡ処女(TARGET)
 	BASE:魅力値 -= 5
 ELSEIF TALENT:精愛味覚 == 1
 	BASE:魅力値 -= 5

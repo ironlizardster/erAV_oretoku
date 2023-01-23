@@ -186,9 +186,9 @@ IF TALENT:永遠の愛 == 0
 		PRINTL 【ファーストキス】
 		RESETCOLOR
 	ENDIF
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		CSTR:処女喪失相手 = 神崎京一（彼氏）
-		TALENT:処女 = 0
+		IS処女(TARGET) = 0
 		CFLAG:処女喪失相手 = 8
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】
@@ -203,9 +203,9 @@ IF TALENT:永遠の愛 == 0
 	PRINTFORM  清水桜子は研究を続けていくうちにギャルの世界にのめり込んでしまい、
 	PRINTFORML 神崎京一と付き合うことになったようだ……
 ELSE
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		CSTR:処女喪失相手 = 神崎京一（セフレ）
-		TALENT:処女 = 0
+		IS処女(TARGET) = 0
 		CFLAG:処女喪失相手 = 9
 		SETCOLOR 0xF58F98
 		PRINTL 【処女喪失】

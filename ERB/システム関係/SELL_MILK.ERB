@@ -19,7 +19,7 @@ IF A > 0
 	ENDIF
 
 	;処女なら売却額三倍
-	SIF TALENT:処女
+	SIF IS処女(TARGET)
 		O = O * 3
 	;乳狂いなら売却額ニ倍
 	SIF TALENT:乳狂い

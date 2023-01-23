@@ -151,9 +151,9 @@ SIF MAXBASE:気力 >= 2000
 SIF MAXBASE:体力 >= 2500
 	LOCAL:1++
 
-SIF TALENT:処女 == 1
+SIF IS処女(TARGET)
 	LOCAL:11++
-SIF TALENT:Ａ処女 == 1
+SIF ISＡ処女(TARGET)
 	LOCAL:11++
 IF LOCAL:1 >= 14
 	SIF LOCAL:11 == 2
@@ -174,13 +174,13 @@ RETURN 0
 ;=================================================
 @MISSION_REPORT_54(ARG)
 
-IF TALENT:処女
+IF IS処女(TARGET)
 	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_輪姦,"柴田智久（クラスメイト）")
 ENDIF
 IF !CFLAG:初キス相手
 	CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"浅田一貴（クラスメイト）")
 ENDIF
-IF TALENT:Ａ処女
+IF ISＡ処女(TARGET)
 	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_輪姦,"木幡基樹（クラスメイト）")
 ENDIF
 TCVAR:絶頂経験 += 15 + RAND:11

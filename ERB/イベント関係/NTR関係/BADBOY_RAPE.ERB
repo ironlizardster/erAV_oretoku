@@ -118,7 +118,7 @@ PRINTFORML あなたは嫌な胸騒ぎがしてコンビニを飛び出し、不
 PRINTW
 PRINTFORML 強引に脱がされたのだろうか、乱雑に床に捨てられていた%CALLNAME:ARG%の服はところどころがほつれ、壁にもたれかかった%CALLNAME:ARG%の目はうつろで、その身体のあちこちに精液をこびりつかせ、腕には痛々しい注射の痕が残っていた……
 PRINTFORM 赤く充血して腫れた、%CALLNAME:ARG%の膣穴からは
-	IF TALENT:ARG:処女 == 1
+	IF IS処女(ARG)
 		PRINTFORM 破瓜の血が混ざった
 	ENDIF
 PRINTFORML 精液が垂れ落ち、地面にシミを作っている……
@@ -130,13 +130,13 @@ PRINTFORMW どうやら%CALLNAME:ARG%は不良たちに強姦されたようだ�
 強姦薬物経験 += RAND:3
 
 PRINTFORML Ｖ経験＋{強姦経験}
-IF !CFLAG:ARG:処女喪失相手 && TALENT:ARG:処女
+IF !CFLAG:ARG:処女喪失相手 && IS処女(ARG)
 	強姦異常経験 += 1
 	CALL 処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
 ENDIF
 IF 強姦Ａ経験 > 0
 	PRINTFORML Ａ経験＋{強姦Ａ経験}
-	IF TALENT:ARG:Ａ処女
+	IF ISＡ処女(ARG)
 		強姦異常経験 += 1
 		CALL Ａ処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_廃工場,初状況_無理犯,"不良")
 	ENDIF

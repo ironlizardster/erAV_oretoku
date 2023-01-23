@@ -151,9 +151,9 @@ SIF ABL:オタク知識 >= 8
 	LOCAL:1++
 SIF ABL:オタク知識 < 8
 	LOCAL:1 -= 100
-SIF TALENT:処女 == 1
+SIF IS処女(TARGET)
 	LOCAL:1++
-SIF TALENT:処女 == 0
+SIF !IS処女(TARGET)
 	LOCAL:1 -= 100
 
 SIF TALENT:コスプレイヤー == 1
@@ -167,7 +167,7 @@ SIF TALENT:[[TALENT:Mermaid girl]] == 1
 SIF TALENT:Triptych == 1
 	LOCAL:1 -= 100
 
-SIF TALENT:Ａ処女 == 1
+SIF ISＡ処女(TARGET)
 	LOCAL:1++
 SIF TALENT:アイドル || TALENT:ファッションモデル == 1
 	LOCAL:1++

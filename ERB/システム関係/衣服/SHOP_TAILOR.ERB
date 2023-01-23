@@ -67,7 +67,7 @@ PRINTL  [ 4] - 装備品
 PRINTL  [ 5] - 替え下着（100ポイント）
 SIF CFLAG:特別コスタイプ == 69 && ((CFLAG:着衣状態 & 64) == 0 || CFLAG:特別コス状態 > 0)
 	PRINTL  [ 6] - 替えオムツ（50ポイント）
-SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯鍵廃棄 == 0 && TALENT:処女
+SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯鍵廃棄 == 0 && IS処女(TARGET)
 	PRINTL  [ 7] - 貞操帯のカギを捨てる
 ;SIF TALENT:恋心 == 1
 ;	PRINTL  [ 8] - 専用装備
@@ -134,7 +134,7 @@ ELSEIF RESULT == 5
 	CALL TAILOR_UNDERWARE
 ELSEIF RESULT == 6 && CFLAG:特別コスタイプ == 69
 	CALL TAILOR_DIAPER
-ELSEIF RESULT == 7 && CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯鍵廃棄 == 0 && TALENT:処女
+ELSEIF RESULT == 7 && CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64) && CFLAG:貞操帯鍵廃棄 == 0 && IS処女(TARGET)
 	CALL CHASTITY_KEY
 ;ELSEIF RESULT == 8 && TALENT:恋心 == 1
 ;	CALL TAILOR_SPECIA
@@ -1080,7 +1080,7 @@ ELSEIF RESULT == 26 && ミッション結果:83 >= 3
 	R = 82
 	C = 50000
 	S = 1
-	SIF TALENT:Ａ処女 == 1
+	SIF ISＡ処女(TARGET)
 		S = 11
 ELSEIF RESULT == 27 && ミッション結果:304 == 4
 	R = 99

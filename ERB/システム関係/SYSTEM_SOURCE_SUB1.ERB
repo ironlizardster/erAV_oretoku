@@ -256,7 +256,7 @@ ENDIF
 ;-------------------------------------------------
 @LOST_VIRGIN_CHECK
 ;処女でないかＶ経験を伴うコマンドフラグが立ってなければそのまま終了
-SIF TALENT:処女 == 0 || TFLAG:V経験を伴うコマンド == 0
+SIF !IS処女(TARGET) || TFLAG:V経験を伴うコマンド == 0
 	RETURN 0
 
 SIF RELATION:TARGET:(NO:PLAYER) <= 1000
@@ -424,13 +424,11 @@ ENDIF
 ;-------------------------------------------------
 @LOST_ANALVIRGIN_CHECK
 ;Ａ処女でない
-IF TALENT:Ａ処女 == 0 || TFLAG:Ａ挿入判定 == 0
+IF !ISＡ処女(TARGET) || TFLAG:Ａ挿入判定 == 0
 	RETURN 0
 ENDIF
 
 TFLAG:Ａ処女喪失 = 1
-
-TALENT:Ａ処女 = 0
 
 ;Ａ処女喪失フラグ(ビデオ撮影)
 SIF TEQUIP:撮影中

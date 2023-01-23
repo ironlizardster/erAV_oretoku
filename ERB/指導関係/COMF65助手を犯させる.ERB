@@ -188,7 +188,7 @@ CALL TRAIN_MESSAGE_B
 ;-------------------------------------------------
 ;助手の処女を奪うかどうかの確認
 $INPUT_LOOP_01
-IF TALENT:ASSI:処女
+IF IS処女(ASSI)
 	PRINTFORML %CALLNAME:ASSI%の処女を%CALLNAME:TARGET%に奪わせますか？
 	PRINTL  [0] - はい
 	PRINTL  [1] - いいえ
@@ -435,7 +435,7 @@ IF TALENT:オトコ && TALENT:PLAYER:オトコ
 ENDIF
 
 ;助手が処女
-IF TALENT:ASSI:処女 == 1
+IF IS処女(ASSI)
 	TIMES SOURCE:屈従 , 20.00
 	TIMES SOURCE:逸脱 , 3.00
 
@@ -516,7 +516,7 @@ ELSEIF TFLAG:近親相姦 == 5 || TFLAG:近親相姦 == 6
 ENDIF
 
 ;調教対象が童貞なら童貞喪失
-IF TALENT:童貞
+IF IS童貞(TARGET)
 	CALL 童貞喪失実行(TARGET,NO:ASSI + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	;処女喪失相手を記録
 	IF CFLAG:包皮状態 == 2

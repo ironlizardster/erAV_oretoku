@@ -49,6 +49,7 @@ REPEAT CHARANUM
 		PRINTL [0] - 女
 		PRINTL [1] - 男
 		PRINTL [2] - ふたなり
+		TALENT:COUNT:性経験 = 0
 		INPUT
 			IF RESULT == 0
 				TALENT:COUNT:オトコ = 0
@@ -56,16 +57,13 @@ REPEAT CHARANUM
 				CFLAG:COUNT:ペニスサイズ = 0
 				CFLAG:COUNT:包皮状態 = 0
 			ELSEIF RESULT == 1
-				TALENT:COUNT:処女 = 0
 				TALENT:COUNT:オトコ = 1
 				TALENT:COUNT:ふたなり = 0
-				TALENT:COUNT:童貞 = 1
 				CFLAG:COUNT:ペニスサイズ = 2
 				CFLAG:COUNT:包皮状態 = 2
 			ELSEIF RESULT == 2
 				TALENT:COUNT:オトコ = 0
 				TALENT:COUNT:ふたなり = 1
-				TALENT:COUNT:童貞 = 1
 				CFLAG:COUNT:ペニスサイズ = 2
 				CFLAG:COUNT:包皮状態 = 2
 			ELSE

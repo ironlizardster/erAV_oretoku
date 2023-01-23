@@ -178,7 +178,7 @@ IF TALENT:永遠の愛 == 0
 			CSTR:初キス相手 = 神崎京一
 			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,@"%CSTR:彼氏姓%%CSTR:彼氏名%")
 		ENDIF
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,@"%CSTR:彼氏姓%%CSTR:彼氏名%（彼氏）")
 		ENDIF
 
@@ -199,7 +199,7 @@ IF TALENT:永遠の愛 == 0
 		PRINTFORM  清水桜子は研究を続けていくうちにギャルの世界にのめり込んでしまい、
 		PRINTFORML 神崎京一と付き合うことになったようだ……
 	ELSE
-		IF TALENT:処女 == 1
+		IF IS処女(TARGET)
 			CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"神崎京一（セフレ）")
 		ENDIF
 		CFLAG:処女喪失年齢 = BASE:実年齢
@@ -219,7 +219,7 @@ IF TALENT:永遠の愛 == 0
 		CSTR:セフレ名 = 京一	
 	ENDIF
 ELSE
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,"神崎京一（セフレ）")
 	ENDIF
 	IF !CFLAG:初キス相手

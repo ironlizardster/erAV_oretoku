@@ -335,7 +335,7 @@ ELSE
 	SIF TALENT:ARG:一線越えない == 1
 		TALENT:ARG:一線越えない = 0
 
-	IF !CFLAG:ARG:処女喪失相手 && TALENT:ARG:処女
+	IF !CFLAG:ARG:処女喪失相手 && IS処女(ARG)
 		CALL 処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
 		PRINTL 異常経験＋1
 		EXP:ARG:異常経験 += 1

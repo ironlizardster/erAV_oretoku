@@ -347,8 +347,6 @@ ELSEIF RESULT == 0
 		PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[TALENT:ふたなり]]%】になった》
 		TALENT:T:ふたなり = 1
 		TALENT:T:おしゃれ = 0
-		SIF CFLAG:T:童貞喪失相手 == 0
-			TALENT:T:童貞 = 1
 		CFLAG:T:ペニスサイズ = RAND:3
 		CFLAG:T:包皮状態 = RAND:4
 			IF CFLAG:T:ペニスサイズ >= 2
@@ -429,9 +427,6 @@ IF RESULT == 1
 ELSEIF RESULT == 0 
 	PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[TALENT:ふたなり]]%】でなくなった》
 	TALENT:T:ふたなり = 0
-	SIF TALENT:T:童貞 == 0
-		CFLAG:T:ペニスアクセ = 1
-	TALENT:T:童貞 = 0
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
@@ -810,7 +805,7 @@ ELSEIF TALENT:RESULT:オトコ
 	PRINTW どう見ても不可能です、本当にありがとうございました
 	RETURN 0
 ;【処女】は除外
-ELSEIF TALENT:RESULT:処女
+ELSEIF IS処女(RESULT)
 	PRINTFORM %NAME:RESULT%は処女です
 	RETURN 0
 ENDIF
@@ -827,8 +822,8 @@ INPUT
 IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0 
-	PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[TALENT:処女]]%】になった》
-	TALENT:T:処女 = 1
+	PRINTFORMW 《%NAME:T%は【%TALENTNAME:[[IS処女(TARGET)]]%】になった》
+	CLEARBIT TALENT:T:性経験, 0
 	CFLAG:T:処女膜再生回数 += 1
 ELSE
 	GOTO INPUT_LOOP
@@ -886,8 +881,6 @@ ELSEIF RESULT == 0
 	IF TALENT:T:オトコ
 		PRINTFORML 《%NAME:T%は【%TALENTNAME:[[TALENT:オトコ]]%】でなくなった》
 		TALENT:T:オトコ = 0
-		TALENT:T:処女 = 1
-		TALENT:T:童貞 = 0
 	;オトコでなければオトコをつける
 	ELSE
 		;ふたなりならそれを外す
@@ -897,8 +890,6 @@ ELSEIF RESULT == 0
 		ENDIF
 		PRINTFORML 《%NAME:T%は【%TALENTNAME:[[TALENT:オトコ]]%】になった》
 		TALENT:T:オトコ = 1
-		TALENT:T:処女 = 0
-		TALENT:T:童貞 = 1
 	ENDIF
 	Z = 1
 	PRINTFORMW %EXPNAME:[[EXP:異常経験]]%＋{Z}

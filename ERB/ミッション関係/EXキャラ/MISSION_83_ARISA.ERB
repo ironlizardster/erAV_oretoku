@@ -119,7 +119,7 @@ SIF ABL:奉仕技術 >= 5
 	LOCAL:1++
 SIF ABL:話術 >= 5
 	LOCAL:1++
-SIF TALENT:処女 == 1
+SIF IS処女(TARGET)
 	LOCAL:1++
 SIF !CFLAG:処女喪失相手
 	LOCAL:1++
@@ -148,7 +148,7 @@ RETURN 0
 BASE:魅力値 -= 20 + RAND:11
 IF TALENT:永遠の愛 == 1
 	;処女＋Ａ処女＋初キス未経験で【永遠の愛】なら【天使】を得る
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		;閣下はこんなことしないよ！
 		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
 	ENDIF
@@ -167,7 +167,7 @@ IF TALENT:永遠の愛 == 1
 	PRINTFORML 愛する%CALLNAME:MASTER%のところに戻ってきた……
 	PRINTFORML しかし、%CALLNAME:MASTER%に売られたことについては許すつもりはないようだ
 ELSE
-	IF TALENT:処女 == 1
+	IF IS処女(TARGET)
 		CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
 	ENDIF
 	CSTR:彼氏姓 = 朝生

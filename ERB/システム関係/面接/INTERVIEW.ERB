@@ -828,9 +828,8 @@ ELSE
 ENDIF
 
 ;セックス経験を登録
-IF !性経験決定(BASE:実年齢, CFLAG:彼氏タイプ)
-	TALENT:処女 = 1
-ELSE
+IF 性経験決定(BASE:実年齢, CFLAG:彼氏タイプ)
+	CALL 処女喪失(TARGET)
 	;経験が有る場合、回数を適当に決定
 ;	IF CFLAG:性別 == 0	;キャラが女性の場合
 		EXP:Ｖ経験 += 1 + RAND:20
@@ -858,7 +857,7 @@ ELSE
 				CSTR:処女喪失相手 = ローター
 			ENDIF
 		ELSEIF LOCAL < 7 && CFLAG:性別 != 0		;女性以外(童貞戻し)
-			TALENT:童貞 = 1
+			CLEARBIT TALENT:性経験, 2
 		ELSEIF LOCAL == 7
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
 				CSTR:処女喪失相手 = 知らないオンナの人
@@ -1033,7 +1032,7 @@ ELSE
 				IF CFLAG:性別 == 0
 					IF LOCAL == 0
 						CSTR:処女喪失相手 = 二次元男子(実は未経験)
-						TALENT:処女 = 1
+						CLEARBIT TALENT:性経験, 0
 					ELSEIF LOCAL == 1
 						CSTR:処女喪失相手 = 妄想彼氏(自慰：自分の指)
 					ELSE
@@ -1043,7 +1042,7 @@ ELSE
 					LOCAL = RAND:10
 					IF LOCAL == 0
 						CSTR:処女喪失相手 = 妄想彼女(実は未経験)
-						TALENT:童貞 = 1
+						CLEARBIT TALENT:性経験, 2
 					ELSEIF LOCAL < 9
 						CSTR:処女喪失相手 = 二次元彼女(自慰)
 					ELSE
@@ -1057,7 +1056,7 @@ ELSE
 						ELSE
 							CSTR:処女喪失相手 = 妄想彼氏(実は未経験)
 						ENDIF
-						TALENT:童貞 = 1
+						CLEARBIT TALENT:性経験, 2
 					ELSEIF LOCAL < 6
 						CSTR:処女喪失相手 = 妄想彼女(自慰)
 					ELSE
@@ -1090,9 +1089,8 @@ ELSE
 ENDIF
 
 ;アナル経験を登録
-IF !後経験決定()
-	TALENT:Ａ処女 = 1
-ELSE
+IF 後経験決定()
+	CALL Ａ処女喪失(TARGET)
 	;経験が有る場合、回数を適当に決定
 	IF CFLAG:性別 == 0	;キャラが女性の場合
 		EXP:Ａ経験 += 1 + RAND:10
@@ -1102,32 +1100,32 @@ ELSE
 		LOCAL = RAND:10
 		IF LOCAL < 5			;半分の確率で恋人
 			IF TALENT:人妻
-				CSTR:童貞喪失相手 = 夫
+				CSTR:Ａ処女喪失相手 = 夫
 			ELSEIF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:童貞喪失相手 = 彼女
+				CSTR:Ａ処女喪失相手 = 彼女
 			ELSE
-				CSTR:童貞喪失相手 = 彼氏
+				CSTR:Ａ処女喪失相手 = 彼氏
 			ENDIF
 		ELSEIF LOCAL < 7 && CFLAG:性別 == 0		;2割が道具による喪失
 			LOCAL = RAND:3
 			IF LOCAL == 0
-				CSTR:童貞喪失相手 = アナルバイブ
+				CSTR:Ａ処女喪失相手 = アナルバイブ
 			ELSEIF LOCAL == 1
-				CSTR:童貞喪失相手 = アナルビーズ
+				CSTR:Ａ処女喪失相手 = アナルビーズ
 			ELSEIF LOCAL == 2
-				CSTR:童貞喪失相手 = ビー玉
+				CSTR:Ａ処女喪失相手 = ビー玉
 			ENDIF
 		ELSEIF LOCAL == 7
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:童貞喪失相手 = 知らないオンナの人
+				CSTR:Ａ処女喪失相手 = 知らないオンナの人
 			ELSE
-				CSTR:童貞喪失相手 = 知らないオトコの人
+				CSTR:Ａ処女喪失相手 = 知らないオトコの人
 			ENDIF
 		ELSE
 			IF CFLAG:性別 == 1 || ( CFLAG:性別 == 2 && RAND:3 == 0 )
-				CSTR:童貞喪失相手 = 元カノ
+				CSTR:Ａ処女喪失相手 = 元カノ
 			ELSE
-				CSTR:童貞喪失相手 = 元カレ
+				CSTR:Ａ処女喪失相手 = 元カレ
 			ENDIF
 		ENDIF
 	ELSEIF CFLAG:彼氏タイプ == 7
@@ -1271,7 +1269,7 @@ ELSE
 				IF CFLAG:性別 == 0
 					IF LOCAL == 0
 						CSTR:Ａ処女喪失相手 = 二次元男子(実は未経験)
-						TALENT:Ａ処女 = 1
+						CLEARBIT TALENT:性経験, 1
 					ELSEIF LOCAL == 1
 						CSTR:Ａ処女喪失相手 = 妄想彼氏(自慰：自分の指)
 					ELSE
@@ -1281,7 +1279,7 @@ ELSE
 					LOCAL = RAND:10
 					IF LOCAL == 0
 						CSTR:Ａ処女喪失相手 = 妄想彼女(実は未経験)
-						TALENT:Ａ処女 = 1
+						CLEARBIT TALENT:性経験, 1
 						EXP:Ａ経験 = 0
 						EXP:絶頂経験 = 0
 					ELSE
@@ -1295,7 +1293,7 @@ ELSE
 						ELSE
 							CSTR:Ａ処女喪失相手 = 妄想彼氏(実は未経験)
 						ENDIF
-						TALENT:Ａ処女 = 1
+						CLEARBIT TALENT:性経験, 1
 						EXP:Ａ経験 = 0
 						EXP:絶頂経験 = 0
 					ELSEIF LOCAL < 6
@@ -1808,21 +1806,21 @@ ENDIF
 ;助手が話術1以上あれば、より詳しい情報を表示する
 IF ASSI > 0 && ABL:ASSI:話術 >= 3
 	PRINTFORM 口のうまい%CALLNAME:ASSI%が緊張をほぐして詳しい話を聞くと、
-	IF !CFLAG:初キス相手 && TALENT:処女 && TALENT:Ａ処女
+	IF !CFLAG:初キス相手 && IS処女(TARGET) && ISＡ処女(TARGET)
 		PRINTL セックスどころかキスの経験すらないようだ。
-	ELSEIF !CFLAG:初キス相手 && !TALENT:処女 && TALENT:Ａ処女
+	ELSEIF !CFLAG:初キス相手 && !IS処女(TARGET) && ISＡ処女(TARGET)
 		PRINTL セックスの経験はあるがファーストキスはまだらしい。
-	ELSEIF !CFLAG:初キス相手 && TALENT:処女 && !TALENT:Ａ処女
+	ELSEIF !CFLAG:初キス相手 && IS処女(TARGET) && !ISＡ処女(TARGET)
 		PRINTL なぜかアナルでのみ経験があるらしい……
-	ELSEIF !CFLAG:初キス相手 && !TALENT:処女 && !TALENT:Ａ処女
+	ELSEIF !CFLAG:初キス相手 && !IS処女(TARGET) && !ISＡ処女(TARGET)
 		PRINTL キス以外は一通り経験しているようだ……
-	ELSEIF CFLAG:初キス相手 && TALENT:処女 && TALENT:Ａ処女
+	ELSEIF CFLAG:初キス相手 && IS処女(TARGET) && ISＡ処女(TARGET)
 		PRINTL キスまでは行ったが、そこから先は未経験らしい。
-	ELSEIF CFLAG:初キス相手 && !TALENT:処女 && TALENT:Ａ処女
+	ELSEIF CFLAG:初キス相手 && !IS処女(TARGET) && ISＡ処女(TARGET)
 		PRINTL 恋人とは普通にエッチをしていたようだ。
-	ELSEIF CFLAG:初キス相手 && TALENT:処女 && !TALENT:Ａ処女
+	ELSEIF CFLAG:初キス相手 && IS処女(TARGET) && !ISＡ処女(TARGET)
 		PRINTL 前の貞操だけは頑なに守り続けていたようだ……
-	ELSEIF CFLAG:初キス相手 && !TALENT:処女 && !TALENT:Ａ処女
+	ELSEIF CFLAG:初キス相手 && !IS処女(TARGET) && !ISＡ処女(TARGET)
 		PRINTL キスやセックスの経験はもちろん、アナルも貫通済みらしい。
 	ENDIF
 

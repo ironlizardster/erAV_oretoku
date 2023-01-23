@@ -227,7 +227,7 @@ PRINTL  [1] - 会話営業
 PRINTL  [2] - 奉仕営業
 ;Ａ営業の条件：Ａ感覚が3以上かつ、屈服刻印が2以上で個室拡張済み
 IF MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
-	IF TALENT:Ａ処女
+	IF ISＡ処女(TARGET)
 		PRINTL  [3] - Ａ営業 (Ａ処女)
 	ELSE
 		PRINTL  [3] - Ａ営業
@@ -237,7 +237,7 @@ ENDIF
 IF TALENT:オトコ == 0 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
 	;貞操帯を付けているとダメ
 	IF CFLAG:特別コスタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
-		IF TALENT:処女
+		IF IS処女(TARGET)
 			PRINTL  [4] - Ｖ営業 (処女)
 		ELSE
 			PRINTL  [4] - Ｖ営業
@@ -581,7 +581,7 @@ REPEAT CHARANUM
 	SIF FLAG:特殊営業フラグ == 9 && (ABL:COUNT:信頼 < 4 || ABL:COUNT:欲望 < 4 || ABL:COUNT:露出癖 < 3)
 		CONTINUE
 	;処女オークションは素質:処女かつ従順3以上必要で貞操帯不可
-	SIF FLAG:特殊営業フラグ == 10 && ((TALENT:COUNT:処女 == 0 || ABL:COUNT:信頼 < 4) || (CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)))
+	SIF FLAG:特殊営業フラグ == 10 && ((!IS処女(COUNT) || ABL:COUNT:信頼 < 4) || (CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)))
 		CONTINUE
 	PRINTFORM  [{COUNT}] %NAME:COUNT% 
 	IF CFLAG:COUNT:特殊営業参加 == 1

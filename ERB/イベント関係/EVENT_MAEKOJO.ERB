@@ -162,7 +162,7 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 		ENDIF
 	PRINTFORML ……♪
 	PRINTFORM 　それに
-		IF CFLAG:(LOCAL:1):包皮状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
+		IF CFLAG:(LOCAL:1):包皮状態 == 2 && !IS童貞(LOCAL:1)
 			PRINTFORM ズル剥け
 		ELSEIF CFLAG:(LOCAL:1):包皮状態 == 3
 			PRINTFORM ズル剥け
@@ -183,7 +183,7 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 		ENDIF
 	PRINTFORML ……
 	PRINTFORM 　
-		IF CFLAG:(LOCAL:1):包皮状態 < 2 && CFLAG:LOCAL:包皮状態 == 2 && TALENT:LOCAL:童貞 == 0
+		IF CFLAG:(LOCAL:1):包皮状態 < 2 && CFLAG:LOCAL:包皮状態 == 2 && !IS童貞(LOCAL)
 			PRINTFORM %CSTR:LOCAL:一人称%みたいにムケてた方が
 				IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
 					PRINTFORM オチ○ポ
@@ -199,7 +199,7 @@ IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
 					PRINTFORM だ
 				ENDIF
 			PRINTFORM よ♪
-		ELSEIF CFLAG:LOCAL:包皮状態 < 2  && CFLAG:(LOCAL:1):包皮状態 == 2 && TALENT:(LOCAL:1):童貞 == 0
+		ELSEIF CFLAG:LOCAL:包皮状態 < 2  && CFLAG:(LOCAL:1):包皮状態 == 2 && !IS童貞(LOCAL:1)
 			PRINTFORM %CSTR:LOCAL:一人称%も%CALLNAME:(LOCAL:1)%
 				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 					PRINTFORM さん

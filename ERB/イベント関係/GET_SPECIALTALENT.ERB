@@ -48,7 +48,7 @@ IF MARK:反発刻印 == 0
 		;欲望3以上、CVAB感覚合計10以上、異常経験3以上で【恋心】がなければ【淫乱】に
 		;両方処女だとだめ
 		IF TALENT:淫魔 == 0 && TALENT:アンドロイド == 0 && TALENT:天使 == 0 && TALENT:[[TALENT:ONLY ONE EMPRESS]] == 0
-			IF ABL:欲望 >= 3 && ABL:Ｃ感覚+ABL:Ｂ感覚+ABL:Ｖ感覚+ABL:Ａ感覚 >= 10 && EXP:異常経験 >= 3 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && (TALENT:処女 == 0 || TALENT:Ａ処女 == 0)
+			IF ABL:欲望 >= 3 && ABL:Ｃ感覚+ABL:Ｂ感覚+ABL:Ｖ感覚+ABL:Ａ感覚 >= 10 && EXP:異常経験 >= 3 && TALENT:淫乱 == 0 && TALENT:恋心 == 0 && (!IS処女(TARGET) || !ISＡ処女(TARGET))
 				CALL 淫乱GET
 			ENDIF		
 		ELSE
@@ -455,18 +455,18 @@ IF ((!TALENT:ルーンマスター && ABL:信頼 >= 7 && ABL:奉仕精神 >= 7 &
 			RELATION:TARGET:(NO:MASTER) = 200
 ENDIF
 
-;IF (ABL:欲望 >= 7 && EXP:異常経験 >= 5 && TALENT:淫乱 == 1 && TALENT:絶倫 == 0 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && TALENT:淫魔 == 0 && TALENT:アンドロイド == 0&& TALENT:天使 == 0 && (TALENT:処女 == 0 || TALENT:Ａ処女 == 0)) || (ABL:欲望 >= 7 && EXP:異常経験 >= 3 && TALENT:淫乱 == 1 && TALENT:絶倫 == 0 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && (TALENT:淫魔 == 1 || TALENT:アンドロイド == 1 || TALENT:天使 == 1 || TALENT:[[TALENT:ONLY ONE EMPRESS]] == 1))
+;IF (ABL:欲望 >= 7 && EXP:異常経験 >= 5 && TALENT:淫乱 == 1 && TALENT:絶倫 == 0 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && TALENT:淫魔 == 0 && TALENT:アンドロイド == 0&& TALENT:天使 == 0 && (!IS処女(TARGET) || !ISＡ処女(TARGET))) || (ABL:欲望 >= 7 && EXP:異常経験 >= 3 && TALENT:淫乱 == 1 && TALENT:絶倫 == 0 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && (TALENT:淫魔 == 1 || TALENT:アンドロイド == 1 || TALENT:天使 == 1 || TALENT:[[TALENT:ONLY ONE EMPRESS]] == 1))
 ;長かったので縮める。それでも長い……
 ;絶倫取得の条件：
 ;欲望が7以上であり[淫乱]持ち、[絶倫]を取得していないときに、いずれかの感覚が10であり、
 ;淫魔アンドロイド天使以外であれば：異常経験5以上とどっちかの処女喪失済
 ;淫魔アンドロイド天使であれば：異常経験3
-IF ABL:欲望 >= 7 && TALENT:淫乱 && !TALENT:絶倫 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && ((EXP:異常経験 >= 5 && !TALENT:淫魔 && !TALENT:アンドロイド && !TALENT:天使 && (!TALENT:処女 || !TALENT:Ａ処女)) || (EXP:異常経験 >= 3 && (TALENT:淫魔 || TALENT:アンドロイド || TALENT:天使 || TALENT:[[TALENT:ONLY ONE EMPRESS]])))
+IF ABL:欲望 >= 7 && TALENT:淫乱 && !TALENT:絶倫 && (ABL:Ｃ感覚 == 10 || ABL:Ｂ感覚 == 10 || ABL:Ｖ感覚 == 10 || ABL:Ａ感覚 == 10) && ((EXP:異常経験 >= 5 && !TALENT:淫魔 && !TALENT:アンドロイド && !TALENT:天使 && (!IS処女(TARGET) || !ISＡ処女(TARGET))) || (EXP:異常経験 >= 3 && (TALENT:淫魔 || TALENT:アンドロイド || TALENT:天使 || TALENT:[[TALENT:ONLY ONE EMPRESS]])))
 	PRINTFORMW %NAME:TARGET%の様子がおかしい……
 	PRINTFORM 指導が終わった後にも何度も
 	IF ABL:Ｖ感覚 == 10
 		PRINTFORM %CALLNAME:MASTER%の腰に足を絡めて精を子宮で受け止め
-	ELSEIF ABL:Ａ感覚 == 10 && TALENT:Ａ処女 == 0
+	ELSEIF ABL:Ａ感覚 == 10 && !ISＡ処女(TARGET)
 		PRINTFORM %CALLNAME:MASTER%の精を足を絡めて直腸で受け止め
 	ELSEIF ABL:Ｃ感覚 == 10
 		IF TALENT:ふたなり == 0
@@ -490,7 +490,7 @@ IF TALENT:性魔術 && (BASE:魔力 == 0 ||  BASE:魅力値 <= 0)
 ENDIF
 
 ;[彼氏あり],[貞操観念]なし,[淫乱],[セフレあり],[恋心]なし,信頼3以上,欲望5以上,性交中毒2以上,どっちか非処女,奉仕快楽経験300以上
-IF TALENT:彼氏あり == 1 && TALENT:貞操観念 == 0 && TALENT:淫乱 == 1 && TALENT:セフレあり == 1 && TALENT:恋心 == 0 && ABL:信頼 >= 3 && ABL:欲望 >= 5 && ABL:性交中毒 >= 2 && (TALENT:処女 == 0 || TALENT:Ａ処女 == 0) && EXP:奉仕快楽経験 >= 300 && TALENT:セフレ == 0
+IF TALENT:彼氏あり == 1 && TALENT:貞操観念 == 0 && TALENT:淫乱 == 1 && TALENT:セフレあり == 1 && TALENT:恋心 == 0 && ABL:信頼 >= 3 && ABL:欲望 >= 5 && ABL:性交中毒 >= 2 && (!IS処女(TARGET) || !ISＡ処女(TARGET)) && EXP:奉仕快楽経験 >= 300 && TALENT:セフレ == 0
 	PRINTFORM つい先ほどまでベッドの上で%CALLNAME:MASTER%に
 	IF ABL:Ｖ感覚 >= ABL:Ａ感覚
 		PRINTFORM ヴァギナ

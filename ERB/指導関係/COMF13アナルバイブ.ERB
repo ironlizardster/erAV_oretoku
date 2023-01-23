@@ -336,7 +336,7 @@ SOURCE:屈従 += B
 SOURCE:痛覚 += C
 
 ;処女で貞操観念
-IF TALENT:処女 && TALENT:貞操観念
+IF IS処女(TARGET) && TALENT:貞操観念
 	TIMES SOURCE:屈従 , 0.80
 	TIMES SOURCE:逸脱 , 0.50
 ENDIF

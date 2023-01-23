@@ -814,10 +814,10 @@ ELSEIF BASE:RESULT:体力 < 1
 ELSEIF TALENT:RESULT:ミッション
 	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
 	GOTO INPUT_LOOP
-ELSEIF B == 100 && TALENT:RESULT:処女 == 1 && !CFLAG:RESULT:処女喪失相手
+ELSEIF B == 100 && IS処女(RESULT) && !CFLAG:RESULT:処女喪失相手
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
-ELSEIF B == 150 && TALENT:RESULT:Ａ処女 == 1
+ELSEIF B == 150 && ISＡ処女(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ELSEIF B == 200 && !CFLAG:RESULT:初キス相手
@@ -857,14 +857,14 @@ ELSEIF RESULT == 0
 	PRINTFORM 《ユーニスによって事象が改変され、
 		IF B == 100
 			PRINTFORM %CALLNAME:TARGET%は純粋な【処女】になった
-			TALENT:処女 = 1
+			CLEARBIT TALENT:性経験, 0
 			EXP:Ｖ経験 = 0
 			ABL:Ｖ感覚 = 0
 			CFLAG:処女喪失相手 = 0
 			JUEL:快Ｖ = 0
 		ELSEIF B == 150
 			PRINTFORM %CALLNAME:TARGET%は【Ａ処女】になった
-			TALENT:Ａ処女 = 1
+			CLEARBIT TALENT:性経験, 1
 			EXP:Ａ経験 = 0
 			ABL:Ａ感覚 = 0
 			JUEL:快Ａ = 0
@@ -1037,7 +1037,7 @@ SIF TALENT:淫魔 == 0
 	MAXBASE:魅力値 -= 50
 CALL SUCCUBUS_STATUS_ACH(TARGET)
 
-TALENT:童貞 = 1
+CLEARBIT TALENT:性経験, 2
 TALENT:ふたなり = 1
 TALENT:淫乱 = 1
 TALENT:狂気 = 1
@@ -1079,7 +1079,7 @@ IF TALENT:淫乱 == 1
 	R *= 2
 ENDIF
 
-IF TALENT:処女
+IF IS処女(TARGET)
 	CALL 処女喪失実行(TARGET,NO:MASTER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交)
 ENDIF
 
@@ -1087,11 +1087,11 @@ IF !CFLAG:初キス相手
 	CALL 初キス喪失実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススのカリ高極太ふたなりチンポ")
 ENDIF
 
-IF TALENT:童貞 == 1
+IF IS童貞(TARGET)
 	CALL 童貞喪失実行(TARGET,初相手_不明,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交,"知らない女のコの処女マンコ")
 ENDIF
 
-IF TALENT:Ａ処女 == 1
+IF ISＡ処女(TARGET)
 	CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交,"触手生物")
 ENDIF
 

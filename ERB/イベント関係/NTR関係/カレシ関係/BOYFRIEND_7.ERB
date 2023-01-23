@@ -48,7 +48,7 @@ SIF TCVAR:ARG:被写経験 <= 0
 
 SIF !CFLAG:ARG:初キス相手
 	CALL 初キス喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
-IF !CFLAG:ARG:処女喪失相手 && TALENT:ARG:処女
+IF !CFLAG:ARG:処女喪失相手 && IS処女(ARG)
 	TCVAR:ARG:異常経験 += 1
 	CALL 処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_ハメ撮,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF

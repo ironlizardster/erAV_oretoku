@@ -976,7 +976,7 @@ DRAWLINE
 ;産卵
 @EGG_BIRTH
 
-IF TALENT:C:処女 == 1
+IF IS処女(C)
 	CSTR:C:処女喪失相手 = スライムの卵
 	CALL 処女喪失実行(C,初相手_産卵,BASE:C:実年齢,DAY:日付_月,DAY:日付_日,初場所_自室,初状況_なし,CSTR:C:処女喪失相手)
 ENDIF

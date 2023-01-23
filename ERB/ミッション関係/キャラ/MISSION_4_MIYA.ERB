@@ -32,9 +32,9 @@ P:2 = 1
 P:3 = P:1 * 2
 ; 条件による違約金追加
 LOCAL = GETCHARA([[キャラ:高階美夜]])
-SIF TALENT:LOCAL:処女 == 0
+SIF !IS処女(LOCAL)
 	P:3 += 500000
-SIF TALENT:LOCAL:Ａ処女 == 0
+SIF !ISＡ処女(LOCAL)
 	P:3 += 500000
 SIF CFLAG:LOCAL:初キス相手
 	P:3 += 500000
@@ -96,9 +96,9 @@ CALL キャラ追加([[キャラ:高階美夜]])
 LOCAL = GETCHARA([[キャラ:高階美夜]])
 LOCAL:1 = 0
 ;処女性
-SIF TALENT:LOCAL:処女 == 1
+SIF IS処女(LOCAL)
 	LOCAL:1++
-SIF TALENT:LOCAL:Ａ処女 == 1
+SIF ISＡ処女(LOCAL)
 	LOCAL:1++
 ;露出
 SIF ABL:LOCAL:露出癖 >= 2
