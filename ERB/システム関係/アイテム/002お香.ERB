@@ -3,9 +3,16 @@ RESULTS = 否定の珠を半減します
 
 @ITEM_CAN_BUY_お香
 ;お香はHARDでは1日3個、POWERFULでは1個まで
-ITEMSALES:お香 = 調合知識持ち && (!(FLAG:難易度 == 3 && FLAG:１日あたりにお香を購入した数 >= 3) || !(FLAG:難易度 == 4 && FLAG:１日あたりにお香を購入した数 >= 1))
+ITEMSALES:お香 = 調合知識持ち && (!(FLAG:難易度 == 難易度HARD && FLAG:１日あたりにお香を購入した数 >= 3) || !(FLAG:難易度 == 難易度POWERFUL && FLAG:１日あたりにお香を購入した数 >= 1))
+IF !調合知識持ち
+	RESULTS = 主人と助手に[調合知識]持ちがいない
+ELSEIF FLAG:難易度 == 難易度HARD
+	RESULTS = HARDでは1日3個までしか購入できない
+ELSEIF FLAG:難易度 == 難易度POWERFUL
+	RESULTS = POWERFULでは1日1個までしか購入できない
+ENDIF
 
-@ITEM_CAN_USE_お香
+@ITEM_USE_TARGETお香
 PRINTFORML %ITEMNAME:BOUGHT%を誰に使いますか？　所持金：{MONEY}ポイント
 						;****使用アイテム連続購入改造ここまで****
 CALL LIFE_LIST_NEW,LL_MODE_全部

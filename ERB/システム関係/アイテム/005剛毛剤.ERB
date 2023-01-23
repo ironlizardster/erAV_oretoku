@@ -3,8 +3,9 @@ RESULTS = 陰毛の成長を早めます
 
 @ITEM_CAN_BUY_剛毛剤
 ITEMSALES:剛毛剤 = 調合知識持ち
+RESULTS = 主人と助手に[調合知識]持ちがいない
 
-@ITEM_CAN_USE_剛毛剤
+@ITEM_USE_TARGET剛毛剤
 PRINTFORML %ITEMNAME:BOUGHT%を誰に使いますか？　所持金：{MONEY}ポイント
 						;****使用アイテム連続購入改造ここまで****
 CALL LIFE_LIST_NEW,LL_MODE_全部

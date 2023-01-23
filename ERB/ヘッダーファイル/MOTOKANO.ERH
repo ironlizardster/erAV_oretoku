@@ -1,0 +1,14 @@
+﻿#DIM SAVEDATA 元カノタイプ
+#DIM SAVEDATA 元カノ初キス経験済
+#DIM SAVEDATA 元カノ初キス相手
+#DIM SAVEDATA 元カノ性経験
+#DIM SAVEDATA 元カノ処女喪失相手
+#DIM SAVEDATA 元カノアナル経験
+#DIM SAVEDATA 元カノＡ処女喪失相手
+#DIM SAVEDATA 元カノ子供の父親
+
+#DIM CONST 元カノタイプ_委員長 = 1
+#DIM CONST 元カノタイプ_スポーツ少女 = 2
+#DIM CONST 元カノタイプ_ギャル = 3
+#DIM CONST 元カノタイプ_図書委員 = 4
+

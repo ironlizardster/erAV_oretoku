@@ -77,7 +77,7 @@ IF EXP:交際人数 >= 1
 ENDIF
 
 ;ギャルたちの間でカリスマ、なのに何で褐色肌見てたんだ……
-IF TALENT:ギャル系 == 1 && TALENT:アイドル == 1 && TALENT:ColorfulPureGirls == 1 && TALENT:Triptych == 1
+IF TALENT:ギャル系 == 1 && TALENT:アイドル == 1 && IS_FAMOUS(TARGET)
 	PRINTFORML  現役アイドルなだけにギャルたちの間でカリスマ的な存在です。
 ELSEIF TALENT:褐色肌 == 1 && TALENT:アイドル == 0 && TALENT:ColorfulPureGirls == 0 && TALENT:Triptych == 0 && TALENT:ギャル系 == 1 && ABL:舞踊技能 >= 4
 	PRINTFORML  とあるＤＪバーのレゲエパーティーではちょっとした有名ダンサーのようです。

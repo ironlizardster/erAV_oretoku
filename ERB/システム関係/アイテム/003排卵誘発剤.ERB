@@ -3,8 +3,9 @@ RESULTS = 妊娠確率を高めます
 
 @ITEM_CAN_BUY_排卵誘発剤
 ITEMSALES:排卵誘発剤 = 調合知識持ち
+RESULTS = 主人と助手に[調合知識]持ちがいない
 
-@ITEM_CAN_USE_排卵誘発剤
+@ITEM_USE_TARGET排卵誘発剤
 PRINTFORML %ITEMNAME:BOUGHT%を誰に使いますか？　所持金：{MONEY}ポイント
 						;****使用アイテム連続購入改造ここまで****
 CALL LIFE_LIST_NEW,LL_MODE_全部

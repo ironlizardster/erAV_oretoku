@@ -71,3 +71,19 @@
 #DIM MAX_LINE
 #DIM GCOUNT
 #DIM エフェクトあり
+#DIM GLOBAL COLUMNDRAW
+#DIM カラム入力無視
+;GUIオプション
+#DIM GLOBAL SAVEDATA GUI
+#DIM GIDDEL, 8192
+#DIMS GLOBAL SAVEDATA BARCOLOR, 20
+{
+#DIMS CONST BARCOLORDEFAULT = 
+"coral",
+"deepskyblue",
+"violet",
+"white",
+"ivory",
+"linen"
+}
+
