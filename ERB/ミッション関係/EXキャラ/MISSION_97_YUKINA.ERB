@@ -184,7 +184,7 @@ TCVAR:異常経験 += 1 + RAND:4
 TCVAR:放尿経験 += TCVAR:性交経験 + RAND:6
 TCVAR:セフレ性経験 += 5
 BASE:魅力値 -= 30 + RAND:11
-SIF TALENT:ふたなり || TALENT:オトコ 
+SIF HAVE_PENIS(TARGET) 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 
 CALL MISSION_ADD_EXP(TARGET)

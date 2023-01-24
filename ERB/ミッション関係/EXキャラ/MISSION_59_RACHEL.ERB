@@ -186,7 +186,7 @@ TCVAR:異常経験 += 5 + RAND:6
 TCVAR:放尿経験 += 10 + RAND:21
 TCVAR:触手経験 = TCVAR:性交経験 + TCVAR:フェラ経験 + TCVAR:乳姦経験
 TCVAR:緊縛経験 = TCVAR:触手経験
-SIF TALENT:ふたなり || TALENT:オトコ 
+SIF HAVE_PENIS(TARGET) 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 IF IS処女(TARGET)
 	CALL 処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_無理犯,"触手生物")

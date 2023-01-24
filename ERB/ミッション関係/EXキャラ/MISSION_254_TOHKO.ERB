@@ -198,7 +198,7 @@ IF TALENT:彼氏あり == 1
 ENDIF
 CSTR:セフレ姓 = 楠谷
 CSTR:セフレ名 = 響子
-SIF TALENT:ふたなり || TALENT:オトコ 
+SIF HAVE_PENIS(TARGET) 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)

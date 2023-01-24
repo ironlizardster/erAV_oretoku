@@ -76,7 +76,7 @@ IF EXP:Ｖ経験 < EXPLV:1
 	SOURCE:痛覚 += 20000
 	SOURCE:欲情 += 2000
 
-	IF TALENT:PLAYER:オトコ == 0
+	IF HAVE_VAGINA(PLAYER) 
 		EXP:異常経験 += 1
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%＋１
 	ENDIF

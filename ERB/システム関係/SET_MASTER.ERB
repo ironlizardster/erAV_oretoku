@@ -37,20 +37,21 @@ INPUT
 TALENT:MASTER:性経験 = 0
 
 IF RESULT == 0
+	CALL SET_SEXUALITY(MASTER,性別_オトコ)
 	PRINTW オトコで始めます
 ELSEIF RESULT == 1
-	TALENT:MASTER:オトコ = 0
+	CALL SET_SEXUALITY(MASTER,性別_女)
 	PRINTW オンナで始めます
 ELSEIF RESULT == 2
+	CALL SET_SEXUALITY(MASTER,性別_オトコ)
 	TALENT:MASTER:オトコの娘 = 1
 	PRINTW オトコの娘で始めます
 ELSEIF RESULT == 3
-	TALENT:MASTER:ふたなり = 1
-	TALENT:MASTER:オトコ = 0
+	CALL SET_SEXUALITY(MASTER,性別_ふたなり)
 	PRINTW ふたなりで始めます
 ELSEIF RESULT == 4
 	TALENT:MASTER:具現 = 1
-	TALENT:MASTER:オトコ = 0
+	CALL SET_SEXUALITY(MASTER,性別_女)
 	PRINTW 【具現】で始めます
 ELSE
 	GOTO INPUT_LOOP_SEX
@@ -94,7 +95,7 @@ RETURN
 @SET_MASTER_LOSTVIRGIN
 
 ;童貞喪失相手
-IF TALENT:MASTER:オトコ == 1 || TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:具現 == 1
+IF HAVE_PENIS(MASTER) || TALENT:MASTER:具現
 	PRINTL 童貞喪失相手は？
 	PRINTFORML [0] - 実はまだ
 	PRINTFORML [1] - 元カノ
@@ -118,7 +119,7 @@ IF TALENT:MASTER:オトコ == 1 || TALENT:MASTER:ふたなり == 1 || TALENT:MAS
 		EXP:MASTER:射精経験 += 1
 		EXP:MASTER:挿入経験 += 1
 		EXP:MASTER:性交経験 += 1
-		SIF TALENT:MASTER:オトコ == 1
+		SIF IS_MALE(MASTER)
 			EXP:MASTER:ＢＬ経験 += 3
 	ELSEIF RESULT == 3
 		CALL 童貞喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"今カレ")
@@ -135,7 +136,7 @@ ELSE
 ENDIF
 
 ;処女喪失相手
-IF TALENT:MASTER:オトコ == 0
+IF HAVE_VAGINA(MASTER)
 	PRINTL 処女喪失相手は？
 	PRINTFORML [0] - 実はまだ
 	PRINTFORML [1] - 元カノ
@@ -150,19 +151,19 @@ IF TALENT:MASTER:オトコ == 0
 		CALL 処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カノ")
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
-		SIF TALENT:MASTER:オトコ == 0
+		SIF HAVE_VAGINA(MASTER)
 			EXP:MASTER:レズ経験 += 3
 	ELSEIF RESULT == 2
 		CALL 処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カレ")
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
-		SIF TALENT:MASTER:オトコ == 1
+		SIF IS_MALE(MASTER)
 			EXP:MASTER:ＢＬ経験 += 3
 	ELSEIF RESULT == 3
 		CALL 処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"今カレ")
 		EXP:MASTER:Ｖ経験 += 5
 		EXP:MASTER:性交経験 += 1
-		SIF TALENT:MASTER:オトコ == 0
+		SIF HAVE_VAGINA(MASTER)
 			EXP:MASTER:レズ経験 += 3
 	ELSE
 		GOTO SET_MASTER_LOSTVIRGIN2
@@ -184,26 +185,26 @@ ELSEIF RESULT == 1
 	CALL Ａ処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カノ")
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
-	SIF TALENT:MASTER:オトコ == 0
+	SIF HAVE_VAGINA(MASTER)
 		EXP:MASTER:レズ経験 += 3
 ELSEIF RESULT == 2
 	CALL Ａ処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"元カレ")
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
-	SIF TALENT:MASTER:オトコ == 1
+	SIF IS_MALE(MASTER)
 		EXP:MASTER:ＢＬ経験 += 3
 ELSEIF RESULT == 3
 	CALL Ａ処女喪失実行(MASTER,初相手_元彼,0,0,0,初場所_あなたの部屋,初状況_なし,"今カレ")
 	EXP:MASTER:Ａ経験 += 5
 	EXP:MASTER:性交経験 += 1
-	SIF TALENT:MASTER:オトコ == 1
+	SIF IS_MALE(MASTER)
 		EXP:MASTER:ＢＬ経験 += 3
 ELSE
 	GOTO SET_MASTER_LOSTVIRGIN3
 ENDIF
 
 ;ペニスサイズ決定
-IF TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1 || TALENT:MASTER:具現 == 1
+IF HAVE_PENIS(MASTER) || TALENT:MASTER:具現
 	PRINTFORML ところでアレのサイズには自信がありますか？
 	PRINTL [0] - 全くない
 	PRINTL [1] - 平均ぐらいだと思う……

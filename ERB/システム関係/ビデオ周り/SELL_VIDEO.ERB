@@ -247,7 +247,7 @@ REPEAT TFLAG:ビデオ撮影回数
 		G = 200
 		撮影部位C += 3
 		撮影内容愛撫 += 3
-		SIF TALENT:ふたなり
+		SIF IS_FUTA(TARGET)
 			撮影特殊ふたなり += 10
 	;COM:胸愛撫を見る
 	ELSEIF T == 5
@@ -316,7 +316,7 @@ REPEAT TFLAG:ビデオ撮影回数
 		撮影部位C += 3
 		撮影内容器具 += 3
 		撮影傾向自慰 += 3
-		SIF TALENT:ふたなり
+		SIF IS_FUTA(TARGET)
 			撮影特殊ふたなり += 10
 	;COM:アナルビーズを見る
 	ELSEIF T == 19
@@ -468,7 +468,7 @@ REPEAT TFLAG:ビデオ撮影回数
 	;COM:助手にキスを見る
 	ELSEIF T == 60
 		G = 100
-		IF TALENT:ASSI:オトコ == 0
+		IF HAVE_VAGINA(ASSI)
 			E = 33
 			撮影特殊レズ += 3
 		ENDIF
@@ -523,7 +523,7 @@ REPEAT TFLAG:ビデオ撮影回数
 		G = 600
 		撮影部位C += 3
 		撮影傾向奉仕 += 3
-		SIF ( U == 1 && (TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ) ) || ( U == 0 && (TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ))
+		SIF ( U == 1 && HAVE_PENIS(ASSI) ) || ( U == 0 && HAVE_PENIS(MASTER))
 			撮影内容フェラ += 3
 	;COM:ダブル素股を見る
 	ELSEIF T == 70
@@ -724,7 +724,7 @@ REPEAT TFLAG:ビデオ撮影回数
 		撮影部位C += 3
 		撮影内容愛撫 += 3
 		撮影特殊触手 += 5
-		SIF TALENT:ふたなり
+		SIF IS_FUTA(TARGET)
 			撮影特殊ふたなり += 10
 	;COM,挿入Ｇスポ責めを見る
 	ELSEIF T == 120
@@ -744,7 +744,7 @@ REPEAT TFLAG:ビデオ撮影回数
 		G = 200
 		撮影部位C += 3
 		撮影内容愛撫 += 3
-		SIF TALENT:ふたなり
+		SIF IS_FUTA(TARGET)
 			撮影特殊ふたなり += 10
 	;COM,パイズリフェラを見る
 	ELSEIF T == 123
@@ -881,7 +881,7 @@ REPEAT TFLAG:ビデオ撮影回数
 						;****追加ここまで****
 	;助手プレイで助手が女
 	IF ASSI > 0
-		SIF U && TALENT:ASSI:オトコ == 0
+		SIF U && HAVE_VAGINA(ASSI)
 			撮影特殊レズ += 1
 	ENDIF
 

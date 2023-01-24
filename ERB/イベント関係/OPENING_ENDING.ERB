@@ -96,7 +96,7 @@ PRINTFORML 面倒見のよい姐御肌の生徒会長というのはあくまで
 PRINTFORML りヤクザの一人娘であることを知っていた
 PRINTFORML そして葬儀のあとにこうしてヤクザがやって来るということはつまり――
 PRINTFORMW
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORML 「単刀直入に言おう、これからアンタら兄妹が返していかなきゃいけない借金についてだ
 ELSE
 	PRINTFORML 「単刀直入に言おう、これからアンタら姉妹が返していかなきゃいけない借金についてだ
@@ -119,7 +119,7 @@ PRINTFORML 　ただ、真っ当な金融機関なら自己破産なりなんな
 PRINTFORML 　からこんな段階で剥ぎ取りに来ることはないけどさ、アタシらは筋モンだからハナシは違う
 PRINTFORMW 　親が死んだならその子から、たとえどんなことをしてでも絶対に回収する
 PRINTFORML 　――おっと、妹さん……かなでだったかい？
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORML 　今月からウチの学園に通うことになった入試トップの新入生だし、それにアンタのお兄さんには色々と良くしてもら
 ELSE
 	PRINTFORML 　今月からウチの学園に通うことになった入試トップの新入生だし、それにアンタのお姉さんには色々と良くしてもら
@@ -128,7 +128,7 @@ PRINTFORML 　っているからね、そりゃ名前も知っているさ
 PRINTFORML 　それだけの頭脳の持ち主なら『違法金利だろうから裁判所に訴えて、その後弁護士を通して計画的な支払いを提示す
 PRINTFORML 　る』とか考えているだろうけど、そんなのは関係ないさ
 PRINTFORML 　アタシらはナメられたら終わりの商売だ、そんなのに応じるぐらいなら全面戦争に持ち込むよ？
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORML 　まあつまり、アンタら兄妹に逃げ道はないってことさね
 ELSE
 	PRINTFORML 　まあつまり、アンタら姉妹に逃げ道はないってことさね
@@ -138,7 +138,7 @@ PRINTFORML 　額面はその書類に書いてある通りだけど、返済に
 PRINTFORML 　……どうだい、コレだけの額を返す方法なんか思いつくかい？
 PRINTFORML 　宮間センセイの生命保険、それでもってアンタがこれから一生かかって稼ぐ給料ごときでは返しきれないトンでも
 PRINTFORML 　ない額だ
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORML 　そこでまあ、同じ学園のよしみでアタシがアンタら兄妹に仕事を紹介してやることにしたのさ
 ELSE
 	PRINTFORML 　そこでまあ、同じ学園のよしみでアタシがアンタら姉妹に仕事を紹介してやることにしたのさ
@@ -162,7 +162,7 @@ PRINTFORML 　その代わり……そうさね、アンタが学園を卒業す
 PRINTFORML 　もちろんそれまでに借金の額に達したらその時に返してもいい
 PRINTFORML 　他に不安だろう部分はある程度はアタシらが面倒を見てやるし、こっちの仕事なら短期決済でなおかつ、地下風俗
 PRINTFORML 　なんてモノ扱いされるような場所に行かなくてもいいんだ
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORMW 　どっちの方がアンタら兄妹にとってオトクかは言うまでもないと思うけどね？
 ELSE
 	PRINTFORMW 　どっちの方がアンタら姉妹にとってオトクかは言うまでもないと思うけどね？
@@ -172,7 +172,7 @@ PRINTFORML 　だからアタシはこの仕事を提案しているんだ
 PRINTFORML 　この仕事にかかる桐生組の手間暇ぐらいなら短期決済ならそれでよしだからね――まあ、当然こんな仕事を紹介す
 PRINTFORML 　るからにはハッキリ言ってしまえばウラはあるけど、そいつは今は気にしないでおくれ、そのうち時機が来たら話
 PRINTFORMW 　すさ
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORML 　この期間の間、アタシら桐生組としてはアンタら兄妹に追い込みをかけるようなマネは一切しない
 ELSE
 	PRINTFORML 　この期間の間、アタシら桐生組としてはアンタら姉妹に追い込みをかけるようなマネは一切しない
@@ -186,7 +186,7 @@ PRINTFORML 　既に桐生組として面接しているのか、学園の行事
 PRINTFORML 　り――その中には%CALLNAME:MASTER%の見知った人物の名前もあった
 PRINTFORMW
 PRINTFORML 「これが現時点でアタシから紹介できる人材のリストだ――おっと、数人は足りないかな？
-IF TALENT:MASTER:オトコ
+IF IS_MALE(MASTER)
 	PRINTFORML 　一応聞いておくが……かなで、もしも借金返済のために自分の兄貴がこの仕事をするとなった場合、アンタは女優
 ELSE
 	PRINTFORML 　一応聞いておくが……かなで、もしも借金返済のために自分の姉がこの仕事をするとなった場合、アンタは女優

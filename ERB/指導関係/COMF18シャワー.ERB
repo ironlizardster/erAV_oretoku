@@ -71,11 +71,11 @@ ENDIF
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +1
 	EXP:レズ経験 += 1
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +1
 	EXP:ＢＬ経験 += 1
@@ -89,12 +89,12 @@ TEQUIP:シャワー = 1 - TEQUIP:シャワー
 ;-------------------------------------------------
 ;シャワーで汚れがリセット
 ;-------------------------------------------------
-STAIN:0 = 0
-STAIN:1 = 0
-STAIN:2 = 2
-STAIN:3 = 1
-STAIN:4 = 8
-STAIN:5 = 0
+STAIN:口 = 0
+STAIN:手 = 0
+STAIN:ペニス = 2
+STAIN:ヴァギナ = 1
+STAIN:アナル = 8
+STAIN:胸 = 0
 
 ;（できれば）潤滑が半分に
 PALAM:潤滑 /= 2
@@ -176,11 +176,11 @@ ENDIF
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +1
 	EXP:レズ経験 += 1
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +1
 	EXP:ＢＬ経験 += 1
@@ -189,12 +189,12 @@ ENDIF
 ;-------------------------------------------------
 ;シャワーで汚れがリセット
 ;-------------------------------------------------
-STAIN:0 = 0
-STAIN:1 = 0
-STAIN:2 = 2
-STAIN:3 = 1
-STAIN:4 = 8
-STAIN:5 = 0
+STAIN:口 = 0
+STAIN:手 = 0
+STAIN:ペニス = 2
+STAIN:ヴァギナ = 1
+STAIN:アナル = 8
+STAIN:胸 = 0
 
 PALAM:潤滑 /= 2
 PALAM:不快 /= 2

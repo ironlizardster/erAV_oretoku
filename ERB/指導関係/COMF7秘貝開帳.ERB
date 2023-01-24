@@ -293,8 +293,8 @@ SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛状態 <=
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷の指⇔奴隷のＶの汚れが移動
-STAIN:1 |= STAIN:3
-STAIN:3 |= STAIN:1
+STAIN:手 |= STAIN:ヴァギナ
+STAIN:ヴァギナ |= STAIN:手
 
 ;-------------------------------------------------
 ;経験上昇
@@ -321,7 +321,7 @@ IF ABL:露出癖 >= 3
 ENDIF
 
 ;レズ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +2
 	EXP:レズ経験 += 2

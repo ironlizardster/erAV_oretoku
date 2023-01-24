@@ -44,7 +44,7 @@ IF IS処女(PLAYER)
 ENDIF
 ;コンドームを使うかの確認
 $INPUT_LOOP_02
-IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && (TALENT:TARGET:ふたなり || TALENT:TARGET:オトコ) && CFLAG:コンドーム使用禁止 != 2
+IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && HAVE_PENIS(TARGET) && CFLAG:コンドーム使用禁止 != 2
 	PRINTFORML %CALLNAME:TARGET%にコンドームを嵌めますか？
 	PRINTL  [0] - 嵌める
 	PRINTL  [1] - 生でやる
@@ -165,7 +165,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -241,7 +241,7 @@ ELSE
 ENDIF
 
 ;調教対象がオトコではない
-IF TALENT:オトコ == 0
+IF HAVE_VAGINA(TARGET)
 	SOURCE:露出 = 1200
 	TIMES SOURCE:逸脱 , 6.00
 ENDIF
@@ -256,18 +256,18 @@ ENDIF
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＰ⇔調教者のＶの汚れが移動
-STAIN:2 |= STAIN:PLAYER:3
-STAIN:PLAYER:3 |= STAIN:2
+STAIN:ペニス |= STAIN:PLAYER:ヴァギナ
+STAIN:PLAYER:ヴァギナ |= STAIN:ペニス
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +4
 	EXP:レズ経験 += 4
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +4
 	EXP:ＢＬ経験 += 4
@@ -338,7 +338,7 @@ IF IS処女(PLAYER) && IS童貞(TARGET)
 ELSEIF IS童貞(TARGET)
 	E = 50
 ;調教対象がオトコ
-ELSEIF TALENT:オトコ
+ELSEIF IS_MALE(TARGET)
 	E = 4
 ELSE
 	E = 3
@@ -383,7 +383,7 @@ RETURN 1
 A = NO:PLAYER
 ;【オトコ】か【ふたなり】であり【未熟】
 ;△って未熟見てないやんか。えー
-SIF (TALENT:ふたなり == 0 && TALENT:オトコ == 0) || EXP:射精経験 != 0
+SIF !HAVE_PENIS(TARGET) || EXP:射精経験 != 0
 	RETURN 0
 ;更に［Ｃ感度］５以上で触手調教や獣姦でなく
 SIF TEQUIP:触手召喚 || TEQUIP:獣姦プレイ

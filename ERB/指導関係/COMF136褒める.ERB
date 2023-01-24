@@ -53,18 +53,18 @@ SIF TALENT:恋心
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷の口⇔調教者の口の汚れが移動
-STAIN:0 |= STAIN:PLAYER:0
-STAIN:PLAYER:0 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:口
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +3
 	EXP:ＢＬ経験 += 3

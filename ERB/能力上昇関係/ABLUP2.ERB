@@ -6,7 +6,7 @@
 ;-------------------------------------------------
 @ABLUP2
 ;オトコは却下
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 
 DRAWLINE
@@ -76,7 +76,7 @@ RETURN 0
 ;-------------------------------------------------
 @CAN_ABLUP2
 ;オトコは却下
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 SIF ABL:Ｖ感覚 >= 3 && IS処女(TARGET)
 	RETURN 0

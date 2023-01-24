@@ -40,7 +40,7 @@ REPEAT CHARANUM
 	SIF CFLAG:COUNT:特殊営業参加 && ABL:COUNT:精液中毒 == 0
 		E = 0
 REND
-SIF TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
+SIF !HAVE_PENIS(MASTER)
 	E = 0
 SIF E == 1
 	S |= 2
@@ -279,7 +279,7 @@ REPEAT CHARANUM
 		CFLAG:COUNT:133 += RAND:3
 			IF CFLAG:COUNT:133 == 0
 				CSTR:COUNT:童貞喪失相手 = 知らないオンナの人
-			ELSEIF CFLAG:COUNT:133 == 1 && TALENT:MASTER:オトコ == 0
+			ELSEIF CFLAG:COUNT:133 == 1 && HAVE_VAGINA(MASTER)
 				CSTR:COUNT:童貞喪失相手 = %CALLNAME:MASTER%
 				IF IS処女(MASTER) && CFLAG:MASTER:処女喪失相手 == 0
 					CALL 処女喪失実行(MASTER,NO:COUNT + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:COUNT)
@@ -817,7 +817,7 @@ REPEAT CHARANUM
 	;Ｖ使用不可キャラがいると減る
 	IF CFLAG:COUNT:売春Ｖ不能
 		V = 70
-		IF TALENT:COUNT:オトコ
+		IF IS_MALE(COUNT)
 			PRINT オトコ
 		ELSE
 			PRINT Ｖ不可
@@ -930,9 +930,9 @@ SIF E < RAND:100
 CFLAG:便所公開浣腸 += 1
 IF ABL:Ａ感覚 > ABL:Ｖ感覚 && ABL:Ａ感覚 > ABL:Ｃ感覚
 	PRINT 自分のアナルをほじり続けていた
-ELSEIF ABL:Ｖ感覚 > ABL:Ｃ感覚 && TALENT:オトコ == 0 && CFLAG:売春Ｖ不能 == 0
+ELSEIF ABL:Ｖ感覚 > ABL:Ｃ感覚 && HAVE_VAGINA(TARGET) && CFLAG:売春Ｖ不能 == 0
 	PRINT ヴァギナに指を出し入れし続けていた
-ELSEIF TALENT:オトコ || TALENT:ふたなり
+ELSEIF HAVE_PENIS(TARGET)
 	PRINT ペニスをしごき続けていた
 ELSE
 	PRINT クリトリスをいじり続けていた
@@ -946,7 +946,7 @@ ELSEIF CFLAG:便所公開浣腸 == 3
 	PRINT 大きく背中をのけぞらせ
 ENDIF
 
-IF TALENT:オトコ || TALENT:ふたなり
+IF HAVE_PENIS(TARGET)
 	PRINTL て、ザーメンを勢いよく迸らせた……
 ELSEIF CFLAG:便所公開浣腸 == 3
 	PRINTL て、
@@ -1167,7 +1167,7 @@ IF (TALENT:Y:小柄 && TALENT:MASTER:小柄 == 0) || (TALENT:Y:大柄 == 0 && TA
 	PRINTFORML %CALLNAME:Y%は%CALLNAME:MASTER%の体重にほとんど押し潰されそうになり、
 	PRINTFORMW 顔を真っ赤にして両腕を突っ張り、辛うじて胴体を浮かせているのがやっとだ
 	PRINTFORM 正直、この騎手と
-	IF TALENT:Y:オトコ
+	IF IS_MALE(Y)
 		PRINT 牡
 	ELSE
 		PRINT 牝
@@ -1176,7 +1176,7 @@ IF (TALENT:Y:小柄 && TALENT:MASTER:小柄 == 0) || (TALENT:Y:大柄 == 0 && TA
 ELSEIF (TALENT:Y:大柄 && TALENT:MASTER:大柄 == 0) || (TALENT:Y:小柄 == 0 && TALENT:MASTER:小柄)
 	PRINTFORMW %CALLNAME:Y%の背中は、%CALLNAME:MASTER%の体重にもしっかりと持ち堪えている
 	PRINTFORM これは、なかなか頼りがいのある
-	IF TALENT:Y:オトコ
+	IF IS_MALE(Y)
 		PRINT 牡
 	ELSE
 		PRINT 牝

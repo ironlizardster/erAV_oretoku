@@ -18,7 +18,7 @@ SIF CFLAG:ピアス状況 & 2
 SIF CFLAG:ピアス状況 & 4
 	PRINT ラビア 
 IF CFLAG:ピアス状況 & 8
-	IF TALENT:ふたなり || TALENT:オトコ
+	IF HAVE_PENIS(TARGET)
 		PRINT ペニス 
 	ELSE
 		PRINT クリトリス 
@@ -51,10 +51,10 @@ IF RESULT == 0
 		PRINTL  [0] - 乳首(2個消費)
 	SIF (CFLAG:ピアス状況 & 2) == 0
 		PRINTL  [1] - へそ
-	SIF (CFLAG:ピアス状況 & 4) == 0 && TALENT:オトコ == 0 && ITEM:ピアスリング >= 2
+	SIF (CFLAG:ピアス状況 & 4) == 0 && HAVE_VAGINA(TARGET) && ITEM:ピアスリング >= 2
 		PRINTL  [2] - ラビア(2個消費)
 	IF (CFLAG:ピアス状況 & 8) == 0 
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINTL  [3] - ペニス
 		ELSE
 			PRINTL  [3] - クリトリス
@@ -70,7 +70,7 @@ IF RESULT == 0
 		RETURN 0
 	ELSEIF RESULT < 0 || RESULT > 4
 		GOTO INPUT_LOOP
-	ELSEIF RESULT == 2 && TALENT:オトコ
+	ELSEIF RESULT == 2 && IS_MALE(TARGET)
 		GOTO INPUT_LOOP
 	ENDIF
 ELSEIF RESULT == 1
@@ -79,10 +79,10 @@ ELSEIF RESULT == 1
 		PRINTL  [0] - 乳首
 	SIF (CFLAG:ピアス状況 & 2)
 		PRINTL  [1] - へそ
-	SIF (CFLAG:ピアス状況 & 4) && TALENT:オトコ == 0
+	SIF (CFLAG:ピアス状況 & 4) && HAVE_VAGINA(TARGET)
 		PRINTL  [2] - ラビア
 	IF (CFLAG:ピアス状況 & 8) 
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINTL  [3] - ペニス
 		ELSE
 			PRINTL  [3] - クリトリス
@@ -98,7 +98,7 @@ ELSEIF RESULT == 1
 		RETURN 0
 	ELSEIF RESULT < 0 || RESULT > 4
 		GOTO INPUT_LOOP
-	ELSEIF RESULT == 2 && TALENT:オトコ
+	ELSEIF RESULT == 2 && IS_MALE(TARGET)
 		GOTO INPUT_LOOP
 	ENDIF
 ELSEIF RESULT == 10
@@ -308,23 +308,23 @@ LOSEBASE:気力 += 100
 ;ニプル
 IF P == 1
 	;対象のＢ⇔調教者の指の汚れが移動
-	STAIN:5 |= STAIN:PLAYER:1
-	STAIN:PLAYER:1 |= STAIN:5
+	STAIN:胸 |= STAIN:PLAYER:手
+	STAIN:PLAYER:手 |= STAIN:胸
 ;ラビア
 ELSEIF P == 4
 	;対象のＶ⇔調教者の指の汚れが移動
-	STAIN:3 |= STAIN:PLAYER:1
-	STAIN:PLAYER:1 |= STAIN:3
+	STAIN:ヴァギナ |= STAIN:PLAYER:手
+	STAIN:PLAYER:手 |= STAIN:ヴァギナ
 ;クリ
 ELSEIF P == 8
 	;対象のＶ⇔調教者の指の汚れが移動
-	STAIN:3 |= STAIN:PLAYER:1
-	STAIN:PLAYER:1 |= STAIN:3
+	STAIN:ヴァギナ |= STAIN:PLAYER:手
+	STAIN:PLAYER:手 |= STAIN:ヴァギナ
 ;舌
 ELSEIF P == 16
 	;対象の口⇔調教者の指の汚れが移動
-	STAIN:0 |= STAIN:PLAYER:1
-	STAIN:PLAYER:1 |= STAIN:0
+	STAIN:口 |= STAIN:PLAYER:手
+	STAIN:PLAYER:手 |= STAIN:口
 ENDIF
 
 SOURCE:痛覚 = 3000

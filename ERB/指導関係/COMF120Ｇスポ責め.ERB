@@ -108,7 +108,7 @@ ELSEIF PREVCOM == [[TRAIN:背面座位]]
 ENDIF
 
 ;調教者が[オトコ]
-SIF TALENT:PLAYER:オトコ
+SIF IS_MALE(PLAYER) 
 	TIMES SOURCE:快Ｖ , 2.50
 
 ;小柄体形

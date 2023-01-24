@@ -49,11 +49,11 @@ ENDIF
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +1
 	EXP:レズ経験 += 1
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +1
 	EXP:ＢＬ経験 += 1
@@ -70,8 +70,8 @@ SIF TEQUIP:触手召喚
 ;汚れ（触手）
 ;-------------------------------------------------
 IF TEQUIP:触手召喚 && TEQUIP:オナホール
-	STAIN:3 |= 2
-	STAIN:3 |= 4
+	STAIN:ヴァギナ |= 2
+	STAIN:ヴァギナ |= 4
 ENDIF
 
 RETURN 1
@@ -154,11 +154,11 @@ ENDIF
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +1
 	EXP:レズ経験 += 1
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +1
 	EXP:ＢＬ経験 += 1

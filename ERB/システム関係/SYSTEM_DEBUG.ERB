@@ -163,7 +163,7 @@ CALL PRINT_BUTTON(" [9] - 処女リセット",!(IS処女(TARGET)&&!CFLAG:初キ�
 CALL PRINT_BUTTON(" [10] - 恋心GET",!(TALENT:恋心),10,-1,1)
 CALL PRINT_BUTTON(" [11] - 永遠の愛情経験",EXP:愛情経験 < 10000,11,-1,1)
 CALL PRINT_BUTTON(" [12] - 調教経験",CFLAG:好感度 < 5000,12,-1,1)
-TEMP_NUM = ABL:Ｃ感覚 < 10 || ABL:Ｂ感覚 < 10 || ABL:Ｖ感覚 < 10 || ABL:Ａ感覚 < 10 || ABL:信頼 < 10 || ABL:欲望 < 10 || ABL:技巧 < 10 || ABL:奉仕技術 < 10 || ABL:性交技術 < 10 || ABL:話術 < 10 || ABL:奉仕精神 < 10 || ABL:露出癖 < 10 || (ABL:性交中毒 && ABL:性交中毒 < 10) || ABL:自慰中毒 < 10 || ABL:精液中毒 < 10|| ABL:売春中毒 < 10 || ABL:射精中毒 < 10 || ABL:噴乳中毒 < 10 || ABL:美容感覚 < 10 || ABL:運動能力 < 10 || ABL:学力 < 10 || ABL:被写技能 < 10 || ABL:歌唱技能 < 10 || ABL:舞踊技能 < 10 || ABL:料理技能 < 10 || ABL:オタク知識 < 10 || (!TALENT:オトコ && ABL:レズっ気 < 10) || (TALENT:オトコ && ABL:ＢＬっ気 < 10) || (!TALENT:オトコ && ABL:レズ中毒 < 10) || EXP:自慰経験 < 200 || EXP:Ｖ経験 < 300 || EXP:Ａ快楽経験 < 300 || EXP:Ｂ開発経験 < 150 || EXP:野外露出経験 < 100 || EXP:調教自慰経験 < 100 || EXP:嗜虐快楽経験 < 100 || (!TALENT:精愛味覚 && CFLAG:強制精飲絶頂 && CFLAG:強制精飲絶頂 < 100) || RELATION:0 < 1000
+TEMP_NUM = ABL:Ｃ感覚 < 10 || ABL:Ｂ感覚 < 10 || ABL:Ｖ感覚 < 10 || ABL:Ａ感覚 < 10 || ABL:信頼 < 10 || ABL:欲望 < 10 || ABL:技巧 < 10 || ABL:奉仕技術 < 10 || ABL:性交技術 < 10 || ABL:話術 < 10 || ABL:奉仕精神 < 10 || ABL:露出癖 < 10 || (ABL:性交中毒 && ABL:性交中毒 < 10) || ABL:自慰中毒 < 10 || ABL:精液中毒 < 10|| ABL:売春中毒 < 10 || ABL:射精中毒 < 10 || ABL:噴乳中毒 < 10 || ABL:美容感覚 < 10 || ABL:運動能力 < 10 || ABL:学力 < 10 || ABL:被写技能 < 10 || ABL:歌唱技能 < 10 || ABL:舞踊技能 < 10 || ABL:料理技能 < 10 || ABL:オタク知識 < 10 || (HAVE_VAGINA(TARGET) && ABL:レズっ気 < 10) || (IS_MALE(TARGET) && ABL:ＢＬっ気 < 10) || (HAVE_VAGINA(TARGET) && ABL:レズ中毒 < 10) || EXP:自慰経験 < 200 || EXP:Ｖ経験 < 300 || EXP:Ａ快楽経験 < 300 || EXP:Ｂ開発経験 < 150 || EXP:野外露出経験 < 100 || EXP:調教自慰経験 < 100 || EXP:嗜虐快楽経験 < 100 || (!TALENT:精愛味覚 && CFLAG:強制精飲絶頂 && CFLAG:強制精飲絶頂 < 100) || RELATION:0 < 1000
 CALL PRINT_BUTTON(" [13] - ABL全部UP",TEMP_NUM,13,-1,1)
 DRAWLINE
 
@@ -336,11 +336,11 @@ ELSEIF RESULT == 13
 		ABL:性交中毒 = 10
 	ABL:自慰中毒 = 10
 	ABL:精液中毒 = 10
-	SIF !TALENT:オトコ
+	SIF HAVE_VAGINA(TARGET)
 		ABL:レズ中毒 = 10
-	SIF !TALENT:オトコ
+	SIF HAVE_VAGINA(TARGET)
 		ABL:レズっ気 = 10
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		ABL:ＢＬっ気 = 10
 	ABL:売春中毒 = 10
 	ABL:射精中毒 = 10

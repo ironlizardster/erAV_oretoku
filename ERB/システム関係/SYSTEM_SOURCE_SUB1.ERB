@@ -28,11 +28,11 @@
 ;-------------------------------------------------
 @SOURCE_SEX_CHECK
 ;レズ
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	;女性同士の場合のチェック
 	;関数はSOURCE_SUB_SUB.ERBに記述
 	CALL SOURCE_LESBIAN_SEX_CHECK
-ELSEIF TALENT:オトコ && TALENT:PLAYER:オトコ
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	;男性同士の場合のチェック
 	;関数はSOURCE_SUB_SUB.ERBに記述
 	CALL SOURCE_GAY_SEX_CHECK
@@ -218,25 +218,25 @@ TFLAG:近親相姦 = 0
 CALL INCEST
 
 IF TFLAG:近親相姦 && TFLAG:V経験を伴うコマンド
-	IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
+	IF TFLAG:近親相姦 == 1 && IS_MALE(PLAYER) 
 		PRINTL 父娘相姦
-	ELSEIF  TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
+	ELSEIF  TFLAG:近親相姦 == 1 && HAVE_VAGINA(PLAYER) 
 		PRINTL 母娘相姦
-	ELSEIF  TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ
+	ELSEIF  TFLAG:近親相姦 == 2 && IS_MALE(PLAYER) 
 		PRINTL 母子相姦
-	ELSEIF  TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ == 0
+	ELSEIF  TFLAG:近親相姦 == 2 && HAVE_VAGINA(PLAYER) 
 		PRINTL 母娘相姦
-	ELSEIF  TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
+	ELSEIF  TFLAG:近親相姦 == 3 && IS_MALE(PLAYER) 
 		PRINTL 兄妹相姦
-	ELSEIF  TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
+	ELSEIF  TFLAG:近親相姦 == 3 && HAVE_VAGINA(PLAYER) 
 		PRINTL 姉妹相姦
-	ELSEIF  TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
+	ELSEIF  TFLAG:近親相姦 == 4 && IS_MALE(PLAYER) 
 		PRINTL 姉弟相姦
-	ELSEIF  TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
+	ELSEIF  TFLAG:近親相姦 == 4 && HAVE_VAGINA(PLAYER) 
 		PRINTL 姉妹相姦
-	ELSEIF  TFLAG:近親相姦 == 5 && TALENT:PLAYER:オトコ == 0
+	ELSEIF  TFLAG:近親相姦 == 5 && HAVE_VAGINA(PLAYER) 
 		PRINTL 従弟相姦
-	ELSEIF  TFLAG:近親相姦 == 6 && TALENT:PLAYER:オトコ
+	ELSEIF  TFLAG:近親相姦 == 6 && IS_MALE(PLAYER) 
 		PRINTL 従姉相姦
 	ENDIF
 
@@ -498,7 +498,7 @@ ENDIF
 ;調教対象の射精チェック
 ;-------------------------------------------------
 @TARGET_EJAC_CHECK
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 SIF TALENT:未熟
 	RETURN 0
@@ -576,7 +576,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋１
 	PRINTL 射精経験＋２
-	IF EXP:射精経験 == 0 && TALENT:オトコ == 0
+	IF EXP:射精経験 == 0 && HAVE_VAGINA(TARGET)
 		EXP:異常経験 += 1
 		PRINTL 異常経験＋1
 	ENDIF
@@ -584,7 +584,7 @@ IF E == 2
 	EXP:射精経験 += 2
 
 	;Ｐに精液汚れ
-	STAIN:2 |= 4
+	STAIN:ペニス |= 4
 
 	BASE:射精ゲージ -= EJAC*2
 	SIF BASE:射精ゲージ >= EJAC
@@ -621,14 +621,14 @@ ELSEIF E == 1
 	PRINTS NAME:TARGET
 	PRINTL 射精
 	PRINTL 射精経験＋１
-	IF EXP:射精経験 == 0 && TALENT:オトコ == 0
+	IF EXP:射精経験 == 0 && HAVE_VAGINA(TARGET)
 		EXP:異常経験 += 1
 		PRINTL 異常経験＋1
 	ENDIF
 	EXP:射精経験 += 1
 
 	;Ｐに精液汚れ
-	STAIN:2 |= 4
+	STAIN:ペニス |= 4
 
 	BASE:射精ゲージ -= EJAC
 	SIF BASE:射精ゲージ >= EJAC
@@ -740,7 +740,7 @@ IF E == 2
 	ENDIF
 	EXP:噴乳経験 += 2
 	;Ｂに母乳汚れ
-	STAIN:5 |= 16
+	STAIN:胸 |= 16
 
 	BASE:噴乳ゲージ -= EJAC*2
 	SIF BASE:噴乳ゲージ >= EJAC
@@ -786,7 +786,7 @@ ELSEIF E == 1
 	ENDIF
 	EXP:噴乳経験 += 1
 	;Ｂに母乳汚れ
-	STAIN:5 |= 16
+	STAIN:胸 |= 16
 
 	BASE:噴乳ゲージ -= EJAC
 	SIF BASE:噴乳ゲージ >= EJAC
@@ -839,7 +839,7 @@ IF TALENT:自制心
 ENDIF
 
 ;オトコ
-IF TALENT:オトコ
+IF IS_MALE(TARGET)
 	TIMES UP:[[UP:快Ａ]] , 1.30
 ENDIF
 
@@ -1644,8 +1644,8 @@ IF TFLAG:絶頂の強度 >= 7 && TEQUIP:利尿剤効果 && TALENT:おもらし�
 	EXP:放尿経験 += 5
 	TEQUIP:利尿剤効果 = 0
 	;奴隷のＶとＰに＜尿＞の汚れが発生
-	STAIN:2 |= 32
-	STAIN:3 |= 32
+	STAIN:ペニス |= 32
+	STAIN:ヴァギナ |= 32
 	;着衣おもらし処理
 	CALL SOILING_CLOTH_NO1
 ;大量放尿
@@ -1654,8 +1654,8 @@ ELSEIF (TFLAG:絶頂の強度 >= 7 && TEQUIP:利尿剤効果) || (TFLAG:絶頂�
 	EXP:放尿経験 += 4
 	TEQUIP:利尿剤効果 = 0
 	;奴隷のＶとＰに＜尿＞の汚れが発生
-	STAIN:2 |= 32
-	STAIN:3 |= 32
+	STAIN:ペニス |= 32
+	STAIN:ヴァギナ |= 32
 	;着衣おもらし処理
 	CALL SOILING_CLOTH_NO1
 ;放尿
@@ -1664,8 +1664,8 @@ ELSEIF (TFLAG:絶頂の強度 >= 7 && TALENT:おもらし癖) || (TFLAG:絶頂�
 	EXP:放尿経験 += 3
 	TEQUIP:利尿剤効果 = 0
 	;奴隷のＶとＰに＜尿＞の汚れが発生
-	STAIN:2 |= 32
-	STAIN:3 |= 32
+	STAIN:ペニス |= 32
+	STAIN:ヴァギナ |= 32
 	;着衣おもらし処理
 	CALL SOILING_CLOTH_NO1
 ;失禁
@@ -1675,8 +1675,8 @@ ELSEIF (TFLAG:絶頂の強度 >= 5 && TALENT:おもらし癖) || (TFLAG:絶頂�
 	SIF TALENT:おもらし癖 == 0
 		TEQUIP:利尿剤効果 = 0
 	;奴隷のＶとＰに＜尿＞の汚れが発生
-	STAIN:2 |= 32
-	STAIN:3 |= 32
+	STAIN:ペニス |= 32
+	STAIN:ヴァギナ |= 32
 	;着衣おもらし処理
 	CALL SOILING_CLOTH_NO1
 ;微量失禁
@@ -1684,8 +1684,8 @@ ELSEIF (TFLAG:絶頂の強度 >= 3 && TALENT:おもらし癖) || (TFLAG:絶頂�
 	PRINTFORML %EXPNAME:[[EXP:放尿経験]]%＋１
 	EXP:放尿経験 += 1
 	;奴隷のＶとＰに＜尿＞の汚れが発生
-	STAIN:2 |= 32
-	STAIN:3 |= 32
+	STAIN:ペニス |= 32
+	STAIN:ヴァギナ |= 32
 ENDIF
 
 ;-------------------------------------------------
@@ -1751,10 +1751,10 @@ IF ASSIPLAY == 0 && TEQUIP:触手召喚 == 0
 	SIF TALENT:快感の否定
 		R -= 1
 	;女嫌い
-	SIF TALENT:ボーイッシュ && TALENT:MASTER:オトコ == 0
+	SIF TALENT:ボーイッシュ && HAVE_VAGINA(MASTER)
 		R -= 1
 	;男嫌い
-	SIF TALENT:男性不信 && TALENT:MASTER:オトコ
+	SIF TALENT:男性不信 && IS_MALE(MASTER)
 		R -= 1
 	;恋心
 	SIF TALENT:恋心

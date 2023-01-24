@@ -121,7 +121,7 @@ IF TALENT:快感の否定
 	S = 1
 ENDIF
 ;男嫌い
-IF TALENT:男性不信 && TALENT:PLAYER:オトコ
+IF TALENT:男性不信 && IS_MALE(PLAYER) 
 	PRINT  - 
 	A -= 12
 	PRINTS TALENTNAME:[[TALENT:男性不信]]
@@ -139,30 +139,30 @@ IF TALENT:恋心 && ASSIPLAY == 0
 ENDIF
 
 ;調教者がふたなり
-IF TALENT:PLAYER:ふたなり
+IF IS_FUTA(PLAYER)
 	SIF S
 		PRINT  + 
 	A += 8
-	PRINTS TALENTNAME:[[TALENT:ふたなり]]
+	PRINT ふたなり
 	PRINTV '(,8,')
 	S = 1
 ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:2 & 1
+SIF STAIN:PLAYER:ペニス & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:2 & 4
+SIF STAIN:PLAYER:ペニス & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:2 & 8
+SIF STAIN:PLAYER:ペニス & 8
 	Y += 7
 ;母乳の汚れ
-SIF STAIN:PLAYER:2 & 16
+SIF STAIN:PLAYER:ペニス & 16
 	Y += 1
 ;尿の汚れ
-SIF STAIN:PLAYER:4 & 32
+SIF STAIN:PLAYER:アナル & 32
 	Y += 3
 
 SIF TALENT:汚臭鈍感
@@ -389,7 +389,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -448,7 +448,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋３
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -464,7 +464,7 @@ ELSEIF E == 1
 	PRINTL 精液経験＋１
 
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -477,34 +477,34 @@ ENDIF
 ;-------------------------------------------------
 ;汚れ
 ;-------------------------------------------------
-STAIN:0 = 0
-STAIN:1 = 0
-STAIN:2 = 2
-STAIN:3 = 1
-STAIN:4 = 8
+STAIN:口 = 0
+STAIN:手 = 0
+STAIN:ペニス = 2
+STAIN:ヴァギナ = 1
+STAIN:アナル = 8
 
 IF ASSIPLAY == 0
-	STAIN:MASTER:0 = 0
-	STAIN:MASTER:1 = 0
-	STAIN:MASTER:2 = 2
-	STAIN:MASTER:3 = 1
-	STAIN:MASTER:4 = 8
+	STAIN:MASTER:口 = 0
+	STAIN:MASTER:手 = 0
+	STAIN:MASTER:ペニス = 2
+	STAIN:MASTER:ヴァギナ = 1
+	STAIN:MASTER:アナル = 8
 ELSEIF ASSIPLAY
-	STAIN:ASSI:0 = 0
-	STAIN:ASSI:1 = 0
-	STAIN:ASSI:2 = 2
-	STAIN:ASSI:3 = 1
-	STAIN:ASSI:4 = 8
+	STAIN:ASSI:口 = 0
+	STAIN:ASSI:手 = 0
+	STAIN:ASSI:ペニス = 2
+	STAIN:ASSI:ヴァギナ = 1
+	STAIN:ASSI:アナル = 8
 ENDIF
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +7
 	EXP:レズ経験 += 7
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +7
 	EXP:ＢＬ経験 += 7
@@ -527,7 +527,7 @@ TFLAG:快楽経験 = 1
 TFLAG:屈服刻印2 = 3
 
 ;調教者がふたなり
-IF TALENT:PLAYER:ふたなり
+IF IS_FUTA(PLAYER)
 	SOURCE:屈従 /= 2
 ENDIF
 

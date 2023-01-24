@@ -659,7 +659,7 @@ ENDIF
 IF 元カノ初キス相手 == 1
 	CALL 初キス喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_口,NAME:MASTER)
 	;あなたの初キス相手が今カノor元カノで今カノはいない
-	SIF (FLAG:元カノ存在 & 2 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 2
+	SIF (FLAG:元カノ存在 & 2 && FLAG:今カノ存在 == 0) || FLAG:今カノ存在 & 2
 		CSTR:MASTER:初キス相手 = %CSTR:MASTER:彼氏名%
 ELSEIF 元カノ初キス相手 == 2
 						;****カノ設定改造追加ここから****
@@ -679,7 +679,7 @@ ENDIF
 IF 元カノ処女喪失相手 == 1
 	CALL 処女喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 	;あなたの童貞喪失相手が今カノor元カノで今カノはいない
-	SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4
+	SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0) || FLAG:今カノ存在 & 4
 		CALL 童貞喪失実行(MASTER,NO:TARGET + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 ELSEIF 元カノ処女喪失相手 == 2
 						;****カノ設定改造追加ここから****
@@ -758,7 +758,7 @@ IF CFLAG:MASTER:240 == 1
 	CSTR:Ａ処女喪失相手 = %NAME:MASTER%
 	CALL Ａ処女喪失実行(TARGET,NO:MASTER + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 	;あなたの童貞喪失相手が今カノor元カノで今カノはいないかつ彼女が処女
-	SIF ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4) && 元カノ性経験 == 0
+	SIF ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0) || FLAG:今カノ存在 & 4) && 元カノ性経験 == 0
 		CALL 童貞喪失実行(MASTER,NO:TARGET + 1,0,0,0,初場所_あなたの部屋,初状況_なし)
 ELSEIF CFLAG:MASTER:240 == 2
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)
@@ -1235,7 +1235,7 @@ IF 元カノ初キス相手 == 1
 	CSTR:初キス相手 = %NAME:MASTER%
 	CFLAG:初キス相手 = 16
 	;あなたの初キス相手が今カノor元カノで今カノはいない
-	SIF (FLAG:元カノ存在 & 2 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 2
+	SIF (FLAG:元カノ存在 & 2 && FLAG:今カノ存在 == 0) || FLAG:今カノ存在 & 2
 		CSTR:MASTER:初キス相手 = %CALLNAME:TARGET%
 ELSEIF 元カノ初キス相手 == 2
 	IF (元カノ処女喪失相手 == 3) || (CFLAG:MASTER:240 == 3)
@@ -1254,7 +1254,7 @@ IF 元カノ処女喪失相手 == 1
 	CSTR:処女喪失相手 = %NAME:MASTER%
 	CFLAG:処女喪失相手 = 16
 	;あなたの童貞喪失相手が今カノor元カノで今カノはいない
-	SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4
+	SIF (FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0) || FLAG:今カノ存在 & 4
 		CSTR:MASTER:童貞喪失相手 = %CALLNAME:TARGET%
 ELSEIF 元カノ処女喪失相手 == 2
 	IF (元カノ初キス相手 == 3) || (CFLAG:MASTER:240 == 3)
@@ -1393,7 +1393,7 @@ IF CFLAG:MASTER:240 == 1
 	CSTR:Ａ処女喪失相手 = %NAME:MASTER%
 	CFLAG:Ａ処女喪失相手 = 16
 	;あなたの童貞喪失相手が今カノor元カノで今カノはいないかつ彼女が処女
-	SIF ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0)  || FLAG:今カノ存在 & 4) && 元カノ性経験 == 0
+	SIF ((FLAG:元カノ存在 & 4 && FLAG:今カノ存在 == 0) || FLAG:今カノ存在 & 4) && 元カノ性経験 == 0
 		CSTR:MASTER:童貞喪失相手 = %CALLNAME:TARGET%
 ELSEIF CFLAG:MASTER:240 == 2
 	IF (元カノ初キス相手 == 3) || (元カノ処女喪失相手 == 3)

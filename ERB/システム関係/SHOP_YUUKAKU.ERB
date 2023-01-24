@@ -102,7 +102,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:育児中
 		CONTINUE
 	;素質【オトコ】が付いていると不可
-	SIF TALENT:COUNT:オトコ
+	SIF IS_MALE(COUNT)
 		CONTINUE
 
 	A += 1
@@ -194,7 +194,7 @@ IF TALENT:RESULT:育児中
 	GOTO INPUT_LOOP_0
 ENDIF
 ;素質【オトコ】が付いていると不可
-;IF TALENT:RESULT:オトコ
+;IF IS_MALE(RESULT)
 ;	PRINTL 残念ながら、男娼には未対応です
 ;	WAIT
 ;	GOTO INPUT_LOOP_0
@@ -204,7 +204,7 @@ TARGET = RESULT
 
 ;V使用不可フラグのチェック
 ;オトコである
-IF TALENT:オトコ
+IF IS_MALE(TARGET)
 	CFLAG:売春Ｖ不能 = 1
 ;貞操帯着用
 ELSEIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
@@ -234,7 +234,7 @@ IF MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1)
 	ENDIF
 ENDIF
 ;Ｖ営業の条件：オトコでなく処女でなくかつ、Ｖ感覚が3以上または娼婦持ちかつ、屈服刻印2以上で個室拡張済み
-IF TALENT:オトコ == 0 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
+IF HAVE_VAGINA(TARGET) && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) 
 	;貞操帯を付けているとダメ
 	IF CFLAG:特別コスタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
 		IF IS処女(TARGET)
@@ -245,13 +245,13 @@ IF TALENT:オトコ == 0 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1)
 	ENDIF
 ENDIF
 ;ＳＭ営業の条件：オトコでなく、技巧が3以上かつ、屈服刻印が3以上で、個室とＳＭグッズ拡張済み
-IF TALENT:オトコ == 0 && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:娼館拡張 & 1) && (FLAG:娼館拡張 & 2)
+IF HAVE_VAGINA(TARGET) && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:娼館拡張 & 1) && (FLAG:娼館拡張 & 2)
 	;貞操帯を付けているとダメ
 	SIF CFLAG:特別コスタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
 		PRINTL  [5] - ＳＭ営業	
 ENDIF
 ;出張営業の条件：オトコでなく、常連客が付いており、護衛を拡張済み
-IF TALENT:オトコ == 0 && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
+IF HAVE_VAGINA(TARGET) && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
 	;貞操帯を付けているとダメ
 	SIF CFLAG:特別コスタイプ != 79 || (CFLAG:着衣状態 & 64) == 0
 		PRINTL  [6] - 出張営業
@@ -293,19 +293,19 @@ ELSEIF RESULT == 3 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1)
 	PRINTFORML 《%NAME:TARGET%にＡ営業で稼がせます》
 	WAIT
 	CFLAG:営業内容 = 3
-ELSEIF RESULT == 4 && TALENT:オトコ == 0 && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) != 0
+ELSEIF RESULT == 4 && HAVE_VAGINA(TARGET) && MARK:屈服刻印 >= 2 && (FLAG:娼館拡張 & 1) != 0
 	SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 		GOTO INPUT_LOOP_1
 	PRINTFORML 《%NAME:TARGET%にＶ営業で稼がせます》
 	WAIT
 	CFLAG:営業内容 = 4
-ELSEIF RESULT == 5 && TALENT:オトコ == 0 && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:娼館拡張 & 1) != 0 && (FLAG:娼館拡張 & 2) != 0
+ELSEIF RESULT == 5 && HAVE_VAGINA(TARGET) && ABL:技巧 >=3 && MARK:屈服刻印 >= 3 && (FLAG:娼館拡張 & 1) != 0 && (FLAG:娼館拡張 & 2) != 0
 	SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 		GOTO INPUT_LOOP_1
 	PRINTFORML 《%NAME:TARGET%にＳＭ営業で稼がせます》
 	WAIT
 	CFLAG:営業内容 = 5
-ELSEIF RESULT == 6 && TALENT:オトコ == 0 && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
+ELSEIF RESULT == 6 && HAVE_VAGINA(TARGET) && TALENT:常連客 == 1 && (FLAG:娼館拡張 & 4) != 0
 	SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 		GOTO INPUT_LOOP_1
 	PRINTFORML 《%NAME:TARGET%に常連客への出張営業で稼がせます》
@@ -496,7 +496,7 @@ REPEAT CHARANUM
 
 	;V使用不可フラグのチェック
 	;オトコである
-	IF TALENT:COUNT:オトコ
+	IF IS_MALE(COUNT)
 		CFLAG:COUNT:売春Ｖ不能 = 1
 	;貞操帯着用
 	ELSEIF CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)

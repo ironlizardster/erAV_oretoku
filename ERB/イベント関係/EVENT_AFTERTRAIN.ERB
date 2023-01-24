@@ -101,7 +101,7 @@ ENDIF
 						;****触手中毒パッチ追加ここまで****
 ;調教後の性交渉チェック
 ;奴隷がオトコか、女かつＶ感覚よりＡ感覚の方が高いか、処女でもＡ感覚が3以上ある場合はアナルセックス
-IF TALENT:オトコ || (TALENT:オトコ == 0 && ABL:Ｖ感覚 < ABL:Ａ感覚) || (IS処女(TARGET) && ABL:Ａ感覚 >= 3 && !ISＡ処女(TARGET))
+IF IS_MALE(TARGET) || (HAVE_VAGINA(TARGET) && ABL:Ｖ感覚 < ABL:Ａ感覚) || (IS処女(TARGET) && ABL:Ａ感覚 >= 3 && !ISＡ処女(TARGET))
 	CALL AFTERTRAIN_ANALSEX_CHECK
 ;それ以外なら通常のセックス
 ELSE
@@ -141,13 +141,13 @@ SIF TALENT:恋心 == 0 && TALENT:淫乱 == 0
 SIF EXP:性交経験 < 30
 	RETURN 0
 ;処女やオトコだとダメ
-SIF IS処女(TARGET) || TALENT:オトコ == 1
+SIF IS処女(TARGET) || IS_MALE(TARGET) 
 	RETURN 0
 ;貞操帯だとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;主人がオトコかフタナリじゃないとダメ
-SIF TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
+SIF !HAVE_PENIS(MASTER)
 	RETURN 0
 ;瀕死だとダメ
 SIF BASE:体力 < 500
@@ -256,7 +256,7 @@ SIF TALENT:恋心 == 0 && TALENT:淫乱 == 0
 SIF EXP:性交経験 < 30
 	RETURN 0
 ;主人がオトコかフタナリじゃないとダメ
-SIF TALENT:MASTER:オトコ == 0 && TALENT:MASTER:ふたなり == 0
+SIF !HAVE_PENIS(MASTER)
 	RETURN 0
 ;瀕死だとダメ
 SIF BASE:体力 < 500
@@ -365,7 +365,7 @@ SIF TARGET < 0
 SIF ASSI < 0
 	RETURN 0
 ;奴隷か助手がオトコだとだめ
-SIF TALENT:オトコ || TALENT:ASSI:オトコ
+SIF IS_MALE(TARGET) || IS_MALE(ASSI)
 	RETURN 0
 ;レズっ気2以上、C感覚3以上、欲望2以上、技巧2以上が必要
 SIF ABL:レズっ気 < 2 || ABL:Ｃ感覚 < 3 || ABL:信頼 < 2 || ABL:欲望 < 2
@@ -502,7 +502,7 @@ EXP:絶頂経験 += N*100*ABL:信頼/500
 JUEL:快Ｃ += N*100*ABL:信頼
 JUEL:欲情 += N*200
 ;ふた
-IF TALENT:ASSI:ふたなり
+IF IS_FUTA(ASSI)
 	PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{N}
 	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{N*100*(ABL:技巧+ABL:奉仕精神)}
 	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{N*100*(ABL:技巧+ABL:奉仕精神)}
@@ -542,7 +542,7 @@ IF TALENT:ASSI:マゾ && ABL:TARGET:サドっ気 >= 3
 	EXP:嗜虐快楽経験 += N
 ENDIF
 ;ふた
-IF TALENT:ふたなり
+IF IS_FUTA(TARGET)
 	PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{N*S}
 	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{N*100*S}
 
@@ -550,7 +550,7 @@ IF TALENT:ふたなり
 	JUEL:恥情 += N*100*S
 ENDIF
 ;ふた×ふた　見てるABLは奉仕精神と精液中毒。TARGETだけでいいんかねこれ。
-IF TALENT:ふたなり && TALENT:ASSI:ふたなり && ABL:奉仕精神 >= 3 && ABL:精液中毒 >= 3
+IF IS_FUTA(TARGET) && IS_FUTA(ASSI) && ABL:奉仕精神 >= 3 && ABL:精液中毒 >= 3
 	PRINTFORML %NAME:ASSI%と%NAME:TARGET%は
 	IF TIME == 0
 		PRINTFORMW 日が暮れるまで互いのペニスをしゃぶりあった。
@@ -763,7 +763,7 @@ SIF TALENT:未熟
 SIF EXP:獣姦経験 < 50
 	RETURN 0
 ;処女やオトコだとダメ
-SIF IS処女(TARGET) || TALENT:オトコ == 1
+SIF IS処女(TARGET) || IS_MALE(TARGET) 
 	RETURN 0
 ;貞操帯だとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
@@ -902,7 +902,7 @@ SIF TALENT:未熟
 SIF EXP:触手経験 < 50
 	RETURN 0
 ;処女やオトコだとダメ
-SIF IS処女(TARGET) || TALENT:オトコ == 1
+SIF IS処女(TARGET) || IS_MALE(TARGET) 
 	RETURN 0
 ;貞操帯だとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)

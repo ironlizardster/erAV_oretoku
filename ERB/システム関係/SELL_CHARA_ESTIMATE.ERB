@@ -645,19 +645,19 @@ SIF TALENT:肥満
 ;TALENT:幼稚かTALENT:未熟があれば大丈夫
 SIF TALENT:絶壁 && TALENT:幼稚 == 0 && TALENT:未熟 == 0
 	T:[[TALENT:絶壁]] = 50
-;TALENT:ふたなりをみる
-SIF TALENT:ふたなり
-	T:[[TALENT:ふたなり]] = 200
-;TALENT:オトコをみる
-;TALENT:オトコだとABL:従順・ABL:欲望が共に高く、ある程度のホモっ気がないとかなり下がる
+;ふたなりをみる
+SIF IS_FUTA(TARGET)
+	T:[[TALENT:性別]] = 200
+;IS_MALE(TARGET)をみる
+;IS_MALE(TARGET)だとABL:従順・ABL:欲望が共に高く、ある程度のホモっ気がないとかなり下がる
 ;TALENT:魅力・TALENT:幼稚・TALENT:未熟があれば大丈夫
-IF TALENT:オトコ && TALENT:魅力 == 0 && TALENT:幼稚 == 0 && TALENT:未熟 == 0
+IF IS_MALE(TARGET) && TALENT:魅力 == 0 && TALENT:幼稚 == 0 && TALENT:未熟 == 0
 	IF ABL:信頼 <= 3 || ABL:欲望 <= 3 || ABL:ＢＬっ気 <= 2
-		T:[[TALENT:オトコ]] = 20
+		T:[[TALENT:性別]] = 20
 	ELSEIF ABL:信頼 <= 4 || ABL:欲望 <= 4 || ABL:ＢＬっ気 <= 3
-		T:[[TALENT:オトコ]] = 40
+		T:[[TALENT:性別]] = 40
 	ELSEIF ABL:信頼 <= 5 || ABL:欲望 <= 5 || ABL:ＢＬっ気 <= 4
-		T:[[TALENT:オトコ]] = 70
+		T:[[TALENT:性別]] = 70
 	ENDIF
 ENDIF
 ;TALENT:動物耳をみる

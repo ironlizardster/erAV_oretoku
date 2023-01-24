@@ -143,7 +143,7 @@ IF TALENT:快感の否定
 	S = 1
 ENDIF
 ;男嫌い
-IF TALENT:男性不信 && TALENT:PLAYER:オトコ
+IF TALENT:男性不信 && IS_MALE(PLAYER) 
 	PRINT  - 
 	A -= 12
 	PRINTS TALENTNAME:[[TALENT:男性不信]]
@@ -187,11 +187,11 @@ ELSEIF EXP:Ｖ経験 < EXPLV:2
 ENDIF
 
 ;調教者がふたなり
-IF TALENT:PLAYER:ふたなり
+IF IS_FUTA(PLAYER)
 	SIF S
 		PRINT  + 
 	A += 4
-	PRINTS TALENTNAME:[[TALENT:ふたなり]]
+	PRINT ふたなり
 	PRINTV '(,4,')
 	S = 1
 ENDIF
@@ -218,19 +218,19 @@ ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:2 & 1
+SIF STAIN:PLAYER:ペニス & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:2 & 4
+SIF STAIN:PLAYER:ペニス & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:2 & 8
+SIF STAIN:PLAYER:ペニス & 8
 	Y += 7
 ;母乳の汚れ
-SIF STAIN:PLAYER:2 & 16
+SIF STAIN:PLAYER:ペニス & 16
 	Y += 1
 ;尿の汚れ
-SIF STAIN:PLAYER:4 & 32
+SIF STAIN:PLAYER:アナル & 32
 	Y += 3
 
 ;獣姦の場合は汚れ7で固定
@@ -584,7 +584,7 @@ ELSE
 ENDIF
 
 ;調教者がふたなり
-IF TALENT:PLAYER:ふたなり
+IF IS_FUTA(PLAYER)
 	SOURCE:屈従 /= 2
 ENDIF
 

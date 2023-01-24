@@ -225,7 +225,7 @@ IF CFLAG:予備衣装 != 0
 	PRINTFORML 
 ENDIF
 
-IF !TALENT:絶壁 && !TALENT:未熟 && !TALENT:オトコ && (!TALENT:幼稚 || !TALENT:貧乳)
+IF !TALENT:絶壁 && !TALENT:未熟 && HAVE_VAGINA(TARGET) && (!TALENT:幼稚 || !TALENT:貧乳)
 	PRINTFORM  ブラ：
 		CALL PRINT_UNDERWEAR_COLOR_TOPS
 	SIF CFLAG:ブラタイプ != 12 &&  CFLAG:ブラタイプ != 11 && CFLAG:ブラタイプ != 14 && CFLAG:ブラタイプ != 10 && CFLAG:ブラタイプ != -1
@@ -234,7 +234,7 @@ IF !TALENT:絶壁 && !TALENT:未熟 && !TALENT:オトコ && (!TALENT:幼稚 || !
 		PRINTFORML 　　　
 ENDIF
 
-IF !TALENT:オトコ || (TALENT:オトコ && TALENT:オトコの娘)
+IF HAVE_VAGINA(TARGET) || (IS_MALE(TARGET) && TALENT:オトコの娘)
 	PRINTFORM  ショーツ
 ELSE
 	PRINTFORM  パンツ

@@ -15,7 +15,7 @@ RESULTS = ハードアナルセックス
 @SCENE_VISIBLE_5
 ; 不可視なら0、可視なら1を戻す
 ;男優処理がないので暫定
-IF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ABL:PLAYER:技巧 == 0 && ITEM:ペニスバンド == 0 
+IF !HAVE_PENIS(PLAYER) && ABL:PLAYER:技巧 == 0 && ITEM:ペニスバンド == 0 
 	RETURN 0
 ELSE
 	RETURN 1
@@ -128,7 +128,7 @@ PRINTFORMW %CALLNAME:PLAYER%
 
 PRINTFORM 催淫効果のあるお香が焚かれたラブホテルの一室で、%CALLNAME:TARGET%は%CALLNAME:PLAYER%に
 PRINT 嬌声を上げ全身を痙攣させながら、アナルが広がってしまうまで何度も
-IF TALENT:PLAYER:ふたなり == 1 || TALENT:PLAYER:オトコ == 1
+IF HAVE_PENIS(PLAYER)
 	PRINTL 肉棒
 ELSE
 	PRINTL ペニスバンド
@@ -142,11 +142,11 @@ IF ISＡ処女(TARGET)
 ENDIF
 
 IF !CFLAG:初キス相手
-	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+	IF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
 		LOCALS = %CALLNAME:PLAYER%のおちん○ん
-	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+	ELSEIF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
 		LOCALS = %CALLNAME:PLAYER%のオチ○ポ
-	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+	ELSEIF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 1
 		LOCALS = %CALLNAME:PLAYER%のチンポ
 	ENDIF
 	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影,LOCALS)
@@ -165,7 +165,7 @@ PRINTFORMW %CALLNAME:PLAYER%
 
 PRINTFORM 催淫効果のあるお香が焚かれたラブホテルの一室で、%CALLNAME:TARGET%は%CALLNAME:PLAYER%に
 PRINTFORML 失神するまで何度もアナルを
-IF TALENT:PLAYER:ふたなり == 1 || TALENT:PLAYER:オトコ == 1
+IF HAVE_PENIS(PLAYER)
 	PRINTL 肉棒
 ELSE
 	PRINTL ペニスバンド
@@ -179,11 +179,11 @@ IF ISＡ処女(TARGET)
 ENDIF
 
 IF !CFLAG:初キス相手
-	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+	IF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
 		LOCALS = %CALLNAME:PLAYER%のおちん○ん
-	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+	ELSEIF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
 		LOCALS = %CALLNAME:PLAYER%のオチ○ポ
-	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+	ELSEIF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 1
 		LOCALS = %CALLNAME:PLAYER%のチンポ
 	ENDIF
 	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影,LOCALS)
@@ -211,11 +211,11 @@ IF ISＡ処女(TARGET)
 ENDIF
 
 IF !CFLAG:初キス相手
-	IF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
+	IF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 0 && TALENT:淫乱 == 0
 		LOCALS = %CALLNAME:PLAYER%のおちん○ん
-	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
+	ELSEIF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 0 && TALENT:淫乱 == 1
 		LOCALS = %CALLNAME:PLAYER%のオチ○ポ
-	ELSEIF TALENT:オトコ == 0 && TALENT:褐色肌 == 1
+	ELSEIF HAVE_VAGINA(TARGET) && TALENT:褐色肌 == 1
 		LOCALS = %CALLNAME:PLAYER%のチンポ
 	ENDIF
 	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_撮影,LOCALS)

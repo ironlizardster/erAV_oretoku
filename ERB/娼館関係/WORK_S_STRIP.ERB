@@ -114,7 +114,7 @@ ENDIF
 FLAG:特殊営業タイプ詳細 = 0
 ;&1:オナニー &2:レズ &4:セックス &8:近親
 ;参加者2人で近親関係なら近親ショー
-SIF FLAG:特殊営業参加人数 == 2 && ((TALENT:オトコ || TALENT:ふたなり) || (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり))
+SIF FLAG:特殊営業参加人数 == 2 && (HAVE_PENIS(TARGET) || HAVE_PENIS(ASSI))
 	FLAG:特殊営業タイプ詳細 |= 4
 E = 0
 ;参加者全員が自慰中毒3以上か自慰狂いならオナニーショー
@@ -427,13 +427,13 @@ REPEAT CHARANUM
 		SIF TALENT:COUNT:セックス狂
 			D += 10
 		;性別が同じで両刀
-		SIF TALENT:COUNT:両刀 && (TALENT:TARGET:オトコ == TALENT:ASSI:オトコ)
+		SIF TALENT:COUNT:両刀 && (IS_MALE(TARGET) == IS_MALE(ASSI))
 			D += 5
 		;片方が女で女嫌い
-		SIF TALENT:COUNT:ボーイッシュ && (TALENT:TARGET:オトコ == 0 || TALENT:ASSI:オトコ == 0)
+		SIF TALENT:COUNT:ボーイッシュ && (HAVE_VAGINA(TARGET) || HAVE_VAGINA(ASSI))
 			D -= 3
 		;片方が男で男嫌い
-		SIF TALENT:COUNT:男性不信 && (TALENT:TARGET:オトコ || TALENT:ASSI:オトコ)
+		SIF TALENT:COUNT:男性不信 && (IS_MALE(TARGET) || IS_MALE(ASSI))
 			D -= 3
 	ENDIF
 
@@ -536,15 +536,15 @@ ELSE
 ENDIF
 
 IF FLAG:特殊営業タイプ詳細 & 8
-	IF TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ == 0 && TALENT:ASSI:オトコ == 0
+	IF TFLAG:近親相姦 == 2 && HAVE_VAGINA(PLAYER) && HAVE_VAGINA(ASSI)
 		PRINT による母と娘の
-	ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0 && TALENT:ASSI:オトコ
+	ELSEIF TFLAG:近親相姦 == 2 && HAVE_VAGINA(TARGET) && IS_MALE(ASSI)
 		PRINT による母と息子の
-	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0 && TALENT:ASSI:オトコ == 0
+	ELSEIF TFLAG:近親相姦 == 4 && HAVE_VAGINA(PLAYER) && HAVE_VAGINA(ASSI)
 		PRINT による姉と妹の
-	ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0 && TALENT:ASSI:オトコ
+	ELSEIF TFLAG:近親相姦 == 4 && HAVE_VAGINA(TARGET) && IS_MALE(ASSI)
 		PRINT による姉と弟の
-	ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ && TALENT:ASSI:オトコ == 0
+	ELSEIF TFLAG:近親相姦 == 4 && IS_MALE(TARGET) && HAVE_VAGINA(ASSI)
 		PRINT による兄と妹の
 	ELSE
 		PRINT による近親
@@ -582,23 +582,23 @@ IF FLAG:特殊営業タイプ詳細 & 1
 	;近親オナニーショー
 	IF FLAG:特殊営業タイプ詳細 & 8
 		PRINT 無数の目が見守る中で並んでオナニーを続けている
-		IF TFLAG:近親相姦 == 2  && TALENT:オトコ
+		IF TFLAG:近親相姦 == 2  && IS_MALE(TARGET)
 			PRINT 父
-		ELSEIF TFLAG:近親相姦 == 2  && TALENT:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 2  && HAVE_VAGINA(TARGET)
 			PRINT 母
-		ELSEIF TFLAG:近親相姦 == 4  && TALENT:オトコ
+		ELSEIF TFLAG:近親相姦 == 4  && IS_MALE(TARGET)
 			PRINT 兄
-		ELSEIF TFLAG:近親相姦 == 4  && TALENT:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 4  && HAVE_VAGINA(TARGET)
 			PRINT 姉
 		ENDIF
 		PRINT と
-		IF TFLAG:近親相姦 == 2  && TALENT:ASSI:オトコ
+		IF TFLAG:近親相姦 == 2  && IS_MALE(ASSI)
 			PRINT 息子
-		ELSEIF TFLAG:近親相姦 == 2  && TALENT:ASSI:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 2  && HAVE_VAGINA(ASSI)
 			PRINT 娘
-		ELSEIF TFLAG:近親相姦 == 4  && TALENT:ASSI:オトコ
+		ELSEIF TFLAG:近親相姦 == 4  && IS_MALE(ASSI)
 			PRINT 弟
-		ELSEIF TFLAG:近親相姦 == 4  && TALENT:ASSI:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 4  && HAVE_VAGINA(ASSI)
 			PRINT 妹
 		ENDIF
 		PRINTL に、
@@ -639,7 +639,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 	E = 0
 	PRINTW 本番行為が始まった……
 	;TARGETとASSI双方がふたなりでＶ使用可
-	IF TALENT:TARGET:ふたなり && CFLAG:TARGET:売春Ｖ不能 == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:売春Ｖ不能 == 0
+	IF IS_FUTA(TARGET) && CFLAG:TARGET:売春Ｖ不能 == 0 && IS_FUTA(ASSI) && CFLAG:ASSI:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%と%CALLNAME:ASSI%は
 		PRINTFORMW お互いのペニスでお互いのヴァギナを交互に貫きあった
 		SIF IS処女(TARGET)
@@ -657,7 +657,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		SIF CFLAG:営業コンドーム == 0
 			CFLAG:奴助膣内精子量 += G / 10 + 1
 	;TARGETがオトコorふたなりでASSIがＶ使用可
-	ELSEIF (TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり) && CFLAG:ASSI:売春Ｖ不能 == 0
+	ELSEIF HAVE_PENIS(TARGET) && CFLAG:ASSI:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%は勃起した自分のペニスを
 		PRINTFORMW %CALLNAME:ASSI%の陰唇に出し入れする様子を観客に見せつけた
 		SIF IS童貞(TARGET)
@@ -668,7 +668,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		SIF CFLAG:営業コンドーム == 0
 			CFLAG:奴助膣内精子量 += G / 10 + 1
 	;ASSIがオトコorふたなりでTARGETがＶ使用可
-	ELSEIF  (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:売春Ｖ不能 == 0
+	ELSEIF  HAVE_PENIS(ASSI) && CFLAG:売春Ｖ不能 == 0
 		PRINTFORM %CALLNAME:TARGET%は自分のヴァギナが
 		PRINTFORMW %CALLNAME:ASSI%の陰茎で貫かれる様子を観客に見せつけた
 		SIF IS処女(TARGET)
@@ -682,29 +682,29 @@ IF FLAG:特殊営業タイプ詳細 & 4
 
 	;近親相姦ショー
 	IF FLAG:特殊営業タイプ詳細 & 8 
-		IF TFLAG:近親相姦 == 2 && TALENT:ASSI:オトコ == 0
+		IF TFLAG:近親相姦 == 2 && HAVE_VAGINA(ASSI)
 			PRINT 自分の娘
-		ELSEIF TFLAG:近親相姦 == 2 && TALENT:ASSI:オトコ
+		ELSEIF TFLAG:近親相姦 == 2 && IS_MALE(ASSI)
 			PRINT 自分の息子
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 4 && HAVE_VAGINA(ASSI)
 			PRINT 自分の妹
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:ASSI:オトコ
+		ELSEIF TFLAG:近親相姦 == 4 && IS_MALE(ASSI)
 			PRINT 自分の弟
 		ENDIF
-		IF TALENT:ふたなり && CFLAG:売春Ｖ不能 == 0 && TALENT:ASSI:ふたなり && CFLAG:ASSI:売春Ｖ不能 == 0
+		IF IS_FUTA(TARGET) && CFLAG:売春Ｖ不能 == 0 && IS_FUTA(ASSI) && CFLAG:ASSI:売春Ｖ不能 == 0
 			PRINT と互いに犯しあう
-		ELSEIF (TALENT:オトコ || TALENT:ふたなり) && CFLAG:ASSI:売春Ｖ不能 == 0
+		ELSEIF HAVE_PENIS(TARGET) && CFLAG:ASSI:売春Ｖ不能 == 0
 			PRINT を犯し続ける
-		ELSEIF (TALENT:ASSI:オトコ || TALENT:ASSI:ふたなり) && CFLAG:売春Ｖ不能 == 0
+		ELSEIF HAVE_PENIS(ASSI) && CFLAG:売春Ｖ不能 == 0
 			PRINT に犯され続ける
 		ENDIF
-		IF TFLAG:近親相姦 == 2 && TALENT:オトコ
+		IF TFLAG:近親相姦 == 2 && IS_MALE(TARGET)
 			PRINT 父親
-		ELSEIF TFLAG:近親相姦 == 2 && TALENT:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 2 && HAVE_VAGINA(TARGET)
 			PRINT 母親
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ
+		ELSEIF TFLAG:近親相姦 == 4 && IS_MALE(TARGET)
 			PRINT 兄
-		ELSEIF TFLAG:近親相姦 == 4 && TALENT:オトコ == 0
+		ELSEIF TFLAG:近親相姦 == 4 && HAVE_VAGINA(TARGET)
 			PRINT 姉
 		ENDIF
 		PRINTL という異常な光景に、観客席は静まり返っている……
@@ -718,7 +718,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
-		SIF TALENT:ASSI:オトコ == 0
+		SIF HAVE_VAGINA(ASSI)
 			F += 1
 	ENDIF
 	IF E & 2
@@ -745,7 +745,7 @@ IF FLAG:特殊営業タイプ詳細 & 4
 		F += 1
 		SIF FLAG:特殊営業タイプ詳細 & 8
 			F += 1
-		SIF TALENT:オトコ == 0
+		SIF HAVE_VAGINA(TARGET)
 			F += 1
 	ENDIF
 	IF E & 8
@@ -909,7 +909,7 @@ REPEAT CHARANUM
 	;公開オナニー成功
 	IF FLAG:特殊営業タイプ詳細 & 1
 		TCVAR:絶頂経験 = (G / (10 - Z)) + (G / 10)
-		SIF TALENT:オトコ || TALENT:ふたなり
+		SIF HAVE_PENIS(TARGET)
 			TCVAR:射精経験 = (G / (10 - Z)) + (G / 10)
 		TCVAR:自慰経験 = (G / (6 - Z)) + (G / 2)
 		U:0 = G * (ABL:自慰中毒 + TALENT:自慰狂い * 5) * 10
@@ -929,12 +929,12 @@ REPEAT CHARANUM
 	ENDIF
 	;公開セックス成功
 	IF FLAG:特殊営業タイプ詳細 & 2
-		IF TALENT:オトコ == 0 && CFLAG:売春Ｖ不能 == 0
+		IF HAVE_VAGINA(TARGET) && CFLAG:売春Ｖ不能 == 0
 			TCVAR:Ｖ経験 = (G / (10 - Z)) + (G / 10)
 			U:1 = G * (ABL:性交中毒 + TALENT:セックス狂 * 5) * 10
 			TCVAR:性交経験 = (G / (10 - Z)) + (G / 10)
 		ENDIF
-		IF TALENT:オトコ || TALENT:ふたなり
+		IF HAVE_PENIS(TARGET)
 			TCVAR:射精経験 += (G / (10 - Z)) + (G / 10)
 			U:0 += G * (ABL:性交中毒 + TALENT:セックス狂 * 5) * 10
 			TCVAR:性交経験 +=(G / (10 - Z)) + (G / 10)
@@ -1098,7 +1098,7 @@ REPEAT CHARANUM
 		ENDIF
 
 		;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
-		SIF EXP:Ｖ経験 <= 200 && TALENT:オトコ == 0
+		SIF EXP:Ｖ経験 <= 200 && HAVE_VAGINA(TARGET)
 			TIMES LOSEBASE:体力 , 1.10
 		SIF EXP:Ａ経験 <= 200
 			TIMES LOSEBASE:体力 , 1.20

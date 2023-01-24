@@ -64,7 +64,7 @@ IF FLAG:難易度 > 0 && FLAG:もっと姉ボーナス受け取り == 0
 	TEMP_STR += "あの娘、ああ見えて"
 	IF NO:MASTER == [[キャラ:あなた]]
 		TEMP_STR += "年下好き"
-	ELSEIF !TALENT:MASTER:オトコ
+	ELSEIF HAVE_VAGINA(MASTER)
 		TEMP_STR += "かわいい女の子が好き"
 	ELSE
 		TEMP_STR += "面食い"

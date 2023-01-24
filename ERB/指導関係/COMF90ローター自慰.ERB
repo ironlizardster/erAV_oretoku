@@ -825,20 +825,20 @@ ENDIF
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷の指⇔奴隷のＢの汚れが移動
-STAIN:1 |= STAIN:5
-STAIN:5 |= STAIN:1
+STAIN:手 |= STAIN:胸
+STAIN:胸 |= STAIN:手
 
 ;奴隷の指⇔奴隷のＶの汚れが移動
-STAIN:1 |= STAIN:3
-STAIN:3 |= STAIN:1
+STAIN:手 |= STAIN:ヴァギナ
+STAIN:ヴァギナ |= STAIN:手
 
 
 ;シャワーオナニーの場合汚れをリセット、潤滑更に半分。
 IF TEQUIP:シャワー == 1
-	STAIN:1 = 0
-	STAIN:2 = 2
-	STAIN:3 = 1
-	STAIN:4 = 8
+	STAIN:手 = 0
+	STAIN:ペニス = 2
+	STAIN:ヴァギナ = 1
+	STAIN:アナル = 8
 
 	PALAM:潤滑 /= 2
 ENDIF
@@ -865,11 +865,11 @@ IF (TEQUIP:撮影中 || TEQUIP:野外プレイ) && CFLAG:公開自慰済 == 0
 ENDIF
 
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +3
 	EXP:ＢＬ経験 += 3

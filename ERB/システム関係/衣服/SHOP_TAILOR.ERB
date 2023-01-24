@@ -408,7 +408,7 @@ INPUT
 IF RESULT == 1
 	R = 1
 	S = 0
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		S = 3
 ELSEIF RESULT == 2
 	R = 101
@@ -474,7 +474,7 @@ INPUT
 IF RESULT == 1
 	R = 21
 	S = 0
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		S = 3
 ELSEIF RESULT == 2
 	A = 3
@@ -482,7 +482,7 @@ ELSEIF RESULT == 2
 	S = 5
 	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
 		S = 0
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 3
 	R = 23
@@ -490,7 +490,7 @@ ELSEIF RESULT == 3
 ELSEIF RESULT == 4
 	R = 31
 	S = 0
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		S = 3
 ELSEIF RESULT == 5
 	R = 102
@@ -513,7 +513,7 @@ ELSEIF RESULT == 9
 ELSEIF RESULT == 10
 	R = 201
 	S = 0
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		S = 3
 ELSEIF RESULT == 11
 	R = 202
@@ -521,7 +521,7 @@ ELSEIF RESULT == 11
 ELSEIF RESULT == 12
 	R = 203
 	S = 1
-	SIF TALENT:オトコ && TALENT:ニューハーフ == 0
+	SIF IS_MALE(TARGET) && TALENT:ニューハーフ == 0
 		S = 3
 ELSEIF RESULT == 13
 	R = 204
@@ -537,7 +537,7 @@ ELSEIF RESULT == 15
 	S = 5
 	SIF TALENT:幼稚 || TALENT:未熟 || TALENT:幼児退行
 		S = 0
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 16
 	R = 252
@@ -653,14 +653,14 @@ ELSEIF RESULT == 10
 	S = 4
 	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
 		S = 2
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 11
 	R = 109
 	S = 5
 	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
 		S = 2
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 12
 	A = 3
@@ -673,7 +673,7 @@ ELSEIF RESULT == 13
 	S = 5
 	SIF TALENT:高校生 || TALENT:中学生 || TALENT:幼稚 || TALENT:未熟
 		S = 2
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 14
 	A = 3
@@ -775,7 +775,7 @@ INPUT
 IF RESULT == 1
 	R = 24
 	S = 2 - TALENT:献身的
-	SIF TALENT:オトコ && S < 2
+	SIF IS_MALE(TARGET) && S < 2
 		S = 3
 ELSEIF RESULT == 2
 	R = 25
@@ -988,7 +988,7 @@ ELSEIF RESULT == 8
 	R = 52
 	C = 10000
 	S = 2 - TALENT:献身的
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 9
 	R = 71
@@ -1020,7 +1020,7 @@ ELSEIF RESULT == 13
 	R = 79
 	C = 10000
 	S = 0
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		S = 99
 ELSEIF RESULT == 14
 	R = 60
@@ -1281,7 +1281,7 @@ ELSEIF RESULT == 8
 	R = 52
 	C = 10000
 	S = 2 - TALENT:献身的
-	SIF TALENT:オトコ && S < 3
+	SIF IS_MALE(TARGET) && S < 3
 		S = 3
 ELSEIF RESULT == 9
 	R = 71
@@ -1313,7 +1313,7 @@ ELSEIF RESULT == 13
 	R = 79
 	C = 100
 	S = 0
-	SIF TALENT:オトコ
+	SIF IS_MALE(TARGET)
 		S = 99
 ELSEIF RESULT == 14
 	R = 60
@@ -1399,12 +1399,12 @@ PRINTL
 PRINTL  [0] - はい
 PRINTL  [1] - いいえ
 INPUT
-IF RESULT == 0 && TALENT:オトコ == 0 
+IF RESULT == 0 && HAVE_VAGINA(TARGET) 
 	DRAWLINE
 	PRINTFORMW  日焼けサロンから戻ってきた%CALLNAME:TARGET%は《%TALENTNAME:[[TALENT:褐色肌]]%》になりました
 	TALENT:褐色肌 = 1
 	CFLAG:日焼効果 = 4 + RAND:4
-ELSEIF RESULT == 0 && TALENT:オトコ == 1
+ELSEIF RESULT == 0 && IS_MALE(TARGET) 
 	DRAWLINE
 	PRINTFORMW  日焼けサロンから戻ってきた%CALLNAME:TARGET%は《%TALENTNAME:[[TALENT:褐色肌]]%》になりました
 	TALENT:褐色肌 = 1

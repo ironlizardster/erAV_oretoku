@@ -279,7 +279,7 @@ IF TEQUIP:主人コンドーム || (ASSIPLAY && TEQUIP:助手コンドーム )
 ENDIF
 
 ;射精ゲージ増加処理
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;射精処理
@@ -301,7 +301,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋１
 	;Ｐに精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -314,7 +314,7 @@ ELSEIF E == 1
 	EXP:PLAYER:射精経験 += 1
 	;Ｐに精液汚れ
 	PRINTL 射精
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -354,12 +354,12 @@ SIF TEQUIP:獣姦プレイ
 	RETURN 0
 
 ;女同士ならレズ経験上昇
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +5
 	EXP:レズ経験 += 5
 ;男同士ならホモ経験上昇
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +7
 	EXP:ＢＬ経験 += 7
@@ -382,7 +382,7 @@ ELSE
 ENDIF
 
 ;調教対象が男性なら＋１
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	E += 1
 
 IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0
@@ -421,8 +421,8 @@ ENDIF
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＡ⇔調教者のＰの汚れが移動
-STAIN:4 |= STAIN:PLAYER:2
-STAIN:PLAYER:2 |= STAIN:4
+STAIN:アナル |= STAIN:PLAYER:ペニス
+STAIN:PLAYER:ペニス |= STAIN:アナル
 ;
 ;
 ;

@@ -233,7 +233,7 @@ ELSE
 		LOCAL:1++
 	SIF TALENT:ギャル系 == 1 && TALENT:褐色肌 == 1
 		LOCAL:1 -= 100
-	SIF TALENT:ふたなり == 0
+	SIF !IS_FUTA(TARGET)
 		LOCAL:1++
 
 	SIF LOCAL:1 == 13
@@ -269,7 +269,7 @@ IF A:2 == 0
 		TCVAR:精液経験 += 10 + RAND:6
 		TCVAR:異常経験 += 1
 		TCVAR:性交経験 = TCVAR:絶頂経験
-		SIF TALENT:ふたなり || TALENT:オトコ 
+		SIF HAVE_PENIS(TARGET) 
 			TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 		IF !CFLAG:初キス相手
 			CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"小野寺恭司（クラスメイト）")
@@ -302,7 +302,7 @@ IF A:2 == 0
 		TCVAR:フェラ経験 += 5 + RAND:6
 		TCVAR:異常経験 += 1
 		TCVAR:性交経験 = TCVAR:絶頂経験
-		SIF TALENT:ふたなり || TALENT:オトコ 
+		SIF HAVE_PENIS(TARGET) 
 			TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 		IF !CFLAG:初キス相手
 			IF TALENT:ギャル系 == 1
@@ -337,7 +337,7 @@ ELSE
 	TCVAR:放尿経験 += 10 + RAND:11
 	TCVAR:嗜虐快楽経験 += 60 + RAND:31
 	TCVAR:異常経験 += 2
-		SIF TALENT:ふたなり || TALENT:オトコ 
+		SIF HAVE_PENIS(TARGET) 
 			TCVAR:射精経験 += TCVAR:性交経験 - RAND:6
 	CALL MISSION_ADD_EXP(TARGET)
 	IF ARG > 0

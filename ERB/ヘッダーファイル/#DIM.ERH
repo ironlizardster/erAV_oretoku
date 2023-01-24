@@ -48,6 +48,10 @@
 #DIM CONST 累計上納金累計 = 1
 #DIM CONST 累計ビデオ売上 = 2
 
+#DIM CONST 性別_女 = 1
+#DIM CONST 性別_オトコ = 2
+#DIM CONST 性別_ふたなり = 3
+
 #DIM CONST 日付_経過日数 = 0
 #DIM CONST 日付_年 = 1
 #DIM CONST 日付_月 = 2

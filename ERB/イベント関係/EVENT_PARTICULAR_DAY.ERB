@@ -406,13 +406,13 @@ IF RESULT == COMMAND_はい
 		EXP:絶頂経験 += N / 4
 		PRINTFORML 野外露出経験＋{N / 3}
 		EXP:野外露出経験 += N * ABL:露出癖 / 10
-		IF (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
+		IF HAVE_PENIS(MASTER)
 			PRINTFORML 精液経験＋{N / 5}
 			EXP:精液経験 += N * ABL:精液中毒 / 5
 		ENDIF
 		PRINTFORML 奉仕快楽経験＋{N * 2}
 		EXP:奉仕快楽経験 += N * ABL:奉仕精神 / 5
-		IF (TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1)
+		IF HAVE_PENIS(MASTER)
 			PRINTFORML フェラ経験＋{N / 3}
 			EXP:フェラ経験 += N * ABL:奉仕技術 / 3
 		ENDIF

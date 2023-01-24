@@ -311,18 +311,18 @@ SOURCE:逸脱 += A * 5
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＶ⇔調教者の指の汚れが移動
-STAIN:3 |= STAIN:PLAYER:1
-STAIN:PLAYER:1 |= STAIN:3
+STAIN:ヴァギナ |= STAIN:PLAYER:手
+STAIN:PLAYER:手 |= STAIN:ヴァギナ
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +2
 	EXP:レズ経験 += 2
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +2
 	EXP:ＢＬ経験 += 2

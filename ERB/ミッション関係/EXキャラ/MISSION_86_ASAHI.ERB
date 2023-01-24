@@ -161,7 +161,7 @@ TCVAR:フェラ経験 += 20 + RAND:16
 TCVAR:異常経験 += 1 + RAND:4
 BASE:魅力値 -= 40 + RAND:11
 TALENT:彼氏あり = 0
-SIF TALENT:ふたなり || TALENT:オトコ 
+SIF HAVE_PENIS(TARGET) 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)

@@ -113,7 +113,7 @@ PRINTFORML
 ;	ENDIF
 
 
-	IF TALENT:ふたなり
+	IF IS_FUTA(TARGET)
 		PRINTFORM %CALLNAME:TARGET%のような美少女にはあまりにもアンバランスな、
 		PRINTFORM 肉体改造によって生やされたズル剥けの極太ふたなりペニスが
 		PRINTFORM 観客の視線に晒されて%CALLNAME:TARGET%は興奮しているのか、
@@ -268,7 +268,7 @@ SIF TALENT:ＡＶ女優
 	TIMES M , 5.00
 
 PRINTFORML %CALLNAME:TARGET%の処女は{M}ポイントで落札されました
-	IF TALENT:ふたなり
+	IF IS_FUTA(TARGET)
 		PRINTFORM %CALLNAME:TARGET%のペニスは興奮のあまり完全に勃起し
 		PRINTFORML 鈴口から先走りの汁をよだれのように垂れ流していた……
 	ENDIF

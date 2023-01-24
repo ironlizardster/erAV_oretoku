@@ -33,7 +33,7 @@ IF SELECTCOM == [[TRAIN:愛撫]]
 						;****スライムパッチ追加ここまで****
 		PRINTFORM %CALLNAME:PLAYER%は
 		;口が汚れてないか、主人に汚れ無視があるか、助手でない時にボールギャグ装備中でなくキス経験済みの場合
-		SIF (STAIN:0 < 2 || STAIN:0 == 16 || STAIN:0 == 17 || TALENT:MASTER:汚れ無視 || ASSIPLAY) && TEQUIP:ボールギャグ == 0 && CFLAG:初キス相手
+		SIF (STAIN:口 < 2 || STAIN:口 == 16 || STAIN:口 == 17 || TALENT:MASTER:汚れ無視 || ASSIPLAY) && TEQUIP:ボールギャグ == 0 && CFLAG:初キス相手
 			PRINT キスをしながら
 	ENDIF
 	PRINTFORM %CALLNAME:TARGET%の
@@ -73,9 +73,9 @@ ELSEIF SELECTCOM == [[TRAIN:クンニ]]
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%の秘唇を丁寧に舐めほぐし
 	ENDIF
-	IF TALENT:ふたなり && PALAM:欲情 >= PALAMLV:3
+	IF IS_FUTA(TARGET) && PALAM:欲情 >= PALAMLV:3
 		PRINT 、そそり勃ったペニスに舌を這わせて舐め上げ
-	ELSEIF TALENT:ふたなり
+	ELSEIF IS_FUTA(TARGET)
 		PRINT 、ペニスの付け根を舌で舐め上げ
 	ELSEIF PALAM:欲情 >= PALAMLV:3
 		PRINT 、尖りきったクリトリスを舌で吸い上げ
@@ -112,13 +112,13 @@ ELSEIF SELECTCOM == [[TRAIN:アナル愛撫]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:オナニー]]
 	
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		SAVESTR:2 = 陰茎をしごき
 		SAVESTR:3 = 牡
-	ELSEIF TALENT:ふたなり == 0
+	ELSEIF !IS_FUTA(TARGET)
 		SAVESTR:2 = 秘部をまさぐり
 		SAVESTR:3 = 牝
-	ELSEIF TALENT:ふたなり == 1
+	ELSEIF IS_FUTA(TARGET)
 		SAVESTR:2 = 勃起したふたなりペニスをしごき、秘部をまさぐり
 		SAVESTR:3 = 牝
 	ENDIF
@@ -258,7 +258,7 @@ ELSEIF SELECTCOM == [[TRAIN:キスする]]
 		ENDIF
 	ELSE
 		PRINTFORM %CALLNAME:PLAYER%は%CALLNAME:TARGET%の口腔を隅々まで舐め回
-		IF ABL:信頼 >= 2 && EXP:レズ経験 >= 1000 && TALENT:PLAYER:オトコ == 0 && TFLAG:失神中終了 == 0
+		IF ABL:信頼 >= 2 && EXP:レズ経験 >= 1000 && HAVE_VAGINA(PLAYER) && TFLAG:失神中終了 == 0
 			PRINTFORML し、ねっとりと舌を絡めあいながら唾液を交換した…
 		ELSEIF ABL:信頼 >= 2 && TFLAG:失神中終了 == 0
 			PRINTFORML し、%CALLNAME:TARGET%も積極的に舌を絡めてきた…
@@ -326,7 +326,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 		PRINTFORML 下腹部に手を置き、人差し指と中指でサインを作るように、%CALLNAME:PLAYER%に%SAVESTR:2%自分の秘所を曝した	
 	ELSEIF ABL:露出癖 == 3
 		PRINTFORM 嬉々とした表情で、片手で%SAVESTR:2%陰唇を拡げ、空いた手で
-		IF TALENT:ふたなり
+		IF IS_FUTA(TARGET)
 			PRINT ペニス
 		ELSE
 			PRINT 陰核
@@ -439,7 +439,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 	IF CFLAG:ピアス状況 & 8
 		SIF PALAM:欲情 >= PALAMLV:4
 			PRINT 勃起した
-		IF TALENT:ふたなり
+		IF IS_FUTA(TARGET)
 			PRINT ペニス
 		ELSE
 			PRINT クリトリス
@@ -532,13 +532,13 @@ ELSEIF SELECTCOM == [[TRAIN:アナル舐め]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:ローター]]
 	PRINTFORM %CALLNAME:PLAYER%は%CALLNAME:TARGET%の
-	IF TALENT:オトコ && PALAM:欲情 >= PALAMLV:3
+	IF IS_MALE(TARGET) && PALAM:欲情 >= PALAMLV:3
 		PRINTL 勃起したペニスに震えるローターを押し当てた…
-	ELSEIF TALENT:オトコ
+	ELSEIF IS_MALE(TARGET)
 		PRINTL ペニスに震えるローターを押し当てた…
-	ELSEIF TALENT:ふたなり && PALAM:欲情 >= PALAMLV:3
+	ELSEIF IS_FUTA(TARGET) && PALAM:欲情 >= PALAMLV:3
 		PRINTL ぬかるんだ秘唇に震えるローターを押し当てた…
-	ELSEIF TALENT:ふたなり
+	ELSEIF IS_FUTA(TARGET)
 		PRINTL 秘唇に震えるローターを押し当てた…
 	ELSEIF PALAM:欲情 >= PALAMLV:3
 		PRINTL 硬く尖ったクリトリスに震えるローターを押し当てた…
@@ -767,7 +767,7 @@ ELSEIF SELECTCOM == [[TRAIN:正常位]]
 	;前回と今回の調教者が同じで、前回の調教が正常位であり、抜かないフラグがある場合
 	IF TFLAG:挿しっぱなし && PREVCOM == [[TRAIN:正常位]] && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;調教者がオトコかふたなりである
-		IF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+		IF HAVE_PENIS(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%の膣内の感触を味わいながら、再び腰を動かし始めた…
 		ELSE
 		;ペニスバンドを使用している場合
@@ -781,7 +781,7 @@ ELSEIF SELECTCOM == [[TRAIN:正常位]]
 		SIF TFLAG:今回の調教で処女喪失
 			TFLAG:今回の調教で処女喪失 = 2
 	ELSE
-		SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0	
+		SIF !HAVE_PENIS(PLAYER)
 			PRINTFORM 自らの腰に装着したペニスバンドで、
 		PRINTFORM %CALLNAME:TARGET%の
 		SIF EXP:Ｖ経験 == 0
@@ -824,7 +824,7 @@ ELSEIF SELECTCOM == [[TRAIN:後背位]]
 	;前回と今回の調教者が同じで、前回の調教が後背位であり、抜かないフラグがある場合
 	ELSEIF TFLAG:挿しっぱなし && PREVCOM == [[TRAIN:後背位]] && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;調教者がオトコかふたなりである
-		IF TALENT:PLAYER:ぽっちゃり || TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+		IF HAVE_PENIS(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%の膣内の感触を味わいながら、再び腰を動かし始めた…
 		ELSE
 		;ペニスバンドを使用している場合
@@ -850,7 +850,7 @@ ELSEIF SELECTCOM == [[TRAIN:後背位]]
 			PRINT 秘裂
 		ENDIF
 		PRINTFORM の最奥まで、
-		IF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ	
+		IF HAVE_PENIS(PLAYER)	
 			PRINT 硬くそりかえった陰茎を
 		ELSE
 			PRINT 腰に固定したペニスバイブを
@@ -937,7 +937,7 @@ ELSEIF SELECTCOM == [[TRAIN:正常位アナル]]
 	;前回と今回の調教者が同じで、前回の調教が正常位アナルであり、抜かないフラグがある場合
 	IF TFLAG:挿しっぱなし && PREVCOM == [[TRAIN:正常位アナル]] && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;調教者がオトコかふたなりである
-		IF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+		IF HAVE_PENIS(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%の菊穴の感触を味わいながら、再び腰を動かし始めた…
 		ELSE
 		;ペニスバンドを使用している場合
@@ -966,7 +966,7 @@ ELSEIF SELECTCOM == [[TRAIN:後背位アナル]]
 			SIF EXP:獣姦経験 >= 200 && PALAM:欲情 > PALAMLV:4
 				PRINTFORML %CALLNAME:TARGET%も犬の動きに合わせて腰を振っている
 		;調教者がオトコかふたなりである
-		ELSEIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+		ELSEIF HAVE_PENIS(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%のアヌスの感触を味わいながら、再び腰を動かし始めた…
 		ELSE
 		;ペニスバンドを使用している場合
@@ -1258,13 +1258,13 @@ ELSEIF SELECTCOM == [[TRAIN:アナル奉仕]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:足コキ]]
 	PRINTFORM %CALLNAME:TARGET%は%CALLNAME:PLAYER%のペニスを
-	IF TALENT:小悪魔 && (CFLAG:着衣状態 & 1) && TALENT:オトコ == 0
+	IF TALENT:小悪魔 && (CFLAG:着衣状態 & 1) && HAVE_VAGINA(TARGET)
 
 		SIF PALAM:潤滑 >= PALAMLV:4
 			PRINT 愛液で陰裂がくっきりと浮き出た
 		CALL PRINT_UNDERWEAR_UNDER
 		PRINTFORML を挑発的に見せつけるようにしながら、
-	ELSEIF TALENT:小悪魔 && (CFLAG:着衣状態 & 1) == 0 && TALENT:オトコ == 0
+	ELSEIF TALENT:小悪魔 && (CFLAG:着衣状態 & 1) == 0 && HAVE_VAGINA(TARGET)
 		SIF PALAM:潤滑 >= PALAMLV:4
 			PRINT 愛液でしとどに濡れ、ぱっくりと口を開いた
 		SIF (CFLAG:ピアス状況 & 4)
@@ -1350,7 +1350,7 @@ ELSEIF SELECTCOM == [[TRAIN:ナイズリ]]
 		PRINT うっとりとした表情をしながら、
 	IF TALENT:オトコの娘
 		PRINT 懸命に薄い胸板に
-	ELSEIF TALENT:TALENT:オトコ
+	ELSEIF TALENT:IS_MALE(TARGET)
 		PRINT 懸命に厚い胸板に
 	ELSE
 		PRINT 懸命に薄い胸に
@@ -1804,8 +1804,8 @@ ELSEIF SELECTCOM == [[TRAIN:助手を犯させる]]
 		PRINTFORM 嗜虐的な笑みを浮かべながらねっとりとした腰使いで
 	ENDIF
 	PRINTFORM %CALLNAME:PLAYER%を背後から
-	IF TALENT:ふたなり || TALENT:ふたなり
-		SIF TALENT:ふたなり
+	IF HAVE_PENIS(TARGET)
+		SIF IS_FUTA(TARGET)
 			PRINTFORM ふたなり
 		PRINTFORM ペニス
 	ELSE
@@ -2031,7 +2031,7 @@ ELSEIF SELECTCOM == [[TRAIN:ピアシング]]
 		ELSEIF TALENT:幼稚
 			PRINT 小さな
 		ENDIF
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINT ペニス
 		ELSE
 			PRINT クリトリス
@@ -2099,13 +2099,13 @@ ELSEIF SELECTCOM == [[TRAIN:谷間ホール]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:ローター自慰]]
 	
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		SAVESTR:2 = 陰茎をしごき
 		SAVESTR:3 = 牡
-	ELSEIF TALENT:ふたなり == 0
+	ELSEIF !IS_FUTA(TARGET)
 		SAVESTR:2 = 秘部をまさぐり
 		SAVESTR:3 = 牝
-	ELSEIF TALENT:ふたなり == 1
+	ELSEIF IS_FUTA(TARGET)
 		SAVESTR:2 = 勃起したふたなりペニスをしごき、秘部をまさぐり
 		SAVESTR:3 = 牝
 	ENDIF
@@ -2167,13 +2167,13 @@ ELSEIF SELECTCOM == [[TRAIN:ローター自慰]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:電マ自慰]]
 	
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		SAVESTR:2 = 陰茎をしごき
 		SAVESTR:3 = 牡
-	ELSEIF TALENT:ふたなり == 0
+	ELSEIF !IS_FUTA(TARGET)
 		SAVESTR:2 = 秘部をまさぐり
 		SAVESTR:3 = 牝
-	ELSEIF TALENT:ふたなり == 1
+	ELSEIF IS_FUTA(TARGET)
 		SAVESTR:2 = 勃起したふたなりペニスをしごき、秘部をまさぐり
 		SAVESTR:3 = 牝
 	ENDIF
@@ -2202,7 +2202,7 @@ ELSEIF SELECTCOM == [[TRAIN:電マ自慰]]
 		ENDIF
 		SIF TEQUIP:撮影中
 			PRINT ビデオカメラの前で
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINT 股間
 		ELSE
 			PRINT 秘所
@@ -2463,7 +2463,7 @@ ELSEIF SELECTCOM == [[TRAIN:子宮口責め]]
 		PRINTFORMW %CALLNAME:TARGET%は%CALLNAME:PLAYER%の胸に手を衝き、ペニスを根元まで飲み込んだ…
 		IF EXP:Ｖ経験 <= 30
 			PRINTFORMW %CALLNAME:TARGET%はそのまま腰を前後に揺すっている…
-		ELSEIF EXP:Ｖ経験 <= 50 && TALENT:ふたなり
+		ELSEIF EXP:Ｖ経験 <= 50 && IS_FUTA(TARGET)
 			PRINTFORMW %CALLNAME:TARGET%は%CALLNAME:PLAYER%の腹にペニスを押し付けている…
 		ELSEIF EXP:Ｖ経験 <= 50
 			PRINTFORMW %CALLNAME:TARGET%は%CALLNAME:PLAYER%の陰毛でクリトリスを刺激しているようだ…
@@ -2497,7 +2497,7 @@ ELSEIF SELECTCOM == [[TRAIN:子宮口責め]]
 		ENDIF
 		IF EXP:Ｖ経験 <= 30 || (EXP:Ｖ経験 >= 31 && EXP:Ｖ経験 <= 50 && (PREVCOM == [[TRAIN:後背位]] || PREVCOM == 612))
 			PRINTFORMW %CALLNAME:TARGET%は異物感が強いのか、苦しそうにしている…
-		ELSEIF EXP:Ｖ経験 <= 50 && TALENT:ふたなり
+		ELSEIF EXP:Ｖ経験 <= 50 && IS_FUTA(TARGET)
 			PRINTFORMW %CALLNAME:TARGET%は陰毛と臍の窪みにペニスを嬲られ、鼻声を漏らしている…
 		ELSEIF EXP:Ｖ経験 <= 50
 			PRINTFORMW %CALLNAME:TARGET%は陰毛にクリトリスを擦られ、鼻声を漏らしている…
@@ -2570,7 +2570,7 @@ ELSEIF SELECTCOM == [[TRAIN:フェラ自慰]]
 	ELSEIF TEQUIP:アナルバイブ
 		PRINTL アナルに差し込まれたバイブを抜き差しした…
 	ELSE
-		IF TALENT:オトコ
+		IF IS_MALE(TARGET)
 			PRINTL 陰茎をしごいた…
 		ELSE
 			PRINTL 秘部をまさぐった…
@@ -2585,7 +2585,7 @@ ELSEIF SELECTCOM == [[TRAIN:手コキフェラ]]
 		PRINT うっとりとした表情をしながら、
 	SIF TALENT:舌使い
 		PRINT 舌を竿に絡めて
-	IF TALENT:PLAYER:オトコ
+	IF IS_MALE(PLAYER) 
 		PRINTL ペニスをしゃぶりながら片方の手で玉を揉み、もう片方の手で竿の根元を扱いた…
 	ELSE
 		PRINTL ペニスをしゃぶりながら竿の根元を扱いた…
@@ -2641,7 +2641,7 @@ ELSEIF SELECTCOM == [[TRAIN:正常位ＳＰ]]
 	IF TFLAG:失神中終了 == 0
 		IF EXP:Ｖ経験 <= 30 || (EXP:Ｖ経験 >= 31 && EXP:Ｖ経験 <= 50)
 			PRINTFORMW %CALLNAME:TARGET%は異物感が強いのか、苦しそうにしている…
-		ELSEIF EXP:Ｖ経験 <= 50 && TALENT:ふたなり
+		ELSEIF EXP:Ｖ経験 <= 50 && IS_FUTA(TARGET)
 			PRINTFORMW %CALLNAME:TARGET%は陰毛と臍の窪みにペニスを嬲られ、鼻声を漏らしている…
 		ELSEIF EXP:Ｖ経験 <= 50
 			PRINTFORMW %CALLNAME:TARGET%は陰毛にクリトリスを擦られ、鼻声を漏らしている…
@@ -2730,7 +2730,7 @@ ELSEIF SELECTCOM == [[TRAIN:後背位ＳＰ]]
 	IF TFLAG:失神中終了 == 0
 		IF EXP:Ｖ経験 <= 30 || (EXP:Ｖ経験 >= 31 && EXP:Ｖ経験 <= 50)
 			PRINTFORMW %CALLNAME:TARGET%は異物感が強いのか、苦しそうにしている…
-		ELSEIF EXP:Ｖ経験 <= 50 && TALENT:ふたなり
+		ELSEIF EXP:Ｖ経験 <= 50 && IS_FUTA(TARGET)
 			PRINTFORMW %CALLNAME:TARGET%は陰毛と臍の窪みにペニスを嬲られ、鼻声を漏らしている…
 		ELSEIF EXP:Ｖ経験 <= 50
 			PRINTFORMW %CALLNAME:TARGET%は陰毛にクリトリスを擦られ、鼻声を漏らしている…
@@ -2904,13 +2904,13 @@ ELSEIF SELECTCOM == [[TRAIN:スライム肛門進入]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:スライムオナニー]]
 	
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		SAVESTR:2 = 陰茎をしごき
 		SAVESTR:3 = 牡
-	ELSEIF TALENT:ふたなり == 0
+	ELSEIF !IS_FUTA(TARGET)
 		SAVESTR:2 = 秘部をまさぐり
 		SAVESTR:3 = 牝
-	ELSEIF TALENT:ふたなり == 1
+	ELSEIF IS_FUTA(TARGET)
 		SAVESTR:2 = 勃起したふたなりペニスをしごき、秘部をまさぐり
 		SAVESTR:3 = 牝
 	ENDIF
@@ -2991,7 +2991,7 @@ ELSEIF SELECTCOM == [[TRAIN:アナル舐め手コキ]]
 	PRINTL 薄桃色のすぼまりの中に尖らせた舌先を挿入した…
 	IF (CFLAG:ピアス状況 & 16)
 		PRINTFORM %CALLNAME:TARGET%の舌先に取り付けられたピアスが%CALLNAME:PLAYER%の
-		IF TALENT:PLAYER:オトコ == 1
+		IF IS_MALE(PLAYER) 
 			PRINTFORM 前立腺
 		ELSE
 			PRINTFORM 腸壁
@@ -3008,7 +3008,7 @@ ELSEIF SELECTCOM == [[TRAIN:アナル舐め手コキ]]
 ;具現
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:具現]]
-	IF TALENT:ふたなり == 0
+	IF !IS_FUTA(TARGET)
 		PRINTFORM %CALLNAME:PLAYER%に命じられた%CALLNAME:TARGET%は
 		PRINTFORM 自身の陰核の位置に%CALLNAME:TARGET%のような
 		SIF MAXBASE:魅力値 >= 120

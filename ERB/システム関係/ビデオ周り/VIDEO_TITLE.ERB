@@ -79,11 +79,11 @@ ELSE
 	;あと、だれが実際に奪ったのかも実は取れてない
 	IF TFLAG:ビデオ撮影内容 & 1
 		タイトル7 = で処女喪失
-		IF NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) 
+		IF NO:PLAYER == [[キャラ:あなた]] && HAVE_VAGINA(PLAYER) && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) 
 			タイトル8 =  ～お姉ちゃんにオトナの女にしてもらいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:PLAYER:オトコ == 0 && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
+		ELSEIF HAVE_VAGINA(PLAYER) && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
 			タイトル8 =  ～レズセフレのギャル友・%NICKNAME:ASSI%にオトナの女にされちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:PLAYER:オトコ == 0
+		ELSEIF HAVE_VAGINA(PLAYER) 
 			タイトル8 =  ～\@ PLAYER ? %NICKNAME:PLAYER%chan # 監督 \@にオトナの女にしてもらいました%UNICODE(0x2665)%～
 		ELSEIF TALENT:ギャル系 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
 			タイトル8 =  ～お兄ちゃんにオトナの女にしてもらいました%UNICODE(0x2665)%～
@@ -104,11 +104,11 @@ ELSE
 		ENDIF
 	ELSEIF TFLAG:ビデオ撮影内容2 & 1
 		タイトル7 = でＡ処女喪失
-		IF NO:PLAYER == [[キャラ:あなた]] && TALENT:PLAYER:オトコ == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) 
+		IF NO:PLAYER == [[キャラ:あなた]] && HAVE_VAGINA(PLAYER) && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]]) 
 			タイトル8 =  ～お姉ちゃんにＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:PLAYER:オトコ == 0 && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
+		ELSEIF HAVE_VAGINA(PLAYER) && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
 			タイトル8 =  ～レズセフレのギャル友・%NICKNAME:ASSI%にＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:PLAYER:オトコ == 0
+		ELSEIF HAVE_VAGINA(PLAYER) 
 			タイトル8 =  ～\@ PLAYER ? %NICKNAME:PLAYER%chan # 監督 \@にＡ処女捧げちゃいました%UNICODE(0x2665)%～
 		ELSEIF TALENT:ギャル系 == 0 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
 			タイトル8 =  ～お兄ちゃんにＡ処女捧げちゃいました%UNICODE(0x2665)%～
@@ -131,9 +131,9 @@ ELSE
 		IF TFLAG:童貞喪失 == 1
 			タイトル7 = で童貞喪失
 		ENDIF
-		IF TALENT:PLAYER:オトコ == 0 && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
+		IF HAVE_VAGINA(PLAYER) && TALENT:ギャル系 == 1 && TALENT:PLAYER:ギャル系 == 1
 			タイトル8 =  ～レズセフレのギャル友・%NICKNAME:ASSI%のマンコに%CSTR:一人称%のチンポハメられちゃいました～
-		ELSEIF TALENT:PLAYER:オトコ == 0
+		ELSEIF HAVE_VAGINA(PLAYER) 
 			タイトル8 =  ～\@ PLAYER ? %NICKNAME:PLAYER%chan # 監督 \@のオマ○コに%CSTR:一人称%のオチ○ポハメられちゃいました%UNICODE(0x2665)%～
 		ENDIF
 	ELSE
@@ -258,7 +258,7 @@ ELSEIF NO:TARGET == [[キャラ:須野郁美]]
 ELSEIF NO:TARGET == [[キャラ:後藤光希]]
 	CSTR:TARGET:称号2 = 美人ナース
 ELSEIF NO:TARGET == [[キャラ:榊あゆむ]]
-	CSTR:TARGET:称号2 = \@ TALENT:ふたなり ? ふたなり # 男の娘 \@
+	CSTR:TARGET:称号2 = \@ IS_FUTA(TARGET) ? ふたなり # 男の娘 \@
 ELSEIF NO:TARGET == [[キャラ:御弦伊月]]
 	CSTR:TARGET:称号2 = サムライガール
 ELSEIF NO:TARGET == [[キャラ:雛見春乃]] && !TALENT:淫乱
@@ -492,7 +492,7 @@ ELSEIF NO:TARGET == [[キャラ:和泉透子]]
 ELSEIF NO:TARGET == [[キャラ:高屋敷春海]]
 	CSTR:TARGET:称号2 = ニンジャガール
 ELSEIF NO:TARGET == [[キャラ:鏑木紫苑]]
-	CSTR:TARGET:称号2 = 某令嬢そっくりの\@ TALENT:ふたなり ? ふたなり # 男の娘 \@
+	CSTR:TARGET:称号2 = 某令嬢そっくりの\@ IS_FUTA(TARGET) ? ふたなり # 男の娘 \@
 ELSEIF NO:TARGET == [[キャラ:両島みちる]]
 	CSTR:TARGET:称号2 = 爆乳ヤンキー
 ELSEIF NO:TARGET == [[キャラ:春日律花]]

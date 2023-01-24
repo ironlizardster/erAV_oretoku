@@ -302,9 +302,9 @@ IF TFLAG:口で射精 == 1
 		ELSE
 			PRINTFORML 精液を%CALLNAME:TARGET%の口の中へと流し込んだ…
 		ENDIF
-		SIF ABL:精液中毒 >= 3 && TALENT:PLAYER:オトコ
+		SIF ABL:精液中毒 >= 3 && IS_MALE(PLAYER) 
 			PRINTFORML %CALLNAME:TARGET%は玉を揉み上げ、竿を絞るように扱いて、精液を啜り上げている
-		SIF ABL:精液中毒 >= 3 && TALENT:PLAYER:ふたなり
+		SIF ABL:精液中毒 >= 3 && IS_FUTA(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%は竿を絞るように扱いて、精液を啜り上げている
 	;バキュームフェラ
 	ELSEIF SELECTCOM == [[TRAIN:バキュームフェラ]]
@@ -426,9 +426,9 @@ ELSEIF TFLAG:口で射精 == 2
 		ELSE
 			PRINTFORML 溢れるほどの精液が%CALLNAME:TARGET%の喉に叩きつけられた…
 		ENDIF
-		SIF ABL:精液中毒 >= 3 && TALENT:PLAYER:オトコ
+		SIF ABL:精液中毒 >= 3 && IS_MALE(PLAYER) 
 			PRINTFORML %CALLNAME:TARGET%は溢れた精液で口の周りをドロドロにしながらも玉を揉み上げ、竿を絞るように扱いて、精液を啜り上げている
-		SIF ABL:精液中毒 >= 3 && TALENT:PLAYER:ふたなり
+		SIF ABL:精液中毒 >= 3 && IS_FUTA(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%は溢れた精液で口の周りをドロドロにしながらも竿を絞るように扱いて、精液を啜り上げている
 	;バキュームフェラ
 	ELSEIF SELECTCOM == [[TRAIN:バキュームフェラ]]
@@ -578,15 +578,15 @@ IF TFLAG:絶頂の強度 > 0 && TFLAG:失神中終了 <= 1
 		PRINT 胸の先端から母乳を垂らし、
 	SIF TFLAG:調教対象が噴乳 == 2
 		PRINT 胸の先端から香るほど大量の母乳を噴き出し
-	SIF TFLAG:絶頂の強度 >= 5 && TFLAG:絶頂の強度 <= 8 && TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	SIF TFLAG:絶頂の強度 >= 5 && TFLAG:絶頂の強度 <= 8 && !HAVE_PENIS(TARGET)
 		PRINT 陰唇から透明な潮を噴き出し
-	SIF TFLAG:絶頂の強度 >= 9 && TALENT:ふたなり == 0 && TALENT:オトコ == 0
+	SIF TFLAG:絶頂の強度 >= 9 && !HAVE_PENIS(TARGET)
 		PRINT 陰唇から白濁混じりのイキ汁を噴き出し
 	SIF TFLAG:調教対象が射精 == 1
 		PRINT ペニスから精液を噴き出し
 	SIF TFLAG:調教対象が射精 == 2
 		PRINT 脈打つペニスから大量の精液を撒き散らし
-	SIF (TFLAG:絶頂の強度 < 5 || TALENT:ふたなり || TALENT:オトコ) && TFLAG:調教対象が射精 == 0 && TFLAG:調教対象が噴乳 == 0
+	SIF (TFLAG:絶頂の強度 < 5 || HAVE_PENIS(TARGET)) && TFLAG:調教対象が射精 == 0 && TFLAG:調教対象が噴乳 == 0
 		PRINT 背中を大きく反らし
 	IF TFLAG:絶頂の強度 < 12
 		PRINTL ながら、全身を震わせて絶頂に達した
@@ -889,23 +889,23 @@ SIF TFLAG:セックスで射精 == 0 && TFLAG:触手が射精 == 0 && TFLAG:処�
 ;--------------------------------------------------------
 IF TFLAG:処女喪失 && TFLAG:近親相姦 > 0 && TFLAG:触手が射精 == 0 && TEQUIP:獣姦プレイ == 0 && TEQUIP:触手召喚 == 0 && TFLAG:失神中終了 <= 1
 	PRINTFORM %CALLNAME:TARGET%は
-	IF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ
+	IF TFLAG:近親相姦 == 1 && IS_MALE(PLAYER) 
 		PRINT 父親
-	ELSEIF TFLAG:近親相姦 == 1 && TALENT:PLAYER:オトコ == 0
+	ELSEIF TFLAG:近親相姦 == 1 && HAVE_VAGINA(PLAYER) 
 		PRINT 母親
-	ELSEIF TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ
+	ELSEIF TFLAG:近親相姦 == 2 && IS_MALE(PLAYER) 
 		PRINT 息子
-	ELSEIF TFLAG:近親相姦 == 2 && TALENT:PLAYER:オトコ == 0
+	ELSEIF TFLAG:近親相姦 == 2 && HAVE_VAGINA(PLAYER) 
 		PRINT 娘
-	ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ
+	ELSEIF TFLAG:近親相姦 == 3 && IS_MALE(PLAYER) 
 		PRINT 兄
-	ELSEIF TFLAG:近親相姦 == 3 && TALENT:PLAYER:オトコ == 0
+	ELSEIF TFLAG:近親相姦 == 3 && HAVE_VAGINA(PLAYER) 
 		PRINT 姉
-	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ
+	ELSEIF TFLAG:近親相姦 == 4 && IS_MALE(PLAYER) 
 		PRINT 弟
-	ELSEIF TFLAG:近親相姦 == 4 && TALENT:PLAYER:オトコ == 0
+	ELSEIF TFLAG:近親相姦 == 4 && HAVE_VAGINA(PLAYER) 
 		PRINT 妹
-	ELSEIF TFLAG:近親相姦 == 6 && TALENT:PLAYER:オトコ
+	ELSEIF TFLAG:近親相姦 == 6 && IS_MALE(PLAYER) 
 		PRINT 従弟
 	ENDIF
 	PRINTFORML である%CALLNAME:PLAYER%に処女を捧げた
@@ -972,7 +972,7 @@ IF SELECTCOM == [[TRAIN:シックスナイン]] && TFLAG:絶頂の強度
 		PRINTFORML %CALLNAME:PLAYER%と%CALLNAME:TARGET%は一息つくと、どちらからともなくお互いの性器を弄りだした。
 	ELSE 
 		PRINTFORM %CALLNAME:PLAYER%が下腹を見ると、%CALLNAME:TARGET%がべとべとの
-			IF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+			IF HAVE_PENIS(PLAYER)
 				PRINTFORM 陰茎
 			ELSE
 				PRINTFORM 陰唇
@@ -1127,7 +1127,7 @@ ELSEIF SELECTCOM == [[TRAIN:オナニー]]
 	D = UP:17
 	E = A + B + C + D
 
-	IF TALENT:オトコ || TALENT:ふたなり
+	IF HAVE_PENIS(TARGET)
 		SAVESTR:2 = 性器をしごき
 		SAVESTR:3 = 硬く勃起したペニスを握り締め
 	ELSE
@@ -1217,7 +1217,7 @@ ELSEIF SELECTCOM == [[TRAIN:胸愛撫]] && TEQUIP:獣姦プレイ == 0 && TFLAG:
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:ローター]] && TFLAG:失神中終了 <= 1
 	A = UP:[[UP:快Ｃ]]
-	IF TALENT:ふたなり || TALENT:オトコ
+	IF HAVE_PENIS(TARGET)
 		SAVESTR:2 = ペニス
 	ELSE
 		SAVESTR:2 = クリトリス
@@ -1292,7 +1292,7 @@ ELSEIF SELECTCOM == [[TRAIN:バイブ]] && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:Ｅマッサージャ]] && TFLAG:失神中終了 <= 1
 	A = UP:[[UP:快Ｃ]]
-	IF TALENT:ふたなり || TALENT:オトコ
+	IF HAVE_PENIS(TARGET)
 		SAVESTR:2 = ペニス
 	ELSE
 		SAVESTR:2 = クリトリス
@@ -1309,7 +1309,7 @@ ELSEIF SELECTCOM == [[TRAIN:Ｅマッサージャ]] && TFLAG:失神中終了 <= 
 		PRINTFORML %CALLNAME:TARGET%は%SAVESTR:2%に感じるマッサージャの振動がもたらす余りの快楽に、必死に逃げようとしながら色っぽい喘ぎ声を出し続けている。
 	ELSE
 		PRINTFORM %CALLNAME:TARGET%はマッサージャを押し当てた瞬間に激しく体をのけぞらせ、
-		IF TALENT:濡れやすい && TALENT:オトコ == 0
+		IF TALENT:濡れやすい && HAVE_VAGINA(TARGET)
  			PRINTL あそこから何度も潮をふいた。
 		ELSE
 			PRINTL 強烈な快楽に身体を跳ねまくらせた。
@@ -1478,7 +1478,7 @@ ELSEIF SELECTCOM == [[TRAIN:スパンキング]] || SELECTCOM == [[TRAIN:鞭]] |
 	ENDIF
 	IF UP:[[UP:欲情]] > 1000
 		PRINTFORM しかしながら、%CALLNAME:TARGET%は苦痛に身をよじりつつも
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINTFORML ペニスを勃起させている……
 		ELSE
 			PRINTFORML 股間を濡らしている……
@@ -1526,7 +1526,7 @@ ELSEIF SELECTCOM == [[TRAIN:剃毛]] && TFLAG:失神中終了 <= 1
 			ENDIF
 	ELSE
 		PRINTFORM 幼児のようにむき出しになった自分の
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINT ペニスを、
 		ELSE
 			IF CFLAG:性器 == 0

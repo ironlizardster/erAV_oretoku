@@ -172,11 +172,11 @@ EXP:Ａ経験 += S
 PRINTFORML Ａ経験+{S}
 
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +1
 	EXP:レズ経験 += 1
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +1
 	EXP:ＢＬ経験 += 1
@@ -193,8 +193,8 @@ SIF TEQUIP:触手召喚
 ;汚れ（触手）
 ;-------------------------------------------------
 IF TEQUIP:触手召喚 && TEQUIP:アナルバイブ
-	STAIN:4 |= 2
-	STAIN:4 |= 4
+	STAIN:アナル |= 2
+	STAIN:アナル |= 4
 ENDIF
 
 RETURN 1

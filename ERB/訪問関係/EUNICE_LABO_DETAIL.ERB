@@ -924,7 +924,7 @@ ELSEIF TALENT:RESULT:ミッション
 	PRINTFORMW  【%TALENTNAME:[[TALENT:ミッション]]%】対象にはユーニスは興味が無いようです
 	GOTO INPUT_LOOP
 ;すでにち○こ生えてるのは排除＝ユーニスの趣味は女にち○こ生やして射精の快楽に戸惑うのを見ること
-ELSEIF TALENT:RESULT:ふたなり || TALENT:RESULT:オトコ
+ELSEIF HAVE_PENIS(RESULT)
 	PRINTFORMW  ユーニスは自分の趣味の邪魔をされたことを理由に拒否しています
 	GOTO INPUT_LOOP
 ;ユーニスは排除
@@ -1038,7 +1038,7 @@ SIF TALENT:淫魔 == 0
 CALL SUCCUBUS_STATUS_ACH(TARGET)
 
 CLEARBIT TALENT:性経験, 2
-TALENT:ふたなり = 1
+TALENT:性別 = 3
 TALENT:淫乱 = 1
 TALENT:狂気 = 1
 TALENT:淫魔 = 1

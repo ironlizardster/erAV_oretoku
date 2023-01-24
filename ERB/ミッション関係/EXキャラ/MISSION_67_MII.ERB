@@ -14,7 +14,7 @@ RESULTS = TWO UNLIMITED
 ;=================================================
 @MISSION_VISIBLE_67
 ; 不可視なら0、可視なら1を戻す
-RETURN GETCHARA([[キャラ:須野郁美]]) != -1 && GETCHARA([[キャラ:宮間未依]]) != -1 && TALENT:(GETCHARA([[キャラ:須野郁美]])):ふたなり == 0
+RETURN GETCHARA([[キャラ:須野郁美]]) != -1 && GETCHARA([[キャラ:宮間未依]]) != -1 && !IS_FUTA(GETCHARA([[キャラ:須野郁美]]))
 
 ;=================================================
 ; ミッション報酬
@@ -169,7 +169,7 @@ RETURN 0
 ;=================================================
 @MISSION_REPORT_67(ARG)
 
-TALENT:ASSI:ふたなり = 1
+CALL SET_SEXUALITY(ASSI,性別_ふたなり)
 BASE:ASSI:ペニスサイズ = 15 + RAND:5
 CFLAG:ASSI:包皮状態 = 3
 
@@ -195,15 +195,15 @@ TCVAR:フェラ経験 += 50 + RAND:31
 TCVAR:異常経験 += 5 + RAND:6
 TCVAR:Ｖ拡張経験 += 1 + RAND:5
 TCVAR:Ａ拡張経験 += 1 + RAND:5
-SIF TALENT:ふたなり || TALENT:オトコ
+SIF HAVE_PENIS(TARGET)
 		TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 
 TCVAR:ASSI:絶頂経験 += 70 + RAND:31
 TCVAR:ASSI:射精経験 += TCVAR:TARGET:精液経験
 TCVAR:ASSI:性交経験 += TCVAR:TARGET:性交経験
 TCVAR:ASSI:異常経験 += 2 + RAND:4
-SIF TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ
-		TCVAR:ASSI:精液経験 += TCVAR:ASSI:射精経験 / 2
+SIF HAVE_PENIS(ASSI)
+	TCVAR:ASSI:精液経験 += TCVAR:ASSI:射精経験 / 2
 
 CALL MISSION_ADD_EXP(TARGET)
 

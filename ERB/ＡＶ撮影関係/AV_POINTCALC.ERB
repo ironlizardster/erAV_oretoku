@@ -37,7 +37,7 @@ SIF TALENT:爆乳
 SIF TALENT:肥満
 	TIMES ビデオ売上 , 0.20
 ;素質:ふたなりを見る
-SIF TALENT:ふたなり
+SIF IS_FUTA(TARGET)
 	TIMES ビデオ売上 , 1.20
 ;素質:狂気を見る
 SIF TALENT:狂気
@@ -58,7 +58,7 @@ SIF TALENT:魅力
 SIF TALENT:肥満
 	TIMES ビデオ売上 , 0.20
 ;素質:オトコを見る。オトコの娘なら大丈夫
-SIF TALENT:オトコ && TALENT:オトコの娘 == 0
+SIF IS_MALE(TARGET) && TALENT:オトコの娘 == 0
 	TIMES ビデオ売上 , 0.20
 ;素質:母乳体質を見る
 SIF TALENT:母乳体質

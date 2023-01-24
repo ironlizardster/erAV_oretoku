@@ -30,7 +30,7 @@ CALL CLEARRANDCHOOSE
 FOR LCOUNT,0,CHARANUM
 	;同一人物じゃない、s_actorのレズっ気2以上、歌音でない、相性が良い（%とりあえず120以上%）%）時にランダムで（%とりあえず1割くらいで%）
 	;こっちにはオトコはダメって書いてあるんだけどなぜこっちだけ。
-	IF LCOUNT != f_actor && ABL:LCOUNT:レズっ気 >= 2  && (RELATION:f_actor:(NO:LCOUNT) >= 120) && RAND:100 < 10 && TALENT:LCOUNT:オトコ == 0 && NO:LCOUNT != [[キャラ:桐生歌音]]
+	IF LCOUNT != f_actor && ABL:LCOUNT:レズっ気 >= 2  && (RELATION:f_actor:(NO:LCOUNT) >= 120) && RAND:100 < 10 && HAVE_VAGINA(LCOUNT) && NO:LCOUNT != [[キャラ:桐生歌音]]
 		CALL ADDRANDCHOOSE(LCOUNT)
 	ENDIF
 NEXT
@@ -94,7 +94,7 @@ PRINTFORM どうやら先ほどのは見間違いではなく、一緒に入浴�
 PRINTFORML 隣で%CALLNAME:MASTER%が寝ているにも関わらずレズプレイを始めてしまったようだ
 PRINTFORM 仲がいいのはいいことだが、せめて隣の迷惑も考えて欲しいと思いながら%CALLNAME:MASTER%は
 PRINTFORM 二人の漏れ聞こえる痴態にあてられて、誘ってもらえない虚しさを覚えながらも
-IF TALENT:MASTER:オトコ == 1 || TALENT:MASTER:ふたなり == 1
+IF HAVE_PENIS(MASTER)
 	PRINTFORM 勃起したペニスを握りしめ、
 ELSE
 	PRINTFORM 愛液に濡れたヴァギナを
@@ -207,7 +207,7 @@ EXP:f_actor:絶頂経験 += NumofTimes*100*ABL:f_actor:欲望/500
 JUEL:f_actor:快Ｃ += NumofTimes*100*ABL:f_actor:欲望
 JUEL:f_actor:欲情 += NumofTimes*200
 		
-IF TALENT:s_actor:ふたなり
+IF IS_FUTA(s_actor)
 	PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{NumofTimes}（%CALLNAME:f_actor%）
 	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
 	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*100*(ABL:f_actor:技巧+ABL:f_actor:奉仕精神)}（%CALLNAME:f_actor%）
@@ -236,7 +236,7 @@ IF TALENT:s_actor:マゾ == 1 && ABL:f_actor:サドっ気 >= 3
 	JUEL:f_actor:欲情 += NumofTimes*100*ABL:f_actor:サドっ気
 	EXP:f_actor:嗜虐快楽経験 += NumofTimes
 ENDIF
-IF TALENT:f_actor:ふたなり
+IF IS_FUTA(f_actor)
 	PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{NumofTimes}（%CALLNAME:f_actor%）
 	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{NumofTimes*100}（%CALLNAME:f_actor%）
 	EXP:f_actor:射精経験 += NumofTimes
@@ -257,7 +257,7 @@ EXP:s_actor:絶頂経験 += NumofTimes*100*ABL:s_actor:欲望/500
 JUEL:s_actor:快Ｃ += NumofTimes*100*ABL:s_actor:欲望
 JUEL:s_actor:欲情 += NumofTimes*200
 		
-IF TALENT:f_actor:ふたなり
+IF IS_FUTA(f_actor)
 	PRINTFORML %EXPNAME:[[EXP:精液経験]]%＋{NumofTimes}（%CALLNAME:s_actor%）
 	PRINTFORML %PALAMNAME:[[PALAM:屈服]]%の珠＋{NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
 	PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{NumofTimes*100*(ABL:s_actor:技巧+ABL:s_actor:奉仕精神)}（%CALLNAME:s_actor%）
@@ -286,7 +286,7 @@ IF TALENT:f_actor:マゾ == 1 && ABL:f_actor:サドっ気 >= 3
 	JUEL:f_actor:欲情 += NumofTimes*100*ABL:f_actor:サドっ気
 	EXP:f_actor:嗜虐快楽経験 += NumofTimes
 ENDIF
-IF TALENT:s_actor:ふたなり
+IF IS_FUTA(s_actor)
 	PRINTFORML %EXPNAME:[[EXP:射精経験]]%＋{NumofTimes}
 	PRINTFORML %PALAMNAME:[[PALAM:恥情]]%の珠＋{NumofTimes*100}（%CALLNAME:s_actor%）
 	EXP:s_actor:射精経験 += NumofTimes

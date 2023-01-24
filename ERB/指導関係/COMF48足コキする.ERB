@@ -73,11 +73,11 @@ ELSEIF ABL:欲望 >= 3 || ABL:マゾっ気 >= 1
 ENDIF
 
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +3
 	EXP:ＢＬ経験 += 3
@@ -86,7 +86,7 @@ ENDIF
 CALL EVENT_SEITSU_ASIKOKI
 
 ;愛情経験
-IF TALENT:オトコ
+IF IS_MALE(TARGET)
 	E = 2
 ELSE
 	E = 1
@@ -106,7 +106,7 @@ RETURN 1
 @EVENT_SEITSU_ASIKOKI
 A = NO:PLAYER
 ;【オトコ】か【ふたなり】であり【未熟】
-SIF (TALENT:ふたなり == 0 && TALENT:オトコ == 0) || TALENT:未熟 == 0
+SIF !HAVE_PENIS(TARGET) || TALENT:未熟 == 0
 	RETURN 0
 ;更に［Ｃ感度］５以上で触手調教や獣姦でなく
 SIF ABL:Ｃ感覚 <= 4 || TEQUIP:触手召喚 || TEQUIP:獣姦プレイ

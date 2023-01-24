@@ -3,8 +3,8 @@
 ;===========================================================
 @ADD_CATASTROPH(ARG)
 
-FOR LOCAL, 0, 800
-	SIF LOCAL == [[TALENT:性経験]] ||  LOCAL == [[TALENT:ふたなり]] || LOCAL == [[TALENT:オトコ]] || LOCAL == [[TALENT:母乳体質]] || LOCAL == [[TALENT:妊娠]] || LOCAL == [[TALENT:育児中]] || LOCAL == [[TALENT:褐色肌]] || LOCAL == [[TALENT:喫煙者]]
+FOR LOCAL, 0, VARSIZE("TALENT")
+	SIF LOCAL == [[TALENT:性経験]] ||  LOCAL == [[TALENT:性別]] || LOCAL == [[TALENT:母乳体質]] || LOCAL == [[TALENT:妊娠]] || LOCAL == [[TALENT:育児中]] || LOCAL == [[TALENT:褐色肌]] || LOCAL == [[TALENT:喫煙者]]
 		CONTINUE
 	TALENT:ARG:LOCAL = 0
 NEXT

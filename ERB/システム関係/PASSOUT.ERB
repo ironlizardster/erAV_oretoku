@@ -227,7 +227,7 @@ ELSE
 	SIF (TEQUIP:媚薬効果 && TFLAG:880 != 21) || (TEQUIP:利尿剤効果 && TFLAG:880 != 22)
 		TFLAG:880 = (-1)
 	;シチュエーション(特殊コマンド)系の実行中判定
-	SIF (TEQUIP:撮影中 && TFLAG:881 != 53)  || (TEQUIP:野外プレイ && TFLAG:881 != 54) || (TEQUIP:お風呂場プレイ && TFLAG:881 != 58)
+	SIF (TEQUIP:撮影中 && TFLAG:881 != 53) || (TEQUIP:野外プレイ && TFLAG:881 != 54) || (TEQUIP:お風呂場プレイ && TFLAG:881 != 58)
 		TFLAG:881 = (-1)
 	;触手系コマンド実行中判定
 	SIF TEQUIP:触手召喚 == 1 && TFLAG:882 != 1

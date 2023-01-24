@@ -227,7 +227,7 @@ SIF P == 8
 	F = 112
 
 ;対象が男か未熟なら関数終了
-SIF TALENT:T:オトコ || TALENT:T:未熟
+SIF IS_MALE(T) || TALENT:T:未熟
 	RETURN 0
 
 						;****あなた妊娠パッチ追加ここから****
@@ -589,7 +589,7 @@ REPEAT 5
 		;父親・母親の子供を妊娠
 		IF CFLAG:T:B < 1000
 			I = 1
-			IF F > 0 && TALENT:F:オトコ
+			IF F > 0 && IS_MALE(F)
 				PRINTFORML %CALLNAME:T%は自分の父親である%CALLNAME:F%の子種で妊娠した
 			ELSEIF F > 0
 				PRINTFORML %CALLNAME:T%は自分の母親である%CALLNAME:F%の子種で妊娠した
@@ -599,7 +599,7 @@ REPEAT 5
 		;息子・娘の子供を妊娠
 		ELSEIF  CFLAG:T:B < 2000
 			I = 2
-			IF F > 0 && TALENT:F:オトコ
+			IF F > 0 && IS_MALE(F)
 				PRINTFORML %CALLNAME:T%は自分の息子である%CALLNAME:F%の子種で妊娠した
 			ELSEIF F > 0
 				PRINTFORML %CALLNAME:T%は自分の娘である%CALLNAME:F%の子種で妊娠した
@@ -609,7 +609,7 @@ REPEAT 5
 		;兄・姉の子供を妊娠
 		ELSEIF  CFLAG:T:B < 3000
 			I = 3
-			IF F > 0 && TALENT:F:オトコ
+			IF F > 0 && IS_MALE(F)
 				PRINTFORML %CALLNAME:T%は自分の兄である%CALLNAME:F%の子種で妊娠した
 			ELSEIF F > 0
 				PRINTFORML %CALLNAME:T%は自分の姉である%CALLNAME:F%の子種で妊娠した
@@ -619,7 +619,7 @@ REPEAT 5
 		;弟・妹の子供を妊娠
 		ELSEIF  CFLAG:T:B < 4000
 			I = 4
-			IF F > 0 && TALENT:F:オトコ
+			IF F > 0 && IS_MALE(F)
 				PRINTFORML %CALLNAME:T%は自分の弟である%CALLNAME:F%の子種で妊娠した
 			ELSEIF F > 0
 				PRINTFORML %CALLNAME:T%は自分の妹である%CALLNAME:F%の子種で妊娠した
@@ -630,7 +630,7 @@ REPEAT 5
 ;Im@s用処理。AV_Hoではたぶん必要ないのでなかったことに。
 ;		ELSEIF  CFLAG:T:B == 516
 ;			I = 5
-;			IF F > 0 && TALENT:F:オトコ
+;			IF F > 0 && IS_MALE(F)
 ;				PRINTFORML %CALLNAME:T%は自分の従弟である%CALLNAME:F%の子種で妊娠した
 ;			ENDIF
 		ENDIF
@@ -844,7 +844,7 @@ CALL SELF_KOJO(TARGET)
 ;【恋心】持ちの奴隷に産ませた子供が3人以上でマスターに【父性】が付く
 SIF TALENT:C:恋心 && CFLAG:C:妊娠精子キャラ番号 == NO:MASTER
 	FLAG:恋心子供 += 1
-IF FLAG:恋心子供 >= 3 && TALENT:MASTER:父性 == 0 && TALENT:MASTER:オトコ
+IF FLAG:恋心子供 >= 3 && TALENT:MASTER:父性 == 0 && IS_MALE(MASTER)
 	PRINTFORML %CALLNAME:MASTER%は【%TALENTNAME:[[TALENT:父性]]%】に目覚めた
 	WAIT
 	TALENT:MASTER:父性 = 1

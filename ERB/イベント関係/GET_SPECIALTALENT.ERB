@@ -162,7 +162,7 @@ IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:自慰狂い == 0
 	IF ABL:Ｃ感覚 >= 4 && EXP:絶頂経験 >= 100 && TALENT:自慰狂い == 0 && EXP:自慰経験 >= 100
 		PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
 		PRINTFORM 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%の目も憚らず、
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINT ペニス
 		ELSE
 			PRINT クリトリス
@@ -179,7 +179,7 @@ ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:自慰狂い == 0
 	IF ABL:Ｃ感覚 >= 3 && EXP:絶頂経験 >= 50 && TALENT:自慰狂い == 0 && EXP:自慰経験 >= 50
 		PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
 		PRINTFORM 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%の目も憚らず、
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINT ペニス
 		ELSE
 			PRINT クリトリス
@@ -282,7 +282,7 @@ IF FLAG:強化素質なし == 0
 	IF ABL:Ｃ感覚 >= 5 && TALENT:自慰狂い == 1 && TALENT:淫核 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫)
 		PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
 		PRINTFORM %CALLNAME:TARGET%は調教が終わった後にもかかわらず、%CALLNAME:MASTER%に
-		IF TALENT:ふたなり || TALENT:オトコ
+		IF HAVE_PENIS(TARGET)
 			PRINT ペニス
 		ELSE
 			PRINT クリトリス
@@ -360,11 +360,11 @@ IF FLAG:常時発情なし == 0
 		IF CFLAG:潤滑蓄積量 >= 700 && CFLAG:欲情蓄積量 >= 2250
 			PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
 			PRINTFORM %CALLNAME:TARGET%の
-			SIF TALENT:TARGET:オトコ || TALENT:TARGET:ふたなり
+			SIF HAVE_PENIS(TARGET)
 				PRINT ペニスの先端
-			SIF TALENT:TARGET:ふたなり
+			SIF IS_FUTA(TARGET)
 				PRINT と
-			SIF TALENT:TARGET:オトコ == 0
+			SIF HAVE_VAGINA(TARGET)
 				PRINT ヴァギナ
 			PRINTFORML から透明な液体がこんこんと湧き出ている…
 			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:常時発情]]%】を得た
@@ -469,7 +469,7 @@ IF ABL:欲望 >= 7 && TALENT:淫乱 && !TALENT:絶倫 && (ABL:Ｃ感覚 == 10 ||
 	ELSEIF ABL:Ａ感覚 == 10 && !ISＡ処女(TARGET)
 		PRINTFORM %CALLNAME:MASTER%の精を足を絡めて直腸で受け止め
 	ELSEIF ABL:Ｃ感覚 == 10
-		IF TALENT:ふたなり == 0
+		IF !IS_FUTA(TARGET)
 			PRINTFORM 硬くしこったクリトリスで
 		ELSE
 			PRINTFORM 硬く屹立したふたなりペニスで

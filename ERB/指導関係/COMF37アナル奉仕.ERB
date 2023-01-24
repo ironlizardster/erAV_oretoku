@@ -192,19 +192,19 @@ ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:4 & 1
+SIF STAIN:PLAYER:アナル & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:4 & 4
+SIF STAIN:PLAYER:アナル & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:4 & 8
+SIF STAIN:PLAYER:アナル & 8
 	Y += 7
 ;母乳の汚れ
-SIF STAIN:PLAYER:4 & 16
+SIF STAIN:PLAYER:アナル & 16
 	Y += 1
 ;尿の汚れ
-SIF STAIN:PLAYER:4 & 32
+SIF STAIN:PLAYER:アナル & 32
 	Y += 3
 
 ;獣姦の場合は汚れ7で固定
@@ -404,7 +404,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:オトコ  || TALENT:PLAYER:ふたなり
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -463,7 +463,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋４
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -478,7 +478,7 @@ ELSEIF E == 1
 	PRINTL 射精
 	PRINTL 精液経験＋１
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -492,13 +492,13 @@ ENDIF
 ;汚れ
 ;-------------------------------------------------
 ;奴隷の口⇔調教者のＡの汚れが移動
-STAIN:0 |= STAIN:PLAYER:4
-STAIN:PLAYER:4 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:アナル
+STAIN:PLAYER:アナル |= STAIN:口
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +6
 	EXP:レズ経験 += 6
@@ -524,15 +524,15 @@ TFLAG:621 |= 4
 ;		CSTR:初キス相手 = お兄ちゃんのアナル
 ;	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:PLAYER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
 ;		CSTR:初キス相手 = アニキのケツ穴
-;	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
+;	ELSEIF HAVE_VAGINA(TARGET) && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
 ;		CSTR:初キス相手 = %CALLNAME:PLAYER%のお尻の穴
-;	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
+;	ELSEIF HAVE_VAGINA(TARGET) && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
 ;		CSTR:初キス相手 = %CALLNAME:PLAYER%のアナル
-;	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 1
+;	ELSEIF HAVE_VAGINA(TARGET) && TALENT:ギャル系 == 1
 ;		CSTR:初キス相手 = %CALLNAME:PLAYER%のケツ穴
-;	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 0
+;	ELSEIF IS_MALE(TARGET) && TALENT:オトコの娘 == 0
 ;		CSTR:初キス相手 = %CALLNAME:PLAYER%のケツ穴
-;	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 1 
+;	ELSEIF IS_MALE(TARGET) && TALENT:オトコの娘 == 1 
 ;		CSTR:初キス相手 = %CALLNAME:PLAYER%のお尻の穴
 ;	ELSE
 ;		CSTR:初キス相手 = %CALLNAME:PLAYER%のお尻の穴	

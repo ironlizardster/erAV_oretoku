@@ -3,7 +3,7 @@
 ;-------------------------------------------------
 @CLEARBONUS_BOYFRIEND
 
-IF  TALENT:オトコ == 0 && TALENT:人妻 == 0 && TALENT:彼氏あり == 0
+IF  HAVE_VAGINA(TARGET) && TALENT:人妻 == 0 && TALENT:彼氏あり == 0
 	PRINTFORML %NAME:TARGET%が彼氏持ちのＩＦの世界に突入しますか？
 	PRINTL  [0] - はい
 	PRINTL  [1] - いいえ

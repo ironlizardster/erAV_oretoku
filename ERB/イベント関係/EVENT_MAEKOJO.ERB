@@ -51,7 +51,7 @@ PRINTFORM ったらえっちなん
 	ENDIF
 PRINTFORML からぁｖ」
 
-IF TALENT:(LOCAL:1):ふたなり == 1
+IF IS_FUTA(LOCAL:1)
 	PRINTFORM 「きゃっ……%CALLNAME:(LOCAL:1)%
 		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM さん
@@ -107,7 +107,7 @@ PRINTFORM 「あっ……あァンっｖ%CALLNAME:(LOCAL:1)%
 			PRINTFORM ちゃん
 		ENDIF
 PRINTFORM の
-	IF TALENT:(LOCAL:1):ふたなり == 1
+	IF IS_FUTA(LOCAL:1)
 		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
 			PRINTFORM オチ○ポ
 		ELSEIF TALENT:LOCAL:ギャル系 == 1
@@ -119,7 +119,7 @@ PRINTFORM の
 		PRINTFORM クリトリス
 	ENDIF
 PRINTFORM 、%CSTR:LOCAL:一人称%の
-	IF TALENT:LOCAL:ふたなり == 1
+	IF IS_FUTA(LOCAL)
 		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
 			PRINTFORM オチ○ポの先っぽ
 		ELSEIF TALENT:LOCAL:ギャル系 == 1
@@ -131,7 +131,7 @@ PRINTFORM 、%CSTR:LOCAL:一人称%の
 		PRINTFORM クリトリス
 	ENDIF
 PRINTFORML とキスしちゃってるぅ……♪」
-IF TALENT:LOCAL:ふたなり == 1 && TALENT:(LOCAL:1):ふたなり == 1
+IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 	PRINTFORM 「あはっ、%CALLNAME:(LOCAL:1)%
 		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM さん
@@ -234,7 +234,7 @@ PRINTFORM 「ねぇ……もっとぎゅってして
 	ENDIF
 PRINTFORML ｖ
 PRINTFORM 　おクチと
-	IF TALENT:LOCAL:ふたなり == 1
+	IF IS_FUTA(LOCAL)
 		IF TALENT:LOCAL:淫乱 == 1 && TALENT:LOCAL:ギャル系 == 0
 			PRINTFORM オチ○ポの先っぽ
 		ELSEIF TALENT:LOCAL:ギャル系 == 1

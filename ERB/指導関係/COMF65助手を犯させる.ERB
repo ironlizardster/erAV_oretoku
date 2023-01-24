@@ -107,7 +107,7 @@ IF TALENT:快感の否定
 	S = 1
 ENDIF
 ;女嫌い
-IF TALENT:ボーイッシュ && TALENT:PLAYER:オトコ == 0
+IF TALENT:ボーイッシュ && HAVE_VAGINA(PLAYER) 
 	PRINT  - 
 	A -= 5
 	PRINTS TALENTNAME:[[TALENT:ボーイッシュ]]
@@ -201,7 +201,7 @@ IF IS処女(ASSI)
 ENDIF
 ;コンドームを使うかの確認
 $INPUT_LOOP_02
-IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && (TALENT:TARGET:ふたなり || TALENT:TARGET:オトコ)
+IF TEQUIP:調教対象コンドーム == 0 && ITEM:コンドーム && HAVE_PENIS(TARGET)
 	PRINTFORML %CALLNAME:TARGET%にコンドームを使わせますか？
 	PRINTL  [0] - 使わせる
 	PRINTL  [1] - 生でやらせる
@@ -309,7 +309,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -389,7 +389,7 @@ ELSE
 ENDIF
 
 ;調教対象・助手が共に女ならABL:レズっ気をみる
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	IF ABL:レズっ気 == 0
 		TIMES SOURCE:性行動 , 0.20
 		TIMES SOURCE:達成 , 0.20
@@ -412,7 +412,7 @@ IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
 ENDIF
 
 ;調教対象・助手が共にオトコならABL:ホモっ気をみる
-IF TALENT:オトコ && TALENT:PLAYER:オトコ
+IF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	IF ABL:ＢＬっ気 == 0
 		TIMES SOURCE:性行動 , 0.20
 		TIMES SOURCE:達成 , 0.20
@@ -461,31 +461,31 @@ EXP:PLAYER:性交経験 += 1
 
 ;助手が調教対象の肉親
 IF TFLAG:近親相姦 == 1 
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		PRINTL ＜強制母子相姦＞
 	ELSE
 		PRINTL ＜強制母娘相姦＞
 	ENDIF
 ELSEIF TFLAG:近親相姦 == 2
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		PRINTL ＜強制父娘相姦＞
 	ELSE
 		PRINTL ＜強制母娘相姦＞
 	ENDIF
 ELSEIF TFLAG:近親相姦 == 3
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		PRINTL ＜強制姉弟相姦＞
 	ELSE
 		PRINTL ＜強制姉妹相姦＞
 	ENDIF
 ELSEIF TFLAG:近親相姦 == 4
-	IF TALENT:オトコ
+	IF IS_MALE(TARGET)
 		PRINTL ＜強制兄妹相姦＞
 	ELSE
 		PRINTL ＜強制姉妹相姦＞
 	ENDIF
 ELSEIF TFLAG:近親相姦 == 6
-	IF TALENT:オトコ == 0
+	IF HAVE_VAGINA(TARGET)
 		PRINTL ＜強制従弟相姦＞
 	ENDIF
 ENDIF
@@ -583,7 +583,7 @@ IF E == 2
 	PRINTFORML %NAME:PLAYER%大量射精
 	PRINTL 精液経験＋１
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -596,7 +596,7 @@ ELSEIF E == 1
 	EXP:PLAYER:射精経験 += 1
 	PRINTFORML %NAME:PLAYER%射精
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -606,17 +606,17 @@ ELSEIF E == 1
 	TFLAG:助手が射精 = 1
 ENDIF
 
-IF TALENT:ぽっちゃり || TALENT:ふたなり || TALENT:オトコ
+IF HAVE_PENIS(TARGET)
 	;奴隷のＰ⇔調教者のＶの汚れが移動
-	STAIN:2 |= STAIN:PLAYER:3
-	STAIN:PLAYER:3 |= STAIN:2
+	STAIN:ペニス |= STAIN:PLAYER:ヴァギナ
+	STAIN:PLAYER:ヴァギナ |= STAIN:ペニス
 ENDIF
 
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +10
 	EXP:レズ経験 += 10
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +10
 	EXP:ＢＬ経験 += 10

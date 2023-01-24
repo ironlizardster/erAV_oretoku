@@ -63,7 +63,7 @@ IF BASE:ARG:身長
 	;バストカップの変化による素質の変化
 	BASE:ARG:カップ = CALCF("バストカップ", CALCF("バストカップ計算値", ARG) )
 
-	IF TALENT:ARG:オトコ
+	IF IS_MALE(ARG)
 		SIF BASE:ARG:カップ
 			CALL CALC, "男乳化", ARG
 	ELSEIF TALENT:ARG:巨乳 >= 3

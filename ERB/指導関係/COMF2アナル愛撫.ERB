@@ -137,12 +137,12 @@ SIF TALENT:未熟
 ;-------------------------------------------------
 IF TEQUIP:触手召喚
 	;奴隷のＡに触手の汚れがつく
-	STAIN:4 |= 2
-	STAIN:4 |= 4
+	STAIN:アナル |= 2
+	STAIN:アナル |= 4
 ELSE
 	;奴隷のＡ⇔調教者の指の汚れが移動
-	STAIN:4 |= STAIN:PLAYER:1
-	STAIN:PLAYER:1 |= STAIN:4
+	STAIN:アナル |= STAIN:PLAYER:手
+	STAIN:PLAYER:手 |= STAIN:アナル
 ENDIF
 
 ;-------------------------------------------------
@@ -164,11 +164,11 @@ PRINTFORML Ａ経験+{S}
 S = 0
 
 ;レズ経験・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +2
 	EXP:レズ経験 += 2
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +5
 	EXP:ＢＬ経験 += 5

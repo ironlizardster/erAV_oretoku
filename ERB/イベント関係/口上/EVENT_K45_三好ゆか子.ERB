@@ -491,7 +491,7 @@ ELSEIF MARK:屈服刻印 == 1 && FLAG:口上使用 == 2
 ELSEIF MARK:屈服刻印 == 2 && FLAG:口上使用 == 2
 	DRAWLINE
 	IF RAND:2 == 0
-		IF TALENT:MASTER:ふたなり == 1 || TALENT:MASTER:オトコ == 1  
+		IF HAVE_PENIS(MASTER)
 			PRINTFORML 「%CSTR:一人称%、いい事思いついたんです」
 			PRINTFORMW 「監督さんの%CSTR:男性器呼び方%にチョコレートをかけて%CSTR:一人称%がしゃぶるってどうですか？」
 		ELSE

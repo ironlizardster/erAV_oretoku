@@ -14,7 +14,7 @@ RESULTS = フェラ
 ;=================================================
 @SCENE_VISIBLE_3
 ;男優処理がないので暫定
-IF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0 
+IF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0 
 	RETURN 0
 ELSE
 	RETURN 1

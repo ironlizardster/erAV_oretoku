@@ -123,7 +123,7 @@ IF TALENT:快感の否定
 	S = 1
 ENDIF
 ;女嫌い
-IF TALENT:ボーイッシュ && TALENT:PLAYER:オトコ == 0
+IF TALENT:ボーイッシュ && HAVE_VAGINA(PLAYER) 
 	PRINT  - 
 	A -= 5
 	PRINTS TALENTNAME:[[TALENT:ボーイッシュ]]
@@ -142,15 +142,15 @@ ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:3 & 1
+SIF STAIN:PLAYER:ヴァギナ & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:3 & 4
+SIF STAIN:PLAYER:ヴァギナ & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:3 & 8
+SIF STAIN:PLAYER:ヴァギナ & 8
 	Y += 7
-SIF STAIN:PLAYER:3 & 16
+SIF STAIN:PLAYER:ヴァギナ & 16
 	Y += 15
 
 SIF TALENT:汚臭鈍感
@@ -272,7 +272,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:オトコ  || TALENT:PLAYER:ふたなり
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -392,7 +392,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋４
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -407,7 +407,7 @@ ELSEIF E == 1
 	PRINTL 射精
 	PRINTL 精液経験＋１
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -418,14 +418,14 @@ ELSEIF E == 1
 ENDIF
 
 ;奴隷の口⇔調教者のＶの汚れが移動
-STAIN:0 |= STAIN:PLAYER:3
-STAIN:PLAYER:3 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:ヴァギナ
+STAIN:PLAYER:ヴァギナ |= STAIN:口
 
 ;初キス
 TFLAG:621 |= 1
 TFLAG:621 |= 8
 
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +6
 	EXP:レズ経験 += 6

@@ -244,7 +244,7 @@ IF ISＡ処女(TARGET)
 	CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_なし,"アンドリュー・テイラー")
 ENDIF
 
-SIF TALENT:ふたなり || TALENT:オトコ 
+SIF HAVE_PENIS(TARGET) 
 	TCVAR:射精経験 += TCVAR:Ｖ経験 + RAND:6
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)

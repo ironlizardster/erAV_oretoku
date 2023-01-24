@@ -806,7 +806,7 @@ REPEAT CHARANUM
 		ENDIF
 	
 		;Ｖ経験、Ａ経験が一定値以下だった場合体力消費増加
-		SIF EXP:Ｖ経験 <= 200 && TALENT:オトコ == 0
+		SIF EXP:Ｖ経験 <= 200 && HAVE_VAGINA(TARGET)
 			TIMES LOSEBASE:体力 , 1.10
 		SIF EXP:Ａ経験 <= 200
 			TIMES LOSEBASE:体力 , 1.20

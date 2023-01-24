@@ -52,14 +52,14 @@ ENDIF
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＡ⇔調教者の口の汚れが移動
-STAIN:4 |= STAIN:PLAYER:0
-STAIN:PLAYER:0 |= STAIN:4
+STAIN:アナル |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:アナル
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3

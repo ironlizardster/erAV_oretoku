@@ -101,7 +101,7 @@ IF EXP:Ｖ経験 < EXPLV:1
 	TIMES SOURCE:快Ｖ , 0.20
 	SOURCE:痛覚 = 5000
 
-	IF ASSIPLAY && TALENT:PLAYER:オトコ == 0
+	IF ASSIPLAY && HAVE_VAGINA(PLAYER) 
 		EXP:異常経験 += 1
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%＋１
 	ENDIF
@@ -165,7 +165,7 @@ ENDIF
 
 ;調教者がふたなり
 IF ASSIPLAY
-	SIF TALENT:ASSI:ふたなり
+	SIF IS_FUTA(ASSI)
 		TIMES SOURCE:快Ｖ , 2.50
 ENDIF
 
@@ -258,12 +258,12 @@ TFLAG:620 |= 1
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷の口⇔調教者の口の汚れが移動
-STAIN:0 |= STAIN:PLAYER:0
-STAIN:PLAYER:0 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:口
 
 ;奴隷のＢ⇔調教者の指の汚れが移動
-STAIN:5 |= STAIN:PLAYER:1
-STAIN:PLAYER:1 |= STAIN:5
+STAIN:胸 |= STAIN:PLAYER:手
+STAIN:PLAYER:手 |= STAIN:胸
 
 ;セックス後の処理
 CALL COM_AFTER_VAGINA_SEX

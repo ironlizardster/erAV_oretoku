@@ -133,7 +133,7 @@ RETURN CHARANUM - 1
 ;性別を指定の通りに設定、指定がない場合は設定された男性率に応じて性別をランダムに決定
 IF RAND:100 < 5
 	IF RAND:30 == 0
-		LOCAL:0 = 4
+		LOCAL:0 = 3
 	ELSEIF RAND:30 == 0
 		LOCAL:0 = 3
 	ELSE
@@ -151,25 +151,19 @@ TALENT:性経験 = 0
 SELECTCASE LOCAL:0
 	CASE 0
 		;男性
-		TALENT:オトコ = 1
+		CALL SET_SEXUALITY(TARGET,性別_オトコ)
 		TALENT:オトコの娘 = 0
 	CASE 1
 		;女性
-		TALENT:オトコ = 0
+		CALL SET_SEXUALITY(TARGET,性別_女)
 		TALENT:オトコの娘 = 0
 	CASE 2
 		;女性ふたなり
-		TALENT:オトコ = 0
-		TALENT:オトコの娘 = 0
-		TALENT:ふたなり = 1
+		CALL SET_SEXUALITY(TARGET,性別_ふたなり)
+		TALENT:オトコの娘 = 0		
 	CASE 3
-		;男の娘ふたなり
-		TALENT:オトコ = 1
-		TALENT:オトコの娘 = 1
-		TALENT:ふたなり = 1
-	CASE 4
 		;男の娘
-		TALENT:オトコ = 1
+		CALL SET_SEXUALITY(TARGET,性別_オトコ)
 		TALENT:オトコの娘 = 1
 ENDSELECT
 
@@ -277,7 +271,7 @@ CALL RCHARA_TALENT_SINGLE, [[TALENT:中毒しやすい]], 8
 ;倒錯的
 CALL RCHARA_TALENT_SINGLE, [[TALENT:倒錯的]], 8
 ;両刀(女性は少し確率高め、男の娘は極端に確率が高い)
-IF TALENT:オトコ
+IF IS_MALE(TARGET)
 	CALL RCHARA_TALENT_SINGLE, [[TALENT:両刀]], 8
 ELSEIF TALENT:オトコの娘
 	CALL RCHARA_TALENT_SINGLE, [[TALENT:両刀]], 30
@@ -307,7 +301,7 @@ IF RAND:100 < ARG:0
 ENDIF
 
 ;母乳体質
-SIF !TALENT:オトコ
+SIF HAVE_VAGINA(TARGET)
 	CALL RCHARA_TALENT_SINGLE, GETNUM(TALENT, "母乳体質"), 5
 
 ;■敏鈍感素質の決定
@@ -340,7 +334,7 @@ IF IS処女(TARGET) && IS童貞(TARGET)
 
 		IF TALENT:両刀
 			IF RAND:2
-				IF TALENT:オトコ
+				IF IS_MALE(TARGET)
 					ABL:ＢＬっ気 = MAX(RAND:3 + 1)
 					ABL:性交技術 = MAX(ABL:ＢＬっ気 + RAND:6 - 5, 0)
 					ABL:Ａ感覚 = MAX(ABL:ＢＬっ気 + RAND:6 - 5, 0)
@@ -350,7 +344,7 @@ IF IS処女(TARGET) && IS童貞(TARGET)
 			ENDIF
 		ELSE
 			IF RAND:15 == 0
-				IF TALENT:オトコ
+				IF IS_MALE(TARGET)
 					ABL:ＢＬっ気 = MAX(RAND:2 + 1)
 					ABL:性交技術 = MAX(ABL:ＢＬっ気 + RAND:6 - 5, 0)
 					ABL:Ａ感覚 = MAX(ABL:ＢＬっ気 + RAND:6 - 5, 0)
@@ -394,7 +388,7 @@ ELSE
 
 	IF TALENT:両刀
 		IF RAND:3 != 0
-			IF TALENT:オトコ
+			IF IS_MALE(TARGET)
 				ABL:ＢＬっ気 = MAX(RAND:3 + 1)
 				ABL:Ａ感覚 = MAX(ABL:ＢＬっ気 + RAND:4 - 3, 0)
 			ELSE
@@ -403,7 +397,7 @@ ELSE
 		ENDIF
 	ELSE
 		IF RAND:8 == 0
-			IF TALENT:オトコ
+			IF IS_MALE(TARGET)
 				ABL:ＢＬっ気 = MAX(RAND:2 + 1)
 				ABL:Ａ感覚 = MAX(ABL:ＢＬっ気 + RAND:4 - 3, 0)
 			ELSE

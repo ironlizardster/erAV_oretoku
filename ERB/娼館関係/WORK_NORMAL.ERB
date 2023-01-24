@@ -137,7 +137,7 @@ SIF ABL:信頼 <= 3
 	D /= 2
 
 ;オトコの場合ホモっ気が1以下なら満足度は半減
-SIF TALENT:オトコ && ABL:ＢＬっ気 <= 1
+SIF IS_MALE(TARGET) && ABL:ＢＬっ気 <= 1
 	D /= 2
 
 ;献身的ならボーナス+2
@@ -178,7 +178,7 @@ ENDIF
 TCVAR:精液経験 = G
 TCVAR:フェラ経験 = G
 TCVAR:売春経験 = G
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	TCVAR:ＢＬ経験 = G
 
 ;常連客がいれば営業愛情経験増加
@@ -249,7 +249,7 @@ SIF ABL:信頼 <= 4
 	D /= 2
 
 ;オトコの場合ホモっ気が2以下なら満足度は半減
-SIF TALENT:オトコ && ABL:ＢＬっ気 <= 2
+SIF IS_MALE(TARGET) && ABL:ＢＬっ気 <= 2
 	D /= 2
 
 ;尻穴狂いならボーナス+5
@@ -288,7 +288,7 @@ TCVAR:Ａ経験 = G
 TCVAR:性交経験 = G
 TCVAR:精液経験 = G
 TCVAR:売春経験 = G
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	TCVAR:ＢＬ経験 = G * 2
 
 ;常連客がいれば営業愛情経験増加
@@ -319,7 +319,7 @@ ELSE
 ENDIF
 
 ;オトコの場合Ａ営業の獲得額増加
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	TCVAR:人気 += 1
 
 ;体力減少量補正

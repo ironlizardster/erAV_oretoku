@@ -59,7 +59,7 @@ ELSE
 	PRINTFORM   Ｈ：%TEXTS("0.01", BASE:ヒップ)%cm
 ENDIF
 PRINTL
-IF TALENT:ふたなり == 1 || TALENT:オトコ == 1
+IF HAVE_PENIS(TARGET)
 	PRINTFORM 　
 	PRINTFORM 勃起時のペニスサイズ：{BASE:ペニスサイズ}cm（
 	IF CFLAG:包皮状態 == 3

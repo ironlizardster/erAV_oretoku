@@ -264,7 +264,7 @@ REPEAT CHARANUM
 		PRINTW
 	ENDIF
 
-	IF TALENT:COUNT:ふたなり == 1
+	IF IS_FUTA(COUNT)
 		PRINTFORM %CALLNAME:COUNT%のはちきれんばかりに勃起したふたなりペニスは、背後から伸ばされた手で扱き続けられ、
 		PRINTFORML 止めどなく精液を吐き出している……
 		PRINTFORMW 恍惚の表情を浮かべながら、%CALLNAME:COUNT%は手コキの継続を哀願していた
@@ -288,9 +288,9 @@ REPEAT CHARANUM
 	ENDIF
 	IF IS童貞(COUNT)
 		PRINTFORM たっぷりと愛液を含んだ女性客の膣肉への挿入で、包皮が剥けたばかりの%CALLNAME:COUNT%の
-			IF TALENT:COUNT:ふたなり == 1
+			IF IS_FUTA(COUNT)
 				PRINTFORM ふたなりペニス
-			ELSEIF TALENT:COUNT:ふたなり == 1
+			ELSEIF IS_FUTA(COUNT)
 				PRINTFORM ペニス
 			ENDIF
 		PRINTFORM は生まれて初めて味わう、肉棒を絞り尽くそうとするような膣襞のうねりに堪えきれず、

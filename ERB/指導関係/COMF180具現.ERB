@@ -5,9 +5,9 @@
 @COM180
 
 PRINTL 具現
-IF TALENT:ふたなり == 1
+IF IS_FUTA(TARGET)
 	SAVESTR:0 = 具現（ペニス消去）
-ELSEIF TALENT:ふたなり == 1
+ELSEIF IS_FUTA(TARGET)
 	SAVESTR:0 = 具現（ペニス生成）
 ENDIF
 CALL TRAIN_MESSAGE_B
@@ -22,9 +22,9 @@ ELSE
 	LOSEBASE:気力 += 30
 ENDIF
 
-;ボンデージルックの装着
-IF TALENT:ふたなり == 0
-	TALENT:ふたなり = 1
+;ペニスの切り替え
+CALL TOGGLE_P(TARGET)
+IF !IS_FUTA(TARGET)
 	IF MAXBASE:ペニスサイズ == 0
 		MAXBASE:ペニスサイズ = 15 + RAND:6
 		BASE:ペニスサイズ = MAXBASE:ペニスサイズ
@@ -35,8 +35,6 @@ IF TALENT:ふたなり == 0
 			CFLAG:ペニスサイズ = 2
 		ENDIF
 	ENDIF
-ELSEIF TALENT:ふたなり == 1
-	TALENT:ふたなり = 0
 ENDIF
 
 

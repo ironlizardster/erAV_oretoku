@@ -11,7 +11,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE1
 ;対象がオトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -37,7 +37,7 @@ SIF CFLAG:特別コスタイプ == 69 && (CFLAG:着衣状態 & 64)
 SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;性器が精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合クンニはできない（調教者が汚れ無視ならＯＫ）
-IF (STAIN:2 & 4 || STAIN:2 & 8 || STAIN:2 & 32) && ASSIPLAY
+IF (STAIN:ペニス & 4 || STAIN:ペニス & 8 || STAIN:ペニス & 32) && ASSIPLAY
 	SIF ABL:ASSI:Ｃ感覚 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -138,12 +138,12 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE4
 ;性器が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合フェラはできない（調教者が汚れ無視ならＯＫ）
-IF (STAIN:2 & 1 || STAIN:2 & 4 || STAIN:2 & 8 || STAIN:0 & 32) && ASSIPLAY
+IF (STAIN:ペニス & 1 || STAIN:ペニス & 4 || STAIN:ペニス & 8 || STAIN:口 & 32) && ASSIPLAY
 	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;対象がオトコかふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -181,7 +181,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE5
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;ブラジャーか上着上を着てるとダメ
 SIF (CFLAG:着衣状態 & 6)
@@ -196,7 +196,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE6
 ;口が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合キスはできない（調教者が汚れ無視ならＯＫ）
-IF (STAIN:0 & 1 || STAIN:0 & 4 || STAIN:0 & 8 || STAIN:0 & 32) && ASSIPLAY
+IF (STAIN:口 & 1 || STAIN:口 & 4 || STAIN:口 & 8 || STAIN:口 & 32) && ASSIPLAY
 	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -227,7 +227,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;従順が2未満だとダメ
 SIF ABL:信頼 < 2
@@ -274,7 +274,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE8
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合指挿入れはできない（サドならＯＫ）
 IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
@@ -436,7 +436,7 @@ SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 SIF TEQUIP:バイブ
 	RETURN 1
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
@@ -591,7 +591,7 @@ SIF TEQUIP:クリキャップ
 SIF ITEM:クリキャップ == 0 && NOITEM == 0
 	RETURN 0
 ;オトコやふたなりはダメ
-SIF TALENT:ふたなり == 1 || TALENT:オトコ == 1
+SIF HAVE_PENIS(TARGET)
 	RETURN 0
 ;ASSIの場合、技巧3以上じゃないと使えない。
 IF ASSIPLAY
@@ -686,7 +686,7 @@ SIF TEQUIP:ニプルキャップ
 SIF ABL:TARGET:Ｂ感覚 <= 2 
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;ASSIの場合、技巧3以上じゃないと使えない。
 IF ASSIPLAY
@@ -737,7 +737,7 @@ SIF TEQUIP:オナホール
 SIF ITEM:オナホール == 0 && NOITEM == 0
 	RETURN 0
 ;オトコやふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 ;ASSIの場合、技巧3以上じゃないと使えない。
 IF ASSIPLAY
@@ -845,13 +845,13 @@ RETURN 1
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -909,13 +909,13 @@ RETURN 1
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -973,7 +973,7 @@ SIF EXP:Ｖ経験 == 0
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
@@ -999,7 +999,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合対面座位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -1039,7 +1039,7 @@ SIF EXP:Ｖ経験 == 0
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
@@ -1065,7 +1065,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合背面座位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -1100,10 +1100,10 @@ RETURN 1
 ;=================================================
 @COM_ABLE24
 ;対象がオトコかふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 ;調教者がオトコだとダメ
-SIF TALENT:PLAYER:オトコ
+SIF IS_MALE(PLAYER) 
 	RETURN 0
 ;調教者が未熟だとダメ
 SIF TALENT:PLAYER:未熟
@@ -1114,7 +1114,7 @@ IF ASSIPLAY
 		RETURN 0
 ENDIF
 ;調教者が女で対象がオトコの場合、調教者の体格が対象の体格を上回ってないとダメ（縄使用中or従順３以上ならＯＫ）
-IF TALENT:オトコ && TALENT:PLAYER:オトコ == 0 && TEQUIP:縄 == 0 && ABL:信頼 < 3
+IF IS_MALE(TARGET) && HAVE_VAGINA(PLAYER) && TEQUIP:縄 == 0 && ABL:信頼 < 3
 	SIF TALENT:大柄
 		RETURN 0
 	SIF TALENT:小柄 == 0 && TALENT:PLAYER:大柄 == 0
@@ -1169,7 +1169,7 @@ RETURN 1
 ;=================================================
 @COM_ABLE25
 ;対象がオトコかふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 ;調教者が未熟だとダメ
 SIF TALENT:PLAYER:未熟
@@ -1180,7 +1180,7 @@ IF ASSIPLAY
 		RETURN 0
 ENDIF
 ;調教者が女で対象がオトコの場合、調教者の体格が対象の体格を上回ってないとダメ（縄使用中or従順３以上ならＯＫ）
-IF TALENT:オトコ && TALENT:PLAYER:オトコ == 0 && TEQUIP:縄 == 0 && ABL:信頼 < 3
+IF IS_MALE(TARGET) && HAVE_VAGINA(PLAYER) && TEQUIP:縄 == 0 && ABL:信頼 < 3
 	SIF TALENT:大柄
 		RETURN 0
 	SIF TALENT:小柄 == 0 && TALENT:PLAYER:大柄 == 0
@@ -1250,7 +1250,7 @@ SIF TEQUIP:アナル電極
 SIF EXP:Ａ経験 < 10
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合正常位アナルはできない（サドならＯＫ）
 IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
@@ -1306,7 +1306,7 @@ SIF TEQUIP:アナルビーズ
 SIF TEQUIP:浣腸セット
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;潤滑不足で、従順4以下・レズっ気4以下のASSIの場合アナルセックスはできない（サドならＯＫ）
 IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
@@ -1388,7 +1388,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合対面座位アナルはできない（サドならＯＫ）
 IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
@@ -1449,7 +1449,7 @@ SIF TEQUIP:獣姦プレイ
 SIF TEQUIP:顔面騎乗
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;潤滑不足で、従順3以下・レズっ気3以下のASSIの場合背面座位アナルはできない（サドならＯＫ）
 IF PALAM:潤滑 < PALAMLV:2 && ASSIPLAY
@@ -1481,7 +1481,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -1516,13 +1516,13 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -1559,7 +1559,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;[絶壁]だとダメ
 SIF TALENT:絶壁
@@ -1571,10 +1571,10 @@ SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && ABL:技巧 < 3
 SIF TALENT:貧乳 && ABL:技巧 < 4
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -1623,7 +1623,7 @@ SIF TFLAG:失神中終了 > 0
 SIF PALAM:潤滑 < 2000
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -1683,10 +1683,10 @@ SIF TALENT:未熟
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -1814,7 +1814,7 @@ SIF TEQUIP:浣腸セット
 SIF TEQUIP:アナル電極
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;縄使用中は不可
 SIF TEQUIP:縄
@@ -1865,7 +1865,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -1906,7 +1906,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;縄使用中は不可
 SIF TEQUIP:縄
@@ -1940,7 +1940,7 @@ SIF TFLAG:失神中終了 > 0
 SIF ITEM:オナホール == 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;縄使用中は不可
 SIF TEQUIP:縄
@@ -2212,7 +2212,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE48
 ;対象がオトコかふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 ;従順4以下・レズっ気4以下のASSIの場合足コキはできない（サドならＯＫ）
 IF ASSIPLAY
@@ -2601,7 +2601,7 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;調教者がオトコだとダメ
-SIF TALENT:PLAYER:オトコ
+SIF IS_MALE(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -2642,13 +2642,13 @@ SIF ASSI < 1
 SIF ASSIPLAY
 	RETURN 0
 ;助手がオトコだとダメ
-SIF TALENT:ASSI:オトコ
+SIF IS_MALE(ASSI)
 	RETURN 0
 ;助手が未熟だとダメ（主人がサドならＯＫ）
 SIF TALENT:ASSI:未熟 && TALENT:MASTER:サド ==0
 	RETURN 0
 ;主人がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(MASTER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -2691,10 +2691,10 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;オトコかふたなりだとダメ
-SIF TALENT:ふたなり || TALENT:オトコ
+SIF HAVE_PENIS(TARGET)
 	RETURN 0
 ;調教者がオトコかふたなりだとダメ
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	RETURN 0
 ;欲望3以下の場合貝あわせはできない（小悪魔、相性良好ならＯＫ）
 R = NO:PLAYER
@@ -2751,7 +2751,7 @@ SIF TFLAG:失神中終了 > 0
 SIF ASSI < 1
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ
 SIF TALENT:未熟
@@ -2764,10 +2764,10 @@ SIF TEQUIP:アナルバイブ
 	RETURN 0
 A = 0
 ;MASTERがオトコかふたなり
-SIF TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ
+SIF HAVE_PENIS(MASTER)
 	A += 1
 ;ASSIがオトコかふたなり
-SIF TALENT:ASSI:ふたなり || TALENT:ASSI:オトコ
+SIF HAVE_PENIS(ASSI)
 	A += 1
 ;ペニスバンドとあわせて二本ないとだめ
 SIF A + ITEM:ペニスバンド < 2
@@ -2830,13 +2830,13 @@ SIF TFLAG:失神中終了 > 0
 SIF PLAYER != ASSI
 	RETURN 0
 ;助手がオトコだとダメ
-SIF TALENT:PLAYER:オトコ
+SIF IS_MALE(PLAYER) 
 	RETURN 0
 ;助手が未熟だとダメ
 SIF TALENT:PLAYER:未熟
 	RETURN 0
 ;オトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(TARGET) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
@@ -2893,10 +2893,10 @@ SIF TFLAG:失神中終了 > 0
 SIF PLAYER != ASSI
 	RETURN 0
 ;主人がオトコかふたなりじゃないとダメ
-SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+SIF !HAVE_PENIS(MASTER)
 	RETURN 0
 ;助手がオトコかふたなりじゃないとダメ
-SIF TALENT:ASSI:ふたなり == 0 && TALENT:ASSI:オトコ == 0
+SIF !HAVE_PENIS(ASSI)
 	RETURN 0
 ;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
 IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
@@ -2945,7 +2945,7 @@ SIF TFLAG:失神中終了 > 0
 SIF PLAYER != ASSI
 	RETURN 0
 ;主人がオトコかふたなりじゃないとダメ
-SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+SIF !HAVE_PENIS(MASTER)
 	RETURN 0
 ;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
 IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
@@ -3051,7 +3051,7 @@ SIF ASSIPLAY
 SIF ASSI < 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
 IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
@@ -3113,13 +3113,13 @@ SIF TFLAG:失神中終了 > 0
 SIF PLAYER != ASSI
 	RETURN 0
 ;調教対象と助手のどちらかがオトコだとダメ
-SIF TALENT:オトコ || TALENT:ASSI:オトコ
+SIF IS_MALE(TARGET) || IS_MALE(ASSI)
 	RETURN 0
 ;調教対象と助手のどちらかが[絶壁]だとダメ
 SIF TALENT:絶壁 || TALENT:ASSI:絶壁
 	RETURN 0
 ;主人がオトコかふたなりじゃないとダメ
-SIF TALENT:MASTER:ふたなり == 0 && TALENT:MASTER:オトコ == 0
+SIF !HAVE_PENIS(MASTER)
 	RETURN 0
 ;主人が【魅惑】か【謎の魅力】じゃないとダメ（助手と対象が共に愛or淫乱なら可）
 IF TALENT:MASTER:魅惑 == 0 && TALENT:MASTER:謎の魅力 == 0
@@ -3175,7 +3175,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE80
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;ボールギャグ使用中は不可
 SIF TEQUIP:ボールギャグ
@@ -3219,7 +3219,7 @@ SIF EXP:Ｖ経験 < 75
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
@@ -3356,7 +3356,7 @@ SIF TEQUIP:アナルバイブ
 SIF TEQUIP:浣腸セット
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0	
 ;一定のＶ・Ａ経験が必要
 SIF EXP:Ｖ経験 < 150 || EXP:Ａ経験 < 150
@@ -3660,7 +3660,7 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE92
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;ブラジャーか上着上を着てるとダメ
 SIF (CFLAG:着衣状態 & 6)
@@ -3725,7 +3725,7 @@ RETURN 1
 SIF TEQUIP:触手召喚 == 0
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;貞操帯を付けているとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
@@ -3746,7 +3746,7 @@ RETURN 1
 SIF TEQUIP:触手召喚 == 0
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 RETURN 1
 
@@ -3767,7 +3767,7 @@ SIF TEQUIP:触手召喚 == 0
 SIF TEQUIP:ニプルキャップ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 RETURN 1
 
@@ -3800,7 +3800,7 @@ RETURN 1
 SIF TEQUIP:触手召喚 == 0
 	RETURN 0
 ;オトコかふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 RETURN 1
 
@@ -3891,13 +3891,13 @@ SIF FLAG:追加コマンドなし == 1
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -3957,13 +3957,13 @@ SIF FLAG:追加コマンドなし == 1
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4020,10 +4020,10 @@ RETURN 1
 SIF FLAG:追加コマンドなし == 1
 	RETURN 0
 ;対象がオトコかふたなりじゃないとダメ
-SIF TALENT:ふたなり == 0 && TALENT:オトコ == 0
+SIF !HAVE_PENIS(TARGET)
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -4073,7 +4073,7 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕技術 < 3
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;[絶壁]だとダメ
 SIF TALENT:絶壁
@@ -4085,10 +4085,10 @@ SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && ABL:技巧 < 3
 SIF TALENT:貧乳 && ABL:技巧 < 4
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -4141,13 +4141,13 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -4191,13 +4191,13 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:信頼 < 3 &&  ABL:技巧 < 3 &&  ABL:奉仕技術 < 3
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -4260,13 +4260,13 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -4312,13 +4312,13 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -4360,13 +4360,13 @@ SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4429,13 +4429,13 @@ SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4498,13 +4498,13 @@ SIF ABL:PLAYER:技巧 < 5 && ABL:性交技術 < 3
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合正常位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4567,13 +4567,13 @@ SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4633,13 +4633,13 @@ SIF ABL:PLAYER:技巧 < 3 && ABL:性交技術 < 2
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4699,13 +4699,13 @@ SIF ABL:PLAYER:技巧 < 4 && ABL:性交技術 < 3
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4765,13 +4765,13 @@ SIF ABL:PLAYER:技巧 < 5 && ABL:性交技術 < 3
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;未熟だとダメ（調教者がサドなら可）
 SIF TALENT:未熟 && TALENT:PLAYER:サド == 0
 	RETURN 0
 ;調教者がオトコ、ふたなり、もしくはペニスバンドがないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0 && ITEM:ペニスバンド == 0
+SIF !HAVE_PENIS(PLAYER) && ITEM:ペニスバンド == 0
 	RETURN 0
 ;処女で、従順4以下・レズっ気4以下のASSIの場合後背位はできない（サドならＯＫ）
 IF EXP:Ｖ経験 == 0 && ASSIPLAY
@@ -4831,7 +4831,7 @@ SIF TALENT:TARGET:サド == 0 && ABL:TARGET:サドっ気 <= 3
 SIF TEQUIP:バイブ
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;野外プレイ中はダメ
 SIF TEQUIP:野外プレイ
@@ -4923,16 +4923,16 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:技巧 < 4
 	RETURN 0
 ;[絶壁][オトコ][男の娘]以外だとダメ
-SIF TALENT:絶壁 == 0 && TALENT:オトコ == 0 && TALENT:オトコの娘 == 0
+SIF TALENT:絶壁 == 0 && HAVE_VAGINA(TARGET) && TALENT:オトコの娘 == 0
 	RETURN 0
 ;[オトコ]だと従順4以上必要
-SIF TALENT:オトコ && ABL:信頼 < 4
+SIF IS_MALE(TARGET) && ABL:信頼 < 4
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -4978,16 +4978,16 @@ RETURN 1
 SIF TFLAG:失神中終了 > 0
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;[爆乳]か[巨乳]でなければダメ、
 SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -5030,16 +5030,16 @@ RETURN 1
 ;-------------------------------------------------
 @COM_ABLE143
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;[爆乳]か[巨乳]でなければダメ、
 SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
@@ -5149,7 +5149,7 @@ RETURN 1
 SIF TEQUIP:スライム生成 == 0
 	RETURN 0
 ;オトコだとダメ
-SIF TALENT:オトコ
+SIF IS_MALE(TARGET)
 	RETURN 0
 ;貞操帯を付けているとダメ
 SIF CFLAG:特別コスタイプ == 79 && (CFLAG:着衣状態 & 64)
@@ -5247,13 +5247,13 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕精神 < 3
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
-SIF TALENT:PLAYER:ふたなり == 0 && TALENT:PLAYER:オトコ == 0
+SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;奉仕しないがあるとダメ
 SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者の%CSTR:男性器呼び方%が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
-IF STAIN:PLAYER:2 & 1 || STAIN:PLAYER:2 & 4 || STAIN:PLAYER:2 & 8 || STAIN:PLAYER:2 & 32
+IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
 	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF

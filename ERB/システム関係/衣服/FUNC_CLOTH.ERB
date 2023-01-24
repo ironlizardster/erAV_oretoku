@@ -65,15 +65,15 @@ IF CFLAG:上着タイプ == 192 && (CFLAG:着衣状態 & 16)
 ELSEIF CFLAG:上着タイプ == 109
 	IF (CFLAG:着衣状態 & 4) && (CFLAG:着衣状態 & 24) == 0
 		PRINT 体操着の上だけで
-		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 0
+		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && !IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 0
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && !IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1 
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET) 
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:オトコ == 1 
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_MALE(TARGET) 
 			PRINTFORM パンツ丸見え
 		ELSE
 			PRINT 下半身裸
@@ -97,15 +97,15 @@ IF CFLAG:上着タイプ >= 201 && CFLAG:上着タイプ <= 300
 	IF (CFLAG:着衣状態 & 4) && (CFLAG:着衣状態 & 24) == 0
 		CALL PRINT_上着タイプ(TARGET)
 		PRINT の下が破れて、
-		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 0
+		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && !IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 0
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && !IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET)
 			PRINTFORM パンツ丸見え
 		ELSE
 			PRINT 下半身裸
@@ -121,7 +121,7 @@ IF CFLAG:上着タイプ >= 201 && CFLAG:上着タイプ <= 300
 		ELSEIF (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 1 && NO:TARGET != [[キャラ:桐生歌音]]
 			PRINT 上はサラシだけ
 		ELSE
-			IF TALENT:オトコ == 0 && TALENT:絶壁 == 0 && (TALENT:貧乳 == 0 || TALENT:幼稚 == 0)
+			IF HAVE_VAGINA(TARGET) && TALENT:絶壁 == 0 && (TALENT:貧乳 == 0 || TALENT:幼稚 == 0)
 				PRINT 乳房むきだし
 			ELSE
 				PRINT 上半身裸
@@ -135,15 +135,15 @@ IF (CFLAG:着衣状態 & 28)
 	IF (CFLAG:着衣状態 & 4) && (CFLAG:着衣状態 & 24) == 0
 		CALL PRINT_上着タイプ(TARGET)
 		PRINT 上だけ
-		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 0
+		IF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && !IS_FUTA(TARGET)
 			PRINTFORM パンツ一枚
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && IS_FUTA(TARGET)
 			PRINTFORM パンツ一枚
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 0
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && !IS_FUTA(TARGET)
 			PRINTFORM パンツ一枚
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET)
 			PRINTFORM パンツ一枚
-		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1
+		ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET)
 			PRINTFORM パンツ一枚
 		ELSE
 			PRINT 下半身裸
@@ -156,7 +156,7 @@ IF (CFLAG:着衣状態 & 28)
 		ELSEIF (CFLAG:着衣状態 & 2) && NO:TARGET == [[キャラ:桐生歌音]]
 			PRINT ブラジャーに
 		ELSE
-			IF TALENT:オトコ == 0 && TALENT:絶壁 == 0 && (TALENT:貧乳 == 0 || TALENT:幼稚 == 0)
+			IF HAVE_VAGINA(TARGET) && TALENT:絶壁 == 0 && (TALENT:貧乳 == 0 || TALENT:幼稚 == 0)
 				PRINT 乳房むきだしに
 			ELSE
 				PRINT 上半身裸に
@@ -177,23 +177,23 @@ ELSEIF (CFLAG:着衣状態 & 1) && (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 
 	PRINT 下着
 	SIF (CFLAG:着衣状態 & 64) == 0
 		PRINT 
-ELSEIF (CFLAG:着衣状態 & 1) && (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 1 && TALENT:オトコ == 0
+ELSEIF (CFLAG:着衣状態 & 1) && (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 1 && HAVE_VAGINA(TARGET)
 	PRINT 下着
 	SIF (CFLAG:着衣状態 & 64) == 0
 		PRINT 
-ELSEIF (CFLAG:着衣状態 & 1) && (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 1 && TALENT:オトコ == 1
+ELSEIF (CFLAG:着衣状態 & 1) && (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 1 && IS_MALE(TARGET) 
 	PRINT 黒いブーメランパンツ
 	SIF (CFLAG:着衣状態 & 64) == 0
 		PRINT 
-ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 0
+ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && !IS_FUTA(TARGET)
 	PRINTFORM パンツ一枚
-ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && TALENT:ふたなり == 1
+ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 0 && IS_FUTA(TARGET)
 	PRINTFORM パンツ一枚
-ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 0
+ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && !IS_FUTA(TARGET)
 	PRINTFORM パンツ一枚
-ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1
+ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET)
 	PRINTFORM パンツ一枚
-ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && TALENT:ふたなり == 1
+ELSEIF (CFLAG:着衣状態 & 1) && TALENT:淫乱 == 1 && IS_FUTA(TARGET)
 	PRINTFORM パンツ一枚
 ELSEIF (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 0 && NO:TARGET != [[キャラ:桐生歌音]]
 	PRINT ブラ一枚で下半身丸出し

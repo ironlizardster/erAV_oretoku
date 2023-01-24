@@ -568,7 +568,7 @@ IF TEQUIP:主人コンドーム || (ASSIPLAY && TEQUIP:助手コンドーム )
 ENDIF
 
 ;射精ゲージ増加処理
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;射精処理
@@ -594,7 +594,7 @@ IF E == 2
 	ENDIF
 	PRINTL 精液経験＋１
 	;Ｐに精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -617,7 +617,7 @@ ELSEIF E == 1
 	ELSE
 		PRINTL 射精
 	ENDIF
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -664,7 +664,7 @@ TFLAG:近親相姦 = 0
 CALL INCEST
 
 ;処女喪失相手が女性なら異常経験に＋1
-SIF IS処女(TARGET) && TALENT:PLAYER:オトコ == 0
+SIF IS処女(TARGET) && HAVE_VAGINA(PLAYER) 
 	Z += 1
 ;処女喪失相手が父親か母親なら異常経験に＋２
 IF IS処女(TARGET) && TFLAG:近親相姦 == 1
@@ -691,7 +691,7 @@ SIF TEQUIP:獣姦プレイ
 	RETURN 0
 
 ;レズ経験上昇
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +4
 	EXP:レズ経験 += 4
@@ -787,8 +787,8 @@ TFLAG:近親相姦 = 0
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＶ⇔調教者のＰの汚れが移動
-STAIN:3 |= STAIN:PLAYER:2
-STAIN:PLAYER:2 |= STAIN:3
+STAIN:ヴァギナ |= STAIN:PLAYER:ペニス
+STAIN:PLAYER:ペニス |= STAIN:ヴァギナ
 ;
 ;
 ;

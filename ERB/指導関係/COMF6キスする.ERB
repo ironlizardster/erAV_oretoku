@@ -40,19 +40,19 @@ S = 0
 ;汚れは自動成功判定前に算出するように
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:0 & 1
+SIF STAIN:PLAYER:口 & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:0 & 4
+SIF STAIN:PLAYER:口 & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:0 & 8
+SIF STAIN:PLAYER:口 & 8
 	Y += 7
 ;母乳の汚れ
-SIF STAIN:PLAYER:0 & 16
+SIF STAIN:PLAYER:口 & 16
 	Y += 1
 ;尿の汚れ
-SIF STAIN:PLAYER:0 & 32
+SIF STAIN:PLAYER:口 & 32
 	Y += 3
 
 ;獣姦の場合は汚れ7で固定
@@ -356,18 +356,18 @@ SIF TALENT:恋心
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷の口⇔調教者の口の汚れが移動
-STAIN:0 |= STAIN:PLAYER:0
-STAIN:PLAYER:0 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:口
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +3
 	EXP:ＢＬ経験 += 3
@@ -387,7 +387,7 @@ TFLAG:621 |= 1
 TFLAG:620 |= 1
 
 
-SIF TALENT:オトコ || TALENT:ふたなり
+SIF HAVE_PENIS(TARGET)
 	TFLAG:620 |= 2
 
 IF CFLAG:好感度 >= 1000 && ASSIPLAY == 0

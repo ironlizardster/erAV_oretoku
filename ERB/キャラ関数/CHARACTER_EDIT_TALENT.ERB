@@ -20,18 +20,17 @@ PRINTL
 SIF CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値)
 	RETURN 0
 
-TALENT:対象:入力値 = !TALENT:対象:入力値
 SELECTCASE 入力値
-	CASE [[TALENT:オトコ]]
-		IF TALENT:対象:オトコ
-			TALENT:対象:ギャル系 = 0
-		ELSE
+	CASE [[TALENT:性経験]]
+		TALENT:対象:性経験++
+		SIF TALENT:対象:性経験 > 7
+			TALENT:対象:性経験 = 0
+	CASE [[TALENT:性別]]
+		TALENT:対象:性別++
+		SIF TALENT:対象:性別 > 性別_ふたなり
+			TALENT:対象:性別 = 性別_女
+		SIF HAVE_VAGINA(対象)
 			TALENT:対象:オトコの娘 = 0
-			TALENT:対象:チャラ男 = 0
-		ENDIF
-	CASE [[TALENT:ふたなり]]
-		IF !TALENT:対象:ふたなり
-		ENDIF
 	CASE [[TALENT:絶壁]]
 		IF TALENT:対象:絶壁
 			TALENT:対象:貧乳 = 0
@@ -230,6 +229,8 @@ SELECTCASE 入力値
 	CASE [[TALENT:男性不信]]
 		SIF TALENT:対象:男性不信
 			TALENT:対象:両刀 = 0
+	CASEELSE
+		TALENT:対象:入力値 = !TALENT:対象:入力値
 ENDSELECT
 
 @CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値)
@@ -244,4 +245,4 @@ STRFIND TALENTNAME:入力値, "／／／"
 SIF RESULT > -1
 	RETURNF 1
 
-RETURNF GROUPMATCH(入力値, [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:ギャル系]])) || (!TALENT:対象:オトコ && GROUPMATCH(入力値, [[TALENT:チャラ男]]))
+RETURNF GROUPMATCH(入力値, [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (IS_MALE(対象) && GROUPMATCH(入力値, [[TALENT:ギャル系]])) || (HAVE_VAGINA(対象) && GROUPMATCH(入力値, [[TALENT:チャラ男]]))

@@ -16,12 +16,11 @@ TALENT:ARG:献身的 = 1
 TALENT:ARG:両刀 = 1
 TALENT:ARG:カリスマ = 1
 TALENT:ARG:魅力 = 1
-IF TALENT:ARG:ふたなり == 0 && TALENT:ARG:オトコ == 0
+IF BASE:ARG:ペニスサイズ == 0
 	BASE:ARG:ペニスサイズ = 13 + RAND:5
 	CFLAG:ARG:包皮状態 = RAND:4
 ENDIF
-TALENT:ARG:ふたなり = 1
-TALENT:ARG:オトコ = 0
+CALL SET_SEXUALITY(ARG,性別_ふたなり)
 TALENT:ARG:交渉上手 = 1
 TALENT:ARG:天使 = 1
 TALENT:ARG:永遠の愛 = 0

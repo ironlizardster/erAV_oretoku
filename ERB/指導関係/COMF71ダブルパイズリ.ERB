@@ -12,13 +12,13 @@ SIF RESULT == 0
 ;近親チェック
 TFLAG:近親相姦 = 0
 CALL INCEST
-IF (TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2) && TALENT:オトコ == 0 && TALENT:ASSI:オトコ == 0
+IF (TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2) && HAVE_VAGINA(TARGET) && HAVE_VAGINA(ASSI)
 	PRINT 母娘
 ELSEIF TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2
 	PRINT 親子
-ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && TALENT:オトコ == 0 && TALENT:ASSI:オトコ == 0
+ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && HAVE_VAGINA(TARGET) && HAVE_VAGINA(ASSI)
 	PRINT 姉妹
-ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && TALENT:オトコ && TALENT:ASSI:オトコ
+ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && IS_MALE(TARGET) && IS_MALE(ASSI)
 	PRINT 兄弟
 ELSEIF  TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4
 	PRINT 兄妹
@@ -142,7 +142,7 @@ IF TALENT:快感の否定
 	S = 1
 ENDIF
 ;男嫌い
-IF TALENT:男性不信 && TALENT:MASTER:オトコ
+IF TALENT:男性不信 && IS_MALE(MASTER)
 	PRINT  - 
 	A -= 12
 	PRINTS TALENTNAME:[[TALENT:男性不信]]
@@ -159,30 +159,30 @@ IF TALENT:恋心 && ASSIPLAY == 0
 	S = 1
 ENDIF
 ;調教者がふたなり
-IF TALENT:MASTER:ふたなり
+IF IS_FUTA(MASTER)
 	SIF S
 		PRINT  + 
 	A += 8
-	PRINTS TALENTNAME:[[TALENT:ふたなり]]
+	PRINT ふたなり
 	PRINTV '(,8,')
 	S = 1
 ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:MASTER:2 & 1
+SIF STAIN:MASTER:ペニス & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:MASTER:2 & 4
+SIF STAIN:MASTER:ペニス & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:MASTER:2 & 8
+SIF STAIN:MASTER:ペニス & 8
 	Y += 7
 ;母乳の汚れ
-SIF STAIN:MASTER:2 & 16
+SIF STAIN:MASTER:ペニス & 16
 	Y += 1
 ;尿の汚れ
-SIF STAIN:MASTER:4 & 32
+SIF STAIN:MASTER:アナル & 32
 	Y += 3
 
 SIF TALENT:汚臭鈍感
@@ -252,15 +252,15 @@ TFLAG:622 |= 2
 ;		CSTR:初キス相手 = お兄ちゃんの%CSTR:男性器呼び方%
 ;	ELSEIF NO:TARGET == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ギャル系 == 1
 ;		CSTR:初キス相手 = アニキの%CSTR:男性器呼び方%
-;	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
+;	ELSEIF HAVE_VAGINA(TARGET) && TALENT:ギャル系 == 0 && TALENT:淫乱 == 0
 ;		CSTR:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
+;	ELSEIF HAVE_VAGINA(TARGET) && TALENT:ギャル系 == 0 && TALENT:淫乱 == 1
 ;		CSTR:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:オトコ == 0 && TALENT:ギャル系 == 1
+;	ELSEIF HAVE_VAGINA(TARGET) && TALENT:ギャル系 == 1
 ;		CSTR:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 0
+;	ELSEIF IS_MALE(TARGET) && TALENT:オトコの娘 == 0
 ;		CSTR:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:オトコ == 1  && TALENT:オトコの娘 == 1
+;	ELSEIF IS_MALE(TARGET) && TALENT:オトコの娘 == 1
 ;		CSTR:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
 ;	ELSE
 ;		CSTR:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%	
@@ -279,15 +279,15 @@ TFLAG:622 |= 2
 ;		CSTR:ASSI:初キス相手 = お兄ちゃんの%CSTR:男性器呼び方%
 ;	ELSEIF NO:ASSI == [[キャラ:宮間かなで]] && NO:MASTER == [[キャラ:あなた]] && TALENT:ASSI:ギャル系 == 1
 ;		CSTR:ASSI:初キス相手 = アニキの%CSTR:男性器呼び方%
-;	ELSEIF TALENT:ASSI:オトコ == 0 && TALENT:ASSI:ギャル系 == 0 && TALENT:ASSI:淫乱 == 0
+;	ELSEIF HAVE_VAGINA(ASSI) && TALENT:ASSI:ギャル系 == 0 && TALENT:ASSI:淫乱 == 0
 ;		CSTR:ASSI:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:ASSI:オトコ == 0 && TALENT:ASSI:ギャル系 == 0 && TALENT:ASSI:淫乱 == 1
+;	ELSEIF HAVE_VAGINA(ASSI) && TALENT:ASSI:ギャル系 == 0 && TALENT:ASSI:淫乱 == 1
 ;		CSTR:ASSI:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:ASSI:オトコ == 0 && TALENT:ASSI:ギャル系 == 1
+;	ELSEIF HAVE_VAGINA(ASSI) && TALENT:ASSI:ギャル系 == 1
 ;		CSTR:ASSI:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:ASSI:オトコ == 1 && TALENT:ASSI:オトコの娘 == 0
+;	ELSEIF IS_MALE(ASSI) && TALENT:ASSI:オトコの娘 == 0
 ;		CSTR:ASSI:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
-;	ELSEIF TALENT:ASSI:オトコ == 1 && TALENT:ASSI:オトコの娘 == 1
+;	ELSEIF IS_MALE(ASSI) && TALENT:ASSI:オトコの娘 == 1
 ;		CSTR:ASSI:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%
 ;	ELSE
 ;		CSTR:ASSI:初キス相手 = %CALLNAME:MASTER%の%CSTR:男性器呼び方%	
@@ -499,7 +499,7 @@ ELSE
 ENDIF
 
 
-SIF TALENT:MASTER:ふたなり || TALENT:MASTER:オトコ
+SIF HAVE_PENIS(MASTER)
 	BASE:MASTER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -558,7 +558,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋6
 	;精液汚れ
-	STAIN:MASTER:2 |= 4
+	STAIN:MASTER:ペニス |= 4
 
 	BASE:MASTER:射精ゲージ -= EJAC*2
 	SIF BASE:MASTER:射精ゲージ >= EJAC
@@ -573,7 +573,7 @@ ELSEIF E == 1
 	PRINTL 射精
 	PRINTL 精液経験＋3
 	;精液汚れ
-	STAIN:MASTER:2 |= 4
+	STAIN:MASTER:ペニス |= 4
 
 	BASE:MASTER:射精ゲージ -= EJAC
 	SIF BASE:MASTER:射精ゲージ >= EJAC
@@ -589,17 +589,17 @@ ENDIF
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＢ⇔調教者のＰの汚れが移動
-STAIN:5 |= STAIN:MASTER:2
-STAIN:MASTER:2 |= STAIN:5
+STAIN:胸 |= STAIN:MASTER:ペニス
+STAIN:MASTER:ペニス |= STAIN:胸
 
 ;助手のＢ⇔調教者のＰの汚れが移動
-STAIN:ASSI:5 |= STAIN:MASTER:2
-STAIN:MASTER:2 |= STAIN:ASSI:5
+STAIN:ASSI:胸 |= STAIN:MASTER:ペニス
+STAIN:MASTER:ペニス |= STAIN:ASSI:胸
 
 
 ;奉仕精神ＬＶ２以上、技巧ＬＶ２以上なら汚れをなめ取る
 IF ABL:奉仕精神 >= 2 && ABL:技巧 >= 2
-	STAIN:MASTER:2 = 2
+	STAIN:MASTER:ペニス = 2
 	SIF E >= 1
 		TFLAG:フェラで射精後 = 2
 	
@@ -608,14 +608,14 @@ IF ABL:奉仕精神 >= 2 && ABL:技巧 >= 2
 	EXP:フェラ経験 += 1
 	
 	;奴隷の口⇔調教者のＰの汚れが移動
-	STAIN:0 |= STAIN:MASTER:2
-	STAIN:MASTER:2 |= STAIN:0
+	STAIN:口 |= STAIN:MASTER:ペニス
+	STAIN:MASTER:ペニス |= STAIN:口
 ENDIF
 
 ;奴隷と助手が共に女性でどちらかが精液中毒を持っているとき、奴隷の口⇔助手の口の汚れが移動
-IF TALENT:オトコ == 0 && TALENT:ASSI:オトコ == 0 && (ABL:精液中毒 >= 1 || ABL:ASSI:精液中毒 >= 1)
-	STAIN:0 |= STAIN:ASSI:2
-	STAIN:ASSI:0 |= STAIN:0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(ASSI) && (ABL:精液中毒 >= 1 || ABL:ASSI:精液中毒 >= 1)
+	STAIN:口 |= STAIN:ASSI:ペニス
+	STAIN:ASSI:口 |= STAIN:口
 	SIF E >= 1
 		TFLAG:フェラで射精後 = 3
 ENDIF
@@ -625,22 +625,22 @@ ENDIF
 ;経験の処理
 ;-------------------------------------------------
 ;マスターと奴隷のレズorホモ
-IF TALENT:オトコ == 0 && TALENT:MASTER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(MASTER)
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +7
 	EXP:レズ経験 += 7
-ELSEIF TALENT:オトコ == 1 && TALENT:MASTER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(MASTER)
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +7
 	EXP:ＢＬ経験 += 7
 ENDIF
 
 ;助手と奴隷のレズorホモ
-IF TALENT:オトコ == 0 && TALENT:ASSI:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(ASSI)
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +5
 	EXP:レズ経験 += 5
-ELSEIF TALENT:オトコ == 1 && TALENT:ASSI:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(ASSI)
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +5
 	EXP:ＢＬ経験 += 5
@@ -650,7 +650,7 @@ ENDIF
 ;その他の処理
 ;------------------------------------------------
 ;調教者がふたなり
-IF TALENT:MASTER:ふたなり
+IF IS_FUTA(MASTER)
 	SOURCE:21 /= 2
 ENDIF
 

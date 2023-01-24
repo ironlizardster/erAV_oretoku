@@ -60,14 +60,14 @@ SIF TEQUIP:獣姦プレイ
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＶ⇔調教者の口の汚れが移動
-STAIN:3 |= STAIN:PLAYER:0
-STAIN:PLAYER:0 |= STAIN:3
+STAIN:ヴァギナ |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:ヴァギナ
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3
@@ -79,7 +79,7 @@ P = 0
 ;調教者の初キス記録
 IF !CFLAG:PLAYER:初キス相手
 	TFLAG:620 |= 1
-	IF TALENT:オトコ || TALENT:ふたなり
+	IF HAVE_PENIS(TARGET)
 		TFLAG:620 |= 2
 	ELSE
 		TFLAG:620 |= 8

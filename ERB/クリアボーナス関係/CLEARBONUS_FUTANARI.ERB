@@ -2,7 +2,7 @@
 ;クリアボーナス：ふたなり
 ;===========================================================
 @CLEARBONUS_FUTANARI
-IF  TALENT:オトコ == 0
+IF  HAVE_VAGINA(TARGET)
 	PRINTFORML %NAME:TARGET%がふたなりのＩＦの世界に突入しますか？
 	PRINTL  [0] - はい
 	PRINTL  [1] - いいえ
@@ -97,8 +97,8 @@ $INPUTLOOP_3
 INPUT
 
 IF RESULT == 0
-	PRINTFORMW 《%CALLNAME:LOCAL%は【%TALENTNAME:[[TALENT:ふたなり]]%】になった》
-	TALENT:LOCAL:ふたなり = 1
+	PRINTFORMW 《%CALLNAME:LOCAL%は【ふたなり】になった》
+	CALL SET_SEXUALITY(LOCAL,性別_ふたなり)
 ELSEIF RESULT == 1
 	PRINTFORML 再選択してください
 	GOTO INPUTLOOP_START

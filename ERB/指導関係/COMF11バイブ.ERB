@@ -144,7 +144,7 @@ PRINTFORML Ｖ経験+{S}
 S = 0
 
 ;レズ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +3
 	EXP:レズ経験 += 3
@@ -161,8 +161,8 @@ SIF TEQUIP:触手召喚
 ;汚れ（触手）
 ;-------------------------------------------------
 IF TEQUIP:触手召喚 && TEQUIP:バイブ
-	STAIN:3 |= 2
-	STAIN:3 |= 4
+	STAIN:ヴァギナ |= 2
+	STAIN:ヴァギナ |= 4
 ENDIF
 
 RETURN 1

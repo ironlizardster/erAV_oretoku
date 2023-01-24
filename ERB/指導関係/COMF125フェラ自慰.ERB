@@ -145,7 +145,7 @@ IF TALENT:快感の否定
 	S = 1
 ENDIF
 ;男嫌い
-IF TALENT:男性不信 && TALENT:PLAYER:オトコ
+IF TALENT:男性不信 && IS_MALE(PLAYER) 
 	PRINT  - 
 	A -= 12
 	PRINTS TALENTNAME:[[TALENT:男性不信]]
@@ -162,11 +162,11 @@ IF TALENT:恋心 && ASSIPLAY == 0
 	S = 1
 ENDIF
 ;調教者がふたなり
-IF TALENT:PLAYER:ふたなり
+IF IS_FUTA(PLAYER)
 	SIF S
 		PRINT  + 
 	A += 8
-	PRINTS TALENTNAME:[[TALENT:ふたなり]]
+	PRINT ふたなり
 	PRINTV '(,8,')
 	S = 1
 ENDIF
@@ -182,19 +182,19 @@ ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:2 & 1
+SIF STAIN:PLAYER:ペニス & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:2 & 4
+SIF STAIN:PLAYER:ペニス & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:2 & 8
+SIF STAIN:PLAYER:ペニス & 8
 	Y += 7
 ;母乳の汚れ
-SIF STAIN:PLAYER:2 & 16
+SIF STAIN:PLAYER:ペニス & 16
 	Y += 1
 ;尿の汚れ
-SIF STAIN:PLAYER:4 & 32
+SIF STAIN:PLAYER:アナル & 32
 	Y += 3
 
 ;獣姦の場合は汚れ7で固定
@@ -977,7 +977,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:ぽっちゃり || TALENT:PLAYER:オトコ  || TALENT:PLAYER:ふたなり
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -1036,7 +1036,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋９
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -1051,7 +1051,7 @@ ELSEIF E == 1
 	PRINTL 射精
 	PRINTL 精液経験＋３
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -1065,30 +1065,30 @@ ENDIF
 ;汚れ
 ;-------------------------------------------------
 ;奴隷の口⇔調教者のＰの汚れが移動
-STAIN:0 |= STAIN:PLAYER:2
-STAIN:PLAYER:2 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:ペニス
+STAIN:PLAYER:ペニス |= STAIN:口
 
 ;奴隷の指⇔奴隷のＢの汚れが移動
-STAIN:1 |= STAIN:5
-STAIN:5 |= STAIN:1
+STAIN:手 |= STAIN:胸
+STAIN:胸 |= STAIN:手
 
 ;奴隷の指⇔奴隷のＶの汚れが移動
-STAIN:1 |= STAIN:3
-STAIN:3 |= STAIN:1
+STAIN:手 |= STAIN:ヴァギナ
+STAIN:ヴァギナ |= STAIN:手
 
 ;シャワーオナニーの場合汚れをリセット、潤滑更に半分。
 IF TEQUIP:シャワー == 1
-	STAIN:1 = 0
-	STAIN:2 = 2
-	STAIN:3 = 1
-	STAIN:4 = 8
+	STAIN:手 = 0
+	STAIN:ペニス = 2
+	STAIN:ヴァギナ = 1
+	STAIN:アナル = 8
 
 	PALAM:潤滑 /= 2
 ENDIF
 
 ;奉仕精神ＬＶ２以上、技巧ＬＶ２以上なら汚れをなめ取る
 IF ABL:奉仕精神 >= 2 && ABL:技巧 >= 2
-	STAIN:PLAYER:2 = 2
+	STAIN:PLAYER:ペニス = 2
 	SIF E >= 1
 		TFLAG:フェラで射精後 = 1
 ENDIF
@@ -1096,11 +1096,11 @@ ENDIF
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +7
 	EXP:レズ経験 += 7
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +7
 	EXP:ＢＬ経験 += 7
@@ -1109,7 +1109,7 @@ ENDIF
 SIF ASSIPLAY == 0 && EXP:Ｖ経験 >= EXPLV:3
 	TFLAG:主人経験 += 1
 
-IF TALENT:オトコ
+IF IS_MALE(TARGET)
 	E = 2
 ELSE
 	E = 1
@@ -1130,7 +1130,7 @@ ENDIF
 E = 0
 
 ;調教者がふたなり
-IF TALENT:PLAYER:ふたなり
+IF IS_FUTA(PLAYER)
 	SOURCE:屈従 /= 2
 ENDIF
 

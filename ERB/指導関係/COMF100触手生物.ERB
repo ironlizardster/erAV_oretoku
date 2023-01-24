@@ -371,8 +371,8 @@ IF TEQUIP:触手口辱
 	TEQUIP:触手口辱 = 0
 ELSE
 	TEQUIP:触手口辱 = 1
-	STAIN:0 |= 2
-	STAIN:0 |= 4
+	STAIN:口 |= 2
+	STAIN:口 |= 4
 ENDIF
 T = 0
 
@@ -443,7 +443,7 @@ RETURN 1
 ;
 @SYOKUSYU_MILK
 ;［Ｂ感度］３以上、［母乳体質］無しかつ［貧乳］[絶壁]［オトコ］無し
-IF ABL:TARGET:Ｂ感覚 >= 3 && TALENT:母乳体質 == 0 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0 && TALENT:オトコ == 0 
+IF ABL:TARGET:Ｂ感覚 >= 3 && TALENT:母乳体質 == 0 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0 && HAVE_VAGINA(TARGET) 
 	PRINTFORML 触手搾乳により%NAME:TARGET%は母乳が出るようになった
 	TALENT:母乳体質 = 1
 ENDIF

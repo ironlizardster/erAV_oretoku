@@ -679,13 +679,13 @@ REPEAT CHARANUM
 		SIF IS処女(COUNT) && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
 			CONTINUE
 		;オトコでない場合は「従順+欲望+V感覚+12以下」かつ「従順+欲望+Ａ感覚+14以下」だとダメ
-		SIF !TALENT:COUNT:オトコ && (ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ｖ感覚 <= 12 && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14)
+		SIF HAVE_VAGINA(COUNT) && (ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ｖ感覚 <= 12 && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14)
 			CONTINUE
 		;オトコの場合は従順+欲望+Ａ感覚+12以下だとダメ
-		SIF TALENT:COUNT:オトコ && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 12
+		SIF IS_MALE(COUNT) && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 12
 			CONTINUE
 		;貞操帯の場合は従順+欲望+Ａ感覚+14以下だとダメ
-		SIF CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64)  && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
+		SIF CFLAG:COUNT:特別コスタイプ == 79 && (CFLAG:COUNT:着衣状態 & 64) && ABL:COUNT:信頼+ABL:COUNT:欲望+ABL:COUNT:Ａ感覚 <= 14
 			CONTINUE
 
 		;性交中毒
@@ -755,7 +755,7 @@ CALL SELF_KOJO(TARGET)
 ;Ｖ使用フラグ
 F = 1
 ;オトコだとダメ
-SIF TALENT:TEMP_NUM:オトコ
+SIF IS_MALE(TEMP_NUM) 
 	F = 0
 ;処女だとダメ
 SIF IS処女(TEMP_NUM)
@@ -851,7 +851,7 @@ CALL SELF_KOJO(TARGET)
 ;Ｖ使用フラグ
 F = 1
 ;オトコだとダメ
-SIF TALENT:TEMP_NUM:オトコ
+SIF IS_MALE(TEMP_NUM) 
 	F = 0
 ;処女だとダメ
 SIF IS処女(TEMP_NUM)
@@ -884,7 +884,7 @@ IF F == 1
 	PRINTFORM %CALLNAME:MASTER%の朝勃ちに欲望を抑えきれなくなったらしく、%CALLNAME:TEMP_NUM%は申し訳なさそうにしながらも
 	PRINTFORML 艶やかな喘ぎ声を上げながらなおも腰を振り続けている
 	PRINTFORM %CALLNAME:MASTER%は%CALLNAME:TEMP_NUM%の
-		IF TALENT:TEMP_NUM:オトコ == 1 || TALENT:TEMP_NUM:ふたなり == 1
+		IF HAVE_PENIS(TEMP_NUM)
 			PRINTFORM ペニスを扱き
 		ELSEIF TALENT:TEMP_NUM:巨乳 || TALENT:TEMP_NUM:爆乳
 			PRINTFORM 豊かなバストを揉みしだき
@@ -926,7 +926,7 @@ ELSEIF F == 0 && !ISＡ処女(TEMP_NUM)
 	PRINTFORM %CALLNAME:MASTER%の朝勃ちに欲望を抑えきれなくなったらしく、%CALLNAME:TEMP_NUM%は申し訳なさそうにしながらも
 	PRINTFORML 艶やかな喘ぎ声を上げながらなおも腰を振り続けている
 	PRINTFORM %CALLNAME:MASTER%は%CALLNAME:TEMP_NUM%の
-		IF TALENT:TEMP_NUM:オトコ == 1 || TALENT:TEMP_NUM:ふたなり == 1
+		IF HAVE_PENIS(TEMP_NUM)
 			PRINTFORM ペニスを扱き
 		ELSEIF TALENT:TEMP_NUM:巨乳 || TALENT:TEMP_NUM:爆乳
 			PRINTFORM 豊かなバストを揉みしだき

@@ -138,7 +138,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -214,7 +214,7 @@ ELSE
 ENDIF
 
 ;調教対象がオトコではない
-IF TALENT:オトコ == 0
+IF HAVE_VAGINA(TARGET)
 	SOURCE:露出 = 1200
 	TIMES SOURCE:逸脱 , 6.00
 ENDIF
@@ -224,18 +224,18 @@ ENDIF
 ;汚れの処理
 ;-------------------------------------------------
 ;奴隷のＰ⇔調教者のＡの汚れが移動
-STAIN:2 |= STAIN:PLAYER:4
-STAIN:PLAYER:4 |= STAIN:2
+STAIN:ペニス |= STAIN:PLAYER:アナル
+STAIN:PLAYER:アナル |= STAIN:ペニス
 
 ;-------------------------------------------------
 ;経験上昇
 ;-------------------------------------------------
 ;レズ・ホモ経験
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +4
 	EXP:レズ経験 += 4
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +4
 	EXP:ＢＬ経験 += 4
@@ -317,7 +317,7 @@ RETURN 1
 @EVENT_SEITSU_REVARAPE
 A = NO:PLAYER
 ;【オトコ】か【ふたなり】であり【未熟】
-SIF (TALENT:ふたなり == 0 && TALENT:オトコ == 0) || TALENT:未熟 == 0
+SIF !HAVE_PENIS(TARGET) || TALENT:未熟 == 0
 	RETURN 0
 ;更に［Ｃ感度］５以上で触手調教や獣姦でなく
 SIF ABL:Ｃ感覚 <= 4 || TEQUIP:触手召喚 || TEQUIP:獣姦プレイ

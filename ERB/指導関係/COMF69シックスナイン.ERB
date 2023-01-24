@@ -14,13 +14,13 @@
 
 TFLAG:近親相姦 = 0
 CALL INCEST
-IF (TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2) && TALENT:PLAYER:オトコ == 0 && TALENT:オトコ == 0
+IF (TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2) && HAVE_VAGINA(PLAYER) && HAVE_VAGINA(TARGET)
 	PRINT 母娘
 ELSEIF TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2
 	PRINT 親子
-ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && TALENT:PLAYER:オトコ == 0 && TALENT:オトコ == 0
+ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && HAVE_VAGINA(PLAYER) && HAVE_VAGINA(TARGET)
 	PRINT 姉妹
-ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && TALENT:PLAYER:オトコ && TALENT:オトコ
+ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && IS_MALE(PLAYER) && IS_MALE(TARGET)
 	PRINT 兄弟
 ELSEIF  TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4
 	PRINT 兄妹
@@ -164,15 +164,15 @@ ENDIF
 
 Y = 0
 ;愛液の汚れ
-SIF STAIN:PLAYER:3 & 1
+SIF STAIN:PLAYER:ヴァギナ & 1
 	Y += 1
 ;精液の汚れ
-SIF STAIN:PLAYER:3 & 4
+SIF STAIN:PLAYER:ヴァギナ & 4
 	Y += 3
 ;アナルの汚れ
-SIF STAIN:PLAYER:3 & 8
+SIF STAIN:PLAYER:ヴァギナ & 8
 	Y += 7
-SIF STAIN:PLAYER:3 & 16
+SIF STAIN:PLAYER:ヴァギナ & 16
 	Y += 15
 
 SIF TALENT:汚臭鈍感
@@ -311,7 +311,7 @@ ELSE
 	TIMES B , 5.00
 ENDIF
 
-SIF TALENT:PLAYER:オトコ  || TALENT:PLAYER:ふたなり
+SIF HAVE_PENIS(PLAYER)
 	BASE:PLAYER:射精ゲージ += B
 
 ;-------------------------------------------------
@@ -508,7 +508,7 @@ IF E == 2
 	PRINTL 大量射精
 	PRINTL 精液経験＋９
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC*2
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -523,7 +523,7 @@ ELSEIF E == 1
 	PRINTL 射精
 	PRINTL 精液経験＋３
 	;精液汚れ
-	STAIN:PLAYER:2 |= 4
+	STAIN:PLAYER:ペニス |= 4
 
 	BASE:PLAYER:射精ゲージ -= EJAC
 	SIF BASE:PLAYER:射精ゲージ >= EJAC
@@ -534,44 +534,44 @@ ELSEIF E == 1
 ENDIF
 
 ;調教者がオトコかふたなりだとフェラ経験
-IF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+IF HAVE_PENIS(PLAYER)
 	PRINTFORML %EXPNAME:[[EXP:フェラ経験]]%＋１
 	EXP:フェラ経験 += 1
 ENDIF
 
 ;奴隷の口⇔調教者のＶの汚れが移動
-STAIN:0 |= STAIN:PLAYER:3
-STAIN:PLAYER:3 |= STAIN:0
+STAIN:口 |= STAIN:PLAYER:ヴァギナ
+STAIN:PLAYER:ヴァギナ |= STAIN:口
 ;奴隷のＶ⇔調教者の口の汚れが移動
-STAIN:3 |= STAIN:PLAYER:0
-STAIN:PLAYER:0 |= STAIN:3
+STAIN:ヴァギナ |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:ヴァギナ
 
 ;初キス
 TFLAG:620 |= 1
-IF TALENT:ふたなり || TALENT:オトコ
+IF HAVE_PENIS(TARGET)
 	TFLAG:620 |= 2
 ELSE
 	TFLAG:620 |= 8
 ENDIF
 TFLAG:621 |= 1
-IF TALENT:PLAYER:ふたなり || TALENT:PLAYER:オトコ
+IF HAVE_PENIS(PLAYER)
 	TFLAG:621 |= 2
 ELSE
 	TFLAG:621 |= 8
 ENDIF
 
 
-IF TALENT:オトコ == 0 && TALENT:PLAYER:オトコ == 0
+IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]
 	PRINTL +8
 	EXP:レズ経験 += 8
-ELSEIF TALENT:オトコ == 1 && TALENT:PLAYER:オトコ == 1
+ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
 	PRINTS EXPNAME:[[EXP:ＢＬ経験]]
 	PRINTL +8
 	EXP:ＢＬ経験 += 8
 ENDIF
 
-IF TALENT:オトコ
+IF IS_MALE(TARGET)
 	E = 2
 ELSE
 	E = 1

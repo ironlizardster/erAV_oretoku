@@ -6,7 +6,7 @@
 ;-------------------------------------------------
 @ABLUP23
 ;オトコでないととダメ
-SIF TALENT:オトコ == 0
+SIF HAVE_VAGINA(TARGET)
 	RETURN 0
 DRAWLINE
 ;PRINTL 奴隷のＢＬっ気を高めます
@@ -117,7 +117,7 @@ RETURN 0
 ;-------------------------------------------------
 @CAN_ABLUP23
 ;オトコでないとダメ
-SIF TALENT:オトコ == 0
+SIF HAVE_VAGINA(TARGET)
 	RETURN 0
 ;ＢＬっ気はLv5が上限
 ;[解放][倒錯的][両刀][狂気]が付いている場合はLv10まで解放
