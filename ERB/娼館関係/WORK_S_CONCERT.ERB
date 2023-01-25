@@ -405,16 +405,16 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:臆病
 		D -= 2
 	;大人しい
-	SIF TALENT:COUNT:大人しい
+	SIF IS_大人しい(COUNT)
 		D -= 2
 	;プライド高い
-	SIF TALENT:COUNT:プライド高い
+	SIF IS_プライド高い(COUNT)
 		D += 3
 	;活発
-	SIF TALENT:COUNT:活発
+	SIF IS_活発(COUNT)
 		D += 5
 	;プライド低い
-	SIF TALENT:COUNT:プライド低い
+	SIF IS_プライド低い(COUNT)
 		D -= 1
 	;感情乏しい
 	SIF TALENT:COUNT:感情乏しい
@@ -426,19 +426,19 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:目立ちたがり
 		D += 5
 	;抑圧
-	SIF TALENT:COUNT:抑圧
+	SIF IS_抑圧(COUNT)
 		D -= 3
 	;解放
-	SIF TALENT:COUNT:解放
+	SIF IS_解放(COUNT)
 		D += 3
 	;抵抗
 	SIF TALENT:COUNT:抵抗
 		D -= 5
 	;恥じらい
-	SIF TALENT:COUNT:恥じらい
+	SIF IS_恥じらい(COUNT)
 		D -= 3
 	;恥薄い
-	SIF TALENT:COUNT:恥薄い
+	SIF IS_恥薄い(COUNT)
 		D += 3
 	;献身的
 	SIF TALENT:COUNT:献身的
@@ -453,23 +453,23 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:謎の魅力
 		D += 10
 	;貧乳
-	SIF TALENT:COUNT:貧乳
+	SIF IS_貧乳(COUNT)
 		D -= 2
 	;巨乳
-	SIF TALENT:COUNT:巨乳
+	SIF IS_巨乳(COUNT)
 		D += 2
 	;魅力
 	SIF TALENT:COUNT:魅力
 		D += 5
 	;爆乳
-	SIF TALENT:COUNT:爆乳
+	SIF IS_爆乳(COUNT)
 		D += 2
 	;絶壁
-	SIF TALENT:COUNT:絶壁
+	SIF IS_絶壁(COUNT)
 		D -= 3
 
 	;肥満
-	SIF TALENT:COUNT:肥満
+	SIF IS_肥満(COUNT)
 		D /= 2
 
 	;狂気・崩壊があると満足度激減
@@ -698,22 +698,22 @@ REPEAT CHARANUM
 	SIF TALENT:感情乏しい
 		TIMES U:100 , 0.90
 	;プライドが高いと増える
-	SIF TALENT:プライド高い
+	SIF IS_プライド高い(TARGET)
 		TIMES U:100 , 1.50
 	;目立ちたがりだと少なくなる
 	SIF TALENT:目立ちたがり
 		TIMES U:100 , 0.80
 	;抑圧だと増える
-	SIF TALENT:抑圧
+	SIF IS_抑圧(TARGET)
 		TIMES U:100 , 1.20
 	;解放だと少なくなる
-	SIF TALENT:解放
+	SIF IS_解放(TARGET)
 		TIMES U:100 , 0.80
 	;アイドルだと少なくなる
 	SIF TALENT:アイドル
 		TIMES U:100 , 0.80
 	;コンサート失敗かつ恥じらいだと結構増える
-	SIF TALENT:恥じらい && A <= 1
+	SIF IS_恥じらい(TARGET) && A <= 1
 		TIMES U:100 , 1.50
 
 	;特殊コンサート用処理その２
@@ -778,7 +778,7 @@ REPEAT CHARANUM
 	ENDIF
 
 	;小柄だと疲労増加
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		TIMES LOSEBASE:体力 , 1.20
 	;アイドルだと疲労半減
 	SIF TALENT:アイドル

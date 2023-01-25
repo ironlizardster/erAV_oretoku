@@ -100,9 +100,9 @@ IF MARK:苦痛刻印
 	S = 1
 ENDIF
 
-IF TALENT:プライド高い
+IF IS_プライド高い(TARGET)
 	T = 4
-ELSEIF TALENT:プライド低い
+ELSEIF IS_プライド低い(TARGET)
 	T = 1
 ELSE
 	T = 2
@@ -210,19 +210,19 @@ IF TALENT:素直
 	S = 1
 ENDIF
 ;自尊心
-IF TALENT:プライド高い
+IF IS_プライド高い(TARGET)
 	PRINT  - 
 	A -= 15
-	PRINTS TALENTNAME:[[TALENT:プライド高い]]
+	PRINTS GET_STR_プライド(TARGET)
 	PRINTV '(,15,')
 	S = 1
 ENDIF
 ;プライド低い
-IF TALENT:プライド低い
+IF IS_プライド低い(TARGET)
 	SIF S
 		PRINT  + 
 	A += 5
-	PRINTS TALENTNAME:[[TALENT:プライド低い]]
+	PRINTS GET_STR_プライド(TARGET)
 	PRINTV '(,5,')
 	S = 1
 ENDIF
@@ -236,10 +236,10 @@ IF TALENT:目立ちたがり
 	S = 1
 ENDIF
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	PRINT  - 
 	A -= 10
-	PRINTS TALENTNAME:[[TALENT:抑圧]]
+	PRINTS GET_STR_解放的(TARGET)
 	PRINTV '(,10,')
 	S = 1
 ENDIF

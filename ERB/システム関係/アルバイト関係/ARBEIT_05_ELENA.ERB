@@ -58,8 +58,7 @@ IF LOCAL >= 2
 	PRINTFORML どうやら一生懸命働く姿が評価されているようだ
 ENDIF
 IF EXP:ARG:エレナアルバイト >= 30 && TALENT:ARG:汚れ無視 == 0
-	TALENT:ARG:汚臭鈍感 = 0
-	TALENT:ARG:汚臭敏感 = 0
+	TALENT:ARG:汚臭耐性 = 0
 	TALENT:ARG:汚れ無視 = 1
 	PRINTFORML このアルバイトを続けたおかげで%CALLNAME:ARG%は汚れを気にしないようになった
 ENDIF

@@ -78,27 +78,27 @@ IF L
 ENDIF
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 1
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
 ;汚臭鈍感
-IF TALENT:汚臭鈍感
+IF IS_汚臭鈍感(TARGET)
 	SIF S
 		PRINT  + 
 	A += 1
-	PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
+	PRINTS GET_STR_汚臭耐性(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
 ;汚臭敏感
-IF TALENT:汚臭敏感
+IF IS_汚臭敏感(TARGET)
 	PRINT  - 
 	A -= 3
-	PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+	PRINTS GET_STR_汚臭耐性(TARGET)
 	PRINTV '(,3,')
 	S = 1
 ENDIF
@@ -112,10 +112,10 @@ IF TALENT:献身的
 	S = 1
 ENDIF
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	PRINT  - 
 	A -= 1
-	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTS GET_STR_快感に素直(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
@@ -177,12 +177,12 @@ IF Y
 	PRINT  - 
 	A -= Y
 	;汚臭鈍感
-	IF TALENT:汚臭鈍感
+	IF IS_汚臭鈍感(TARGET)
 		PRINT 汚れあり、
-		PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
-	ELSEIF TALENT:汚臭敏感
+		PRINTS GET_STR_汚臭耐性(TARGET)
+	ELSEIF IS_汚臭敏感(TARGET)
 		PRINT 汚れあり、
-		PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+		PRINTS GET_STR_汚臭耐性(TARGET)
 	ELSE
 		PRINT 汚れあり
 	ENDIF

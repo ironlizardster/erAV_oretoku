@@ -293,19 +293,19 @@ N = 200
 SIF TALENT:ナマイキ
 	TIMES N , 1.10
 ;プライド高い
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	TIMES N , 1.20
 ;保守的
 SIF TALENT:保守的
 	TIMES N , 1.20
 ;貞操無頓着
-SIF TALENT:貞操無頓着
+SIF IS_貞操無頓着(TARGET)
 	TIMES N , 0.80
 ;恥じらい
-SIF TALENT:恥じらい
+SIF IS_恥じらい(TARGET)
 	TIMES N , 1.10
 ;恥薄い
-SIF TALENT:恥薄い
+SIF IS_恥薄い(TARGET)
 	TIMES N , 0.90
 ;淫乱
 SIF TALENT:淫乱
@@ -485,7 +485,7 @@ REPEAT 10
 	SIF TALENT:臆病
 		TIMES LOSEBASE:体力 , 1.10
 	;抑圧
-	SIF TALENT:抑圧
+	SIF IS_抑圧(TARGET)
 		TIMES LOSEBASE:体力 , 1.10
 	;淫乱
 	SIF TALENT:淫乱
@@ -1366,7 +1366,7 @@ LOSEBASE:体力 = 100
 @RECEPTION_VAGINASEX
 
 ;処女で従順Lv4以下かつ欲望Lv4以下、または貞操無頓着が付いていない場合は強制的に失敗
-IF IS処女(TARGET) && (ABL:信頼 <= 4 && ABL:欲望 <= 4) && TALENT:貞操無頓着 == 0
+IF IS処女(TARGET) && (ABL:信頼 <= 4 && ABL:欲望 <= 4) && !IS_貞操無頓着(TARGET)
 	PRINTFORMW %CALLNAME:TARGET%は純潔を守ろうと、必死で抵抗した
 	PRINTFORMW あまりの強い抵抗に、相手も諦めざるを得なかった……
 	B -= 5

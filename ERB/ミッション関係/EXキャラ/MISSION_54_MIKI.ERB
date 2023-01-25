@@ -198,13 +198,11 @@ SIF HAVE_PENIS(TARGET)
 IF ARG == 0
 	CALL ADD_CATASTROPH(TARGET)
 ELSEIF ARG == 1
-	TALENT:プライド高い = 0
-	TALENT:プライド低い = 1
+	TALENT:プライド = -1
 	SIF ABL:性交中毒 < 3
 		ABL:性交中毒 = 3
 ELSEIF ARG == 2
-	TALENT:プライド高い = 0
-	TALENT:プライド低い = 1
+	TALENT:プライド = -1
 	SIF ABL:性交中毒 < 3
 		ABL:性交中毒 = 3
 	TALENT:淫乱 = 1

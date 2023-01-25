@@ -12,7 +12,7 @@ DRAWLINE
 ;DRAWLINE
 ;売春中毒はLv10が上限
 ;[淫乱][貞操無頓着][娼婦]が付いている場合はLv10まで解放
-IF ABL:売春中毒 >= 5 && (TALENT:淫乱 == 0 && TALENT:貞操無頓着 == 0 && TALENT:風俗嬢 == 0)
+IF ABL:売春中毒 >= 5 && (TALENT:淫乱 == 0 && !IS_貞操無頓着(TARGET) && TALENT:風俗嬢 == 0)
 	PRINTW これ以上UPするには素質が必要です
 	RETURN 0
 ELSEIF ABL:売春中毒 >= 10
@@ -89,7 +89,7 @@ RETURN 0
 @CAN_ABLUP37
 ;SIF ABL:売春中毒 + ABL:射精中毒 >= 10
 ;	RETURN 0
-SIF ABL:売春中毒 >= 5 && (TALENT:淫乱 == 0 && TALENT:貞操無頓着 == 0 && TALENT:風俗嬢 == 0)
+SIF ABL:売春中毒 >= 5 && (TALENT:淫乱 == 0 && !IS_貞操無頓着(TARGET) && TALENT:風俗嬢 == 0)
 	RETURN 0
 
 ;判定変数を空に
@@ -208,7 +208,7 @@ IF TALENT:保守的
 ENDIF
 
 ;悲観的
-IF TALENT:ネガティブ
+IF IS_悲観的(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 	TIMES C , 0.90
@@ -223,13 +223,13 @@ IF TALENT:目立ちたがり
 ENDIF
 
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	TIMES A , 2.00
 	TIMES B , 2.00
 	TIMES C , 2.00
 	TIMES D , 2.00
 ;貞操無頓着
-ELSEIF TALENT:貞操無頓着
+ELSEIF IS_貞操無頓着(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 	TIMES C , 0.90
@@ -237,13 +237,13 @@ ELSEIF TALENT:貞操無頓着
 ENDIF
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES A , 1.20
 	TIMES B , 1.20
 	TIMES C , 1.20
 	TIMES D , 1.20
 ;解放
-ELSEIF TALENT:解放
+ELSEIF IS_解放(TARGET)
 	TIMES A , 0.80
 	TIMES B , 0.80
 	TIMES C , 0.80
@@ -259,13 +259,13 @@ IF TALENT:抵抗
 ENDIF
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	TIMES A , 1.10
 	TIMES B , 1.10
 	TIMES C , 1.10
 	TIMES D , 1.10
 ;恥薄い
-ELSEIF TALENT:恥薄い
+ELSEIF IS_恥薄い(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 	TIMES C , 0.90
@@ -362,9 +362,9 @@ ENDIF
 ;[反抗的][自制心][抑圧][抵抗][快感の否定][愛][求愛]があると増加、[狂気][崩壊]なら無視できる)
 IF ABL:売春中毒 >= 2 && (TALENT:狂気 == 0 && TALENT:崩壊 == 0)
 	F = ABL:売春中毒 - 1
-	SIF TALENT:解放
+	SIF IS_解放(TARGET)
 		F -= 1
-	SIF TALENT:快感に素直
+	SIF IS_快感に素直(TARGET)
 		F -= 1
 	SIF TALENT:中毒しやすい
 		F -= 2
@@ -382,11 +382,11 @@ IF ABL:売春中毒 >= 2 && (TALENT:狂気 == 0 && TALENT:崩壊 == 0)
 		F += 1
 	SIF TALENT:自制心
 		F += 1
-	SIF TALENT:抑圧
+	SIF IS_抑圧(TARGET)
 		F += 1
 	SIF TALENT:抵抗
 		F += 1
-	SIF TALENT:快感の否定
+	SIF IS_快感の否定(TARGET)
 		F += 1
 	SIF TALENT:恋心
 		F += 1

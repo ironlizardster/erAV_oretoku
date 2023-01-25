@@ -80,7 +80,7 @@ IF FLAG:難易度 > 0 && (FLAG:借金完済ボーナス受け取り == 0 && GETC
 
 	LOCAL = GETCHARA([[キャラ:雨草愛理]] ,0)
 	IF LOCAL > 0 && CFLAG:LOCAL:売却助手可能 >= 2
-		TALENT:LOCAL:プライド高い = 0
+		TALENT:LOCAL:プライド = 0
 		TALENT:LOCAL:素直 = 1
 		TALENT:LOCAL:カリスマ = 1
 		PRINTFORMW 《雨草愛理は【プライド高い】を失い【素直】【カリスマ】を得た》

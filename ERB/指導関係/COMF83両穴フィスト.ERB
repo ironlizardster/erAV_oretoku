@@ -217,10 +217,10 @@ ELSE
 ENDIF
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES SOURCE:痛覚 , 0.80
 ;小柄体形
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES SOURCE:痛覚 , 3.00
 ;未熟
 SIF TALENT:未熟
@@ -228,12 +228,12 @@ SIF TALENT:未熟
 
 ;Ａ敏感、鈍感をみる
 ;快Ａ自体のチェックは後でまとめてやる
-IF TALENT:Ａ鈍感
+IF IS_Ａ鈍感(TARGET)
 	TIMES SOURCE:痛覚 , 1.50
 	TIMES SOURCE:欲情 , 1.50
 	TIMES SOURCE:屈従 , 1.50
 	TIMES SOURCE:逸脱 , 1.50
-ELSEIF TALENT:Ａ敏感
+ELSEIF IS_Ａ敏感(TARGET)
 	TIMES SOURCE:痛覚 , 0.60
 	TIMES SOURCE:欲情 , 0.60
 	TIMES SOURCE:屈従 , 0.60
@@ -244,7 +244,7 @@ EXP:Ａ経験 += 25
 PRINTL Ａ経験＋２５
 
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	IF EXP:Ｖ経験 == 0
 		TIMES SOURCE:情愛 , 0.60
 		TIMES SOURCE:欲情, 5.00
@@ -253,7 +253,7 @@ IF TALENT:貞操観念
 		TIMES SOURCE:欲情, 1.80
 	ENDIF
 ;貞操無頓着
-ELSEIF TALENT:貞操無頓着
+ELSEIF IS_貞操無頓着(TARGET)
 	IF EXP:Ｖ経験 == 0
 		TIMES SOURCE:欲情, 0.50
 	ELSE

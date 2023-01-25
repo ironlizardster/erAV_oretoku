@@ -274,28 +274,28 @@ RETURNF 20 + RAND:11
 @苦痛適正決定
 #FUNCTION
 LOCAL = RAND:100
-SIF LOCAL <= 4
-	RETURNF [[TALENT:痛みに弱い]]
-SIF LOCAL >= 95
-	RETURNF [[TALENT:痛みに強い]]
+;SIF LOCAL <= 4
+;	RETURNF [[TALENT:痛みに弱い]]
+;SIF LOCAL >= 95
+;	RETURNF [[TALENT:痛みに強い]]
 RETURNF 0
 
 @濡れ適正決定
 #FUNCTION
 LOCAL = RAND:100
-SIF LOCAL <= 4
-	RETURNF [[TALENT:濡れやすい]]
-SIF LOCAL >= 95
-	RETURNF [[TALENT:濡れにくい]]
+;SIF LOCAL <= 4
+;	RETURNF [[TALENT:濡れやすい]]
+;SIF LOCAL >= 95
+;	RETURNF [[TALENT:濡れにくい]]
 RETURNF 0
 
 @身長決定
 #FUNCTION
 LOCAL = RAND:100
-SIF LOCAL <= 4
-	RETURNF [[TALENT:大柄]]
-SIF LOCAL >= 95
-	RETURNF [[TALENT:小柄]]
+;SIF LOCAL <= 4
+;	RETURNF [[TALENT:大柄]]
+;SIF LOCAL >= 95
+;	RETURNF [[IS_小柄(TARGET)]]
 RETURNF 0
 
 @TARGET身体設定(身長係数)
@@ -393,16 +393,16 @@ ENDIF
 BASE:身長 = LOCAL
 
 ;大柄小柄補正＆個人差補正
-IF 身長係数 == [[TALENT:大柄]]	;大柄(+5%～+25％で増減)
-	LOCAL = 105 + RAND:21
-ELSEIF 身長係数 == [[TALENT:小柄]]	;小柄(-15%～-5％で増減,増減なしが最多)
-	LOCAL = RAND:11 - RAND:11
-	SIF LOCAL > 0		;0以上の値を反転(0から離れた数字を最少とするため。問題点としてグラフで並べた場合の0だけが少なくなる1以降は順当に減少)
-		LOCAL = 0 - LOCAL
-	LOCAL = 95 + LOCAL
-ELSE			;普通(-5%～+5％で増減,増減なしが最多)
-	LOCAL = 100 + RAND:6 - RAND:6
-ENDIF
+;IF 身長係数 == [[TALENT:大柄]]	;大柄(+5%～+25％で増減)
+;	LOCAL = 105 + RAND:21
+;ELSEIF 身長係数 == [[IS_小柄(TARGET)]]	;小柄(-15%～-5％で増減,増減なしが最多)
+;	LOCAL = RAND:11 - RAND:11
+;	SIF LOCAL > 0		;0以上の値を反転(0から離れた数字を最少とするため。問題点としてグラフで並べた場合の0だけが少なくなる1以降は順当に減少)
+;		LOCAL = 0 - LOCAL
+;	LOCAL = 95 + LOCAL
+;ELSE			;普通(-5%～+5％で増減,増減なしが最多)
+;	LOCAL = 100 + RAND:6 - RAND:6
+;ENDIF
 BASE:身長 = BASE:身長 * LOCAL / 100
 
 @TARGET体重設定()
@@ -579,17 +579,17 @@ BASE:体重 += 脂肪 * 50 * BASE:身長 / 1000 / 100
 		;女(おっぱい) (※ 成熟度(成熟)で補正 だいたい±1.5cmの範囲)
 		成熟 = (成熟 - 60) * 3
 		;想定カップサイズはジャストより1cm程度～余裕を持たせておく(大きくなると余裕はより大きめに)
-		IF TALENT:絶壁		;絶壁
+		IF IS_絶壁(TARGET)		;絶壁
 			;BT - BU = 3.5cm～7.0cm(AA未満)を想定
 			身長係数 = 350 + RAND:350 + 成熟
 			MAXBASE:気力 += 100	;絶壁はかわいそう補正。気力アップ;
-		ELSEIF TALENT:貧乳		;貧乳
+		ELSEIF IS_貧乳(TARGET)		;貧乳
 			;BT - BU = 7.0cm～11.5cm(AA～A)を想定
 			身長係数 = 700 + RAND:450 + 成熟
-		ELSEIF TALENT:巨乳		;巨乳
+		ELSEIF IS_巨乳(TARGET)		;巨乳
 			;BT - BU = 16.5cm～23.0cm(D～F)を想定
 			身長係数 = 1650 + RAND:650 + 成熟
-		ELSEIF TALENT:爆乳		;爆乳
+		ELSEIF IS_デカパイ(TARGET)		;爆乳
 			;BT - BU = 23.0cm～31.0cm(G～I)を想定
 			身長係数 = 2300 + RAND:851 + 成熟
 			MAXBASE:体力 += 100	;爆乳は体力アップ
@@ -1471,13 +1471,13 @@ CFLAG:体型 = RAND:6 - RAND:6
 
 ;バストサイズの素質を登録
 IF バストサイズ == 1
-	TALENT:絶壁 = 1
+	TALENT:乳サイズ = -2
 ELSEIF バストサイズ == 2
-	TALENT:貧乳 = 1
+	TALENT:乳サイズ = -1
 ELSEIF バストサイズ == 3
-	TALENT:巨乳 = 1
+	TALENT:乳サイズ = 1
 ELSEIF バストサイズ == 4
-	TALENT:爆乳 = 1
+	TALENT:乳サイズ = 2
 ENDIF
 
 CALL TARGET身体設定(身長係数)
@@ -1486,9 +1486,9 @@ CALL TARGET体重設定()
 ;身長の素質を登録
 ;身長が150cm未満で[小柄]、170cm以上で[大柄]に
 IF BASE:身長 < 150
-	TALENT:小柄 = 1
+	TALENT:身長 = -1
 ELSEIF BASE:身長 >= 170
-	TALENT:大柄 = 1
+	TALENT:身長 = 1
 ENDIF
 
 BASE:体力 = MAXBASE:体力
@@ -1533,8 +1533,8 @@ ENDIF
 ;乙女心系素質を決定
 LOCAL = 乙女心決定()
 ;乙女心系素質を登録
-SIF LOCAL >= 30
-	TALENT:(LOCAL - 30 + [[TALENT:貞操観念]]) = 1
+;SIF LOCAL >= 30
+;	TALENT:(LOCAL - 30 + [[TALENT:貞操観念]]) = 1
 
 ;苦痛適正で痛みに弱い|痛みに強いを決定
 LOCAL = 苦痛適正決定()
@@ -1609,9 +1609,9 @@ ELSEIF CFLAG:体型 >= 6
 	PRINT 肥満気味の
 ENDIF
 ;大柄|小柄を表示
-IF TALENT:大柄
+IF IS_大柄(TARGET)
 	PRINT 大柄の
-ELSEIF TALENT:小柄
+ELSEIF IS_小柄(TARGET)
 	PRINT ちっちゃい
 ENDIF
 
@@ -1637,27 +1637,27 @@ PRINTFORM %CHARA_HAIRSTYLE_STRING(TARGET)%
 PRINTL にしている。
 
 ;胸のサイズ表示
-IF TALENT:絶壁 || TALENT:貧乳 || TALENT:巨乳 || TALENT:爆乳
+IF IS_絶壁(TARGET) || IS_貧乳(TARGET) || IS_巨乳(TARGET) || IS_デカパイ(TARGET)
 	IF CFLAG:性別 == 0
 		PRINT 胸元に目を向けると
-		IF TALENT:絶壁
+		IF IS_絶壁(TARGET)
 			PRINTL ふくらみは皆無だが、マニア受けはするかもしれない。
-		ELSEIF TALENT:貧乳
+		ELSEIF IS_貧乳(TARGET)
 			PRINTL そのふくらみは若干控えめである。
-		ELSEIF TALENT:巨乳
+		ELSEIF IS_巨乳(TARGET)
 			PRINTL 服の上からでもその豊かなふくらみがわかる。
-		ELSEIF TALENT:爆乳
+		ELSEIF IS_デカパイ(TARGET)
 			PRINTL いまにも服からまろび出そうな胸がそこにあった。
 		ENDIF
 	ELSEIF CFLAG:性別 == 2
 		PRINT 無意識に目が行った胸元には
-		IF TALENT:絶壁
+		IF IS_絶壁(TARGET)
 			PRINTL 若干のふくらみがある気がする。そんなはずはないのだが…
-		ELSEIF TALENT:貧乳
+		ELSEIF IS_貧乳(TARGET)
 			PRINTL 若干控えめなふくらみがあるような気がする。偽装だろうか？
-		ELSEIF TALENT:巨乳
+		ELSEIF IS_巨乳(TARGET)
 			PRINTL 不思議なことに服の上からでもわかる豊かなふくらみあった。
-		ELSEIF TALENT:爆乳
+		ELSEIF IS_デカパイ(TARGET)
 			PRINTL 性別を疑うほどの立派な胸がそこにあった。
 		ENDIF
 	ENDIF
@@ -1758,46 +1758,46 @@ IF ASSI > 0 && ABL:ASSI:話術 >= 1
 		PRINT 気丈さ
 	ELSEIF TALENT:素直
 		PRINT 素直さ
-	ELSEIF TALENT:大人しい
+	ELSEIF IS_大人しい(TARGET)
 		PRINT 大人しさ
-	ELSEIF TALENT:プライド高い
+	ELSEIF IS_プライド高い(TARGET)
 		PRINT 高いプライド
-	ELSEIF TALENT:活発
+	ELSEIF IS_活発(TARGET)
 		PRINT 活発さ
-	ELSEIF TALENT:プライド低い
+	ELSEIF IS_プライド低い(TARGET)
 		PRINT 低いプライド
 	ELSEIF TALENT:ツンデレ
 		PRINT ツンデレっぽさ
 	ELSE
 		PRINT 性格に気になる点は無い
-		IF (TALENT:貞操観念 || TALENT:貞操無頓着 || TALENT:抑圧 || TALENT:解放 || TALENT:抵抗 || TALENT:恥じらい || TALENT:恥薄い || TALENT:弱味)
+		IF (IS_貞操観念(TARGET) || IS_貞操無頓着(TARGET)|| IS_抑圧(TARGET) || IS_解放(TARGET) || TALENT:抵抗 || IS_恥じらい(TARGET) || IS_恥薄い(TARGET) || TALENT:弱味)
 			PRINT が、
 		ELSE
 			PRINTL ようだ。
 		ENDIF
 	ENDIF
 
-	IF (TALENT:臆病 || TALENT:ナマイキ || TALENT:気丈 || TALENT:素直 || TALENT:大人しい || TALENT:プライド高い || TALENT:活発 || TALENT:プライド低い || TALENT:ツンデレ)
-		IF (TALENT:貞操観念 || TALENT:貞操無頓着 || TALENT:抑圧 || TALENT:解放 || TALENT:抵抗 || TALENT:恥じらい || TALENT:恥薄い || TALENT:弱味)
+	IF (TALENT:臆病 || TALENT:ナマイキ || TALENT:気丈 || TALENT:素直 || IS_大人しい(TARGET) || IS_プライド高い(TARGET) || IS_活発(TARGET) || IS_プライド低い(TARGET) || TALENT:ツンデレ)
+		IF (IS_貞操観念(TARGET) || IS_貞操無頓着(TARGET)|| IS_抑圧(TARGET) || IS_解放(TARGET) || TALENT:抵抗 || IS_恥じらい(TARGET) || IS_恥薄い(TARGET) || TALENT:弱味)
 			PRINT と、
 		ELSE
 			PRINTL を気にしている。
 		ENDIF
 	ENDIF
 
-	IF TALENT:貞操観念
+	IF IS_貞操観念(TARGET)
 		PRINTL 強い貞操観念を気にしている。
-	ELSEIF TALENT:貞操無頓着
+	ELSEIF IS_貞操無頓着(TARGET)
 		PRINTL 軽薄そうなところを気にしている。
-	ELSEIF TALENT:抑圧
+	ELSEIF IS_抑圧(TARGET)
 		PRINTL 欲望を無理に抑えているところを気にしている。
-	ELSEIF TALENT:解放
+	ELSEIF IS_解放(TARGET)
 		PRINTL 開けっ広げなところを気にしている。
 	ELSEIF TALENT:抵抗
 		PRINTL 面接に来るのがやっとの様子を気にしている。
-	ELSEIF TALENT:恥じらい
+	ELSEIF IS_恥じらい(TARGET)
 		PRINTL すぐに赤面するところを気にしている。
-	ELSEIF TALENT:恥薄い
+	ELSEIF IS_恥薄い(TARGET)
 		PRINTL 露出度が高い服装を気にしている。
 	ELSEIF TALENT:弱味
 		PRINTL 何かに怯えているところを気にしている。
@@ -1833,14 +1833,14 @@ IF ASSI > 0 && ABL:ASSI:話術 >= 3
 		PRINTL どうやら陰毛の手入れをしたことがないようだ……
 	ENDIF
 
-	IF TALENT:痛みに弱い
+	IF IS_痛みに弱い(TARGET)
 		PRINTL 痛いことは苦手と言っている。
-	ELSEIF TALENT:痛みに強い
+	ELSEIF IS_痛みに強い(TARGET)
 		PRINTL 多少痛くしても大丈夫だそうだ。
 	ENDIF
-	IF TALENT:濡れやすい
+	IF IS_濡れやすい(TARGET)
 		PRINTL すぐに濡れてしまう体質らしい。
-	ELSEIF TALENT:濡れにくい
+	ELSEIF IS_濡れにくい(TARGET)
 		PRINTL なかなか濡れない体質を気にしている。
 	ENDIF
 ENDIF

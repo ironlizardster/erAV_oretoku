@@ -119,10 +119,10 @@ ELSE
 ENDIF
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES SOURCE:痛覚 , 0.80
 ;小柄
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES SOURCE:痛覚 , 2.00
 ;未熟
 SIF TALENT:未熟
@@ -130,17 +130,17 @@ SIF TALENT:未熟
 
 ;Ａ敏感、鈍感をみる
 ;快Ａ自体のチェックは後でまとめてやる
-IF TALENT:Ａ鈍感
+IF IS_Ａ鈍感(TARGET)
 	TIMES SOURCE:痛覚 , 1.50
 	TIMES SOURCE:屈従 , 1.50
 	TIMES SOURCE:逸脱 , 1.50
-ELSEIF TALENT:Ａ敏感
+ELSEIF IS_Ａ敏感(TARGET)
 	TIMES SOURCE:痛覚 , 0.60
 	TIMES SOURCE:屈従 , 0.60
 	TIMES SOURCE:逸脱 , 0.60
 ENDIF
 
-IF EXP:Ｖ経験 == 0 && TALENT:貞操観念
+IF EXP:Ｖ経験 == 0 && IS_貞操観念(TARGET)
 	SOURCE:屈従 /= 3
 ENDIF
 
@@ -310,10 +310,10 @@ ELSE
 ENDIF
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES C , 0.80
 ;小柄
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES C , 2.00
 ;未熟
 SIF TALENT:未熟
@@ -321,11 +321,11 @@ SIF TALENT:未熟
 
 ;Ａ敏感、鈍感をみる
 ;快Ａ自体のチェックは後でまとめてやる
-IF TALENT:Ａ鈍感
+IF IS_Ａ鈍感(TARGET)
 	TIMES SOURCE:痛覚 , 1.50
 	TIMES SOURCE:屈従 , 1.50
 	TIMES SOURCE:逸脱 , 1.50
-ELSEIF TALENT:Ａ敏感
+ELSEIF IS_Ａ敏感(TARGET)
 	TIMES SOURCE:痛覚 , 0.60
 	TIMES SOURCE:屈従 , 0.60
 	TIMES SOURCE:逸脱 , 0.60
@@ -336,7 +336,7 @@ SOURCE:屈従 += B
 SOURCE:痛覚 += C
 
 ;処女で貞操観念
-IF IS処女(TARGET) && TALENT:貞操観念
+IF IS処女(TARGET) && IS_貞操観念(TARGET)
 	TIMES SOURCE:屈従 , 0.80
 	TIMES SOURCE:逸脱 , 0.50
 ENDIF

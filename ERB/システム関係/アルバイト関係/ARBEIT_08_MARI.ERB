@@ -45,11 +45,11 @@ RETURN GETCHARA([[キャラ:赤羽真理]]) > 0
 @ARBEIT_EXEC_8(ARG)
 LOCAL = RAND:3
 
-SIF TALENT:ARG:プライド低い
+SIF IS_プライド低い(ARG)
 	LOCAL *= 2
 SIF TALENT:ARG:影響されやすい
 	LOCAL *= 5
-SIF TALENT:ARG:プライド高い
+SIF IS_プライド高い(ARG)
 	LOCAL /= 2
 SIF LOCAL == 0
 	LOCAL = 1

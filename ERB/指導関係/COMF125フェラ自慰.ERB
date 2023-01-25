@@ -103,27 +103,27 @@ IF TALENT:自制心
 	S = 1
 ENDIF
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 1
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
 ;汚臭鈍感
-IF TALENT:汚臭鈍感
+IF IS_汚臭鈍感(TARGET)
 	SIF S
 		PRINT  + 
 	A += 1
-	PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
+	PRINTS GET_STR_汚臭耐性(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
 ;汚臭敏感
-IF TALENT:汚臭敏感
+IF IS_汚臭敏感(TARGET)
 	PRINT  - 
 	A -= 3
-	PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+	PRINTS GET_STR_汚臭耐性(TARGET)
 	PRINTV '(,3,')
 	S = 1
 ENDIF
@@ -137,10 +137,10 @@ IF TALENT:献身的
 	S = 1
 ENDIF
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	PRINT  - 
 	A -= 1
-	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTS GET_STR_快感に素直(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
@@ -201,9 +201,9 @@ SIF STAIN:PLAYER:アナル & 32
 SIF TEQUIP:獣姦プレイ
 	Y = 7
 
-SIF TALENT:汚臭鈍感
+SIF IS_汚臭鈍感(TARGET)
 	Y /= 3
-SIF TALENT:汚臭敏感
+SIF IS_汚臭敏感(TARGET)
 	Y *= 2
 
 ;汚れあり
@@ -211,12 +211,12 @@ IF Y
 	PRINT  - 
 	A -= Y
 	;汚臭鈍感
-	IF TALENT:汚臭鈍感
+	IF IS_汚臭鈍感(TARGET)
 		PRINT 汚れあり、
-		PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
-	ELSEIF TALENT:汚臭敏感
+		PRINTS GET_STR_汚臭耐性(TARGET)
+	ELSEIF IS_汚臭敏感(TARGET)
 		PRINT 汚れあり、
-		PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+		PRINTS GET_STR_汚臭耐性(TARGET)
 	ELSE
 		PRINT 汚れあり
 	ENDIF
@@ -374,10 +374,10 @@ IF TEQUIP:バイブ
 		C += 0
 	ENDIF
 	;Ｖ敏感、鈍感をみる
-	IF TALENT:Ｖ鈍感
+	IF IS_Ｖ鈍感(TARGET)
 		TIMES C , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ｖ敏感
+	ELSEIF IS_Ｖ敏感(TARGET)
 		TIMES C , 0.60
 		TIMES D , 0.60
 	ENDIF
@@ -433,10 +433,10 @@ IF TEQUIP:アナルバイブ
 	ENDIF
 
 	;Ａ敏感、鈍感をみる
-	IF TALENT:Ａ鈍感
+	IF IS_Ａ鈍感(TARGET)
 		TIMES C , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ａ敏感
+	ELSEIF IS_Ａ敏感(TARGET)
 		TIMES C , 0.60
 		TIMES D , 0.60
 	ENDIF
@@ -516,18 +516,18 @@ IF TEQUIP:シャワー
 	ENDIF
 
 	;Ｖ敏感、鈍感をみる
-	IF TALENT:Ｖ鈍感
+	IF IS_Ｖ鈍感(TARGET)
 		TIMES SOURCE:痛覚 , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ｖ敏感
+	ELSEIF IS_Ｖ敏感(TARGET)
 		TIMES SOURCE:痛覚 , 0.60
 		TIMES D , 0.60
 	ENDIF
 	;Ａ敏感、鈍感をみる
-	IF TALENT:Ａ鈍感
+	IF IS_Ａ鈍感(TARGET)
 		TIMES SOURCE:痛覚 , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ａ敏感
+	ELSEIF IS_Ａ敏感(TARGET)
 		TIMES SOURCE:痛覚 , 0.60
 		TIMES D , 0.60
 	ENDIF
@@ -630,14 +630,14 @@ IF TEQUIP:バイブ || TEQUIP:アナルバイブ
 	ENDIF
 	
 	;大柄
-	SIF TALENT:大柄
+	SIF IS_大柄(TARGET)
 		TIMES C , 0.80
 	;小柄体形
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		TIMES C , 2.00
 
 	;貞操観念
-	IF TALENT:貞操観念
+	IF IS_貞操観念(TARGET)
 		TIMES C, 3.00
 	ENDIF
 
@@ -890,7 +890,7 @@ IF TEQUIP:撮影中 || TEQUIP:野外プレイ
 ENDIF
 
 ;陰毛を生やす設定で剃毛状態
-SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛状態 <= 5
+SIF FLAG:陰毛を生やす && !IS_パイパン(TARGET) && CFLAG:陰毛状態 <= 5
 	TIMES SOURCE:露出 , 2.00
 
 ;-------------------------------------------------

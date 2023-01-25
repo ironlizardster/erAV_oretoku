@@ -230,7 +230,7 @@ ELSEIF ABL:信頼 < S
 ENDIF
 
 ;【大柄】キャラに子供服を買ってやった場合
-IF TALENT:大柄 && A == 3
+IF IS_大柄(TARGET) && A == 3
 	$INPUT_LOOP_03
 	PRINTFORML %CALLNAME:TARGET%に、この服は着られそうにありません……
 	PRINTFORML  [0] - 強引に着せる
@@ -247,7 +247,7 @@ IF TALENT:大柄 && A == 3
 		GOTO INPUT_LOOP_03
 	ENDIF
 ;【小型体型】でない【巨乳】【爆乳】キャラに子供服を買ってやった場合
-ELSEIF (TALENT:小柄 == 0 && (TALENT:爆乳 || TALENT:巨乳)) && A == 3
+ELSEIF (!IS_小柄(TARGET) && IS_チチユレ(TARGET)) && A == 3
 	$INPUT_LOOP_04
 	PRINTFORML %CALLNAME:TARGET%に、この服は着られそうにありません……
 	PRINTFORML  [0] - 強引に着せる
@@ -1008,7 +1008,7 @@ ELSEIF RESULT == 11
 	R = 73
 	C = 10000
 	S = 5
-	SIF (TALENT:巨乳 || TALENT:爆乳) && TALENT:母乳体質
+	SIF IS_チチユレ(TARGET) && TALENT:母乳体質
 		S = 3
 ELSEIF RESULT == 12
 	R = 69
@@ -1301,7 +1301,7 @@ ELSEIF RESULT == 11
 	R = 73
 	C = 10000
 	S = 5
-	SIF (TALENT:巨乳 || TALENT:爆乳) && TALENT:母乳体質
+	SIF IS_チチユレ(TARGET) && TALENT:母乳体質
 		S = 3
 ELSEIF RESULT == 12
 	R = 69

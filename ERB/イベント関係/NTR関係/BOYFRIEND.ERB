@@ -141,7 +141,7 @@ SIF TALENT:ARG:彼氏あり
 SIF TALENT:ARG:セックス狂
 	性交回数 *= 2
 ;快感に素直
-SIF TALENT:ARG:快感に素直
+SIF IS_快感に素直(ARG)
 	性交回数 += 1
 ;淫乱によるボーナス
 SIF TALENT:ARG:淫乱
@@ -169,9 +169,9 @@ IF TALENT:ARG:妊娠 == 0 && TALENT:ARG:育児中 == 0
 	ELSEIF CFLAG:ARG:排卵促進剤使用 == -1
 		LOCAL = 0
 	ENDIF
-	SIF TALENT:ARG:貞操観念 == 1
+	SIF IS_貞操観念(ARG)
 		LOCAL = 0
-	SIF TALENT:ARG:貞操観念 == 0 && TALENT:ARG:貞操無頓着 == 0
+	SIF !IS_貞操観念(ARG) && !IS_貞操無頓着(ARG)
 		LOCAL /= 2
 	SIF TALENT:ARG:避妊治療済 == 1
 		LOCAL = 0
@@ -356,7 +356,7 @@ SIF TALENT:ARG:彼氏あり
 SIF TALENT:ARG:セックス狂
 	性交回数 *= 2
 ;快感に素直
-SIF TALENT:ARG:快感に素直
+SIF IS_快感に素直(ARG)
 	性交回数 += 1
 ;淫乱によるボーナス
 SIF TALENT:ARG:淫乱

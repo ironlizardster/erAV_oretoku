@@ -31,198 +31,95 @@ SELECTCASE 入力値
 			TALENT:対象:性別 = 性別_女
 		SIF HAVE_VAGINA(対象)
 			TALENT:対象:オトコの娘 = 0
-	CASE [[TALENT:絶壁]]
-		IF TALENT:対象:絶壁
-			TALENT:対象:貧乳 = 0
-			TALENT:対象:巨乳 = 0
-			TALENT:対象:爆乳 = 0
-			TALENT:対象:超乳 = 0
-			TALENT:対象:魔乳 = 0
-			TALENT:対象:神乳 = 0
-		ENDIF
-	CASE [[TALENT:貧乳]]
-		IF TALENT:対象:貧乳
-			TALENT:対象:絶壁 = 0
-			TALENT:対象:巨乳 = 0
-			TALENT:対象:爆乳 = 0
-			TALENT:対象:超乳 = 0
-			TALENT:対象:魔乳 = 0
-			TALENT:対象:神乳 = 0
-		ENDIF
-	CASE [[TALENT:巨乳]]
-		IF TALENT:対象:巨乳
-			TALENT:対象:貧乳 = 0
-			TALENT:対象:絶壁 = 0
-			TALENT:対象:爆乳 = 0
-			TALENT:対象:超乳 = 0
-			TALENT:対象:魔乳 = 0
-			TALENT:対象:神乳 = 0
-		ENDIF
-	CASE [[TALENT:爆乳]]
-		IF TALENT:対象:爆乳
-			TALENT:対象:貧乳 = 0
-			TALENT:対象:巨乳 = 0
-			TALENT:対象:絶壁 = 0
-			TALENT:対象:超乳 = 0
-			TALENT:対象:魔乳 = 0
-			TALENT:対象:神乳 = 0
-		ENDIF
-	CASE [[TALENT:超乳]]
-		IF TALENT:対象:超乳
-			TALENT:対象:貧乳 = 0
-			TALENT:対象:巨乳 = 0
-			TALENT:対象:爆乳 = 0
-			TALENT:対象:絶壁 = 0
-			TALENT:対象:魔乳 = 0
-			TALENT:対象:神乳 = 0
-		ENDIF
-	CASE [[TALENT:魔乳]]
-		IF TALENT:対象:魔乳
-			TALENT:対象:貧乳 = 0
-			TALENT:対象:巨乳 = 0
-			TALENT:対象:爆乳 = 0
-			TALENT:対象:超乳 = 0
-			TALENT:対象:絶壁 = 0
-			TALENT:対象:神乳 = 0
-		ENDIF
-	CASE [[TALENT:神乳]]
-		IF TALENT:対象:神乳
-			TALENT:対象:貧乳 = 0
-			TALENT:対象:巨乳 = 0
-			TALENT:対象:爆乳 = 0
-			TALENT:対象:超乳 = 0
-			TALENT:対象:魔乳 = 0
-			TALENT:対象:絶壁 = 0
-		ENDIF
-	CASE [[TALENT:Ｃ鈍感]]
-		SIF TALENT:対象:Ｃ鈍感
-			TALENT:対象:Ｃ敏感 = 0
-	CASE [[TALENT:Ｃ敏感]]
-		SIF TALENT:対象:Ｃ敏感
-			TALENT:対象:Ｃ鈍感 = 0
-	CASE [[TALENT:Ｖ鈍感]]
-		SIF TALENT:対象:Ｖ鈍感
-			TALENT:対象:Ｖ敏感 = 0
-	CASE [[TALENT:Ｖ敏感]]
-		SIF TALENT:対象:Ｖ敏感
-			TALENT:対象:Ｖ鈍感 = 0
-	CASE [[TALENT:Ａ鈍感]]
-		SIF TALENT:対象:Ａ鈍感
-			TALENT:対象:Ａ敏感 = 0
-	CASE [[TALENT:Ａ敏感]]
-		SIF TALENT:対象:Ａ敏感
-			TALENT:対象:Ａ鈍感 = 0
-	CASE [[TALENT:Ｂ鈍感]]
-		SIF TALENT:対象:Ｂ鈍感
-			TALENT:対象:Ｂ敏感 = 0
-	CASE [[TALENT:Ｂ敏感]]
-		SIF TALENT:対象:Ｂ敏感
-			TALENT:対象:Ｂ鈍感 = 0
-	CASE [[TALENT:回復早い]]
-		SIF TALENT:対象:回復早い
-			TALENT:対象:回復遅い = 0
-	CASE [[TALENT:回復遅い]]
-		SIF TALENT:対象:回復早い
-			TALENT:対象:回復遅い = 0
-	CASE [[TALENT:痛みに弱い]]
-		SIF TALENT:対象:痛みに弱い
-			TALENT:対象:痛みに強い = 0
-	CASE [[TALENT:痛みに強い]]
-		SIF TALENT:対象:痛みに弱い
-			TALENT:対象:痛みに強い = 0
-	CASE [[TALENT:濡れやすい]]
-		SIF TALENT:対象:濡れやすい
-			TALENT:対象:濡れにくい = 0
-	CASE [[TALENT:濡れにくい]]
-		SIF TALENT:対象:濡れにくい
-			TALENT:対象:濡れやすい = 0
-	CASE [[TALENT:素質]]
-		SIF TALENT:対象:素質
-			TALENT:対象:習得遅い = 0
-	CASE [[TALENT:習得遅い]]
-		SIF TALENT:対象:習得遅い
-			TALENT:対象:素質 = 0
-	CASE [[TALENT:大柄]]
-		SIF TALENT:対象:大柄
-			TALENT:対象:小柄 = 0
-	CASE [[TALENT:小柄]]
-		SIF TALENT:対象:小柄
-			TALENT:対象:大柄 = 0
-	CASE [[TALENT:パイパン]]
-		SIF TALENT:対象:パイパン
-			TALENT:対象:剛毛 = 0
-	CASE [[TALENT:剛毛]]
-		SIF TALENT:対象:剛毛
-			TALENT:対象:パイパン = 0
+	CASE [[TALENT:乳サイズ]]
+		TALENT:対象:乳サイズ++
+		SIF TALENT:対象:乳サイズ > 5
+			TALENT:対象:乳サイズ = -2
+	CASE [[TALENT:尻サイズ]]
+		TALENT:対象:尻サイズ++
+		SIF TALENT:対象:尻サイズ > 3
+			TALENT:対象:尻サイズ = -1
+	CASE [[TALENT:Ｃ感度]]
+		SIF TALENT:対象:Ｃ感度 > 1
+			TALENT:対象:Ｃ感度 = -1
+	CASE [[TALENT:Ｖ感度]]
+		SIF TALENT:対象:Ｖ感度 > 1
+			TALENT:対象:Ｖ感度 = -1
+	CASE [[TALENT:Ａ感度]]
+		SIF TALENT:対象:Ａ感度 > 1
+			TALENT:対象:Ａ感度 = -1
+	CASE [[TALENT:Ｂ感度]]
+		SIF TALENT:対象:Ｂ感度 > 1
+			TALENT:対象:Ｂ感度 = -1
+	CASE [[TALENT:回復速度]]
+		TALENT:対象:回復速度++
+		SIF TALENT:対象:回復速度 > 1
+			TALENT:対象:回復速度 = -1
+	CASE [[TALENT:痛覚耐性]]
+		TALENT:対象:痛覚耐性++
+		SIF TALENT:対象:痛覚耐性 > 1
+			TALENT:対象:痛覚耐性 = -1
+	CASE [[TALENT:濡れやすさ]]
+		TALENT:対象:濡れやすさ++
+		SIF TALENT:対象:濡れやすさ > 1
+			TALENT:対象:濡れやすさ = -1
+	CASE [[TALENT:習得速度]]
+		TALENT:対象:習得速度++
+		SIF TALENT:対象:習得速度 > 1
+			TALENT:対象:習得速度 = -1
+	CASE [[TALENT:身長]]
+		TALENT:対象:身長++
+		SIF TALENT:対象:身長 > 1
+			TALENT:対象:身長 = -1
+	CASE [[TALENT:陰毛]]
+		TALENT:対象:陰毛++
+		SIF TALENT:対象:陰毛 > 1
+			TALENT:対象:陰毛 = -1
 	CASE [[TALENT:ハーフ]]
 		SIF TALENT:対象:ハーフ
 			TALENT:対象:クオーター = 0
 	CASE [[TALENT:クオーター]]
 		SIF TALENT:対象:クオーター
 			TALENT:対象:ハーフ = 0
-	CASE [[TALENT:大人しい]]
-		SIF TALENT:対象:大人しい
-			TALENT:対象:活発 = 0
-	CASE [[TALENT:活発]]
-		SIF TALENT:対象:活発
-			TALENT:対象:大人しい = 0
-	CASE [[TALENT:プライド高い]]
-		SIF TALENT:対象:プライド高い
-			TALENT:対象:プライド低い = 0
-	CASE [[TALENT:プライド低い]]
-		SIF TALENT:対象:プライド低い
-			TALENT:対象:プライド高い = 0
-	CASE [[TALENT:ポジティブ]]
-		SIF TALENT:対象:ポジティブ
-			TALENT:対象:ネガティブ = 0
-	CASE [[TALENT:ネガティブ]]
-		SIF TALENT:対象:ネガティブ
-			TALENT:対象:ポジティブ = 0
+	CASE [[TALENT:活発度]]
+		TALENT:対象:活発度++
+		SIF TALENT:対象:活発度 > 1
+			TALENT:対象:活発度 = -1
+	CASE [[TALENT:プライド]]
+		TALENT:対象:プライド++
+		SIF TALENT:対象:プライド > 1
+			TALENT:対象:プライド = -1
+	CASE [[TALENT:ポジティブさ]]
+		TALENT:対象:ポジティブさ++
+		SIF TALENT:対象:ポジティブさ > 1
+			TALENT:対象:ポジティブさ = -1
 	CASE [[TALENT:動物好き]]
-		SIF TALENT:対象:動物好き
-			TALENT:対象:動物苦手 = 0
-	CASE [[TALENT:動物苦手]]
-		SIF TALENT:対象:動物苦手
-			TALENT:対象:動物好き = 0
+		TALENT:対象:動物好き++
+		SIF TALENT:対象:動物好き > 1
+			TALENT:対象:動物好き = -1
 	CASE [[TALENT:貞操観念]]
-		SIF TALENT:対象:貞操観念
-			TALENT:対象:貞操無頓着 = 0
-	CASE [[TALENT:貞操無頓着]]
-		SIF TALENT:対象:貞操無頓着
-			TALENT:対象:貞操観念 = 0
-	CASE [[TALENT:抑圧]]
-		SIF TALENT:対象:抑圧
-			TALENT:対象:解放 = 0
-	CASE [[TALENT:解放]]
-		SIF TALENT:対象:解放
-			TALENT:対象:抑圧 = 0
+		TALENT:対象:貞操観念++
+		SIF TALENT:対象:貞操観念 > 1
+			TALENT:対象:貞操観念 = -1
+	CASE [[TALENT:解放的]]
+		TALENT:対象:解放的++
+		SIF TALENT:対象:解放的 > 1
+			TALENT:対象:解放的 = -1
 	CASE [[TALENT:恥じらい]]
-		SIF TALENT:対象:恥じらい
-			TALENT:対象:恥薄い = 0
-	CASE [[TALENT:恥薄い]]
-		SIF TALENT:対象:恥薄い
-			TALENT:対象:恥じらい = 0
-	CASE [[TALENT:汚臭鈍感]]
-		IF TALENT:対象:汚臭鈍感
-			TALENT:対象:汚臭敏感 = 0
-			TALENT:対象:汚れ無視 = 0
-		ENDIF
+		TALENT:対象:恥じらい++
+		SIF TALENT:対象:恥じらい > 1
+			TALENT:対象:恥じらい = -1
+	CASE [[TALENT:汚臭耐性]]
+		TALENT:対象:汚臭耐性++
+		SIF TALENT:対象:汚臭耐性 > 1
+			TALENT:対象:汚臭耐性 = -1
 	CASE [[TALENT:汚れ無視]]
-		IF TALENT:対象:汚れ無視
-			TALENT:対象:汚臭鈍感 = 0
-			TALENT:対象:汚臭敏感 = 0
-		ENDIF
-	CASE [[TALENT:汚臭敏感]]
-		IF TALENT:対象:汚臭敏感
-			TALENT:対象:汚臭鈍感 = 0
-			TALENT:対象:汚れ無視 = 0
-		ENDIF
+		SIF TALENT:対象:汚れ無視
+			TALENT:対象:汚臭耐性 = 0
 	CASE [[TALENT:快感に素直]]
-		SIF TALENT:対象:快感に素直
-			TALENT:対象:快感の否定 = 0
-	CASE [[TALENT:快感の否定]]
-		SIF TALENT:対象:快感の否定
-			TALENT:対象:快感に素直 = 0
+		TALENT:対象:快感に素直++
+		SIF TALENT:対象:快感に素直 > 1
+			TALENT:対象:快感に素直 = -1
 	CASE [[TALENT:両刀]]
 		SIF TALENT:対象:両刀
 			TALENT:対象:男性不信 = 0

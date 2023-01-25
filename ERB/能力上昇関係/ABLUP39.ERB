@@ -165,13 +165,13 @@ IF TALENT:自制心
 ENDIF
 
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	TIMES A , 0.75
 	TIMES B , 0.75
 ENDIF
 
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	TIMES A , 1.75
 	TIMES B , 1.75
 ENDIF
@@ -210,14 +210,14 @@ IF TALENT:淫魔
 ENDIF
 
 ;B鈍感
-IF TALENT:Ｂ鈍感
+IF IS_Ｂ鈍感(TARGET)
 	TIMES A , 1.50
 	TIMES B , 1.50
 	TIMES C , 1.50
 ENDIF
 
 ;B敏感
-IF TALENT:Ｂ敏感
+IF IS_Ｂ敏感(TARGET)
 	TIMES A , 0.80
 	TIMES B , 0.80
 	TIMES C , 0.80

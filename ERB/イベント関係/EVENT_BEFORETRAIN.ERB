@@ -86,7 +86,7 @@ S = 0
 C = NO:TARGET + 2000
 
 ;素直かおとなしいなら従順4以上、奉仕精神3以上、反発刻印無しで土下座（口上があればそちらを優先）
-IF (TALENT:素直 || TALENT:大人しい || TALENT:マゾ) && ABL:信頼 >= 4 && ABL:奉仕精神 >= 3 && MARK:反発刻印 == 0 && FLAG:C == 0
+IF (TALENT:素直 || IS_大人しい(TARGET) || TALENT:マゾ) && ABL:信頼 >= 4 && ABL:奉仕精神 >= 3 && MARK:反発刻印 == 0 && FLAG:C == 0
 	WAIT
 	PRINTFORM %CALLNAME:TARGET%は
 	CALL PRINT_CLOTHTYPE
@@ -136,7 +136,7 @@ IF (TALENT:素直 || TALENT:大人しい || TALENT:マゾ) && ABL:信頼 >= 4 &&
 ;	ENDIF
 ;	S = 1
 ;素直かおとなしいなら従順3以上、反発刻印1以下で指導前の挨拶（口上があればそちらを優先）
-ELSEIF (TALENT:素直 || TALENT:大人しい) && ABL:信頼 >= 3 && MARK:反発刻印 <= 1 && FLAG:C == 0
+ELSEIF (TALENT:素直 || IS_大人しい(TARGET)) && ABL:信頼 >= 3 && MARK:反発刻印 <= 1 && FLAG:C == 0
 	WAIT
 	PRINTFORM %CALLNAME:TARGET%は
 	CALL PRINT_CLOTHTYPE
@@ -269,7 +269,7 @@ IF TALENT:妊娠 && CFLAG:出産日 <= DAY+10
 		ENDIF
 	ENDIF
 	PRINTFORM の%CALLNAME:TARGET%は
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		PRINT その小さな身体に不釣合いな、
 	PRINTFORML 今にもはちきれそうなお腹を抱えている。
 	PRINTFORML （過激な指導は避けてあげましょう）
@@ -285,9 +285,9 @@ B = CFLAG:着衣状態
 CFLAG:着衣状態 = A
 
 IF (CFLAG:着衣状態 & 4)
-	IF (CFLAG:着衣状態 & 2) == 0 && (B & 2) && (TALENT:貧乳 == 0 && TALENT:絶壁 == 0)
+	IF (CFLAG:着衣状態 & 2) == 0 && (B & 2) && !IS_ナイチチ(TARGET)
 		PRINT ノーブラの乳房が服の下で揺れている様子が
-		IF TALENT:巨乳 || TALENT:爆乳
+		IF IS_チチユレ(TARGET)
 			PRINT はっきり
 		ELSE
 			PRINT 微かに
@@ -417,19 +417,19 @@ ELSEIF TALENT:自制心
 ELSEIF TALENT:臆病
 	PRINTFORML 裸にむかれた%CALLNAME:TARGET%は、自分の肩を抱いて震えている。
 	PRINTFORML これから自分を待ち受ける運命を想像して、恐怖に歯を鳴らしている。
-ELSEIF TALENT:プライド高い
+ELSEIF IS_プライド高い(TARGET)
 	PRINTFORML %CALLNAME:TARGET%は全裸を晒した恥辱に
 	PRINTFORML 歯を食いしばり肩を震わせながら、必死に堪えている。
-ELSEIF TALENT:プライド低い
+ELSEIF IS_プライド低い(TARGET)
 	PRINTFORML 裸にされた%CALLNAME:TARGET%は、おどおどと%CALLNAME:MASTER%の顔色をうかがっている。
 	PRINTFORML 言う事さえ聞いていれば、痛い目にはあわないかもしれない、と考えているようだ。
 ELSEIF TALENT:素直
 	PRINTFORML 裸にむかれながらも、%CALLNAME:TARGET%は自分の置かれた状況を受け入れられない様子だ。
 	PRINTFORML 人間がこんな酷い事を他の人間にやれるわけがない、そう考えているのだろうか。
-ELSEIF TALENT:大人しい
+ELSEIF IS_大人しい(TARGET)
 	PRINTFORML 抵抗は無駄だと悟ったらしく、%CALLNAME:TARGET%はおとなしく服を脱いで裸になった。
 	PRINTFORML せめて、無理矢理服を剥ぎ取られる屈辱だけは避けたかったのかもしれない。
-ELSEIF TALENT:活発
+ELSEIF IS_活発(TARGET)
 	PRINTFORML %CALLNAME:TARGET%は怯えつつも、やや挑戦的に%CALLNAME:MASTER%を睨んでいる。
 	PRINTFORML こんな事で自分は屈服させられたりしないという自信があるらしい。
 ELSE
@@ -719,7 +719,7 @@ ELSEIF TALENT:臆病
 	ENDIF
 	PRINTFORM の%CALLNAME:TARGET%は、自分の肩を抱いて震えている。
 	PRINTFORML これから自分を待ち受ける運命を想像して、恐怖に歯を鳴らしている。
-ELSEIF TALENT:プライド高い
+ELSEIF IS_プライド高い(TARGET)
 	CALL PRINT_CLOTHTYPE
 	IF CFLAG:靴下着用 == 0
 		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
@@ -754,7 +754,7 @@ ELSEIF TALENT:プライド高い
 	ENDIF
 	PRINTFORM の%CALLNAME:TARGET%は、これから奴隷として扱われる屈辱を、
 	PRINTFORML 歯を食いしばり肩を震わせながら、必死に堪えている。
-ELSEIF TALENT:プライド低い
+ELSEIF IS_プライド低い(TARGET)
 	CALL PRINT_CLOTHTYPE
 	IF CFLAG:靴下着用 == 0
 		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
@@ -824,7 +824,7 @@ ELSEIF TALENT:素直
 	ENDIF
 	PRINTFORM の%CALLNAME:TARGET%は、自分の置かれた状況を受け入れられない様子だ。
 	PRINTFORML 人間がこんな酷い事を他の人間にやれるわけがない、そう考えているのだろうか。
-ELSEIF TALENT:大人しい
+ELSEIF IS_大人しい(TARGET)
 	PRINTFORM 抵抗は無駄だと悟ったらしく、
 	CALL PRINT_CLOTHTYPE
 	IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0
@@ -856,7 +856,7 @@ ELSEIF TALENT:大人しい
 		PRINT 姿で
 	ENDIF
 	PRINTFORML の%CALLNAME:TARGET%はおとなしくしている。
-ELSEIF TALENT:活発
+ELSEIF IS_活発(TARGET)
 	CALL PRINT_CLOTHTYPE
 	IF CFLAG:靴下着用 == 0
 		IF CFLAG:靴下タイプ == 0 && CFLAG:靴タイプ == 0 && CFLAG:着衣状態 == 0

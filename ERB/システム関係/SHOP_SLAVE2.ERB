@@ -21,7 +21,7 @@ IF FLAG:陰毛を生やす
 	ELSEIF CHARA_NO == [[キャラ:佐々木美乃里]]
 		CFLAG:陰毛状態 = 7
 	;パイパンなら生えない
-	ELSEIF TALENT:パイパン
+	ELSEIF IS_パイパン(TARGET)
 		CFLAG:陰毛状態 = -1
 	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
 	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]

@@ -4,13 +4,13 @@
     "\\CSV",
     "\\ERB",
     "\\ERB\\イベント関係",
-    "\\ERB\\イベント関係\\職業素質系",
+    "\\ERB\\イベント関係\\初体験関係",
     "\\ERB\\システム関係",
-    "\\ERB\\指導関係",
-    "\\ERB\\組み込み関数",
-    "\\ERB\\組み込み関数\\汎用関数",
-    "\\ERB\\組み込み関数\\汎用関数\\RANDCHOOSE"
+    "\\ERB\\システム関係\\キャラシステム",
+    "\\ERB\\ヘッダーファイル",
+    "\\ERB\\娼館関係",
+    "\\ERB\\組み込み関数"
   ],
-  "SelectedNode": "\\CSV\\GameBase.csv",
+  "SelectedNode": "\\CSV\\CFLAG.csv",
   "PreviewInSolutionExplorer": false
 }

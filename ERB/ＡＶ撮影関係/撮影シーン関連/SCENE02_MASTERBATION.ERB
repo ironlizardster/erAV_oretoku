@@ -67,11 +67,11 @@ SIF TALENT:マゾ
 	LOCAL:1 += 10
 SIF TALENT:淫乱
 	LOCAL:1 += 5
-SIF TALENT:恥薄い
+SIF IS_恥薄い(TARGET)
 	LOCAL:1 += 5
 SIF TALENT:自慰しやすい
 	LOCAL:1 += 5
-SIF TALENT:プライド低い
+SIF IS_プライド低い(TARGET)
 	LOCAL:1 += 5
 
 
@@ -79,9 +79,9 @@ SIF TALENT:抵抗
 	LOCAL:1 -= 20
 SIF TALENT:アイドル
 	LOCAL:1 -= 10
-SIF TALENT:恥じらい
+SIF IS_恥じらい(TARGET)
 	LOCAL:1 -= 5
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	LOCAL:1 -= 5
 
 
@@ -133,7 +133,7 @@ P:4 *= 2
 @SCENE_RESULT_SUCCESS_2
 
 PRINTFORM %NICKNAME:TARGET%はカメラを気にする素振りを見ているが、
-SIF TALENT:恥じらい
+SIF IS_恥じらい(TARGET)
 	PRINTFORM 頬を赤らて
 PRINTFORML 快感に身を震わせながら性器をいじり続けている……
 PRINTL
@@ -146,7 +146,7 @@ PRINTL
 @SCENE_RESULT_FAILED_2
 
 PRINTFORM %NICKNAME:TARGET%は
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINTFORM 頬を真っ赤にして
 ENDIF
 PRINTFORML ぎこちない手つきで性器をいじっていたが、やがてその動きは完全に止まってしまった……

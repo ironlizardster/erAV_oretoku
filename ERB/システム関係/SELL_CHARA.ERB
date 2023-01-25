@@ -16,7 +16,7 @@ SIF ABL:Ｃ感覚 < 3 && ABL:Ｂ感覚 < 3 && ABL:Ｖ感覚 < 3 && ABL:Ａ感覚
 SIF ABL:信頼 < 4 && (TALENT:ナマイキ || TALENT:気丈)
 	RETURN 0
 ;【自制心】【抑圧】【抵抗】を持っているなら欲望が4LV以上になっており
-SIF ABL:欲望 < 4 && (TALENT:自制心 || TALENT:抑圧 || TALENT:抵抗)
+SIF ABL:欲望 < 4 && (TALENT:自制心 || IS_抑圧(TARGET) || TALENT:抵抗)
 	RETURN 0
 ;「〈技巧〉3LV以上で〈奉仕精神〉3LV以上」か「〈露出癖〉3LV以上で〈自慰中毒〉2LV以上」か「C・V・A・B感覚の合計が13LV以上」か「従順か欲望がLV5」に達しているか
 IF ((ABL:技巧 >= 3 && ABL:奉仕精神 >= 3) || (ABL:露出癖 >= 3 && ABL:自慰中毒 >= 2) || ABL:マゾっ気 >= 3 || (ABL:Ｃ感覚+ABL:Ｂ感覚+ABL:Ｖ感覚+ABL:Ａ感覚 >= 13) || ABL:信頼 >= 5 || ABL:欲望 >= 5) && TALENT:ＡＶ女優 == 1
@@ -191,7 +191,7 @@ REPEAT CHARANUM
 		DRAWLINE
 		PRINTL 
 		PRINTFORML その日、%NAME:COUNT%は、売られていく%NAME:TARGET%が乗っている輸送車が、
-		SIF !TALENT:COUNT:泣かない
+		SIF !IS_泣かない(COUNT)
 			PRINT 涙でぼやけた
 		PRINTFORML 視界の外に出て見えなくなるまで、
 		PRINTFORML そして見えなくなった後も、ずっと見送っていた。

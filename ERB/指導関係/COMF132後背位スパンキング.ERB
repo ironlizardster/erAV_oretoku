@@ -109,14 +109,14 @@ IF ASSIPLAY
 ENDIF
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES SOURCE:痛覚 , 1.80
 ;小柄体形
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES SOURCE:痛覚 , 2.00
 
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	IF EXP:Ｖ経験 == 0
 		TIMES SOURCE:情愛 , 0.60
 		SOURCE:反感 = 10000
@@ -125,7 +125,7 @@ IF TALENT:貞操観念
 		SOURCE:反感 = 1000
 	ENDIF
 ;貞操無頓着
-ELSEIF TALENT:貞操無頓着
+ELSEIF IS_貞操無頓着(TARGET)
 	IF EXP:Ｖ経験 == 0
 		TIMES SOURCE:情愛 , 0.60
 		SOURCE:反感 = 300

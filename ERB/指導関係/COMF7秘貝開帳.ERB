@@ -99,25 +99,25 @@ IF L
 ENDIF
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 2
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,2,')
 	S = 1
 ENDIF
 ;恥薄い
-IF TALENT:恥薄い
+IF IS_恥薄い(TARGET)
 	SIF S
 		PRINT  + 
 	A += 2
-	PRINTS TALENTNAME:[[TALENT:恥薄い]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,2,')
 	S = 1
 ENDIF
 
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	SIF S
 		PRINT  + 
 	A += 5
@@ -126,10 +126,10 @@ IF TALENT:快感に素直
 	S = 1
 ENDIF
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	PRINT  - 
 	A -= 5
-	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTS GET_STR_快感に素直(TARGET)
 	PRINTV '(,5,')
 	S = 1
 ENDIF
@@ -286,7 +286,7 @@ IF TALENT:露出狂
 ENDIF
 
 ;陰毛を生やす設定で剃毛状態
-SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛状態 <= 5
+SIF FLAG:陰毛を生やす && !IS_パイパン(TARGET) && CFLAG:陰毛状態 <= 5
 	TIMES SOURCE:露出 , 2.00
 
 ;-------------------------------------------------

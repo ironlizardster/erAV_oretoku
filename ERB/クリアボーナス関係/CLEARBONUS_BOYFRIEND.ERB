@@ -300,28 +300,24 @@ IF TALENT:LOCAL:淫乱 == 1
 
 	IF ABL:LOCAL:Ｃ感覚 >= 6
 		TALENT:LOCAL:自慰狂い = 1
-		TALENT:LOCAL:Ｃ鈍感 = 0
 	ENDIF
 
 	IF ABL:LOCAL:Ｂ感覚 >= 6
 		TALENT:LOCAL:乳狂い = 1
-		TALENT:LOCAL:Ｂ鈍感 = 0
 	ENDIF
 
 	IF ABL:LOCAL:Ｖ感覚 >= 6
 		TALENT:LOCAL:セックス狂 = 1
-		TALENT:LOCAL:Ｖ鈍感 = 0
 	ENDIF
 
 	IF ABL:LOCAL:Ａ感覚 >= 6
 		TALENT:LOCAL:尻穴狂い = 1
-		TALENT:LOCAL:Ａ鈍感 = 0
 	ENDIF
 ENDIF
 
 IF ABL:LOCAL:欲望 >= 4
 	TALENT:LOCAL:貞操観念 = 0
-	TALENT:LOCAL:快感の否定 = 0
+	TALENT:LOCAL:快感に素直 = IS_快感の否定(LOCAL) ? 0 # TALENT:LOCAL:快感に素直
 	IF TALENT:LOCAL:男性不信 == 1
 		TALENT:LOCAL:男性不信 = 0
 		TALENT:LOCAL:両刀 = 1
@@ -485,7 +481,7 @@ IF FLAG:陰毛を生やす
 	ELSEIF NO:TARGET == [[キャラ:佐々木美乃里]]
 		CFLAG:陰毛状態 = 7
 	;パイパンなら生えない
-	ELSEIF TALENT:パイパン
+	ELSEIF IS_パイパン(TARGET)
 		CFLAG:陰毛状態 = -1
 	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
 	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]

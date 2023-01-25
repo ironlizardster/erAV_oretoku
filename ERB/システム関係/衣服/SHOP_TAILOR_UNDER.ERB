@@ -3,7 +3,7 @@
 ;===========================================================
 @TAILOR_UNDER_MAIN
 
-IF TALENT:絶壁 == 0 && TALENT:未熟 == 0 && (TALENT:幼稚 == 0 || TALENT:貧乳 == 0)
+IF !IS_絶壁(TARGET) && TALENT:未熟 == 0 && (TALENT:幼稚 == 0 || !IS_貧乳(TARGET))
 	CALL CHOICE_TOPS
 ELSE
 	CALL CHOICE_UNDER

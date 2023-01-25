@@ -139,41 +139,6 @@ WEND
 
 RETURNF LOOPCOUNT
 
-;===============================================
-;HAVE_PENIS
-;P持ちかどうかを見る
-;-----------------------------------------------
-;つまりありがちなあれ
-;===============================================
-@HAVE_PENIS(ARG)
-#FUNCTION
-RETURNF GETBIT(TALENT:ARG:性別, 1)
-
-@HAVE_VAGINA(ARG)
-#FUNCTION
-RETURNF GETBIT(TALENT:ARG:性別, 0)
-
-@IS_FUTA(ARG)
-#FUNCTION
-RETURNF TALENT:ARG:性別 == 性別_ふたなり
-
-@IS_MALE(ARG)
-#FUNCTION
-RETURNF TALENT:ARG:性別 == 性別_オトコ
-
-@IS_FEMALE(ARG)
-#FUNCTION
-RETURNF TALENT:ARG:性別 == 性別_女
-
-@TOGGLE_V(ARG)
-INVERTBIT TALENT:ARG:性別, 0
-
-@TOGGLE_P(ARG)
-INVERTBIT TALENT:ARG:性別, 1
-
-@SET_SEXUALITY(ARG,ARG:1)
-TALENT:ARG:性別 = ARG:1
-
 ;=================================================
 ; 経験増加処理
 ;--------------------------------------------

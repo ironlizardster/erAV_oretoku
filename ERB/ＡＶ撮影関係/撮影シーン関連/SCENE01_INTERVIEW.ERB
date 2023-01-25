@@ -61,14 +61,14 @@ SIF TALENT:露出狂
 	LOCAL:1 += 10
 SIF TALENT:饒舌
 	LOCAL:1 += 10
-SIF TALENT:恥薄い
+SIF IS_恥薄い(TARGET)
 	LOCAL:1 += 5
-SIF TALENT:プライド低い
+SIF IS_プライド低い(TARGET)
 	LOCAL:1 += 5
 
 SIF TALENT:抵抗
 	LOCAL:1 -= 20
-SIF TALENT:恥じらい
+SIF IS_恥じらい(TARGET)
 	LOCAL:1 -= 5
 
 IF LOCAL:1 >= 10
@@ -107,9 +107,9 @@ PRINTW
 @SCENE_RESULT_PERFECT_1
 
 PRINTFORM %NICKNAME:TARGET%はいくぶんかリラックスした様子で、
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINTFORM 頬を赤らめながらも
-ELSEIF TALENT:恥薄い
+ELSEIF IS_恥薄い(TARGET)
 	PRINTFORM 明け透けな態度で
 ENDIF
 PRINTFORML かなりきわどい突っ込んだ質問にもしっかりと受け答えしている……
@@ -125,9 +125,9 @@ P:4 *= 2
 @SCENE_RESULT_SUCCESS_1
 
 PRINTFORM %NICKNAME:TARGET%はやや緊張した様子で
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINTFORM 頬を赤らめながら
-ELSEIF TALENT:恥薄い
+ELSEIF IS_恥薄い(TARGET)
 	PRINTFORM 明け透けな態度で
 ENDIF
 PRINTFORML かなりきわどい突っ込んだ質問にも時折どもりながらも受け答えしている……
@@ -144,7 +144,7 @@ P:4 *= 1
 @SCENE_RESULT_FAILED_1
 
 PRINTFORM %NICKNAME:TARGET%はかなり緊張しているのか、
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINTFORM 頬を真っ赤にし
 ENDIF
 PRINTFORML 質問に対してズレた回答をしたり、完全に黙りこくってしまっている……

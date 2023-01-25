@@ -73,10 +73,10 @@ IF L
 ENDIF
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 1
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,1,')
 	S = 1
 ENDIF
@@ -90,7 +90,7 @@ IF TALENT:献身的
 	S = 1
 ENDIF
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	SIF S
 		PRINT  + 
 	A += 2
@@ -99,10 +99,10 @@ IF TALENT:快感に素直
 	S = 1
 ENDIF
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	PRINT  - 
 	A -= 2
-	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTS GET_STR_快感に素直(TARGET)
 	PRINTV '(,2,')
 	S = 1
 ENDIF

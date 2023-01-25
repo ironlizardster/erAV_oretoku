@@ -340,7 +340,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:感情乏しい
 		B -= 5
 	;抑圧
-	SIF TALENT:COUNT:抑圧
+	SIF IS_抑圧(COUNT)
 		B -= 3
 	;舌使い
 	SIF TALENT:COUNT:舌使い
@@ -349,7 +349,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:献身的
 		B += 2
 	;快感に素直
-	SIF TALENT:COUNT:快感に素直
+	SIF IS_快感に素直(COUNT)
 		B += 3
 	;淫乱
 	SIF TALENT:COUNT:淫乱
@@ -370,15 +370,15 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:謎の魅力
 		B += 5
 	;爆乳
-	SIF TALENT:COUNT:爆乳
+	SIF IS_爆乳(COUNT)
 		B += 3
 	;巨乳
-	SIF TALENT:COUNT:巨乳
+	SIF IS_巨乳(COUNT)
 		B += 2
 	;貧乳をみる
 	;小柄・幼稚・未熟があれば逆にボーナス
-	IF TALENT:COUNT:貧乳
-		IF TALENT:COUNT:小柄 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+	IF IS_貧乳(COUNT)
+		IF IS_小柄(COUNT) || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
 			B += 2
 		ELSE
 			B -= 2
@@ -386,7 +386,7 @@ REPEAT CHARANUM
 	ENDIF
 	;絶壁をみる
 	;幼稚・未熟があれば逆にボーナス
-	IF TALENT:COUNT:絶壁
+	IF IS_絶壁(COUNT)
 		IF TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
 			B += 3
 		ELSE
@@ -458,7 +458,7 @@ REPEAT CHARANUM
 	U:100 = G * M
 
 	;プライドが高いと増える
-	SIF TALENT:活発
+	SIF IS_活発(TARGET)
 		TIMES U:100 , 1.50
 	;無関心だと少なくなる
 	SIF TALENT:クール
@@ -470,13 +470,13 @@ REPEAT CHARANUM
 	SIF TALENT:目立ちたがり
 		TIMES U:100 , 0.80
 	;抑圧だと増える
-	SIF TALENT:抑圧
+	SIF IS_抑圧(TARGET)
 		TIMES U:100 , 1.20
 	;解放だと少なくなる
-	SIF TALENT:解放
+	SIF IS_解放(TARGET)
 		TIMES U:100 , 0.80
 	;恥じらいだと増える
-	SIF TALENT:恥じらい
+	SIF IS_恥じらい(TARGET)
 		TIMES U:100 , 1.10
 	;露出狂だと一気に少なくなる
 	SIF TALENT:露出狂

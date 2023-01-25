@@ -12,7 +12,7 @@ DRAWLINE
 ;露出癖はLv5が上限
 ;[素直][解放][目立ちたがり][露出狂]が付いている場合はLv10まで解放
 ;[快感に素直]も。
-IF ABL:露出癖 >= 5 && (TALENT:素直 == 0 && TALENT:解放 == 0 && TALENT:目立ちたがり == 0 && TALENT:露出狂 == 0 && TALENT:快感に素直 == 0)
+IF ABL:露出癖 >= 5 && (TALENT:素直 == 0 && !IS_解放(TARGET) && TALENT:目立ちたがり == 0 && TALENT:露出狂 == 0 && !IS_快感に素直(TARGET))
 	PRINTW これ以上UPするには素質が必要です
 	RETURN 0
 ELSEIF ABL:露出癖 >= 10
@@ -101,7 +101,7 @@ RETURN 0
 @CAN_ABLUP17
 SIF ABL:露出癖 >= 10
 	RETURN 0
-SIF ABL:露出癖 >= 5 && (TALENT:素直 == 0 && TALENT:解放 == 0 && TALENT:目立ちたがり == 0 && TALENT:露出狂 == 0 && TALENT:快感に素直 == 0)
+SIF ABL:露出癖 >= 5 && (TALENT:素直 == 0 && !IS_解放(TARGET) && TALENT:目立ちたがり == 0 && TALENT:露出狂 == 0 && !IS_快感に素直(TARGET))
 	RETURN 0
 
 ;判定変数を空に
@@ -164,7 +164,7 @@ IF TALENT:一線越えない
 ENDIF
 
 ;ＬＶ３以上に上げるときは異常経験必要（素質：[目立ちたがり][解放][淫乱][倒錯的][マゾ][狂気]なら無視できる）
-IF ABL:露出癖 >= 3 && (TALENT:目立ちたがり == 0 && TALENT:解放 == 0 && TALENT:快感に素直 == 0 && TALENT:淫乱 == 0 && TALENT:倒錯的 == 0 && TALENT:マゾ == 0 && TALENT:狂気 == 0)
+IF ABL:露出癖 >= 3 && (TALENT:目立ちたがり == 0 && !IS_解放(TARGET) && !IS_快感に素直(TARGET) && TALENT:淫乱 == 0 && TALENT:倒錯的 == 0 && TALENT:マゾ == 0 && TALENT:狂気 == 0)
 	B = ABL:露出癖 - 2
 ENDIF
 
@@ -193,13 +193,13 @@ IF TALENT:目立ちたがり
 	TIMES E , 0.50
 ENDIF
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	TIMES A , 1.20
 	TIMES D , 1.20
 	TIMES E , 1.20
 ENDIF
 ;貞操無頓着
-IF TALENT:貞操無頓着
+IF IS_貞操無頓着(TARGET)
 	TIMES A , 0.80
 	TIMES D , 0.80
 	TIMES E , 0.80
@@ -207,12 +207,12 @@ ENDIF
 
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES A , 1.20
 	TIMES D , 1.20
 	TIMES E , 1.20
 ;解放
-ELSEIF TALENT:解放
+ELSEIF IS_解放(TARGET)
 	TIMES A , 0.80
 	TIMES D , 0.80
 	TIMES E , 0.80
@@ -226,12 +226,12 @@ IF TALENT:抵抗
 ENDIF
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	TIMES A , 1.10
 	TIMES D , 1.10
 	TIMES E , 1.10
 ;恥薄い
-ELSEIF TALENT:恥薄い
+ELSEIF IS_恥薄い(TARGET)
 	TIMES A , 0.90
 	TIMES D , 0.90
 	TIMES E , 0.90
@@ -249,12 +249,12 @@ IF TALENT:自慰しやすい
 ENDIF	
 
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	TIMES A , 0.90
 	TIMES D , 0.90
 	TIMES E , 0.90
 ;快感の否定
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	TIMES A , 1.20
 	TIMES D , 1.20
 	TIMES E , 1.20

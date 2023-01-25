@@ -8,9 +8,9 @@ B = CFLAG:着衣状態
 CFLAG:着衣状態 = A
 
 IF (CFLAG:着衣状態 & 4)
-	IF (CFLAG:着衣状態 & 2) == 0 && (B & 2) && (TALENT:貧乳 == 0 && TALENT:絶壁 == 0)
+	IF (CFLAG:着衣状態 & 2) == 0 && (B & 2) && !IS_ナイチチ(TARGET)
 		PRINT ノーブラの乳房が服の下で揺れている様子が
-		IF TALENT:巨乳 || TALENT:爆乳
+		IF IS_チチユレ(TARGET)
 			PRINT はっきり
 		ELSE
 			PRINT 微かに

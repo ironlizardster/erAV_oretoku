@@ -50,10 +50,10 @@ ENDIF
 @SCOUT_IDOL
 PRINTFORMW ある日、桐生組が経営する『真っ当な』芸能プロダクションのスカウトマンが、歌音を伴って事務所を訪れた……
 PRINTFORML 用件を聞くと%NAME:COUNT%を一般メディアにグラビアアイドルとしてデビューさせたい、とのことだ
-	IF BASE:COUNT:バスト < 80
+	IF BASE:COUNT:バスト < 8000
 		PRINTFORM %CALLNAME:COUNT%は巨乳というわけではなく、むしろ微乳・貧乳と言った方がいいスタイルだが、
 		PRINTFORML 逆にそれがマニア受けする、とスカウトマンは力説している
-	ELSEIF BASE:COUNT:バスト >= 80 && BASE:COUNT:バスト < 85
+	ELSEIF BASE:COUNT:バスト >= 8000 && BASE:COUNT:バスト < 8500
 		PRINTFORM %CALLNAME:COUNT%は巨乳ではないが、均整の取れたスタイルはムラムラ来るものがある、と
 		PRINTFORML スカウトマンは力説している
 	ELSE
@@ -105,7 +105,7 @@ PRINTFORML 用件を聞くと%NAME:COUNT%をキャバ嬢として雇いたい、
 		PRINTFORM 気立てのいいタイプに癒されたい、というリクエストが
 	ELSEIF TALENT:COUNT:ツンデレ == 1
 		PRINTFORM ツンツンしているが、仲良くなったら甘えてくれそうなタイプと酒を呑みたい、というリクエストが
-	ELSEIF TALENT:COUNT:プライド高い
+	ELSEIF IS_プライド高い(COUNT)
 		PRINTFORM プライドの高い、高嶺の花のようなタイプに罵られたい、というリクエストが
 	ELSE
 		PRINTFORM 超Ａ級の美少女・美女と酒を呑みたい、というリクエストが
@@ -154,10 +154,10 @@ ENDIF
 @SCOUT_MODEL
 PRINTFORMW ある日、桐生組の息がかかった『真っ当な』出版社のスカウトマンが、歌音を伴って事務所を訪れた……
 PRINTFORML 用件を聞くと%NAME:COUNT%を一般メディアにファッションモデルとしてデビューさせたい、とのことだ
-	IF TALENT:COUNT:大柄 == 1
+	IF IS_大柄(COUNT)
 		PRINTFORM %CALLNAME:COUNT%のような長身はモデルとして映え、年齢層が高めのファッション誌向きだ
 		PRINTFORML 、とスカウトマンは力説している
-	ELSEIF TALENT:COUNT:小柄 == 1
+	ELSEIF IS_小柄(COUNT)
 		PRINTFORM %CALLNAME:COUNT%はモデルのような長身ではないものの、逆にそれがローティーン向けのファッション誌向きだ
 		PRINTFORML 、とスカウトマンは力説している
 	ELSE

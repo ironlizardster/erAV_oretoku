@@ -206,19 +206,19 @@ IF TALENT:保守的
 	S = 1
 ENDIF
 ;痛みに弱い
-IF TALENT:痛みに弱い
+IF IS_痛みに弱い(TARGET)
 	PRINT  - 
 	A -= 3
-	PRINTS TALENTNAME:[[TALENT:痛みに弱い]]
+	PRINTS GET_STR_痛覚耐性(TARGET)
 	PRINTV '(,3,')
 	S = 1
 ENDIF
 ;痛みに強い
-IF TALENT:痛みに強い
+IF IS_痛みに強い(TARGET)
 	SIF S
 		PRINT  + 
 	A += 3
-	PRINTS TALENTNAME:[[TALENT:痛みに強い]]
+	PRINTS GET_STR_痛覚耐性(TARGET)
 	PRINTV '(,3,')
 	S = 1
 ENDIF

@@ -274,22 +274,22 @@ SIF C < 0
 	C = 1
 
 IF CFLAG:T:F >= 30
-	SIF RAND:((1 + TALENT:T:小柄 * 2) * C) == 0
+	SIF RAND:((1 + IS_小柄(T) * 2) * C) == 0
 		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 20
-	SIF RAND:((2 + TALENT:T:小柄 * 2) * C) == 0
+	SIF RAND:((2 + IS_小柄(T) * 2) * C) == 0
 		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 15
-	SIF RAND:((3 + TALENT:T:小柄 * 2) * C) == 0
+	SIF RAND:((3 + IS_小柄(T) * 2) * C) == 0
 		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 10
-	SIF RAND:((4 + TALENT:T:小柄 * 2) * C) == 0
+	SIF RAND:((4 + IS_小柄(T) * 2) * C) == 0
 		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 5
-	SIF RAND:((5 + TALENT:T:小柄 * 2) * C) == 0
+	SIF RAND:((5 + IS_小柄(T) * 2) * C) == 0
 		CFLAG:T:妊娠精子 = P
 ELSEIF CFLAG:T:F >= 1
-	SIF RAND:((6 + TALENT:T:小柄 * 2) * C) == 0
+	SIF RAND:((6 + IS_小柄(T) * 2) * C) == 0
 		CFLAG:T:妊娠精子 = P
 ENDIF
 
@@ -997,7 +997,7 @@ TALENT:C:抱卵 = 0
 
 MAXBASE:C:体力 += 500
 TALENT:C:育児中 = 0
-IF TALENT:C:貧乳 == 0 && TALENT:C:絶壁 == 0
+IF !IS_ナイチチ(C)
 	PRINTFORML %NAME:C%の胸は母乳を与える役割を終えたことで小さくなりました
 	WAIT
 		;母乳出なくなる
@@ -1023,7 +1023,7 @@ WAIT
 ;妊娠時に減った体力の最大値が回復
 MAXBASE:C:体力 += 500
 TALENT:C:育児中 = 0
-IF TALENT:C:貧乳 == 0 && TALENT:C:絶壁 == 0
+IF !IS_ナイチチ(C)
 	PRINTFORML %NAME:C%の胸は母乳を与える役割を終えたことで小さくなりました
 	WAIT
 		;母乳出なくなる
@@ -1067,25 +1067,13 @@ IF BASE:T:バスト > 0 && FLAG:ＩＷＳなし > 0
 ELSE
 ;乳がワンランクパワーアップする
 ;絶→貧　貧→普　普→巨　巨→爆　爆→そのまま
-	IF TALENT:T:絶壁 == 1
-		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:絶壁]]%】から【%TALENTNAME:[[TALENT:貧乳]]%】ぐらいに大きくなった
-		TALENT:T:絶壁 = 0
-		TALENT:T:貧乳 = 1
-	ELSEIF TALENT:T:貧乳 == 1
-		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:貧乳]]%】から普通程度に大きくなった
-		TALENT:T:貧乳 = 0
-	ELSEIF TALENT:T:巨乳 == 0 && TALENT:T:爆乳 == 0
-		PRINTFORML %CALLNAME:T%の胸が普通程度から【%TALENTNAME:[[TALENT:巨乳]]%】サイズに大きくなった
-		TALENT:T:巨乳 = 1
-	ELSEIF TALENT:T:巨乳 == 1
-		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:巨乳]]%】から【%TALENTNAME:[[TALENT:爆乳]]%】サイズになった
-		TALENT:T:巨乳 = 0
-		TALENT:T:爆乳 = 1
-						;****あなた妊娠パッチ追加ここから****
-	ELSEIF TALENT:T:爆乳 == 1
-		PRINTFORML %CALLNAME:T%の胸が【%TALENTNAME:[[TALENT:爆乳]]%】から更に大きくなった
+	IF IS_神乳(T)
+		PRINTFORML %CALLNAME:T%の胸が【%GET_STR_乳サイズ(T)%】から更に大きくなった
 		MARK:T:5 = 1
-						;****あなた妊娠パッチ追加ここまで****
+	ELSE
+		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳サイズ(T)%】から
+		TALENT:T:乳サイズ++
+		PRINTFORML 【%GET_STR_乳サイズ(T)%】ぐらいに大きくなった
 	ENDIF
 ENDIF
 
@@ -1097,16 +1085,12 @@ IF BASE:T:バスト > 0 && FLAG:ＩＷＳなし > 0
 ELSE
 ;爆→巨　巨→普　普→貧　貧・絶→そのまま
 						;****あなた妊娠パッチ追加ここから****
-	IF TALENT:C:爆乳 && MARK:C:5 >= 1
+	IF MARK:C:5 >= 1
 		MARK:C:5 = 0
-	ELSEIF TALENT:C:爆乳
-						;****あなた妊娠パッチ追加ここまで****
-		TALENT:C:爆乳 = 0
-		TALENT:C:巨乳 = 1
-	ELSEIF TALENT:C:巨乳
-		TALENT:C:巨乳 = 0
-	ELSEIF TALENT:C:貧乳 == 0 && TALENT:C:絶壁 == 0
-		TALENT:C:貧乳 = 1
+	ELSEIF !IS_ナイチチ(C)
+		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳サイズ(C)%】から
+		TALENT:T:乳サイズ--
+		PRINTFORML 【%GET_STR_乳サイズ(C)%】ぐらいに小さくなった
 	ENDIF
 ENDIF
 

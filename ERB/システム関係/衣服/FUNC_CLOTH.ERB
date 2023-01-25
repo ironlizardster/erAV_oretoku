@@ -121,7 +121,7 @@ IF CFLAG:上着タイプ >= 201 && CFLAG:上着タイプ <= 300
 		ELSEIF (CFLAG:着衣状態 & 2) && TALENT:淫乱 == 1 && NO:TARGET != [[キャラ:桐生歌音]]
 			PRINT 上はサラシだけ
 		ELSE
-			IF HAVE_VAGINA(TARGET) && TALENT:絶壁 == 0 && (TALENT:貧乳 == 0 || TALENT:幼稚 == 0)
+			IF HAVE_VAGINA(TARGET) && !IS_絶壁(TARGET) && (!IS_貧乳(TARGET) || TALENT:幼稚 == 0)
 				PRINT 乳房むきだし
 			ELSE
 				PRINT 上半身裸
@@ -156,7 +156,7 @@ IF (CFLAG:着衣状態 & 28)
 		ELSEIF (CFLAG:着衣状態 & 2) && NO:TARGET == [[キャラ:桐生歌音]]
 			PRINT ブラジャーに
 		ELSE
-			IF HAVE_VAGINA(TARGET) && TALENT:絶壁 == 0 && (TALENT:貧乳 == 0 || TALENT:幼稚 == 0)
+			IF HAVE_VAGINA(TARGET) && !IS_絶壁(TARGET) && (!IS_貧乳(TARGET) || TALENT:幼稚 == 0)
 				PRINT 乳房むきだしに
 			ELSE
 				PRINT 上半身裸に
@@ -268,7 +268,7 @@ RETURN 1
 CFLAG:着衣状態 |= 1
 
 ;絶壁、未熟、幼稚＋貧乳の場合を除きブラ装着
-SIF TALENT:絶壁 == 0 && TALENT:未熟 == 0 && (TALENT:幼稚 == 0 || TALENT:貧乳 == 0)
+SIF !IS_絶壁(TARGET) && TALENT:未熟 == 0 && (TALENT:幼稚 == 0 || !IS_貧乳(TARGET))
 	CFLAG:着衣状態 |= 2
 ;和服・バニースーツ用ノーブラ化処理
 SIF CFLAG:上着タイプ == 202 || CFLAG:上着タイプ == 254

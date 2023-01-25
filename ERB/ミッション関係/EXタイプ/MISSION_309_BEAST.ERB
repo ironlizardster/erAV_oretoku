@@ -121,9 +121,9 @@ CALL MISSION_EXEC_REPORT(309)
 ; 失敗なら0, 成功なら1, 大成功なら2をRETURNで戻す
 LOCAL:1 = 0
 
-SIF TALENT:貞操無頓着 == 1
+SIF IS_貞操無頓着(TARGET)
 	LOCAL:1++
-SIF TALENT:動物好き == 1
+SIF IS_動物好き(TARGET)
 	LOCAL:1++
 SIF ABL:技巧  == 10
 	LOCAL:1++

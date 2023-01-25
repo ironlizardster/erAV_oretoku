@@ -130,18 +130,18 @@ IF TALENT:保守的
 ENDIF
 
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	TIMES A , 1.50
 ;貞操無頓着
-ELSEIF TALENT:貞操無頓着
+ELSEIF IS_貞操無頓着(TARGET)
 	TIMES A , 0.95
 ENDIF
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES A , 1.50
 ;解放
-ELSEIF TALENT:解放
+ELSEIF IS_解放(TARGET)
 	TIMES A , 0.90
 ENDIF
 
@@ -150,18 +150,18 @@ SIF TALENT:抵抗
 	TIMES A , 1.50
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	TIMES A , 1.10
 ;恥薄い
-ELSEIF TALENT:恥薄い
+ELSEIF IS_恥薄い(TARGET)
 	TIMES A , 0.95
 ENDIF
 
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	TIMES A , 0.80
 ;快感の否定
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	TIMES A , 1.50
 ENDIF
 
@@ -203,10 +203,10 @@ IF TALENT:淫魔
 ENDIF
 
 ;ＬＶ４から５に上げるときは異常経験必要（素質：[解放][快感に素直][即落ち][淫乱][狂気]なら無視できる）
-IF ABL:欲望 == 4 && (TALENT:解放 == 0 && TALENT:快感に素直 == 0 && TALENT:即落ち == 0 && TALENT:淫乱 == 0 && TALENT:狂気 == 0)
+IF ABL:欲望 == 4 && (!IS_解放(TARGET) && !IS_快感に素直(TARGET) && TALENT:即落ち == 0 && TALENT:淫乱 == 0 && TALENT:狂気 == 0)
 	E = 1
 ;ＬＶ７から８に上げるときは異常経験が３以上必要（素質：[解放][快感に素直][即落ち][淫乱][狂気]なら無視できる）
-ELSEIF ABL:欲望 == 7 && (TALENT:解放 == 0 && TALENT:快感に素直 == 0 && TALENT:即落ち == 0 && TALENT:淫乱 == 0 && TALENT:狂気 && TALENT:淫魔 == 0)
+ELSEIF ABL:欲望 == 7 && (!IS_解放(TARGET) && !IS_快感に素直(TARGET) && TALENT:即落ち == 0 && TALENT:淫乱 == 0 && TALENT:狂気 && TALENT:淫魔 == 0)
 	E = 3
 ENDIF
 

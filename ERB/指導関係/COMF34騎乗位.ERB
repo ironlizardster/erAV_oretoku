@@ -127,18 +127,18 @@ IF L
 ENDIF
 
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 2
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,2,')
 	S = 1
 ENDIF
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	PRINT  - 
 	A -= 5
-	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTS GET_STR_快感に素直(TARGET)
 	PRINTV '(,5,')
 	S = 1
 ENDIF
@@ -237,9 +237,9 @@ SIF STAIN:PLAYER:アナル & 32
 SIF TEQUIP:獣姦プレイ
 	Y = 7
 
-SIF TALENT:汚臭鈍感
+SIF IS_汚臭鈍感(TARGET)
 	Y /= 3
-SIF TALENT:汚臭敏感
+SIF IS_汚臭敏感(TARGET)
 	Y *= 2
 
 ;騎乗位では汚れの影響が少なめ
@@ -250,12 +250,12 @@ IF Y
 	PRINT  - 
 	A -= Y
 	;汚臭鈍感
-	IF TALENT:汚臭鈍感
+	IF IS_汚臭鈍感(TARGET)
 		PRINT 汚れあり、
-		PRINTS TALENTNAME:[[TALENT:汚臭鈍感]]
-	ELSEIF TALENT:汚臭敏感
+		PRINTS GET_STR_汚臭耐性(TARGET)
+	ELSEIF IS_汚臭敏感(TARGET)
 		PRINT 汚れあり、
-		PRINTS TALENTNAME:[[TALENT:汚臭敏感]]
+		PRINTS GET_STR_汚臭耐性(TARGET)
 	ELSE
 		PRINT 汚れあり
 	ENDIF
@@ -436,17 +436,17 @@ ELSE
 ENDIF
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES SOURCE:痛覚 , 0.80
 ;小柄体形
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES SOURCE:痛覚 , 2.00
 ;未熟
 SIF TALENT:未熟
 	TIMES SOURCE:痛覚 , 4.00
 
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	IF EXP:Ｖ経験 == 0
 		TIMES SOURCE:情愛 , 0.60
 		TIMES SOURCE:逸脱, 15.00
@@ -457,7 +457,7 @@ IF TALENT:貞操観念
 		SOURCE:反感 = 1000
 	ENDIF
 ;貞操無頓着
-ELSEIF TALENT:貞操無頓着
+ELSEIF IS_貞操無頓着(TARGET)
 	IF EXP:Ｖ経験 == 0
 		TIMES SOURCE:逸脱, 0.50
 		SOURCE:反感 = 300

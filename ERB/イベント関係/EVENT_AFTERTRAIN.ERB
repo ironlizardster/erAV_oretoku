@@ -200,9 +200,9 @@ SIF TALENT:セックス狂
 	S += 2
 
 ;快感に素直、快感の否定
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	S += 1
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	S -= 2
 ENDIF
 
@@ -309,9 +309,9 @@ SIF TALENT:セックス狂
 	S += 2
 
 ;快感に素直、快感の否定
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	S += 1
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	S -= 2
 ENDIF
 
@@ -463,14 +463,14 @@ SIF TALENT:ASSI:淫乱
 	N += 1
 
 ;快感に素直、快感の否定
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	N += 1
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	N -= 2
 ENDIF
-IF TALENT:ASSI:快感に素直
+IF IS_快感に素直(ASSI)
 	N += 1
-ELSEIF TALENT:ASSI:快感の否定
+ELSEIF IS_快感の否定(ASSI)
 	N -= 2
 ENDIF
 
@@ -663,23 +663,23 @@ IF ASSI >= 0
 ENDIF
 
 ;プライド低い、解放によるボーナス
-SIF TALENT:プライド低い
+SIF IS_プライド低い(TARGET)
 	A += 1
-SIF TALENT:解放
+SIF IS_解放(TARGET)
 	A += 1
 
 ;プライド高い、自制心、抑圧によるペナルティ
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	A -= 1
 SIF TALENT:自制心
 	A -= 1
-SIF TALENT:抑圧
+SIF IS_抑圧(TARGET)
 	A -= 1
 
 ;快感に素直、快感の否定
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	A += 1
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	A -= 2
 ENDIF
 
@@ -815,27 +815,27 @@ SIF B <= 0
 	RETURN 0
 
 ;プライド低い、解放、動物耳によるボーナス
-SIF TALENT:プライド低い
+SIF IS_プライド低い(TARGET)
 	B += 1
-SIF TALENT:解放
+SIF IS_解放(TARGET)
 	B += 1
 SIF TALENT:動物耳
 	B += 1
 
 ;プライド高い、自制心、抑圧、汚臭敏感によるペナルティ
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	B -= 1
 SIF TALENT:自制心
 	B -= 1
-SIF TALENT:抑圧
+SIF IS_抑圧(TARGET)
 	B -= 1
-SIF TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+SIF IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 	B -= 2
 
 ;快感に素直、快感の否定
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	B += 1
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	B -= 2
 ENDIF
 
@@ -957,25 +957,25 @@ SIF B <= 0
 	RETURN 0
 
 ;プライド低い、解放によるボーナス
-SIF TALENT:プライド低い
+SIF IS_プライド低い(TARGET)
 	B += 1
-SIF TALENT:解放
+SIF IS_解放(TARGET)
 	B += 1
 
 ;プライド高い、自制心、抑圧、汚臭敏感によるペナルティ
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	B -= 1
 SIF TALENT:自制心
 	B -= 1
-SIF TALENT:抑圧
+SIF IS_抑圧(TARGET)
 	B -= 1
-SIF TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+SIF IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 	B -= 2
 
 ;快感に素直、快感の否定
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	B += 1
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	B -= 2
 ENDIF
 

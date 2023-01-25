@@ -38,7 +38,7 @@ ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ;プライド高い・低いは排除
-ELSEIF TALENT:RESULT:プライド高い || TALENT:RESULT:プライド低い
+ELSEIF IS_プライド高い(RESULT) || IS_プライド低い(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -55,13 +55,13 @@ INPUT
 IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0
+	TALENT:プライド = 1
 	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
 	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
-	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:プライド高い]]%】になった》
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%GET_STR_プライド(TARGET)%】になった》
 	PRINTFORML
 	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
 	EXP:異常経験 += 1
-	TALENT:プライド高い = 1
 ELSE
 	GOTO INPUT_LOOP_2
 ENDIF
@@ -110,7 +110,7 @@ ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ;プライド高い・低いは排除
-ELSEIF TALENT:RESULT:プライド高い || TALENT:RESULT:プライド低い
+ELSEIF IS_プライド高い(RESULT) || IS_プライド低い(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -127,13 +127,13 @@ INPUT
 IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0
+	TALENT:プライド = -1
 	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
 	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
-	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:プライド低い]]%】になった》
+	PRINTFORML  《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%GET_STR_プライド(TARGET)%】になった》
 	PRINTFORML
 	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
 	EXP:異常経験 += 1
-	TALENT:プライド低い = 1
 ELSE
 	GOTO INPUT_LOOP_2
 ENDIF
@@ -182,7 +182,7 @@ ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ;プライド高い・低いなしは排除
-ELSEIF TALENT:RESULT:プライド高い == 0 && TALENT:RESULT:プライド低い  == 0
+ELSEIF !IS_プライド高い(RESULT) && !IS_プライド低い(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -205,8 +205,7 @@ ELSEIF RESULT == 0
 	PRINTFORML
 	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
 	EXP:異常経験 += 1
-	TALENT:プライド高い = 0
-	TALENT:プライド低い = 0
+	TALENT:プライド = 0
 ELSE
 	GOTO INPUT_LOOP_2
 ENDIF
@@ -255,7 +254,7 @@ ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ;快感に素直・否定は排除
-ELSEIF TALENT:RESULT:快感に素直 || TALENT:RESULT:快感の否定
+ELSEIF IS_快感に素直(RESULT) || IS_快感の否定(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -272,13 +271,13 @@ INPUT
 IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0
+	TALENT:快感に素直 = 1
 	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
 	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
-	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:快感に素直]]%】になった》
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】になった》
 	PRINTFORML
 	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
 	EXP:異常経験 += 1
-	TALENT:快感に素直 = 1
 ELSE
 	GOTO INPUT_LOOP_2
 ENDIF
@@ -327,7 +326,7 @@ ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ;快感に素直・否定は排除
-ELSEIF TALENT:RESULT:快感に素直 || TALENT:RESULT:快感の否定
+ELSEIF IS_快感に素直(RESULT) || IS_快感の否定(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -344,13 +343,13 @@ INPUT
 IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0
+	TALENT:快感に素直 = -1
 	PRINTFORML  ユーニスは連れてこられた%CALLNAME:TARGET%の耳元に口を寄せて、悪魔の誘惑そのものの言葉をささやいた……
 	PRINTFORML  そしてその言葉に魂を侵された%CALLNAME:TARGET%は、虚ろな瞳で何事かをうわ言のように呟いている
-	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】になった》
+	PRINTFORML 《ユーニスの狂気に侵された%CALLNAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】になった》
 	PRINTFORML
 	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
 	EXP:異常経験 += 1
-	TALENT:快感の否定 = 1
 ELSE
 	GOTO INPUT_LOOP_2
 ENDIF
@@ -399,7 +398,7 @@ ELSEIF NO:RESULT == [[キャラ:ユーニス・パラディスス]]
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ;快感に素直・否定を持たないキャラは排除
-ELSEIF TALENT:RESULT:快感に素直 == 0 && TALENT:RESULT:快感の否定  == 0
+ELSEIF !IS_快感に素直(RESULT) && !IS_快感の否定(RESULT)
 	PRINTFORMW  %CALLNAME:RESULT%には効果がありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -423,7 +422,6 @@ ELSEIF RESULT == 0
 	PRINTFORMW  %EXPNAME:[[EXP:異常経験]]%＋1
 	EXP:異常経験 += 1
 	TALENT:快感に素直 = 0
-	TALENT:快感の否定 = 0
 ELSE
 	GOTO INPUT_LOOP_2
 ENDIF
@@ -847,7 +845,7 @@ ELSEIF RESULT == 0
 			PRINTFORM 何かに口付けた
 		ENDIF
 	PRINTFORM ことがないのが、突如振られた性的な話題に
-	IF TALENT:恥薄い
+	IF IS_恥薄い(TARGET)
 		PRINTFORM も恥じる様子も無く
 	ELSE
 		PRINTFORM 頬を赤らめながら

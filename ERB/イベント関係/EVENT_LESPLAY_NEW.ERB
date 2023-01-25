@@ -177,14 +177,14 @@ SIF TALENT:s_actor:淫乱
 	NumofTimes += 1
 
 ;快感に素直、快感の否定
-IF TALENT:f_actor:快感に素直
+IF IS_快感に素直(f_actor)
 	NumofTimes += 1
-ELSEIF TALENT:f_actor:快感の否定
+ELSEIF IS_快感の否定(f_actor)
 	NumofTimes -= 2
 ENDIF
-IF TALENT:s_actor:快感に素直
+IF IS_快感に素直(s_actor)
 	NumofTimes += 1
-ELSEIF TALENT:s_actor:快感の否定
+ELSEIF IS_快感の否定(s_actor)
 	NumofTimes -= 2
 ENDIF
 

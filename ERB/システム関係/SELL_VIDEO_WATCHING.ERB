@@ -459,9 +459,9 @@ REPEAT TFLAG:ビデオ撮影回数
 		ELSEIF T == 5
 			IF F & 128
 				PRINT に胸を舐めまわされてる
-			ELSEIF TALENT:絶壁
+			ELSEIF IS_絶壁(TARGET)
 				PRINT に胸を撫で回される
-			ELSEIF TALENT:貧乳
+			ELSEIF IS_貧乳(TARGET)
 				PRINT に乳房を撫でられる
 			ELSE
 				PRINT に乳房をもみしだかれる

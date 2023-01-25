@@ -183,7 +183,7 @@ IF A:2 == 0
 		LOCAL:1++
 	SIF IS処女(TARGET)
 		LOCAL:1++
-	SIF TALENT:大人しい == 1
+	SIF IS_大人しい(TARGET)
 		LOCAL:1++
 	SIF !CFLAG:処女喪失相手
 		LOCAL:1++
@@ -342,7 +342,7 @@ ELSE
 	CALL MISSION_ADD_EXP(TARGET)
 	IF ARG > 0
 		CALL KANADE_MISSION2_SS
-		TALENT:解放 = 1
+		TALENT:解放的 = 1
 		TALENT:恥じらい = 0
 		TALENT:淫乱 = 1
 		TALENT:カリスマ = 1

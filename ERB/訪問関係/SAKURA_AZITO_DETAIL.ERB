@@ -42,11 +42,11 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;貞操観念は排除
-ELSEIF TALENT:RESULT:貞操観念
+ELSEIF IS_貞操観念(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%は既に強い貞操観念を抱いています
 	GOTO INPUT_LOOP
 ;貞操無頓着は排除
-ELSEIF TALENT:RESULT:貞操無頓着
+ELSEIF IS_貞操無頓着(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -65,8 +65,8 @@ IF RESULT == 1
 ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORML 世の中には貞淑な乙女が好きな男性が多いことを知り、何か感じ入るものがあったようだ
-	PRINTFORMW %CALLNAME:T%の貞操観念は【%TALENTNAME:[[TALENT:貞操観念]]%】になった
 	TALENT:T:貞操観念 = 1
+	PRINTFORMW %CALLNAME:T%の貞操観念は【%GET_STR_貞操観念(T)%】になった
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -119,11 +119,11 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;妊娠中は排除
-ELSEIF TALENT:RESULT:貞操観念
+ELSEIF IS_貞操観念(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ;貞操無頓着は排除
-ELSEIF TALENT:RESULT:貞操無頓着
+ELSEIF IS_貞操無頓着(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はバリバリの肉食系です
 	GOTO INPUT_LOOP
 ENDIF
@@ -142,8 +142,8 @@ IF RESULT == 1
 ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORML 世の中には女からの攻めに弱い男が多いことを知り、何か感じ入るものがあったようだ
-	PRINTFORMW %CALLNAME:T%の貞操観念は【%TALENTNAME:[[TALENT:貞操無頓着]]%】になった
-	TALENT:T:貞操無頓着 = 1
+	TALENT:T:貞操観念 = -1
+	PRINTFORMW %CALLNAME:T%の貞操観念は【%GET_STR_貞操観念(T)%】になった
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -196,7 +196,7 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;自然体は排除
-ELSEIF TALENT:RESULT:貞操観念 == 0 && TALENT:RESULT:貞操無頓着 == 0
+ELSEIF !IS_貞操観念(RESULT) && !IS_貞操無頓着(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -217,7 +217,6 @@ ELSEIF RESULT == 0
 	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
 	PRINTFORMW %CALLNAME:T%の貞操観念は自然体になった
 	TALENT:T:貞操観念 = 0
-	TALENT:T:貞操無頓着 = 0
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -270,11 +269,11 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;恥じらいは排除
-ELSEIF TALENT:RESULT:恥じらい == 1
+ELSEIF IS_恥じらい(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はかなりの恥ずかしがり屋です
 	GOTO INPUT_LOOP
 ;恥薄いは排除
-ELSEIF TALENT:RESULT:恥薄い == 1
+ELSEIF IS_恥薄い(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -293,7 +292,7 @@ IF RESULT == 1
 ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
-	PRINTFORMW %CALLNAME:T%の恥情意識は【%TALENTNAME:[[TALENT:恥じらい]]%】になった
+	PRINTFORMW %CALLNAME:T%の恥情意識は【%GET_STR_恥じらい(TARGET)%】になった
 	TALENT:T:恥じらい = 1
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
@@ -347,11 +346,11 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;恥じらいは排除
-ELSEIF TALENT:RESULT:恥じらい == 1
+ELSEIF IS_恥じらい(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ;恥薄いは排除
-ELSEIF TALENT:RESULT:恥薄い == 1
+ELSEIF IS_恥薄い(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%は人前でイチャイチャすることに抵抗がないようです
 	GOTO INPUT_LOOP
 ENDIF
@@ -371,8 +370,8 @@ ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORM 世の中には人前であまり恥ずかしがらないでイチャイチャしてくれる女が好きな
 	PRINTFORML 男が多いことを知り、何か感じ入るものがあったようだ
-	PRINTFORMW %CALLNAME:T%の恥情意識は【%TALENTNAME:[[TALENT:恥薄い]]%】になった
-	TALENT:T:恥薄い = 1
+	TALENT:T:恥じらい = -1
+	PRINTFORMW %CALLNAME:T%の恥情意識は【%GET_STR_恥じらい(TARGET)%】になった
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -426,7 +425,7 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;自然体は排除
-ELSEIF TALENT:RESULT:恥じらい == 0 && TALENT:RESULT:恥薄い == 0
+ELSEIF TALENT:RESULT:恥じらい == 0 && !IS_恥薄い(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -447,7 +446,6 @@ ELSEIF RESULT == 0
 	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
 	PRINTFORMW %CALLNAME:T%の恥情意識は自然体になった
 	TALENT:T:恥じらい = 0
-	TALENT:T:恥薄い = 0
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -656,11 +654,11 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;大人しいは排除
-ELSEIF TALENT:RESULT:大人しい == 1
+ELSEIF IS_大人しい(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりアクティブな性格ではありません
 	GOTO INPUT_LOOP
 ;活発は排除
-ELSEIF TALENT:RESULT:活発 == 1
+ELSEIF IS_活発(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -679,8 +677,8 @@ IF RESULT == 1
 ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORML 世の中には大人しい女が好きな男が多いことを知り、何か感じ入るものがあったようだ
-	PRINTFORMW %CALLNAME:T%の性格は【%TALENTNAME:[[TALENT:大人しい]]%】になった
-	TALENT:T:大人しい = 1
+	TALENT:T:活発度 = -1
+	PRINTFORMW %CALLNAME:T%の性格は【%GET_STR_活発度(T)%】になった
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -733,11 +731,11 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;大人しいは排除
-ELSEIF TALENT:RESULT:大人しい == 1
+ELSEIF IS_大人しい(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ;活発は排除
-ELSEIF TALENT:RESULT:活発 == 1
+ELSEIF IS_活発(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はアクティブな性格です
 	GOTO INPUT_LOOP
 ENDIF
@@ -756,8 +754,8 @@ IF RESULT == 1
 ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORML 世の中にはアクティブな女が好きな男が多いことを知り、何か感じ入るものがあったようだ
-	PRINTFORMW %CALLNAME:T%の性格は【%TALENTNAME:[[TALENT:活発]]%】になった
-	TALENT:T:活発 = 1
+	TALENT:T:活発度 = 1
+	PRINTFORMW %CALLNAME:T%の性格は【%GET_STR_活発度(T)%】になった
 	EXP:T:ＲＢ団性格改善経験 += 1
 ELSE
 	GOTO INPUT_LOOP_2
@@ -810,7 +808,7 @@ ELSEIF NO:RESULT == [[キャラ:清水桜子]]
 	PRINTFORMW %CALLNAME:RESULT%はこのセミナーの講師です
 	GOTO INPUT_LOOP
 ;大人しいは排除
-ELSEIF TALENT:RESULT:ナマイキ == 0 && TALENT:RESULT:素直 == 0 && TALENT:RESULT:大人しい == 0 && TALENT:RESULT:活発 == 0
+ELSEIF TALENT:RESULT:ナマイキ == 0 && TALENT:RESULT:素直 == 0 && !IS_大人しい(RESULT) && IS_活発(RESULT)
 	PRINTFORMW %CALLNAME:RESULT%はあまりこのセミナーに乗り気ではありません
 	GOTO INPUT_LOOP
 ENDIF
@@ -830,8 +828,7 @@ ELSEIF RESULT == 0
 	PRINTFORMW %NAME:T%はＲＢ団主催のセミナーを受けた……
 	PRINTFORML 世の中には自然体な女が好きな男が多いことを知り、何か感じ入るものがあったようだ
 	PRINTFORMW %CALLNAME:T%の性格は自然体になった
-	TALENT:T:活発 = 0
-	TALENT:T:大人しい = 0
+	TALENT:T:活発度 = 0
 	TALENT:T:ナマイキ = 0
 	TALENT:T:素直 = 0
 	EXP:T:ＲＢ団性格改善経験 += 1

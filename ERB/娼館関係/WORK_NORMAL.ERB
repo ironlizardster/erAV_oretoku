@@ -75,7 +75,7 @@ ELSE
 		B += ABL:話術 * 3
 	ENDIF
 	;解放か恥薄いがあればボーナス+2
-	SIF TALENT:解放 || TALENT:恥薄い
+	SIF IS_解放(TARGET) || IS_恥薄い(TARGET)
 		B += 2
 
 	D += B

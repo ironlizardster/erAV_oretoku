@@ -373,13 +373,13 @@ ELSE
 	SIF ABL:ARG:欲望 >= 4 && ABL:ARG:Ｖ感覚 >= 3
 		S += 1
 	;彼氏あり、淫乱によるボーナス
-	SIF TALENT:ARG:貞操無頓着
+	SIF IS_貞操無頓着(ARG)
 		S += 10
 	;セックス狂によるボーナス
 	SIF TALENT:ARG:セックス狂
 		S *= 2
 	;快感に素直、快感の否定
-	IF TALENT:ARG:快感に素直
+	IF IS_快感に素直(ARG)
 		S += 1
 	SIF TALENT:ARG:淫乱
 		S *= 2

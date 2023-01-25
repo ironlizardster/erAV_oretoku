@@ -42,7 +42,7 @@ ENDIF
 ;-------------------------------------------------
 @PLAYER_SKILL_CHECK
 ;調教者のTALENT:解放をみる
-IF TALENT:PLAYER:解放
+IF IS_解放(PLAYER)
 	TIMES SOURCE:快Ｃ , 1.20
 	TIMES SOURCE:快Ｖ , 1.20
 	TIMES SOURCE:快Ａ , 1.20
@@ -510,7 +510,7 @@ SIF TALENT:自制心
 	A /= 2
 
 ;快感に素直
-SIF TALENT:快感に素直
+SIF IS_快感に素直(TARGET)
 	TIMES A , 1.20
 
 ;淫乱
@@ -518,7 +518,7 @@ SIF TALENT:淫乱
 	TIMES A , 1.10
 
 ;快感の否定
-SIF TALENT:快感の否定
+SIF IS_快感の否定(TARGET)
 	TIMES A , 0.80
 
 ;媚薬
@@ -654,7 +654,7 @@ SIF TALENT:自制心
 	A /= 2
 
 ;快感に素直
-SIF TALENT:快感に素直
+SIF IS_快感に素直(TARGET)
 	TIMES A , 1.20
 
 ;淫乱化
@@ -662,11 +662,11 @@ SIF TALENT:淫乱
 	TIMES A , 1.10
 
 ;快感の否定
-SIF TALENT:快感の否定
+SIF IS_快感の否定(TARGET)
 	TIMES A , 0.80
 
 ;B敏感
-SIF TALENT:Ｂ敏感
+SIF IS_Ｂ敏感(TARGET)
 	TIMES A , 1.50
 
 ;媚薬
@@ -686,11 +686,11 @@ SIF TALENT:PLAYER:幼稚
 	A *= 2
 
 ;貧乳
-SIF TALENT:貧乳
+SIF IS_貧乳(TARGET)
 	TIMES A , 0.50
 
 ;絶壁
-SIF TALENT:絶壁
+SIF IS_絶壁(TARGET)
 	TIMES A , 0.20
 
 A = 1000+(A-1000)/2
@@ -844,7 +844,7 @@ IF IS_MALE(TARGET)
 ENDIF
 
 ;肥満
-IF TALENT:肥満
+IF IS_肥満(TARGET)
 	TIMES UP:[[UP:快Ｃ]] , 0.50
 	TIMES UP:[[UP:快Ｖ]] , 0.50
 	TIMES UP:[[UP:快Ａ]] , 0.50
@@ -923,17 +923,17 @@ IF TALENT:素直
 	TIMES UP:[[UP:反感]] , 0.60
 ENDIF
 ;大人しい
-IF TALENT:大人しい
+IF IS_大人しい(TARGET)
 	TIMES UP:[[UP:反感]] , 0.30
 ENDIF
 ;プライド高い
-IF TALENT:プライド高い
+IF IS_プライド高い(TARGET)
 	TIMES UP:[[UP:屈服]] , 0.50
 	TIMES UP:[[UP:恐怖]] , 0.60
 	TIMES UP:[[UP:反感]] , 1.20
 ENDIF
 ;プライド低い
-IF TALENT:プライド低い
+IF IS_プライド低い(TARGET)
 	TIMES UP:[[UP:屈服]] , 2.00
 	TIMES UP:[[UP:恐怖]] , 1.50
 	TIMES UP:[[UP:反感]] , 0.80
@@ -967,21 +967,21 @@ SIF TALENT:保守的
 	TIMES UP:[[UP:習得]] , 0.80
 
 ;楽観的
-SIF TALENT:ポジティブ
+SIF IS_楽観的(TARGET)
 	TIMES UP:[[UP:抑鬱]] , 0.30
 
 ;悲観的
-SIF TALENT:ネガティブ
+SIF IS_悲観的(TARGET)
 	TIMES UP:[[UP:抑鬱]] , 2.50
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES UP:[[UP:欲情]] , 0.50
 	TIMES UP:[[UP:反感]] , 2.00
 	TIMES UP:[[UP:抑鬱]] , 1.50
 ENDIF
 ;解放
-IF TALENT:解放
+IF IS_解放(TARGET)
 	TIMES UP:[[UP:欲情]] , 2.00
 	TIMES UP:[[UP:屈服]] , 2.00
 ENDIF
@@ -992,21 +992,21 @@ IF TALENT:抵抗
 ENDIF
 
 ;痛みに弱い
-IF TALENT:痛みに弱い
+IF IS_痛みに弱い(TARGET)
 	TIMES UP:[[UP:恐怖]] , 2.00
 	TIMES UP:[[UP:反感]] , 1.50
 ENDIF
 ;痛みに強い
-IF TALENT:痛みに強い
+IF IS_痛みに強い(TARGET)
 	TIMES UP:[[UP:恐怖]] , 0.50
 	TIMES UP:[[UP:反感]] , 0.75
 ENDIF
 
 ;習得早い
-SIF TALENT:素質
+SIF IS_習得早い(TARGET)
 	TIMES UP:[[UP:習得]] , 2.00
 ;習得遅い
-SIF TALENT:習得遅い
+SIF IS_習得遅い(TARGET)
 	TIMES UP:[[UP:習得]] , 0.50
 
 ;献身的
@@ -1014,10 +1014,10 @@ SIF TALENT:献身的
 	TIMES UP:[[UP:屈服]] , 2.00
 
 ;快感に素直
-SIF TALENT:快感に素直
+SIF IS_快感に素直(TARGET)
 	TIMES UP:[[UP:欲情]] , 2.00
 ;快感の否定
-SIF TALENT:快感の否定
+SIF IS_快感の否定(TARGET)
 	TIMES UP:[[UP:欲情]] , 0.50
 
 ;恋心
@@ -1035,7 +1035,7 @@ IF TALENT:妄信
 ENDIF
 
 ;肥満
-IF TALENT:肥満
+IF IS_肥満(TARGET)
 	TIMES UP:[[UP:抑鬱]] , 0.20
 ENDIF
 
@@ -1216,11 +1216,11 @@ ENDIF
 ;欲望の上昇による[抑圧][抵抗]の消滅をチェック
 ;-------------------------------------------------
 @YOKUBO_UP_CHECK
-IF ABL:欲望 >= 3 && (TALENT:抑圧 || TALENT:抵抗)
+IF ABL:欲望 >= 3 && (IS_抑圧(TARGET) || TALENT:抵抗)
 	PRINTFORM %NAME:TARGET%は
-	IF TALENT:抑圧
-		PRINTFORM 【%TALENTNAME:[[TALENT:抑圧]]%】
-		TALENT:抑圧 = 0
+	IF IS_抑圧(TARGET)
+		PRINTFORM 【%GET_STR_解放的(TARGET)%】
+		TALENT:解放的 = 0
 	ENDIF
 	IF TALENT:抵抗
 		PRINTFORM 【%TALENTNAME:[[TALENT:抵抗]]%】
@@ -1745,10 +1745,10 @@ IF ASSIPLAY == 0 && TEQUIP:触手召喚 == 0
 	SIF TALENT:献身的
 		R += 1
 	;快感に素直
-	SIF TALENT:快感に素直
+	SIF IS_快感に素直(TARGET)
 		R += 1
 	;快感の否定
-	SIF TALENT:快感の否定
+	SIF IS_快感の否定(TARGET)
 		R -= 1
 	;女嫌い
 	SIF TALENT:ボーイッシュ && HAVE_VAGINA(MASTER)

@@ -370,13 +370,13 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:臆病
 		D -= 1
 	;大人しい
-	SIF TALENT:COUNT:大人しい
+	SIF IS_大人しい(COUNT)
 		D -= 1
 	;プライド高い
-	SIF TALENT:COUNT:プライド高い
+	SIF IS_プライド高い(COUNT)
 		D += 2
 	;プライド低い
-	SIF TALENT:COUNT:プライド低い
+	SIF IS_プライド低い(COUNT)
 		D -= 2
 	;感情乏しい
 	SIF TALENT:COUNT:感情乏しい
@@ -388,25 +388,25 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:目立ちたがり
 		D += 3
 	;抑圧
-	SIF TALENT:COUNT:抑圧
+	SIF IS_抑圧(COUNT)
 		D -= 2
 	;解放
-	SIF TALENT:COUNT:解放
+	SIF IS_解放(COUNT)
 		D += 2
 	;抵抗
 	SIF TALENT:COUNT:抵抗
 		D -= 2
 	;恥じらい
-	SIF TALENT:COUNT:恥じらい
+	SIF IS_恥じらい(COUNT)
 		D -= 2
 	;恥薄い
-	SIF TALENT:COUNT:恥薄い
+	SIF IS_恥薄い(COUNT)
 		D += 2
 	;自慰しやすい
 	SIF TALENT:COUNT:自慰しやすい
 		D += 5
 	;快感に素直
-	SIF TALENT:COUNT:快感に素直
+	SIF IS_快感に素直(COUNT)
 		D += 3
 	;淫乱
 	SIF TALENT:COUNT:淫乱
@@ -458,7 +458,7 @@ REPEAT CHARANUM
 	ENDIF
 
 	;肥満があると満足度半減
-	SIF TALENT:COUNT:肥満
+	SIF IS_肥満(COUNT)
 		D /= 2
 
 	;狂気・崩壊があると満足度激減
@@ -986,22 +986,22 @@ REPEAT CHARANUM
 	SIF TALENT:感情乏しい
 		TIMES U:100 , 0.90
 	;プライドが高いと増える
-	SIF TALENT:プライド高い
+	SIF IS_プライド高い(TARGET)
 		TIMES U:100 , 1.50
 	;目立ちたがりだと少なくなる
 	SIF TALENT:目立ちたがり
 		TIMES U:100 , 0.80
 	;抑圧だと増える
-	SIF TALENT:抑圧
+	SIF IS_抑圧(TARGET)
 		TIMES U:100 , 1.20
 	;解放だと少なくなる
-	SIF TALENT:解放
+	SIF IS_解放(TARGET)
 		TIMES U:100 , 0.80
 	;露出狂だとほとんどなくなる
 	SIF TALENT:露出狂
 		TIMES U:100 , 0.05
 	;ストリップショー失敗かつ恥じらいだと結構増える
-	SIF TALENT:恥じらい && A <= 1
+	SIF IS_恥じらい(TARGET) && A <= 1
 		TIMES U:100 , 1.50
 	;公開セックスがあった場合セックス狂いがないと増える
 	SIF FLAG:特殊営業タイプ詳細 & 4 && TALENT:セックス狂 == 0
@@ -1073,7 +1073,7 @@ REPEAT CHARANUM
 	LOSEBASE:体力 = G * 30
 
 	;小柄だと疲労増加
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		TIMES LOSEBASE:体力 , 1.20
 	;露出狂だと疲労半減
 	SIF TALENT:露出狂
@@ -1397,32 +1397,32 @@ REPEAT CHARANUM
 		CONTINUE
 ;技能・素質による修正値を加算
 	;巨乳
-	SIF TALENT:COUNT:巨乳
+	SIF IS_巨乳(COUNT)
 		V += 3
 	;爆乳
-	SIF TALENT:COUNT:爆乳
+	SIF IS_爆乳(COUNT)
 		V += 2
 	;貧乳
-	SIF TALENT:COUNT:貧乳
+	SIF IS_貧乳(COUNT)
 		V -= 3
 	;絶壁
-	SIF TALENT:COUNT:絶壁
+	SIF IS_絶壁(COUNT)
 		V -= 5
 	;魅力
 	SIF TALENT:COUNT:魅力
 		V += 10
 	;パイパン
-	SIF TALENT:COUNT:パイパン
+	SIF IS_パイパン(COUNT)
 		V += 3
 	;ロリ系
 	SIF TALENT:COUNT:童顔
 		V += 5
 
 	;剛毛
-	SIF TALENT:COUNT:剛毛
+	SIF IS_剛毛(COUNT)
 		V /= 2
 	;肥満
-	SIF TALENT:COUNT:肥満
+	SIF IS_肥満(COUNT)
 		V /= 4
 REND
 

@@ -102,23 +102,20 @@ ELSE
 	GOTO INPUT_LOOP_ADD_PHYSICAL
 ENDIF
 
-IF CFLAG:T:体力増強剤投与回数 == 5 && TALENT:T:回復遅い
-	PRINTFORMW %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%TALENTNAME:[[TALENT:回復遅い]]%】ではなくなった
-	TALENT:T:回復遅い = 0
-ELSEIF CFLAG:T:体力増強剤投与回数 == 10 && TALENT:T:回復早い == 0 && TALENT:T:異常回復 == 0
+IF CFLAG:T:体力増強剤投与回数 == 5 && IS_回復遅い(T)
+	PRINTFORMW %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%GET_STR_回復速度(T)%】ではなくなった
+	TALENT:T:回復速度 = 0
+ELSEIF CFLAG:T:体力増強剤投与回数 == 10 && !IS_回復早い(T) && !IS_異常回復(T)
 	IF TALENT:T:最先端科学 == 0
 		IF TALENT:T:天使 == 0
-			PRINTFORMW %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%TALENTNAME:[[TALENT:回復早い]]%】になった
-			TALENT:T:回復遅い = 0
-			TALENT:T:回復早い = 1
+			TALENT:T:回復速度 = 1
+			PRINTFORMW %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%GET_STR_回復速度(T)%】になった
 		ENDIF
 	ENDIF
-ELSEIF CFLAG:T:体力増強剤投与回数 == 15 && TALENT:T:異常回復 == 0
-	PRINTFORML %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%TALENTNAME:[[TALENT:異常回復]]%】になった
+ELSEIF CFLAG:T:体力増強剤投与回数 == 15 && !IS_異常回復(T)
+	PRINTFORML %CALLNAME:T%の新陳代謝が改善され、%CALLNAME:T%は【%GET_STR_回復速度(T)%】になった
 	PRINTFORMW %EXPNAME:[[EXP:異常経験]]%+1
-	TALENT:T:回復早い = 0
-	TALENT:T:回復遅い = 0
-	TALENT:T:異常回復 = 1
+	TALENT:T:回復速度 = 2
 	EXP:T:異常経験 += 1
 ENDIF
 

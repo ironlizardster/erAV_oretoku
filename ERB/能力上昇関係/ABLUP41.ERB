@@ -162,11 +162,11 @@ IF TALENT:自制心
 	TIMES C , 1.50
 ENDIF
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	TIMES A , 0.75
 	TIMES B , 0.75
 ;快感の否定
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	TIMES A , 1.75
 	TIMES B , 1.75
 ENDIF

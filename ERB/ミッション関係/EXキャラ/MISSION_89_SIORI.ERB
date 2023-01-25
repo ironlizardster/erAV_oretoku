@@ -187,12 +187,12 @@ RETURN 0
 @MISSION_REPORT_89(ARG)
 
 IF ARG < 1
-	TALENT:解放 = 9
+	TALENT:解放的 = -1
 	MAXBASE:魅力値 -= 50
 	BASE:魅力値 -= 50
 	MARK:反発刻印 = 3
 ELSE
-	TALENT:解放 = 1
+	TALENT:解放的 = 1
 	TALENT:魅力 = 1
 	TALENT:姉 = 1
 	MAXBASE:魅力値 += 20

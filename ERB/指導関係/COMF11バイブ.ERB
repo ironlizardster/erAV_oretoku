@@ -108,10 +108,10 @@ ELSE
 ENDIF
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES SOURCE:痛覚 , 0.80
 ;小柄
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES SOURCE:痛覚 , 2.00
 ;未熟
 SIF TALENT:未熟
@@ -279,17 +279,17 @@ ENDIF
 
 
 ;大柄
-SIF TALENT:大柄
+SIF IS_大柄(TARGET)
 	TIMES B , 0.80
 ;小柄
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	TIMES B , 2.00
 ;未熟
 SIF TALENT:未熟
 	TIMES B , 4.00
 
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	;処女はありえない
 	TIMES B, 3.00
 ENDIF

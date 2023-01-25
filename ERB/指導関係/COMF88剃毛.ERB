@@ -80,19 +80,19 @@ IF TALENT:自制心
 	S = 1
 ENDIF
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 5
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,5,')
 	S = 1
 ENDIF
 ;恥薄い
-IF TALENT:恥薄い
+IF IS_恥薄い(TARGET)
 	SIF S
 		PRINT  + 
 	A += 2
-	PRINTS TALENTNAME:[[TALENT:恥薄い]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,2,')
 	S = 1
 ENDIF
@@ -264,11 +264,11 @@ SIF TALENT:ナマイキ
 	TIMES A , 2.00
 
 ;プライド高い
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	TIMES A , 2.00
 
 ;プライド低い
-SIF TALENT:プライド低い
+SIF IS_プライド低い(TARGET)
 	TIMES A , 0.80
 
 ;自制心
@@ -284,7 +284,7 @@ SIF TALENT:目立ちたがり
 	TIMES A , 0.80
 
 ;抑圧
-SIF TALENT:抑圧
+SIF IS_抑圧(TARGET)
 	TIMES A , 3.00
 
 ;抵抗
@@ -292,11 +292,11 @@ SIF TALENT:抵抗
 	TIMES A , 3.00
 
 ;恥じらい
-SIF TALENT:恥じらい
+SIF IS_恥じらい(TARGET)
 	TIMES A , 3.50
 
 ;恥薄い
-SIF TALENT:恥薄い
+SIF IS_恥薄い(TARGET)
 	TIMES A , 0.50
 
 ;露出狂

@@ -82,7 +82,7 @@ ENDIF
 ;---------------------------------------------------------
 ;特殊技能素質
 ;---------------------------------------------------------
-IF TALENT:習得遅い
+IF IS_習得遅い(TARGET)
 	;技巧Lv7以上かつ奉仕技術Lv7以上かつフェラ経験1500以上（[習得遅い]ありの場合）で【舌使い】
 	IF ABL:技巧 >= 7 && ABL:奉仕技術 >= 7 && EXP:フェラ経験 >= 1500 && TALENT:舌使い == 0
 		PRINTFORMW %CALLNAME:TARGET%の奉仕もかなりのものとなってきた……
@@ -128,7 +128,7 @@ IF ABL:露出癖 >= 4 && EXP:自慰経験 >= 200 && EXP:絶頂経験 >= 100 && T
 	TALENT:露出狂 = 1
 ;目立ちたがり、恥薄い、淫魔で条件緩和(3,50,100,50)
 ;恥薄いで条件緩和ってあまりぴんと来ないね（恥ずかしいのが好き、だろうから）
-ELSEIF ABL:露出癖 >= 3 && EXP:自慰経験 >= 100 && EXP:絶頂経験 >= 50 && TALENT:露出狂 == 0 && EXP:野外露出経験 >= 50 && (TALENT:目立ちたがり == 1 || TALENT:淫魔 == 1 || TALENT:恥薄い == 1)
+ELSEIF ABL:露出癖 >= 3 && EXP:自慰経験 >= 100 && EXP:絶頂経験 >= 50 && TALENT:露出狂 == 0 && EXP:野外露出経験 >= 50 && (TALENT:目立ちたがり == 1 || TALENT:淫魔 == 1 || IS_恥薄い(TARGET))
 	PRINTFORMW %CALLNAME:TARGET%の様子がおかしい…
 	PRINTFORML 自分の恥ずかしい姿を他人に見られるのが嬉しくてたまらないようだ
 	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:露出狂]]%】を得た
@@ -170,9 +170,9 @@ IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:自慰狂い == 0
 		PRINTFORML をいじり続けている
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰狂い]]%】を得た
 		TALENT:自慰狂い = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:自慰狂い == 0
@@ -187,9 +187,9 @@ ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:自慰狂い == 0
 		PRINTFORML をいじり続けている
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:自慰狂い]]%】を得た
 		TALENT:自慰狂い = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ENDIF
@@ -201,9 +201,9 @@ IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:セックス狂 == 0
 		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%にしなだれかかり抱いて欲しいと懇願してきた
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:セックス狂]]%】を得た
 		TALENT:セックス狂 = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:セックス狂 == 0
@@ -212,9 +212,9 @@ ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:セックス狂 == 0
 		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は%CALLNAME:MASTER%にしなだれかかり抱いて欲しいと懇願してきた
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:セックス狂]]%】を得た
 		TALENT:セックス狂 = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ENDIF
@@ -226,9 +226,9 @@ IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:尻穴狂い == 0
 		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%はアナルを弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:尻穴狂い]]%】を得た
 		TALENT:尻穴狂い = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:尻穴狂い == 0
@@ -237,9 +237,9 @@ ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:尻穴狂い == 0
 		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%はアナルを弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:尻穴狂い]]%】を得た
 		TALENT:尻穴狂い = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ENDIF
@@ -253,9 +253,9 @@ IF (TALENT:淫乱 == 0 && TALENT:淫魔 == 0) && TALENT:乳狂い == 0
 		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は乳首を弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:乳狂い]]%】を得た
 		TALENT:乳狂い = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:乳狂い == 0
@@ -264,9 +264,9 @@ ELSEIF (TALENT:淫乱 == 1 || TALENT:淫魔 == 1) && TALENT:乳狂い == 0
 		PRINTFORML 調教が終わった後にもかかわらず、%CALLNAME:TARGET%は乳首を弄りながら物欲しげな視線を%CALLNAME:MASTER%に送っている
 		PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:乳狂い]]%】を得た
 		TALENT:乳狂い = 1
-		IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-			PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-			TALENT:快感の否定 = 0
+		IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+			PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+			TALENT:快感に素直 = 0
 		ENDIF
 	ENDIF
 ENDIF
@@ -321,32 +321,24 @@ IF FLAG:強化素質なし == 0
 		PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:性豪]]%】を得た
 		TALENT:性豪 = 1
 		;【Ｃ鈍感】【Ｖ鈍感】【Ａ鈍感】【Ｂ鈍感】は消える
-		IF TALENT:Ｃ鈍感
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｃ鈍感]]%】を失った
-			TALENT:Ｃ鈍感 = 0
-		ENDIF
-		IF TALENT:Ｖ鈍感
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｖ鈍感]]%】を失った
-			TALENT:Ｖ鈍感 = 0
-		ENDIF
-		IF TALENT:Ａ鈍感
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ａ鈍感]]%】を失った
-			TALENT:Ａ鈍感 = 0
-		ENDIF
-		IF TALENT:Ｂ鈍感
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｂ鈍感]]%】を失った
-			TALENT:Ｂ鈍感 = 0
-		ENDIF
+		SIF IS_Ｃ鈍感(TARGET)
+			PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ｃ感度(TARGET)%】を失った
+		SIF IS_Ｖ鈍感(TARGET)
+			PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ｖ感度(TARGET)%】を失った
+		SIF IS_Ａ鈍感(TARGET)
+			PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ａ感度(TARGET)%】を失った
+		SIF IS_Ｂ鈍感(TARGET)
+			PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ｂ感度(TARGET)%】を失った
 		;【Ｃ敏感】【Ｖ敏感】【Ａ敏感】【Ｂ敏感】を得る
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｃ敏感]]%】になった
-			TALENT:Ｃ敏感 = 1
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｖ敏感]]%】になった
-			TALENT:Ｖ敏感 = 1
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ａ敏感]]%】になった
-			TALENT:Ａ敏感 = 1
-			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:Ｂ敏感]]%】になった
-			TALENT:Ｂ敏感 = 1
-			PRINTFORML
+		TALENT:Ｃ感度 = 1
+		PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ｃ感度(TARGET)%】になった
+		TALENT:Ｖ感度 = 1
+		PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ｖ感度(TARGET)%】になった
+		TALENT:Ａ感度 = 1
+		PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ａ感度(TARGET)%】になった
+		TALENT:Ｂ感度 = 1
+		PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_Ｂ感度(TARGET)%】になった
+		PRINTFORML
 	ENDIF
 ENDIF
 
@@ -370,13 +362,13 @@ IF FLAG:常時発情なし == 0
 			PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:常時発情]]%】を得た
 			TALENT:常時発情 = 1
 			;【濡れにくい】がなければ【濡れやすい】追加
-			IF TALENT:濡れにくい == 0 && TALENT:濡れやすい == 0
-				PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:濡れやすい]]%】を得た
-				TALENT:濡れやすい = 1
+			IF !IS_濡れにくい(TARGET) && !IS_濡れやすい(TARGET)
+				TALENT:濡れやすさ++
+				PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_濡れやすさ(TARGET)%】を得た
 			;【濡れにくい】は消える
-			ELSEIF TALENT:濡れにくい
-				PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:濡れにくい]]%】を失った
-				TALENT:濡れにくい = 0
+			ELSEIF IS_濡れにくい(TARGET)
+				PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_濡れやすさ(TARGET)%】を失った
+				TALENT:濡れやすさ++
 			ENDIF
 		ENDIF
 	ENDIF
@@ -392,9 +384,9 @@ IF TFLAG:精愛味覚取得用のフラグ && TALENT:精愛味覚 == 0
 	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:精愛味覚]]%】を得た
 	TALENT:精愛味覚 = 1
 	;汚臭敏感がなくなる
-	IF TALENT:汚臭敏感 == 1
-		PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:汚臭敏感]]%】でなくなった
-		TALENT:汚臭敏感 = 0
+	IF IS_汚臭敏感(TARGET)
+		PRINTFORMW %CALLNAME:TARGET%は【%GET_STR_汚臭耐性(TARGET)%】でなくなった
+		TALENT:汚臭耐性 = 0
 	ENDIF
 	;精液中毒がLV5に上がる
 	IF ABL:精液中毒 < 5
@@ -490,7 +482,7 @@ IF TALENT:性魔術 && (BASE:魔力 == 0 ||  BASE:魅力値 <= 0)
 ENDIF
 
 ;[彼氏あり],[貞操観念]なし,[淫乱],[セフレあり],[恋心]なし,信頼3以上,欲望5以上,性交中毒2以上,どっちか非処女,奉仕快楽経験300以上
-IF TALENT:彼氏あり == 1 && TALENT:貞操観念 == 0 && TALENT:淫乱 == 1 && TALENT:セフレあり == 1 && TALENT:恋心 == 0 && ABL:信頼 >= 3 && ABL:欲望 >= 5 && ABL:性交中毒 >= 2 && (!IS処女(TARGET) || !ISＡ処女(TARGET)) && EXP:奉仕快楽経験 >= 300 && TALENT:セフレ == 0
+IF TALENT:彼氏あり == 1 && !IS_貞操観念(TARGET) && TALENT:淫乱 == 1 && TALENT:セフレあり == 1 && TALENT:恋心 == 0 && ABL:信頼 >= 3 && ABL:欲望 >= 5 && ABL:性交中毒 >= 2 && (!IS処女(TARGET) || !ISＡ処女(TARGET)) && EXP:奉仕快楽経験 >= 300 && TALENT:セフレ == 0
 	PRINTFORM つい先ほどまでベッドの上で%CALLNAME:MASTER%に
 	IF ABL:Ｖ感覚 >= ABL:Ａ感覚
 		PRINTFORM ヴァギナ
@@ -539,11 +531,11 @@ IF TALENT:両刀 == 0 && CFLAG:好感度 >= 1500 && EXP:レズ経験 >= 2000 && 
 ENDIF
 
 ;EXP:104はセフレとの経験
-IF EXP:セフレ性経験 >= 20 && TALENT:貞操観念
+IF EXP:セフレ性経験 >= 20 && IS_貞操観念(TARGET)
 	PRINTFORMW %NAME:TARGET%の様子がおかしい……
 	PRINTFORM 以前は性的な行為にも抵抗があったようだが、何人ものセフレに抱かれていくうちに
 	PRINTFORML 性行為にも抵抗がなくなってきたようだ
-	PRINTFORMW 《%NAME:TARGET%は【貞操観念】を失った》
+	PRINTFORMW 《%NAME:TARGET%は【%GET_STR_貞操観念(TARGET)%】を失った》
 	TALENT:貞操観念 = 0
 ENDIF
 
@@ -556,7 +548,7 @@ IF EXP:セフレ性経験 >= 30 && TALENT:影響されやすい && TALENT:恋心
 	TALENT:ギャル系 = 1
 ENDIF
 
-IF EXP:セフレ性経験 >= 50 && TALENT:貞操無頓着 == 0 && TALENT:淫乱 == 1
+IF EXP:セフレ性経験 >= 50 && !IS_貞操無頓着(TARGET) && TALENT:淫乱 == 1
 	;△現状EXP:104の増加には要黒ギャル。
 	;どうもそれっぽいテクストじゃないような
 	;（あと前口上に移動予定）
@@ -615,15 +607,15 @@ IF EXP:セフレ性経験 >= 50 && TALENT:貞操無頓着 == 0 && TALENT:淫乱 
 	ELSEIF NO:TARGET != [[キャラ:宮間かなで]]
 		PRINTFORMW %NAME:TARGET%について妙な噂話が流れている……
 		PRINTFORM なんでも%CALLNAME:TARGET%は
-		SIF TALENT:大人しい == 1
+		SIF IS_大人しい(TARGET)
 			PRINTFORM 大人しいフリをして
 		PRINTFORM 『頼めば誰でもヤらせてくれる』ヤリマンで、実際に%CALLNAME:TARGET%と
 		PRINTFORML ＳＥＸしたことがあるという者もいるという
 		PRINTFORML %CALLNAME:TARGET%に事実を確認してみると、今日も指導前にセフレたちと『遊んで』きたようだった
 	ENDIF
 
-	PRINTFORMW 《%NAME:TARGET%は【貞操無頓着】を得た》
-	TALENT:貞操無頓着 = 1
+	TALENT:貞操観念 = -1
+	PRINTFORMW 《%NAME:TARGET%は【GET_STR_貞操観念(TARGET)】を得た》
 ENDIF
 
 ;---------------------------------------------------------
@@ -832,18 +824,18 @@ IF TALENT:一線越えない == 1 && TALENT:売却不可 == 0
 	TALENT:一線越えない = 0
 ENDIF
 ;【抑圧】か【抵抗】か【嫉妬】なら【売却不可】でない限り消える
-IF (TALENT:抑圧 || TALENT:抵抗 || TALENT:嫉妬) && TALENT:売却不可 == 0
+IF (IS_抑圧(TARGET) || TALENT:抵抗 || TALENT:嫉妬) && TALENT:売却不可 == 0
 	PRINTFORM %NAME:TARGET%は
-	IF TALENT:抑圧
-		PRINTFORM 【%TALENTNAME:[[TALENT:抑圧]]%】
-		TALENT:抑圧 = 0
+	IF IS_抑圧(TARGET)
+		PRINTFORM 【%GET_STR_解放的(TARGET)%】
+		TALENT:解放的 = 0
 	ENDIF
 	IF TALENT:抵抗
 		PRINTFORM 【%TALENTNAME:[[TALENT:抵抗]]%】
 		TALENT:抵抗 = 0
 	ENDIF
 	IF TALENT:嫉妬
-		PRINTFORM 【%TALENTNAME:[[TALENT:抑圧]]%】
+		PRINTFORM 【%TALENTNAME:[[TALENT:嫉妬]]%】
 		TALENT:嫉妬 = 0
 	ENDIF
 	PRINTL を失った
@@ -851,9 +843,9 @@ IF (TALENT:抑圧 || TALENT:抵抗 || TALENT:嫉妬) && TALENT:売却不可 == 0
 	JUEL:否定 /= 2
 ENDIF
 ;【快感の否定】持ちの場合は【売却不可】でない限り消える
-IF TALENT:快感の否定 == 1 && TALENT:売却不可 == 0
-	PRINTFORMW %NAME:TARGET%は【%TALENTNAME:[[TALENT:快感の否定]]%】を失った
-	TALENT:快感の否定 = 0
+IF IS_快感の否定(TARGET) && TALENT:売却不可 == 0
+	PRINTFORMW %NAME:TARGET%は【%GET_STR_快感に素直(TARGET)%】を失った
+	TALENT:快感に素直 = 0
 ENDIF
 IF TALENT:男性不信 == 1 && TALENT:両刀 == 0
 	PRINTFORM オトコが苦手だった%NAME:TARGET%は【%TALENTNAME:[[TALENT:男性不信]]%】

@@ -73,7 +73,7 @@ ENDIF
 ;奴隷の口が愛液、精液、アナル、尿で汚れており、
 ;汚臭敏感で従順3以下のASSIの場合キスはしない（汚れ無視なら問題なし）
 IF  (STAIN:口 & 1 || STAIN:口 & 4 || STAIN:口 & 8 || STAIN:口 & 32) && ASSIPLAY
-	IF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+	IF ABL:ASSI:信頼 <= 3 && IS_汚臭敏感(ASSI) && TALENT:ASSI:汚れ無視 == 0
 		SOURCE:不潔 = 0
 		SOURCE:快Ｃ /= 2
 		SOURCE:情愛 /= 4
@@ -93,13 +93,13 @@ ELSEIF !CFLAG:初キス相手
 	SOURCE:愛液分泌 /= 2
 ELSE
 	;汚臭鈍感
-	SIF TALENT:汚臭鈍感
+	SIF IS_汚臭鈍感(TARGET)
 		SOURCE:不潔 /= 4
 	;汚臭敏感
-	SIF TALENT:汚臭敏感
+	SIF IS_汚臭敏感(TARGET)
 		SOURCE:不潔 *= 3
 	;自尊心
-	SIF TALENT:プライド高い
+	SIF IS_プライド高い(TARGET)
 		SOURCE:不潔 *= 2
 	;愛
 	IF TALENT:恋心 && ASSIPLAY == 0

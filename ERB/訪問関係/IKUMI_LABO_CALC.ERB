@@ -92,14 +92,11 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:大人しい = 1
-				TALENT:COUNT:活発 = 0
+				 TALENT:COUNT:活発度 = -1
 			ELSEIF RESULT == 1
-				TALENT:COUNT:大人しい = 0
-				TALENT:COUNT:活発 = 1
+				 TALENT:COUNT:活発度 = 1
 			ELSEIF RESULT == 2
-				TALENT:COUNT:大人しい = 0
-				TALENT:COUNT:活発 = 0
+				 TALENT:COUNT:活発度 = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_2
 			ENDIF
@@ -110,14 +107,11 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:プライド高い = 1
-				TALENT:COUNT:プライド低い = 0
+				TALENT:COUNT:プライド = 1
 			ELSEIF RESULT == 1
-				TALENT:COUNT:プライド高い = 0
-				TALENT:COUNT:プライド低い = 1
+				TALENT:COUNT:プライド = -1
 			ELSEIF RESULT == 2
-				TALENT:COUNT:プライド高い = 0
-				TALENT:COUNT:プライド低い = 0
+				TALENT:COUNT:プライド = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_3
 			ENDIF
@@ -146,14 +140,11 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:ポジティブ = 1
-				TALENT:COUNT:ネガティブ = 0
+				TALENT:COUNT:ポジティブさ = 1
 			ELSEIF RESULT == 1
-				TALENT:COUNT:ポジティブ = 0
-				TALENT:COUNT:ネガティブ = 1
+				TALENT:COUNT:ポジティブさ = -1
 			ELSEIF RESULT == 2
-				TALENT:COUNT:ポジティブ = 0
-				TALENT:COUNT:ネガティブ = 0
+				TALENT:COUNT:ポジティブさ = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_5
 			ENDIF
@@ -165,13 +156,10 @@ REPEAT CHARANUM
 		INPUT
 			IF RESULT == 0
 				TALENT:COUNT:貞操観念 = 1
-				TALENT:COUNT:貞操無頓着 = 0
 			ELSEIF RESULT == 1
-				TALENT:COUNT:貞操観念 = 0
-				TALENT:COUNT:貞操無頓着 = 1
+				TALENT:COUNT:貞操観念 = -1
 			ELSEIF RESULT == 2
 				TALENT:COUNT:貞操観念 = 0
-				TALENT:COUNT:貞操無頓着 = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_6
 			ENDIF
@@ -183,13 +171,10 @@ REPEAT CHARANUM
 		INPUT
 			IF RESULT == 0
 				TALENT:COUNT:恥じらい = 1
-				TALENT:COUNT:恥薄い = 0
 			ELSEIF RESULT == 1
-				TALENT:COUNT:恥じらい = 0
-				TALENT:COUNT:恥薄い = 1
+				TALENT:COUNT:恥じらい = -1
 			ELSEIF RESULT == 2
 				TALENT:COUNT:恥じらい = 0
-				TALENT:COUNT:恥薄い = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_7
 			ENDIF
@@ -200,14 +185,11 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:痛みに弱い = 1
-				TALENT:COUNT:痛みに強い = 0
+				TALENT:COUNT:痛覚耐性 = -1
 			ELSEIF RESULT == 1
-				TALENT:COUNT:痛みに弱い = 0
-				TALENT:COUNT:痛みに強い = 1
+				TALENT:COUNT:痛覚耐性 = 1
 			ELSEIF RESULT == 2
-				TALENT:COUNT:痛みに弱い = 0
-				TALENT:COUNT:痛みに強い = 0
+				TALENT:COUNT:痛覚耐性 = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_8
 			ENDIF
@@ -218,14 +200,11 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:素質 = 1
-				TALENT:COUNT:習得遅い = 0
+				TALENT:COUNT:習得速度 = 1
 			ELSEIF RESULT == 1
-				TALENT:COUNT:素質 = 0
-				TALENT:COUNT:習得遅い = 1
+				TALENT:COUNT:習得速度 = -1
 			ELSEIF RESULT == 2
-				TALENT:COUNT:素質 = 0
-				TALENT:COUNT:習得遅い = 0
+				TALENT:COUNT:習得速度 = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_9
 			ENDIF
@@ -236,14 +215,11 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:汚臭鈍感 = 1
-				TALENT:COUNT:汚臭敏感 = 0
+				TALENT:COUNT:汚臭耐性 = 1
 			ELSEIF RESULT == 1
-				TALENT:COUNT:汚臭鈍感 = 0
-				TALENT:COUNT:汚臭敏感 = 1
+				TALENT:COUNT:汚臭耐性 = -1
 			ELSEIF RESULT == 2
-				TALENT:COUNT:汚臭鈍感 = 0
-				TALENT:COUNT:汚臭敏感 = 0
+				TALENT:COUNT:汚臭耐性 = 0
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_10
 			ENDIF
@@ -254,17 +230,14 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:大柄 = 1
-				TALENT:COUNT:小柄 = 0
-				BASE:COUNT:身長 = 167
+				TALENT:COUNT:身長 = 1
+				BASE:COUNT:身長 = 16700
 			ELSEIF RESULT == 1
-				TALENT:COUNT:大柄 = 0
-				TALENT:COUNT:小柄 = 1
-				BASE:COUNT:身長 = 147
+				TALENT:COUNT:身長 = -1
+				BASE:COUNT:身長 = 14700
 			ELSEIF RESULT == 2
-				TALENT:COUNT:大柄 = 0
-				TALENT:COUNT:小柄 = 0
-				BASE:COUNT:身長 = 157
+				TALENT:COUNT:身長 = 0
+				BASE:COUNT:身長 = 15700
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_11
 			ENDIF
@@ -275,17 +248,14 @@ REPEAT CHARANUM
 		PRINTL [2] - ふつう
 		INPUT
 			IF RESULT == 0
-				TALENT:COUNT:貧乳 = 1
-				TALENT:COUNT:巨乳 = 0
-				BASE:COUNT:バスト = 74
+				TALENT:COUNT:乳サイズ = -1
+				BASE:COUNT:バスト = 7400
 			ELSEIF RESULT == 1
-				TALENT:COUNT:貧乳 = 0
-				TALENT:COUNT:巨乳 = 1
-				BASE:COUNT:身長 = 94
+				TALENT:COUNT:乳サイズ = 1
+				BASE:COUNT:身長 = 9400
 			ELSEIF RESULT == 2
-				TALENT:COUNT:貧乳 = 0
-				TALENT:COUNT:巨乳 = 0
-				BASE:COUNT:身長 = 84
+				TALENT:COUNT:乳サイズ = 0
+				BASE:COUNT:身長 = 8400
 			ELSE
 				GOTO INPUT_LOOP_PERSONALITY_12
 			ENDIF

@@ -454,7 +454,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:感情乏しい
 		B -= 5
 	;抑圧
-	SIF TALENT:COUNT:抑圧
+	SIF IS_抑圧(COUNT)
 		B -= 3
 	;舌使い
 	SIF TALENT:COUNT:舌使い
@@ -463,7 +463,7 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:献身的
 		B += 2
 	;快感に素直
-	SIF TALENT:COUNT:快感に素直
+	SIF IS_快感に素直(COUNT)
 		B += 3
 	;淫乱
 	SIF TALENT:COUNT:淫乱
@@ -484,15 +484,15 @@ REPEAT CHARANUM
 	SIF TALENT:COUNT:謎の魅力
 		B += 5
 	;爆乳
-	SIF TALENT:COUNT:爆乳
+	SIF IS_爆乳(COUNT)
 		B += 3
 	;巨乳
-	SIF TALENT:COUNT:巨乳
+	SIF IS_巨乳(COUNT)
 		B += 2
 	;貧乳をみる
 	;小柄・幼稚・未熟があれば逆にボーナス
-	IF TALENT:COUNT:貧乳
-		IF TALENT:COUNT:小柄 || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
+	IF IS_貧乳(COUNT)
+		IF IS_小柄(COUNT) || TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
 			B += 2
 		ELSE
 			B -= 2
@@ -500,7 +500,7 @@ REPEAT CHARANUM
 	ENDIF
 	;絶壁をみる
 	;幼稚・未熟があれば逆にボーナス
-	IF TALENT:COUNT:絶壁
+	IF IS_絶壁(COUNT)
 		IF TALENT:COUNT:幼稚 || TALENT:COUNT:未熟
 			B += 3
 		ELSE
@@ -583,7 +583,7 @@ REPEAT CHARANUM
 	U:100 = G * M
 
 	;プライドが高いと増える
-	SIF TALENT:活発
+	SIF IS_活発(TARGET)
 		TIMES U:100 , 1.50
 	;無関心だと少なくなる
 	SIF TALENT:クール
@@ -595,13 +595,13 @@ REPEAT CHARANUM
 	SIF TALENT:目立ちたがり
 		TIMES U:100 , 0.80
 	;抑圧だと増える
-	SIF TALENT:抑圧
+	SIF IS_抑圧(TARGET)
 		TIMES U:100 , 1.20
 	;解放だと少なくなる
-	SIF TALENT:解放
+	SIF IS_解放(TARGET)
 		TIMES U:100 , 0.80
 	;恥じらいだと増える
-	SIF TALENT:恥じらい
+	SIF IS_恥じらい(TARGET)
 		TIMES U:100 , 1.10
 	;露出狂だと一気に少なくなる
 	SIF TALENT:露出狂
@@ -911,10 +911,10 @@ E += ABL:自慰中毒*2
 ;露出癖は等倍
 E += ABL:露出癖
 ;抑圧
-SIF TALENT:抑圧
+SIF IS_抑圧(TARGET)
 	E -= 2
 ;解放
-SIF TALENT:解放
+SIF IS_解放(TARGET)
 	E += 2
 ;自慰しやすい
 SIF TALENT:自慰しやすい
@@ -1163,7 +1163,7 @@ Z = 0
 
 PRINTFORM 床の上に両手両足を突いた%CALLNAME:Y%の背中に、
 PRINTFORMW %CALLNAME:MASTER%が体重をかけて跨った
-IF (TALENT:Y:小柄 && TALENT:MASTER:小柄 == 0) || (TALENT:Y:大柄 == 0 && TALENT:MASTER:大柄)
+IF (IS_小柄(Y) && !IS_小柄(MASTER)) || (!IS_大柄(Y) && IS_大柄(MASTER))
 	PRINTFORML %CALLNAME:Y%は%CALLNAME:MASTER%の体重にほとんど押し潰されそうになり、
 	PRINTFORMW 顔を真っ赤にして両腕を突っ張り、辛うじて胴体を浮かせているのがやっとだ
 	PRINTFORM 正直、この騎手と
@@ -1173,7 +1173,7 @@ IF (TALENT:Y:小柄 && TALENT:MASTER:小柄 == 0) || (TALENT:Y:大柄 == 0 && TA
 		PRINT 牝
 	ENDIF
 	PRINTFORML 馬の組み合わせは無理があったかもしれない――
-ELSEIF (TALENT:Y:大柄 && TALENT:MASTER:大柄 == 0) || (TALENT:Y:小柄 == 0 && TALENT:MASTER:小柄)
+ELSEIF (IS_大柄(Y) && !IS_大柄(MASTER)) || (!IS_小柄(Y) && IS_小柄(MASTER))
 	PRINTFORMW %CALLNAME:Y%の背中は、%CALLNAME:MASTER%の体重にもしっかりと持ち堪えている
 	PRINTFORM これは、なかなか頼りがいのある
 	IF IS_MALE(Y)
@@ -1228,19 +1228,19 @@ REPEAT CHARANUM
 	;残り体力による修正
 	E += (BASE:体力 - CFLAG:55) / 200
 	;大柄
-	SIF TALENT:大柄
+	SIF IS_大柄(TARGET)
 		E += 5
 	;小柄
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		E -= 5
 	;未熟
 	SIF TALENT:未熟
 		E -= 5
 	;主人と組んで主人が小柄
-	SIF TARGET == Y && TALENT:MASTER:小柄
+	SIF TARGET == Y && IS_小柄(MASTER)
 		E += 5
 	;主人と組んで主人が大柄
-	SIF TARGET == Y && TALENT:MASTER:大柄
+	SIF TARGET == Y && IS_大柄(MASTER)
 		E -= 5
 	;反抗的
 	SIF TALENT:ナマイキ
@@ -1278,16 +1278,16 @@ REPEAT CHARANUM
 	;体力の消耗
 	CFLAG:55 += 10 + RAND:5
 	;大柄
-	SIF TALENT:大柄
+	SIF IS_大柄(TARGET)
 		CFLAG:55 -= 5
 	;小柄
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		CFLAG:55 += 10
 	;主人と組んで主人が小柄
-	SIF TARGET == Y && TALENT:MASTER:小柄
+	SIF TARGET == Y && IS_小柄(MASTER)
 		CFLAG:55 -= 5
 	;主人と組んで主人が大柄
-	SIF TARGET == Y && TALENT:MASTER:大柄
+	SIF TARGET == Y && IS_大柄(MASTER)
 		CFLAG:55 += 10
 
 	;走行距離を加算

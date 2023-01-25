@@ -10,9 +10,9 @@ ELSEIF TALENT:精愛味覚 == 1
 	BASE:魅力値 -= 5
 ELSEIF TALENT:汚れ無視 == 1
 	BASE:魅力値 -= 5
-ELSEIF TALENT:肥満 == 1
+ELSEIF IS_肥満(TARGET)
 	BASE:魅力値 -= 20
-ELSEIF TALENT:剛毛 == 1
+ELSEIF IS_剛毛(TARGET)
 	BASE:魅力値 -= 5
 ELSEIF TALENT:風俗嬢 == 1
 	BASE:魅力値 -= 5

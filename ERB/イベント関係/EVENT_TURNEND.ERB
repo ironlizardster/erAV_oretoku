@@ -313,7 +313,7 @@ REPEAT CHARANUM
 		A += 100
 	
 	;回復早い、回復遅い、アンドロイド、淫魔、天使
-	SIF TALENT:COUNT:異常回復
+	SIF IS_異常回復(COUNT)
 		A += 3000
 	SIF TALENT:COUNT:最先端科学
 		A += 3000
@@ -367,9 +367,9 @@ REPEAT CHARANUM
 	SIF TIME == 1 && A < 10
 		A = 10
 
-	IF TALENT:COUNT:回復早い
+	IF IS_回復早い(COUNT)
 		A *= 2
-	ELSEIF TALENT:COUNT:回復遅い
+	ELSEIF IS_回復遅い(COUNT)
 		A /= 2
 	ENDIF
 
@@ -394,25 +394,25 @@ SIF FLAG:陰毛を生やす == 0
 
 REPEAT CHARANUM
 	;剛毛剤使用中か剛毛体質
-	SIF (CFLAG:COUNT:剛毛剤使用 || TALENT:COUNT:剛毛) && CFLAG:COUNT:陰毛状態 <= 25
+	SIF (CFLAG:COUNT:剛毛剤使用 || IS_剛毛(COUNT)) && CFLAG:COUNT:陰毛状態 <= 25
 		CFLAG:COUNT:陰毛状態 += 1
 
 	;【パイパン】消失
-	IF TALENT:COUNT:パイパン && CFLAG:COUNT:陰毛状態 > 5
+	IF IS_パイパン(COUNT) && CFLAG:COUNT:陰毛状態 > 5
 		PRINTFORMW %NAME:COUNT%の性器にうっすらと毛が生え始めている……
-		PRINTFORMW %NAME:COUNT%は【%TALENTNAME:[[TALENT:パイパン]]%】でなくなった。	
-		TALENT:COUNT:パイパン = 0
+		PRINTFORMW %NAME:COUNT%は【%GET_STR_陰毛(COUNT)%】でなくなった。	
+		TALENT:COUNT:陰毛 = 0
 	ENDIF
 	;【剛毛体質】獲得
-	IF TALENT:COUNT:剛毛 == 0 && CFLAG:COUNT:陰毛状態 > 18
+	IF !IS_剛毛(COUNT) && CFLAG:COUNT:陰毛状態 > 18
 		PRINTFORML %NAME:COUNT%の下腹部は恥丘からアナルまで、
 		PRINTFORMW 密生した陰毛に覆われている……
-		PRINTFORMW %NAME:COUNT%は【%TALENTNAME:[[TALENT:剛毛]]%】になった。	
-		TALENT:COUNT:剛毛 = 1
+		TALENT:COUNT:陰毛 = 1
+		PRINTFORMW %NAME:COUNT%は【%GET_STR_陰毛(COUNT)%】になった。	
 	ENDIF
 
 	;パイパンならそのまま
-	SIF TALENT:COUNT:パイパン
+	SIF IS_パイパン(COUNT)
 		CONTINUE
 	;永久脱毛してるならそのまま
 	SIF CFLAG:COUNT:陰毛状態 < 0

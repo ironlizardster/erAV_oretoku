@@ -554,10 +554,10 @@ IF 元カノタイプ == 元カノタイプ_委員長
 	ABL:運動能力 = 3
 	ABL:学力 = 7
 ELSEIF 元カノタイプ == 元カノタイプ_スポーツ少女
-	TALENT:活発 = 1
-	TALENT:ポジティブ = 1
+	TALENT:活発度 = 1
+	TALENT:ポジティブさ = 1
 	TALENT:好奇心 = 1
-	TALENT:回復早い = 1
+	TALENT:回復速度 = 1
 	TALENT:運動部 = 1
 	ABL:美容感覚 = 3
 	ABL:運動能力 = 7
@@ -565,7 +565,7 @@ ELSEIF 元カノタイプ == 元カノタイプ_スポーツ少女
 	CSTR:一人称 = あたし
 ELSEIF 元カノタイプ == 元カノタイプ_ギャル
 	TALENT:ギャル系 = 1
-	TALENT:解放 = 1
+	TALENT:解放的 = 1
 	TALENT:饒舌 = 1
 	TALENT:交渉上手 = 1
 	ABL:美容感覚 = 7
@@ -574,9 +574,9 @@ ELSEIF 元カノタイプ == 元カノタイプ_ギャル
 	CSTR:一人称 = アタシ
 ELSEIF 元カノタイプ == 元カノタイプ_図書委員
 	TALENT:クール = 1
-	TALENT:素質 = 1
-	TALENT:恥薄い = 1
-	TALENT:回復遅い = 1
+	TALENT:習得速度 = 1
+	TALENT:恥じらい = -1
+	TALENT:回復速度 = -1
 	ABL:美容感覚 = 4
 	ABL:運動能力 = 2
 	ABL:学力 = 7
@@ -883,18 +883,10 @@ ENDIF
 						;****カノ設定改造追加ここまで****
 
 IF CFLAG:MASTER:236
-	IF TALENT:絶壁 == 1
-		TALENT:絶壁 = 0
-		TALENT:貧乳 = 1
-	ELSEIF TALENT:貧乳 == 1
-		TALENT:貧乳 = 0
-	ELSEIF TALENT:巨乳 == 0 && TALENT:爆乳 == 0
-		TALENT:巨乳 = 1
-	ELSEIF TALENT:巨乳 == 1
-		TALENT:巨乳 = 0
-		TALENT:爆乳 = 1
-	ELSEIF TALENT:爆乳 == 1
+	IF IS_神乳(TARGET)
 		MARK:5 = 1
+	ELSE
+		TALENT:乳サイズ++
 	ENDIF
 	MAXBASE:体力 -= 500
 	IF TALENT:母乳体質 == 1
@@ -1518,18 +1510,10 @@ ENDIF
 						;****カノ設定改造追加ここまで****
 
 IF CFLAG:MASTER:236
-	IF TALENT:絶壁 == 1
-		TALENT:絶壁 = 0
-		TALENT:貧乳 = 1
-	ELSEIF TALENT:貧乳 == 1
-		TALENT:貧乳 = 0
-	ELSEIF TALENT:巨乳 == 0 && TALENT:爆乳 == 0
-		TALENT:巨乳 = 1
-	ELSEIF TALENT:巨乳 == 1
-		TALENT:巨乳 = 0
-		TALENT:爆乳 = 1
-	ELSEIF TALENT:爆乳 == 1
+	IF IS_神乳(TARGET)
 		MARK:5 = 1
+	ELSE
+		TALENT:乳サイズ++
 	ENDIF
 	MAXBASE:体力 -= 500
 	IF TALENT:母乳体質 == 1

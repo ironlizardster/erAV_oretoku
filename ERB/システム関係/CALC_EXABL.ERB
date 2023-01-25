@@ -8,7 +8,7 @@ RETURNF TALENT:ARG:ColorfulPureGirls || TALENT:ARG:オリジナルユニット |
 
 @UNLOCK_運動LV8(ARG)
 #FUNCTION
-RETURNF TALENT:ARG:活発 || UNLOCK_運動LV10(ARG)
+RETURNF IS_活発(ARG) || UNLOCK_運動LV10(ARG)
 
 @UNLOCK_運動LV10(ARG)
 #FUNCTION
@@ -16,7 +16,7 @@ RETURNF TALENT:ARG:運動部 || TALENT:ARG:護身術
 
 @UNLOCK_学力LV8(ARG)
 #FUNCTION
-RETURNF TALENT:ARG:素質 || UNLOCK_学力LV10(ARG)
+RETURNF IS_習得早い(ARG) || UNLOCK_学力LV10(ARG)
 
 @UNLOCK_学力LV10(ARG)
 #FUNCTION
@@ -24,7 +24,7 @@ RETURNF TALENT:ARG:優等生 || TALENT:ARG:最先端科学 || TALENT:ARG:異界�
 
 @UNLOCK_オタLV8(ARG)
 #FUNCTION
-RETURNF TALENT:ARG:素質 || UNLOCK_オタLV10(ARG)
+RETURNF IS_習得早い(ARG) || UNLOCK_オタLV10(ARG)
 
 @UNLOCK_オタLV10(ARG)
 #FUNCTION
@@ -63,7 +63,7 @@ REPEAT CHARANUM
 		ENDIF
 						;****追加ここまで****
 		EXP:COUNT:美容トレーニング経験 += 1
-		SIF TALENT:COUNT:ファッションモデル || TALENT:COUNT:素質
+		SIF TALENT:COUNT:ファッションモデル || IS_習得早い(COUNT)
 			EXP:COUNT:美容トレーニング経験 += 1
 		SIF TALENT:COUNT:ギャル系
 			EXP:COUNT:美容トレーニング経験 += 2
@@ -100,11 +100,11 @@ REPEAT CHARANUM
 		ENDIF
 						;****追加ここまで****
 		EXP:COUNT:運動トレーニング経験 += 1
-		SIF TALENT:COUNT:回復早い
+		SIF IS_回復早い(COUNT)
 			EXP:COUNT:運動トレーニング経験 += 1
 		SIF TALENT:COUNT:運動部
 			EXP:COUNT:運動トレーニング経験 += 2
-		SIF TALENT:COUNT:異常回復
+		SIF IS_異常回復(COUNT)
 			EXP:COUNT:運動トレーニング経験 += 3
 	ENDIF
 REND
@@ -137,8 +137,8 @@ REPEAT CHARANUM
 		ENDIF
 						;****追加ここまで****
 		EXP:COUNT:学業トレーニング経験 += 1
-		SIF TALENT:COUNT:素質
-			EXP:COUNT:224 += 1
+		SIF IS_習得早い(COUNT)
+			EXP:COUNT:学業トレーニング経験 += 1
 		SIF TALENT:COUNT:優等生
 			EXP:COUNT:学業トレーニング経験 += 2
 	ENDIF
@@ -172,7 +172,7 @@ REPEAT CHARANUM
 		ENDIF
 						;****追加ここまで****
 		EXP:COUNT:オタクトレーニング経験 += 1
-		SIF TALENT:COUNT:コスプレイヤー || TALENT:COUNT:素質
+		SIF TALENT:COUNT:コスプレイヤー || IS_習得早い(COUNT)
 			EXP:COUNT:オタクトレーニング経験 += 1
 		SIF TALENT:COUNT:ニート
 			EXP:COUNT:オタクトレーニング経験 += 2

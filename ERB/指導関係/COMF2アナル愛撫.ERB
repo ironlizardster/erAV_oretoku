@@ -112,18 +112,18 @@ ENDIF
 
 ;Ａ敏感、鈍感をみる
 ;快Ａ自体のチェックは後でまとめてやる
-IF TALENT:Ａ鈍感
+IF IS_Ａ鈍感(TARGET)
 	TIMES SOURCE:痛覚 , 1.50
 	TIMES SOURCE:屈従 , 1.50
 	TIMES SOURCE:逸脱 , 1.50
-ELSEIF TALENT:Ａ敏感
+ELSEIF IS_Ａ敏感(TARGET)
 	TIMES SOURCE:痛覚 , 0.60
 	TIMES SOURCE:屈従 , 0.60
 	TIMES SOURCE:逸脱 , 0.60
 ENDIF
 
 ;処女で貞操観念
-IF IS処女(TARGET) && TALENT:貞操観念
+IF IS処女(TARGET) && IS_貞操観念(TARGET)
 	TIMES SOURCE:屈従 , 0.80
 	TIMES SOURCE:逸脱 , 0.50
 ENDIF

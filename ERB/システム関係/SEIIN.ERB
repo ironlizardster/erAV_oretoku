@@ -33,31 +33,31 @@ SIF TALENT:気丈 == 1
 SIF TALENT:保守的 == 1
 	P += 4
 ;楽観的(ポジティブ)
-SIF TALENT:ポジティブ == 1
+SIF IS_楽観的(TARGET)
 	P -= 2
 ;悲観的(ネガティブ)
-SIF TALENT:ネガティブ == 1
+SIF IS_悲観的(TARGET)
 	P += 2
 ;一線越えない
 SIF TALENT:一線越えない == 1
 	P += 5
 ;抑圧
-SIF TALENT:抑圧 == 1
+SIF IS_抑圧(TARGET)
 	P += 4
 ;解放
-SIF TALENT:解放 == 1
+SIF IS_解放(TARGET)
 	P -= 2
 ;汚臭鈍感
-SIF TALENT:汚臭鈍感 == 1
+SIF IS_汚臭鈍感(TARGET)
 	P -= 2
 ;汚臭敏感
-SIF TALENT:汚臭敏感 == 1
+SIF IS_汚臭敏感(TARGET)
 	P += 2
 ;快感に素直
-SIF TALENT:快感に素直 == 1
+SIF IS_快感に素直(TARGET)
 	P -= 2
 ;快感の否定
-SIF TALENT:快感の否定 == 1
+SIF IS_快感の否定(TARGET)
 	P += 4
 ;中毒しやすい
 SIF TALENT:中毒しやすい == 1

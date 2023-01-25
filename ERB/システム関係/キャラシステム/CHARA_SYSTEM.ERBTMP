@@ -75,7 +75,7 @@ IF BASE:ARG:身長
 	ELSEIF TALENT:ARG:巨乳 == 1
 		SIF BASE:ARG:カップ <= NUM("並乳の上限") || BASE:ARG:カップ > NUM("巨乳の上限")
 			IS_CHANGESIZE = 1
-	ELSEIF TALENT:ARG:貧乳
+	ELSEIF IS_貧乳(ARG)
 		SIF BASE:ARG:カップ > NUM("貧乳の上限")
 			IS_CHANGESIZE = 1
 	ELSEIF TALENT:ARG:巨乳 + TALENT:ARG:貧乳 == 0

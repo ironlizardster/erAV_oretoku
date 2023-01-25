@@ -611,12 +611,12 @@ IF EXP:売春経験 >= 100 && MARK:反発刻印 == 0 && TALENT:風俗嬢 == 0 &&
 	TALENT:風俗嬢 = 1
 	MAXBASE:魅力値 += 10
 	BASE:魅力値 += 10
-	IF TALENT:貞操観念 == 1
-		PRINTFORML 《%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:貞操観念]]%】を失った》
+	IF IS_貞操観念(TARGET)
+		PRINTFORML 《%CALLNAME:TARGET%は【%GET_STR_貞操観念(TARGET)%】を失った》
 		TALENT:貞操観念 = 0
-	ELSEIF TALENT:貞操観念 == 0 && TALENT:貞操無頓着 == 0
-		PRINTFORML 《%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:貞操無頓着]]%】になった》
-		TALENT:貞操無頓着 = 1
+	ELSEIF !IS_貞操観念(TARGET) && !IS_貞操無頓着(TARGET)
+		TALENT:貞操観念 = -1
+		PRINTFORML 《%CALLNAME:TARGET%は【%GET_STR_貞操観念(TARGET)%】になった》
 	ENDIF
 ENDIF
 ;傾城の条件：売春経験200以上、反発刻印なし、屈服刻印Lv3、娼婦取得、人気100
@@ -628,12 +628,12 @@ IF EXP:売春経験 >= 200 && MARK:反発刻印 == 0 && TALENT:風俗嬢 == 1 &&
 	TALENT:風俗嬢 = 0
 	MAXBASE:魅力値 += 20
 	BASE:魅力値 += 20
-	IF TALENT:貞操観念 == 1
-		PRINTFORML 《%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:貞操観念]]%】を失った》
+	IF IS_貞操観念(TARGET)
+		PRINTFORML 《%CALLNAME:TARGET%は【%GET_STR_貞操観念(TARGET)%】を失った》
 		TALENT:貞操観念 = 0
-	ELSEIF TALENT:貞操観念 == 0 && TALENT:貞操無頓着 == 0
-		PRINTFORML 《%CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:貞操無頓着]]%】になった》
-		TALENT:貞操無頓着 = 1
+	ELSEIF !IS_貞操観念(TARGET) && !IS_貞操無頓着(TARGET)
+		TALENT:貞操観念 = -1
+		PRINTFORML 《%CALLNAME:TARGET%は【%GET_STR_貞操観念(TARGET)%】になった》
 	ENDIF
 ENDIF
 ;求愛の条件：売春経験100以上、営業愛情経験300以上、永遠の愛未取得、常連客がいる、人気60以上
@@ -931,13 +931,13 @@ SIF TALENT:謎の魅力
 SIF TALENT:人気者
 	B += 35
 ;巨乳か貧乳
-SIF TALENT:巨乳 || TALENT:貧乳
+SIF IS_巨乳(TARGET) || IS_貧乳(TARGET)
 	B += 25
 ;ふたなり
 SIF IS_FUTA(TARGET)
 	B += 15
 ;小柄体系
-SIF TALENT:小柄
+SIF IS_小柄(TARGET)
 	B += 25
 ;アイドル
 SIF TALENT:アイドル
@@ -1002,10 +1002,10 @@ SIF TALENT:風俗嬢
 SIF TALENT:彼氏あり
 	TIMES A , 0.50
 ;プライドが高いと増える
-SIF TALENT:プライド高い
+SIF IS_プライド高い(TARGET)
 	TIMES A , 1.50
 ;貞操観念だと凄く増える
-SIF TALENT:貞操観念
+SIF IS_貞操観念(TARGET)
 	TIMES A , 2.50
 ;淫乱だとやや少なくなる
 SIF TALENT:淫乱

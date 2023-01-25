@@ -189,20 +189,20 @@ ENDIF
 SIF TALENT:気丈
 	TIMES A , 0.90
 ;大人しい
-SIF TALENT:大人しい
+SIF IS_大人しい(TARGET)
 	TIMES A , 1.20
 ;生意気
-IF TALENT:活発
+IF IS_活発(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 ENDIF
 
 ;プライド高い
-IF TALENT:プライド高い
+IF IS_プライド高い(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 ;プライド低い
-ELSEIF TALENT:プライド低い
+ELSEIF IS_プライド低い(TARGET)
 	TIMES A , 1.10
 	TIMES B , 1.10
 ENDIF
@@ -228,7 +228,7 @@ IF TALENT:好奇心
 	TIMES B , 0.90
 ENDIF
 ;悲観的
-SIF TALENT:ネガティブ
+SIF IS_悲観的(TARGET)
 	TIMES A , 1.10
 ;目立ちたがり
 IF TALENT:目立ちたがり
@@ -236,21 +236,21 @@ IF TALENT:目立ちたがり
 	TIMES B , 0.90
 ENDIF
 ;貞操観念
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
 	TIMES A , 1.10
 	TIMES B , 1.10
 ;貞操無頓着
-ELSEIF TALENT:貞操無頓着
+ELSEIF IS_貞操無頓着(TARGET)
 	TIMES A , 0.95
 	TIMES B , 0.95
 ENDIF
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES A , 0.95
 	TIMES B , 0.95
 ;解放
-ELSEIF TALENT:解放
+ELSEIF IS_解放(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 ENDIF
@@ -262,11 +262,11 @@ IF TALENT:ボーイッシュ || TALENT:男性不信
 ENDIF
 
 ;痛みに弱い
-IF TALENT:痛みに弱い
+IF IS_痛みに弱い(TARGET)
 	TIMES A , 1.20
 	TIMES B , 1.20
 ;痛みに強い
-ELSEIF TALENT:痛みに強い
+ELSEIF IS_痛みに強い(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 ENDIF

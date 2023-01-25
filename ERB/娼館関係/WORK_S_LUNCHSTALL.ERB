@@ -61,7 +61,7 @@ REPEAT CHARANUM
 		CONTINUE
 	SIF TARGET == COUNT
 		CONTINUE
-	SIF IS_MALE(COUNT) || TALENT:COUNT:絶壁
+	SIF IS_MALE(COUNT) || IS_絶壁(COUNT)
 		F = 0
 REND
 
@@ -401,16 +401,16 @@ SIF TALENT:感情乏しい
 SIF TALENT:好奇心
 	D += 1
 ;素質
-SIF TALENT:素質
+SIF IS_習得早い(TARGET)
 	D += 2
 ;習得遅い
-SIF TALENT:習得遅い
+SIF IS_習得遅い(TARGET)
 	D -= 2
 ;汚臭鈍感
-SIF TALENT:汚臭鈍感
+SIF IS_汚臭鈍感(TARGET)
 	D -= 3
 ;汚臭敏感
-SIF TALENT:汚臭敏感
+SIF IS_汚臭敏感(TARGET)
 	D += 3
 ;献身的
 SIF TALENT:献身的
@@ -448,16 +448,16 @@ REPEAT CHARANUM
 	;おっぱい屋台
 	IF FLAG:特殊営業で夜の部を開催フラグ
 		;巨乳
-		SIF TALENT:COUNT:巨乳
+		SIF IS_巨乳(COUNT)
 			D += 3
 		;爆乳
-		SIF TALENT:COUNT:爆乳
+		SIF IS_爆乳(COUNT)
 			D += 5
 		;貧乳
-		SIF TALENT:COUNT:貧乳
+		SIF IS_貧乳(COUNT)
 			D -= 2
 		;絶壁
-		SIF TALENT:COUNT:絶壁
+		SIF IS_絶壁(COUNT)
 			D -= 5
 		;母乳体質
 		SIF TALENT:COUNT:母乳体質
@@ -677,13 +677,13 @@ REPEAT CHARANUM
 	SIF TALENT:感情乏しい
 		TIMES U:100 , 0.90
 	;プライドが高いとかなり増える
-	SIF TALENT:プライド高い
+	SIF IS_プライド高い(TARGET)
 		TIMES U:100 , 1.80
 	;目立ちたがりだと少なくなる
 	SIF TALENT:目立ちたがり
 		TIMES U:100 , 0.80
 	;生意気だと増える
-	SIF TALENT:活発
+	SIF IS_活発(TARGET)
 		TIMES U:100 , 1.20
 	;献身的だと少なくなる
 	SIF TALENT:献身的
@@ -695,7 +695,7 @@ REPEAT CHARANUM
 	SIF TALENT:母性
 		TIMES U:100 , 0.50
 	;屋台営業失敗かつ恥じらいだと結構増える
-	SIF TALENT:恥じらい && A <= 1
+	SIF IS_恥じらい(TARGET) && A <= 1
 		TIMES U:100 , 1.50
 	;おっぱい屋台だと接客係はすごく増える（乳狂いなら平気）
 	SIF FLAG:特殊営業で夜の部を開催フラグ && TARGET != X && TALENT:乳狂い == 0
@@ -734,7 +734,7 @@ REPEAT CHARANUM
 	LOSEBASE:体力 = G * 20
 	
 	;小柄だと疲労増加
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		TIMES LOSEBASE:体力 , 1.20
 
 	;おっぱい屋台なら接客係はかなり疲れる
@@ -1021,27 +1021,27 @@ IF FLAG:特殊営業で夜の部を開催フラグ == 1
 			CONTINUE
 		V = 100
 		;爆乳
-		IF TALENT:COUNT:爆乳
+		IF IS_爆乳(COUNT)
 			V = 120
-			PRINTFORML %TALENTNAME:[[TALENT:爆乳]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			PRINTFORML %GET_STR_乳サイズ(COUNT)%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
 			Q *= V
 			Q /= 100
 		;巨乳
-		ELSEIF TALENT:COUNT:巨乳
+		ELSEIF IS_巨乳(COUNT)
 			V = 110
-			PRINTFORML %TALENTNAME:[[TALENT:巨乳]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			PRINTFORML %GET_STR_乳サイズ(COUNT)%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
 			Q *= V
 			Q /= 100
 		;貧乳
-		ELSEIF TALENT:COUNT:貧乳
+		ELSEIF IS_貧乳(COUNT)
 			V = 80
-			PRINTFORML %TALENTNAME:[[TALENT:貧乳]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			PRINTFORML %GET_STR_乳サイズ(COUNT)%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
 			Q *= V
 			Q /= 100
 		;貧乳
-		ELSEIF TALENT:COUNT:絶壁
+		ELSEIF IS_絶壁(COUNT)
 			V = 50
-			PRINTFORML %TALENTNAME:[[TALENT:絶壁]]%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
+			PRINTFORML %GET_STR_乳サイズ(COUNT)%(%CALLNAME:COUNT%) ×{V/100}.{V%100}
 			Q *= V
 			Q /= 100
 		ENDIF

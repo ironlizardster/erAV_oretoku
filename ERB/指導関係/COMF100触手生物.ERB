@@ -443,7 +443,7 @@ RETURN 1
 ;
 @SYOKUSYU_MILK
 ;［Ｂ感度］３以上、［母乳体質］無しかつ［貧乳］[絶壁]［オトコ］無し
-IF ABL:TARGET:Ｂ感覚 >= 3 && TALENT:母乳体質 == 0 && TALENT:貧乳 == 0 && TALENT:絶壁 == 0 && HAVE_VAGINA(TARGET) 
+IF ABL:TARGET:Ｂ感覚 >= 3 && TALENT:母乳体質 == 0 && !IS_ナイチチ(TARGET) && HAVE_VAGINA(TARGET) 
 	PRINTFORML 触手搾乳により%NAME:TARGET%は母乳が出るようになった
 	TALENT:母乳体質 = 1
 ENDIF

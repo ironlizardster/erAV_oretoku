@@ -12,7 +12,7 @@ DRAWLINE
 ;DRAWLINE
 ;精液中毒はLv5が上限
 ;[淫乱][習得早い][汚臭鈍感][汚れ無視][精愛味覚]が付いている場合はLv10まで解放
-IF ABL:精液中毒 >= 5 && (TALENT:淫乱 == 0 && TALENT:素質 == 0 && TALENT:汚臭鈍感 == 0 && TALENT:汚れ無視 == 0 && TALENT:精愛味覚 == 0)
+IF ABL:精液中毒 >= 5 && (TALENT:淫乱 == 0 && !IS_習得早い(TARGET) && !IS_汚臭鈍感(TARGET) && TALENT:汚れ無視 == 0 && TALENT:精愛味覚 == 0)
 	PRINTW これ以上UPするには素質が必要です
 	RETURN 0
 ELSEIF ABL:精液中毒 >= 10
@@ -20,7 +20,7 @@ ELSEIF ABL:精液中毒 >= 10
 	RETURN 0
 ;精液中毒＋レズ中毒は11以上にならない
 ;そんなファンタジー。例外多々あり、ABLUP33のコメント参照
-ELSEIF ABL:精液中毒 + ABL:レズ中毒 + ABL:獣姦中毒 >= 10 && TALENT:精愛味覚 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:男性不信 == 0 && TALENT:動物好き == 0 && TALENT:牝犬 == 0
+ELSEIF ABL:精液中毒 + ABL:レズ中毒 + ABL:獣姦中毒 >= 10 && TALENT:精愛味覚 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:男性不信 == 0 && !IS_動物好き(TARGET) && TALENT:牝犬 == 0
 	PRINTFORMW 精液中毒({ABL:精液中毒})＋レズ中毒({ABL:レズ中毒})＋獣姦中毒({ABL:獣姦中毒})の上限は10です
 	RETURN 0
 ENDIF
@@ -123,10 +123,10 @@ RETURN 0
 ;[淫乱][習得早い][汚臭鈍感][汚れ無視][精愛味覚]が付いている場合はLv10まで解放
 SIF ABL:精液中毒 >= 10
 	RETURN 0
-SIF ABL:精液中毒 >= 5 && (TALENT:淫乱 == 0 && TALENT:素質 == 0 && TALENT:汚臭鈍感 == 0 && TALENT:汚れ無視 == 0 && TALENT:精愛味覚 == 0)
+SIF ABL:精液中毒 >= 5 && (TALENT:淫乱 == 0 && !IS_習得早い(TARGET) && !IS_汚臭鈍感(TARGET) && TALENT:汚れ無視 == 0 && TALENT:精愛味覚 == 0)
 	RETURN 0
 ;精液中毒＋レズ中毒＋獣姦中毒は11以上にならない
-SIF ABL:精液中毒 + ABL:レズ中毒 + ABL:獣姦中毒 >= 10 && TALENT:精愛味覚 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:男性不信 == 0 && TALENT:動物好き == 0 && TALENT:牝犬 == 0
+SIF ABL:精液中毒 + ABL:レズ中毒 + ABL:獣姦中毒 >= 10 && TALENT:精愛味覚 == 0 && TALENT:倒錯的 == 0 && TALENT:両刀 == 0 && TALENT:男性不信 == 0 && !IS_動物好き(TARGET) && TALENT:牝犬 == 0
 	RETURN 0
 
 ;判定変数を空に
@@ -202,7 +202,7 @@ IF TALENT:一線越えない
 ENDIF
 
 ;ＬＶ２以上に上げるときは異常経験必要（素質：[汚臭鈍感][中毒しやすい][倒錯的][狂気][精愛味覚]なら無視できる）
-SIF ABL:精液中毒 >= 2 && (TALENT:汚臭鈍感 == 0 && TALENT:中毒しやすい == 0 && TALENT:倒錯的 == 0 && TALENT:狂気 == 0 && TALENT:精愛味覚 == 0)
+SIF ABL:精液中毒 >= 2 && (!IS_汚臭鈍感(TARGET) && TALENT:中毒しやすい == 0 && TALENT:倒錯的 == 0 && TALENT:狂気 == 0 && TALENT:精愛味覚 == 0)
 	D = ABL:精液中毒 - 1
 
 ;反抗的
@@ -225,12 +225,12 @@ IF TALENT:保守的
 ENDIF
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES A , 1.20
 	TIMES B , 1.20
 	TIMES C , 1.20
 ;解放
-ELSEIF TALENT:解放
+ELSEIF IS_解放(TARGET)
 	TIMES A , 0.80
 	TIMES B , 0.80
 	TIMES C , 0.80
@@ -258,12 +258,12 @@ IF TALENT:舌使い
 ENDIF
 
 ;汚臭鈍感
-IF TALENT:汚臭鈍感
+IF IS_汚臭鈍感(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 	TIMES C , 0.90
 ;汚臭敏感
-ELSEIF TALENT:汚臭敏感
+ELSEIF IS_汚臭敏感(TARGET)
 	TIMES A , 2.00
 	TIMES B , 2.00
 	TIMES C , 2.00

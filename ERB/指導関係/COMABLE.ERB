@@ -38,7 +38,7 @@ SIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
 	RETURN 0
 ;性器が精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合クンニはできない（調教者が汚れ無視ならＯＫ）
 IF (STAIN:ペニス & 4 || STAIN:ペニス & 8 || STAIN:ペニス & 32) && ASSIPLAY
-	SIF ABL:ASSI:Ｃ感覚 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+	SIF ABL:ASSI:Ｃ感覚 <= 3 && IS_汚臭敏感(ASSI) && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
 RETURN 1
@@ -139,7 +139,7 @@ RETURN 1
 @COM_ABLE4
 ;性器が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合フェラはできない（調教者が汚れ無視ならＯＫ）
 IF (STAIN:ペニス & 1 || STAIN:ペニス & 4 || STAIN:ペニス & 8 || STAIN:口 & 32) && ASSIPLAY
-	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+	SIF ABL:ASSI:信頼 <= 3 && IS_汚臭敏感(ASSI) && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;対象がオトコかふたなりじゃないとダメ
@@ -197,7 +197,7 @@ RETURN 1
 @COM_ABLE6
 ;口が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下のASSIの場合キスはできない（調教者が汚れ無視ならＯＫ）
 IF (STAIN:口 & 1 || STAIN:口 & 4 || STAIN:口 & 8 || STAIN:口 & 32) && ASSIPLAY
-	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+	SIF ABL:ASSI:信頼 <= 3 && IS_汚臭敏感(ASSI) && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;奉仕しないがあるとダメ
@@ -318,7 +318,7 @@ RETURN 1
 @COM_ABLE9
 ;汚臭敏感で従順3以下のASSIの場合アナル舐めはできない（調教者が汚れ無視ならＯＫ）
 IF ASSIPLAY
-	SIF ABL:ASSI:信頼 <= 3 && TALENT:ASSI:汚臭敏感 && TALENT:ASSI:汚れ無視 == 0
+	SIF ABL:ASSI:信頼 <= 3 && IS_汚臭敏感(ASSI) && TALENT:ASSI:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;触手調教中はダメ
@@ -1115,11 +1115,11 @@ IF ASSIPLAY
 ENDIF
 ;調教者が女で対象がオトコの場合、調教者の体格が対象の体格を上回ってないとダメ（縄使用中or従順３以上ならＯＫ）
 IF IS_MALE(TARGET) && HAVE_VAGINA(PLAYER) && TEQUIP:縄 == 0 && ABL:信頼 < 3
-	SIF TALENT:大柄
+	SIF IS_大柄(TARGET)
 		RETURN 0
-	SIF TALENT:小柄 == 0 && TALENT:PLAYER:大柄 == 0
+	SIF !IS_小柄(TARGET) && !IS_大柄(PLAYER)
 		RETURN 0
-	SIF TALENT:PLAYER:小柄
+	SIF IS_小柄(PLAYER)
 		RETURN 0
 ENDIF
 ;対象の欲情がある程度高まってないとダメ
@@ -1181,11 +1181,11 @@ IF ASSIPLAY
 ENDIF
 ;調教者が女で対象がオトコの場合、調教者の体格が対象の体格を上回ってないとダメ（縄使用中or従順３以上ならＯＫ）
 IF IS_MALE(TARGET) && HAVE_VAGINA(PLAYER) && TEQUIP:縄 == 0 && ABL:信頼 < 3
-	SIF TALENT:大柄
+	SIF IS_大柄(TARGET)
 		RETURN 0
-	SIF TALENT:小柄 == 0 && TALENT:PLAYER:大柄 == 0
+	SIF !IS_小柄(TARGET) && !IS_大柄(PLAYER)
 		RETURN 0
-	SIF TALENT:PLAYER:小柄
+	SIF IS_小柄(PLAYER)
 		RETURN 0
 ENDIF
 ;対象の欲情がある程度高まってないとダメ
@@ -1523,7 +1523,7 @@ SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;ボールギャグ使用中は不可
@@ -1562,20 +1562,20 @@ SIF TFLAG:失神中終了 > 0
 SIF IS_MALE(TARGET)
 	RETURN 0
 ;[絶壁]だとダメ
-SIF TALENT:絶壁
+SIF IS_絶壁(TARGET)
 	RETURN 0
 ;[爆乳]か[巨乳]でなければ技巧3以上、
-SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && ABL:技巧 < 3 
+SIF !IS_チチユレ(TARGET) && ABL:技巧 < 3 
 	RETURN 0
 ;[貧乳]だと技巧4以上必要
-SIF TALENT:貧乳 && ABL:技巧 < 4
+SIF IS_貧乳(TARGET) && ABL:技巧 < 4
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
 SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;奉仕しないがあるとダメ
@@ -3116,7 +3116,7 @@ SIF PLAYER != ASSI
 SIF IS_MALE(TARGET) || IS_MALE(ASSI)
 	RETURN 0
 ;調教対象と助手のどちらかが[絶壁]だとダメ
-SIF TALENT:絶壁 || TALENT:ASSI:絶壁
+SIF IS_絶壁(TARGET) || IS_絶壁(ASSI)
 	RETURN 0
 ;主人がオトコかふたなりじゃないとダメ
 SIF !HAVE_PENIS(MASTER)
@@ -3130,10 +3130,10 @@ ENDIF
 SIF ABL:ASSI:技巧 < 4 || ABL:ASSI:奉仕精神 < 3
 	RETURN 0
 ;調教対象と助手のどちらかが[爆乳]か[巨乳]でなければ技巧3以上、
-SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && TALENT:ASSI:爆乳 == 0 && TALENT:ASSI:巨乳 == 0 && ABL:技巧 < 3 
+SIF !IS_チチユレ(TARGET) && !IS_チチユレ(ASSI) && ABL:技巧 < 3 
 	RETURN 0
 ;調教対象と助手が両方とも[貧乳]だと技巧4以上必要
-SIF TALENT:貧乳 && TALENT:ASSI:貧乳 && ABL:技巧 < 4
+SIF IS_貧乳(TARGET) && IS_貧乳(ASSI) && ABL:技巧 < 4
 	RETURN 0
 ;対象か助手のどちらかに奉仕しないがあるとダメ
 SIF TALENT:奉仕しない || TALENT:ASSI:奉仕しない
@@ -3230,7 +3230,7 @@ IF ASSIPLAY
 		RETURN 0
 ENDIF
 ;小柄なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
-SIF TALENT:小柄 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
+SIF IS_小柄(TARGET) && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
 		RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -3294,7 +3294,7 @@ IF ASSIPLAY
 		RETURN 0
 ENDIF
 ;小柄なら従順が4以上かつマゾっ気が4以上じゃないと実行できない
-SIF TALENT:小柄 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
+SIF IS_小柄(TARGET) && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3)
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -3367,7 +3367,7 @@ IF ASSIPLAY
 		RETURN 0
 ENDIF
 ;小柄なら従順が4以上かつマゾっ気が4以上かつ拡張経験5以上じゃないと実行できない
-SIF TALENT:小柄 && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3 || EXP:Ａ拡張経験 < 5)
+SIF IS_小柄(TARGET) && (ABL:信頼 <= 3 || ABL:マゾっ気 <= 3 || EXP:Ａ拡張経験 < 5)
 	RETURN 0
 ;触手調教中はダメ
 SIF TEQUIP:触手召喚
@@ -4076,20 +4076,20 @@ SIF ABL:信頼 < 3 && ABL:技巧 < 3 && ABL:奉仕技術 < 3
 SIF IS_MALE(TARGET)
 	RETURN 0
 ;[絶壁]だとダメ
-SIF TALENT:絶壁
+SIF IS_絶壁(TARGET)
 	RETURN 0
 ;[爆乳]か[巨乳]でなければ技巧3以上、
-SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0 && ABL:技巧 < 3 
+SIF !IS_チチユレ(TARGET) && ABL:技巧 < 3 
 	RETURN 0
 ;[貧乳]だと技巧4以上必要
-SIF TALENT:貧乳 && ABL:技巧 < 4
+SIF IS_貧乳(TARGET) && ABL:技巧 < 4
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
 SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;奉仕しないがあるとダメ
@@ -4148,7 +4148,7 @@ SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;ボールギャグ使用中は不可
@@ -4198,7 +4198,7 @@ SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;従順3以下・レズっ気3以下のASSIの場合自慰はできない（小悪魔ならＯＫ）
@@ -4267,7 +4267,7 @@ SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;ボールギャグ使用中は不可
@@ -4319,7 +4319,7 @@ SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;ボールギャグ使用中は不可
@@ -4923,7 +4923,7 @@ SIF TFLAG:失神中終了 > 0
 SIF ABL:技巧 < 4
 	RETURN 0
 ;[絶壁][オトコ][男の娘]以外だとダメ
-SIF TALENT:絶壁 == 0 && HAVE_VAGINA(TARGET) && TALENT:オトコの娘 == 0
+SIF !IS_絶壁(TARGET) && HAVE_VAGINA(TARGET) && TALENT:オトコの娘 == 0
 	RETURN 0
 ;[オトコ]だと従順4以上必要
 SIF IS_MALE(TARGET) && ABL:信頼 < 4
@@ -4933,7 +4933,7 @@ SIF !HAVE_PENIS(PLAYER)
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;奉仕しないがあるとダメ
@@ -4981,14 +4981,14 @@ SIF TFLAG:失神中終了 > 0
 SIF IS_MALE(TARGET)
 	RETURN 0
 ;[爆乳]か[巨乳]でなければダメ、
-SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0
+SIF !IS_チチユレ(TARGET)
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
 SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;奉仕しないがあるとダメ
@@ -5033,14 +5033,14 @@ RETURN 1
 SIF IS_MALE(TARGET)
 	RETURN 0
 ;[爆乳]か[巨乳]でなければダメ、
-SIF TALENT:爆乳 == 0 && TALENT:巨乳 == 0
+SIF !IS_チチユレ(TARGET)
 	RETURN 0
 ;調教者がオトコかふたなりじゃないとダメ
 SIF !HAVE_PENIS(PLAYER) 
 	RETURN 0
 ;調教者のペニスが愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;奉仕しないがあるとダメ
@@ -5254,7 +5254,7 @@ SIF TALENT:奉仕しない
 	RETURN 0
 ;調教者の%CSTR:男性器呼び方%が愛液、精液、アナル、尿で汚れており、汚臭敏感で従順3以下の場合フェラはできない（汚れ無視ならＯＫ）
 IF STAIN:PLAYER:ペニス & 1 || STAIN:PLAYER:ペニス & 4 || STAIN:PLAYER:ペニス & 8 || STAIN:PLAYER:ペニス & 32
-	SIF ABL:信頼 <= 3 && TALENT:汚臭敏感 && TALENT:汚れ無視 == 0
+	SIF ABL:信頼 <= 3 && IS_汚臭敏感(TARGET) && TALENT:汚れ無視 == 0
 		RETURN 0
 ENDIF
 ;ボールギャグ使用中は不可

@@ -343,7 +343,7 @@ ELSE
 		
 
 		;パイパンなら-1に設定
-		IF TALENT:COUNT:パイパン
+		IF IS_パイパン(COUNT)
 			CFLAG:COUNT:陰毛状態 = -1
 		;幼稚・未熟なら7に設定
 		ELSEIF TALENT:COUNT:幼稚 || TALENT:COUNT:未熟

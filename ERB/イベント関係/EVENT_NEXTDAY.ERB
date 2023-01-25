@@ -31,13 +31,13 @@ REPEAT CHARANUM
 	ENDIF
 
 	;ストレス肥満持ちで否定の珠が1000以上でかつ肥満でない時に、【肥満】に変化
-	IF TALENT:肥満 == 0
+	IF !IS_肥満(TARGET)
 		SIF TALENT:ストレス肥満 == 1  && JUEL:否定 >= 1000
 			CALL EVENT_HIMAN
 	ENDIF
 
 	;ストレス肥満持ちで否定の珠がなく肥満である時に、【肥満】から回復
-	IF TALENT:肥満 == 1
+	IF TALENT:体形 < 0
 		SIF TALENT:ストレス肥満 == 1  && JUEL:否定 == 0
 			CALL EVENT_YASERU
 	ENDIF
@@ -316,29 +316,29 @@ IF TALENT:保守的
 	TALENT:保守的 = 0
 	PRINTFORML 【%TALENTNAME:[[TALENT:保守的]]%】がなくなった
 ENDIF
-IF TALENT:ネガティブ
-	TALENT:ネガティブ = 0
-	PRINTFORML 【%TALENTNAME:[[TALENT:ネガティブ]]%】がなくなった
+IF IS_悲観的(TARGET)
+	PRINTFORML 【GET_STR_ポジティブさ(TARGET)】がなくなった
+	TALENT:ポジティブさ = 0
 ENDIF
 IF TALENT:一線越えない
 	TALENT:一線越えない = 0
 	PRINTFORML 【%TALENTNAME:[[TALENT:一線越えない]]%】がなくなった
 ENDIF
-IF TALENT:貞操観念
+IF IS_貞操観念(TARGET)
+	PRINTFORML 【%GET_STR_貞操観念(TARGET)%】がなくなった
 	TALENT:貞操観念 = 0
-	PRINTFORML 【%TALENTNAME:[[TALENT:貞操観念]]%】がなくなった
 ENDIF
-IF TALENT:抑圧
-	TALENT:抑圧 = 0
-	PRINTFORML 【%TALENTNAME:[[TALENT:抑圧]]%】がなくなった
+IF IS_抑圧(TARGET)
+	PRINTFORML 【%GET_STR_解放的(TARGET)%】がなくなった
+	TALENT:解放的 = 0
 ENDIF
 IF TALENT:抵抗
 	TALENT:抵抗 = 0
 	PRINTFORML 【%TALENTNAME:[[TALENT:抵抗]]%】がなくなった
 ENDIF
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
+	PRINTFORML 【%GET_STR_恥じらい(TARGET)%】がなくなった
 	TALENT:恥じらい = 0
-	PRINTFORML 【%TALENTNAME:[[TALENT:恥じらい]]%】がなくなった
 ENDIF
 IF TALENT:弱味
 	TALENT:弱味 = 0
@@ -352,9 +352,9 @@ IF TALENT:カリスマ
 	TALENT:カリスマ = 0
 	PRINTFORML 【%TALENTNAME:[[TALENT:カリスマ]]%】がなくなった
 ENDIF
-;IF TALENT:パイパン
-;	TALENT:パイパン = 0
-;	PRINTFORML 【%TALENTNAME:[[TALENT:パイパン]]%】がなくなった
+;IF IS_パイパン(TARGET)
+;	IS_パイパン(TARGET) = 0
+;	PRINTFORML 【%TALENTNAME:[[IS_パイパン(TARGET)]]%】がなくなった
 ;ENDIF
 IF TALENT:おもらし癖 == 0
 	TALENT:おもらし癖 = 1
@@ -371,8 +371,8 @@ WAIT
 @EVENT_HIMAN
 PRINTFORML ストレスのあまり、%NAME:TARGET%は食糧貯蔵庫に忍び込んで、
 PRINTFORMW やけ食いをしたようだ…
-PRINTFORML %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:肥満]]%】になった
-TALENT:肥満 = 1
+TALENT:体形--
+PRINTFORML %CALLNAME:TARGET%は【%GET_STR_体形(TARGET)%】になった
 
 WAIT
 ;-------------------------------------------------
@@ -380,8 +380,8 @@ WAIT
 ;-------------------------------------------------
 @EVENT_YASERU
 PRINTFORMW %NAME:TARGET%は、近頃ほっそりとしてきたようだ…
-PRINTFORML %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:肥満]]%】でなくなった
-TALENT:肥満 = 0
+PRINTFORML %CALLNAME:TARGET%は【%GET_STR_体形(TARGET)%】でなくなった
+TALENT:体形++
 
 WAIT
 ;-------------------------------------------------
@@ -404,13 +404,13 @@ PRINTFORML %NAME:TARGET%は、中学校に入学することになっている�
 			PRINTL 着ている物を全て脱ぎ捨て、全裸になってみせた。そしてそのまま
 		SIF ABL:マゾっ気 >= 3
 			PRINTFORML あなたの靴にぎゅっと唇を押し付けて感謝の言葉を述べた。%CALLNAME:TARGET%は
-		SIF TALENT:恥じらい
+		SIF IS_恥じらい(TARGET)
 			PRINT はにかみながらも
 		SIF TALENT:素直
 			PRINT 心から喜んだ様子で
 		SIF TALENT:好奇心
 			PRINT とても楽しそうに
-		SIF TALENT:恥じらい || TALENT:素直 || TALENT:好奇心
+		SIF IS_恥じらい(TARGET) || TALENT:素直 || TALENT:好奇心
 			PRINT 、
 		PRINTL あなたの目の前で中学校の制服を着てみせた。
 		PRINTL
@@ -467,13 +467,13 @@ PRINTFORML %NAME:TARGET%は、高校に入学することになっている。
 			PRINTL 着ている物を全て脱ぎ捨て、全裸になってみせた。そしてそのまま
 		SIF ABL:マゾっ気 >= 3
 			PRINTFORML あなたの靴にぎゅっと唇を押し付けて感謝の言葉を述べた。%CALLNAME:TARGET%は
-		SIF TALENT:恥じらい
+		SIF IS_恥じらい(TARGET)
 			PRINT はにかみながらも
 		SIF TALENT:素直
 			PRINT 心から喜んだ様子で
 		SIF TALENT:好奇心
 			PRINT とても楽しそうに
-		SIF TALENT:恥じらい || TALENT:素直 || TALENT:好奇心
+		SIF IS_恥じらい(TARGET) || TALENT:素直 || TALENT:好奇心
 			PRINT 、
 		PRINTL あなたの目の前で高校の制服を着てみせた。
 		PRINTL
@@ -670,7 +670,7 @@ REPEAT CHARANUM
 		;奉仕しないがあるとダメ
 		SIF TALENT:COUNT:奉仕しない
 			CONTINUE
-		SIF TALENT:COUNT:彼氏あり && !TALENT:COUNT:貞操無頓着 && !TALENT:COUNT:セフレあり
+		SIF TALENT:COUNT:彼氏あり && !IS_貞操無頓着(COUNT) && !TALENT:COUNT:セフレあり
 			CONTINUE
 		;反発刻印があるとダメ
 		SIF MARK:COUNT:反発刻印 > 0
@@ -692,16 +692,16 @@ REPEAT CHARANUM
 		A = ABL:COUNT:性交中毒
 
 		;解放
-		SIF TALENT:COUNT:解放
+		SIF IS_解放(COUNT)
 			A += 1
 		;自制心
 		SIF TALENT:COUNT:自制心
 			A -= 2
 		;快感に素直
-		SIF TALENT:COUNT:快感に素直
+		SIF IS_快感に素直(COUNT)
 			A += 1
 		;快感の否定
-		SIF TALENT:COUNT:快感の否定
+		SIF IS_快感の否定(COUNT)
 			A -= 1
 		;セックス狂
 		SIF TALENT:COUNT:セックス狂 && !IS処女(COUNT) && ABL:COUNT:Ｖ感覚 >= ABL:COUNT:Ａ感覚
@@ -886,7 +886,7 @@ IF F == 1
 	PRINTFORM %CALLNAME:MASTER%は%CALLNAME:TEMP_NUM%の
 		IF HAVE_PENIS(TEMP_NUM)
 			PRINTFORM ペニスを扱き
-		ELSEIF TALENT:TEMP_NUM:巨乳 || TALENT:TEMP_NUM:爆乳
+		ELSEIF IS_チチユレ(TEMP_NUM)
 			PRINTFORM 豊かなバストを揉みしだき
 		ELSEIF ABL:TEMP_NUM:Ａ感覚 > 3
 			PRINTFORM アナルに指を挿入し
@@ -928,7 +928,7 @@ ELSEIF F == 0 && !ISＡ処女(TEMP_NUM)
 	PRINTFORM %CALLNAME:MASTER%は%CALLNAME:TEMP_NUM%の
 		IF HAVE_PENIS(TEMP_NUM)
 			PRINTFORM ペニスを扱き
-		ELSEIF TALENT:TEMP_NUM:巨乳 || TALENT:TEMP_NUM:爆乳
+		ELSEIF IS_チチユレ(TEMP_NUM)
 			PRINTFORM 豊かなバストを揉みしだき
 		ELSEIF ABL:TEMP_NUM:Ｖ感覚 > 3
 			PRINTFORM 膣穴を指でかき回し

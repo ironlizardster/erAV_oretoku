@@ -195,9 +195,9 @@ CALL LOST_ANALVIRGIN_CHECK
 ;快Ｃのソース
 ;-------------------------------------------------
 ;Ｃ敏感とＣ鈍感はここで処理
-SIF TALENT:Ｃ鈍感
+SIF IS_Ｃ鈍感(TARGET)
 	TIMES SOURCE:快Ｃ , 0.50
-SIF TALENT:Ｃ敏感
+SIF IS_Ｃ敏感(TARGET)
 	TIMES SOURCE:快Ｃ , 2.00
 
 A = SOURCE:快Ｃ
@@ -237,7 +237,7 @@ ELSE
 ENDIF
 
 ;快感の否定、抑圧、抵抗
-IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
+IF IS_抑圧(TARGET) || TALENT:抵抗 || IS_快感の否定(TARGET)
 	C = SOURCE:快Ｃ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
@@ -282,9 +282,9 @@ UP:[[UP:抑鬱]] += C
 ;快Ｖのソース
 ;-------------------------------------------------
 ;Ｖ敏感とＶ鈍感はここで処理
-SIF TALENT:Ｖ鈍感
+SIF IS_Ｖ鈍感(TARGET)
 	TIMES SOURCE:快Ｖ , 0.50
-SIF TALENT:Ｖ敏感
+SIF IS_Ｖ敏感(TARGET)
 	TIMES SOURCE:快Ｖ , 2.00
 
 A = SOURCE:快Ｖ
@@ -324,7 +324,7 @@ ELSE
 ENDIF
 
 ;快感の否定、抑圧、抵抗
-IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
+IF IS_抑圧(TARGET) || TALENT:抵抗 || IS_快感の否定(TARGET)
 	C = SOURCE:快Ｖ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
@@ -371,9 +371,9 @@ UP:[[UP:抑鬱]] += C
 ;快Ａのソース
 ;-------------------------------------------------
 ;Ａ敏感とＡ鈍感はここで処理
-SIF TALENT:Ａ鈍感
+SIF IS_Ａ鈍感(TARGET)
 	TIMES SOURCE:快Ａ , 0.50
-SIF TALENT:Ａ敏感
+SIF IS_Ａ敏感(TARGET)
 	TIMES SOURCE:快Ａ , 2.00
 
 A = SOURCE:快Ａ
@@ -414,7 +414,7 @@ ELSE
 ENDIF
 
 ;快感の否定、抑圧、抵抗
-IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
+IF IS_抑圧(TARGET) || TALENT:抵抗 || IS_快感の否定(TARGET)
 	C = SOURCE:快Ａ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
@@ -461,26 +461,26 @@ UP:[[UP:抑鬱]] += C
 ;快Ｂのソース
 ;-------------------------------------------------
 ;Ｂ敏感とＢ鈍感はここで処理
-SIF TALENT:Ｂ鈍感
+SIF IS_Ｂ鈍感(TARGET)
 	TIMES SOURCE:快Ｂ , 0.50
-SIF TALENT:Ｂ敏感
+SIF IS_Ｂ敏感(TARGET)
 	TIMES SOURCE:快Ｂ , 2.00
 
 ;絶壁、貧乳、巨乳、爆乳はここで処理
-IF TALENT:神乳
-	TIMES SOURCE:快Ｖ , 2.50
-ELSEIF TALENT:魔乳
-	TIMES SOURCE:快Ｖ , 2.15
-ELSEIF TALENT:超乳
-	TIMES SOURCE:快Ｖ , 1.80
-ELSEIF TALENT:絶壁
-	TIMES SOURCE:快Ｖ , 1.50
-ELSEIF TALENT:貧乳
-	TIMES SOURCE:快Ｖ , 1.20
-ELSEIF TALENT:巨乳
-	TIMES SOURCE:快Ｖ , 0.90
-ELSEIF TALENT:爆乳
-	TIMES SOURCE:快Ｖ , 0.80
+IF IS_神乳(TARGET)
+	TIMES SOURCE:快Ｂ , 2.50
+ELSEIF IS_魔乳(TARGET)
+	TIMES SOURCE:快Ｂ , 2.15
+ELSEIF IS_超乳(TARGET)
+	TIMES SOURCE:快Ｂ , 1.80
+ELSEIF IS_絶壁(TARGET)
+	TIMES SOURCE:快Ｂ , 1.50
+ELSEIF IS_貧乳(TARGET)
+	TIMES SOURCE:快Ｂ , 1.20
+ELSEIF IS_巨乳(TARGET)
+	TIMES SOURCE:快Ｂ , 0.90
+ELSEIF IS_デカパイ(TARGET)
+	TIMES SOURCE:快Ｂ , 0.80
 ENDIF
 
 A = SOURCE:快Ｂ
@@ -520,7 +520,7 @@ ELSE
 ENDIF
 
 ;快感の否定、抑圧、抵抗
-IF TALENT:抑圧 || TALENT:抵抗 || TALENT:快感の否定
+IF IS_抑圧(TARGET) || TALENT:抵抗 || IS_快感の否定(TARGET)
 	C = SOURCE:快Ｂ / 3
 	;ABL:欲望をみる
 	IF ABL:欲望 == 0
@@ -610,9 +610,9 @@ A = UP:[[UP:快Ｃ]] + UP:[[UP:快Ｖ]] + UP:[[UP:快Ａ]] + UP:[[UP:快Ｂ]]
 ;快Ｃ＋快Ｖ＋快Ａ＋快Ｂが合わせて100以上上昇ならその20%の液体のソースが加わる（オトコはダメ）
 IF A > 100 && HAVE_VAGINA(TARGET)
 	;濡れやすいと濡れにくいはここで処理
-	SIF TALENT:濡れやすい
+	SIF IS_濡れやすい(TARGET)
 		TIMES A , 3.00
-	SIF TALENT:濡れにくい
+	SIF IS_濡れにくい(TARGET)
 		TIMES A , 0.40
 	SIF TALENT:170
 		TIMES A , 0.10
@@ -1151,7 +1151,7 @@ SIF TALENT:PLAYER:プロデューサー
 	TIMES A , 1.20
 
 ;抑圧か抵抗がある場合はPALAM:抑鬱が上がる
-IF TALENT:抑圧 || TALENT:抵抗
+IF IS_抑圧(TARGET) || TALENT:抵抗
 	B = SOURCE:性行動 / 5
 	;ABL:奉仕精神をみる
 	IF ABL:奉仕精神 == 0
@@ -1321,10 +1321,10 @@ SIF TALENT:PLAYER:サド
 	TIMES D , 2.00
 
 ;痛みに弱い・強い
-IF TALENT:痛みに弱い
+IF IS_痛みに弱い(TARGET)
 	TIMES A , 1.50
 	TIMES D , 4.00
-ELSEIF TALENT:痛みに強い
+ELSEIF IS_痛みに強い(TARGET)
 	TIMES A , 0.80
 	TIMES D , 0.80
 ENDIF
@@ -1449,9 +1449,9 @@ UP:[[UP:欲情]] += A
 ;露出のソース
 ;-------------------------------------------------
 ;恥じらいと恥薄いはここで処理
-SIF TALENT:恥じらい
+SIF IS_恥じらい(TARGET)
 	TIMES SOURCE:露出 , 2.00
-SIF TALENT:恥薄い
+SIF IS_恥薄い(TARGET)
 	TIMES SOURCE:露出 , 0.50
 
 ;潤滑アップの50％を露出のソースに加える
@@ -1736,10 +1736,10 @@ ELSE
 ENDIF
 
 ;痛みに弱い
-SIF TALENT:痛みに弱い
+SIF IS_痛みに弱い(TARGET)
 	TIMES D , 1.20
 ;痛みに強い
-SIF TALENT:痛みに強い
+SIF IS_痛みに強い(TARGET)
 	TIMES D , 0.80
 
 LOSEBASE:体力 += D

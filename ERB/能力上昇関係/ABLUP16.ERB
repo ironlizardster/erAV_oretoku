@@ -283,19 +283,19 @@ IF TALENT:素直
 ENDIF
 
 ;生意気
-IF TALENT:活発
+IF IS_活発(TARGET)
 	TIMES A , 1.10
 	TIMES B , 1.10
 ENDIF
 
 ;プライド高い
-IF TALENT:プライド高い
+IF IS_プライド高い(TARGET)
 	TIMES A , 1.40
 	TIMES B , 1.30
 	TIMES D , 1.20
 	TIMES E , 1.20
 ;プライド低い
-ELSEIF TALENT:プライド低い
+ELSEIF IS_プライド低い(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.80
 	TIMES D , 0.80
@@ -348,13 +348,13 @@ IF TALENT:保守的
 ENDIF
 
 ;楽観的
-IF TALENT:ポジティブ
+IF IS_楽観的(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.80
 	TIMES D , 0.70
 	TIMES E , 0.75
 ;悲観的
-ELSEIF TALENT:ネガティブ
+ELSEIF IS_悲観的(TARGET)
 	TIMES A , 0.80
 	TIMES B , 0.80
 	TIMES D , 0.80
@@ -370,13 +370,13 @@ IF TALENT:目立ちたがり
 ENDIF
 
 ;抑圧
-IF TALENT:抑圧
+IF IS_抑圧(TARGET)
 	TIMES A , 1.10
 	TIMES B , 1.10
 	TIMES D , 2.50
 	TIMES E , 3.00
 ;解放
-ELSEIF TALENT:解放
+ELSEIF IS_解放(TARGET)
 	TIMES A , 0.90
 	TIMES B , 0.90
 	TIMES D , 0.70
@@ -402,11 +402,11 @@ IF TALENT:弱味
 ENDIF
 
 ;習得早い
-SIF TALENT:素質
+SIF IS_習得早い(TARGET)
 	TIMES C , 0.80
 
 ;習得遅い
-SIF TALENT:習得遅い
+SIF IS_習得遅い(TARGET)
 	TIMES C , 1.60
 
 ;舌使い
@@ -422,10 +422,10 @@ IF TALENT:献身的
 ENDIF
 
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	TIMES E , 0.70
 ;快感の否定
-ELSEIF TALENT:快感の否定
+ELSEIF IS_快感の否定(TARGET)
 	TIMES E , 3.00
 ENDIF
 

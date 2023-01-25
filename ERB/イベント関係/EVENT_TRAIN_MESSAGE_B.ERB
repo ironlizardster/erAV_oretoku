@@ -39,9 +39,9 @@ IF SELECTCOM == [[TRAIN:愛撫]]
 	PRINTFORM %CALLNAME:TARGET%の
 	IF TALENT:未熟
 		PRINT 未熟な
-	ELSEIF TALENT:小柄
+	ELSEIF IS_小柄(TARGET)
 		PRINT 未発達な
-	ELSEIF TALENT:肥満
+	ELSEIF IS_肥満(TARGET)
 		PRINT でっぷり太った
 	ENDIF
 						;****スライムパッチ追加ここから****
@@ -132,17 +132,17 @@ ELSEIF SELECTCOM == [[TRAIN:オナニー]]
 			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
-		SIF TALENT:プライド高い
+		SIF IS_プライド高い(TARGET)
 			PRINT プライドの高さを見せながら
 		IF TALENT:感情乏しい
 			PRINT 無表情な顔で黙々と
-		ELSEIF TALENT:臆病 || TALENT:大人しい
+		ELSEIF TALENT:臆病 || IS_大人しい(TARGET)
 			PRINT 震える指先で、
 		ELSEIF TALENT:ナマイキ
 			PRINT 反抗的に睨んできたが、
 		ELSEIF TALENT:気丈
 			PRINT 屈辱に唇を噛み締めて、
-		ELSEIF TALENT:恥じらい
+		ELSEIF IS_恥じらい(TARGET)
 			PRINT 恥ずかしさに耳まで真っ赤になりながら、
 		ENDIF
 		SIF TEQUIP:撮影中
@@ -197,15 +197,15 @@ ELSEIF SELECTCOM == [[TRAIN:胸愛撫]]
 			PRINTL 、乳首を貫く金属製のピアスを軽く引っ張りながら、
 	ENDIF
 	PRINTFORM %CALLNAME:TARGET%の
-	IF TALENT:絶壁
+	IF IS_絶壁(TARGET)
 		PRINT 真っ平らな
-	ELSEIF TALENT:小柄 && TALENT:貧乳
+	ELSEIF IS_小柄(TARGET) && IS_貧乳(TARGET)
 		PRINT 僅かに膨らみが感じられる程度の
-	ELSEIF TALENT:貧乳
+	ELSEIF IS_貧乳(TARGET)
 		PRINT 標準よりやや小さめの
-	ELSEIF TALENT:巨乳 && TEQUIP:獣姦プレイ == 0
+	ELSEIF IS_巨乳(TARGET) && TEQUIP:獣姦プレイ == 0
 		PRINT 手から溢れそうなほどの
-	ELSEIF TALENT:爆乳
+	ELSEIF IS_デカパイ(TARGET)
 		PRINT 片乳だけで一抱えもある
 	ENDIF
 						;****スライムパッチ追加ここから****
@@ -227,7 +227,7 @@ ELSEIF SELECTCOM == [[TRAIN:胸愛撫]]
 		PRINTFORML 口にふくんだ%CALLNAME:TARGET%の乳首から、甘ったるいミルクが噴き出してくる…
 	ELSEIF PALAM:欲情 > PALAMLV:3 && TEQUIP:搾乳機 == 0 && TEQUIP:ニプルキャップ == 0
 		PRINTL 胸の先端の、すっかり硬くなった突起をつまみあげた…
-	ELSEIF TALENT:絶壁
+	ELSEIF IS_絶壁(TARGET)
 		PRINTL 胸を撫で回した…
 	ELSE
 		PRINTL 胸を揉みしだいた…
@@ -277,7 +277,7 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 		
 	ELSEIF CFLAG:陰毛状態 == 0 - 2
 		SAVESTR:2 = 永久脱毛された
-	ELSEIF CFLAG:陰毛状態 == 0 - 1 || CFLAG:陰毛状態 == 0 || (CFLAG:陰毛状態 <= 5 && TALENT:パイパン)
+	ELSEIF CFLAG:陰毛状態 == 0 - 1 || CFLAG:陰毛状態 == 0 || (CFLAG:陰毛状態 <= 5 && IS_パイパン(TARGET))
 		SAVESTR:2 = 無毛の
 	ELSEIF CFLAG:陰毛状態 <= 5
 		SAVESTR:2 = すべすべに剃り上げられた
@@ -305,13 +305,13 @@ ELSEIF SELECTCOM == [[TRAIN:秘貝開帳]]
 	IF ABL:露出癖 == 0
 		IF TALENT:感情乏しい
 			PRINT 無表情な顔で
-		ELSEIF TALENT:臆病 || TALENT:大人しい
+		ELSEIF TALENT:臆病 || IS_大人しい(TARGET)
 			PRINT 震えながら
 		ELSEIF TALENT:ナマイキ
 			PRINT 反抗的に睨んできたが、再度命令されるとしぶしぶといった様子で
 		ELSEIF TALENT:気丈
 			PRINT 屈辱に唇を噛み締めて、
-		ELSEIF TALENT:恥じらい
+		ELSEIF IS_恥じらい(TARGET)
 			PRINT 恥ずかしさに耳まで真っ赤になりながら、
 		ENDIF
 		;着衣設定
@@ -559,7 +559,7 @@ ELSEIF SELECTCOM == [[TRAIN:バイブ]]
 		;△なんでTALENT:85（恋心）？
 			IF EXP:Ｖ経験 >= 201 && TALENT:恋心
 				PRINTFORM %CALLNAME:TARGET%は、膣内の喪失感に耐えかねて
-				SIF !TALENT:泣かない 
+				SIF !IS_泣かない(TARGET)
 					PRINTFORM 涙と
 				PRINTFORM 涎をこぼし
 			ELSEIF EXP:Ｖ経験 >= 151 && EXP:Ｖ経験 <= 200 && TALENT:恋心
@@ -601,7 +601,7 @@ ELSEIF SELECTCOM == [[TRAIN:バイブ]]
 				PRINT 処女である事もお構いなしに、腰を揺らしておねだりをし
 			ELSEIF IS処女(TARGET) && TALENT:一線越えない
 				PRINT 何かを諦めた表情で
-				SIF !TALENT:泣かない 
+				SIF !IS_泣かない(TARGET)
 					PRINT 目にうっすら涙を浮かべ
 			ELSEIF IS処女(TARGET)
 				PRINT ガタガタと震え、喪失の恐怖に怯え
@@ -1078,7 +1078,7 @@ ELSEIF SELECTCOM == [[TRAIN:パイズリ]]
 	
 	SIF TALENT:恋心 && ASSIPLAY == 0
 		PRINT うっとりとした表情をしながら、
-	IF TALENT:貧乳
+	IF IS_貧乳(TARGET)
 		PRINTFORM 薄い胸で懸命に
 			;獣姦プレイ中
 			IF TEQUIP:獣姦プレイ
@@ -1086,7 +1086,7 @@ ELSEIF SELECTCOM == [[TRAIN:パイズリ]]
 			ELSE
 				PRINTFORM %CALLNAME:PLAYER%のペニスを
 			ENDIF
-	ELSEIF TALENT:巨乳
+	ELSEIF IS_巨乳(TARGET)
 		PRINTFORM 豊満な胸で
 			;獣姦プレイ中
 			IF TEQUIP:獣姦プレイ
@@ -1094,7 +1094,7 @@ ELSEIF SELECTCOM == [[TRAIN:パイズリ]]
 				ELSE
 					PRINTFORM %CALLNAME:PLAYER%のペニスを包み込んで
 				ENDIF
-	ELSEIF TALENT:爆乳
+	ELSEIF IS_デカパイ(TARGET)
 		PRINTFORM 両の乳房の間にすっかりうずまった
 			;獣姦プレイ中
 			IF TEQUIP:獣姦プレイ
@@ -1131,7 +1131,7 @@ ELSEIF SELECTCOM == [[TRAIN:素股]]
 		PRINT 幸せそうな表情を浮かべながら
 	ELSEIF TALENT:淫乱
 		PRINTFORM 淫猥な目つきで挑発しながら
-	ELSEIF TALENT:恥薄い
+	ELSEIF IS_恥薄い(TARGET)
 		PRINTFORM 大胆に腰を動かしながら
 	ELSEIF TALENT:感情乏しい
 		PRINTFORM うっすらと上気した顔で
@@ -1179,14 +1179,14 @@ ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
 		IF EXP:Ｖ経験 >= EXPLV:3
 			PRINTL  
 			PRINTFORM %CALLNAME:TARGET%は
-			IF TALENT:大柄
+			IF IS_大柄(TARGET)
 				PRINT 覆いかぶさるようにのしかかり
-			ELSEIF TALENT:小柄
+			ELSEIF IS_小柄(TARGET)
 				PRINT 小さな身体で懸命に
 			ENDIF
 			SIF TALENT:妊娠 && CFLAG:出産日 <= DAY+10
 				PRINT 膨れ上がった臨月腹を抱えて
-			SIF TALENT:巨乳 || TALENT:爆乳
+			SIF IS_チチユレ(TARGET)
 				PRINT 大きく胸を揺らしながら
 			PRINT 自ら腰を動かしている…
 		ENDIF
@@ -1199,11 +1199,11 @@ ELSEIF SELECTCOM == [[TRAIN:泡踊り]]
 	PRINTFORM %CALLNAME:TARGET%はソープを泡立たせて自分に塗りたくり、
 	SIF TALENT:恋心
 		PRINT うっとりとした表情をしつつ
-	IF TALENT:大柄
+	IF IS_大柄(TARGET)
 		PRINTFORM %CALLNAME:PLAYER%をすっぽり包み込むようにして
-	ELSEIF TALENT:小柄
+	ELSEIF IS_小柄(TARGET)
 		PRINTFORM %CALLNAME:PLAYER%に小さな身体を目一杯擦りつけて
-	ELSEIF TALENT:巨乳 || TALENT:爆乳
+	ELSEIF IS_チチユレ(TARGET)
 		PRINTFORM %CALLNAME:PLAYER%に豊満な胸とふくよかな肌を擦りつけて
 	ELSE
 		PRINTFORM %CALLNAME:PLAYER%に全身を擦りつけて
@@ -1234,12 +1234,12 @@ ELSEIF SELECTCOM == [[TRAIN:騎乗位アナル]]
 	ENDIF
 	IF EXP:Ｖ経験 >= EXPLV:3
 		PRINTFORM %CALLNAME:TARGET%は
-		IF TALENT:大柄
+		IF IS_大柄(TARGET)
 			PRINT 覆いかぶさるようにのしかかり
-		ELSEIF TALENT:小柄
+		ELSEIF IS_小柄(TARGET)
 			PRINT 小さな身体で懸命に
 		ENDIF
-	SIF TALENT:巨乳 || TALENT:爆乳
+	SIF IS_チチユレ(TARGET)
 		PRINT 大きく胸を揺らしながら
 		PRINTL 自ら腰を動かしている…
 	ENDIF
@@ -1366,10 +1366,10 @@ ELSEIF SELECTCOM == [[TRAIN:縦パイズリ]]
 	SIF TALENT:恋心
 		PRINT うっとりとした表情をしながら、
 		;巨乳
-		IF TALENT:巨乳
+		IF IS_巨乳(TARGET)
 			PRINT 豊満な胸でペニスを包み込み、胸を振るようにして
 		;爆乳
-		ELSEIF TALENT:爆乳
+		ELSEIF IS_デカパイ(TARGET)
 			PRINT 豊満すぎる程の胸でペニスを包み隠し、胸を揉み込むようにして
 		ENDIF
 		PRINTW 刺激している……
@@ -1573,7 +1573,7 @@ ELSEIF SELECTCOM == [[TRAIN:利尿剤]]
 	ENDIF
 	IF TFLAG:失神中終了 == 0
 		PRINTFORM %CALLNAME:TARGET%は荒い息をつき、
-		SIF !TALENT:泣かない 
+		SIF !IS_泣かない(TARGET)
 			PRINTFORM 涙を浮かべて
 		PRINTFORML 尿意に耐えている…
 	ENDIF
@@ -1988,7 +1988,7 @@ ELSEIF SELECTCOM == [[TRAIN:放尿]]
 		PRINTFORML %CALLNAME:PLAYER%に見せ付けるようにして放尿した…
 	ELSEIF TEQUIP:野外プレイ == 1
 		PRINTFORML %CALLNAME:TARGET%は羞恥と屈辱感にまみれ、
-		SIF !TALENT:泣かない 
+		SIF !IS_泣かない(TARGET)
 			PRINTFORM 涙を浮かべながら、
 		PRINTFORML 草むらの中で放尿した…
 	ELSEIF TEQUIP:羞恥大鏡プレイ
@@ -2083,10 +2083,10 @@ ELSEIF SELECTCOM == [[TRAIN:谷間ホール]]
 	SIF TEQUIP:縄 == 1
 	PRINTFORM キュッと縛りあげられた
 	;巨乳
-	IF TALENT:巨乳
+	IF IS_巨乳(TARGET)
 		PRINT 豊満な乳房
 	;爆乳
-	ELSEIF TALENT:爆乳
+	ELSEIF IS_デカパイ(TARGET)
 		PRINT 豊満すぎる程の乳房
 	ENDIF
 	PRINTFORML の隙間に自身のペニスを挿入すると、
@@ -2119,17 +2119,17 @@ ELSEIF SELECTCOM == [[TRAIN:ローター自慰]]
 			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
-		SIF TALENT:プライド高い
+		SIF IS_プライド高い(TARGET)
 			PRINT プライドの高さを見せながら
 		IF TALENT:感情乏しい
 			PRINT 無表情な顔で黙々と
-		ELSEIF TALENT:臆病 || TALENT:大人しい
+		ELSEIF TALENT:臆病 || IS_大人しい(TARGET)
 			PRINT 震える指先で、
 		ELSEIF TALENT:ナマイキ
 			PRINT 反抗的に睨んできたが、
 		ELSEIF TALENT:気丈
 			PRINT 屈辱に唇を噛み締めて、
-		ELSEIF TALENT:恥じらい
+		ELSEIF IS_恥じらい(TARGET)
 			PRINT 恥ずかしさに耳まで真っ赤になりながら、
 		ENDIF
 		SIF TEQUIP:撮影中
@@ -2187,17 +2187,17 @@ ELSEIF SELECTCOM == [[TRAIN:電マ自慰]]
 			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
-		SIF TALENT:プライド高い
+		SIF IS_プライド高い(TARGET)
 			PRINT プライドの高さを見せながら
 		IF TALENT:感情乏しい
 			PRINT 無表情な顔で黙々と
-		ELSEIF TALENT:臆病 || TALENT:大人しい
+		ELSEIF TALENT:臆病 || IS_大人しい(TARGET)
 			PRINT 震える指先で、
 		ELSEIF TALENT:ナマイキ
 			PRINT 反抗的に睨んできたが、
 		ELSEIF TALENT:気丈
 			PRINT 屈辱に唇を噛み締めて、
-		ELSEIF TALENT:恥じらい
+		ELSEIF IS_恥じらい(TARGET)
 			PRINT 恥ずかしさに耳まで真っ赤になりながら、
 		ENDIF
 		SIF TEQUIP:撮影中
@@ -2245,15 +2245,15 @@ ELSEIF SELECTCOM == [[TRAIN:乳首ローター]]
 			PRINT 下着ごしに、
 		ENDIF
 		PRINTFORM %CALLNAME:TARGET%の
-			IF TALENT:絶壁
+			IF IS_絶壁(TARGET)
 				PRINT 真っ平らな
-			ELSEIF TALENT:小柄 && TALENT:貧乳
+			ELSEIF IS_小柄(TARGET) && IS_貧乳(TARGET)
 				PRINT 僅かに膨らみが感じられる程度の
-			ELSEIF TALENT:貧乳
+			ELSEIF IS_貧乳(TARGET)
 				PRINT 標準よりやや小さめの
-			ELSEIF TALENT:巨乳 && TEQUIP:獣姦プレイ == 0
+			ELSEIF IS_巨乳(TARGET) && TEQUIP:獣姦プレイ == 0
 				PRINT 手から溢れそうなほどの
-			ELSEIF TALENT:爆乳
+			ELSEIF IS_デカパイ(TARGET)
 				PRINT 片乳だけで一抱えもある
 			ENDIF
 		PRINTL 胸に震えるローターを押し当てた…
@@ -2527,11 +2527,11 @@ ELSEIF SELECTCOM == [[TRAIN:パイズリフェラ]]
 	PRINTFORM %CALLNAME:TARGET%は
 	SIF TALENT:恋心
 		PRINT うっとりとした表情をしながら、
-	IF TALENT:貧乳
+	IF IS_貧乳(TARGET)
 		PRINTL 薄い胸にペニスを擦りつけ、亀頭に舌を這わせた…
-	ELSEIF TALENT:巨乳
+	ELSEIF IS_巨乳(TARGET)
 		PRINTL ペニスを豊満な胸で包み込み、頭を出したペニスを舐めて刺激している…
-	ELSEIF TALENT:爆乳
+	ELSEIF IS_デカパイ(TARGET)
 		PRINTL 豊満すぎる程の胸でペニスを包み隠してしまい、自分の胸に顔を突っ込んでペニスを舐め上げている…
 	ELSE
 		PRINTL 胸でペニスをはさみ、ペニスを舐めて刺激している…
@@ -2546,7 +2546,7 @@ ELSEIF SELECTCOM == [[TRAIN:ディープスロート]]
 	SIF TALENT:舌使い
 		PRINT 舌を竿に絡めて
 	PRINT 喉の奥までペニスを咥え込んで
-	IF TALENT:活発 >= 3
+	IF TALENT:淫乱
 		PRINTL 淫猥な音を立てて深いストロークで刺激した…
 	ELSE
 		PRINTL いった…
@@ -2615,9 +2615,9 @@ ELSEIF SELECTCOM == [[TRAIN:正常位キス]]
 ELSEIF SELECTCOM == [[TRAIN:正常位胸愛撫]]
 	PRINTFORM %CALLNAME:TARGET%を貫いたまま
 	;巨乳か爆乳
-	IF TALENT:巨乳 || TALENT:爆乳
+	IF IS_チチユレ(TARGET)
 		PRINT 揺れ弾む乳房を揉みしだい
-	ELSEIF TALENT:貧乳
+	ELSEIF IS_貧乳(TARGET)
 		PRINT 小さな胸をまさぐっ
 	ELSE
 		PRINT 揺れる胸を揉みしだい
@@ -2628,9 +2628,9 @@ ELSEIF SELECTCOM == [[TRAIN:正常位胸愛撫]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:正常位ＳＰ]]
 	PRINTFORML %CALLNAME:TARGET%に覆いかぶさるように身体を倒し、唇を重ねて舌を絡め合い、
-	IF TALENT:巨乳 || TALENT:爆乳
+	IF IS_チチユレ(TARGET)
 		PRINT 揺れ弾む乳房を揉みしだき
-	ELSEIF TALENT:貧乳
+	ELSEIF IS_貧乳(TARGET)
 		PRINT 小さな胸をまさぐり
 	ELSE
 		PRINT 揺れる胸を揉み、
@@ -2667,9 +2667,9 @@ ELSEIF SELECTCOM == [[TRAIN:正常位ＳＰ]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:後背位胸愛撫]]
 	PRINTFORM %CALLNAME:TARGET%の
-	IF TALENT:巨乳 || TALENT:爆乳
+	IF IS_チチユレ(TARGET)
 		PRINT 揺れ弾む乳房を後ろから鷲掴みにして揉みしだきながら
-	ELSEIF TALENT:貧乳
+	ELSEIF IS_貧乳(TARGET)
 		PRINT 小さな胸を後ろからまさぐりながら
 	ELSE
 		PRINT 揺れる胸を後ろから揉みしだきながら
@@ -2694,9 +2694,9 @@ ELSEIF SELECTCOM == [[TRAIN:後背位スパンキング]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:立ちバック]]
 	PRINTFORM 貫いている%CALLNAME:TARGET%の上体を起こし、後ろから
-	IF TALENT:巨乳 || TALENT:爆乳
+	IF IS_チチユレ(TARGET)
 		PRINTL 揺れ弾む乳房を鷲掴みにして揉みしだき、
-	ELSEIF TALENT:貧乳
+	ELSEIF IS_貧乳(TARGET)
 		PRINTL 小さな胸をまさぐり、
 	ELSE
 		PRINTL 揺れる胸を揉みしだき、
@@ -2713,9 +2713,9 @@ ELSEIF SELECTCOM == [[TRAIN:立ちバック]]
 ;--------------------------------------------------------
 ELSEIF SELECTCOM == [[TRAIN:後背位ＳＰ]]
 	PRINTFORM %CALLNAME:TARGET%の
-	IF TALENT:巨乳 || TALENT:爆乳
+	IF IS_チチユレ(TARGET)
 		PRINTL 揺れ弾む乳房を後ろから鷲掴みにして揉みしだき、
-	ELSEIF TALENT:貧乳
+	ELSEIF IS_貧乳(TARGET)
 		PRINTL 小さな胸を後ろからまさぐり、
 	ELSE
 		PRINTL 揺れる胸を後ろから揉みしだき、
@@ -2773,14 +2773,14 @@ ELSEIF SELECTCOM == [[TRAIN:顔面騎乗プレイ]]
 		PRINTFORM %CALLNAME:TARGET%は
 			IF ASSI >= 0
 				PRINTFORM %CALLNAME:PLAYER%の顔に自らの
-				 IF TALENT:TARGET:剛毛 == 1
+				 IF IS_巨尻(TARGET)
 				 	PRINTL 豊満な尻を押し付けてきた
 				 ELSE
 				 	PRINTL 尻を押し付けた
 				 ENDIF
 			ELSE
 				PRINTFORM %CALLNAME:PLAYER%の顔に自らの
-				 IF TALENT:TARGET:剛毛 == 1
+				 IF IS_巨尻(TARGET)
 				 	PRINTL 豊満な尻を押し付けてきた
 				 ELSE
 				 	PRINTL 尻を押し付けた
@@ -2924,17 +2924,17 @@ ELSEIF SELECTCOM == [[TRAIN:スライムオナニー]]
 			CALL PRINT_上着タイプ(TARGET)
 			PRINT の前をめくり上げて性器をあらわにし、
 		ENDIF
-		SIF TALENT:プライド高い
+		SIF IS_プライド高い(TARGET)
 			PRINT プライドの高さを見せながら
 		IF TALENT:感情乏しい
 			PRINT 無表情な顔で黙々と
-		ELSEIF TALENT:臆病 || TALENT:大人しい
+		ELSEIF TALENT:臆病 || IS_大人しい(TARGET)
 			PRINT 震える指先で、
 		ELSEIF TALENT:ナマイキ
 			PRINT 反抗的に睨んできたが、
 		ELSEIF TALENT:気丈
 			PRINT 屈辱に唇を噛み締めて、
-		ELSEIF TALENT:恥じらい
+		ELSEIF IS_恥じらい(TARGET)
 			PRINT 恥ずかしさに耳まで真っ赤になりながら、
 		ENDIF
 		SIF TEQUIP:撮影中

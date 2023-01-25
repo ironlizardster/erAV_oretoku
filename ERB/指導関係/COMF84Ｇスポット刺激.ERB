@@ -109,18 +109,18 @@ ENDIF
 
 ;Ｖ敏感、鈍感をみる
 ;快Ｖ自体のチェックは後でまとめてやる
-IF TALENT:Ｖ鈍感
+IF IS_Ｖ鈍感(TARGET)
 	TIMES SOURCE:痛覚 , 1.50
 	TIMES SOURCE:屈従 , 1.50
 	TIMES SOURCE:逸脱 , 1.50
-ELSEIF TALENT:Ｖ敏感
+ELSEIF IS_Ｖ敏感(TARGET)
 	TIMES SOURCE:痛覚 , 0.60
 	TIMES SOURCE:屈従 , 0.60
 	TIMES SOURCE:逸脱 , 0.60
 ENDIF
 
 ;処女で貞操観念
-IF EXP:Ｖ経験 == 0 && TALENT:貞操観念
+IF EXP:Ｖ経験 == 0 && IS_貞操観念(TARGET)
 	TIMES SOURCE:屈従 , 2.00
 ENDIF
 

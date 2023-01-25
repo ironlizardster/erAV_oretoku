@@ -6,7 +6,7 @@
 ;-------------------------------------------------
 @ABLUP1
 DRAWLINE
-;SIF HAVE_VAGINA(TARGET) && TALENT:絶壁 == 0
+;SIF HAVE_VAGINA(TARGET) && !IS_絶壁(TARGET)
 ;	PRINT 乳房や
 ;PRINTL 乳首の感度をUPします
 ;PRINTL Ｂ感覚が高まると、胸への愛撫や搾乳からより大きな快楽が得られます
@@ -114,17 +114,17 @@ IF TALENT:一線越えない
 ENDIF
 
 ;B鈍感
-SIF TALENT:Ｂ鈍感
+SIF IS_Ｂ鈍感(TARGET)
 	TIMES A , 1.20
 ;巨乳
-SIF TALENT:巨乳
+SIF IS_巨乳(TARGET)
 	TIMES A , 1.10
 ;爆乳
-SIF TALENT:爆乳
+SIF IS_デカパイ(TARGET)
 	TIMES A , 1.20
 
 ;B敏感
-SIF TALENT:Ｂ敏感
+SIF IS_Ｂ敏感(TARGET)
 	TIMES A , 0.80
 ;淫乱
 SIF TALENT:淫乱
@@ -136,10 +136,10 @@ SIF TALENT:絶倫
 SIF TALENT:乳狂い
 	TIMES A , 0.80
 ;貧乳
-SIF TALENT:貧乳
+SIF IS_貧乳(TARGET)
 	TIMES A , 0.80
 ;絶壁
-SIF TALENT:絶壁
+SIF IS_絶壁(TARGET)
 	TIMES A , 0.65
 
 ;最低でも１個は必要

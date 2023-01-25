@@ -45,12 +45,12 @@ ENDIF
 
 ;大きいと重いので食い込みが強くなる
 ;大柄
-IF TALENT:大柄
+IF IS_大柄(TARGET)
 	TIMES SOURCE:快Ｃ , 1.80
 	TIMES SOURCE:痛覚 , 1.80
 ENDIF
 ;小柄
-IF TALENT:小柄
+IF IS_小柄(TARGET)
 	TIMES SOURCE:快Ｃ , 0.80
 	TIMES SOURCE:痛覚 , 0.80
 ENDIF
@@ -136,12 +136,12 @@ ENDIF
 
 ;大きいと重いので食い込みが強くなる
 ;大柄
-IF TALENT:大柄
+IF IS_大柄(TARGET)
 	TIMES A , 1.80
 	TIMES B , 1.80
 ENDIF
 ;小柄
-IF TALENT:小柄
+IF IS_小柄(TARGET)
 	TIMES A , 0.80
 	TIMES B , 0.80
 ENDIF

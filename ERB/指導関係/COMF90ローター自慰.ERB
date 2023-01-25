@@ -121,19 +121,19 @@ IF TALENT:自制心
 	S = 1
 ENDIF
 ;恥じらい
-IF TALENT:恥じらい
+IF IS_恥じらい(TARGET)
 	PRINT  - 
 	A -= 5
-	PRINTS TALENTNAME:[[TALENT:恥じらい]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,5,')
 	S = 1
 ENDIF
 ;恥薄い
-IF TALENT:恥薄い
+IF IS_恥薄い(TARGET)
 	SIF S
 		PRINT  + 
 	A += 2
-	PRINTS TALENTNAME:[[TALENT:恥薄い]]
+	PRINTS GET_STR_恥じらい(TARGET)
 	PRINTV '(,2,')
 	S = 1
 ENDIF
@@ -147,7 +147,7 @@ IF TALENT:自慰しやすい
 	S = 1
 ENDIF
 ;快感に素直
-IF TALENT:快感に素直
+IF IS_快感に素直(TARGET)
 	SIF S
 		PRINT  + 
 	A += 5
@@ -156,10 +156,10 @@ IF TALENT:快感に素直
 	S = 1
 ENDIF
 ;快感の否定
-IF TALENT:快感の否定
+IF IS_快感の否定(TARGET)
 	PRINT  - 
 	A -= 5
-	PRINTS TALENTNAME:[[TALENT:快感の否定]]
+	PRINTS GET_STR_快感に素直(TARGET)
 	PRINTV '(,5,')
 	S = 1
 ENDIF
@@ -327,10 +327,10 @@ IF TEQUIP:バイブ
 		C += 0
 	ENDIF
 	;Ｖ敏感、鈍感をみる
-	IF TALENT:Ｖ鈍感
+	IF IS_Ｖ鈍感(TARGET)
 		TIMES C , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ｖ敏感
+	ELSEIF IS_Ｖ敏感(TARGET)
 		TIMES C , 0.60
 		TIMES D , 0.60
 	ENDIF
@@ -386,10 +386,10 @@ IF TEQUIP:アナルバイブ
 	ENDIF
 
 	;Ａ敏感、鈍感をみる
-	IF TALENT:Ａ鈍感
+	IF IS_Ａ鈍感(TARGET)
 		TIMES C , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ａ敏感
+	ELSEIF IS_Ａ敏感(TARGET)
 		TIMES C , 0.60
 		TIMES D , 0.60
 	ENDIF
@@ -469,18 +469,18 @@ IF TEQUIP:シャワー
 	ENDIF
 
 	;Ｖ敏感、鈍感をみる
-	IF TALENT:Ｖ鈍感
+	IF IS_Ｖ鈍感(TARGET)
 		TIMES SOURCE:痛覚 , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ｖ敏感
+	ELSEIF IS_Ｖ敏感(TARGET)
 		TIMES SOURCE:痛覚 , 0.60
 		TIMES D , 0.60
 	ENDIF
 	;Ａ敏感、鈍感をみる
-	IF TALENT:Ａ鈍感
+	IF IS_Ａ鈍感(TARGET)
 		TIMES SOURCE:痛覚 , 1.50
 		TIMES D , 1.50
-	ELSEIF TALENT:Ａ敏感
+	ELSEIF IS_Ａ敏感(TARGET)
 		TIMES SOURCE:痛覚 , 0.60
 		TIMES D , 0.60
 	ENDIF
@@ -583,14 +583,14 @@ IF TEQUIP:バイブ || TEQUIP:アナルバイブ
 	ENDIF
 	
 	;大柄
-	SIF TALENT:大柄
+	SIF IS_大柄(TARGET)
 		TIMES C , 0.80
 	;小柄体形
-	SIF TALENT:小柄
+	SIF IS_小柄(TARGET)
 		TIMES C , 2.00
 
 	;貞操観念
-	IF TALENT:貞操観念
+	IF IS_貞操観念(TARGET)
 		TIMES C, 3.00
 	ENDIF
 
@@ -804,7 +804,7 @@ IF TEQUIP:撮影中 || TEQUIP:野外プレイ
 ENDIF
 
 ;陰毛を生やす設定で剃毛状態
-SIF FLAG:陰毛を生やす && TALENT:パイパン == 0 && CFLAG:陰毛状態 <= 5
+SIF FLAG:陰毛を生やす && !IS_パイパン(TARGET) && CFLAG:陰毛状態 <= 5
 	TIMES SOURCE:露出 , 2.00
 
 						;****スライムパッチ追加ここから****

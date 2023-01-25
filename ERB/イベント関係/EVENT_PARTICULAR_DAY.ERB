@@ -107,7 +107,7 @@ REPEAT CHARANUM
 					JUEL:COUNT:恥情 += 500
 
 				;爆乳以上
-				ELSEIF TALENT:COUNT:爆乳 || TALENT:COUNT:超乳 || TALENT:COUNT:魔乳 || TALENT:COUNT:神乳
+				ELSEIF IS_デカパイ(COUNT)
 					PRINTFORML %CALLNAME:COUNT%は巨大な乳房の谷間にハート形のチョコレートを乗せ、%CALLNAME:MASTER%に差し出してきた。
 					PRINTFORML %CALLNAME:COUNT%の胸の感触を存分に愉しみつつ%CALLNAME:MASTER%がチョコを食べ終えた頃には、%CALLNAME:COUNT%は頬を紅潮させて上気した吐息を漏らしていた…
 					PRINTL
@@ -134,7 +134,7 @@ REPEAT CHARANUM
 				PRINTFORML 下着姿の%CALLNAME:COUNT%が%CALLNAME:MASTER%を待っていた。
 
 				;爆乳以上
-				IF TALENT:COUNT:爆乳 || TALENT:COUNT:超乳 || TALENT:COUNT:魔乳 || TALENT:COUNT:神乳
+				IF IS_デカパイ(COUNT)
 					PRINTFORML %CALLNAME:COUNT%は巨大な乳房の谷間にハート形のチョコレートを乗せ、%CALLNAME:MASTER%に差し出してきた。
 					PRINTFORML %CALLNAME:COUNT%の胸の感触を存分に愉しみつつ%CALLNAME:MASTER%がチョコを食べ終えた頃には、%CALLNAME:COUNT%は頬を紅潮させて上気した吐息を漏らしていた…
 					PRINTL
@@ -158,13 +158,13 @@ REPEAT CHARANUM
 		;好感度1000以上＋【恋心】
 		ELSEIF CFLAG:COUNT:好感度 >= 1000 && TALENT:COUNT:恋心
 			;素質ごとに描写（臆病・恥じらい／素直／好奇心・楽観的／プライド高い／それ以外）
-			IF TALENT:COUNT:臆病 || TALENT:COUNT:恥じらい
+			IF TALENT:COUNT:臆病 || IS_恥じらい(COUNT)
 				PRINT 顔を真っ赤にした
 			ELSEIF TALENT:COUNT:素直
 				PRINT うきうきした様子の
-			ELSEIF TALENT:COUNT:好奇心 || TALENT:COUNT:ポジティブ
+			ELSEIF TALENT:COUNT:好奇心 || IS_楽観的(COUNT)
 				PRINT 楽しげな様子の
-			ELSEIF TALENT:COUNT:プライド高い
+			ELSEIF IS_プライド高い(COUNT)
 				PRINT そわそわした様子の
 			ELSE
 				PRINT 頬を染めた
@@ -175,7 +175,7 @@ REPEAT CHARANUM
 			;素質ごとに描写（自制心／恥薄い・目立ちたがり／無関心／臆病）
 			IF TALENT:COUNT:自制心
 				PRINT 辺りを窺うようにしつつ
-			ELSEIF TALENT:COUNT:恥薄い || TALENT:COUNT:目立ちたがり
+			ELSEIF IS_恥薄い(COUNT) || TALENT:COUNT:目立ちたがり
 				PRINT 勢いよく
 			ELSEIF TALENT:COUNT:クール
 				PRINT 何気なく
@@ -210,7 +210,7 @@ REPEAT CHARANUM
 				PRINT にっこりと微笑み、
 			ELSEIF CFLAG:COUNT:好感度 < 2000
 				PRINTFORM %CALLNAME:MASTER%をぎゅっと抱きしめ
-			ELSEIF TALENT:COUNT:小柄
+			ELSEIF IS_小柄(COUNT)
 				PRINTFORM 背伸びして%CALLNAME:MASTER%に口づけし、
 			ELSE
 				PRINTFORM 微笑んで%CALLNAME:MASTER%に口づけし、
@@ -219,7 +219,7 @@ REPEAT CHARANUM
 			;素質ごとに描写（素直・ツンデレ／臆病・大人しい／それ以外）
 			IF TALENT:COUNT:素直 || TALENT:COUNT:ツンデレ
 				PRINTL 幸せそうに去っていった。
-			ELSEIF TALENT:COUNT:臆病 || TALENT:COUNT:恥じらい
+			ELSEIF TALENT:COUNT:臆病 || IS_恥じらい(COUNT)
 				PRINTL 逃げるように去っていった。
 			ELSE
 				PRINTL 手を振って去っていった。
@@ -335,7 +335,7 @@ IF RESULT == COMMAND_はい
 	ENDIF
 	PRINTFORM を着た%CALLNAME:TARGET%は
 	;おっぱいおっぱい(絶望)
-	IF TALENT:巨乳 == 1 || TALENT:爆乳 == 1
+	IF IS_チチユレ(TARGET)
 		PRINTFORM 大きな胸を揺らしながら
 	ENDIF
 	PRINTFORML 元気よく%CALLNAME:MASTER%とじゃれ合っている……
@@ -420,7 +420,7 @@ IF RESULT == COMMAND_はい
 		PRINTFORML 愛情経験＋{N / 3}
 		EXP:愛情経験 += N * ABL:信頼 / 2
 		CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口)
-		IF IS童貞(MASTER) && HAVE_PENIS(MASTER)
+		IF IS童貞(MASTER)
 			CALL 童貞喪失実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_なし)
 		ENDIF
 	ENDIF
