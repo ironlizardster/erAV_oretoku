@@ -419,9 +419,9 @@ IF RESULT == COMMAND_はい
 
 		PRINTFORML 愛情経験＋{N / 3}
 		EXP:愛情経験 += N * ABL:信頼 / 2
-		CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口)
+		CALL 初キス喪失実行(TARGET,NO:MASTER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_口)
 		IF IS童貞(MASTER)
-			CALL 童貞喪失実行(MASTER,NO:TARGET + 1,BASE:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_なし)
+			CALL 童貞喪失実行(MASTER,NO:TARGET + 1,CFLAG:MASTER:実年齢,DAY:日付_月,DAY:日付_日,初場所_海,初状況_なし)
 		ENDIF
 	ENDIF
 

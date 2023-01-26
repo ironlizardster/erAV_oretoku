@@ -160,7 +160,7 @@ PRINTFORML %PALAMNAME:[[PALAM:習得]]%の珠＋{X*40}
 
 ;△SLANGとの整合性
 IF !CFLAG:初キス相手
-	CALL 初キス喪失実行(TARGET,NO:MASTER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_男性器)
+	CALL 初キス喪失実行(TARGET,NO:MASTER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_男性器)
 ENDIF
 
 WAIT

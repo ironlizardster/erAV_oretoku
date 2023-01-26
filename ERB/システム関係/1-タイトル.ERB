@@ -24,7 +24,7 @@ FOR LCOUNT, 0, 固有キャラ最大ID
 	IF EXISTCSV(LCOUNT)
 		CSVCOUNT++
 		固有キャラ名前リスト:LCOUNT '= CSVNAME(LCOUNT)
-		IF (CSVBASE(LCOUNT, [[BASE:誕生月]])) == LMONTH && (CSVBASE(LCOUNT, [[BASE:誕生日]])) == LDAYS
+		IF (CSVCFLAG(LCOUNT, [[CFLAG:誕生月]])) == LMONTH && (CSVCFLAG(LCOUNT, [[CFLAG:誕生日]])) == LDAYS
 			誕生日名前:誕生日人数 '= CSVNAME(LCOUNT)
 			誕生日人数++
 		ENDIF

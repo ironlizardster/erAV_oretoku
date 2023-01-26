@@ -451,7 +451,7 @@ IF IS処女(ASSI)
 
 	;助手の初体験を記録
 	IF CFLAG:ASSI:処女喪失相手 == 0
-		CALL 処女喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+		CALL 処女喪失実行(ASSI,NO:TARGET + 1,CFLAG:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	ENDIF
 ENDIF
 
@@ -517,7 +517,7 @@ ENDIF
 
 ;調教対象が童貞なら童貞喪失
 IF IS童貞(TARGET)
-	CALL 童貞喪失実行(TARGET,NO:ASSI + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+	CALL 童貞喪失実行(TARGET,NO:ASSI + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	;処女喪失相手を記録
 	IF CFLAG:包皮状態 == 2
 		CFLAG:包皮状態 = 3
@@ -547,27 +547,27 @@ IF E
 
 	;ABL:精液中毒をみる
 	IF ABL:精液中毒 == 0
-		SOURCE:中毒充足 = 0
+		SOURCE:充足 = 0
 		TIMES SOURCE:達成 , 2.00
 		TIMES SOURCE:屈従, 2.00
 	ELSEIF ABL:精液中毒 == 1
-		SOURCE:中毒充足 = 50
+		SOURCE:充足 = 50
 		TIMES SOURCE:達成 , 2.50
 		TIMES SOURCE:屈従, 1.60
 	ELSEIF ABL:精液中毒 == 2
-		SOURCE:中毒充足 = 150
+		SOURCE:充足 = 150
 		TIMES SOURCE:達成 , 3.00
 		TIMES SOURCE:屈従, 1.00
 	ELSEIF ABL:精液中毒 == 3
-		SOURCE:中毒充足 = 300
+		SOURCE:充足 = 300
 		TIMES SOURCE:達成 , 4.50
 		TIMES SOURCE:屈従, 0.70
 	ELSEIF ABL:精液中毒 == 4
-		SOURCE:中毒充足 = 600
+		SOURCE:充足 = 600
 		TIMES SOURCE:達成 , 6.00
 		TIMES SOURCE:屈従, 0.40
 	ELSE
-		SOURCE:中毒充足 = 1200
+		SOURCE:充足 = 1200
 		TIMES SOURCE:達成 , 8.00
 		TIMES SOURCE:屈従, 0.10
 	ENDIF
@@ -575,7 +575,7 @@ ENDIF
 
 ;大量射精
 IF E == 2
-	TIMES SOURCE:中毒充足 , 2.00
+	TIMES SOURCE:充足 , 2.00
 	TIMES SOURCE:達成 , 1.50
 
 	EXP:PLAYER:射精経験 += 2

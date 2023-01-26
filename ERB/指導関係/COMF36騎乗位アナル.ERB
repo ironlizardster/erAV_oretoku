@@ -488,17 +488,17 @@ IF E
 
 	;ABL:精液中毒をみる
 	IF ABL:精液中毒 == 0
-		SOURCE:中毒充足 = 0
+		SOURCE:充足 = 0
 	ELSEIF ABL:精液中毒 == 1
-		SOURCE:中毒充足 = 300
+		SOURCE:充足 = 300
 	ELSEIF ABL:精液中毒 == 2
-		SOURCE:中毒充足 = 1000
+		SOURCE:充足 = 1000
 	ELSEIF ABL:精液中毒 == 3
-		SOURCE:中毒充足 = 1500
+		SOURCE:充足 = 1500
 	ELSEIF ABL:精液中毒 == 4
-		SOURCE:中毒充足 = 2200
+		SOURCE:充足 = 2200
 	ELSE
-		SOURCE:中毒充足 = 3000
+		SOURCE:充足 = 3000
 	ENDIF
 ENDIF
 

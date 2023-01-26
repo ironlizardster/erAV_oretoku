@@ -45,11 +45,11 @@ REPEAT CHARANUM
 ;一応コメントアウト。
 ;△進学イベ
 ;	;12歳で3月31日を終えた時、【中学生】に進学（【愛】がない場合、素質は付かない）
-;	IF BASE:実年齢 == 12 && DAY:日付_月 == 3 && DAY:日付_日 == 31
+;	IF CFLAG:実年齢 == 12 && DAY:日付_月 == 3 && DAY:日付_日 == 31
 ;		CALL EVENT_JUNIORHIGHSCHOOL
 ;	ENDIF
 ;	;15歳で3月31日を終えた時、【高校生】に進学（【愛】がない場合、素質は付かない）
-;	IF BASE:実年齢 == 15 && DAY:日付_月 == 3 && DAY:日付_日 == 31
+;	IF CFLAG:実年齢 == 15 && DAY:日付_月 == 3 && DAY:日付_日 == 31
 ;		CALL EVENT_HIGHSCHOOL
 ;	ENDIF
 	;媚薬中毒
@@ -813,7 +813,7 @@ ELSE
 	ENDIF
 	PRINTFORML {S}回の交わりの後に、二人は繋がったまま抱き合い、深い眠りに落ちた
 	IF ISＡ処女(TEMP_NUM)
-		CALL Ａ処女喪失実行(TEMP_NUM,NO:MASTER + 1,BASE:TEMP_NUM:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_夜這)
+		CALL Ａ処女喪失実行(TEMP_NUM,NO:MASTER + 1,CFLAG:TEMP_NUM:実年齢,DAY:日付_月,DAY:日付_日,初場所_あなたの部屋,初状況_夜這)
 	ENDIF
 	PRINTFORML %EXPNAME:[[EXP:Ａ経験]]%＋{S}
 	PRINTFORML %EXPNAME:[[EXP:性交経験]]%＋{S}

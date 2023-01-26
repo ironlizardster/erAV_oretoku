@@ -28,13 +28,13 @@ SELECTCASE 入力値
 	CASE [[TALENT:性別]]
 		TALENT:対象:性別++
 		SIF TALENT:対象:性別 > 性別_ふたなり
-			TALENT:対象:性別 = 性別_女
+			TALENT:対象:性別 = 性別_オンナ
 		SIF HAVE_VAGINA(対象)
 			TALENT:対象:オトコの娘 = 0
-	CASE [[TALENT:乳サイズ]]
-		TALENT:対象:乳サイズ++
-		SIF TALENT:対象:乳サイズ > 5
-			TALENT:対象:乳サイズ = -2
+	CASE [[TALENT:乳房]]
+		TALENT:対象:乳房++
+		SIF TALENT:対象:乳房 > 5
+			TALENT:対象:乳房 = -2
 	CASE [[TALENT:尻サイズ]]
 		TALENT:対象:尻サイズ++
 		SIF TALENT:対象:尻サイズ > 3

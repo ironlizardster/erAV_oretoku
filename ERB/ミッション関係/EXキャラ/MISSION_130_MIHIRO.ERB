@@ -241,13 +241,13 @@ IF TALENT:永遠の愛 == 0 && TALENT:崩壊 == 0
 		ELSEIF TALENT:淫乱 == 1
 			CSTR:初キス相手 = 重村慎二
 		ENDIF
-		CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"重村慎二")
+		CALL 初キス喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"重村慎二")
 	ENDIF
 	IF IS処女(TARGET)
-		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"重村慎二（お笑い芸人）")
+		CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"重村慎二（お笑い芸人）")
 	ENDIF
 	IF ISＡ処女(TARGET)
-		CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"中野敦史（お笑い芸人）")
+		CALL Ａ処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"中野敦史（お笑い芸人）")
 	ENDIF
 	REPEAT 110
 		JUEL:TARGET:COUNT = 0
@@ -266,7 +266,7 @@ IF TALENT:永遠の愛 == 0 && TALENT:崩壊 == 0
 	ABL:奉仕精神 = 0
 ELSE
 	IF IS処女(TARGET)
-		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"中野敦史（お笑い芸人）")
+		CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"中野敦史（お笑い芸人）")
 	ENDIF
 	IF !CFLAG:初キス相手
 		IF TALENT:ギャル系 == 1
@@ -275,10 +275,10 @@ ELSE
 		ELSEIF TALENT:淫乱 == 1
 			CSTR:初キス相手 = 中野敦史
 		ENDIF
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"中野敦史")
+		CALL 初キス喪失実行(TARGET,初相手_今彼,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_男性器,"中野敦史")
 	ENDIF
 	IF ISＡ処女(TARGET)
-		CALL Ａ処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"重村慎二（お笑い芸人）")
+		CALL Ａ処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_クスリ,"重村慎二（お笑い芸人）")
 	ENDIF
 ENDIF
 TALENT:男性不信 = RAND:2

@@ -189,13 +189,13 @@ TCVAR:緊縛経験 = TCVAR:触手経験
 SIF HAVE_PENIS(TARGET) 
 	TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 IF IS処女(TARGET)
-	CALL 処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_無理犯,"触手生物")
+	CALL 処女喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_無理犯,"触手生物")
 ENDIF
 IF !CFLAG:初キス相手
-	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"触手生物")
+	CALL 初キス喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"触手生物")
 ENDIF
 IF ISＡ処女(TARGET)
-	CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_無理犯,"触手生物")
+	CALL Ａ処女喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_無理犯,"触手生物")
 ENDIF
 ; 経験増加処理の呼び出し
 CALL MISSION_ADD_EXP(TARGET)

@@ -48,7 +48,7 @@
 #DIM CONST 累計上納金累計 = 1
 #DIM CONST 累計ビデオ売上 = 2
 
-#DIM CONST 性別_女 = 1
+#DIM CONST 性別_オンナ = 1
 #DIM CONST 性別_オトコ = 2
 #DIM CONST 性別_ふたなり = 3
 

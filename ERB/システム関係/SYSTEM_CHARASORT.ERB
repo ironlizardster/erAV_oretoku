@@ -295,25 +295,25 @@ REPEAT CHARANUM
 		PRINTFORM [{COUNT}] %NAME:COUNT% 
 		PRINT [
 			;およその見た目が存在するならそちらで表示、でなければ実年齢で表示
-			IF BASE:COUNT:概算年齢 > 0
-				IF BASE:COUNT:外見年齢 == 0
+			IF CFLAG:COUNT:概算年齢 > 0
+				IF CFLAG:COUNT:外見年齢 == 0
 					PRINT ？歳
 				ELSE
-					PRINTFORM {BASE:COUNT:外見年齢}
-					IF BASE:COUNT:概算年齢 == 1
+					PRINTFORM {CFLAG:COUNT:外見年齢}
+					IF CFLAG:COUNT:概算年齢 == 1
 						PRINT 代
-					ELSEIF BASE:COUNT:概算年齢 == 2
+					ELSEIF CFLAG:COUNT:概算年齢 == 2
 						PRINT 代前半
-					ELSEIF BASE:COUNT:概算年齢 == 3
+					ELSEIF CFLAG:COUNT:概算年齢 == 3
 						PRINT 代半ば
-					ELSEIF BASE:COUNT:概算年齢 == 4
+					ELSEIF CFLAG:COUNT:概算年齢 == 4
 						PRINT 代後半
-					ELSEIF BASE:COUNT:概算年齢 == 5
+					ELSEIF CFLAG:COUNT:概算年齢 == 5
 						PRINT 歳前後
 					ENDIF
 				ENDIF
 			ELSE
-				PRINTFORM {BASE:COUNT:実年齢}歳
+				PRINTFORM {CFLAG:COUNT:実年齢}歳
 			ENDIF
 		PRINT ]
 		PRINTL  
@@ -334,21 +334,21 @@ REPEAT F
 	SIF COUNT == 0
 		CONTINUE
 	;キャラの年齢判定用変数Dを設定（～代など微妙な年齢判定用に3倍値を使う）
-	D = BASE:COUNT:外見年齢 * 3
-	IF BASE:COUNT:概算年齢 == 1
+	D = CFLAG:COUNT:外見年齢 * 3
+	IF CFLAG:COUNT:概算年齢 == 1
 		D += 28
-	ELSEIF BASE:COUNT:概算年齢 == 2
+	ELSEIF CFLAG:COUNT:概算年齢 == 2
 		D += 16
-	ELSEIF BASE:COUNT:概算年齢 == 3
+	ELSEIF CFLAG:COUNT:概算年齢 == 3
 		D += 17
-	ELSEIF BASE:COUNT:概算年齢 == 4
+	ELSEIF CFLAG:COUNT:概算年齢 == 4
 		D += 29
-	ELSEIF BASE:COUNT:概算年齢 == 5
+	ELSEIF CFLAG:COUNT:概算年齢 == 5
 		D += 1
 	ENDIF
 	;外見年齢が存在しないなら実年齢の3倍値をDに代入
-	SIF BASE:COUNT:概算年齢 == 0
-		D = BASE:COUNT:実年齢 * 3
+	SIF CFLAG:COUNT:概算年齢 == 0
+		D = CFLAG:COUNT:実年齢 * 3
 	IF D > C
 		B = COUNT
 		C = D

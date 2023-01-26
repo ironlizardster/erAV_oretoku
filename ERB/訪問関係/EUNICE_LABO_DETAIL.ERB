@@ -1078,19 +1078,19 @@ IF TALENT:淫乱 == 1
 ENDIF
 
 IF IS処女(TARGET)
-	CALL 処女喪失実行(TARGET,NO:MASTER + 1,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交)
+	CALL 処女喪失実行(TARGET,NO:MASTER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交)
 ENDIF
 
 IF !CFLAG:初キス相手
-	CALL 初キス喪失実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススのカリ高極太ふたなりチンポ")
+	CALL 初キス喪失実行(TARGET,[[キャラ:ユーニス・パラディスス]] + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_男性器,"ユーニス・パラディススのカリ高極太ふたなりチンポ")
 ENDIF
 
 IF IS童貞(TARGET)
-	CALL 童貞喪失実行(TARGET,初相手_不明,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交,"知らない女のコの処女マンコ")
+	CALL 童貞喪失実行(TARGET,初相手_不明,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交,"知らない女のコの処女マンコ")
 ENDIF
 
 IF ISＡ処女(TARGET)
-	CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:TARGET:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交,"触手生物")
+	CALL Ａ処女喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_乱交,"触手生物")
 ENDIF
 
 CFLAG:ペニスサイズ = 2

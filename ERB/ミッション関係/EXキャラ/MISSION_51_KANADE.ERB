@@ -262,7 +262,7 @@ IF A:2 == 0
 	BASE:魅力値 -= 20 + RAND:11
 	IF TALENT:永遠の愛
 		IF IS処女(TARGET)
-			CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_無理犯,"小野寺恭司（クラスメイト）")
+			CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_無理犯,"小野寺恭司（クラスメイト）")
 		ENDIF
 		TCVAR:絶頂経験 += 5 + RAND:6
 		TCVAR:Ｖ経験 += 3 + RAND:6
@@ -272,16 +272,16 @@ IF A:2 == 0
 		SIF HAVE_PENIS(TARGET) 
 			TCVAR:射精経験 += TCVAR:絶頂経験 + RAND:6
 		IF !CFLAG:初キス相手
-			CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"小野寺恭司（クラスメイト）")
+			CALL 初キス喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"小野寺恭司（クラスメイト）")
 		ENDIF
-		CFLAG:処女喪失年齢 = BASE:実年齢
+		CFLAG:処女喪失年齢 = CFLAG:実年齢
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 5
 		CFLAG:処女喪失状況 = 0
 	ELSE
 		IF IS処女(TARGET)
-			CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_無理犯,"小野寺恭司（クラスメイト）")
+			CALL 処女喪失実行(TARGET,初相手_今彼,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_無理犯,"小野寺恭司（クラスメイト）")
 		ENDIF
 		CSTR:彼氏姓 = 小野寺
 		CSTR:彼氏名 = 恭司
@@ -290,7 +290,7 @@ IF A:2 == 0
 		CFLAG:彼氏有 = 1
 		CFLAG:彼氏タイプ = 1
 
-		CFLAG:処女喪失年齢 = BASE:実年齢
+		CFLAG:処女喪失年齢 = CFLAG:実年齢
 		CFLAG:処女喪失月 = DAY:日付_月
 		CFLAG:処女喪失日 = DAY:日付_日
 		CFLAG:処女喪失場所 = 5
@@ -312,7 +312,7 @@ IF A:2 == 0
 			ELSE
 				CSTR:初キス相手 = 恭司くん
 			ENDIF
-			CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_男性器,"%CSTR:初キス相手%")
+			CALL 初キス喪失実行(TARGET,初相手_今彼,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_男性器,"%CSTR:初キス相手%")
 		ENDIF
 		BASE:魅力値 -= RAND:6
 		LOCAL = 3

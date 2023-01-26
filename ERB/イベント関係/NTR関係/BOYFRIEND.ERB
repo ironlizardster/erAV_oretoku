@@ -30,7 +30,7 @@ IF TALENT:ARG:恋心 == 0 && TALENT:ARG:永遠の愛 == 0 && !CFLAG:ARG:彼氏�
 	CFLAG:ARG:彼氏有 = 1
 	IF FLAG:チャラ男固定 == 0 || TALENT:ARG:ギャル系 == 0
 		CFLAG:ARG:彼氏タイプ += RAND:7
-			IF CFLAG:ARG:彼氏タイプ == 1 && BASE:ARG:実年齢 > 18
+			IF CFLAG:ARG:彼氏タイプ == 1 && CFLAG:ARG:実年齢 > 18
 				CFLAG:ARG:彼氏タイプ = 5
 			ENDIF
 		BASE:ARG:魅力値 -= 5
@@ -44,7 +44,7 @@ ELSEIF TALENT:ARG:恋心 == 1 && TALENT:ARG:永遠の愛 == 0 && !CFLAG:ARG:彼�
 	CFLAG:ARG:彼氏有 = 1
 	IF FLAG:チャラ男固定 == 0 || TALENT:ARG:ギャル系 == 0
 		CFLAG:ARG:彼氏タイプ += RAND:7
-			IF CFLAG:ARG:彼氏タイプ == 1 && BASE:ARG:実年齢 > 18
+			IF CFLAG:ARG:彼氏タイプ == 1 && CFLAG:ARG:実年齢 > 18
 				CFLAG:ARG:彼氏タイプ = 5
 			ENDIF 
 	ELSE
@@ -58,7 +58,7 @@ ENDIF
 
 IF !CFLAG:ARG:初キス相手
 	PRINTFORMW %CALLNAME:ARG%はもうすでに彼氏にファーストキスを捧げたらしい……
-	CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL 初キス喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 DRAWLINE
 
@@ -298,14 +298,14 @@ EXP:ARG:彼氏性経験 += 1
 SIF LOCAL:1 >= 8 && IS処女(ARG)
 	TCVAR:ARG:異常経験 += 1
 IF !CFLAG:ARG:処女喪失相手
-	CALL 処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL 処女喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 
 IF !CFLAG:ARG:初キス相手
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	ELSE
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 		TCVAR:ARG:異常経験 += 1
 	ENDIF
 	
@@ -453,14 +453,14 @@ EXP:ARG:彼氏性経験 += 1
 SIF LOCAL:1 >= 8 && ISＡ処女(ARG)
 	TCVAR:ARG:異常経験 = 1
 IF ISＡ処女(ARG)
-	CALL Ａ処女喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL Ａ処女喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,ハメ撮り?初状況_ハメ撮#初状況_なし,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 ENDIF
 
 IF !CFLAG:ARG:初キス相手
 	IF RAND:2 == 0
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	ELSE
-		CALL 初キス喪失実行(ARG,初相手_今彼,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+		CALL 初キス喪失実行(ARG,初相手_今彼,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,喪失場所,初状況_男性器,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 		TCVAR:ARG:異常経験 += 1
 	ENDIF
 ENDIF

@@ -391,7 +391,7 @@ IF IS童貞(PLAYER) && HAVE_PENIS(PLAYER)
 	ENDIF
 	TFLAG:童貞喪失 = 1
 	SIF !CFLAG:PLAYER:童貞喪失相手
-		CALL 童貞喪失実行(PLAYER,NO:ASSI + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+		CALL 童貞喪失実行(PLAYER,NO:ASSI + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 ENDIF
 TARGET = C
 
@@ -402,7 +402,7 @@ IF IS処女(ASSI)
 
 	IF !CFLAG:ASSI:処女喪失相手
 		;助手の処女喪失相手を記録（初期値が0のため、+1して記録）
-		CALL 処女喪失実行(ASSI,NO:PLAYER + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+		CALL 処女喪失実行(ASSI,NO:PLAYER + 1,CFLAG:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	ENDIF
 
 	PRINTL ＜助手が処女＞

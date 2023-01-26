@@ -34,34 +34,34 @@ ENDIF
 
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
-	SOURCE:中毒充足 += 0
+	SOURCE:充足 += 0
 	SOURCE:愛液分泌 += 0
 	SOURCE:屈従 += 600
 	SOURCE:逸脱 += 1000
 	SOURCE:反感 += 1000
 	TIMES A, 0.60
 ELSEIF ABL:露出癖 == 1
-	SOURCE:中毒充足 += 150
+	SOURCE:充足 += 150
 	SOURCE:愛液分泌 += 150
 	SOURCE:屈従 += 500
 	TIMES A, 1.00
 ELSEIF ABL:露出癖 == 2
-	SOURCE:中毒充足 += 300
+	SOURCE:充足 += 300
 	SOURCE:愛液分泌 += 300
 	SOURCE:屈従 += 400
 	TIMES A, 1.60
 ELSEIF ABL:露出癖 == 3
-	SOURCE:中毒充足 += 600
+	SOURCE:充足 += 600
 	SOURCE:愛液分泌 += 600
 	SOURCE:屈従 += 300
 	TIMES A, 2.00
 ELSEIF ABL:露出癖 == 4
-	SOURCE:中毒充足 += 1000
+	SOURCE:充足 += 1000
 	SOURCE:愛液分泌 += 1000
 	SOURCE:屈従 += 200
 	TIMES A, 2.60
 ELSE
-	SOURCE:中毒充足 += 1800
+	SOURCE:充足 += 1800
 	SOURCE:愛液分泌 += 1800
 	SOURCE:屈従 += 100
 	TIMES A, 3.80
@@ -154,34 +154,34 @@ ELSEIF PALAM:欲情 >= PALAMLV:4
 ENDIF
 ;ABL:露出癖をみる
 IF ABL:露出癖 == 0
-	SOURCE:中毒充足 += 0
+	SOURCE:充足 += 0
 	SOURCE:愛液分泌 += 0
 	SOURCE:屈従 += 600
 	SOURCE:逸脱 += 1000
 	SOURCE:反感 += 1000
 	TIMES A, 0.30
 ELSEIF ABL:露出癖 == 1
-	SOURCE:中毒充足 += 150
+	SOURCE:充足 += 150
 	SOURCE:愛液分泌 += 150
 	SOURCE:屈従 += 500
 	TIMES A, 1.00
 ELSEIF ABL:露出癖 == 2
-	SOURCE:中毒充足 += 300
+	SOURCE:充足 += 300
 	SOURCE:愛液分泌 += 300
 	SOURCE:屈従 += 400
 	TIMES A, 2.00
 ELSEIF ABL:露出癖 == 3
-	SOURCE:中毒充足 += 600
+	SOURCE:充足 += 600
 	SOURCE:愛液分泌 += 600
 	SOURCE:屈従 += 300
 	TIMES A, 3.60
 ELSEIF ABL:露出癖 == 4
-	SOURCE:中毒充足 += 1000
+	SOURCE:充足 += 1000
 	SOURCE:愛液分泌 += 1000
 	SOURCE:屈従 += 200
 	TIMES A, 4.60
 ELSE
-	SOURCE:中毒充足 += 1800
+	SOURCE:充足 += 1800
 	SOURCE:愛液分泌 += 1800
 	SOURCE:屈従 += 100
 	TIMES A, 5.80

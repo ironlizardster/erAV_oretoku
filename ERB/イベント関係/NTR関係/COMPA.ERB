@@ -105,13 +105,13 @@ PRINTFORMW 酔いつぶされた%CALLNAME:ARG%はラブホに連れ込まれて�
 PRINTFORML Ｖ経験＋{強姦経験}
 IF !CFLAG:ARG:処女喪失相手 && IS処女(ARG)
 	強姦異常経験 += 1
-	CALL 処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_クスリ,"不良")
+	CALL 処女喪失実行(ARG,初相手_不良,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_クスリ,"不良")
 ENDIF
 IF 強姦Ａ経験 > 0
 	PRINTFORML Ａ経験＋{強姦Ａ経験}
 	IF ISＡ処女(ARG)
 		強姦異常経験 += 1
-		CALL Ａ処女喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_クスリ,"不良")
+		CALL Ａ処女喪失実行(ARG,初相手_不良,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_クスリ,"不良")
 	ENDIF
 ENDIF
 ;初強姦で異常+1
@@ -120,7 +120,7 @@ SIF EXP:ARG:強姦回数 == 0
 PRINTFORML 性交経験＋{強姦経験}
 PRINTFORML フェラ経験＋{強姦フェラ経験}
 IF !CFLAG:ARG:初キス相手
-	CALL 初キス喪失実行(ARG,初相手_不良,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"不良")
+	CALL 初キス喪失実行(ARG,初相手_不良,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"不良")
 ENDIF
 PRINTFORML 精液経験＋{強姦Ａ経験+強姦経験+強姦フェラ経験}
 PRINTFORML 薬物経験＋{強姦薬物経験}

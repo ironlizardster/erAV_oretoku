@@ -251,8 +251,8 @@ LOCAL = RAND:100
 ;恋人あり(or既婚)の場合、LOCALが年齢より小さければアナル経験有、LOCALが年齢より大きい男の娘の場合、LOCALが年齢の3倍より小さければアナル経験有
 ;恋人がいない場合LOCALが年齢の4分の1より小さければアナル経験有
 {
-RETURNF (( CFLAG:彼氏タイプ >= 2 && CFLAG:彼氏タイプ <= 7 ) || TALENT:人妻) && (LOCAL < (BASE:実年齢 * 1) || (CFLAG:性別 == 2 && LOCAL < (BASE:実年齢 * 3)))
-		|| LOCAL < (BASE:実年齢 / 4)
+RETURNF (( CFLAG:彼氏タイプ >= 2 && CFLAG:彼氏タイプ <= 7 ) || TALENT:人妻) && (LOCAL < (CFLAG:実年齢 * 1) || (CFLAG:性別 == 2 && LOCAL < (CFLAG:実年齢 * 3)))
+		|| LOCAL < (CFLAG:実年齢 / 4)
 }
 
 @陰毛決定(年齢)
@@ -284,9 +284,9 @@ RETURNF 0
 #FUNCTION
 LOCAL = RAND:100
 ;SIF LOCAL <= 4
-;	RETURNF [[TALENT:濡れやすい]]
+;	RETURNF [[IS_濡れやすい(TARGET)]]
 ;SIF LOCAL >= 95
-;	RETURNF [[TALENT:濡れにくい]]
+;	RETURNF [[IS_濡れにくい(TARGET)]]
 RETURNF 0
 
 @身長決定
@@ -318,44 +318,44 @@ ENDIF
 ;平均身長の設定(性別ごとに分岐)
 IF LOCAL == 0
 	;女子
-	IF BASE:実年齢 == 8
+	IF CFLAG:実年齢 == 8
 		LOCAL = 128	;8歳女子の平均身長
-	ELSEIF BASE:実年齢 == 9
+	ELSEIF CFLAG:実年齢 == 9
 		LOCAL = 133	;9歳女子の平均身長
-	ELSEIF BASE:実年齢 == 10
+	ELSEIF CFLAG:実年齢 == 10
 		LOCAL = 140	;10歳女子の平均身長
-	ELSEIF BASE:実年齢 == 11
+	ELSEIF CFLAG:実年齢 == 11
 		LOCAL = 147	;11歳女子の平均身長
-	ELSEIF BASE:実年齢 == 12
+	ELSEIF CFLAG:実年齢 == 12
 		LOCAL = 152	;12歳女子の平均身長
-	ELSEIF BASE:実年齢 == 13
+	ELSEIF CFLAG:実年齢 == 13
 		LOCAL = 133	;13歳女子の平均身長
-	ELSEIF BASE:実年齢 == 14
+	ELSEIF CFLAG:実年齢 == 14
 		LOCAL = 156	;14歳女子の平均身長
-	ELSEIF BASE:実年齢 == 15
+	ELSEIF CFLAG:実年齢 == 15
 		LOCAL = 157	;15歳女子の平均身長
 	ELSE
 		LOCAL = 158	;16歳以降の女子平均身長
 	ENDIF
 ELSEIF LOCAL == 1
 	;男子
-	IF BASE:実年齢 == 8
+	IF CFLAG:実年齢 == 8
 		LOCAL = 128	;8歳男子の平均身長
-	ELSEIF BASE:実年齢 == 9
+	ELSEIF CFLAG:実年齢 == 9
 		LOCAL = 133	;9歳男子の平均身長
-	ELSEIF BASE:実年齢 == 10
+	ELSEIF CFLAG:実年齢 == 10
 		LOCAL = 139	;10歳男子の平均身長
-	ELSEIF BASE:実年齢 == 11
+	ELSEIF CFLAG:実年齢 == 11
 		LOCAL = 145	;11歳男子の平均身長
-	ELSEIF BASE:実年齢 == 12
+	ELSEIF CFLAG:実年齢 == 12
 		LOCAL = 152	;12歳男子の平均身長
-	ELSEIF BASE:実年齢 == 13
+	ELSEIF CFLAG:実年齢 == 13
 		LOCAL = 159	;13歳男子の平均身長
-	ELSEIF BASE:実年齢 == 14
+	ELSEIF CFLAG:実年齢 == 14
 		LOCAL = 165	;14歳男子の平均身長
-	ELSEIF BASE:実年齢 == 15
+	ELSEIF CFLAG:実年齢 == 15
 		LOCAL = 168	;15歳男子の平均身長
-	ELSEIF BASE:実年齢 == 16
+	ELSEIF CFLAG:実年齢 == 16
 		LOCAL = 170	;16歳男子の平均身長
 	ELSE
 		LOCAL = 171	;17歳以降の男子平均身長
@@ -363,23 +363,23 @@ ELSEIF LOCAL == 1
 ELSE	;IF LOCAL == 2
 	;男の娘
 	;([同年代の男子]+[同年代の女子]+[男女の低いほう])/3で出した身長で仮設定。疑問が残る場合は変更してくれい
-	IF BASE:実年齢 == 8
+	IF CFLAG:実年齢 == 8
 		LOCAL = 128	;8歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 9
+	ELSEIF CFLAG:実年齢 == 9
 		LOCAL = 133	;9歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 10
+	ELSEIF CFLAG:実年齢 == 10
 		LOCAL = 139	;10歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 11
+	ELSEIF CFLAG:実年齢 == 11
 		LOCAL = 145	;11歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 12
+	ELSEIF CFLAG:実年齢 == 12
 		LOCAL = 151	;12歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 13
+	ELSEIF CFLAG:実年齢 == 13
 		LOCAL = 156	;13歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 14
+	ELSEIF CFLAG:実年齢 == 14
 		LOCAL = 159	;14歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 15
+	ELSEIF CFLAG:実年齢 == 15
 		LOCAL = 161	;15歳男の娘の仮想平均身長(仮)
-	ELSEIF BASE:実年齢 == 16
+	ELSEIF CFLAG:実年齢 == 16
 		LOCAL = 162	;16歳男の娘の仮想平均身長(仮)
 	ELSE
 		LOCAL = 162	;17歳以降の男の娘の平均身長(仮)
@@ -418,10 +418,10 @@ BASE:身長 = BASE:身長 * LOCAL / 100
 	脂肪 = RAND:101 - RAND:101
 	IF CFLAG:性別 == 0
 		;女性:8歳=17%～16歳=25%
-		IF BASE:実年齢 > 16
+		IF CFLAG:実年齢 > 16
 			脂肪 = 16 - 8
 		ELSE
-			脂肪 = BASE:実年齢 - 8
+			脂肪 = CFLAG:実年齢 - 8
 		ENDIF
 		脂肪 = 160 + (脂肪 * 12) + RAND:121 - RAND:121
 	ELSEIF CFLAG:性別 == 1
@@ -429,10 +429,10 @@ BASE:身長 = BASE:身長 * LOCAL / 100
 		脂肪 = 165 + RAND:121 - RAND:121
 	ELSEIF CFLAG:性別 == 2
 		;男の娘(女性を参考に年齢増減をやや少なめ)
-		IF BASE:実年齢 > 16
+		IF CFLAG:実年齢 > 16
 			脂肪 = 16
 		ELSE
-			脂肪 = BASE:実年齢 - 8
+			脂肪 = CFLAG:実年齢 - 8
 		ENDIF
 		脂肪 = 160 + (脂肪 * 8)
 ;		脂肪 += RAND:121 - RAND:121
@@ -451,7 +451,7 @@ BASE:身長 = BASE:身長 * LOCAL / 100
 
 ;成熟度
 	IF CFLAG:性別 == 0 || CFLAG:性別 == 2
-		IF BASE:実年齢 < 10
+		IF CFLAG:実年齢 < 10
 			;10歳未満
 			IF RAND:20 == 0
 				;1/20で最大60の成熟度に達する稀有な存在(･･･が大半は10止まり)
@@ -464,13 +464,13 @@ BASE:身長 = BASE:身長 * LOCAL / 100
 					成熟 = 10
 			ENDIF
 			身長係数 = 100
-		ELSEIF (BASE:実年齢 > 10 && BASE:実年齢 < 16)
+		ELSEIF (CFLAG:実年齢 > 10 && CFLAG:実年齢 < 16)
 			;11歳～15歳
 			IF RAND:10 == 0
 				;1/10の確率でほぼ成長していない相手
-				成熟 = 10 + (BASE:実年齢 - 10) * 1
+				成熟 = 10 + (CFLAG:実年齢 - 10) * 1
 			ELSE
-				成熟 = 10 + (BASE:実年齢 - 10) * 15
+				成熟 = 10 + (CFLAG:実年齢 - 10) * 15
 			ENDIF
 			成熟 = 成熟 + RAND:31 - RAND:31
 			SIF 成熟 < 15
@@ -479,7 +479,7 @@ BASE:身長 = BASE:身長 * LOCAL / 100
 			;	成熟 = 100
 			;100オーバーしたらしたでいいや
 			;成長度の差で身長係数が±3割増減
-			身長係数 = 100 + ( 30 * ( 成熟 - ( 10 + (BASE:実年齢 - 10) * 15 ) ) / 100 )
+			身長係数 = 100 + ( 30 * ( 成熟 - ( 10 + (CFLAG:実年齢 - 10) * 15 ) ) / 100 )
 		ELSE
 			;16歳以上
 			IF RAND:10 == 0
@@ -498,20 +498,20 @@ BASE:身長 = BASE:身長 * LOCAL / 100
 			身長係数 = 100 + ( 30 * ( 成熟 - 85 ) / 100 )
 		ENDIF
 	ELSEIF CFLAG:性別 == 1
-		IF BASE:実年齢 < 12
+		IF CFLAG:実年齢 < 12
 			;10歳未満
 			成熟 = RAND:11 - RAND:11
 			SIF 成熟 < 10
 				成熟 = 10
 			身長係数 = 100
-		ELSEIF (BASE:実年齢 > 12 && BASE:実年齢 < 17)
+		ELSEIF (CFLAG:実年齢 > 12 && CFLAG:実年齢 < 17)
 			;12歳～17歳
-			成熟 = 10 + (BASE:実年齢 - 10) * 15
+			成熟 = 10 + (CFLAG:実年齢 - 10) * 15
 			成熟 = 成熟 + RAND:31 - RAND:31
 			SIF 成熟 < 15
 				成熟 = 15
 			;成長度の差で身長係数が±3割増減
-			身長係数 = 100 + ( 30 * ( 成熟 - ( 10 + (BASE:実年齢 - 10) * 15 ) ) / 100 )
+			身長係数 = 100 + ( 30 * ( 成熟 - ( 10 + (CFLAG:実年齢 - 10) * 15 ) ) / 100 )
 		ELSE
 			;17歳以上
 			成熟 = 85
@@ -634,7 +634,7 @@ BASE:体重 += 脂肪 * 50 * BASE:身長 / 1000 / 100
 #DIM 空想喪失 = 0
 
 ;初キスを登録
-IF !キス経験決定(BASE:実年齢)
+IF !キス経験決定(CFLAG:実年齢)
 	CFLAG:初キス相手 = 0
 ELSE
 	CFLAG:初キス相手 = 1
@@ -828,7 +828,7 @@ ELSE
 ENDIF
 
 ;セックス経験を登録
-IF 性経験決定(BASE:実年齢, CFLAG:彼氏タイプ)
+IF 性経験決定(CFLAG:実年齢, CFLAG:彼氏タイプ)
 	CALL 処女喪失(TARGET)
 	;経験が有る場合、回数を適当に決定
 ;	IF CFLAG:性別 == 0	;キャラが女性の場合
@@ -1351,7 +1351,7 @@ MAXBASE:魅力値 = 80
 CFLAG:性別 = 性別
 
 ;性別を登録
-CALL SET_SEXUALITY(TARGET,性別_女)
+CALL SET_SEXUALITY(TARGET,性別_オンナ)
 IF CFLAG:性別 == 1
 	CALL SET_SEXUALITY(TARGET,性別_オトコ)
 ELSEIF CFLAG:性別 == 2
@@ -1360,33 +1360,33 @@ ELSEIF CFLAG:性別 == 2
 ENDIF
 
 ;基本的なプロフィールを登録
-BASE:実年齢 = 年齢決定()
-BASE:誕生月 = 誕生月決定()
-BASE:誕生日 = 誕生日決定(BASE:誕生月)
-BASE:血液型 = 血液型決定()
+CFLAG:実年齢 = 年齢決定()
+CFLAG:誕生月 = 誕生月決定()
+CFLAG:誕生日 = 誕生日決定(CFLAG:誕生月)
+CFLAG:血液型 = 血液型決定()
 
 ;性別による体力補正
 IF CFLAG:性別 == 1
 	;男は体力はあるが気力は低い
 	MAXBASE:気力 -= 100
-	SIF BASE:実年齢 > 12
+	SIF CFLAG:実年齢 > 12
 		MAXBASE:体力 += 100	;女性との差=200
-	SIF BASE:実年齢 > 15
+	SIF CFLAG:実年齢 > 15
 		MAXBASE:体力 += 200	;さらに加算
 ENDIF
 
 ;職業を決定(15歳までなら学生固定)
-職業 = 職業決定(BASE:実年齢)
+職業 = 職業決定(CFLAG:実年齢)
 
 ;職業を登録(ついでに衣装も登録)
 ;小●生は子供服、気力、体力ダウン
-IF 職業 == 0 && BASE:実年齢 <= 12
+IF 職業 == 0 && CFLAG:実年齢 <= 12
 	TALENT:小学生 = 1
 	CFLAG:上着タイプ = 22
 	MAXBASE:体力 -= 100
 	MAXBASE:気力 -= 100
 ;中●生は制服
-ELSEIF 職業 == 0 && BASE:実年齢 >= 13 && BASE:実年齢 <= 15
+ELSEIF 職業 == 0 && CFLAG:実年齢 >= 13 && CFLAG:実年齢 <= 15
 	TALENT:中学生 = 1
 	CFLAG:上着タイプ = 18
 ;ナースはナース服、体力アップ
@@ -1458,7 +1458,7 @@ ENDIF
 
 ;髪型を登録
 ;確率の調整のため母数を大きくしている。
-CFLAG:髪型 = 髪型決定(BASE:実年齢)
+CFLAG:髪型 = 髪型決定(CFLAG:実年齢)
 
 ;胸のサイズを決定
 バストサイズ = バストサイズ決定()
@@ -1471,13 +1471,13 @@ CFLAG:体型 = RAND:6 - RAND:6
 
 ;バストサイズの素質を登録
 IF バストサイズ == 1
-	TALENT:乳サイズ = -2
+	TALENT:乳房 = -2
 ELSEIF バストサイズ == 2
-	TALENT:乳サイズ = -1
+	TALENT:乳房 = -1
 ELSEIF バストサイズ == 3
-	TALENT:乳サイズ = 1
+	TALENT:乳房 = 1
 ELSEIF バストサイズ == 4
-	TALENT:乳サイズ = 2
+	TALENT:乳房 = 2
 ENDIF
 
 CALL TARGET身体設定(身長係数)
@@ -1518,7 +1518,7 @@ SIF 性格 >= 10
 	TALENT:(性格 - 10 + [[TALENT:臆病]]) = 1
 
 ;陰毛状態を決定
-LOCAL = 陰毛決定(BASE:実年齢)
+LOCAL = 陰毛決定(CFLAG:実年齢)
 ;陰毛を登録
 IF LOCAL <= 1
 	CFLAG:陰毛状態 = -2 
@@ -1573,9 +1573,9 @@ NICKNAME '= LOCALS:1
 @DISPLAY_TARGET_INTERVIEW
 ;ここから面接内容表示
 PRINT 約束の喫茶店に
-IF BASE:実年齢 <= 14
+IF CFLAG:実年齢 <= 14
 	PRINT まだ幼すぎる
-ELSEIF BASE:実年齢 >= 15 && BASE:実年齢 <=18
+ELSEIF CFLAG:実年齢 >= 15 && CFLAG:実年齢 <=18
 	IF CFLAG:性別 == 0
 		PRINT 少女の
 	ELSEIF CFLAG:性別 == 1
@@ -1584,7 +1584,7 @@ ELSEIF BASE:実年齢 >= 15 && BASE:実年齢 <=18
 		PRINT まるで少女のような
 	ENDIF
 	PRINT あどけなさを残す
-ELSEIF BASE:実年齢 >= 19
+ELSEIF CFLAG:実年齢 >= 19
 	PRINT 大人の
 ENDIF
 
@@ -1616,11 +1616,11 @@ ELSEIF IS_小柄(TARGET)
 ENDIF
 
 ;性別を表示
-IF CFLAG:性別 == 0 && BASE:実年齢 <= 14
+IF CFLAG:性別 == 0 && CFLAG:実年齢 <= 14
 	PRINT 少女
 ELSEIF CFLAG:性別 == 0
 	PRINT 女
-ELSEIF CFLAG:性別 == 1 && BASE:実年齢 <= 14
+ELSEIF CFLAG:性別 == 1 && CFLAG:実年齢 <= 14
 	PRINT 少年
 ELSEIF CFLAG:性別 == 1
 	PRINT 男

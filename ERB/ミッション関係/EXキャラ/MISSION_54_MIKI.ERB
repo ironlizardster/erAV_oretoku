@@ -175,13 +175,13 @@ RETURN 0
 @MISSION_REPORT_54(ARG)
 
 IF IS処女(TARGET)
-	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_輪姦,"柴田智久（クラスメイト）")
+	CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_輪姦,"柴田智久（クラスメイト）")
 ENDIF
 IF !CFLAG:初キス相手
-	CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"浅田一貴（クラスメイト）")
+	CALL 初キス喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_口,"浅田一貴（クラスメイト）")
 ENDIF
 IF ISＡ処女(TARGET)
-	CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_輪姦,"木幡基樹（クラスメイト）")
+	CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_学校,初状況_輪姦,"木幡基樹（クラスメイト）")
 ENDIF
 TCVAR:絶頂経験 += 15 + RAND:11
 TCVAR:Ｖ経験 += 15 + RAND:11

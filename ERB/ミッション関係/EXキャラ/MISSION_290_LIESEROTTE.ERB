@@ -169,7 +169,7 @@ RETURN 0
 ;=================================================
 @MISSION_REPORT_290(ARG)
 
-LOCAL:10 = BASE:実年齢
+LOCAL:10 = CFLAG:実年齢
 
 IF ARG == 0
 	QUIT
@@ -185,7 +185,7 @@ ELSE
 	TALENT:具現 = 1
 	MAXBASE:魅力値 = 500
 	BASE:魅力値 = 500
-	BASE:実年齢 = LOCAL:10
+	CFLAG:実年齢 = LOCAL:10
 	MAXBASE:体力 += 1500
 	MAXBASE:気力 += 1500
 	BASE:体力 += 1500

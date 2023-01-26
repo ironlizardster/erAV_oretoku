@@ -27,9 +27,9 @@ ENDIF
 IF FLAG:売れ筋 == -1 && NO:TARGET == [[キャラ:桐生歌音]]
 	TIMES ビデオ売上 , 5.00
 						;****都子ラボ追加ここまで****
-ELSEIF FLAG:売れ筋 == 0 && TALENT:淫魔 == 0 && TALENT:アンドロイド == 0 && (BASE:実年齢 <= 15  || TALENT:童顔 == 1)
+ELSEIF FLAG:売れ筋 == 0 && TALENT:淫魔 == 0 && TALENT:アンドロイド == 0 && (CFLAG:実年齢 <= 15  || TALENT:童顔 == 1)
 	TIMES ビデオ売上 , 1.50
-ELSEIF FLAG:売れ筋 == 1 && BASE:実年齢 >= 23
+ELSEIF FLAG:売れ筋 == 1 && CFLAG:実年齢 >= 23
 	TIMES ビデオ売上 , 1.50
 ELSEIF FLAG:売れ筋 == 2 && (TALENT:高校生 == 1 || TALENT:中学生 == 1)
 	TIMES ビデオ売上 , 1.50

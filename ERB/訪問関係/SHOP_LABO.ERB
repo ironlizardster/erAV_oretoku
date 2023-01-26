@@ -143,9 +143,9 @@ IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0
 	IF !IS_神乳(T)
-		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳サイズ(T)%】から
-		TALENT:T:乳サイズ++
-		PRINTFORML 【%GET_STR_乳サイズ(T)%】ぐらいに大きくなった
+		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳房(T)%】から
+		TALENT:T:乳房++
+		PRINTFORML 【%GET_STR_乳房(T)%】ぐらいに大きくなった
 	ENDIF
 ELSE
 	RETURN 0
@@ -207,9 +207,9 @@ INPUT
 IF RESULT == 1
 	RETURN 0
 ELSEIF RESULT == 0 
-	PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳サイズ(T)%】から
-	TALENT:T:乳サイズ--
-	PRINTFORML 【%GET_STR_乳サイズ(T)%】ぐらいに小さくなった
+	PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳房(T)%】から
+	TALENT:T:乳房--
+	PRINTFORML 【%GET_STR_乳房(T)%】ぐらいに小さくなった
 ELSE
 	RETURN 0
 ENDIF

@@ -297,16 +297,16 @@ IF !CFLAG:処女喪失相手
 	;初体験がバイブの場合
 	IF SELECTCOM == [[TRAIN:バイブ]]
 		IF TALENT:淫乱 == 0
-			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"バイブ")
+			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"バイブ")
 		ELSEIF TALENT:淫乱 == 1
-			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"極太バイブ")
+			CALL 処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"極太バイブ")
 		ENDIF
 	ELSEIF SELECTCOM == [[TRAIN:フィストファック]]
-		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"フィストファック")
+		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"フィストファック")
 	ELSEIF TEQUIP:触手召喚 == 1
-		CALL 処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"触手生物")
+		CALL 処女喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況,"触手生物")
 	ELSE
-		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況)
+		CALL 処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:処女喪失場所,CFLAG:処女喪失状況)
 	ENDIF
 ENDIF
 
@@ -338,7 +338,7 @@ ENDIF
 SIF CFLAG:PLAYER:初キス相手 || TFLAG:620 == 0
 	RETURN 0
 
-CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,NAME:TARGET)
+CALL 初キス喪失実行(PLAYER,NO:TARGET + 1,CFLAG:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,NAME:TARGET)
 
 ;フラグを折っておく
 TFLAG:620 = 0
@@ -365,7 +365,7 @@ ELSE
 	CFLAG:ASSI:初キス喪失場所 = 初場所_スタジオ
 ENDIF
 
-CALL 初キス喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ASSI:初キス喪失場所,初状況_口,NAME:TARGET)
+CALL 初キス喪失実行(ASSI,NO:TARGET + 1,CFLAG:ASSI:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:ASSI:初キス喪失場所,初状況_口,NAME:TARGET)
 
 
 ;-------------------------------------------------
@@ -400,22 +400,22 @@ ENDIF
 
 ;CFLAG:初キス相手=16にするとこの辺の特殊処理をガン無視することになるんだなあと頭を抱えるなど
 IF (TFLAG:621 & 2)
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器)
 	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 4)
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_肛門)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_肛門)
 	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 8) 
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_女性器)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_女性器)
 	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 16) 
-	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器,"触手生物")
+	CALL 初キス喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器,"触手生物")
 	TFLAG:初キス口以外 = 1	
 ELSEIF (TFLAG:621 & 32) 
-	CALL 初キス喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器,"スライム")
+	CALL 初キス喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_男性器,"スライム")
 	TFLAG:初キス口以外 = 1	
 ELSE
-	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_口)
+	CALL 初キス喪失実行(TARGET,NO:PLAYER + 1,CFLAG:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:初キス喪失場所,初状況_口)
 ENDIF
 
 
@@ -463,16 +463,16 @@ IF !CFLAG:Ａ処女喪失相手
 	;初体験がバイブの場合
 	IF SELECTCOM == [[TRAIN:アナルバイブ]]
 		IF TALENT:淫乱 == 0
-			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルバイブ")
+			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルバイブ")
 		ELSEIF TALENT:淫乱 == 1
-			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"極太アナルバイブ")
+			CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"極太アナルバイブ")
 		ENDIF
 	ELSEIF SELECTCOM == [[TRAIN:アナルフィスト]]
-		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルフィスト")
+		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"アナルフィスト")
 	ELSEIF TEQUIP:触手召喚 == 1
-		CALL Ａ処女喪失実行(TARGET,初相手_触手,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"触手生物")
+		CALL Ａ処女喪失実行(TARGET,初相手_触手,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況,"触手生物")
 	ELSE
-		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況)
+		CALL Ａ処女喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,CFLAG:Ａ処女喪失場所,CFLAG:Ａ処女喪失状況)
 	ENDIF
 ENDIF
 

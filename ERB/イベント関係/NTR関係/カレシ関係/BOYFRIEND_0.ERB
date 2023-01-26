@@ -135,9 +135,9 @@ PRINTFORML すんなりとあなたの肉棒を飲み込んだ
 PRINTFORML 甘ったるい鼻にかかった吐息を漏らしながら、%CALLNAME:ARG%は目を細めてコンドーム越しのあなたのペニスの形を確かめるように無意識のうちに膣襞を収縮させている
 PRINTFORML 
 
-CALL 初キス喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
-CALL 処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
-CALL Ａ処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+CALL 初キス喪失実行(ARG,初相手_セフレ,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+CALL 処女喪失実行(ARG,初相手_セフレ,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+CALL Ａ処女喪失実行(ARG,初相手_セフレ,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 
 IF LOCAL > 0
 	VARSET GOTJUEL:LOCAL:快Ｃ
@@ -154,9 +154,9 @@ IF LOCAL > 0
 			TIMES GOTJUEL:ARG:(LOCAL:1), 2
 		ENDIF
 	NEXT
-	CALL 初キス喪失実行(LOCAL,初相手_セフレ,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
-	CALL 処女喪失実行(LOCAL,初相手_セフレ,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
-	CALL Ａ処女喪失実行(LOCAL,初相手_セフレ,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL 初キス喪失実行(LOCAL,初相手_セフレ,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL 処女喪失実行(LOCAL,初相手_セフレ,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
+	CALL Ａ処女喪失実行(LOCAL,初相手_セフレ,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_乱交,@"%CSTR:ARG:彼氏姓%%CSTR:ARG:彼氏名%")
 	CALL ADD_JUEL(LOCAL)
 	CALL ADD_EXP(LOCAL)
 ENDIF

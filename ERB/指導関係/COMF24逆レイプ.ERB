@@ -360,14 +360,14 @@ IF IS処女(PLAYER) && IS童貞(TARGET)
 	ENDIF
 	TFLAG:童貞喪失 = 1
 	SIF !CFLAG:童貞喪失相手
-		CALL 童貞喪失実行(TARGET,NO:PLAYER + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+		CALL 童貞喪失実行(TARGET,NO:PLAYER + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 
 ENDIF
 
 ;調教者が処女なら処女喪失
 IF IS処女(PLAYER)
 	IF !CFLAG:PLAYER:処女喪失相手
-		CALL 処女喪失実行(PLAYER,NO:TARGET + 1,BASE:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+		CALL 処女喪失実行(PLAYER,NO:TARGET + 1,CFLAG:PLAYER:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	ENDIF
 ENDIF
 

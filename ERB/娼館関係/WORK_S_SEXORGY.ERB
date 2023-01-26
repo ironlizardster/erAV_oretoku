@@ -216,7 +216,7 @@ WAIT
 ;主人公が童貞なら童貞喪失
 IF IS童貞(MASTER)
 	;童貞喪失相手（乱交）はここで記録
-	CALL 童貞喪失実行(MASTER,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,"女性客")
+	CALL 童貞喪失実行(MASTER,初相手_売春客女,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,"女性客")
 ENDIF
 
 
@@ -240,22 +240,22 @@ REPEAT CHARANUM
 			;処女喪失相手（乱交）はここで記録
 				CFLAG:COUNT:131 = RAND:6
 					IF CFLAG:131 == 0
-						CALL 処女喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
+						CALL 処女喪失実行(COUNT,NO:MASTER + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
 					ELSEIF CFLAG:131 == 1
 						CSTR:COUNT:処女喪失相手 = 知らないオトコの人
-						CALL 処女喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
+						CALL 処女喪失実行(COUNT,初相手_売春客男,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSEIF CFLAG:131 == 2
 						CSTR:COUNT:処女喪失相手 = 知らないオンナの人
-						CALL 処女喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
+						CALL 処女喪失実行(COUNT,初相手_売春客女,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSEIF CFLAG:131 == 3
 						CSTR:COUNT:処女喪失相手 = バイブ
-						CALL 処女喪失実行(COUNT,初相手_バイブ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
+						CALL 処女喪失実行(COUNT,初相手_バイブ,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSEIF CFLAG:131 == 4
 						CSTR:COUNT:処女喪失相手 = 極太バイブ
-						CALL 処女喪失実行(COUNT,初相手_極太バイブ,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
+						CALL 処女喪失実行(COUNT,初相手_極太バイブ,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ELSE
 						CSTR:COUNT:処女喪失相手 = 誰かわからない
-						CALL 処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
+						CALL 処女喪失実行(COUNT,初相手_不明,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 					ENDIF
 		ENDIF
 
@@ -263,16 +263,16 @@ REPEAT CHARANUM
 	IF ISＡ処女(COUNT)
 		CFLAG:COUNT:132 += RAND:3 
 			IF CFLAG:COUNT:132 == 0 
-				CALL Ａ処女喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
+				CALL Ａ処女喪失実行(COUNT,NO:MASTER + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交)
 			ELSEIF CFLAG:COUNT:132 == 1
 				CSTR:COUNT:Ａ処女喪失相手 = 知らないオトコの人
-				CALL Ａ処女喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
+				CALL Ａ処女喪失実行(COUNT,初相手_売春客男,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ELSEIF CFLAG:COUNT:132 == 2
 				CSTR:COUNT:Ａ処女喪失相手 = 知らないオンナの人
-				CALL Ａ処女喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
+				CALL Ａ処女喪失実行(COUNT,初相手_売春客女,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ELSE
 				CSTR:COUNT:Ａ処女喪失相手 = 誰かわからない
-				CALL Ａ処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
+				CALL Ａ処女喪失実行(COUNT,初相手_不明,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:Ａ処女喪失相手)
 			ENDIF
 	ENDIF
 	IF IS童貞(COUNT)
@@ -282,12 +282,12 @@ REPEAT CHARANUM
 			ELSEIF CFLAG:COUNT:133 == 1 && HAVE_VAGINA(MASTER)
 				CSTR:COUNT:童貞喪失相手 = %CALLNAME:MASTER%
 				IF IS処女(MASTER) && CFLAG:MASTER:処女喪失相手 == 0
-					CALL 処女喪失実行(MASTER,NO:COUNT + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:COUNT)
+					CALL 処女喪失実行(MASTER,NO:COUNT + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:COUNT)
 				ENDIF
-				CALL 童貞喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:MASTER)
+				CALL 童貞喪失実行(COUNT,NO:MASTER + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CALLNAME:MASTER)
 			ELSE
 				CSTR:COUNT:童貞喪失相手 = 誰かわからない
-				CALL 処女喪失実行(COUNT,初相手_不明,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
+				CALL 処女喪失実行(COUNT,初相手_不明,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_乱交,CSTR:COUNT:処女喪失相手)
 			ENDIF
 	ENDIF
 	IF !CFLAG:COUNT:初キス相手
@@ -353,23 +353,23 @@ REPEAT CHARANUM
 				ENDIF
 		SELECTCASE CFLAG:COUNT:初キス相手
 			CASE 0
-				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
 			CASE 1
-				CALL 初キス喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客男,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
 			CASE 2
-				CALL 初キス喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客女,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_口,CSTR:COUNT:初キス相手)
 			CASE 3
-				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
 			CASE 4
-				CALL 初キス喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客男,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_男性器,CSTR:COUNT:初キス相手)
 			CASE 5
-				CALL 初キス喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_女性器,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客女,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_女性器,CSTR:COUNT:初キス相手)
 			CASE 6
-				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,NO:MASTER + 1,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
 			CASE 7
-				CALL 初キス喪失実行(COUNT,初相手_売春客男,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客男,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
 			CASE 8
-				CALL 初キス喪失実行(COUNT,初相手_売春客女,BASE:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
+				CALL 初キス喪失実行(COUNT,初相手_売春客女,CFLAG:COUNT:実年齢,DAY:日付_月,DAY:日付_日,初場所_娼館,初状況_肛門,CSTR:COUNT:初キス相手)
 		ENDSELECT
 	ENDIF
 REND

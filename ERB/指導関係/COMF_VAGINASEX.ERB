@@ -776,7 +776,7 @@ IF IS童貞(PLAYER) && HAVE_PENIS(PLAYER)
 	ENDIF
 	TFLAG:童貞喪失 = 1
 	SIF !CFLAG:PLAYER:童貞喪失相手
-		CALL 童貞喪失実行(PLAYER,NO:TARGET + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
+		CALL 童貞喪失実行(PLAYER,NO:TARGET + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_指導)
 	SIF NO:PLAYER == [[キャラ:あなた]] && NO:TARGET == [[キャラ:宮間かなで]]
 		FLAG:かなで相手童貞喪失 = 1
 ENDIF

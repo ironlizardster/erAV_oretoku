@@ -605,12 +605,12 @@ ENDIF
 						;****カノ設定改造追加ここから****
 IF 元カノ初キス経験済 == 1
 	IF 元カノ性経験 == 1 ||  元カノアナル経験 == 1
-		CFLAG:初キス喪失年齢 = (BASE:実年齢 - RAND:3)
+		CFLAG:初キス喪失年齢 = (CFLAG:実年齢 - RAND:3)
 		CFLAG:初キス喪失月 = (1 + RAND:11)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
-		IF CFLAG:初キス喪失年齢 >= BASE:実年齢
-			 SIF CFLAG:初キス喪失月 >= BASE:誕生月
+		IF CFLAG:初キス喪失年齢 >= CFLAG:実年齢
+			 SIF CFLAG:初キス喪失月 >= CFLAG:誕生月
 				CFLAG:初キス喪失年齢 -= 1
 		ENDIF	
 		SIF CFLAG:初キス喪失月 == DAY:日付_月 && CFLAG:初キス喪失日 >= DAY:日付_日
@@ -619,7 +619,7 @@ IF 元カノ初キス経験済 == 1
 		CFLAG:初キス喪失場所 = 3
 		CFLAG:初キス喪失状況 = RAND:3
 	ELSEIF 元カノ性経験 == 2 ||  元カノアナル経験 == 2
-		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失年齢 = CFLAG:実年齢
 		CFLAG:初キス喪失月 = (DAY:日付_月 - RAND:4)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
@@ -629,7 +629,7 @@ IF 元カノ初キス経験済 == 1
 		CFLAG:初キス喪失場所 = 3
 		CFLAG:初キス喪失状況 = RAND:3
 	ELSEIF 元カノ性経験 == 3 ||  元カノアナル経験 == 3
-		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失年齢 = CFLAG:実年齢
 		CFLAG:初キス喪失月 = (DAY:日付_月 - RAND:2)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
@@ -639,7 +639,7 @@ IF 元カノ初キス経験済 == 1
 		CFLAG:初キス喪失場所 = 3
 		CFLAG:初キス喪失状況 = 0
 	ELSE
-		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失年齢 = CFLAG:実年齢
 		CFLAG:初キス喪失月 = (DAY:日付_月 - RAND:2)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
@@ -796,16 +796,16 @@ IF 元カノアナル経験 == 1
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 1
-	CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	SIF CFLAG:Ａ処女喪失年齢 == (BASE:実年齢 - 1)
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 3)
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 3)
+	CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - RAND:3)
+	SIF CFLAG:Ａ処女喪失年齢 == (CFLAG:実年齢 - 1)
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 3)
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 3)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:4)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
-	IF CFLAG:Ａ処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:Ａ処女喪失月 <= BASE:誕生月
+	IF CFLAG:Ａ処女喪失年齢 >= CFLAG:実年齢
+		 SIF CFLAG:Ａ処女喪失月 <= CFLAG:誕生月
 			CFLAG:Ａ処女喪失年齢 -= 1
 	ENDIF	
 	SIF CFLAG:Ａ処女喪失月 == DAY:日付_月 && CFLAG:Ａ処女喪失日 >= DAY:日付_日
@@ -821,9 +821,9 @@ ELSEIF 元カノアナル経験 == 2
 	ABL:Ａ感覚 += 1 + RAND:3
 	ABL:欲望 += 1
 	ABL:性交技術 += 1
-	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 1)
+	CFLAG:Ａ処女喪失年齢 = CFLAG:実年齢
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 1)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:2)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
@@ -842,9 +842,9 @@ ELSEIF 元カノアナル経験 == 3
 		EXP:精液経験 = 0
 	EXP:絶頂経験 += RAND:2
 	ABL:Ａ感覚 +=  RAND:2
-	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 1)
+	CFLAG:Ａ処女喪失年齢 = CFLAG:実年齢
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 1)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:2)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
@@ -862,16 +862,16 @@ ELSEIF 元カノアナル経験 == 4
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 3
-	CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	SIF CFLAG:Ａ処女喪失年齢 == (BASE:実年齢 - 1)
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 4)
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 5)
+	CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - RAND:3)
+	SIF CFLAG:Ａ処女喪失年齢 == (CFLAG:実年齢 - 1)
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 4)
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 5)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:4)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
-	IF CFLAG:Ａ処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:Ａ処女喪失月 <= BASE:誕生月
+	IF CFLAG:Ａ処女喪失年齢 >= CFLAG:実年齢
+		 SIF CFLAG:Ａ処女喪失月 <= CFLAG:誕生月
 			CFLAG:Ａ処女喪失年齢 -= 1
 	ENDIF	
 	CFLAG:Ａ処女喪失日 = 1 + RAND:5
@@ -884,9 +884,9 @@ ENDIF
 
 IF CFLAG:MASTER:236
 	IF IS_神乳(TARGET)
-		MARK:5 = 1
+		MARK:胸膨刻印 = 1
 	ELSE
-		TALENT:乳サイズ++
+		TALENT:乳房++
 	ENDIF
 	MAXBASE:体力 -= 500
 	IF TALENT:母乳体質 == 1
@@ -1172,12 +1172,12 @@ SIF (FLAG:今カノ存在 & 2)
 						;****カノ設定改造追加ここから****
 IF 元カノ初キス経験済 == 1
 	IF 元カノ性経験 == 1 ||  元カノアナル経験 == 1
-		CFLAG:初キス喪失年齢 = (BASE:実年齢 - RAND:3)
+		CFLAG:初キス喪失年齢 = (CFLAG:実年齢 - RAND:3)
 		CFLAG:初キス喪失月 = (1 + RAND:11)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
-		IF CFLAG:初キス喪失年齢 >= BASE:実年齢
-			 SIF CFLAG:初キス喪失月 >= BASE:誕生月
+		IF CFLAG:初キス喪失年齢 >= CFLAG:実年齢
+			 SIF CFLAG:初キス喪失月 >= CFLAG:誕生月
 				CFLAG:初キス喪失年齢 -= 1
 		ENDIF	
 		SIF CFLAG:初キス喪失月 == DAY:日付_月 && CFLAG:初キス喪失日 >= DAY:日付_日
@@ -1186,7 +1186,7 @@ IF 元カノ初キス経験済 == 1
 		CFLAG:初キス喪失場所 = 3
 		CFLAG:初キス喪失状況 = RAND:3
 	ELSEIF 元カノ性経験 == 2 ||  元カノアナル経験 == 2
-		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失年齢 = CFLAG:実年齢
 		CFLAG:初キス喪失月 = (DAY:日付_月 - RAND:4)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
@@ -1196,7 +1196,7 @@ IF 元カノ初キス経験済 == 1
 		CFLAG:初キス喪失場所 = 3
 		CFLAG:初キス喪失状況 = RAND:3
 	ELSEIF 元カノ性経験 == 3 ||  元カノアナル経験 == 3
-		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失年齢 = CFLAG:実年齢
 		CFLAG:初キス喪失月 = (DAY:日付_月 - RAND:2)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
@@ -1206,7 +1206,7 @@ IF 元カノ初キス経験済 == 1
 		CFLAG:初キス喪失場所 = 3
 		CFLAG:初キス喪失状況 = 0
 	ELSE
-		CFLAG:初キス喪失年齢 = BASE:実年齢
+		CFLAG:初キス喪失年齢 = CFLAG:実年齢
 		CFLAG:初キス喪失月 = (DAY:日付_月 - RAND:2)
 		SIF CFLAG:初キス喪失月 <= 0
 			CFLAG:初キス喪失月 = 12
@@ -1285,16 +1285,16 @@ IF 元カノ性経験 == 1
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 1
-	CFLAG:処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	SIF CFLAG:処女喪失年齢 == (BASE:実年齢 - 1)
-		CFLAG:処女喪失年齢 = (BASE:実年齢 - 3)
-	SIF CFLAG:処女喪失年齢 == BASE:実年齢
-		CFLAG:処女喪失年齢 = (BASE:実年齢 - 3)
+	CFLAG:処女喪失年齢 = (CFLAG:実年齢 - RAND:3)
+	SIF CFLAG:処女喪失年齢 == (CFLAG:実年齢 - 1)
+		CFLAG:処女喪失年齢 = (CFLAG:実年齢 - 3)
+	SIF CFLAG:処女喪失年齢 == CFLAG:実年齢
+		CFLAG:処女喪失年齢 = (CFLAG:実年齢 - 3)
 	CFLAG:処女喪失月 = (DAY:日付_月 - RAND:4)
 	SIF CFLAG:処女喪失月 <= 0
 		CFLAG:処女喪失月 = 12
-	IF CFLAG:処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:処女喪失月 <= BASE:誕生月
+	IF CFLAG:処女喪失年齢 >= CFLAG:実年齢
+		 SIF CFLAG:処女喪失月 <= CFLAG:誕生月
 			CFLAG:処女喪失年齢 -= 1
 	ENDIF	
 	CFLAG:処女喪失日 = 1 + RAND:5
@@ -1310,9 +1310,9 @@ ELSEIF 元カノ性経験 == 2
 	ABL:Ｖ感覚 += 1 + RAND:3
 	ABL:欲望 += 1
 	ABL:性交技術 += 1
-	CFLAG:処女喪失年齢 = BASE:実年齢
-	SIF CFLAG:処女喪失年齢 == BASE:実年齢
-		CFLAG:処女喪失年齢 = (BASE:実年齢 - 1)
+	CFLAG:処女喪失年齢 = CFLAG:実年齢
+	SIF CFLAG:処女喪失年齢 == CFLAG:実年齢
+		CFLAG:処女喪失年齢 = (CFLAG:実年齢 - 1)
 	CFLAG:処女喪失月 = (DAY:日付_月 - RAND:2)
 	SIF CFLAG:処女喪失月 <= 0
 		CFLAG:処女喪失月 = 12
@@ -1331,9 +1331,9 @@ ELSEIF 元カノ性経験 == 3
 		EXP:精液経験 = 0
 	EXP:絶頂経験 += RAND:2
 	ABL:Ｖ感覚 +=  RAND:2
-	CFLAG:処女喪失年齢 = BASE:実年齢
-	SIF CFLAG:処女喪失年齢 == BASE:実年齢
-		CFLAG:処女喪失年齢 = (BASE:実年齢 - 1)
+	CFLAG:処女喪失年齢 = CFLAG:実年齢
+	SIF CFLAG:処女喪失年齢 == CFLAG:実年齢
+		CFLAG:処女喪失年齢 = (CFLAG:実年齢 - 1)
 	CFLAG:処女喪失月 = (DAY:日付_月 - RAND:2)
 	SIF CFLAG:処女喪失月 <= 0
 		CFLAG:処女喪失月 = 12
@@ -1351,16 +1351,16 @@ ELSEIF 元カノ性経験 == 4
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 3
-	CFLAG:処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	SIF CFLAG:処女喪失年齢 == (BASE:実年齢 - 1)
-		CFLAG:処女喪失年齢 = (BASE:実年齢 - 4)
-	SIF CFLAG:処女喪失年齢 == BASE:実年齢
-		CFLAG:処女喪失年齢 = (BASE:実年齢 - 5)
+	CFLAG:処女喪失年齢 = (CFLAG:実年齢 - RAND:3)
+	SIF CFLAG:処女喪失年齢 == (CFLAG:実年齢 - 1)
+		CFLAG:処女喪失年齢 = (CFLAG:実年齢 - 4)
+	SIF CFLAG:処女喪失年齢 == CFLAG:実年齢
+		CFLAG:処女喪失年齢 = (CFLAG:実年齢 - 5)
 	CFLAG:処女喪失月 = (DAY:日付_月 - RAND:4)
 	SIF CFLAG:処女喪失月 <= 0
 		CFLAG:処女喪失月 = 12
-	IF CFLAG:処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:処女喪失月 <= BASE:誕生月
+	IF CFLAG:処女喪失年齢 >= CFLAG:実年齢
+		 SIF CFLAG:処女喪失月 <= CFLAG:誕生月
 			CFLAG:処女喪失年齢 -= 1
 	ENDIF
 	CFLAG:処女喪失日 = 1 + RAND:5
@@ -1423,16 +1423,16 @@ IF 元カノアナル経験 == 1
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 1
-	CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	SIF CFLAG:Ａ処女喪失年齢 == (BASE:実年齢 - 1)
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 3)
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 3)
+	CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - RAND:3)
+	SIF CFLAG:Ａ処女喪失年齢 == (CFLAG:実年齢 - 1)
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 3)
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 3)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:4)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
-	IF CFLAG:Ａ処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:Ａ処女喪失月 <= BASE:誕生月
+	IF CFLAG:Ａ処女喪失年齢 >= CFLAG:実年齢
+		 SIF CFLAG:Ａ処女喪失月 <= CFLAG:誕生月
 			CFLAG:Ａ処女喪失年齢 -= 1
 	ENDIF
 	CFLAG:Ａ処女喪失日 = 1 + RAND:5
@@ -1448,9 +1448,9 @@ ELSEIF 元カノアナル経験 == 2
 	ABL:Ａ感覚 += 1 + RAND:3
 	ABL:欲望 += 1
 	ABL:性交技術 += 1
-	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 1)
+	CFLAG:Ａ処女喪失年齢 = CFLAG:実年齢
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 1)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:2)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
@@ -1469,9 +1469,9 @@ ELSEIF 元カノアナル経験 == 3
 		EXP:精液経験 = 0
 	EXP:絶頂経験 += RAND:2
 	ABL:Ａ感覚 +=  RAND:2
-	CFLAG:Ａ処女喪失年齢 = BASE:実年齢
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 1)
+	CFLAG:Ａ処女喪失年齢 = CFLAG:実年齢
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 1)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:2)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
@@ -1489,16 +1489,16 @@ ELSEIF 元カノアナル経験 == 4
 	ABL:欲望 += 2
 	ABL:性交技術 += 2
 	ABL:性交中毒 += 3
-	CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - RAND:3)
-	SIF CFLAG:Ａ処女喪失年齢 == (BASE:実年齢 - 1)
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 4)
-	SIF CFLAG:Ａ処女喪失年齢 == BASE:実年齢
-		CFLAG:Ａ処女喪失年齢 = (BASE:実年齢 - 5)
+	CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - RAND:3)
+	SIF CFLAG:Ａ処女喪失年齢 == (CFLAG:実年齢 - 1)
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 4)
+	SIF CFLAG:Ａ処女喪失年齢 == CFLAG:実年齢
+		CFLAG:Ａ処女喪失年齢 = (CFLAG:実年齢 - 5)
 	CFLAG:Ａ処女喪失月 = (DAY:日付_月 - RAND:4)
 	SIF CFLAG:Ａ処女喪失月 <= 0
 		CFLAG:Ａ処女喪失月 = 12
-	IF CFLAG:Ａ処女喪失年齢 >= BASE:実年齢
-		 SIF CFLAG:Ａ処女喪失月 <= BASE:誕生月
+	IF CFLAG:Ａ処女喪失年齢 >= CFLAG:実年齢
+		 SIF CFLAG:Ａ処女喪失月 <= CFLAG:誕生月
 			CFLAG:Ａ処女喪失年齢 -= 1
 	ENDIF
 	CFLAG:Ａ処女喪失日 = 1 + RAND:5
@@ -1511,9 +1511,9 @@ ENDIF
 
 IF CFLAG:MASTER:236
 	IF IS_神乳(TARGET)
-		MARK:5 = 1
+		MARK:胸膨刻印 = 1
 	ELSE
-		TALENT:乳サイズ++
+		TALENT:乳房++
 	ENDIF
 	MAXBASE:体力 -= 500
 	IF TALENT:母乳体質 == 1

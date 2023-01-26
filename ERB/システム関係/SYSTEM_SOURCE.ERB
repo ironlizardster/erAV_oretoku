@@ -353,7 +353,7 @@ IF TALENT:セックス狂
 	TIMES C , 0.50
 ENDIF
 
-;淫壷
+;淫壺
 IF TALENT:淫壺
 	TIMES A , 1.50
 ENDIF
@@ -1352,10 +1352,10 @@ UP:[[UP:反感]] += C
 UP:[[UP:欲情]] += D
 
 ;-------------------------------------------------
-;中毒充足のソース
+;充足のソース
 ;-------------------------------------------------
-A = SOURCE:中毒充足
-B = SOURCE:中毒充足
+A = SOURCE:充足
+B = SOURCE:充足
 
 ;ABL:欲望を見る
 IF ABL:欲望 == 0
@@ -1977,8 +1977,8 @@ SIF SOURCE:達成 > 0
 	PRINTFORM 達成感({SOURCE:達成})
 SIF SOURCE:痛覚 > 0
 	PRINTFORM 痛み({SOURCE:痛覚})
-SIF SOURCE:中毒充足 > 0
-	PRINTFORM 中毒充足({SOURCE:中毒充足})
+SIF SOURCE:充足 > 0
+	PRINTFORM 充足({SOURCE:充足})
 SIF SOURCE:不潔 > 0
 	PRINTFORM 不潔({SOURCE:不潔})
 SIF SOURCE:愛液分泌 > 0

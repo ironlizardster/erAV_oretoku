@@ -292,7 +292,7 @@ IF FLAG:強化素質なし == 0
 		TALENT:淫核 = 1
 	ENDIF
 
-	;Ｖ感覚５以上、Ｖ経験３００以上、絶頂経験３００以上で【淫壷】
+	;Ｖ感覚５以上、Ｖ経験３００以上、絶頂経験３００以上で【淫壺】
 	IF ABL:Ｖ感覚 >= 5 && TALENT:セックス狂 == 1 && TALENT:淫壺 == 0 && (TALENT:淫魔 == 1 || TALENT:絶倫 == 1)
 		PRINTFORMW %CALLNAME:TARGET%のこちらを見る目がおかしい…
 		PRINTFORML %CALLNAME:TARGET%は調教が終わった後にもかかわらず、%CALLNAME:MASTER%に子宮の渇きを癒してほしいと縋りついてきた…
@@ -622,7 +622,7 @@ ENDIF
 ;【不良】獲得（フレーバー要素、Blackgirlに持ってったほうがいい？）
 ;---------------------------------------------------------
 ;20歳未満で5回補導された場合に不良を所持する
-IF BASE:実年齢 < 20 && EXP:補導経験 >= 5 && TALENT:不良 == 0
+IF CFLAG:実年齢 < 20 && EXP:補導経験 >= 5 && TALENT:不良 == 0
 	PRINTFORML これまでに未成年飲酒や喫煙を繰り返し、幾度も補導されてきた%CALLNAME:TARGET%は、周囲にも札付きのワルとして認識されるようになった。
 	PRINTFORMW %CALLNAME:TARGET%は【%TALENTNAME:[[TALENT:不良]]%】になった。
 	TALENT:不良 = 1
@@ -640,7 +640,7 @@ IF CFLAG:総売上 >= 500000 && EXP:ＡＶ出演経験 >= 11 && TALENT:人気Ａ
 	PRINTFORML %NAME:MASTER%は、ネット配信した動画に寄せられる閲覧者の意見に目を通した。
 	PRINTFORML
  	PRINTFORML 　
-	IF BASE:実年齢 < 27 
+	IF CFLAG:実年齢 < 27 
 	;27歳未満で以下の通りに若手扱いに分岐。いつで切るか微妙だがとりあえず。	
 	PRINTFORML 「新作の『%CSTR:新作タイトル1%%CSTR:新作タイトル2%』で、
 	PRINTFORML 　%NICKNAME:TARGET%ちゃんを知ったんだけど、とってもエッチでかわいい。マジ抜ける。」
@@ -652,7 +652,7 @@ IF CFLAG:総売上 >= 500000 && EXP:ＡＶ出演経験 >= 11 && TALENT:人気Ａ
 	PRINTFORML 　ずっと%NICKNAME:TARGET%ちゃんのファンだよ。一度でいいからヤりたい！」
 	ENDIF
 	
-	IF BASE:実年齢 >= 27 
+	IF CFLAG:実年齢 >= 27 
 	;27歳以上で以下の通りに熟女系扱いに分岐。	
 	PRINTFORML 「新作の『%CSTR:新作タイトル1%%CSTR:新作タイトル2%』で	、
 	PRINTFORML 　%NICKNAME:TARGET%さんを知ったんですけど、とってもスケベで色気がありますね。抜くのには最適です。」

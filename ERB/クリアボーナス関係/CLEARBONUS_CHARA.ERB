@@ -67,7 +67,7 @@ SIF 所持クリアポイント >= 500
 @CLEARBONUS_CHARA_230
 TALENT:性魔術 = 0
 LOCAL:10 = 0
-LOCAL:10 = BASE:実年齢
+LOCAL:10 = CFLAG:実年齢
 	PRINTFORML %CALLNAME:TARGET%が健康体な状態で開始しますか？
 	PRINTL [0] - はい
 	PRINTL [1] - いいえ
@@ -109,7 +109,7 @@ LOCAL:10 = BASE:実年齢
 					MAXBASE:気力 += 1500
 					BASE:体力 += 1500
 					BASE:気力 += 1500
-					BASE:実年齢 = LOCAL:10
+					CFLAG:実年齢 = LOCAL:10
 					TALENT:具現 = 1
 			ELSEIF RESULT == 1
 				RETURN

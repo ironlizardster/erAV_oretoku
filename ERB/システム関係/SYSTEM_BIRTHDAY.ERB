@@ -5,14 +5,14 @@
 ;というよりもほぼ書き写しに近いです。ありがとうございました
 ;========================================================;
 ;フラグメモ
-;BASE:外見年齢		外見年齢
-;BASE:概算年齢		見た目年代、1以上なら外見年齢で表示する
+;CFLAG:外見年齢		外見年齢
+;CFLAG:概算年齢		見た目年代、1以上なら外見年齢で表示する
 ;			（1=BASE:7代、2=BASE:7代前半、
 ;			　3=BASE:7代半ば、4=BASE:7代後半、5=BASE:7歳前後）
-;BASE:実年齢		実年齢
-;BASE:誕生月	誕生月
-;BASE:誕生日	誕生日
-;BASE:血液型	血液型(0=不明,1=A,2=B,3=O,4=AB)
+;CFLAG:実年齢		実年齢
+;CFLAG:誕生月	誕生月
+;CFLAG:誕生日	誕生日
+;CFLAG:血液型	血液型(0=不明,1=A,2=B,3=O,4=AB)
 ;
 ;-------------------------------------------------
 ;年齢と誕生日、血液型の表示
@@ -22,55 +22,55 @@
 PRINT 　年齢：
 						;****年齢表示修正追加ここから****
 ;見た目年代が存在するなら外見年齢で表示,【恋心】があれば実年齢を表示
-IF  BASE:外見年齢 > 0 && TALENT:恋心 == 0
-	IF BASE:外見年齢 == 999
+IF  CFLAG:外見年齢 > 0 && TALENT:恋心 == 0
+	IF CFLAG:外見年齢 == 999
 		PRINT 不詳
 	ELSE
-		SIF BASE:概算年齢 == 6
+		SIF CFLAG:概算年齢 == 6
 			PRINT 自称
-		PRINTFORM {BASE:外見年齢}
-		IF  BASE:概算年齢 == 0
+		PRINTFORM {CFLAG:外見年齢}
+		IF  CFLAG:概算年齢 == 0
 			PRINT 歳
-		ELSEIF  BASE:概算年齢 == 1
+		ELSEIF  CFLAG:概算年齢 == 1
 			PRINT 代
-		ELSEIF BASE:概算年齢 == 2
+		ELSEIF CFLAG:概算年齢 == 2
 			PRINT 代前半
-		ELSEIF BASE:概算年齢 == 3
+		ELSEIF CFLAG:概算年齢 == 3
 			PRINT 代半ば
-		ELSEIF BASE:概算年齢 == 4
+		ELSEIF CFLAG:概算年齢 == 4
 			PRINT 代後半
-		ELSEIF BASE:概算年齢 == 5
+		ELSEIF CFLAG:概算年齢 == 5
 			PRINT 歳前後
-		ELSEIF BASE:概算年齢 == 6
+		ELSEIF CFLAG:概算年齢 == 6
 			PRINT 歳
 		ENDIF
 	ENDIF
-ELSEIF BASE:実年齢 == 999
+ELSEIF CFLAG:実年齢 == 999
 	PRINT 不詳
 ELSE
-	PRINTFORM {BASE:実年齢}歳
+	PRINTFORM {CFLAG:実年齢}歳
 ENDIF
 						;****年齢表示修正追加ここまで****
-IF BASE:誕生月 == 0
+IF CFLAG:誕生月 == 0
 	PRINTFORM  　？月
 ELSE 
-	PRINTFORM  　{BASE:誕生月}月
+	PRINTFORM  　{CFLAG:誕生月}月
 ENDIF
 
-IF BASE:誕生日 == 0
+IF CFLAG:誕生日 == 0
 	PRINTFORM ？日生
 ELSE 
-	PRINTFORM {BASE:誕生日}日生
+	PRINTFORM {CFLAG:誕生日}日生
 ENDIF
 
 PRINT  　血液型：
-IF BASE:血液型 == 0
+IF CFLAG:血液型 == 0
 	PRINTL 不明
-ELSEIF BASE:血液型 == 1
+ELSEIF CFLAG:血液型 == 1
 	PRINTL Ａ型
-ELSEIF BASE:血液型 == 2
+ELSEIF CFLAG:血液型 == 2
 	PRINTL Ｂ型
-ELSEIF BASE:血液型 == 3
+ELSEIF CFLAG:血液型 == 3
 	PRINTL Ｏ型
 ELSE
 	PRINTL ＡＢ型
@@ -84,12 +84,12 @@ ENDIF
 @HAPPY_BIRTHDAY
 VARSET LOCAL
 FOR LOCAL,0,CHARANUM
-	IF DAY:日付_月 == BASE:LOCAL:誕生月 && DAY:日付_日 == BASE:LOCAL:誕生日
+	IF DAY:日付_月 == CFLAG:LOCAL:誕生月 && DAY:日付_日 == CFLAG:LOCAL:誕生日
 		PRINTL *****************************************************
 		PRINTFORML %CALLNAME:LOCAL%が誕生日を迎えました
 		PRINTW *****************************************************
 		SIF FLAG:加齢フラグ
-			BASE:LOCAL:実年齢 += 1
+			CFLAG:LOCAL:実年齢 += 1
 		;誕生日イベント（口上等）をする場合はここから呼び出して下さい
 		IF LOCAL != 0
 			TARGET = LOCAL
@@ -130,7 +130,7 @@ ELSEIF RESULT >= 0 && RESULT < COUNT
 	PRINTFORML %NAME:TARGET%の年齢を設定してください(10-60、不明なら0)
 	INPUT
 	IF RESULT == 0
-		BASE:実年齢 = RESULT
+		CFLAG:実年齢 = RESULT
 		PRINTL 実年齢は不明とします。外見年齢を設定してください(10代-50代)
 		;長くなったので下の方に別関数として呼びに行く
 		CALL AGE_UNKNOWN
@@ -138,10 +138,10 @@ ELSEIF RESULT >= 0 && RESULT < COUNT
 		PRINTL 不適切な値です。再設定してください
 		GOTO INPUT_LOOP_1
 	ELSE
-		BASE:実年齢 = RESULT
+		CFLAG:実年齢 = RESULT
 		;見た目年代処理を行なわなくする
 		;加齢フラグがONなら年を取るようになります
-		BASE:概算年齢 = 0
+		CFLAG:概算年齢 = 0
 	ENDIF
 
 	;誕生月
@@ -157,7 +157,7 @@ ELSEIF RESULT >= 0 && RESULT < COUNT
 		PRINTL 生まれ月は不明とします
 	ELSE
 		M = RESULT
-		BASE:誕生月 = RESULT
+		CFLAG:誕生月 = RESULT
 	ENDIF
 
 	;誕生日
@@ -179,7 +179,7 @@ ELSEIF RESULT >= 0 && RESULT < COUNT
 		PRINTL 不適切な値です。もう一度入力してください
 		GOTO INPUT_LOOP_3
 	ELSE
-		BASE:誕生日 = RESULT
+		CFLAG:誕生日 = RESULT
 	ENDIF
 
 	;血液型
@@ -195,7 +195,7 @@ ELSEIF RESULT >= 0 && RESULT < COUNT
 		PRINTL 不適切な値です。再設定してください
 		GOTO INPUT_LOOP_4
 	ELSE
-		BASE:血液型 = RESULT
+		CFLAG:血液型 = RESULT
 	ENDIF
 
 	
@@ -217,10 +217,10 @@ ELSEIF RESULT >= 0 && RESULT < COUNT
 		GOTO INPUT_LOOP_1
 	ELSEIF RESULT == 2
 		PRINTW このキャラの設定を中止します(既存の値は０になってしまいます)
-		BASE:実年齢 = 0
-		BASE:誕生月 = 0
-		BASE:誕生日 = 0
-		BASE:血液型 = 0
+		CFLAG:実年齢 = 0
+		CFLAG:誕生月 = 0
+		CFLAG:誕生日 = 0
+		CFLAG:血液型 = 0
 		TARGET = A
 		GOTO INPUT_LOOP
 	ELSE
@@ -249,47 +249,47 @@ $INPUT_LOOP_7
 	PRINTL  [99] 年齢不詳
 INPUT
 	IF RESULT == 99
-		BASE:外見年齢 = 0
-		BASE:概算年齢 = 1
+		CFLAG:外見年齢 = 0
+		CFLAG:概算年齢 = 1
 	ELSEIF RESULT == 0
-		BASE:外見年齢 = 10
-		BASE:概算年齢 = 2
+		CFLAG:外見年齢 = 10
+		CFLAG:概算年齢 = 2
 	ELSEIF RESULT == 1
-		BASE:外見年齢 = 10
-		BASE:概算年齢 = 3
+		CFLAG:外見年齢 = 10
+		CFLAG:概算年齢 = 3
 	ELSEIF RESULT == 2
-		BASE:外見年齢 = 10
-		BASE:概算年齢 = 4
+		CFLAG:外見年齢 = 10
+		CFLAG:概算年齢 = 4
 	ELSEIF RESULT == 3
-		BASE:外見年齢 = 20
-		BASE:概算年齢 = 2
+		CFLAG:外見年齢 = 20
+		CFLAG:概算年齢 = 2
 	ELSEIF RESULT == 4
-		BASE:外見年齢 = 20
-		BASE:概算年齢 = 3
+		CFLAG:外見年齢 = 20
+		CFLAG:概算年齢 = 3
 	ELSEIF RESULT == 5
-		BASE:外見年齢 = 20
-		BASE:概算年齢 = 4
+		CFLAG:外見年齢 = 20
+		CFLAG:概算年齢 = 4
 	ELSEIF RESULT == 6
-		BASE:外見年齢 = 30
-		BASE:概算年齢 = 2
+		CFLAG:外見年齢 = 30
+		CFLAG:概算年齢 = 2
 	ELSEIF RESULT == 7
-		BASE:外見年齢 = 30
-		BASE:概算年齢 = 3
+		CFLAG:外見年齢 = 30
+		CFLAG:概算年齢 = 3
 	ELSEIF RESULT == 8
-		BASE:外見年齢 = 30
-		BASE:概算年齢 = 4
+		CFLAG:外見年齢 = 30
+		CFLAG:概算年齢 = 4
 	ELSEIF RESULT == 9
-		BASE:外見年齢 = 20
-		BASE:概算年齢 = 2
+		CFLAG:外見年齢 = 20
+		CFLAG:概算年齢 = 2
 	ELSEIF RESULT == 10
-		BASE:外見年齢 = 20
-		BASE:概算年齢 = 4
+		CFLAG:外見年齢 = 20
+		CFLAG:概算年齢 = 4
 	ELSEIF RESULT == 11
-		BASE:外見年齢 = 50
-		BASE:概算年齢 = 2
+		CFLAG:外見年齢 = 50
+		CFLAG:概算年齢 = 2
 	ELSEIF RESULT == 12
-		BASE:外見年齢 = 50
-		BASE:概算年齢 = 4
+		CFLAG:外見年齢 = 50
+		CFLAG:概算年齢 = 4
 	ELSE
 		GOTO INPUT_LOOP_7
 	ENDIF
@@ -379,26 +379,26 @@ INPUT
 	ELSEIF RESULT == 0
 		REPEAT CHARANUM
 			;実年齢が0歳のキャラクター全員
-			IF BASE:COUNT:実年齢 == 0
-				BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, [[BASE:外見年齢]], 0)
-				BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, [[BASE:概算年齢]], 0)
-				BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, [[BASE:実年齢]], 0)
+			IF CFLAG:COUNT:実年齢 == 0
+				CFLAG:COUNT:外見年齢 = CSVCFLAG(NO:COUNT, [[CFLAG:外見年齢]], 0)
+				CFLAG:COUNT:概算年齢 = CSVCFLAG(NO:COUNT, [[CFLAG:概算年齢]], 0)
+				CFLAG:COUNT:実年齢 = CSVCFLAG(NO:COUNT, [[CFLAG:実年齢]], 0)
 			ENDIF
 			;誕生月が不明なキャラクター全員
-			IF BASE:COUNT:誕生月 == 0
-				BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, [[BASE:誕生月]], 0)
-				BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, [[BASE:誕生日]], 0)
-				BASE:COUNT:血液型 = CSVBASE(NO:COUNT, [[BASE:血液型]], 0)
+			IF CFLAG:COUNT:誕生月 == 0
+				CFLAG:COUNT:誕生月 = CSVCFLAG(NO:COUNT, [[CFLAG:誕生月]], 0)
+				CFLAG:COUNT:誕生日 = CSVCFLAG(NO:COUNT, [[CFLAG:誕生日]], 0)
+				CFLAG:COUNT:血液型 = CSVCFLAG(NO:COUNT, [[CFLAG:血液型]], 0)
 			ENDIF
 		REND
 	ELSEIF RESULT == 1	
 		REPEAT CHARANUM
-			BASE:COUNT:外見年齢 = CSVBASE(NO:COUNT, [[BASE:外見年齢]], 0)
-			BASE:COUNT:概算年齢 = CSVBASE(NO:COUNT, [[BASE:概算年齢]], 0)
-			BASE:COUNT:実年齢 = CSVBASE(NO:COUNT, [[BASE:実年齢]], 0)
-			BASE:COUNT:誕生月 = CSVBASE(NO:COUNT, [[BASE:誕生月]], 0)
-			BASE:COUNT:誕生日 = CSVBASE(NO:COUNT, [[BASE:誕生日]], 0)
-			BASE:COUNT:血液型 = CSVBASE(NO:COUNT, [[BASE:血液型]], 0)
+			CFLAG:COUNT:外見年齢 = CSVCFLAG(NO:COUNT, [[CFLAG:外見年齢]], 0)
+			CFLAG:COUNT:概算年齢 = CSVCFLAG(NO:COUNT, [[CFLAG:概算年齢]], 0)
+			CFLAG:COUNT:実年齢 = CSVCFLAG(NO:COUNT, [[CFLAG:実年齢]], 0)
+			CFLAG:COUNT:誕生月 = CSVCFLAG(NO:COUNT, [[CFLAG:誕生月]], 0)
+			CFLAG:COUNT:誕生日 = CSVCFLAG(NO:COUNT, [[CFLAG:誕生日]], 0)
+			CFLAG:COUNT:血液型 = CSVCFLAG(NO:COUNT, [[CFLAG:血液型]], 0)
 		REND
 	ELSE
 			GOTO INPUT_LOOP
@@ -410,7 +410,7 @@ PRINTW 完了しました
 ;SYSTEM_IWS.ERBの構文をほぼ丸ごと使わせて頂きました
 ;-------------------------------------------------
 @ADD_CSV_BIRTHDAY
-IF DAY:日付_月 == BASE:LOCAL:誕生月 && DAY:日付_日 == BASE:LOCAL:誕生日
+IF DAY:日付_月 == CFLAG:LOCAL:誕生月 && DAY:日付_日 == CFLAG:LOCAL:誕生日
 	SIF FLAG:加齢フラグ
-		BASE:LOCAL:実年齢 += 1
+		CFLAG:LOCAL:実年齢 += 1
 ENDIF

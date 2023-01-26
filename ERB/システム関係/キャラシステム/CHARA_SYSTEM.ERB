@@ -1,0 +1,114 @@
+﻿@SET_3SIZE, ARG
+#DIM IS_CHANGESIZE
+VARSET IS_CHANGESIZE
+
+;体型の変更
+IF BASE:ARG:身長
+	;身長の変化による素質の変化
+	SELECTCASE BASE:ARG:身長
+	CASE IS <= NUM("小柄Ⅲの上限")
+		SIF TALENT:ARG:身長 != -3
+			IS_CHANGESIZE = 1
+	CASE IS <= NUM("小柄Ⅱの上限")
+		SIF TALENT:ARG:身長 != -2
+			IS_CHANGESIZE = 1
+	CASE IS <= NUM("小柄の上限")
+		SIF TALENT:ARG:身長 != -1
+			IS_CHANGESIZE = 1
+	CASE IS <= NUM("普通の上限")
+		SIF TALENT:ARG:身長
+			IS_CHANGESIZE = 1
+	CASE IS <= NUM("長身の上限")
+		SIF TALENT:ARG:身長 != 1
+			IS_CHANGESIZE = 1
+	CASE IS <= NUM("長身Ⅱの上限")
+		SIF TALENT:ARG:身長 != 2
+			IS_CHANGESIZE = 1
+	CASEELSE
+		SIF TALENT:ARG:身長 != 3
+			IS_CHANGESIZE = 1
+	ENDSELECT
+	IF IS_CHANGESIZE
+		PRINTFORML （%CALLNAME:ARG%の身長や腰つき等を測り直します）
+
+		SELECTCASE BASE:ARG:身長
+		CASE IS <= NUM("小柄Ⅲの上限")
+			TALENT:ARG:身長 = -3
+		CASE IS <= NUM("小柄Ⅱの上限")
+			TALENT:ARG:身長 = -2
+		CASE IS <= NUM("小柄の上限")
+			TALENT:ARG:身長 = -1
+		CASE IS <= NUM("普通の上限")
+			TALENT:ARG:身長 = 0
+		CASE IS <= NUM("長身の上限")
+			TALENT:ARG:身長 = 1
+		CASE IS <= NUM("長身Ⅱの上限")
+			TALENT:ARG:身長 = 2
+		CASEELSE
+			TALENT:ARG:身長 = 3
+		ENDSELECT
+
+		CALL CALC, "ＢＷＨ計測", ARG
+	ENDIF
+
+	VARSET IS_CHANGESIZE
+
+	;バストカップの変化による素質の変化
+	CFLAG:ARG:カップサイズ = CALCF("バストカップ", CALCF("バストカップ計算値", ARG) )
+
+	IF IS_MALE(ARG)
+		SIF CFLAG:ARG:カップサイズ
+			CALL CALC, "男乳化", ARG
+	ELSEIF TALENT:ARG:巨乳 >= 3
+		SIF CFLAG:ARG:カップサイズ <= NUM("爆乳の上限")
+			IS_CHANGESIZE = 1
+	ELSEIF TALENT:ARG:巨乳 == 2
+		SIF CFLAG:ARG:カップサイズ <= NUM("巨乳の上限")
+			IS_CHANGESIZE = 1
+	ELSEIF TALENT:ARG:巨乳 == 1
+		SIF CFLAG:ARG:カップサイズ <= NUM("並乳の上限") || CFLAG:ARG:カップサイズ > NUM("巨乳の上限")
+			IS_CHANGESIZE = 1
+	ELSEIF IS_貧乳(ARG)
+		SIF CFLAG:ARG:カップサイズ > NUM("貧乳の上限")
+			IS_CHANGESIZE = 1
+	ELSEIF TALENT:ARG:巨乳 + TALENT:ARG:貧乳 == 0
+		SIF CFLAG:ARG:カップサイズ <= NUM("貧乳の上限") || CFLAG:ARG:カップサイズ > NUM("並乳の上限")
+			IS_CHANGESIZE = 1
+	ENDIF
+	IF IS_CHANGESIZE
+		PRINTFORML （%CALLNAME:ARG%のバストサイズを測り直します）
+
+		CALL SETFLAG, "バスト設定", ARG
+
+		PRINTFORML （ウエストサイズを測り直すのは、流石に止めておきます…）
+	ENDIF
+
+	;お尻のサイズ計測（ウェストとヒップから判定するだけなので問題ない）
+	CALL SETFLAG, "ヒップ設定", ARG
+	RETURN 0
+ENDIF
+
+;ゴールデンカノン (バスト = 身長*0.54, ウェスト = 身長*0.38, ヒップ = 身長*0.54)を参考。誤差は上下10%程が妥当か。
+;腰使いLVが高いと、ウェストが低く、ヒップが大きくなりやすい
+;BASE:身長=身長、BASE:バスト=バスト、BASE:カップ=バストカップ、BASE:ウェスト=ウェスト、BASE:ヒップ=ヒップ
+
+;小柄Ⅲ118～130cm、小柄Ⅱ131～143cm、小柄144～152cm、通常153～165cm、長身166～182cm
+IF IS_大柄(ARG) == 3
+	CALL CALC, "長身Ⅲ化", ARG
+ELSEIF IS_大柄(ARG) == 2
+	CALL CALC, "長身Ⅱ化", ARG
+ELSEIF IS_大柄(ARG)
+	CALL CALC, "長身化", ARG
+ELSEIF IS_小柄(ARG) == 3
+	CALL CALC, "小柄Ⅲ化", ARG
+ELSEIF IS_小柄(ARG) == 2
+	CALL CALC, "小柄Ⅱ化", ARG
+ELSEIF IS_小柄(ARG)
+	CALL CALC, "小柄化", ARG
+ELSE
+	CALL CALC, "普通体型化", ARG
+ENDIF
+
+;バストカップ計測。バストサイズ(BASE:バスト)とカップ(BASE:カップ)が決められる
+CALL SETFLAG, "バスト設定", ARG
+

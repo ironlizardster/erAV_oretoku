@@ -598,7 +598,7 @@ SIF TALENT:一線越えない && ABL:信頼 <= 3
 ;TALENT:解放をみる
 SIF IS_解放(TARGET)
 	T:[[TALENT:解放的]] = 120
-;TALENT:濡れやすいをみる
+;TALENT:濡れやすさをみる
 SIF IS_濡れやすい(TARGET)
 	T:[[TALENT:濡れやすさ]] = 120
 ;TALENT:しあわせ草中毒をみる
@@ -628,23 +628,23 @@ SIF TALENT:謎の魅力
 ;TALENT:貧乳をみる
 ;TALENT:小柄・TALENT:幼稚・TALENT:未熟があれば大丈夫
 SIF IS_貧乳(TARGET) && !IS_小柄(TARGET) && TALENT:幼稚 == 0 && TALENT:未熟 == 0
-	T:[[TALENT:乳サイズ]] = 90
+	T:[[TALENT:乳房]] = 90
 ;TALENT:巨乳をみる
 SIF IS_巨乳(TARGET)
-	T:[[TALENT:乳サイズ]] = 150
+	T:[[TALENT:乳房]] = 150
 ;TALENT:魅力をみる
 SIF TALENT:魅力
 	T:[[TALENT:魅力]] = 150
 ;TALENT:爆乳をみる
 SIF IS_デカパイ(TARGET)
-	T:[[TALENT:乳サイズ]] = 160
+	T:[[TALENT:乳房]] = 160
 ;TALENT:肥満をみる
 SIF IS_肥満(TARGET)
 	T:[[TALENT:体形]] = 20
 ;TALENT:絶壁をみる
 ;TALENT:幼稚かTALENT:未熟があれば大丈夫
 SIF IS_絶壁(TARGET) && TALENT:幼稚 == 0 && TALENT:未熟 == 0
-	T:[[TALENT:乳サイズ]] = 50
+	T:[[TALENT:乳房]] = 50
 ;ふたなりをみる
 SIF IS_FUTA(TARGET)
 	T:[[TALENT:性別]] = 200

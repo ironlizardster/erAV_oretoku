@@ -150,7 +150,7 @@ IF TALENT:永遠の愛 == 1
 	;処女＋Ａ処女＋初キス未経験で【永遠の愛】なら【天使】を得る
 	IF IS処女(TARGET)
 		;閣下はこんなことしないよ！
-		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
+		CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
 	ENDIF
 	TCVAR:絶頂経験 += 5 + RAND:6
 	TCVAR:Ｖ経験 += 3 + RAND:6
@@ -159,7 +159,7 @@ IF TALENT:永遠の愛 == 1
 	TCVAR:異常経験 += 1
 	TCVAR:性交経験 = TCVAR:絶頂経験
 	IF !CFLAG:初キス相手
-		CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,"朝生太郎（元議員）")
+		CALL 初キス喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,"朝生太郎（元議員）")
 	ENDIF
 	CALL ADD_ANGEL(TARGET)
 	MARK:反発刻印 = 3
@@ -168,7 +168,7 @@ IF TALENT:永遠の愛 == 1
 	PRINTFORML しかし、%CALLNAME:MASTER%に売られたことについては許すつもりはないようだ
 ELSE
 	IF IS処女(TARGET)
-		CALL 処女喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
+		CALL 処女喪失実行(TARGET,初相手_今彼,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"朝生太郎（元議員）")
 	ENDIF
 	CSTR:彼氏姓 = 朝生
 	CSTR:彼氏名 = 太郎
@@ -184,7 +184,7 @@ ELSE
 	TCVAR:性交経験 = TCVAR:絶頂経験
 	IF !CFLAG:初キス相手
 		CSTR:初キス相手 = 朝生太郎（元議員）
-		CALL 初キス喪失実行(TARGET,初相手_今彼,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,CSTR:初キス相手)
+		CALL 初キス喪失実行(TARGET,初相手_今彼,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_会員制クラブ,初状況_口,CSTR:初キス相手)
 	ENDIF
 	MARK:反発刻印 = 3
 	PRINTFORML 元議員に気に入られた%CALLNAME:TARGET%は性処理用看護婦として飼われることになった……

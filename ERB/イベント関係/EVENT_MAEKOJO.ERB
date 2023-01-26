@@ -14,7 +14,7 @@ CHKFONT "あくびん"
 SETCOLOR 0xDDBBCC
 
 PRINTFORM 「んちゅっ、んっ……ぷぁっ、ダメ
-	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+	IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 		PRINTFORM ですよぅ……
 	ELSE
 		PRINTFORM だよぅ……
@@ -31,20 +31,20 @@ PRINTFORM となりで
 	ENDIF
 PRINTFORML が寝てるのにぃ……ｖ」
 PRINTFORM 「えっ……『%CALLNAME:LOCAL%
-	IF (BASE:LOCAL:実年齢 > BASE:(LOCAL:1):実年齢) || NO:(LOCAL:1) == 9 || NO:(LOCAL:1) == 17
+	IF (CFLAG:LOCAL:実年齢 > CFLAG:(LOCAL:1):実年齢) || NO:(LOCAL:1) == 9 || NO:(LOCAL:1) == 17
 		PRINTFORM さん
 	ELSE
 		PRINTFORM ちゃん
 	ENDIF
 PRINTFORML と一緒にオフロ入った時からムラムラしてた』だなんて……
 PRINTFORM 　もうっ、%CALLNAME:(LOCAL:1)%
-	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+	IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 		PRINTFORM さん
 	ELSE
 		PRINTFORM ちゃん
 	ENDIF
 PRINTFORM ったらえっちなん
-	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+	IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 		PRINTFORM です
 	ELSE
 		PRINTFORM だ
@@ -53,7 +53,7 @@ PRINTFORML からぁｖ」
 
 IF IS_FUTA(LOCAL:1)
 	PRINTFORM 「きゃっ……%CALLNAME:(LOCAL:1)%
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM さん
 		ELSE
 			PRINTFORM ちゃん
@@ -77,7 +77,7 @@ IF IS_FUTA(LOCAL:1)
 	PRINTFORML るぅ……ｖ」
 ENDIF
 PRINTFORM 「でも……実を言うと%CSTR:LOCAL:一人称%もさっきからガマンできない
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM んです
 		ELSE
 			PRINTFORM の
@@ -94,14 +94,14 @@ PRINTFORM 　だから……
 		PRINTFORM あの人
 	ENDIF
 PRINTFORM ももう寝ちゃってるから……ふたりで一緒にキモチよくな
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM りましょう
 		ELSE
 			PRINTFORM ろう
 		ENDIF
 PRINTFORML ｖ」
 PRINTFORM 「あっ……あァンっｖ%CALLNAME:(LOCAL:1)%
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM さん
 		ELSE
 			PRINTFORM ちゃん
@@ -133,7 +133,7 @@ PRINTFORM 、%CSTR:LOCAL:一人称%の
 PRINTFORML とキスしちゃってるぅ……♪」
 IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 	PRINTFORM 「あはっ、%CALLNAME:(LOCAL:1)%
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM さん
 		ELSE
 			PRINTFORM ちゃん
@@ -155,7 +155,7 @@ IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 			PRINTFORM %CSTR:LOCAL:一人称%のと同じぐらいの大きさだ
 		ENDIF
 	PRINTFORM ったん
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM ですねぇ
 		ELSE
 			PRINTFORM だぁ
@@ -176,7 +176,7 @@ IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 		ELSE
 			PRINTFORM おちん○ん
 		ENDIF
-		IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+		IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 			PRINTFORM ですし
 		ELSE
 			PRINTFORM だし
@@ -193,7 +193,7 @@ IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 					PRINTFORM おちん○ん
 				ENDIF
 			PRINTFORM がビンカンになってキモチいいん
-				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+				IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 					PRINTFORM です
 				ELSE
 					PRINTFORM だ
@@ -201,7 +201,7 @@ IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 			PRINTFORM よ♪
 		ELSEIF CFLAG:LOCAL:包皮状態 < 2  && CFLAG:(LOCAL:1):包皮状態 == 2 && !IS童貞(LOCAL:1)
 			PRINTFORM %CSTR:LOCAL:一人称%も%CALLNAME:(LOCAL:1)%
-				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+				IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 					PRINTFORM さん
 				ELSEIF NO:LOCAL != [[キャラ:桐生歌音]]
 					PRINTFORM ちゃん
@@ -217,7 +217,7 @@ IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 			PRINTFORM でキモチよくなれたのに……♪
 		ELSE
 			PRINTFORM %CSTR:LOCAL:一人称%と同じ
-				IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+				IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 					PRINTFORM です
 				ELSE
 					PRINTFORM だ
@@ -227,7 +227,7 @@ IF IS_FUTA(LOCAL) && IS_FUTA(LOCAL:1)
 	PRINTFORML 」
 ENDIF
 PRINTFORM 「ねぇ……もっとぎゅってして
-	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+	IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 		PRINTFORM ください
 	ELSE
 		PRINTFORM ぇ
@@ -252,7 +252,7 @@ PRINTFORM 　おクチと
 		ENDIF
 	ENDIF
 PRINTFORM の両方でえっちなキスし
-	IF (BASE:LOCAL:実年齢 < BASE:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
+	IF (CFLAG:LOCAL:実年齢 < CFLAG:(LOCAL:1):実年齢) || NO:LOCAL == [[キャラ:レイチェル・パラディスス]] || NO:LOCAL == [[キャラ:宮間未依]]
 		PRINTFORM ましょう
 	ELSE
 		PRINTFORM たいのぉ

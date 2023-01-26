@@ -164,7 +164,7 @@ TCVAR:性交経験 = TCVAR:絶頂経験
 TCVAR:異常経験 += 3 + RAND:6
 
 IF !CFLAG:処女喪失相手
-	CALL 処女喪失実行(TARGET,初相手_犬,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"犬")
+	CALL 処女喪失実行(TARGET,初相手_犬,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_なし,"犬")
 ENDIF
 
 ; 経験増加処理の呼び出し

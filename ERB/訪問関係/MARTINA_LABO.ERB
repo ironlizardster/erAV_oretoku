@@ -155,7 +155,7 @@ SELECTCASE LOCAL:0
 		TALENT:オトコの娘 = 0
 	CASE 1
 		;女性
-		CALL SET_SEXUALITY(TARGET,性別_女)
+		CALL SET_SEXUALITY(TARGET,性別_オンナ)
 		TALENT:オトコの娘 = 0
 	CASE 2
 		;女性ふたなり
@@ -255,7 +255,7 @@ ENDIF
 ;痛みに強い、痛みに弱い(白兵の初期値に応じて確率変動)
 ;CALL RCHARA_TALENT_OPPOSE, [[TALENT:痛みに強い]], [[TALENT:痛みに弱い]], 5, 7
 ;濡れやすい、濡れにくい
-;CALL RCHARA_TALENT_OPPOSE, [[TALENT:濡れやすい]], [[TALENT:濡れにくい]], 8, 5
+;CALL RCHARA_TALENT_OPPOSE, [[IS_濡れやすい(TARGET)]], [[IS_濡れにくい(TARGET)]], 8, 5
 ;習得遅い
 ;CALL RCHARA_TALENT_SINGLE, [[IS_習得遅い(TARGET)]], 5
 ;舌使い

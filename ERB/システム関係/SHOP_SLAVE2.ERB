@@ -24,7 +24,7 @@ IF FLAG:陰毛を生やす
 	ELSEIF IS_パイパン(TARGET)
 		CFLAG:陰毛状態 = -1
 	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
-	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
+	ELSEIF CFLAG:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
 		CFLAG:陰毛状態 = 6 
 	;それ以外なら12に設定
 	ELSE

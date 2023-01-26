@@ -550,7 +550,7 @@ ELSEIF CFLAG:COUNT:妊娠精子 == 7 && CFLAG:COUNT:出産日 <= DAY+13
 	PRINTFORML %CALLNAME:COUNT%はカレシの子どもを身篭った様だ
 	PRINTL 
 	PRINTFORML %NAME:COUNT%は【%TALENTNAME:[[TALENT:妊娠]]%】した
-	IF TALENT:COUNT:人妻 == 0 && BASE:COUNT:実年齢 >= 16
+	IF TALENT:COUNT:人妻 == 0 && CFLAG:COUNT:実年齢 >= 16
 		PRINTFORMW
 		PRINTFORML カレシの子どもを妊娠してしまった%CALLNAME:COUNT%は、悩みに悩んだ末にカレシと結婚することにしたようだ……
 		PRINTFORMW 《%NAME:COUNT%は【人妻】になり、名前が%CSTR:COUNT:彼氏姓%%CALLNAME:COUNT%に変わった》
@@ -897,7 +897,7 @@ IF TALENT:C:崩壊 || C == MASTER
 		IF RESULT != 100 && RESULT == MASTER
 			PRINTFORML %CALLNAME:MASTER%は仕事を休んで育児をすることにしました
 			TALENT:C:育児中 = 1
-			;３サイズ設定キャラは乳サイズ以外減らす
+			;３サイズ設定キャラは乳房以外減らす
 			SIF  BASE:C:バスト > 0 && FLAG:ＩＷＳなし > 0
 			CALL REVERSE_3_SIZE_IWS
 			WAIT
@@ -964,7 +964,7 @@ ELSE
 		PRINTFORML どうやら%CALLNAME:C%は【%TALENTNAME:[[TALENT:母性]]%】に目覚めたようだ
 		TALENT:C:母性 = 1
 	ENDIF
-	;３サイズ設定キャラは乳サイズ以外減らす
+	;３サイズ設定キャラは乳房以外減らす
 	SIF  BASE:C:バスト > 0 && FLAG:ＩＷＳなし > 0
 	CALL REVERSE_3_SIZE_IWS
 	WAIT
@@ -978,7 +978,7 @@ DRAWLINE
 
 IF IS処女(C)
 	CSTR:C:処女喪失相手 = スライムの卵
-	CALL 処女喪失実行(C,初相手_産卵,BASE:C:実年齢,DAY:日付_月,DAY:日付_日,初場所_自室,初状況_なし,CSTR:C:処女喪失相手)
+	CALL 処女喪失実行(C,初相手_産卵,CFLAG:C:実年齢,DAY:日付_月,DAY:日付_日,初場所_自室,初状況_なし,CSTR:C:処女喪失相手)
 ENDIF
 EXP:C:Ｖ拡張経験 += 1
 EXP:C:産卵経験 += 1
@@ -1068,12 +1068,12 @@ ELSE
 ;乳がワンランクパワーアップする
 ;絶→貧　貧→普　普→巨　巨→爆　爆→そのまま
 	IF IS_神乳(T)
-		PRINTFORML %CALLNAME:T%の胸が【%GET_STR_乳サイズ(T)%】から更に大きくなった
-		MARK:T:5 = 1
+		PRINTFORML %CALLNAME:T%の胸が【%GET_STR_乳房(T)%】から更に大きくなった
+		MARK:T:胸膨刻印 = 1
 	ELSE
-		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳サイズ(T)%】から
-		TALENT:T:乳サイズ++
-		PRINTFORML 【%GET_STR_乳サイズ(T)%】ぐらいに大きくなった
+		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳房(T)%】から
+		TALENT:T:乳房++
+		PRINTFORML 【%GET_STR_乳房(T)%】ぐらいに大きくなった
 	ENDIF
 ENDIF
 
@@ -1085,12 +1085,12 @@ IF BASE:T:バスト > 0 && FLAG:ＩＷＳなし > 0
 ELSE
 ;爆→巨　巨→普　普→貧　貧・絶→そのまま
 						;****あなた妊娠パッチ追加ここから****
-	IF MARK:C:5 >= 1
-		MARK:C:5 = 0
+	IF MARK:C:胸膨刻印 >= 1
+		MARK:C:胸膨刻印 = 0
 	ELSEIF !IS_ナイチチ(C)
-		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳サイズ(C)%】から
-		TALENT:T:乳サイズ--
-		PRINTFORML 【%GET_STR_乳サイズ(C)%】ぐらいに小さくなった
+		PRINTFORM %CALLNAME:T%の胸が【%GET_STR_乳房(C)%】から
+		TALENT:T:乳房--
+		PRINTFORML 【%GET_STR_乳房(C)%】ぐらいに小さくなった
 	ENDIF
 ENDIF
 

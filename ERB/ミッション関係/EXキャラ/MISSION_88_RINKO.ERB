@@ -339,7 +339,7 @@ TCVAR:舞踊経験 += 150 + RAND:50 - RAND:50
 TCVAR:愛情経験 += 200 + RAND:100 - RAND:100
 TCVAR:レズ経験 += 300 + RAND:100 - RAND:100
 IF !CFLAG:初キス相手
-	CALL 初キス喪失実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
+	CALL 初キス喪失実行(TARGET,[[キャラ:渡来桔梗]] + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 ENDIF
 CALL MISSION_ADD_EXP(TARGET)
 
@@ -355,7 +355,7 @@ IF 桔梗 != -1
 	CALL MISSION_ADD_EXP(TARGET)
 	B = TARGET
 	IF !CFLAG:初キス相手
-		CALL 初キス喪失実行(TARGET,[[キャラ:闇崎燐子]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
+		CALL 初キス喪失実行(TARGET,[[キャラ:闇崎燐子]] + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 	ENDIF
 ENDIF
 
@@ -369,7 +369,7 @@ IF 詩織 != -1
 	CALL MISSION_ADD_EXP(TARGET)
 	C = TARGET
 	IF !CFLAG:初キス相手
-		CALL 初キス喪失実行(TARGET,[[キャラ:渡来桔梗]] + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
+		CALL 初キス喪失実行(TARGET,[[キャラ:渡来桔梗]] + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_野外,初状況_口)
 	ENDIF
 ENDIF
 

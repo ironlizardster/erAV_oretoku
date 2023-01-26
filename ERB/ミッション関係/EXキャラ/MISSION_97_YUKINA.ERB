@@ -199,10 +199,10 @@ IF ARG >= 1
 	CSTR:肛門呼び方 = ケツ穴
 	
 	IF !CFLAG:処女喪失相手
-		CALL 処女喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"園田雅彦（セフレ）")
+		CALL 処女喪失実行(TARGET,初相手_セフレ,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"園田雅彦（セフレ）")
 	ENDIF
 	IF !CFLAG:初キス相手
-		CALL 初キス喪失実行(TARGET,初相手_セフレ,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"園田雅彦（セフレ）")
+		CALL 初キス喪失実行(TARGET,初相手_セフレ,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,"園田雅彦（セフレ）")
 	ENDIF
 	
 	CFLAG:ブラの色 = 1
@@ -228,11 +228,11 @@ IF ARG >= 1
 	PRINTFORMW たが、案外これも似合っているように思えた
 ELSE
 	IF !CFLAG:処女喪失相手
-		CALL 処女喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"園田雅彦")
+		CALL 処女喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_なし,"園田雅彦")
 	ENDIF
 	IF !CFLAG:初キス相手
 		CSTR:初キス相手 = 園田雅彦の真珠入り%CSTR:男性器呼び方%
-		CALL 初キス喪失実行(TARGET,初相手_接待客,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,CSTR:初キス相手)
+		CALL 初キス喪失実行(TARGET,初相手_接待客,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,CSTR:初キス相手)
 	ENDIF	
 ENDIF
 

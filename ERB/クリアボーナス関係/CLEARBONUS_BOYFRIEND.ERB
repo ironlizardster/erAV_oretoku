@@ -99,10 +99,10 @@ IF !CFLAG:LOCAL:初キス相手
 		SIF CFLAG:LOCAL:初キス相手 == 0
 			CFLAG:LOCAL:初キス相手 = 2
 		IF CFLAG:LOCAL:初キス相手 == 1
-			CALL 初キス喪失実行(LOCAL,初相手_今彼,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
+			CALL 初キス喪失実行(LOCAL,初相手_今彼,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_口,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
 			BASE:LOCAL:魅力値 -= 5
 		ELSEIF CFLAG:LOCAL:初キス相手 == 2
-			CALL 初キス喪失実行(LOCAL,初相手_今彼,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
+			CALL 初キス喪失実行(LOCAL,初相手_今彼,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
 			BASE:LOCAL:魅力値 -= 10
 		ENDIF
 	ELSE
@@ -119,7 +119,7 @@ IF !CFLAG:LOCAL:処女喪失相手 && IS処女(LOCAL)
 	IF RESULT == 1
 		PRINT
 	ELSEIF RESULT == 0
-		CALL 処女喪失実行(LOCAL,初相手_今彼,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
+		CALL 処女喪失実行(LOCAL,初相手_今彼,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
 	ELSE
 		GOTO INPUT_LOOP_02
 	ENDIF		
@@ -141,7 +141,7 @@ IF !IS処女(LOCAL)
 		ABL:LOCAL:欲望 += 2
 		ABL:LOCAL:性交技術 += 2
 		ABL:LOCAL:性交中毒 += 1
-		CFLAG:LOCAL:処女喪失年齢 = (BASE:LOCAL:実年齢 - RAND:4 - 1)
+		CFLAG:LOCAL:処女喪失年齢 = (CFLAG:LOCAL:実年齢 - RAND:4 - 1)
 	ELSEIF RESULT == 1
 		TCVAR:LOCAL:Ｖ経験 += 20 + RAND:11
 		TCVAR:LOCAL:性交経験 += 15 + RAND:11
@@ -150,7 +150,7 @@ IF !IS処女(LOCAL)
 		ABL:LOCAL:Ｖ感覚 += 1 + RAND:3
 		ABL:LOCAL:欲望 += 1
 		ABL:LOCAL:性交技術 += 1
-		CFLAG:LOCAL:処女喪失年齢 = (BASE:LOCAL:実年齢 - 1)
+		CFLAG:LOCAL:処女喪失年齢 = (CFLAG:LOCAL:実年齢 - 1)
 	ELSEIF RESULT == 2
 		TCVAR:LOCAL:Ｖ経験 += 1 + RAND:5
 		TCVAR:LOCAL:性交経験 += TCVAR:LOCAL:Ｖ経験 - RAND:3
@@ -185,7 +185,7 @@ IF ISＡ処女(LOCAL)
 	IF RESULT == 1
 		PRINT
 	ELSEIF RESULT == 0
-		CALL Ａ処女喪失実行(LOCAL,初相手_今彼,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
+		CALL Ａ処女喪失実行(LOCAL,初相手_今彼,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_なし,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
 	ELSE
 		GOTO INPUT_LOOP_04
 	ENDIF		
@@ -221,7 +221,7 @@ IF !ISＡ処女(LOCAL)
 		ABL:LOCAL:欲望 += 2
 		ABL:LOCAL:性交技術 += 2
 		ABL:LOCAL:性交中毒 += 1
-		CFLAG:LOCAL:Ａ処女喪失年齢 = (BASE:LOCAL:実年齢 - RAND:4 - 1)
+		CFLAG:LOCAL:Ａ処女喪失年齢 = (CFLAG:LOCAL:実年齢 - RAND:4 - 1)
 	ELSEIF RESULT == 1
 		TCVAR:LOCAL:Ａ経験 += 20 + RAND:11
 		TCVAR:LOCAL:性交経験 += 15 + RAND:11
@@ -232,7 +232,7 @@ IF !ISＡ処女(LOCAL)
 			ABL:LOCAL:Ａ感覚 = 3
 		ABL:LOCAL:欲望 += 1
 		ABL:LOCAL:性交技術 += 1
-		CFLAG:LOCAL:Ａ処女喪失年齢 = (BASE:LOCAL:実年齢 - 1)
+		CFLAG:LOCAL:Ａ処女喪失年齢 = (CFLAG:LOCAL:実年齢 - 1)
 	ELSEIF RESULT == 2
 		TCVAR:LOCAL:Ａ経験 += 1 + RAND:5
 		TCVAR:LOCAL:性交経験 += TCVAR:LOCAL:Ｖ経験 - RAND:3
@@ -455,7 +455,7 @@ ELSEIF RESULT == 8826
 	CSTR:LOCAL:女性器呼び方 = 生ハメＳＥＸ大好きな淫乱ヌレヌレマンコ
 	CSTR:LOCAL:処女喪失相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
 	CSTR:LOCAL:Ａ処女喪失相手 = %CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%
-	CALL 初キス喪失実行(LOCAL,初相手_今彼,BASE:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
+	CALL 初キス喪失実行(LOCAL,初相手_今彼,CFLAG:LOCAL:実年齢,DAY:日付_月,DAY:日付_日,初場所_彼部屋,初状況_男性器,@"%CSTR:LOCAL:彼氏姓%%CSTR:LOCAL:彼氏名%")
 	GOTO INPUT_LOOP_DECIDE
 ELSE
 	GOTO INPUT_LOOP_DECIDE
@@ -484,7 +484,7 @@ IF FLAG:陰毛を生やす
 	ELSEIF IS_パイパン(TARGET)
 		CFLAG:陰毛状態 = -1
 	;発育のいい桔梗以外の15歳以下ならまだ毛が薄い
-	ELSEIF BASE:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
+	ELSEIF CFLAG:実年齢 <= 15 && NO:TARGET != [[キャラ:渡来桔梗]]
 		CFLAG:陰毛状態 = 6 
 	;それ以外なら12に設定
 	ELSE

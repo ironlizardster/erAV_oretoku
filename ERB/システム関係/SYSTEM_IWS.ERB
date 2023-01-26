@@ -195,18 +195,18 @@ ENDIF
 CALL CHECK_CUPSIZE
 IF (CFLAG:カップサイズ > 1 && IS_絶壁(TARGET)) || (CFLAG:カップサイズ > 3 && IS_貧乳(TARGET)) || (CFLAG:カップサイズ > 5 && !IS_チチユレ(TARGET)) || (CFLAG:カップサイズ > 7  && IS_巨乳(TARGET)) || (CFLAG:カップサイズ > 10 && IS_爆乳(TARGET)) || (CFLAG:カップサイズ > 14 && IS_超乳(TARGET)) || (CFLAG:カップサイズ > 19 && IS_魔乳(TARGET))
 	PRINTL ＊バストランクアップ！＊
-	PRINTFORM %CALLNAME:TARGET%は【%GET_STR_乳サイズ(TARGET)%】から
-	TALENT:T:乳サイズ++
-	PRINTFORMW 【%GET_STR_乳サイズ(TARGET)%】になった。
+	PRINTFORM %CALLNAME:TARGET%は【%GET_STR_乳房(TARGET)%】から
+	TALENT:T:乳房++
+	PRINTFORMW 【%GET_STR_乳房(TARGET)%】になった。
 ENDIF
 	
 @BUST_RANKDOWN
 CALL CHECK_CUPSIZE
 IF (CFLAG:カップサイズ <= 19 && IS_神乳(TARGET)) || (CFLAG:カップサイズ <= 14 && IS_魔乳(TARGET)) || (CFLAG:カップサイズ <= 10 && IS_超乳(TARGET)) || (CFLAG:カップサイズ <= 7  && IS_爆乳(TARGET)) || (CFLAG:カップサイズ <= 5 && IS_巨乳(TARGET)) || (CFLAG:カップサイズ <= 3 && !IS_ナイチチ(TARGET)) || (CFLAG:カップサイズ <= 1 && IS_貧乳(TARGET))
 	PRINTL ＊バストランクダウン！＊＊
-	PRINTFORM %CALLNAME:TARGET%は【%GET_STR_乳サイズ(TARGET)%】から
-	TALENT:T:乳サイズ--
-	PRINTFORMW 【%GET_STR_乳サイズ(TARGET)%】になった。
+	PRINTFORM %CALLNAME:TARGET%は【%GET_STR_乳房(TARGET)%】から
+	TALENT:T:乳房--
+	PRINTFORMW 【%GET_STR_乳房(TARGET)%】になった。
 ENDIF
 
 ;-------------------------------------------------

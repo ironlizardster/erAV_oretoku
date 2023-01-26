@@ -373,27 +373,27 @@ IF PREVCOM == 612
 
 	;ABL:露出癖をみる
 	IF ABL:露出癖 == 0
-		SOURCE:中毒充足 += 100
+		SOURCE:充足 += 100
 		SOURCE:愛液分泌 += 100
 		TIMES A, 0.60
 	ELSEIF ABL:露出癖 == 1
-		SOURCE:中毒充足 += 200
+		SOURCE:充足 += 200
 		SOURCE:愛液分泌 += 200
 		TIMES A, 1.00
 	ELSEIF ABL:露出癖 == 2
-		SOURCE:中毒充足 += 400
+		SOURCE:充足 += 400
 		SOURCE:愛液分泌 += 400
 		TIMES A, 1.50
 	ELSEIF ABL:露出癖 == 3
-		SOURCE:中毒充足 += 700
+		SOURCE:充足 += 700
 		SOURCE:愛液分泌 += 700
 		TIMES A, 2.40
 	ELSEIF ABL:露出癖 == 4
-		SOURCE:中毒充足 += 1200
+		SOURCE:充足 += 1200
 		SOURCE:愛液分泌 += 1200
 		TIMES A, 3.60
 	ELSE
-		SOURCE:中毒充足 += 2000
+		SOURCE:充足 += 2000
 		SOURCE:愛液分泌 += 2000
 		TIMES A, 5.80
 	ENDIF

@@ -336,13 +336,13 @@ ELSE
 		TALENT:ARG:一線越えない = 0
 
 	IF !CFLAG:ARG:処女喪失相手 && IS処女(ARG)
-		CALL 処女喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
+		CALL 処女喪失実行(ARG,初相手_セフレ,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_ハメ撮,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
 		PRINTL 異常経験＋1
 		EXP:ARG:異常経験 += 1
 	ENDIF
 			
 	IF !CFLAG:ARG:初キス相手
-		CALL 初キス喪失実行(ARG,初相手_セフレ,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
+		CALL 初キス喪失実行(ARG,初相手_セフレ,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_ラブホ,初状況_男性器,@"%CSTR:ARG:セフレ姓%%CSTR:ARG:セフレ名%（セフレ）")
 	ENDIF
 		
 	;性交回数
@@ -415,7 +415,7 @@ RETURN
 ;補導
 ;===========================================================
 @EVENT_BGGUIDANCE(ARG)
-IF BASE:ARG:実年齢 < 19
+IF CFLAG:ARG:実年齢 < 19
 	PRINTFORMW のんびりと事務所の後片付けをしていた%CALLNAME:MASTER%の携帯に一本の電話が入った……
 	PRINTFORM 電話の主は警察で、%NAME:ARG%が
 		IF RAND:2 == 0

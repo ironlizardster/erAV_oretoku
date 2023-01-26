@@ -203,8 +203,8 @@ SIF LOCAL:1 >= 24
 X = 0
 
 ;必ず起こる処理
-CALL 処女喪失実行(ASSI,NO:TARGET + 1,BASE:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_口)
-CALL 初キス喪失実行(TARGET,NO:ASSI + 1,BASE:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_口)
+CALL 処女喪失実行(ASSI,NO:TARGET + 1,CFLAG:ASSI:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_口)
+CALL 初キス喪失実行(TARGET,NO:ASSI + 1,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_地下室,初状況_口)
 
 ;ユーニス分の経験処理
 TCVAR:絶頂経験 += 10 + RAND:6

@@ -155,7 +155,7 @@ ELSEIF LOCAL >= 4
 	PRINTFORM 満足した痴漢がペニスを引き抜くと、%CALLNAME:ARG%の秘唇から\@ IS処女(ARG) ? 破瓜の血が混ざった # \@精液がごぽりと音を立てて溢れるほど、大量に膣内射精されたようだった……
 	PRINTFORMW  
 	IF IS処女(ARG)
-		CALL 処女喪失実行(ARG,初相手_痴漢,BASE:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_電車,初状況_無理犯,"痴漢")
+		CALL 処女喪失実行(ARG,初相手_痴漢,CFLAG:ARG:実年齢,DAY:日付_月,DAY:日付_日,初場所_電車,初状況_無理犯,"痴漢")
 		PRINTFORML %EXPNAME:[[EXP:異常経験]]%+2
 		EXP:ARG:異常経験 += 2
 	ENDIF

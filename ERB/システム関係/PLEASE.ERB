@@ -66,7 +66,7 @@ IF CFLAG:習い事 == 0
 		PRINT （これ以上は効果がなさそうです）
 	PRINTL
 ENDIF
-IF (BASE:実年齢 <= 18 && CFLAG:習い事 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1)
+IF (CFLAG:実年齢 <= 18 && CFLAG:習い事 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1)
 	PRINT  [ 2] - 学習塾に通ってもらう　　　（月額：10000ポイント）
 	CALL 学習塾通い有効
 	SIF !RESULT
@@ -175,7 +175,7 @@ ELSEIF RESULT == 1 && CFLAG:習い事 == 0
 	CFLAG:習い事 = 1
 	FLAG:習い事人数 += 1
 	GOTO INPUT_LOOP_02
-ELSEIF RESULT == 2 && ((BASE:実年齢 <= 18 && CFLAG:習い事 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1))
+ELSEIF RESULT == 2 && ((CFLAG:実年齢 <= 18 && CFLAG:習い事 == 0) && (TALENT:高校生 == 1 || TALENT:中学生 == 1 || TALENT:小学生 == 1))
 	PRINTFORMW 《%CALLNAME:TARGET%に学習塾に通ってもらうようにお願いしました》
 	CFLAG:塾通い = 1
 	CFLAG:習い事 = 1

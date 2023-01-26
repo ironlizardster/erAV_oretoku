@@ -89,17 +89,17 @@ ELSE
 			タイトル8 =  ～お兄ちゃんにオトナの女にしてもらいました%UNICODE(0x2665)%～
 		ELSEIF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
 			タイトル8 =  ～アニキのチンポでオトナの女にしてもらいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢 < BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 0 && CFLAG:実年齢 < CFLAG:MASTER:実年齢
 			タイトル8 =  ～センパイにオトナの女にしてもらいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  > BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 0 && CFLAG:実年齢  > CFLAG:MASTER:実年齢
 			タイトル8 =  ～年下にオトナの女にされちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  == BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 0 && CFLAG:実年齢  == CFLAG:MASTER:実年齢
 			タイトル8 =  ～男友達にオトナの女にされちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢 < BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 1 && CFLAG:実年齢 < CFLAG:MASTER:実年齢
 			タイトル8 =  ～センパイのチンポでオトナの女にしてもらいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  > BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 1 && CFLAG:実年齢  > CFLAG:MASTER:実年齢
 			タイトル8 =  ～年下のチンポでオトナの女にされちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  == BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 1 && CFLAG:実年齢  == CFLAG:MASTER:実年齢
 			タイトル8 =  ～セフレのチンポでオトナの女にされちゃいました%UNICODE(0x2665)%～
 		ENDIF
 	ELSEIF TFLAG:ビデオ撮影内容2 & 1
@@ -114,17 +114,17 @@ ELSE
 			タイトル8 =  ～お兄ちゃんにＡ処女捧げちゃいました%UNICODE(0x2665)%～
 		ELSEIF TALENT:ギャル系 == 1 && (NO:TARGET == [[キャラ:宮間かなで]] || NO:TARGET == [[キャラ:宮間カナ]])
 			タイトル8 =  ～アニキのチンポにＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢 < BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 0 && CFLAG:実年齢 < CFLAG:MASTER:実年齢
 			タイトル8 =  ～センパイにＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  > BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 0 && CFLAG:実年齢  > CFLAG:MASTER:実年齢
 			タイトル8 =  ～年下にＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 0 && BASE:実年齢  == BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 0 && CFLAG:実年齢  == CFLAG:MASTER:実年齢
 			タイトル8 =  ～男友達にＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢 < BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 1 && CFLAG:実年齢 < CFLAG:MASTER:実年齢
 			タイトル8 =  ～センパイのチンポにＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  > BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 1 && CFLAG:実年齢  > CFLAG:MASTER:実年齢
 			タイトル8 =  ～年下のチンポにＡ処女捧げちゃいました%UNICODE(0x2665)%～
-		ELSEIF TALENT:ギャル系 == 1 && BASE:実年齢  == BASE:MASTER:実年齢
+		ELSEIF TALENT:ギャル系 == 1 && CFLAG:実年齢  == CFLAG:MASTER:実年齢
 			タイトル8 =  ～セフレのチンポにＡ処女捧げちゃいました%UNICODE(0x2665)%～
 		ENDIF
 	ELSEIF TFLAG:童貞喪失

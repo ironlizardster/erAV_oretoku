@@ -1,7 +1,6 @@
 {
   "ExpandedNodes": [
     "",
-    "\\CSV",
     "\\ERB",
     "\\ERB\\イベント関係",
     "\\ERB\\イベント関係\\初体験関係",
@@ -9,8 +8,10 @@
     "\\ERB\\システム関係\\キャラシステム",
     "\\ERB\\ヘッダーファイル",
     "\\ERB\\娼館関係",
-    "\\ERB\\組み込み関数"
+    "\\ERB\\組み込み関数",
+    "\\ERB\\組み込み関数\\AkumaMaid",
+    "\\ERB\\訪問関係"
   ],
-  "SelectedNode": "\\CSV\\CFLAG.csv",
+  "SelectedNode": "\\ERB\\組み込み関数\\AkumaMaid\\TRACHECK.ERB",
   "PreviewInSolutionExplorer": false
 }

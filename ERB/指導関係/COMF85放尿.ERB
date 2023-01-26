@@ -37,53 +37,53 @@ ENDIF
 ;露出癖をみる
 ;露出癖が高くなるにつれ放尿への恥じらいが減っていく
 IF ABL:露出癖 == 0
-	SOURCE:中毒充足 = 0
+	SOURCE:充足 = 0
 	SOURCE:屈従 = 6000
 ELSEIF ABL:露出癖 == 1
-	SOURCE:中毒充足 = 30
+	SOURCE:充足 = 30
 	SOURCE:屈従 = 5000
 ELSEIF ABL:露出癖 == 2
-	SOURCE:中毒充足 = 100
+	SOURCE:充足 = 100
 	SOURCE:屈従 = 4000
 ELSEIF ABL:露出癖 == 3
-	SOURCE:中毒充足 = 300
+	SOURCE:充足 = 300
 	SOURCE:屈従 = 3000
 ELSEIF ABL:露出癖 == 4
-	SOURCE:中毒充足 = 500
+	SOURCE:充足 = 500
 	SOURCE:屈従 = 2000
 ELSE
-	SOURCE:中毒充足 = 1000
+	SOURCE:充足 = 1000
 	SOURCE:屈従 = 1000
 ENDIF
 
 ;ABL:マゾっ気をみる
 IF ABL:マゾっ気 == 0
-	TIMES SOURCE:中毒充足 , 0.80
+	TIMES SOURCE:充足 , 0.80
 	TIMES SOURCE:露出 , 0.80
 	SOURCE:愛液分泌 = 100
 	SOURCE:欲情 = 100
 ELSEIF ABL:マゾっ気 == 1
-	TIMES SOURCE:中毒充足 , 1.00
+	TIMES SOURCE:充足 , 1.00
 	TIMES SOURCE:露出 , 1.00
 	SOURCE:愛液分泌 = 200
 	SOURCE:欲情 = 300
 ELSEIF ABL:マゾっ気 == 2
-	TIMES SOURCE:中毒充足 , 1.30
+	TIMES SOURCE:充足 , 1.30
 	TIMES SOURCE:露出 , 1.20
 	SOURCE:愛液分泌 = 400
 	SOURCE:欲情 = 700
 ELSEIF ABL:マゾっ気 == 3
-	TIMES SOURCE:中毒充足 , 1.40
+	TIMES SOURCE:充足 , 1.40
 	TIMES SOURCE:露出 , 1.40
 	SOURCE:愛液分泌 = 700
 	SOURCE:欲情 = 1200
 ELSEIF ABL:マゾっ気 == 4
-	TIMES SOURCE:中毒充足 , 1.70
+	TIMES SOURCE:充足 , 1.70
 	TIMES SOURCE:露出 , 1.50
 	SOURCE:愛液分泌 = 1100
 	SOURCE:欲情 = 1800
 ELSE
-	TIMES SOURCE:中毒充足 , 2.00
+	TIMES SOURCE:充足 , 2.00
 	TIMES SOURCE:露出 , 1.70
 	SOURCE:愛液分泌 = 1500
 	SOURCE:欲情 = 2500
@@ -165,7 +165,7 @@ SIF IS_恥薄い(TARGET)
 
 ;露出狂
 IF TALENT:露出狂
-	SOURCE:中毒充足 += 500
+	SOURCE:充足 += 500
 	TIMES SOURCE:露出 , 1.50
 ENDIF
 
