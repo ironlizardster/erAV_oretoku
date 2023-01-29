@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
+    "\\CSV",
     "\\ERB",
-    "\\ERB\\イベント関係",
-    "\\ERB\\イベント関係\\初体験関係",
     "\\ERB\\システム関係",
     "\\ERB\\システム関係\\キャラシステム",
     "\\ERB\\ヘッダーファイル",
@@ -12,6 +11,6 @@
     "\\ERB\\組み込み関数\\AkumaMaid",
     "\\ERB\\訪問関係"
   ],
-  "SelectedNode": "\\ERB\\組み込み関数\\AkumaMaid\\TRACHECK.ERB",
+  "SelectedNode": "\\CSV\\Chara216_クリスティナ・ラーグラーデ.csv",
   "PreviewInSolutionExplorer": false
 }

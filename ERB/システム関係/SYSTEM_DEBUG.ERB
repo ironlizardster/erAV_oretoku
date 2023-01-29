@@ -16,6 +16,7 @@ PRINTL  [7] - 全ＡＶ女優を人気ＡＶ女優にする
 PRINTL  [8] - みんな仲良し
 PRINTL  [9] - みんな黒ギャル
 PRINTL  [10] - みんなカレシチャラ男
+PRINTL  [11] - csv全員追加
 DRAWLINE
 PRINTL  [999] - 戻る
 
@@ -94,6 +95,10 @@ ELSEIF RESULT == 6
 		CALL キャラ追加(RESULT)
 		SIF TALENT:ミッション
 			TALENT:ミッション = 0
+		IF TALENT:性魔術
+			MAXBASE:魔力 = 2000000
+			BASE:魔力 = MAXBASE:魔力
+		ENDIF
 	ENDIF
 ELSEIF RESULT == 7
 	REPEAT CHARANUM
@@ -125,6 +130,18 @@ ELSEIF RESULT == 9
 ELSEIF RESULT == 10
 	FOR LOCAL,1,CHARANUM
 		CFLAG:LOCAL:彼氏タイプ = 0
+	NEXT
+ELSEIF RESULT == 11
+	FOR LOCAL, 1, 固有キャラ最大ID
+		SIF !EXISTCSV(LOCAL)
+			CONTINUE
+		CALL キャラ追加(LOCAL)
+		SIF TALENT:ミッション
+			TALENT:ミッション = 0
+		IF TALENT:性魔術
+			MAXBASE:魔力 = 2000000
+			BASE:魔力 = MAXBASE:魔力
+		ENDIF
 	NEXT
 ELSEIF RESULT == 999
 	RETURN 0

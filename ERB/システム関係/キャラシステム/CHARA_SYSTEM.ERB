@@ -1,114 +1,384 @@
-﻿@SET_3SIZE, ARG
-#DIM IS_CHANGESIZE
-VARSET IS_CHANGESIZE
+﻿;///////////////////////////////////////////////
+;キャラの身体測定の再計算結果をMAXBASEに代入することであたかもそのキャラがもともとこのような測定結果であるようにする
+;///////////////////////////////////////////////
+@ＢＷＨリセット(ARG)
+;MAXBASEをキャラのもともとの設定として扱うことで変化を表現する
+CALL ＢＷＨ計測(ARG)
+MAXBASE:ARG:身長 = BASE:ARG:身長
+MAXBASE:ARG:体重 = BASE:ARG:体重
+MAXBASE:ARG:バスト = BASE:ARG:バスト
+MAXBASE:ARG:アンダーバスト = BASE:ARG:アンダーバスト
+MAXBASE:ARG:ウェスト = BASE:ARG:ウェスト
+MAXBASE:ARG:ヒップ = BASE:ARG:ヒップ
+MAXBASE:ARG:股下 = BASE:ARG:股下
 
-;体型の変更
-IF BASE:ARG:身長
-	;身長の変化による素質の変化
-	SELECTCASE BASE:ARG:身長
-	CASE IS <= NUM("小柄Ⅲの上限")
-		SIF TALENT:ARG:身長 != -3
-			IS_CHANGESIZE = 1
-	CASE IS <= NUM("小柄Ⅱの上限")
-		SIF TALENT:ARG:身長 != -2
-			IS_CHANGESIZE = 1
-	CASE IS <= NUM("小柄の上限")
-		SIF TALENT:ARG:身長 != -1
-			IS_CHANGESIZE = 1
-	CASE IS <= NUM("普通の上限")
-		SIF TALENT:ARG:身長
-			IS_CHANGESIZE = 1
-	CASE IS <= NUM("長身の上限")
-		SIF TALENT:ARG:身長 != 1
-			IS_CHANGESIZE = 1
-	CASE IS <= NUM("長身Ⅱの上限")
-		SIF TALENT:ARG:身長 != 2
-			IS_CHANGESIZE = 1
-	CASEELSE
-		SIF TALENT:ARG:身長 != 3
-			IS_CHANGESIZE = 1
-	ENDSELECT
-	IF IS_CHANGESIZE
-		PRINTFORML （%CALLNAME:ARG%の身長や腰つき等を測り直します）
+;///////////////////////////////////////////////
+;ARG:0 キャラ番号
+;ARG:1 0ではない場合身長を年齢と素質で再計算
+;ARG:2 0ではない場合体重を年齢と素質で再計算
+;ゴールデンカノン (バスト = 身長*0.54, ウェスト = 身長*0.38, ヒップ = 身長*0.54)を参考
+;ガチオトコの3sizeはバスト = 身長*0.55, ウェスト = 身長*0.43, ヒップ = 身長*0.48とする
+;男の娘の3sizeはバスト = 身長*0.53, ウェスト = 身長*0.40, ヒップ = 身長*0.50とする
+;ちなみに、ゴールデンカノン比は当然ながら”ウェストは細めでヒップは大きめ”である
+;http://rustyroom.web.fc2.com/Pcheck/Pcheck3.htmlを参考にアンダーバストのゴールデンを［（（ウエストの理想比率－１）＊0.9＋（トップバストの理想比率－１）＊0.1）＊0.75＋１］とする
+;さらに股下と身長の比例で0.45から0.52まで変化するとアンダーバストが0.02縮む
+;TALENT:体型はBMI18から19までスリムでアンダーバストが最大10%縮んでバストが最大3%縮む
+;BMI18以下はやせすぎとしてバストのみがウェイストのゴールデンカノンを考慮して縮む
+;BMI22から24までぽっちゃりとしてアンダーバストが最大10%増えてバストが最大3%増える
+;BMI24以上は肥満としてウェイストがゴールデンカノンの130％まで増えてバストがゴールデンカノンの110％になるがアンダーバストがゴールデンの公式を参考して再計算される
+;///////////////////////////////////////////////
+@ＢＷＨ計測(ARG,ARG:1=0,ARG:2=0,ARG:3=0)
 
-		SELECTCASE BASE:ARG:身長
-		CASE IS <= NUM("小柄Ⅲの上限")
-			TALENT:ARG:身長 = -3
-		CASE IS <= NUM("小柄Ⅱの上限")
-			TALENT:ARG:身長 = -2
-		CASE IS <= NUM("小柄の上限")
-			TALENT:ARG:身長 = -1
-		CASE IS <= NUM("普通の上限")
-			TALENT:ARG:身長 = 0
-		CASE IS <= NUM("長身の上限")
-			TALENT:ARG:身長 = 1
-		CASE IS <= NUM("長身Ⅱの上限")
-			TALENT:ARG:身長 = 2
-		CASEELSE
-			TALENT:ARG:身長 = 3
-		ENDSELECT
-
-		CALL CALC, "ＢＷＨ計測", ARG
-	ENDIF
-
-	VARSET IS_CHANGESIZE
-
-	;バストカップの変化による素質の変化
-	CFLAG:ARG:カップサイズ = CALCF("バストカップ", CALCF("バストカップ計算値", ARG) )
-
-	IF IS_MALE(ARG)
-		SIF CFLAG:ARG:カップサイズ
-			CALL CALC, "男乳化", ARG
-	ELSEIF TALENT:ARG:巨乳 >= 3
-		SIF CFLAG:ARG:カップサイズ <= NUM("爆乳の上限")
-			IS_CHANGESIZE = 1
-	ELSEIF TALENT:ARG:巨乳 == 2
-		SIF CFLAG:ARG:カップサイズ <= NUM("巨乳の上限")
-			IS_CHANGESIZE = 1
-	ELSEIF TALENT:ARG:巨乳 == 1
-		SIF CFLAG:ARG:カップサイズ <= NUM("並乳の上限") || CFLAG:ARG:カップサイズ > NUM("巨乳の上限")
-			IS_CHANGESIZE = 1
-	ELSEIF IS_貧乳(ARG)
-		SIF CFLAG:ARG:カップサイズ > NUM("貧乳の上限")
-			IS_CHANGESIZE = 1
-	ELSEIF TALENT:ARG:巨乳 + TALENT:ARG:貧乳 == 0
-		SIF CFLAG:ARG:カップサイズ <= NUM("貧乳の上限") || CFLAG:ARG:カップサイズ > NUM("並乳の上限")
-			IS_CHANGESIZE = 1
-	ENDIF
-	IF IS_CHANGESIZE
-		PRINTFORML （%CALLNAME:ARG%のバストサイズを測り直します）
-
-		CALL SETFLAG, "バスト設定", ARG
-
-		PRINTFORML （ウエストサイズを測り直すのは、流石に止めておきます…）
-	ENDIF
-
-	;お尻のサイズ計測（ウェストとヒップから判定するだけなので問題ない）
-	CALL SETFLAG, "ヒップ設定", ARG
-	RETURN 0
+;ARG:1 0ではない場合身長を年齢と素質で再計算
+IF ARG:1
+	CALL RECALC身長(ARG)
 ENDIF
 
-;ゴールデンカノン (バスト = 身長*0.54, ウェスト = 身長*0.38, ヒップ = 身長*0.54)を参考。誤差は上下10%程が妥当か。
-;腰使いLVが高いと、ウェストが低く、ヒップが大きくなりやすい
-;BASE:身長=身長、BASE:バスト=バスト、BASE:カップ=バストカップ、BASE:ウェスト=ウェスト、BASE:ヒップ=ヒップ
+;ARG:2 0ではない場合体重を年齢と素質で再計算
+IF ARG:2
+	CALL RECALC体重(ARG)
+ENDIF
 
-;小柄Ⅲ118～130cm、小柄Ⅱ131～143cm、小柄144～152cm、通常153～165cm、長身166～182cm
-IF IS_大柄(ARG) == 3
-	CALL CALC, "長身Ⅲ化", ARG
-ELSEIF IS_大柄(ARG) == 2
-	CALL CALC, "長身Ⅱ化", ARG
-ELSEIF IS_大柄(ARG)
-	CALL CALC, "長身化", ARG
-ELSEIF IS_小柄(ARG) == 3
-	CALL CALC, "小柄Ⅲ化", ARG
-ELSEIF IS_小柄(ARG) == 2
-	CALL CALC, "小柄Ⅱ化", ARG
+;ARG:3 0ではない場合股下を素質美脚で再計算
+IF ARG:3
+	VARSET LOCAL
+	IF TALENT:ARG:美脚
+		;大体平均の54.5±5.5%の範囲に収めてしかも微妙に疑似正規分布の平均±σのあたりの形の確率にしたいので上限と下限を平均±3σにする
+		LOCAL = NORMAL_RANDOM_NUM(1000,380,710)
+		WHILE LOCAL < 490 || LOCAL  > 600
+			LOCAL = NORMAL_RANDOM_NUM(1000,380,710)
+		WEND
+	ELSE
+		;現実の平均より長めの46%-49%未満にする
+		LOCAL = 460 + RAND:30
+	ENDIF
+	BASE:ARG:股下 = BASE:ARG:身長 * LOCAL / 1000
+ENDIF
+
+VARSET LOCAL
+;ゴールデン係数LOCALがウェスト補正、LOCAL:1がヒップ補正、LOCAL:2がバスト補正
+IF IS_MALE(ARG) && !TALENT:ARG:オトコの娘
+	LOCAL = 430
+	LOCAL:1 = 480
+	LOCAL:2 = 550
+ELSEIF TALENT:ARG:オトコの娘
+	LOCAL = 400
+	LOCAL:1 = 500
+	LOCAL:2 = 530
+;少女以下は体のラインがそれほど際立たない
 ELSEIF IS_小柄(ARG)
-	CALL CALC, "小柄化", ARG
+	LOCAL = 400
+	LOCAL:1 = 510
+	LOCAL:2 = 520
 ELSE
-	CALL CALC, "普通体型化", ARG
+	SELECTCASE AGE(ARG)
+		;オトナ
+		CASE IS >= 4
+			LOCAL = 420 + RAND:6
+			LOCAL:1 = 560
+			LOCAL:2 = 550
+		;お姉さん
+		CASE 3
+			LOCAL = 410 + RAND:6
+			LOCAL:1 = 550
+			LOCAL:2 = 540
+		CASE 2
+			LOCAL = 400
+			LOCAL:1 = 530
+			LOCAL:2 = 530
+		CASE 1
+			LOCAL = 410
+			LOCAL:1 = 510
+			LOCAL:2 = 520
+	ENDSELECT
 ENDIF
 
-;バストカップ計測。バストサイズ(BASE:バスト)とカップ(BASE:カップ)が決められる
-CALL SETFLAG, "バスト設定", ARG
+;腰使いによる腰のくびれ＆大きなお尻
+LOCAL -= MIN(RAND:(1 + TALENT:ARG:天性の腰使い*10), 20)
+LOCAL:1 += MIN(RAND:(1 + TALENT:ARG:天性の腰使い*5), 20)
 
+;ランダム変化
+;誤差は90～110%+α(理想値よりもちょっと太めが平均)
+WHILE LOCAL:3 < 90 || LOCAL:3  > 110
+	LOCAL:3  = NORMAL_RANDOM_NUM(700,0,200)
+WEND
+
+LOCAL = MULTIPLY(LOCAL, LOCAL:3)
+LOCAL:1 = MULTIPLY(LOCAL:1, LIMIT(100 + NORMAL_RANDOM_NUM(40,-15,15), LOCAL:3 - 10, LOCAL:3 + 5) )
+LOCAL:2 = MULTIPLY(LOCAL:2, LIMIT(100 + NORMAL_RANDOM_NUM(40,-15,15), LOCAL:3 - 10, LOCAL:3 + 5) )
+
+BASE:ARG:ウェスト = LIMIT(BASE:ARG:身長*LOCAL/1000, BASE:ARG:身長*34/100, BASE:ARG:身長*(45 + AGE(ARG))/100)
+
+IF IS_痩せぎみ(ARG)
+	BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/20)
+	;痩せぎみはバストにペナルティ
+	LOCAL:2 -= 20 - RAND:20
+ELSEIF IS_スリム(ARG)
+	BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/30)
+ELSEIF IS_ぽっちゃり(ARG)
+	BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/30)
+ELSEIF IS_肥満(ARG)
+	BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/20)
+ENDIF
+
+BASE:ARG:ヒップ = LIMIT(BASE:ARG:身長*LOCAL:1/1000, BASE:ARG:ウェスト*130/100, BASE:ARG:ウェスト*(160 + AGE(ARG)*10)/100)
+
+BASE:ARG:バスト = LIMIT(BASE:ARG:身長*LOCAL:2/1000, BASE:ARG:ウェスト*110/100, MAX(BASE:ARG:身長*LOCAL:2/1000, BASE:ARG:ウェスト*110/100))
+
+;;お姉さんやオトナは油断したりするのも良いよね…
+;IF AGE(ARG) >= 3
+;	SELECTCASE RAND:20 + (AGE(ARG) == 3) * RAND:10
+;	CASE 0
+;		BASE:ARG:ウェスト += BASE:ARG:身長*5/100
+;		BASE:ARG:ヒップ += BASE:ARG:身長*15/200
+;	CASE 1, 2
+;		BASE:ARG:ウェスト += BASE:ARG:身長*4/100
+;		BASE:ARG:ヒップ += BASE:ARG:身長*6/100
+;	CASE 3, 4
+;		BASE:ARG:ウェスト += BASE:ARG:身長*3/100
+;		BASE:ARG:ヒップ += BASE:ARG:身長*9/200
+;	CASE 5, 6
+;		BASE:ARG:ウェスト += BASE:ARG:身長*2/100
+;		BASE:ARG:ヒップ += BASE:ARG:身長*3/100
+;	ENDSELECT
+;ENDIF
+
+IF IS_痩せぎみ(ARG)
+	IF BASE:ARG:ウェスト > BASE:ARG:身長 * 38 * 8 / 1000
+		BASE:ARG:ウェスト = BASE:ARG:身長 * 38 * 8 / 1000
+		BASE:ARG:ヒップ = MIN(BASE:ARG:ヒップ, BASE:ARG:ウェスト*(160 + AGE(ARG)*10) * 8 /1000)
+	ENDIF
+ELSEIF IS_スリム(ARG)
+	IF BASE:ARG:ウェスト > BASE:ARG:身長 * 38 / 100
+		BASE:ARG:ウェスト = BASE:ARG:身長 * 38 / 100
+		BASE:ARG:ヒップ = MIN(BASE:ARG:ヒップ, BASE:ARG:ウェスト*(160 + AGE(ARG)*10)/100)
+	ENDIF
+ELSEIF IS_ぽっちゃり(ARG)
+	IF BASE:ARG:ウェスト < BASE:ARG:身長 * 46 / 100
+		BASE:ARG:ウェスト = BASE:ARG:身長 * 46 / 100
+		BASE:ARG:ヒップ = MAX(BASE:ARG:ヒップ, BASE:ARG:ウェスト*130/100)
+	ENDIF
+ELSEIF IS_肥満(ARG)
+	IF BASE:ARG:ウェスト < BASE:ARG:身長 * 46 * 12 / 1000
+		BASE:ARG:ウェスト = BASE:ARG:身長 * 46 * 12 / 1000
+		BASE:ARG:ヒップ = MAX(BASE:ARG:ヒップ, BASE:ARG:ウェスト*130 * 12/1000)
+	ENDIF
+ELSE
+	SELECTCASE BASE:ARG:ウェスト
+	CASE IS >= BASE:ARG:身長 * 46 / 100
+		BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/30) + 1
+	CASE IS <= BASE:ARG:身長 * 38 / 100
+		BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/30) + 1
+	ENDSELECT
+ENDIF
+
+;アンダーバストのゴールデンを［（（ウエストの理想比率－１）＊0.9＋（トップバストの理想比率－１）＊0.1）＊0.75＋１］とする
+;ゴールデンカノン (バスト = 身長*0.54, ウェスト = 身長*0.38, ヒップ = 身長*0.54)を参考
+;ガチオトコの3sizeはバスト = 身長*0.55, ウェスト = 身長*0.43, ヒップ = 身長*0.48とする
+;男の娘の3sizeはバスト = 身長*0.53, ウェスト = 身長*0.40, ヒップ = 身長*0.50とする
+IF IS_MALE(ARG) && !TALENT:ARG:オトコの娘
+	;ガチオトコはバストのほうの影響がもっと強く、股下も影響しない
+	LOCAL:4 = 500 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 43) - 10000) * 3 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 55) - 10000) * 7) * 75) + 10000000) / 10000000
+ELSEIF TALENT:ARG:オトコの娘
+	;オトコの娘はウエストの影響が幾分か強く、股下も影響する
+	LOCAL:4 = 490 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 40) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 53) - 10000) * 3) * 75) + 10000000) / 10000000
+;少女以下は体のラインがそれほど際立たない
+ELSEIF IS_小柄(ARG)
+	LOCAL:4 = 450 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 40) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 52) - 10000) * 3) * 75) + 10000000) / 10000000
+ELSE
+	LOCAL:4 = 430 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 38) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 54) - 10000) * 3) * 75) + 10000000) / 10000000
+ENDIF
+
+;股下と身長の比例で0.45から0.52まで変化するとアンダーバストが2%縮む
+SIF !IS_MALE(ARG) || TALENT:ARG:オトコの娘
+	LOCAL:4 = LOCAL:4 * ((BASE:ARG:股下 * 1000)/BASE:ARG:身長 - 450) * 2 / 7000
+
+;TALENT:体型はBMI18から19までスリムでアンダーバストがゴールデンから最大10%縮む
+;BMI18以下はやせすぎとしてアンダーバストがゴールデンから10%縮む
+;BMI22から24までぽっちゃりとしてアンダーバストがゴールデンから最大10%増える
+;BMI24以上は肥満としてアンダーバストがゴールデンから15%増える
+SELECTCASE TALENT:ARG:体型
+	;BMI16 - 18
+	CASE -2
+		LOCAL:4 = LOCAL:4 * 90 / 100
+	;BMI18 - 20
+	CASE -1
+		LOCAL:4 = LOCAL:4 * (BASE:ARG:体重 * BASE:ARG:身長 * BASE:ARG:身長 - 18 * POWER(10, 10)) * 90 / 100 / (3 * POWER(10, 10))
+	;BMI22 - 24
+	CASE 1
+		LOCAL:4 = LOCAL:4 * (BASE:ARG:体重 * BASE:ARG:身長 * BASE:ARG:身長 - 18 * POWER(10, 10)) * 110 / 100 / (3 * POWER(10, 10))
+	;BMI24 - 30
+	CASE 2
+		LOCAL:4 = LOCAL:4 * 115 / 100
+ENDSELECT
+
+BASE:ARG:アンダーバスト = LIMIT(BASE:ARG:身長*LOCAL:4/1000, MAX(BASE:ARG:アンダーバスト,BASE:ARG:ウェスト*105/100), MAX(BASE:ARG:身長*LOCAL:4/1000, BASE:ARG:ウェスト*105/100))
+
+IF TALENT:ARG:乳房
+	SELECTCASE TALENT:ARG:乳房
+		CASE -2 ;絶壁
+			;5cm未満がAAAなので差が499以下であれば1とする。ただし武士の情けで最低0.1mmはアンダーバストより大きいものとする
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + RAND:498 + 1
+		CASE -1 ;貧乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 500 + RAND:499
+		CASE 0 ;並乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + RAND:749
+		CASE 1 ;巨乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 + RAND:749
+		CASE 2 ;爆乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 2 + RAND:749
+		CASE 3 ;超乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 3 + RAND:749
+		CASE 4 ;魔乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 4 + RAND:749
+		CASE 5 ;神乳
+			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 5 + ABS(NORMAL_RANDOM_NUM(1000,-1 * 750 * 3,750 * 3))
+	ENDSELECT
+ENDIF
+
+CALL RECALCカップサイズ(ARG)
+
+
+;///////////////////////////////////////////////
+;身長を再計算
+;ARG キャラ番号
+;///////////////////////////////////////////////
+@RECALC身長(ARG)
+VARSET LOCAL
+IF !TALENT:ARG:身長
+	;身長を登録
+	;平均身長の設定(性別ごとに分岐)
+	;([同年代の男子]+[同年代の女子]+[男女の低いほう])/3で出した身長で仮設定。疑問が残る場合は変更してくれい
+	;定数はCHARA_CONST.ERHに
+	;男の娘の場合1/3で各々男子女子身長を採用、残りの1/3で特製値を使用
+	SELECTCASE CFLAG:ARG:外見年齢
+		CASE 8 TO 18 ;平均身長:0>8歳女子の平均身長,平均身長:12>8歳男子の平均身長,平均身長:24>8歳男の娘の仮想平均身長(仮)
+			BASE:ARG:身長 = HAVE_VAGINA(ARG) ? 平均身長:(CFLAG:ARG:外見年齢-8) # (!TALENT:ARG:オトコの娘 ? 平均身長:(CFLAG:ARG:外見年齢+8) # 平均身長:(CFLAG:ARG:外見年齢+17))
+		CASEELSE
+			BASE:ARG:身長 = HAVE_VAGINA(ARG) ? 平均身長:11 # (!TALENT:ARG:オトコの娘 ? 平均身長:23 # 平均身長:35)
+	ENDSELECT
+	;個人差補正と大柄小柄再計算
+	WHILE LOCAL < 75 || LOCAL > 125
+		LOCAL = NORMAL_RANDOM_NUM(617,30,170)
+	WEND
+	BASE:ARG:身長 = (BASE:ARG:身長 * LOCAL) / 100
+	SELECTCASE BASE:ARG:身長
+		;118cm～130cm
+		CASE IS < 13000 ;小柄Ⅲ
+			TALENT:ARG:身長 = -3
+		;131cm～143cm
+		CASE IS < 14300 ;小柄Ⅱ
+			TALENT:ARG:身長 = -2
+		;144cm～152cm
+		CASE IS < 15200 ;小柄
+			TALENT:ARG:身長 = -1
+		;153cm～165cm
+		CASE IS < 16500 ;普通
+			TALENT:ARG:身長 = 0
+		;166cm～175cm
+		CASE IS < 17500 ;大柄
+			TALENT:ARG:身長 = 1
+		;175cm～199cm
+		CASE IS < 18800 ;大柄Ⅱ
+			TALENT:ARG:身長 = 2
+		;200cm～220cm
+		CASE IS >18800 ;大柄Ⅲ
+			TALENT:ARG:身長 = 3
+	ENDSELECT
+ELSE
+	SELECTCASE TALENT:ARG:身長
+		;118cm～130cm
+		CASE -3
+			BASE:ARG:身長 = 11800 + RAND:1300
+		;131cm～143cm
+		CASE -2
+			BASE:ARG:身長 = 13100 + RAND:1300
+		;144cm～152cm
+		CASE -1
+			BASE:ARG:身長 = 14400 + RAND:900
+		;153cm～165cm
+		CASE 0
+			BASE:ARG:身長 = 15300 + RAND:1300
+		;166cm～175cm
+		CASE 1
+			BASE:ARG:身長 = 16600 + RAND:900
+		;175cm～188cm
+		CASE 2
+			BASE:ARG:身長 = 17500 + RAND:1300
+		;188cm～209cm
+		CASE 3
+			BASE:ARG:身長 = 18800 + RAND:2100
+	ENDSELECT
+ENDIF
+
+
+;///////////////////////////////////////////////
+;体重を再計算
+;ARG キャラ番号
+;TALENT:体型は女性はBMI18から19までスリム
+;BMI18以下はやせすぎ
+;BMI22から24までぽっちゃり
+;BMI24以上は肥満
+;男性とオトコの娘の場合筋肉質として女性の体重割る0.8とする
+;健康度としてではなくあくまでもAVとしての体型
+;///////////////////////////////////////////////
+@RECALC体重(ARG)
+#DIM BMI
+
+VARSET LOCAL
+;体重=(BMI/身長(メートル単位))/身長(メートル単位)
+;現在身長は0.1mm単位、体重は10g単位で記録されているのでBMIは10^8倍*10^2倍で計算すると都合がいい
+;痩せすぎ、肥満気味補正
+;体型 ： 肥満ランク、マイナスは痩せ
+SELECTCASE TALENT:ARG:体型
+	;BMI16 - 18
+	CASE -2
+		BMI = 16 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+	;BMI18 - 20
+	CASE -1
+		BMI = 18 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+	;BMI20 - 22
+	CASE 0
+		BMI = 20 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+	;BMI22 - 24
+	CASE 1
+		BMI = 22 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+	;BMI24 - 30
+	CASE 2
+		BMI = 24 * POWER(10, 2) + RAND:(6 * POWER(10, 2))
+ENDSELECT
+
+BASE:ARG:体重 = BMI * BASE:ARG:身長 * BASE:ARG:身長 / POWER(10, 8)
+
+IF !HAVE_VAGINA(ARG)
+	BASE:ARG:体重 = BASE:ARG:体重 * 10 / 8
+ENDIF
+
+
+;///////////////////////////////////////////////
+;カップサイズをバスト-アンダーバストで再計算
+;///////////////////////////////////////////////
+@RECALCカップサイズ(ARG)
+;5cm未満がAAAなので差が499以下であれば1とする
+CFLAG:ARG:カップサイズ = (BASE:ARG:バスト - BASE:ARG:アンダーバスト) / 250
+SIF CFLAG:ARG:カップサイズ == 0
+	CFLAG:ARG:カップサイズ = 1
+
+SELECTCASE CFLAG:ARG:カップサイズ
+	CASE IS <= 1 ;絶壁
+		TALENT:ARG:乳房 = -2
+	CASE IS <= 3 ;貧乳
+		TALENT:ARG:乳房 = -1
+	CASE IS <= 6 ;並乳
+		TALENT:ARG:乳房 = 0
+	CASE IS <= 9 ;巨乳
+		TALENT:ARG:乳房 = 1
+	CASE IS <= 12 ;爆乳
+		TALENT:ARG:乳房 = 2
+	CASE IS <= 15 ;超乳
+		TALENT:ARG:乳房 = 3
+	CASE IS <= 18 ;魔乳
+		TALENT:ARG:乳房 = 4
+	CASE IS > 18 ;神乳
+		TALENT:ARG:乳房 = 5
+ENDSELECT

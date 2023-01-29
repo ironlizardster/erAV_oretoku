@@ -1,0 +1,145 @@
+﻿@CHARACTER_EDIT_UI_TALENT(対象)
+#DIM 対象
+LOCAL:1 = 0
+FOR LOCAL, 0, VARSIZE("TALENT")
+	SIF CHARACTER_EDIT_IGNORE_TALENT(対象, LOCAL)
+		CONTINUE
+	CALL PRINT_TOGGLE_BUTTON(@"%"[" + TALENTNAME:(LOCAL) + "]" , 20, LEFT%", LOCAL, TALENT:対象:LOCAL == 1)
+	PRINT  
+	LOCAL:1 ++
+
+	SIF LOCAL:1 != 0 && LOCAL:1 % 6 == 0
+		PRINTL
+NEXT
+PRINTL
+
+@CHARACTER_EDIT_INPUT_TALENT(対象, 入力値)
+#DIM 対象
+#DIM 入力値
+;ガード節
+SIF CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値)
+	RETURN 0
+
+SELECTCASE 入力値
+	CASE [[TALENT:性経験]]
+		TALENT:対象:性経験++
+		SIF TALENT:対象:性経験 > 7
+			TALENT:対象:性経験 = 0
+	CASE [[TALENT:性別]]
+		TALENT:対象:性別++
+		SIF TALENT:対象:性別 > 性別_ふたなり
+			TALENT:対象:性別 = 性別_オンナ
+		SIF HAVE_VAGINA(対象)
+			TALENT:対象:オトコの娘 = 0
+	CASE [[TALENT:乳房]]
+		TALENT:対象:乳房++
+		SIF TALENT:対象:乳房 > 5
+			TALENT:対象:乳房 = -2
+	CASE [[TALENT:尻サイズ]]
+		TALENT:対象:尻サイズ++
+		SIF TALENT:対象:尻サイズ > 3
+			TALENT:対象:尻サイズ = -1
+	CASE [[TALENT:Ｃ感度]]
+		SIF TALENT:対象:Ｃ感度 > 1
+			TALENT:対象:Ｃ感度 = -1
+	CASE [[TALENT:Ｖ感度]]
+		SIF TALENT:対象:Ｖ感度 > 1
+			TALENT:対象:Ｖ感度 = -1
+	CASE [[TALENT:Ａ感度]]
+		SIF TALENT:対象:Ａ感度 > 1
+			TALENT:対象:Ａ感度 = -1
+	CASE [[TALENT:Ｂ感度]]
+		SIF TALENT:対象:Ｂ感度 > 1
+			TALENT:対象:Ｂ感度 = -1
+	CASE [[TALENT:回復速度]]
+		TALENT:対象:回復速度++
+		SIF TALENT:対象:回復速度 > 1
+			TALENT:対象:回復速度 = -1
+	CASE [[TALENT:痛覚耐性]]
+		TALENT:対象:痛覚耐性++
+		SIF TALENT:対象:痛覚耐性 > 1
+			TALENT:対象:痛覚耐性 = -1
+	CASE [[TALENT:濡れやすさ]]
+		TALENT:対象:濡れやすさ++
+		SIF TALENT:対象:濡れやすさ > 1
+			TALENT:対象:濡れやすさ = -1
+	CASE [[TALENT:習得速度]]
+		TALENT:対象:習得速度++
+		SIF TALENT:対象:習得速度 > 1
+			TALENT:対象:習得速度 = -1
+	CASE [[TALENT:身長]]
+		TALENT:対象:身長++
+		SIF TALENT:対象:身長 > 1
+			TALENT:対象:身長 = -1
+	CASE [[TALENT:陰毛]]
+		TALENT:対象:陰毛++
+		SIF TALENT:対象:陰毛 > 1
+			TALENT:対象:陰毛 = -1
+	CASE [[TALENT:ハーフ]]
+		SIF TALENT:対象:ハーフ
+			TALENT:対象:クオーター = 0
+	CASE [[TALENT:クオーター]]
+		SIF TALENT:対象:クオーター
+			TALENT:対象:ハーフ = 0
+	CASE [[TALENT:活発度]]
+		TALENT:対象:活発度++
+		SIF TALENT:対象:活発度 > 1
+			TALENT:対象:活発度 = -1
+	CASE [[TALENT:プライド]]
+		TALENT:対象:プライド++
+		SIF TALENT:対象:プライド > 1
+			TALENT:対象:プライド = -1
+	CASE [[TALENT:ポジティブさ]]
+		TALENT:対象:ポジティブさ++
+		SIF TALENT:対象:ポジティブさ > 1
+			TALENT:対象:ポジティブさ = -1
+	CASE [[TALENT:動物好き]]
+		TALENT:対象:動物好き++
+		SIF TALENT:対象:動物好き > 1
+			TALENT:対象:動物好き = -1
+	CASE [[TALENT:貞操観念]]
+		TALENT:対象:貞操観念++
+		SIF TALENT:対象:貞操観念 > 1
+			TALENT:対象:貞操観念 = -1
+	CASE [[TALENT:解放的]]
+		TALENT:対象:解放的++
+		SIF TALENT:対象:解放的 > 1
+			TALENT:対象:解放的 = -1
+	CASE [[TALENT:恥じらい]]
+		TALENT:対象:恥じらい++
+		SIF TALENT:対象:恥じらい > 1
+			TALENT:対象:恥じらい = -1
+	CASE [[TALENT:汚臭耐性]]
+		TALENT:対象:汚臭耐性++
+		SIF TALENT:対象:汚臭耐性 > 1
+			TALENT:対象:汚臭耐性 = -1
+	CASE [[TALENT:汚れ無視]]
+		SIF TALENT:対象:汚れ無視
+			TALENT:対象:汚臭耐性 = 0
+	CASE [[TALENT:快感に素直]]
+		TALENT:対象:快感に素直++
+		SIF TALENT:対象:快感に素直 > 1
+			TALENT:対象:快感に素直 = -1
+	CASE [[TALENT:両刀]]
+		SIF TALENT:対象:両刀
+			TALENT:対象:男性不信 = 0
+	CASE [[TALENT:男性不信]]
+		SIF TALENT:対象:男性不信
+			TALENT:対象:両刀 = 0
+	CASEELSE
+		TALENT:対象:入力値 = !TALENT:対象:入力値
+ENDSELECT
+
+@CHARACTER_EDIT_IGNORE_TALENT(対象, 入力値)
+#FUNCTION
+#DIM 対象
+#DIM 入力値
+
+SIF TALENTNAME:入力値 == ""
+	RETURNF 1
+
+STRFIND TALENTNAME:入力値, "／／／"
+SIF RESULT > -1
+	RETURNF 1
+
+RETURNF GROUPMATCH(入力値, [[TALENT:妊娠]], [[TALENT:育児中]], [[TALENT:抱卵]]) || (IS_MALE(対象) && GROUPMATCH(入力値, [[TALENT:ギャル系]])) || (HAVE_VAGINA(対象) && GROUPMATCH(入力値, [[TALENT:チャラ男]]))

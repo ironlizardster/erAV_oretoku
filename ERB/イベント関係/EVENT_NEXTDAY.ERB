@@ -37,7 +37,7 @@ REPEAT CHARANUM
 	ENDIF
 
 	;ストレス肥満持ちで否定の珠がなく肥満である時に、【肥満】から回復
-	IF TALENT:体形 < 0
+	IF TALENT:体型 < 0
 		SIF TALENT:ストレス肥満 == 1  && JUEL:否定 == 0
 			CALL EVENT_YASERU
 	ENDIF
@@ -371,8 +371,8 @@ WAIT
 @EVENT_HIMAN
 PRINTFORML ストレスのあまり、%NAME:TARGET%は食糧貯蔵庫に忍び込んで、
 PRINTFORMW やけ食いをしたようだ…
-TALENT:体形--
-PRINTFORML %CALLNAME:TARGET%は【%GET_STR_体形(TARGET)%】になった
+TALENT:体型--
+PRINTFORML %CALLNAME:TARGET%は【%GET_STR_体型(TARGET)%】になった
 
 WAIT
 ;-------------------------------------------------
@@ -380,8 +380,8 @@ WAIT
 ;-------------------------------------------------
 @EVENT_YASERU
 PRINTFORMW %NAME:TARGET%は、近頃ほっそりとしてきたようだ…
-PRINTFORML %CALLNAME:TARGET%は【%GET_STR_体形(TARGET)%】でなくなった
-TALENT:体形++
+PRINTFORML %CALLNAME:TARGET%は【%GET_STR_体型(TARGET)%】でなくなった
+TALENT:体型++
 
 WAIT
 ;-------------------------------------------------
