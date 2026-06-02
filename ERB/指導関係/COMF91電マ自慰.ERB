@@ -9,7 +9,7 @@
 ;前回と今回の調教者が同じ
 IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
 	;前回の調教がフェラかパイズリフェラかディープスロートか手コキフェラかバキュームフェラだとフェラ自慰に
-	IF PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:パイズリフェラ]] || PREVCOM == [[TRAIN:ディープスロート]] || PREVCOM == [[TRAIN:手コキフェラ]] || PREVCOM == [[TRAIN:バキュームフェラ]]
+	IF PREVCOM == TNUM("フェラチオ]] || PREVCOM == [[TRAIN:パイズリフェラ]] || PREVCOM == [[TRAIN:ディープスロート]] || PREVCOM == [[TRAIN:手コキフェラ]] || PREVCOM == [[TRAIN:バキュームフェラ")
 		CALL COM_ABLE125
 		SIF RESULT == 1
 			JUMP COM125
@@ -220,7 +220,7 @@ SIF A < V
 						;****スライムパッチ追加ここから****
 SAVESTR:0 = 電マ自慰
 						;****スライムパッチ追加ここまで****
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -878,6 +878,6 @@ ENDIF
 ;その他の処理
 ;-------------------------------------------------
 ;屈服刻印２に相当
-TFLAG:屈服刻印2 = 2
+TFLAG:屈服刻印取得 = 2
 
 RETURN 1

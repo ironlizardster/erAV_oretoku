@@ -132,3 +132,11 @@
 #DIM CONST 初状況_乱交 = 10
 #DIM CONST 初状況_ストリップ = 11
 #DIM CONST 初状況_オークション = 12
+
+;ピアス状況
+#DIM CONST ピアス_乳首 = 1
+#DIM CONST ピアス_へそ = 2
+#DIM CONST ピアス_ラビア = 4
+#DIM CONST ピアス_クリペニ = 8
+#DIM CONST ピアス_舌 = 16
+

@@ -1,0 +1,170 @@
+﻿;-------------------------------------------------
+;キス実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:キス]]
+#FUNCTION
+    ;キス実行判定
+    RESULT = COMABLE_DEF(TNUM("キス")) && COND("口の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:キス]]
+    IF TEQUIP:獣姦プレイ && CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
+        PRINTFORM ノラ犬は
+        CALL PRINT_CLOTHTYPE_SPECIAL
+        PRINTFORML を舐めまわしている……
+    ELSEIF CFLAG:特別コスタイプ == 11 && (CFLAG:着衣状態 & 64)
+        PRINTFORM %CALLNAME:PLAYER%は
+        CALL PRINT_CLOTHTYPE_SPECIAL
+        PRINTFORML にキスをした……
+    ELSEIF TEQUIP:獣姦プレイ
+        IF TALENT:牝犬 && TFLAG:失神中終了 == 0
+            PRINTFORML %CALLNAME:TARGET%とノラ犬はまるで仲睦まじい恋人同士のように、
+            PRINTFORML ぴちゃぴちゃとお互いの舌をなめあっている……
+            SIF TALENT:恋心 && TFLAG:失神中終了 == 0
+                PRINTFORML その様子は傍から見ていて嫉妬心を覚えるほどだ……
+        ELSEIF ABL:噴乳中毒 >= 3 && TFLAG:失神中終了 == 0
+            PRINTFORML 犬が獣臭い息を吹きつけながら、%CALLNAME:TARGET%の口腔を隅々まで舐め回すと、
+            PRINTFORML %CALLNAME:TARGET%も舌を伸ばして犬の口を舐め返した……
+        ELSE
+            PRINTFORML 犬は獣臭い息を吐きながら、%CALLNAME:TARGET%の口腔を隅々まで舐め回した…
+        ENDIF
+    ELSE
+        PRINTFORM %CALLNAME:PLAYER%は%CALLNAME:TARGET%の口腔を隅々まで舐め回
+        IF ABL:信頼 >= 2 && EXP:レズ経験 >= 1000 && HAVE_VAGINA(PLAYER) && TFLAG:失神中終了 == 0
+            PRINTFORML し、ねっとりと舌を絡めあいながら唾液を交換した…
+        ELSEIF ABL:信頼 >= 2 && TFLAG:失神中終了 == 0
+            PRINTFORML し、%CALLNAME:TARGET%も積極的に舌を絡めてきた…
+        ELSE
+            PRINTL した…
+        ENDIF
+        SIF CFLAG:ピアス状況 & 16
+            PRINTFORML %CALLNAME:TARGET%の舌先に取り付けられたピアスの感触が感じられる……
+    ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:キス]](ARG=100)
+    TMP_SRC:TARGET:性行動 += 100 + MIN(ABL:奉仕精神, 5) * 50
+    TMP_SRC:TARGET:達成 += 10 + MIN(ABL:奉仕精神, 5) * 40 + LIMIT(ABL:奉仕精神 - 1,0,4) * 10 + LIMIT(ABL:奉仕精神 - 2,0,3) * 30 + LIMIT(ABL:奉仕精神 - 2,0,3) * 40 + LIMIT(ABL:奉仕精神 - 4,0,1) * 80
+    SIF IS_汚臭鈍感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("口"),STNNUM("口"),3,1) * 5 / 3
+    SIF IS_汚臭敏感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("口"),STNNUM("口"),3,1) * 5 * 2
+    
+    ;獣姦の場合はここで獣姦中毒他を判定して終了
+    IF TEQUIP:獣姦プレイ
+        SELECTCASE ABL:獣姦中毒 
+            CASE 0
+                TIMES TMP_SRC:TARGET:不潔 , 2.00
+            CASE 1
+                TIMES TMP_SRC:TARGET:不潔 , 1.00
+            CASE 2
+                TIMES TMP_SRC:TARGET:不潔 , 0.80
+            CASE 3
+                TIMES TMP_SRC:TARGET:不潔 , 0.50
+            CASE 4
+                TIMES TMP_SRC:TARGET:不潔 , 0.30
+            CASEELSE
+                TIMES TMP_SRC:TARGET:不潔 , 0.10
+        ENDSELECT
+        TMP_SRC:TARGET:情愛 += LIMIT(ABL:獣姦中毒-2,0,3) * 100 + LIMIT(ABL:獣姦中毒-3,0,2) * 100 + LIMIT(ABL:獣姦中毒-4,0,1) * 300
+        TMP_SRC:TARGET:愛液分泌 += LIMIT(ABL:獣姦中毒-3,0,2) * 100
+    ELSE
+        ;プレイヤーのABL:技巧をみる
+        TMP_SRC:TARGET:情愛 += 100 + LIMIT(ABL:PLAYER:技巧,0,5) * 50 + LIMIT(ABL:PLAYER:技巧-2,0,3) * 50 + LIMIT(ABL:PLAYER:技巧-3,0,2) * 100 + LIMIT(ABL:PLAYER:技巧-4,0,1) * 100
+        TMP_SRC:TARGET:愛液分泌 += LIMIT(ABL:PLAYER:技巧-2,0,3) * 50 + LIMIT(ABL:PLAYER:技巧-4,0,1) * 50
+    ENDIF
+
+    ;TALENT:愛をみる
+    SIF TALENT:恋心 && PLAYER == MASTER
+        TIMES TMP_SRC:TARGET:情愛 , 2.00
+        
+    ;調教者
+    TMP_SRC:PLAYER:性行動 = 100 + MIN(ABL:PLAYER:奉仕精神, 5) * 50
+    TMP_SRC:PLAYER:達成 =  10 + MIN(ABL:PLAYER:奉仕精神, 5) * 40 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 10 + LIMIT(ABL:PLAYER:奉仕精神 - 2,0,3) * 30 + LIMIT(ABL:PLAYER:奉仕精神 - 2,0,3) * 40 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 80
+
+    SIF IS_汚臭鈍感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("口"),STNNUM("口"),3,1) * 5 / 3
+    SIF IS_汚臭敏感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("口"),STNNUM("口"),3,1) * 5 * 2
+
+    ;獣姦の場合はここで獣姦中毒他を判定して終了
+    IF TEQUIP:PLAYER:獣姦プレイ
+        SELECTCASE ABL:PLAYER:獣姦中毒 
+            CASE 0
+                TIMES TMP_SRC:PLAYER:不潔 , 2.00
+            CASE 1
+                TIMES TMP_SRC:PLAYER:不潔 , 1.00
+            CASE 2
+                TIMES TMP_SRC:PLAYER:不潔 , 0.80
+            CASE 3
+                TIMES TMP_SRC:PLAYER:不潔 , 0.50
+            CASE 4
+                TIMES TMP_SRC:PLAYER:不潔 , 0.30
+            CASEELSE
+                TIMES TMP_SRC:PLAYER:不潔 , 0.10
+        ENDSELECT
+        TMP_SRC:PLAYER:情愛 += LIMIT(ABL:PLAYER:獣姦中毒-2,0,3) * 100 + LIMIT(ABL:PLAYER:獣姦中毒-3,0,2) * 100 + LIMIT(ABL:PLAYER:獣姦中毒-4,0,1) * 300
+        TMP_SRC:PLAYER:愛液分泌 += LIMIT(ABL:PLAYER:獣姦中毒-3,0,2) * 100
+    ELSE
+        ;対象のABL:技巧をみる
+        TMP_SRC:PLAYER:情愛 += 100 + LIMIT(ABL:TARGET:技巧,0,5) * 50 + LIMIT(ABL:TARGET:技巧-2,0,3) * 50 + LIMIT(ABL:TARGET:技巧-3,0,2) * 100 + LIMIT(ABL:TARGET:技巧-4,0,1) * 100
+        TMP_SRC:PLAYER:愛液分泌 += LIMIT(ABL:TARGET:技巧-2,0,3) * 50 + LIMIT(ABL:TARGET:技巧-4,0,1) * 50
+    ENDIF
+
+    ;TALENT:愛をみる
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        TIMES TMP_SRC:PLAYER:情愛 , 2.00
+
+    CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:キス]](ARG=100)
+    NOWEX:体力変動 += 5
+    NOWEX:気力変動 += 5
+        
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 3
+        NOWEX:PLAYER:レズ経験 = 3
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 3
+        NOWEX:PLAYER:ＢＬ経験 = 3
+    ENDIF
+
+    IF TEQUIP:獣姦プレイ && ABL:獣姦中毒 >= 2
+        NOWEX:快楽経験 = 1
+    ENDIF
+    IF TEQUIP:PLAYER:獣姦プレイ && ABL:PLAYER:獣姦中毒 >= 2
+        NOWEX:PLAYER:快楽経験 = 1
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 1 + TALENT:恋心
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 1 + TALENT:PLAYER:恋心
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:キス]]
+    SIF PLAYER == MASTER
+        TCVAR:主人経験 += 1
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+    ENDIF
+    STAIN:口 |= STAIN:PLAYER:口
+    STAIN:PLAYER:口 |= STAIN:口
+

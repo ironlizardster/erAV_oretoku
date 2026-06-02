@@ -1,0 +1,147 @@
+﻿;-------------------------------------------------
+;胸愛撫実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:胸愛撫]]
+#FUNCTION
+    ;胸愛撫実行判定
+    RESULT = COMABLE_DEF([[TRAIN:"胸愛撫"]]) && COND("指の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:胸愛撫]]
+    IF TEQUIP:獣姦プレイ
+        PRINTFORM 犬はぴちゃぴちゃと音を立てて、
+                        ;****スライムパッチ追加ここから****
+    ELSEIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+                        ;****スライムパッチ追加ここまで****
+        PRINTFORM %CALLNAME:PLAYER%は
+        SIF CFLAG:ピアス状況 & 1
+            PRINTL 、乳首を貫く金属製のピアスを軽く引っ張りながら、
+    ENDIF
+    PRINTFORM %CALLNAME:TARGET%の
+    IF IS_絶壁(TARGET)
+        PRINT 真っ平らな
+    ELSEIF IS_小柄(TARGET) && IS_貧乳(TARGET)
+        PRINT 僅かに膨らみが感じられる程度の
+    ELSEIF IS_貧乳(TARGET)
+        PRINT 標準よりやや小さめの
+    ELSEIF IS_巨乳(TARGET)
+        PRINT 手から溢れそうなほどの
+    ELSEIF IS_デカパイ(TARGET)
+        PRINT 片乳だけで一抱えもある
+    ENDIF
+                        ;****スライムパッチ追加ここから****
+    IF TEQUIP:スライム生成
+        PRINTFORML 胸に纏わり付いたスライムは%CALLNAME:TARGET%の胸に集まり始めた…
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTL 胸を絞り上げるように、幾本もの触手が絡みついた…
+    ELSEIF TEQUIP:獣姦プレイ
+        PRINTL 胸をねぶりまわしている…
+    ELSEIF PALAM:欲情 > PALAMLV:3 && TEQUIP:搾乳機 == 0 && TEQUIP:ニプルキャップ == 0
+        PRINTL 胸の先端の、すっかり硬くなった突起をつまみあげた…
+    ELSEIF IS_絶壁(TARGET)
+        PRINTL 胸を撫で回した…
+    ELSE
+        PRINTL 胸を揉みしだいた…
+    ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:胸愛撫]](ARG=100)
+    ;快Ｂのソース
+    TMP_SRC:TARGET:快Ｂ += CALC_刺激SOURCE("Ｂ刺激", TARGET, 刺激_緩やか)
+    ;情愛のソース
+    TMP_SRC:TARGET:情愛 += 25 * MIN(ABL:Ｂ感覚 + 1, 4)
+    TMP_SRC:TARGET:性行動 = 60
+    ;不潔のソース
+    TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("手"),TARGET,STNNUM("胸"))
+    TMP_SRC:TARGET:露出 = 100
+
+    ;調教者
+    TMP_SRC:PLAYER:屈従 = 5
+    SIF IS_MALE(TARGET) && IS_MALE(PLAYER) && !TALENT:PLAYER:両刀
+        TMP_SRC:PLAYER:屈従 += 10
+
+    TMP_SRC:PLAYER:逸脱 = 10
+    TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("胸"),PLAYER,STNNUM("手"))
+
+    TMP_SRC:PLAYER:性行動 = 50 + MIN(ABL:PLAYER:奉仕精神, 5) * 25
+    TEMP_NUM = 25 + MIN(ABL:PLAYER:奉仕精神, 5) * 25 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 25 + LIMIT(ABL:PLAYER:奉仕精神 - 3,0,2) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 25
+    IF TEQUIP:PLAYER:奉仕
+        TMP_SRC:PLAYER:屈従 += TEMP_NUM
+        TMP_SRC:PLAYER:達成 += TEMP_NUM / 10
+        TMP_SRC:TARGET:達成 += 10 + MIN(ABL:サドっ気, 5) * 10 + LIMIT(ABL:PLAYER:サドっ気 - 1,0,4) * 10 + LIMIT(ABL:PLAYER:サドっ気 - 3,0,2) * 20 + LIMIT(ABL:PLAYER:サドっ気 - 4,0,1) * 30
+    ELSE
+        TMP_SRC:PLAYER:達成 += TEMP_NUM
+    ENDIF
+
+    ;獣姦の場合はここで終了
+    IF !TEQUIP:獣姦プレイ
+
+        ;調教者が［幼児退行］
+        IF TALENT:PLAYER:幼児退行
+            TIMES TMP_SRC:TARGET:快Ｂ , 1.20
+            TIMES TMP_SRC:TARGET:情愛 , 1.20
+        ENDIF
+
+        ;調教者が［幼稚］
+        IF TALENT:PLAYER:幼稚
+            TIMES TMP_SRC:TARGET:快Ｂ , 1.20
+            TIMES TMP_SRC:TARGET:情愛 , 1.20
+        ENDIF
+    ENDIF
+    
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:胸愛撫]](ARG=100)
+    NOWEX:体力変動 += 5
+    NOWEX:気力変動 += 5
+
+    NOWEX:Ｂ開発経験 = 2
+        
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 5
+        NOWEX:PLAYER:レズ経験 = 5
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 5
+        NOWEX:PLAYER:ＢＬ経験 = 5
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 2
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 2
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:胸愛撫]]
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れの処理
+    ;-------------------------------------------------
+    IF TEQUIP:触手召喚
+        ;奴隷のＢに触手の汚れがつく
+        STAIN:胸 |= STAIN_Ｐ
+        STAIN:胸 |= STAIN_精
+    ELSE
+        ;奴隷のＢ⇔調教者の指の汚れが移動
+        STAIN:胸 |= STAIN:PLAYER:手
+        STAIN:PLAYER:手 |= STAIN:胸
+    ENDIF
+

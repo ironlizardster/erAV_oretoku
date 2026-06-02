@@ -1,0 +1,256 @@
+﻿;-------------------------------------------------
+;乳首あわせ実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:乳首あわせ]]
+#FUNCTION
+    ;乳首あわせ実行判定
+    RESULT = COMABLE_DEF(TNUM("乳首あわせ")) && COND("乳首の使用", PLAYER) && COND("乳首の使用", TARGET)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:乳首あわせ]]
+    PRINTFORM %CALLNAME:PLAYER%は
+    IF IS_絶壁(PLAYER)
+        PRINT 真っ平らな
+    ELSEIF IS_小柄(PLAYER) && IS_貧乳(PLAYER)
+        PRINT 僅かに膨らみが感じられる程度の
+    ELSEIF IS_貧乳(PLAYER)
+        PRINT 標準よりやや小さめの
+    ELSEIF IS_巨乳(PLAYER)
+        PRINT 手から溢れそうなほどの
+    ELSEIF IS_デカパイ(PLAYER)
+        PRINT 片乳だけで一抱えもある
+    ENDIF
+    IF PALAM:PLAYER:欲情 > PALAMLV:3
+        PRINTL 胸の先端の、すっかり硬くなった突起を
+    ELSE
+        PRINTL 乳房の先端を
+    ENDIF
+
+    PRINTFORM %CALLNAME:TARGET%の
+    IF IS_絶壁(TARGET)
+        PRINT 真っ平らな
+    ELSEIF IS_小柄(TARGET) && IS_貧乳(TARGET)
+        PRINT 僅かに膨らみが感じられる程度の
+    ELSEIF IS_貧乳(TARGET)
+        PRINT 標準よりやや小さめの
+    ELSEIF IS_巨乳(TARGET)
+        PRINT 手から溢れそうなほどの
+    ELSEIF IS_デカパイ(TARGET)
+        PRINT 片乳だけで一抱えもある
+    ENDIF
+
+    IF PALAM:欲情 > PALAMLV:3
+        PRINTL 胸の先端の、すっかり硬くなった突起に擦りつけた…
+    ELSE
+        PRINTL 乳房の先端に擦りつけた…
+    ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:乳首あわせ]](ARG=100)
+    ;快Ｂのソース
+    TMP_SRC:TARGET:快Ｂ += 50 * POWER(ABL:Ｂ感覚 + 1, 2)
+    ;情愛のソース
+    TMP_SRC:TARGET:情愛 += 25 * MIN(ABL:Ｂ感覚 + 1, 4)
+    SIF IS_汚臭鈍感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("胸"),STNNUM("胸"),1,3) * 5 / 3
+    SIF IS_汚臭敏感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("胸"),STNNUM("胸"),1,3) * 5 * 2
+    TMP_SRC:TARGET:充足 = 500
+    TMP_SRC:TARGET:露出 = 250
+    TMP_SRC:TARGET:屈従 = 400
+    TMP_SRC:TARGET:逸脱 = 300
+    ;ABL:従順をみる
+    TMP_SRC:TARGET:反感 += 200 - LIMIT(ABL:信頼,0,4)*20 - LIMIT(ABL:信頼,0,3)*20 - LIMIT(ABL:信頼,0,2)*20 - LIMIT(ABL:信頼,0,1)*20
+    ;ABL:Ｂ感覚をみる
+    TMP_SRC:TARGET:性行動 += LIMIT(ABL:Ｂ感覚,0,5)*10 + LIMIT(ABL:Ｂ感覚-1,0,4)*30 + LIMIT(ABL:Ｂ感覚-2,0,3)*10 + LIMIT(ABL:Ｂ感覚-3,0,2)*550 + LIMIT(ABL:Ｂ感覚-4,0,1)*700
+    TMP_SRC:TARGET:達成 += LIMIT(ABL:Ｂ感覚,0,5)*50 + LIMIT(ABL:Ｂ感覚-2,0,3)*150 + LIMIT(ABL:Ｂ感覚-3,0,2)*100 + LIMIT(ABL:Ｂ感覚-4,0,1)*100
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:技巧
+        CASE 0
+            TIMES TMP_SRC:TARGET:性行動 , 0.5
+            TIMES TMP_SRC:TARGET:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:TARGET:性行動 , 0.8
+            TIMES TMP_SRC:TARGET:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:TARGET:性行動 , 1
+            TIMES TMP_SRC:TARGET:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:TARGET:性行動 , 1.2
+            TIMES TMP_SRC:TARGET:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:TARGET:性行動 , 1.5
+            TIMES TMP_SRC:TARGET:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:TARGET:性行動 , 2
+            TIMES TMP_SRC:TARGET:達成 , 2
+    ENDSELECT
+
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:奉仕精神
+        CASE 0
+            TIMES TMP_SRC:TARGET:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:TARGET:達成 , 1
+        CASE 2
+            TIMES TMP_SRC:TARGET:達成 , 1.2
+        CASE 3
+            TIMES TMP_SRC:TARGET:達成 , 1.4
+        CASE 4
+            TIMES TMP_SRC:TARGET:達成 , 1.7
+        CASEELSE
+            TIMES TMP_SRC:TARGET:達成 , 2
+    ENDSELECT
+
+    ;調教者のABL:Ｂ感覚をみる
+    SELECTCASE ABL:PLAYER:Ｂ感覚
+        CASE 0
+            TIMES TMP_SRC:TARGET:性行動 , 0.80
+            TIMES TMP_SRC:TARGET:達成 , 0.50
+        CASE 1
+            TIMES TMP_SRC:TARGET:性行動 , 0.90
+            TIMES TMP_SRC:TARGET:達成 , 0.70
+        CASE 2
+            TIMES TMP_SRC:TARGET:性行動 , 1.00
+            TIMES TMP_SRC:TARGET:達成 , 1.00
+        CASE 3
+            TIMES TMP_SRC:TARGET:性行動 , 1.10
+            TIMES TMP_SRC:TARGET:達成 , 1.20
+        CASE 4
+            TIMES TMP_SRC:TARGET:性行動 , 1.20
+            TIMES TMP_SRC:TARGET:達成 , 1.40
+        CASEELSE
+            TIMES TMP_SRC:TARGET:性行動 , 1.30
+            TIMES TMP_SRC:TARGET:達成 , 1.70
+    ENDSELECT
+
+    ;調教者
+    ;快Ｂのソース
+    TMP_SRC:PLAYER:快Ｂ += 50 * POWER(ABL:Ｂ感覚 + 1, 2)
+    ;情愛のソース
+    TMP_SRC:PLAYER:情愛 += 25 * MIN(ABL:Ｂ感覚 + 1, 4)
+    SIF IS_汚臭鈍感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("胸"),STNNUM("胸"),1,3) * 5 / 3
+    SIF IS_汚臭敏感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("胸"),STNNUM("胸"),1,3) * 5 * 2
+    TMP_SRC:PLAYER:充足 = 500
+    TMP_SRC:PLAYER:露出 = 250
+    TMP_SRC:PLAYER:屈従 = 400
+    TMP_SRC:PLAYER:逸脱 = 300
+    ;ABL:従順をみる
+    TMP_SRC:PLAYER:反感 += 200 - LIMIT(ABL:PLAYER:信頼,0,4)*20 - LIMIT(ABL:PLAYER:信頼,0,3)*20 - LIMIT(ABL:PLAYER:信頼,0,2)*20 - LIMIT(ABL:PLAYER:信頼,0,1)*20
+    ;ABL:Ｂ感覚をみる
+    TMP_SRC:PLAYER:性行動 += LIMIT(ABL:PLAYER:Ｂ感覚,0,5)*10 + LIMIT(ABL:PLAYER:Ｂ感覚-1,0,4)*30 + LIMIT(ABL:PLAYER:Ｂ感覚-2,0,3)*10 + LIMIT(ABL:PLAYER:Ｂ感覚-3,0,2)*550 + LIMIT(ABL:PLAYER:Ｂ感覚-4,0,1)*700
+    TMP_SRC:PLAYER:達成 += LIMIT(ABL:PLAYER:Ｂ感覚,0,5)*50 + LIMIT(ABL:PLAYER:Ｂ感覚-2,0,3)*150 + LIMIT(ABL:PLAYER:Ｂ感覚-3,0,2)*100 + LIMIT(ABL:PLAYER:Ｂ感覚-4,0,1)*100
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:PLAYER:技巧
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.5
+            TIMES TMP_SRC:PLAYER:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 0.8
+            TIMES TMP_SRC:PLAYER:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.2
+            TIMES TMP_SRC:PLAYER:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.5
+            TIMES TMP_SRC:PLAYER:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 2
+            TIMES TMP_SRC:PLAYER:達成 , 2
+    ENDSELECT
+
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:PLAYER:奉仕精神
+        CASE 0
+            TIMES TMP_SRC:PLAYER:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 2
+            TIMES TMP_SRC:PLAYER:達成 , 1.2
+        CASE 3
+            TIMES TMP_SRC:PLAYER:達成 , 1.4
+        CASE 4
+            TIMES TMP_SRC:PLAYER:達成 , 1.7
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:達成 , 2
+    ENDSELECT
+
+    ;調教者のABL:Ｂ感覚をみる
+    SELECTCASE ABL:Ｂ感覚
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.80
+            TIMES TMP_SRC:PLAYER:達成 , 0.50
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 0.90
+            TIMES TMP_SRC:PLAYER:達成 , 0.70
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1.00
+            TIMES TMP_SRC:PLAYER:達成 , 1.00
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.10
+            TIMES TMP_SRC:PLAYER:達成 , 1.20
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.20
+            TIMES TMP_SRC:PLAYER:達成 , 1.40
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 1.30
+            TIMES TMP_SRC:PLAYER:達成 , 1.70
+    ENDSELECT
+    
+	CALL APPLY_SOURCE_RATE(ARG)
+
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:乳首あわせ]](ARG=100)
+    NOWEX:体力変動 += 10
+    NOWEX:気力変動 += 10
+    NOWEX:PLAYER:体力変動 += 10
+    NOWEX:PLAYER:気力変動 += 10
+
+    NOWEX:Ｂ開発経験 = 3
+    NOWEX:PLAYER:Ｂ開発経験 = 3
+        
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 8
+        NOWEX:PLAYER:レズ経験 = 8
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 8
+        NOWEX:PLAYER:ＢＬ経験 = 8
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 2
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 2
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:乳首あわせ]]
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    STAIN:胸 |= STAIN:PLAYER:胸
+    STAIN:PLAYER:胸 |= STAIN:胸
+

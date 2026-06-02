@@ -15,7 +15,7 @@ ELSE
 	PRINTL バイブ
 	SAVESTR:0 = バイブ
 ENDIF
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;ソースの計算
@@ -310,7 +310,7 @@ ENDIF
 ;-------------------------------------------------
 S = 0
 ;自慰実行時は経験＋１
-SIF SELECTCOM == [[TRAIN:オナニー]]
+SIF SELECTCOM == TNUM("オナニー")
 	S = 1
 ;Ｖ感覚が高いほどＶ経験が入る
 IF ABL:Ｖ感覚 <= 1

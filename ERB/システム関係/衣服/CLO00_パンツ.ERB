@@ -1,0 +1,603 @@
+﻿;-------------------------------------------------
+;キャラARGにパンツARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_PANTIES, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:パンツ%
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする
+	STAIN:ARG:パンツ = 0
+
+	CALL PALAM_PANTIES, ARGS, ARG
+
+	;コモンフラグを設定する
+	CSTR:ARG:パンツ = %SET_CLO_COMMON(CSTR:ARG:パンツ, ARG)%
+	CSTR:ARG:ブラ = %SET_CLO_COMMON(CSTR:ARG:ブラ, ARG)%
+
+	EQUIP:ARG:パンツ = STRLENS(CSTR:ARG:パンツ)
+	EQUIP:ARG:ブラ = STRLENS(CSTR:ARG:ブラ)
+
+	;ボディスーツは脱がす
+	SIF EQUIP:ARG:パンツ && EQUIP:ARG:ボディスーツ
+		CALL SET_BODYS, "", ARG
+
+	SIF MEMO_CLO != CSTR:ARG:パンツ
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGの穿いているパンツの名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@PANTIES(ARG, ARGS)
+#FUNCTIONS
+#DIMS COLOR_ABOUT
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "リボン"
+			SIF CHECK_PANTIES("リボン", ARG) == 0
+				RETURNF ""
+			RETURNF EXTSTR(CSTR:ARG:パンツ, "リボン", "/")
+		CASE "パンツ", "下着", "ぱんつ"
+			IF CHECK_PANTIES("前貼り", ARG)
+				RESULTS = 前貼り
+			ELSEIF CHECK_PANTIES("水着", ARG)
+				RESULTS = ビキニ
+			ELSEIF CHECK_PANTIES("ブルマ", ARG)
+				RESULTS = ブルマ
+			ELSE
+				RESULTS = %ARGS%
+			ENDIF
+		CASE "略"
+			IF CHECK_PANTIES("貞操帯", ARG)
+				RESULTS = 貞操帯
+			ELSEIF CHECK_PANTIES("ブルマ", ARG)
+				RESULTS = ブルマ
+			ELSEIF CHECK_PANTIES("ボクサーパンツ", ARG)
+				RESULTS = ボクサーパンツ
+			ELSEIF CHECK_PANTIES("ブリーフ", ARG)
+				RESULTS = ブリーフ
+			ELSEIF CHECK_PANTIES("トランクス", ARG)
+				RESULTS = トランクス
+			ELSEIF CHECK_PANTIES("褌", ARG)
+				RESULTS = 褌
+			;ビキニって呼称は上下合わせないとちょっと微妙かも
+			ELSEIF CHECK_PANTIES("ビキニ", ARG)
+				IF CHECK_PANTIES("ティアドロップ", ARG)
+					RESULTS = ティアドロップビキニ
+				ELSEIF CHECK_PANTIES("マイクロ", ARG)
+					RESULTS = マイクロビキニ
+				ELSE
+					RESULTS = ビキニパンツ
+				ENDIF
+			;ELSEIF CHECK_PANTIES("スパッツ", ARG)
+			;	RESULTS = スパッツ
+			ELSEIF CHECK_PANTIES("ドロワーズ", ARG)
+				RESULTS = ドロワーズ
+			ELSEIF CHECK_PANTIES("Ｃストリング", ARG)
+				RESULTS = Ｃストリング
+			ELSEIF CHECK_PANTIES("前貼り", ARG)
+				RESULTS = 前貼り
+			;ELSEIF CHECK_PANTIES("絆創膏", ARG)
+			;	RESULTS = 絆創膏
+			ELSE
+				RESULTS = パンツ
+			ENDIF
+		CASE "種類"
+			;LOCALSに名称が入る
+			SPLIT CSTR:ARG:パンツ, "/", RESULTS
+		CASE ""
+			;LOCALSに名称が入る
+			SPLIT CSTR:ARG:パンツ, "/", RESULTS
+			COLOR_ABOUT = %CHECK_CLOCOLOR(CSTR:ARG:パンツ)%
+
+			IF CHECK_PANTIES("男物", ARG)
+				RESULTS = \@ TALENT:ARG:オトコ == 0 ? 男物の # \@%RESULTS%
+			;名称と色が被ってる場合は省略
+			ELSEIF STRCOUNT(RESULTS, COLOR_ABOUT)
+				RETURNF RESULTS
+			;一部の柄物
+			ELSEIF STRCOUNTS(CSTR:ARG:パンツ, "縞々", "水玉模様", "豹柄")
+				SELECTCASE COLOR_ABOUT
+				CASE ""
+				CASE "赤", "青", "黒", "白"
+					RESULTS = %COLOR_ABOUT%い%RESULTS%
+				CASE "水玉ピンク", "水玉黒", "水玉黄色", "水玉水色", "水玉白黒", "水玉白"
+					RESULTS = %EXTSTR(COLOR_ABOUT, "水玉")%の%RESULTS%
+				CASEELSE
+					RESULTS = %COLOR_ABOUT%の%RESULTS%
+				ENDSELECT
+			ELSE
+				RESULTS = %CLOCOLOR(CSTR:ARG:パンツ, "形容詞")%%RESULTS%
+			ENDIF
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番のパンツの名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_PANTIES(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		CASE 0
+			RESULTS = シンプルショーツ
+		CASE 1
+			RESULTS = ハイレグショーツ
+		CASE 2
+			RESULTS = フリルショーツ
+		CASE 3
+			RESULTS = ローライズ＆ローレグ
+		CASE 4
+			RESULTS = 刺繍入りショーツ
+		CASE 5
+			RESULTS = シルクショーツ
+		CASE 6
+			RESULTS = マイクロビキニショーツ
+		CASE 7
+			RESULTS = しまぱん
+		CASE 8
+			RESULTS = スパンコールショーツ
+		CASE 9
+			RESULTS = プリントぱんつ
+		CASE 10
+			RESULTS = バンソーコー
+		CASE 11
+			RESULTS = ドロワーズ
+		CASE 12
+			RESULTS = フェザーモチーフショーツ
+		CASE 13
+			RESULTS = ワイルドレザーショーツ
+		CASE 14
+			RESULTS = ふんどし
+		CASE 15
+			RESULTS = チェックプリントショーツ
+		CASE 16
+			RESULTS = オープンショーツ
+		CASE 17
+			RESULTS = シースルーレースショーツ
+		CASE 18
+			RESULTS = トランクス
+		CASE 19
+			RESULTS = ボクサーパンツ
+		CASE 20
+			RESULTS = ブーメランパンツ
+		CASE 21
+			RESULTS = オムツ
+		CASE 99
+			RESULTS = 貞操帯
+	ENDSELECT
+
+	RETURNF RESULTS
+
+
+;-------------------------------------------------
+;キャラARGにパンツARGSを着せた場合のCSTR処理
+;名前/色/属性/…/属性/ というルールで記述される(一番左は名前、次は色で固定)
+;後で属性を追加したい際には CSTR:パンツ += "Ｖ露出/" のように単純に追加すればよい。同じ属性が複数あっても問題ない
+;-------------------------------------------------
+@PALAM_PANTIES, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "ノーパン", "無し"
+			CSTR:ARG:パンツ = 
+		CASE "しまった下着"
+			VARSET LOCALS
+			SPLIT CSTR:ARG:しまった下着, "_", LOCALS
+			CSTR:ARG:パンツ = %LOCALS:0%
+			CSTR:ARG:ブラ = %LOCALS:1%
+			CSTR:ARG:しまった下着 = 
+
+		CASE "ショーツ"
+			CSTR:ARG:パンツ = ショーツ/おとなしい色/フロントリボン/
+		CASE "シンプルショーツ"
+			CSTR:ARG:パンツ = ショーツ/おとなしい色/シンプル/
+		CASE "パンティ"
+			CSTR:ARG:パンツ = パンティ/おとなしい色/フロントリボン/
+		CASE "フルバックパンツ"
+			CSTR:ARG:パンツ = フルバックパンツ/おとなしい色/
+		CASE "ローライズパンツ"
+			CSTR:ARG:パンツ = ローライズパンツ/おとなしい色/
+		;本作ではローレグ＆ローライズの小さいパンツをローレグパンツとする。not子供パンツ
+		CASE "ローレグパンツ"
+			CSTR:ARG:パンツ = ローレグパンツ/おとなしい色/
+		CASE "ハイレグパンツ"
+			CSTR:ARG:パンツ = ハイレグパンツ/ランダムカラー/
+		CASE "Ｔバック"
+			CSTR:ARG:パンツ = Ｔバック/ギャル/紐パン/ハイレグ/
+		CASE "水玉Ｔバック"
+			CSTR:ARG:パンツ = Ｔバック/水玉色/紐パン/ハイレグ/
+		CASE "Ｃストリング"
+			CSTR:ARG:パンツ = Ｃストリング/ランダムカラー/Ｔバック/ずれ不可/
+		CASE "ボーイレッグ"
+			CSTR:ARG:パンツ = ボーイレッグ/おとなしい色/
+		CASE "オープンクロッチパンツ"
+			CSTR:ARG:パンツ = オープンクロッチパンツ/Ｈな色/Ｖ露出/Ａ露出/
+		CASE "Ｏバック"
+			CSTR:ARG:パンツ = Ｏバック/ギャル/Ａ露出/ローレグ/
+		CASE "マイクロショーツ"
+			CSTR:ARG:パンツ = マイクロショーツ/ランダムカラー/
+		CASE "ドロワーズ"
+			CSTR:ARG:パンツ = ドロワーズ/白/ずれ不可/
+
+		CASE "縞々パンツ"
+			CSTR:ARG:パンツ = 縞々パンツ/縞々色/
+		CASE "水玉模様のパンツ"
+			CSTR:ARG:パンツ = 水玉模様のパンツ/水玉色/ハイレグ/Ｔバック/紐パン/
+		CASE "豹柄パンツ"
+			CSTR:ARG:パンツ = 豹柄パンツ/豹柄/ハイレグ/Ｔバック/紐パン/
+		CASE "肉球プリントパンツ"
+			CSTR:ARG:パンツ = 肉球プリントパンツ/黒/紐パン/
+
+		CASE "レースのパンツ"
+			CSTR:ARG:パンツ = レースのパンツ/Ｈな色/シースルー/ランジェリー/
+		CASE "シースルーパンツ"
+			CSTR:ARG:パンツ = シースルーパンツ/おとなしい色/ランジェリー/
+		CASE "フリルのパンツ"
+			CSTR:ARG:パンツ = フリルのパンツ/おとなしい色/フロントリボン紐/ランジェリー/
+		CASE "紐パン"
+			CSTR:ARG:パンツ = 紐パン/おとなしい色/ハイレグ/Ｔバック/
+		CASE "レザーパンツ"
+			CSTR:ARG:パンツ = レザーパンツ/黒/ハイレグ/Ｔバック/
+		CASE "葉っぱパンツ"
+			CSTR:ARG:パンツ = 葉っぱパンツ/緑色/ローレグ/
+
+		CASE "ビキニ", "紐ビキニ"
+			CSTR:ARG:パンツ = ビキニ/ビキニカラー/紐パン/
+		CASE "Ｇストリング"
+			CSTR:ARG:パンツ = Ｇストリング/ギャル/ハイレグ/Ｔバック/紐パン/
+		CASE "Ｇストリングビキニ"
+			CSTR:ARG:パンツ = Ｇストリングビキニ/ギャル/ハイレグ/Ｔバック/紐パン/
+		CASE "水玉Ｇストリング"
+			CSTR:ARG:パンツ = Ｇストリング/水玉色/ハイレグ/Ｔバック/紐パン/
+
+		CASE "白いビキニ"
+			CSTR:ARG:パンツ = 白いビキニ/白/紐パン/
+		CASE "黒いビキニ"
+			CSTR:ARG:パンツ = 黒いビキニ/黒/紐パン/
+		CASE "虎柄ビキニ"
+			CSTR:ARG:パンツ = 虎柄ビキニ/虎柄/ハイレグ/Ｔバック/紐パン/
+		CASE "牛柄ビキニ"
+			CSTR:ARG:パンツ = 牛柄ビキニ/牛柄/ハイレグ/Ｔバック/紐パン/
+		CASE "マイクロビキニ"
+			CSTR:ARG:パンツ = マイクロビキニ/ランダムカラー/
+		CASE "ティアドロップビキニ"
+			CSTR:ARG:パンツ = ティアドロップビキニ/ランダムカラー/Ｔバック/マイクロ/
+
+		CASE "メンズビキニ"
+			CSTR:ARG:パンツ = メンズビキニ/黒/水着/
+		CASE "サーフパンツ"
+			CSTR:ARG:パンツ = サーフパンツ/黒/水着/
+
+		CASE "褌"
+			CSTR:ARG:パンツ = 褌/白/ハイレグ/Ｔバック/
+		CASE "貞操帯"
+			CSTR:ARG:パンツ = 貞操帯/黒/レザー/ずれ不可/脱衣不可/
+		CASE "前貼り"
+			CSTR:ARG:パンツ = 前貼り/白/Ａ露出/ずれ不可/通気性無し/
+		CASE "ハート型前貼り"
+			CSTR:ARG:パンツ = ハート型前貼り/ランダムカラー/Ａ露出/ずれ不可/通気性無し/
+		CASE "子供パンツ"
+			CSTR:ARG:パンツ = 子供パンツ/子供パンツカラー/
+
+		CASE "トランクス"
+			CSTR:ARG:パンツ = トランクス/男物の色/男物/
+		CASE "ボクサーパンツ"
+			CSTR:ARG:パンツ = ボクサーパンツ/男物の色/男物/
+
+		CASE "ハイレグブルマ"
+			CSTR:ARG:パンツ = ハイレグブルマ/%CLOCOLOR_MAIDFACE("ブルマ", "", ARG)%/
+		CASE "Ｈな下着"
+			CSTR:ARG:パンツ = Ｈな下着/Ｈな色/
+
+		CASEELSE
+			CSTR:ARG:パンツ = %ARGS%/ランダムカラー/
+	ENDSELECT
+
+	CSTR:ARG:パンツ = %MERGE_STR(CSTR:ARG:パンツ, STR_ADD)%
+
+
+;-------------------------------------------------
+;ARGの穿いているパンツの詳細
+;-------------------------------------------------
+@DETAIL_PANTIES(ARG)
+#FUNCTIONS
+;種類名：下着かパンツかビキニかブルマ
+#DIMS TYPE_PANTU
+	IF CHECK_PANTIES("ブルマ", ARG)
+		TYPE_PANTU = ブルマ
+	ELSEIF CHECK_PANTIES("ビキニ", ARG)
+		TYPE_PANTU = ビキニ
+	ELSE
+		TYPE_PANTU = %TEXTR("パンツ/下着")%
+	ENDIF
+	VARSET RESULTS
+	;前貼り
+	IF CHECK_PANTIES("前貼り", ARG)
+		RESULTS = 股間にぴったりと%TEXTR("フィットして/くっついて")%%TEXTR("大事な所/アソコ")%を隠している前貼り
+	;Ｈな下着
+	ELSEIF CHECK_PANTIES("Ｈな下着", ARG) || CHECK_PANTIES("Ｖ露出", ARG) || CHECK_PANTIES("Ａ露出", ARG)
+		SIF CHECK_PANTIES("レース", ARG)
+			RESULTS += "レースで彩られた"
+
+		IF CHECK_PANTIES("シースルー", ARG)
+			RESULTS += "シースルー素材の"
+		ELSEIF CHECK_PANTIES("シルク", ARG)
+			RESULTS += "シルク製の"
+		ENDIF
+
+		IF CHECK_PANTIES("Ｖ露出", ARG)
+			IF CHECK_PANTIES("Ａ露出", ARG)
+				RESULTS += "股間が完全に露出している"
+			ELSE
+				RESULTS += "クロッチ部分に生地が無い"
+			ENDIF
+		ELSEIF CHECK_PANTIES("Ａ露出", ARG)
+			RESULTS += "お尻の穴の周りだけ生地が無い"
+		;マイクロ（Ｔバックでもある）
+		ELSEIF CHECK_PANTIES("マイクロ", ARG)
+			RESULTS += "布面積が異常に少ない"
+		ELSEIF CHECK_PANTIES("ファスナー", ARG)
+			RESULTS += "クロッチ部分にファスナーのついた"
+		ELSEIF CHECK_PANTIES("スリット", ARG)
+			RESULTS += "クロッチ部分にスリットが隠された"
+		ENDIF
+
+		SIF RESULTS == ""
+			RESULTS = エロチックな
+
+		IF CHECK_PANTIES("Ｇストリング", ARG)
+			RESULTS += "Ｇストリング"
+			TYPE_PANTU = 
+		ELSEIF CHECK_PANTIES("Ｔバック", ARG)
+			RESULTS += "Ｔバック"
+			TYPE_PANTU = 
+		;ローorハイ
+		ELSEIF CHECK_PANTIES("ローレグ", ARG)
+			RESULTS += "ローレグ"
+		ELSEIF CHECK_PANTIES("ハイレグ", ARG)
+			RESULTS += "ハイレグ"
+		ENDIF
+		;紐
+		IF CHECK_PANTIES("紐パン", ARG)
+			RESULTS += "紐"
+			SIF CHECK_PANTIES("ビキニ", ARG) == 0
+				TYPE_PANTU = パン
+		ENDIF
+		RESULTS = %RESULTS%%TYPE_PANTU%
+	ELSEIF CHECK_PANTIES("マイクロ", ARG)
+		IF RAND:2
+			RESULTS = 小さな布と形容した方がいいような、物凄くきわどい\@ CHECK_PANTIES("ビキニ", ARG) ? ビキニ # パンツ \@
+		ELSE
+			RESULTS = 大事なところを全然隠せていない極小生地の\@ CHECK_PANTIES("ビキニ", ARG) ? 水着 # 下着 \@
+		ENDIF
+	ELSEIF CHECK_PANTIES("ビキニ", ARG)
+		RESULTS = 大胆なビキニ
+	ELSEIF CHECK_PANTIES("Ｃストリング", ARG)
+		RESULTS = パンツと言って良いものか迷う逸品、Ｃストリング
+	;ELSEIF CHECK_PANTIES("褌", ARG)
+
+	;ELSEIF CHECK_PANTIES("貞操帯", ARG)
+
+	ELSEIF CHECK_PANTIES("肉球プリントパンツ", ARG)
+		RESULTS = 前面に小さな猫耳があしらわれたパンツ
+	ELSEIF CHECK_PANTIES("縞々", ARG)
+		IF RAND:2
+			RESULTS = 股間の%TEXTR("陰影/ライン")%を%TEXTR("柔らかく/控えめに")%%TEXTR("浮かば/主張さ")%せる縞々%TEXTR("パンツ/の下着")%
+		ELSE
+			RESULTS = %TEXTR("お尻/股間")%のふくらみに沿って模様が歪んでいる縞パン
+		ENDIF
+	ELSEIF CHECK_PANTIES("水玉模様", ARG)
+		RESULTS = 可愛らしい水玉模様の%TEXTR("パンツ/下着")%
+	ELSEIF CHECK_PANTIES("豹柄", ARG)
+		SELECTCASE AGE(ARG)
+		CASE IS >= 4
+			RESULTS = %TEXTR("セクシーな/エロチックな/大人の香り漂う")%
+		CASE 3
+			RESULTS = %TEXTR("セクシーな/挑発的な/ギャルギャルしい")%
+		CASE 2
+			RESULTS = %TEXTR("大人びた/可愛らしい/挑発的な/")%
+		CASE 1
+			RESULTS = %TEXTR("見た目とのアンバランスさがたまらない/可愛らしい/挑発的な")%
+		ENDSELECT
+		RESULTS += @"%PANTIES(ARG)%"
+	ELSEIF CHECK_PANTIES("レースのパンツ", ARG)
+		IF RAND:4 == 0
+			RESULTS = セクシーな%CLOCOLOR(CSTR:ARG:パンツ, "形容詞")%レース生地の
+		ELSEIF RAND:3 == 0
+			RESULTS = 大人の香り漂う%CLOCOLOR(CSTR:ARG:パンツ, "形容詞")%レースの
+		ELSEIF RAND:2
+			RESULTS = 上品でお洒落なレース生地の
+		ELSE
+			RESULTS = 大人っぽくも可愛らしいレースの
+		ENDIF
+		RESULTS = %RESULTS%%TYPE_PANTU%
+	ELSEIF CHECK_PANTIES("フリルのパンツ", ARG)
+		RESULTS = %TEXTR("可愛らしい/清楚な")%フリル%TEXTR("で飾られた/付きの")%%TYPE_PANTU%
+	ELSEIF CHECK_PANTIES("紐パン", ARG)
+		IF RAND:2
+			RESULTS = 脱がしやすそうな紐パン
+		ELSE
+			RESULTS = %TEXTR("両サイドの結び目/三角形の布地部分")%が目を引く紐パン
+		ENDIF
+	ELSEIF CHECK_PANTIES("Ｇストリング", ARG)
+		RESULTS = お尻部分が紐になっている大胆なＧストリング
+	ELSEIF CHECK_PANTIES("Ｔバック", ARG)
+		RESULTS = お尻のラインが可愛いＴバック
+	ELSEIF CHECK_PANTIES("ローライズ", ARG)
+		RESULTS = 股上が浅いゴム履きのローライズ
+	ELSEIF CHECK_PANTIES("シースルーパンツ", ARG)
+		IF RAND:3 == 0
+			RESULTS = %CALLNAME:ARG%の%TEXTR("下腹部/お尻")%をうっすらと透かしている下着
+		ELSEIF RAND:2 == 0
+			RESULTS = 大胆に透けている下着
+		ELSE
+			RESULTS = なんとも淫靡なシースルーのパンツ
+		ENDIF
+	ELSEIF CHECK_PANTIES("ハイレグブルマ", ARG)
+		RESULTS = %TEXTR("柔らかな恥丘を際立たせる/丸見えの鼠径部が目を引く/お洒落な/股間の切れ込みが深い")%ハイレグブルマ
+	ELSEIF CHECK_PANTIES("ハイレグパンツ", ARG)
+		RESULTS = %TEXTR("柔らかな恥丘を際立たせる/丸見えの鼠径部が目を引く/お洒落な/股間の切れ込みが深い")%ハイレグパンツ
+	ELSEIF CHECK_PANTIES("レザーパンツ", ARG)
+		RESULTS = 股間にファスナーのついた、きわどい革製のハイレグパンツ
+	ELSEIF CHECK_PANTIES("ローレグ", ARG)
+		SELECTCASE COND("陰毛", ARG)
+		CASE 1, 2
+			RESULTS = 剥き卵の様な恥丘
+		CASE 3
+			RESULTS = ツルツルの恥丘
+		CASE 4
+			IF CONDS("陰毛", ARG) == "剃り跡"
+				RESULTS = ジョリジョリの剃り跡
+			ELSE
+				RESULTS = 生えかけの陰毛
+			ENDIF
+		CASE 5
+			IF CEVENTS("陰毛の名称", ARG) != "" && RAND:2
+				RESULTS = %CEVENTS("陰毛の名称", ARG)%に剃り整えられた陰毛
+			ELSE
+				RESULTS = ばっちりお手入れされた陰毛
+			ENDIF
+		CASE IS >= 6
+			RESULTS = 陰毛の茂み
+		ENDSELECT
+		IF RESULTS != ""
+			IF RAND:3 == 0
+				RESULTS = %RESULTS%を見せ付けるようなデザインの
+			ELSEIF RAND:2
+				IF AGE(ARG) >= 3
+					RESULTS = %RESULTS%は勿論、それどころかクリトリスの鞘が見えている
+				ELSE
+					RESULTS = %RESULTS%は勿論、それどころかスジの上端が見えかけている
+				ENDIF
+			ELSE
+				RESULTS = %RESULTS%\@ ABL:ARG:露出癖 >= 3 ? を見せ付けるのに最適な形状の # がよく見える \@
+			ENDIF
+		ELSE
+			RESULTS = 股上が異常に浅い
+		ENDIF
+		RESULTS = %RESULTS%ローレグパンツ
+	ELSEIF CHECK_PANTIES("フロントリボン", ARG)
+		RESULTS = %TEXTR("ワンポイントのリボンがお洒落な/前面に小さなリボンの付いた/可愛らしいリボン付きの")%%CLOCOLOR(CSTR:ARG:パンツ, "形容詞")%%TYPE_PANTU%
+	ELSEIF CHECK_PANTIES("シンプル", ARG)
+		RESULTS = 飾り気の少ない%CLOCOLOR(CSTR:ARG:パンツ, "形容詞")%%TYPE_PANTU%
+	ELSE
+		RESULTS = %PANTIES(ARG)%
+	ENDIF
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARGのパンツが条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_PANTIES(ARGS, ARG)
+#FUNCTION
+	SIF CSTR:ARG:パンツ == ""
+		RETURNF 0
+
+	SELECTCASE ARGS
+		CASE "紐ハイレグ"
+			SIF CHECK_PANTIES("ハイレグ", ARG) && CHECK_PANTIES("紐パン", ARG)
+				RETURNF 1
+		CASE "紐ビキニ"
+			SIF CHECK_PANTIES("ビキニ", ARG) && CHECK_PANTIES("紐パン", ARG)
+				RETURNF 1
+		CASE "紐Ｔバック"
+			SIF CHECK_PANTIES("Ｔバック", ARG) && CHECK_PANTIES("紐パン", ARG)
+				RETURNF 1
+		CASE "はみパン可能"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ハイレグ", "Ｔバック", "Ｃストリング", "マイクロ", "前貼り", "貞操帯")
+				RETURNF 0
+			RETURNF 1
+		CASE "半脱ぎ時太もも保持可能"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "Ｃストリング", "褌", "貞操帯", "前貼り")
+				RETURNF 0
+			RETURNF 1
+		CASE "ワイドクロッチ"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ボクサーパンツ", "ブリーフ", "トランクス", "ボーイレッグ")
+				RETURNF 1
+		;主に"アソコのチラ見せ撮影"の判定で使う
+		CASE "めくり可能"
+			;男物パンツは股間の布地が横幅あり過ぎてめくれない
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ボクサーパンツ", "ブリーフ", "トランクス", "ボーイレッグ")
+				RETURNF 0
+			;めくれなさそうなもの
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "Ｃストリング", "褌", "貞操帯", "前貼り", "Ｖ露出")
+				RETURNF 0
+			RETURNF 1
+		;ずれ不可でなく、ずらしていない
+		CASE "ずらし可", "ずらせる"
+			IF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー")
+				SIF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー開")
+					RETURNF 0
+				SIF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー閉")
+					RETURNF 1
+			ENDIF
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ずらした")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ずれ不可")
+				RETURNF 0
+			RETURNF 1
+		;ファスナーがあり、あけていない
+		CASE "ファスナー閉"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー開")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー")
+				RETURNF 1
+		CASE "オープンクロッチ"
+			SIF STRCOUNT(CSTR:ARG:パンツ, ARGS)
+				RETURNF 1
+			SIF STRCOUNT(CSTR:ARG:パンツ, "Ｖ露出") && STRCOUNT(CSTR:ARG:パンツ, "Ａ露出")
+				RETURNF 1
+		CASE "ＶＡ露出"
+			SIF STRCOUNT(CSTR:ARG:パンツ, "Ｖ露出") && STRCOUNT(CSTR:ARG:パンツ, "Ａ露出")
+				RETURNF 1
+		CASE "Ａのみ露出"
+			SIF STRCOUNT(CSTR:ARG:パンツ, "Ｖ露出") == 0 && STRCOUNT(CSTR:ARG:パンツ, "Ａ露出")
+				RETURNF 1
+		CASE "クロッチ", "Ｖクロッチ", "尿クロッチ"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー開", "ずらした", "破いた", "Ｖ露出", "スリット")
+				RETURNF 0
+			RETURNF 1
+		CASE "Ａクロッチ"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ファスナー開", "ずらした", "破いた", "Ａ露出", "スリット")
+				RETURNF 0
+			RETURNF 1
+		CASE "食い込み"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ハイレグ", "ティアドロップ", "マイクロ")
+				RETURNF 1
+		CASE "Ｈ"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "Ｈ", "シースルー", "ハイレグ", "Ｔバック", "ファスナー", "スリット", "オープン", "Ｏバック")
+				RETURNF 1
+		CASE "セクシー"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "Ｈ", "シースルー", "ハイレグ", "Ｔバック", "ファスナー", "スリット")
+				RETURNF 1
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ストリング", "マイクロ", "Ｖ露出", "Ａ露出")
+				RETURNF 1
+		CASE "マイクロ"
+			SIF STRCOUNT(CSTR:ARG:パンツ, "マイクロ")
+				RETURNF 1
+			SIF STRCOUNT(CSTR:ARG:パンツ, "ハイレグ") && STRCOUNT(CSTR:ARG:パンツ, "Ｔバック") && STRCOUNT(CSTR:ARG:パンツ, "ローレグ")
+				RETURNF 1
+		CASE "蒸れ"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた")
+				RETURNF 0
+			SIF CHECK_STAIN(STAIN:ARG:パンツ, "蒸れ")
+				RETURNF 1
+		CASE "染み"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた", "通気性無し")
+				RETURNF 0
+			SIF CHECK_STAIN(STAIN:ARG:パンツ, "濡れ")
+				RETURNF 1
+		CASE "男物"
+			SIF STRCOUNTS(CSTR:ARG:パンツ, "ボクサーパンツ", "ブリーフ", "トランクス")
+				RETURNF 1
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:パンツ, ARGS)
+				RETURNF 1
+	ENDSELECT
+	RETURNF 0

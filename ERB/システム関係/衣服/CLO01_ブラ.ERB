@@ -1,0 +1,468 @@
+﻿;-------------------------------------------------
+;キャラARGにブラARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_BRA, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:ブラ%
+	CALL PALAM_BRA, ARGS, ARG
+
+	;コモンフラグを設定する
+	CSTR:ARG:パンツ = %SET_CLO_COMMON(CSTR:ARG:パンツ, ARG)%
+	CSTR:ARG:ブラ = %SET_CLO_COMMON(CSTR:ARG:ブラ, ARG)%
+
+	EQUIP:ARG:ブラ = STRLENS(CSTR:ARG:ブラ)
+	EQUIP:ARG:パンツ = STRLENS(CSTR:ARG:パンツ)
+
+	;パンツと色を揃える
+	CALL EQ_CLOCOLOR, ARG
+
+	;ボディスーツは脱がす
+	SIF EQUIP:ARG:ブラ && EQUIP:ARG:ボディスーツ
+		CALL SET_BODYS, "", ARG
+	SIF !TFLAG:着替えた && MEMO_CLO != CSTR:ARG:ブラ
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGの付けているブラの名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@BRA(ARG, ARGS)
+#FUNCTIONS
+#DIMS COLOR_ABOUT
+
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "略"
+			IF CHECK_BRA("貝殻", ARG)
+				RESULTS = 貝殻ブラ
+			ELSEIF CHECK_BRA("帷子", ARG)
+				RESULTS = 帷子
+			ELSEIF CHECK_BRA("前掛け", ARG)
+				RESULTS = 前掛け
+			ELSEIF CHECK_BRA("タンクトップ", ARG)
+				RESULTS = タンクトップ
+			;ELSEIF CHECK_BRA("マイクロ", ARG)
+			;	RESULTS = マイクロブラ
+			ELSEIF CHECK_BRA("水着", ARG)
+				IF CHECK_BRA("マイクロ", ARG)
+					RESULTS = マイクロビキニ
+				ELSE
+					RESULTS = ビキニ
+				ENDIF
+			ELSEIF CHECK_BRA("キャミソール", ARG)
+				RESULTS = キャミソール
+			ELSEIF CHECK_BRA("チューブトップ", ARG)
+				RESULTS = チューブトップ
+			ELSEIF CHECK_BRA("ヌーブラ", ARG)
+				RESULTS = ヌーブラ
+			ELSEIF CHECK_BRA("さらし", ARG)
+				RESULTS = さらし
+			ELSEIF CHECK_BRA("スポーツブラ", ARG)
+				RESULTS = スポブラ
+			ELSEIF CHECK_BRA("ニプレス", ARG)
+				RESULTS = ニプレス
+			ELSE
+				RESULTS = ブラジャー
+			ENDIF
+		CASE "種類"
+			;LOCALSに名称が入る
+			SPLIT CSTR:ARG:ブラ, "/", RESULTS
+		CASE "大体の形状"
+			IF CHECK_BRA("３／４カップ", ARG)
+				RESULTS = ３／４カップブラ
+			ELSEIF CHECK_BRA("ハーフカップ", ARG)
+				RESULTS = ハーフカップブラ
+			ELSEIF CHECK_BRA("シェルフブラ", ARG)
+				RESULTS = シェルフブラ
+			ELSEIF CHECK_BRA("フリルビキニ", ARG)
+				RESULTS = フリルビキニブラ
+			ELSEIF CHECK_BRA("マイクロビキニ", ARG)
+				RESULTS = マイクロビキニ
+			ELSEIF CHECK_BRA("ビキニ", ARG)
+				RESULTS = ビキニブラ
+			ELSEIF CHECK_BRA("チューブトップ", ARG)
+				RESULTS = チューブトップ
+			ELSEIF CHECK_BRA("タンクトップ", ARG)
+				RESULTS = タンクトップ
+			ELSEIF CHECK_BRA("スポーツブラ", ARG)
+				RESULTS = スポーツブラ
+			ELSEIF CHECK_BRA("ヌーブラ", ARG)
+				RESULTS = ヌーブラ
+			ELSEIF CHECK_BRA("オープンブラ", ARG)
+				RESULTS = オープンブラ
+			ELSEIF CHECK_BRA("マイクロブラ", ARG)
+				RESULTS = マイクロブラ
+			ELSEIF CHECK_BRA("レース", ARG)
+				RESULTS = レースのブラジャー
+			ELSEIF CHECK_BRA("フリル", ARG)
+				RESULTS = フリルのブラジャー
+			ELSEIF CHECK_BRA("さらし", ARG)
+				RESULTS = さらし
+			ELSEIF CHECK_BRA("キャミソール", ARG)
+				RESULTS = キャミソール
+			ELSE
+				RESULTS = ノーマルブラ
+			ENDIF
+		CASE ""
+			;LOCALSに名称が入る
+			SPLIT CSTR:ARG:ブラ, "/", RESULTS
+			COLOR_ABOUT = %CHECK_CLOCOLOR(CSTR:ARG:ブラ)%
+
+			;名称と色が被ってる場合は省略
+			IF STRCOUNT(RESULTS, COLOR_ABOUT)
+				RETURNF RESULTS
+			;一部の柄物
+			ELSEIF STRCOUNTS(CSTR:ARG:ブラ, "縞々", "水玉模様", "豹柄")
+				SELECTCASE COLOR_ABOUT
+				CASE ""
+				CASE "赤", "青", "黒", "白"
+					RESULTS = %COLOR_ABOUT%い%RESULTS%
+				CASE "水玉ピンク", "水玉黒", "水玉黄色", "水玉水色", "水玉白黒", "水玉白"
+					RESULTS = %EXTSTR(COLOR_ABOUT, "水玉")%の%RESULTS%
+				CASEELSE
+					RESULTS = %COLOR_ABOUT%の%RESULTS%
+				ENDSELECT
+			ELSE
+				RESULTS = %CLOCOLOR(CSTR:ARG:ブラ, "形容詞")%%RESULTS%
+			ENDIF
+
+	ENDSELECT
+	RETURNF RESULTS
+
+
+;-------------------------------------------------
+;ARG番のブラの名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_BRA(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		CASE 0
+			RESULTS = シンプルブラ
+		CASE 1
+			RESULTS = ハーフカップブラ
+		CASE 2
+			RESULTS = フリルブラ
+		CASE 3
+			RESULTS = スポーツブラ
+		CASE 4
+			RESULTS = 刺繍入りブラ
+		CASE 5
+			RESULTS = シルクブラ
+		CASE 6
+			RESULTS = マイクロビキニブラ
+		CASE 7
+			RESULTS = しましまブラ
+		CASE 8
+			RESULTS = スパンコールブラ
+		CASE 9
+			RESULTS = チューブトップブラ
+		CASE 10
+			RESULTS = バンソーコー
+		CASE 11
+			RESULTS = ニップレス
+		CASE 12
+			RESULTS = フェザーモチーフブラ
+		CASE 13
+			RESULTS = ワイルドレザーブラ
+		CASE 14
+			RESULTS = さらし
+		CASE 15
+			RESULTS = チェックプリントブラ
+		CASE 16
+			RESULTS = オープンブラ
+		CASE 17
+			RESULTS = シースルーレースブラ
+		CASE 18
+			RESULTS = シルクビスチェ
+		CASE 19
+			RESULTS = レザービスチェ
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGにブラARGSを着せた場合のCSTR処理
+;名前/色/属性/…/属性/ というルールで記述される(一番左は名前、次は色で固定)
+;後で属性を追加したい際には CSTR:ブラ += "水着/" のように単純に追加すればよい。同じ属性が複数あっても問題ない
+;-------------------------------------------------
+@PALAM_BRA, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "ノーブラ", "無し"
+			CSTR:ARG:ブラ = 
+		CASE "シンプルブラ"
+			CSTR:ARG:ブラ = シンプルブラ/おとなしい色/フルカップ/
+		CASE "ブラジャー"
+			CSTR:ARG:ブラ = ブラジャー/おとなしい色/フルカップ/
+		CASE "フルカップブラ"
+			CSTR:ARG:ブラ = フルカップブラ/おとなしい色/
+		CASE "３／４カップブラ"
+			CSTR:ARG:ブラ = ３／４カップブラ/おとなしい色/
+		CASE "ハーフカップブラ"
+			CSTR:ARG:ブラ = ハーフカップブラ/Ｈな色/
+		CASE "シェルフブラ"
+			CSTR:ARG:ブラ = シェルフブラ/Ｈな色/乳首露出/乳房露出/
+		CASE "チューブトップ"
+			CSTR:ARG:ブラ = チューブトップ/おとなしい色/
+		CASE "タンクトップ"
+			CSTR:ARG:ブラ = タンクトップ/おとなしい色/
+		CASE "スポーツブラ"
+			CSTR:ARG:ブラ = スポーツブラ/おとなしい色/
+		CASE "ヌーブラ"
+			CSTR:ARG:ブラ = ヌーブラ/ランダムカラー/
+		CASE "オープンブラ"
+			CSTR:ARG:ブラ = オープンブラ/Ｈな色/乳首露出/フルカップ/
+		CASE "マイクロブラ"
+			CSTR:ARG:ブラ = マイクロブラ/ランダムカラー/
+
+		CASE "縞々ブラ"
+			CSTR:ARG:ブラ = 縞々ブラ/縞々色/フルカップ/
+		CASE "水玉模様のブラ"
+			CSTR:ARG:ブラ = 水玉模様のブラ/水玉色/フルカップ/
+		CASE "豹柄ブラ"
+			CSTR:ARG:ブラ = 豹柄ブラ/豹柄/
+
+		CASE "レースのブラ"
+			CSTR:ARG:ブラ = レースのブラ/Ｈな色/シースルー/ランジェリー/
+		CASE "シースルーブラ"
+			CSTR:ARG:ブラ = シースルーブラ/おとなしい色/ランジェリー/
+		CASE "フリルのブラ"
+			CSTR:ARG:ブラ = フリルのブラ/おとなしい色/ランジェリー/
+		CASE "レザーブラ"
+			CSTR:ARG:ブラ = レザーブラ/黒/
+
+		CASE "ビキニブラ"
+			CSTR:ARG:ブラ = ビキニブラ/ランダムカラー/紐/フルカップ/
+		CASE "フリルビキニブラ"
+			CSTR:ARG:ブラ = フリルビキニブラ/ランダムカラー/紐/
+		CASE "マイクロビキニブラ"
+			CSTR:ARG:ブラ = マイクロビキニブラ/ランダムカラー/紐/
+
+		;特殊
+		CASE "さらし"
+			CSTR:ARG:ブラ = さらし/白/
+		CASE "キャミソール"
+			CSTR:ARG:ブラ = キャミソール/おとなしい色/ランジェリー/
+
+		CASE "Ｈなブラ"
+			CSTR:ARG:ブラ = Ｈなブラ/Ｈな色/
+			
+		CASE "ハート型ニプレス"
+			CSTR:ARG:ブラ = ハート型ニプレス/ランダムカラー/
+		CASE "丸型ニプレス"
+			CSTR:ARG:ブラ = 丸型ニプレス/ランダムカラー/
+		CASE "×型ニプレス"
+			CSTR:ARG:ブラ = ×型ニプレス/ランダムカラー/
+		CASE "星型ニプレス"
+			CSTR:ARG:ブラ = 星型ニプレス/ランダムカラー/
+
+		CASE "白いビキニブラ"
+			CSTR:ARG:ブラ = 白いビキニブラ/白/紐/フルカップ/
+		CASE "黒いビキニブラ"
+			CSTR:ARG:ブラ = 黒いビキニブラ/黒/紐/フルカップ/
+		CASE "虎柄ビキニブラ"
+			CSTR:ARG:ブラ = 虎柄ビキニブラ/虎柄/紐/
+		CASE "牛柄ビキニブラ"
+			CSTR:ARG:ブラ = 牛柄ビキニブラ/牛柄/紐/
+			
+		CASE "猫型ブラ"
+			CSTR:ARG:ブラ = 猫型ブラ/黒/紐/ランジェリー/
+		CASEELSE
+			CSTR:ARG:ブラ = %ARGS%/ランダムカラー/
+	ENDSELECT
+
+	CSTR:ARG:ブラ = %MERGE_STR(CSTR:ARG:ブラ, STR_ADD)%
+
+;-------------------------------------------------
+;ARGの着けているブラの詳細
+;-------------------------------------------------
+@DETAIL_BRA(ARG, ARGS)
+#FUNCTIONS
+	VARSET RESULTS
+	;Ｈな下着
+	IF CHECK_BRA("Ｈなブラ", ARG)
+		RESULTS = エロチックな
+		IF CHECK_BRA("シースルー", ARG)
+			RESULTS += "シースルー素材の"
+		ELSEIF CHECK_BRA("レース", ARG)
+			RESULTS += "レースで彩られた"
+		ELSEIF CHECK_BRA("シルク", ARG)
+			RESULTS += "シルク製の"
+		ENDIF
+		IF CHECK_BRA("オープンブラ", ARG)
+			RESULTS += "乳首周辺が全く隠されていないブラジャー(？)"
+		ELSEIF CHECK_BRA("シェルフブラ", ARG)
+			RESULTS += "乳房の下までしかなく乳首が丸見えのブラジャー(？)"
+		ELSEIF CHECK_BRA("マイクロ", ARG)
+			RESULTS += "布面積が異常に少ないブラジャー"
+		ELSEIF CHECK_BRA("ハーフカップ", ARG)
+			RESULTS += "乳房の上半分が半分見えているブラジャー"
+		ELSE
+			RESULTS += "ブラジャー"
+		ENDIF
+
+	ELSEIF CHECK_BRA("マイクロビキニ", ARG)
+		IF RAND:2
+			RESULTS = 小さな布と形容した方がいいような、物凄くきわどいビキニ
+		ELSE
+			RESULTS = 布地が小さいせいで乳輪が隠しきれていない極小生地の水着
+		ENDIF
+
+	ELSEIF CHECK_BRA("ビキニ", ARG)
+		RESULTS = 大胆なビキニタイプのブラ
+	ELSEIF CHECK_BRA("オープンブラ", ARG)
+		RESULTS = 乳首周辺が全く隠されていないブラジャー
+	ELSEIF CHECK_BRA("タンクトップ", ARG)
+		RESULTS = 活動的なタンクトップ
+	ELSEIF CHECK_BRA("スポーツブラ", ARG)
+		RESULTS = 胸の揺れをカバーするスポーツブラ
+	ELSEIF CHECK_BRA("さらし", ARG)
+		RESULTS = 胸を押さえつけて盛り上がりを隠すさらし
+	ELSEIF CHECK_BRA("キャミソール", ARG)
+		RESULTS = 可愛らしいキャミソール
+	ELSEIF CHECK_BRA("ニプレス", ARG)
+		RESULTS = 乳首だけを隠すように貼られた
+		IF CHECK_BRA("ハート型")
+			RESULTS += "ハート型の"
+		ELSEIF CHECK_BRA("丸型")
+			RESULTS += "丸い"
+		ELSEIF CHECK_BRA("×型")
+			RESULTS += "バツ印の"
+		ELSEIF CHECK_BRA("星型")
+			RESULTS += "星型の"
+		ENDIF
+		RESULTS += "ニプレス"
+
+	ELSEIF CHECK_BRA("縞々", ARG)
+		RESULTS = 胸のラインを控えめに主張させる縞々のブラ
+	ELSEIF CHECK_BRA("水玉模様", ARG)
+		RESULTS = 可愛らしい水玉模様の%TEXTR("ブラ/の下着")%
+	ELSEIF CHECK_BRA("豹柄ブラ", ARG)
+		SELECTCASE AGE(ARG)
+		CASE IS >= 4
+			RESULTS = %TEXTR("セクシーな/エロチックな/大人の香り漂う")%
+		CASE 3
+			RESULTS = %TEXTR("セクシーな/挑発的な/ギャルギャルしい")%
+		CASE 2
+			RESULTS = %TEXTR("大人びた/可愛らしい/挑発的な/")%
+		CASE 1
+			RESULTS = %TEXTR("見た目とのアンバランスさがたまらない/可愛らしい/挑発的な")%
+		ENDSELECT
+		RESULTS += "豹柄のブラ"
+
+	ELSEIF CHECK_BRA("レザー", ARG)
+		RESULTS = 倒錯的な雰囲気漂う、革製のブラ
+
+	ELSEIF CHECK_BRA("レースのブラ", ARG)
+		IF RAND:4 == 0
+			RESULTS = セクシーな%CLOCOLOR(CSTR:ARG:ブラ, "形容詞")%レース生地のブラ
+		ELSEIF RAND:3 == 0
+			RESULTS = 大人の香り漂う%CLOCOLOR(CSTR:ARG:ブラ, "形容詞")%レースのブラジャー
+		ELSEIF RAND:2
+			RESULTS = 上品でお洒落なレース生地のブラ
+		ELSE
+			RESULTS = 大人っぽくも可愛らしいレースのブラジャー
+		ENDIF
+	ELSEIF CHECK_BRA("フリルのブラ", ARG)
+		RESULTS = %TEXTR("可愛らしい/清楚な")%フリル%TEXTR("で飾られた/付きの")%ブラジャー
+	ELSEIF CHECK_BRA("シースルーブラ", ARG)
+		IF RAND:2 == 0
+			RESULTS = 大胆に透けているブラジャー
+		ELSE
+			RESULTS = なんとも淫靡なシースルーのブラ
+		ENDIF
+
+	ELSEIF CHECK_BRA("ハーフカップ", ARG)
+		RESULTS = おっぱいの上半分が露出した%CLOCOLOR(CSTR:ARG:ブラ, "形容詞")%ブラジャー
+	ELSEIF CHECK_BRA("シェルフ", ARG)
+		RESULTS = 布地がおっぱいの下までしか無く乳首が丸見えのブラジャー
+	ELSEIF CHECK_BRA("ヌーブラ", ARG)
+		RESULTS = 肩紐もベルトも無い、すっきりしたシルエットのブラ
+	ELSEIF CHECK_BRA("チューブトップ", ARG)
+		RESULTS = ぴったりと胸を覆うチューブトップ
+	ELSEIF CHECK_BRA("シンプル", ARG)
+		RESULTS = 飾り気の少ない%CLOCOLOR(CSTR:ARG:ブラ, "形容詞")%ブラジャー
+	ELSE
+		RESULTS = %BRA(ARG)%
+	ENDIF
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARGのブラが条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_BRA(ARGS, ARG)
+#FUNCTION
+	SIF EQUIP:ARG:ブラ == 0
+		RETURNF 0
+
+	SELECTCASE ARGS
+		CASE "はだけ可"
+			;既に露出している場合
+			SIF STRCOUNTS(CSTR:ARG:ブラ, "胸露出", "乳首露出", "はだけた", "はだけ不可")
+				RETURNF 0
+			RETURNF 1
+		CASE "乳首露出"
+			SIF STRCOUNTS(CSTR:ARG:ブラ, "胸露出", "乳首露出")
+				RETURNF 1
+		CASE "乳輪露出"
+			SIF STRCOUNTS(CSTR:ARG:ブラ, "胸露出", "乳首露出", "乳輪露出")
+				RETURNF 1
+		CASE "セクシー"
+			SIF STRCOUNTS(CSTR:ARG:ブラ, "胸露出", "乳首露出", "乳輪露出", "マイクロ")
+				RETURNF 1
+		CASE "見栄え良し"
+			SIF STRCOUNTS(CSTR:ARG:ブラ, "レース", "シースルー", "フリル")
+				RETURNF 1
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:ブラ, ARGS)
+				RETURNF 1
+	ENDSELECT
+
+	RETURNF 0
+
+
+;-------------------------------------------------
+;キャラARGが今身に着けているパンツにふさわしいブラを（あれば）選ぶ
+;-------------------------------------------------
+@COORDINATE_BRA, ARG
+	;男物だと変更なし
+	IF CHECK_PANTIES("男物", ARG)
+		;パンツと色を揃える
+		CALL EQ_CLOCOLOR, ARG
+	ELSEIF CHECK_PANTIES("Ｈな下着", ARG)
+		CALL SET_BRA, "Ｈなブラ", ARG
+	ELSEIF CHECK_PANTIES("オープンクロッチ", ARG)
+		CALL SET_BRA, "オープンブラ", ARG
+	ELSEIF CHECK_PANTIES("褌", ARG)
+		CALL SET_BRA, "さらし", ARG
+	ELSEIF CHECK_PANTIES("マイクロビキニ", ARG)
+		CALL SET_BRA, "マイクロビキニブラ", ARG
+	ELSEIF CHECK_PANTIES("ビキニ", ARG)
+		CALL SET_BRA, "ビキニブラ", ARG
+
+	ELSEIF CHECK_PANTIES("縞々", ARG)
+		CALL SET_BRA, "縞々ブラ", ARG
+	ELSEIF CHECK_PANTIES("水玉", ARG)
+		CALL SET_BRA, "水玉模様のブラ", ARG
+	ELSEIF CHECK_PANTIES("豹柄", ARG)
+		CALL SET_BRA, "豹柄ブラ", ARG
+
+	ELSEIF CHECK_PANTIES("レース", ARG)
+		CALL SET_BRA, "レースのブラ", ARG
+	ELSEIF CHECK_PANTIES("シースルー", ARG)
+		CALL SET_BRA, "シースルーブラ", ARG
+	ELSEIF CHECK_PANTIES("フリル", ARG)
+		CALL SET_BRA, "フリルのブラ", ARG
+	ELSEIF CHECK_PANTIES("レザー", ARG)
+		CALL SET_BRA, "レザーブラ", ARG
+	ELSE
+		;パンツと色を揃える
+		CALL EQ_CLOCOLOR, ARG
+	ENDIF
+

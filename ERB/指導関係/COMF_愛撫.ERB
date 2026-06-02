@@ -1,0 +1,115 @@
+﻿;-------------------------------------------------
+;愛撫実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:愛撫]]
+#FUNCTION
+    ;愛撫実行判定
+    RESULT = COMABLE_DEF([[TRAIN:愛撫]]) && COND("指の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:愛撫]]
+	IF (CFLAG:着衣状態 & 64) && CFLAG:特別コスタイプ <= 50
+		CALL PRINT_CLOTHTYPE_SPECIAL
+		PRINT ごしに、
+	ELSEIF CFLAG:着衣状態 & 28
+		CALL PRINT_上着タイプ(TARGET)
+		PRINT ごしに、
+	ELSEIF (CFLAG:着衣状態 & 1) || (CFLAG:着衣状態 & 2)
+		PRINT 下着ごしに、
+	ENDIF
+						;****スライムパッチ追加ここから****
+	IF TEQUIP:獣姦プレイ == 0 && TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+						;****スライムパッチ追加ここまで****
+		PRINTFORM %CALLNAME:PLAYER%は
+		;口が汚れてないか、主人に汚れ無視があるか、助手でない時にボールギャグ装備中でなくキス経験済みの場合
+		SIF WILL_PLAYER_KISS(TARGET,PLAYER)
+			PRINT キスをしながら
+	ENDIF
+	PRINTFORM %CALLNAME:TARGET%の
+	IF TALENT:未熟
+		PRINT 未熟な
+	ELSEIF IS_小柄(TARGET)
+		PRINT 未発達な
+	ELSEIF IS_肥満(TARGET)
+		PRINT でっぷり太った
+	ENDIF
+						;****スライムパッチ追加ここから****
+	IF TEQUIP:スライム生成
+		PRINTL 体をスライムが這い回った…
+						;****スライムパッチ追加ここまで****
+	ELSEIF TEQUIP:触手召喚
+		PRINTL 体を触手が弄んだ…
+	ELSEIF TEQUIP:獣姦プレイ
+		PRINTL 体を犬の舌が舐めまわした…
+	ELSE
+		PRINTL 体を丹念に愛撫した…
+	ENDIF
+	;妊娠中で、出産日の5日前でズーコの着ぐるみ以外の特別コスチュームか特別コスチュームでない時
+	SIF TALENT:妊娠 && CFLAG:出産日 <= DAY+5 && (CFLAG:特別コスタイプ != 11 || (CFLAG:着衣状態 & 64) == 0)
+		PRINTFORML %CALLNAME:TARGET%のまん丸く膨れた腹部の中から、微かに赤ん坊が蹴り返してくる……
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:愛撫]](ARG=100)
+#DIM CAN_REACH_胸
+
+    IF CHECK_COM("ローションマッサージ", SELECTCOM)
+        SIF HAVE_VAGINA(TARGET)
+            CALL CALC_SOURCE_COM_秘貝開帳(30)
+    ENDIF
+
+    SIF WILL_PLAYER_KISS(TARGET,PLAYER)
+        CALL CALC_SOURCE_COM_[[TRAIN:キス]](100)
+
+    ;顔面騎乗orシックスナイン状態でないなら胸も愛撫
+    CAN_REACH_胸 = IS_軟体(PLAYER) || (TEQUIP:PLAYER:シックスナイン + TEQUIP:PLAYER:顔面騎乗 == 0)
+    SIF CAN_REACH_胸
+        CALL CALC_SOURCE_COM_[[TRAIN:胸愛撫]](100)
+
+    CALL CALC_SOURCE_COM_[[TRAIN:手マン]](100)
+
+    ;淫紋アリ(シールはダメ)だとＶ快楽発生
+    IF MARK:淫紋 && HAVE_VAGINA(TARGET) && !IS処女(TARGET)
+        TMP_SRC:TARGET:快Ｖ = CALCF("Ｖ刺激", 1)
+        ;調教者の指使いをみる
+        TMP_SRC:TARGET:快Ｖ = SOURCE_EXABL(TMP_SRC:TARGET:快Ｖ, "指使い", PLAYER)
+        TMP_SRC:TARGET:愛液分泌 = 100
+    ENDIF
+
+	CALL APPLY_SOURCE_RATE(70)
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:愛撫]](ARG=100)
+    ;顔面騎乗orシックスナイン状態でないなら胸も愛撫
+    SIF WILL_PLAYER_KISS(TARGET,PLAYER)
+        CALL CALC_NOWEX_COM_[[TRAIN:キス]](100)
+    SIF TEQUIP:触手召喚 || (TEQUIP:PLAYER:シックスナイン + TEQUIP:PLAYER:顔面騎乗 == 0)
+        CALL CALC_NOWEX_COM_[[TRAIN:胸愛撫]](100)
+    CALL CALC_NOWEX_COM_[[TRAIN:手マン]](100)
+
+	CALL APPLY_EX_RATE(70)
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:愛撫]]
+    ; ;-------------------------------------------------
+    ; ;汚れの処理
+    ; ;-------------------------------------------------
+    SIF WILL_PLAYER_KISS(TARGET,PLAYER)
+        CALL CALC_FLAG_COM_[[TRAIN:キス]](100)
+    SIF TEQUIP:触手召喚 || (TEQUIP:PLAYER:シックスナイン + TEQUIP:PLAYER:顔面騎乗 == 0)
+        CALL CALC_FLAG_COM_[[TRAIN:胸愛撫]](100)
+    CALL CALC_FLAG_COM_[[TRAIN:手マン]](100)
+

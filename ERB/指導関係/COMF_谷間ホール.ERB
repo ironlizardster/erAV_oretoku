@@ -1,0 +1,139 @@
+﻿;-------------------------------------------------
+;谷間ホール実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:谷間ホール]]
+#FUNCTION
+    ;谷間ホール実行判定
+    RESULT = COMABLE_DEF(TNUM("谷間ホール")) && COND("乳首の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:谷間ホール]]
+    PRINTFORML %CALLNAME:PLAYER%は、%CALLNAME:PLAYER%をおさえつけて、
+    SIF TEQUIP:縄 == 1
+        PRINTFORM キュッと縛りあげられた
+    ;巨乳
+    IF IS_巨乳(TARGET)
+        PRINT 豊満な乳房
+    ;爆乳
+    ELSEIF IS_デカパイ(TARGET)
+        PRINT 豊満すぎる程の乳房
+    ENDIF
+    PRINTFORML の隙間に自身のペニスを挿入すると、
+    PRINTFORML その柔らかく温かい胸で扱くように腰を前後させ始めた……
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:谷間ホール]](ARG=100)       
+    ;-------------------------------------------------
+    ;谷間ホールをされた対象
+    ;-------------------------------------------------
+    SIF IS_汚臭鈍感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("ペニス"),STNNUM("胸"),1,2) * 5 / 3
+    SIF IS_汚臭敏感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("ペニス"),STNNUM("胸"),1,2) * 5 * 2
+    TMP_SRC:TARGET:痛覚 += 200
+    TMP_SRC:TARGET:露出 += 250
+    TMP_SRC:TARGET:屈従 += 1500
+    TMP_SRC:TARGET:逸脱 += 500
+    TMP_SRC:TARGET:恭順 += 500
+    ;ABL:Ｂ感覚をみる
+    TMP_SRC:TARGET:性行動 += 420 + LIMIT(ABL:TARGET:奉仕精神,0,5)*80
+    TMP_SRC:TARGET:達成 += LIMIT(ABL:TARGET:奉仕精神+1,1,6)*150 + LIMIT(ABL:TARGET:Ｂ感覚-1,0,4)*150 + LIMIT(ABL:TARGET:Ｂ感覚-3,0,2)*300 + LIMIT(ABL:TARGET:Ｂ感覚-4,0,1)*100
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:TARGET:技巧
+        CASE 0
+            TIMES TMP_SRC:TARGET:性行動 , 0.5
+            TIMES TMP_SRC:TARGET:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:TARGET:性行動 , 0.8
+            TIMES TMP_SRC:TARGET:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:TARGET:性行動 , 1
+            TIMES TMP_SRC:TARGET:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:TARGET:性行動 , 1.2
+            TIMES TMP_SRC:TARGET:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:TARGET:性行動 , 1.5
+            TIMES TMP_SRC:TARGET:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:TARGET:性行動 , 2
+            TIMES TMP_SRC:TARGET:達成 , 2
+    ENDSELECT
+    
+    ;調教者
+    ;快Ｃのソース
+    ;ABL:技巧をみる
+    TMP_SRC:PLAYER:快Ｃ += 1200 + MIN(ABL:PLAYER:技巧, 5) * 500 + LIMIT(ABL:PLAYER:技巧 - 1,0,4) * 100 + LIMIT(ABL:PLAYER:技巧 - 2,0,3) * 100
+    TMP_SRC:PLAYER:露出 = 220
+    TMP_SRC:PLAYER:逸脱 = 50
+
+    IF PLAYER == MASTER || TARGET == MASTER
+        TEMP_NUM = TARGET
+        SIF TARGET == MASTER
+            TEMP_NUM = PLAYER
+        ;ABL:Ｃ感覚をみる
+        TMP_SRC:PLAYER:快Ｃ = TMP_SRC:PLAYER:快Ｃ * (MIN(ABL:TEMP_NUM:Ｃ感覚, 7)*50 + 100) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:PLAYER:快Ｃ = TMP_SRC:PLAYER:快Ｃ * (MIN(ABL:TARGET:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:PLAYER:快Ｃ = TMP_SRC:PLAYER:快Ｃ * (MIN(ABL:PLAYER:射精中毒, 5)*10 + 80) / 100
+    ELSE
+        ;PLAYERからTARGETへの相性を見る
+        SELECTCASE RELATION:PLAYER:(NO:TARGET)
+            CASE IS < 50
+                TIMES TMP_SRC:PLAYER:快Ｃ , 0.75
+            CASE IS < 90
+                TIMES TMP_SRC:PLAYER:快Ｃ , 1
+            CASE IS < 110
+                TIMES TMP_SRC:PLAYER:快Ｃ , 1.5
+            CASE IS < 150
+                TIMES TMP_SRC:PLAYER:快Ｃ , 2
+            CASE IS < 200
+                TIMES TMP_SRC:PLAYER:快Ｃ , 2.5
+            CASE IS < 300
+                TIMES TMP_SRC:PLAYER:快Ｃ , 3.5
+            CASEELSE
+                TIMES TMP_SRC:PLAYER:快Ｃ , 5
+        ENDSELECT
+    ENDIF
+    SIF IS_汚臭鈍感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("胸"),STNNUM("ペニス"),1,3) * 5 / 3
+    SIF IS_汚臭敏感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("胸"),STNNUM("ペニス"),1,3) * 5 * 2
+
+	CALL APPLY_SOURCE_RATE(ARG)
+
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:谷間ホール]](ARG=100)
+	CALL CALC_NOWEX_COM_[[TRAIN:パイズリ]](ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:谷間ホール]]
+    SIF PLAYER == MASTER
+        TCVAR:主人経験 += 1
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+        ;屈服刻印１に相当
+        TCVAR:PLAYER:屈服刻印取得 = 2
+    ENDIF
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:快楽経験 = 1
+    TCVAR:PLAYER:被虐快楽経験 = 1
+    STAIN:ペニス |= STAIN:PLAYER:胸
+    STAIN:PLAYER:胸 |= STAIN:ペニス
+
+

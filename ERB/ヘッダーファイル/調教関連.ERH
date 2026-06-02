@@ -1,0 +1,26 @@
+#DIM CONST STAIN_Ｖ = 1
+#DIM CONST STAIN_Ｐ = 2
+#DIM CONST STAIN_精 = 4
+#DIM CONST STAIN_Ａ = 8
+#DIM CONST STAIN_乳 = 16
+#DIM CONST STAIN_尿 = 32
+#DIM CONST STAIN_媚 = 64
+
+;一時的SOURCE,とりあえず1000人分で30種類
+#DIM TMP_SRC, 1000, 30
+
+;ソース計算用刺激モード
+#DIM CONST 刺激_補正なし = 0
+#DIM CONST 刺激_緩やか = 1
+#DIM CONST 刺激_弱め = 2
+#DIM CONST 刺激_強め = 3
+#DIM CONST 刺激_急激 = 4
+
+;屈従と達成計算用モード
+;PLAYERが主導的にコマンドを実行したときもしくはTARGETがPLAYERにコマンドを実行するように命令したとき
+#DIM CONST 主導_調教 = 0
+;PLAYERが命令されて奉仕コマンドを実行したときもしくはTARGETが主導的なPLAYERにコマンドを実行されたとき
+#DIM CONST 主導_被調教 = 1
+;PLAYERがMASTERに命令されて別のTARGETにコマンドを実行したとき
+#DIM CONST 主導_被命令 = 2
+

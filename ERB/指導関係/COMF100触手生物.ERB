@@ -3,7 +3,7 @@
 
 PRINTL 触手召喚
 SAVESTR:0 = 触手召喚
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 IF TEQUIP:触手召喚
 	TEQUIP:触手召喚 = 0
@@ -55,7 +55,7 @@ ELSE
 	LOSEBASE:体力 += A
 	LOSEBASE:気力 += A * 2
 
-	UP:[[UP:恐怖]] += A * 20
+	UP:恐怖 += A * 20
 	SOURCE:逸脱 += A * 5
 ENDIF
 T = 0
@@ -119,7 +119,7 @@ ENDIF
 LOSEBASE:体力 += A
 LOSEBASE:気力 += A * 2
 
-UP:[[UP:恐怖]] += A * 20
+UP:恐怖 += A * 20
 SOURCE:不潔 += A * 10
 SOURCE:逸脱 += A * 5
 
@@ -315,7 +315,7 @@ RETURN 1
 ;触手口辱
 PRINTL 触手口辱
 SAVESTR:0 = 触手口辱
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 LOSEBASE:体力 += 80
 LOSEBASE:気力 += 100

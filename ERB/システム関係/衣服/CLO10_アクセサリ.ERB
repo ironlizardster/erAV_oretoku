@@ -1,0 +1,207 @@
+﻿;-------------------------------------------------
+;キャラARGにアクセサリARGSをつける。ARGS == "" なら全部外す
+;これだけは / で区切って10個程度まで装備可能
+;他のものと異なり各装備に追加の属性などは無く、記号的な意味が非常に強い
+;既に着けているアクセサリに区分が被った物がある場合には上書きする
+;-------------------------------------------------
+@SET_OTHER, ARGS, ARG
+#DIM LCOUNT
+#DIMS MEMO_CLO
+
+	MEMO_CLO = %CSTR:ARG:アクセサリ%
+
+	SELECTCASE ARGS
+		CASE ""
+			CSTR:ARG:アクセサリ = 
+		CASEELSE
+			VARSET LOCALS
+			SPLIT ARGS, "/", LOCALS
+
+			;すでに装備している物から区分被りを消す
+			FOR LCOUNT, 0, 10
+				SELECTCASE LOCALS:LCOUNT
+					CASE ""
+						CONTINUE
+					CASEELSE
+						CALL RESET_OTHER, LOCALS:LCOUNT, ARG
+				ENDSELECT
+			NEXT
+			CSTR:ARG:アクセサリ += @"%ARGS%\/"
+			;念のため "/" の整理
+			CALL RESET_OTHER, "", ARG
+	ENDSELECT
+
+	EQUIP:ARG:アクセサリ = STRLENS(CSTR:ARG:アクセサリ)
+	SIF MEMO_CLO != CSTR:ARG:アクセサリ
+		TFLAG:着替えた = 1
+	RETURN 1
+
+
+;-------------------------------------------------
+;ARGが身に着けているARGSをはずし、順番を区分依存で揃える
+;身に着けていない場合は何も起きない…のでARGSに""を入れる事で不要な "/" の整理も出来る
+;-------------------------------------------------
+@RESET_OTHER, ARGS, ARG
+#DIM LCOUNT
+#DIMS ORDER_OTHER, 10
+
+	VARSET LOCALS
+	SPLIT CSTR:ARG:アクセサリ, "/", LOCALS
+	CSTR:ARG:アクセサリ = 
+
+	VARSET ORDER_OTHER
+	FOR LCOUNT, 0, 10
+
+		SELECTCASE LOCALS:LCOUNT
+			;ARGSと一致する場合は飛ばす
+			CASE "", ARGS
+				CONTINUE
+			;ARGSが"その他"以外の区分ならばARGSと同じ区分のものを飛ばす
+			CASEELSE
+				SIF TYPE_OTHER(ARGS) != "" && TYPE_OTHER(LOCALS:LCOUNT) == TYPE_OTHER(ARGS)
+					CONTINUE
+		ENDSELECT
+
+		SELECTCASE TYPE_OTHER(LOCALS:LCOUNT)
+			CASE "首"
+				ORDER_OTHER:0 += @"%LOCALS:LCOUNT%\/"
+			CASE "眼鏡"
+				ORDER_OTHER:1 += @"%LOCALS:LCOUNT%\/"
+			CASE "帽子"
+				ORDER_OTHER:2 += @"%LOCALS:LCOUNT%\/"
+			CASE "つけ耳"
+				ORDER_OTHER:3 += @"%LOCALS:LCOUNT%\/"
+			CASE "髪飾り"
+				ORDER_OTHER:4 += @"%LOCALS:LCOUNT%\/"
+			CASE "外套"
+				ORDER_OTHER:5 += @"%LOCALS:LCOUNT%\/"
+			CASEELSE
+				SIF LOCALS:LCOUNT != ""
+					ORDER_OTHER:6 += @"%LOCALS:LCOUNT%\/"
+		ENDSELECT
+	NEXT
+
+	FOR LCOUNT, 0, 10
+		SELECTCASE ORDER_OTHER:LCOUNT
+			CASE ""
+				CONTINUE
+			CASEELSE
+				CSTR:ARG:アクセサリ += @"%ORDER_OTHER:LCOUNT%"
+		ENDSELECT
+	NEXT
+
+	EQUIP:ARG:アクセサリ = STRLENS(CSTR:ARG:アクセサリ)
+
+;-------------------------------------------------
+;CSTR:ARG:アクセサリにARGSと完全一致するものがある場合には外し、そうでないなら装備させる
+;-------------------------------------------------
+@INVERTSET_OTHER, ARGS, ARG
+	SIF ARG == 0 && TARGET
+		ARG = TARGET
+	IF STRCOUNT(@"\/%CSTR:ARG:アクセサリ%", @"\/%ARGS%\/")
+		CALL RESET_OTHER, ARGS, ARG
+	ELSE
+		CALL SET_OTHER, ARGS, ARG
+	ENDIF
+
+;-------------------------------------------------
+;アクセサリARGSの区分を返す。その他など特定区分に属さないものの場合は空文字が返る
+;-------------------------------------------------
+@TYPE_OTHER(ARGS)
+#FUNCTIONS
+#DIMS CHECK_TABLE
+#DIM LCOUNT
+
+	CHECK_TABLE = 首/眼鏡/帽子/つけ耳/髪飾り/外套
+	VARSET LOCALS
+	SPLIT CHECK_TABLE, "/", LOCALS
+
+	FOR LCOUNT, 0, 10
+		SIF LOCALS:LCOUNT == ""
+			BREAK
+		SELECTCASE LOCALS:LCOUNT
+			CASE ""
+				BREAK
+			CASE "首"
+				SIF STRCOUNTS(ARGS, "首", "ペンダント", "ネックレス", "タイ", "チョーカー", "マフラー", "ストール")
+					RETURNF LOCALS:LCOUNT
+			CASE "眼鏡"
+				SIF STRCOUNTS(ARGS, "眼鏡", "モノクル", "グラス", "目隠し")
+					RETURNF LOCALS:LCOUNT
+			CASE "帽子"
+				SIF STRCOUNTS(ARGS, "ハット", "帽", "ヘッドドレス", "ボンネット", "キャップ", "ベール")
+					RETURNF LOCALS:LCOUNT
+			CASE "つけ耳"
+				SIF STRCOUNT(ARGS, "耳")
+					RETURNF LOCALS:LCOUNT
+			CASE "髪飾り"
+				SIF STRCOUNTS(ARGS, "カチューシャ", "リボン", "サークレット", "ティアラ", "かんざし", "髪", "ヘアピン")
+					RETURNF LOCALS:LCOUNT
+			CASE "外套"
+				SIF STRCOUNTS(ARGS, "外套", "マント", "コート", "ジャケット", "ジャンバー", "パーカー", "どてら", "羽織", "ケープ", "ジャージ", "カーディガン", "エプロン", "サスペンダー")
+					RETURNF LOCALS:LCOUNT
+		ENDSELECT
+	NEXT
+	RETURNF ""
+
+;-------------------------------------------------
+;キャラARGが身に着けるアクセサリ内の、ARGS区分のアクセサリの名前。基本的に一つしか身に着けないものが対象
+;ARGS区分のものを身に着けているか否かの判定にも使える。
+;-------------------------------------------------
+@OTHER(ARG, ARGS)
+#FUNCTIONS
+#DIM LCOUNT
+
+	VARSET LOCALS
+	SPLIT CSTR:ARG:アクセサリ, "/", LOCALS
+
+	FOR LCOUNT, 0, 10
+		SELECTCASE LOCALS:LCOUNT
+			CASE ""
+				BREAK
+			CASEELSE
+				SIF TYPE_OTHER(LOCALS:LCOUNT) == ARGS
+					RETURNF LOCALS:LCOUNT
+		ENDSELECT
+	NEXT
+	RETURNF ""
+
+;-------------------------------------------------
+;ARG番のアクセサリの名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_OTHER(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		CASE 65
+			RESULTS = 尻尾
+		CASE 72
+			RESULTS = 亀甲縛り
+		CASE 82
+			RESULTS = しっぽ付きアナルプラグ
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARGの身につけている小物が条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_OTHER(ARGS, ARG)
+#FUNCTION
+
+	SIF EQUIP:ARG:アクセサリ == 0
+		RETURNF 0
+
+	SELECTCASE ARGS
+		CASE "首", "眼鏡", "帽子", "つけ耳", "髪飾り", "外套"
+			SIF OTHER(ARG, ARGS) != ""
+				RETURNF 1
+		CASE "髪飾りリボン"
+			SIF STRCOUNTS(@"\/%CSTR:ARG:アクセサリ%", "/リボン/", "/両側リボン/", "/片側リボン/", "/後ろリボン/", "/頭上リボン/")
+				RETURNF 1
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:アクセサリ, ARGS)
+				RETURNF 1
+	ENDSELECT
+	RETURNF 0
+

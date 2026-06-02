@@ -12,7 +12,7 @@ SIF RESULT == 0
 
 ;前回の調教が3Pのとき3Pへ
 TFLAG:３Ｐ継続中 = 0
-IF PREVCOM == [[TRAIN:３Ｐ]]
+IF PREVCOM == TNUM("３Ｐ")
 	CALL COM_ABLE64
 	IF RESULT == 1
 		TFLAG:３Ｐ継続中 = 1
@@ -21,7 +21,7 @@ IF PREVCOM == [[TRAIN:３Ｐ]]
 ;調教者が前回:助手で今回:主人か、前回:主人で今回:助手のとき
 ELSEIF (ASSIPLAY && TFLAG:前回の調教者が助手 == 0) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手)
 	;前回の調教がフェラチオかイラマチオのときは3Pへ
-	IF PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ]]
+	IF PREVCOM == TNUM("フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ")
 		CALL COM_ABLE64
 		SIF RESULT == 1
 			JUMP COM64
@@ -30,7 +30,7 @@ ENDIF
 
 PRINTL 正常位アナル
 SAVESTR:0 = 正常位アナル
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;A経験を伴うコマンドのフラグ
 TFLAG:Ａ挿入判定 = 1

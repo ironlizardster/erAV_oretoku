@@ -1,0 +1,1398 @@
+;-------------------------------------------------
+;特にコマンド側で何も特殊なことをしていないとき
+;コマンド側で違うことをしたいときはCOMFコマンドID_コマンド名.ERBの中にCOM_コマンド名で実装すること
+;-------------------------------------------------
+@COM_DEFAULT
+    CALL PRINT_TRAIN_NAME(SELECTCOM)
+    CALL TRAIN_MESSAGE
+    SIF CANCEL_CHECK()
+        RETURN 0
+
+    STR:前回コマンド = %STR:今回コマンド%
+    RETURN 1
+
+;-------------------------------------------------
+;全部の@COMABLEを一斉に管理する時に使用する式中関数
+;押し倒しなど、登場頻度が非常に多いものについてのみ扱う
+;バイブなどの装備品が解除できるかどうかの判定は、この判定よりも優先度が高いことに注意
+;なお、NEXTCOMの時には@COM_ABLEを通らない。
+;0がコマンド実行可能
+;ARG:コマンド
+;-------------------------------------------------
+@COMABLE_DEF(ARG)
+#FUNCTION    
+    SIF TARGET < 0 || PLAYER < 0 || TARGET >= CHARANUM || PLAYER >= CHARANUM || TRAINNAME_EX(ARG) == ""
+        RETURNF 1
+        
+    ;TARGETのコマンド禁止処置
+    SIF DITEMTYPE:ARG > 0
+        RETURNF 1
+
+    ;PLAYERのコマンド禁止処置
+    SELECTCASE REVCOM(ARG,PLAYER)
+    ;コマンド立場逆転でも変わらないものは問題ない
+    CASE ARG
+    CASEELSE
+        SIF DITEMTYPE:PLAYER:RESULT > 0
+            RETURNF 1
+    ENDSELECT
+
+    ;コマンド禁止フィルタ
+    SIF DITEMTYPE:0:ARG == 2 && CONFIG("コマンドフィルタ") == 0
+        RETURNF 1
+
+    ;各種フィルタ
+    IF TALENT:処女 && CONFIG("Ｖ調教フィルタ")
+        SIF TRAIN_GENRE("Ｖ調教", ARG,TARGET)
+            RETURNF 1
+    ENDIF
+    IF CONFIG("Ａ調教フィルタ")
+        SIF TRAIN_GENRE("Ａ調教", ARG,TARGET)
+            RETURNF 1
+    ENDIF
+    IF CONFIG("逆挿入フィルタ")
+        SIF TRAIN_GENRE("逆挿入", ARG,TARGET)
+            RETURNF 1
+    ENDIF
+    IF CONFIG("道具調教フィルタ")
+        SIF TRAIN_GENRE("道具調教", ARG,TARGET)
+            RETURNF 1
+    ENDIF
+    IF CONFIG("ハード調教フィルタ")
+        SIF TRAIN_GENRE("ハード調教", ARG,TARGET)
+            RETURNF 1
+    ENDIF
+
+    IF CONFIG("立位")
+        SIF TRAIN_GENRE("立位可能", ARG,TARGET) == 0
+            RETURNF 1
+        IF TRAIN_GENRE("駅弁挿入", ARG,TARGET)
+            SIF SIZE("ペニス", PLAYER) == 0
+                RETURNF 1
+            SIF TALENT:小柄 == 0 && TALENT:PLAYER:力持ち == 0
+                RETURNF 1
+        ENDIF
+
+        SELECTCASE ARG
+            ;駅弁挿入中は幾つかの愛撫コマンドをすると終了してしまうため、一見可能かよく分からないものは禁止しておく
+            ;駅弁のみ禁止
+            CASE TNUM("自慰")
+                SIF INSERT("駅弁")
+                    RETURNF 1
+            ;両駅弁共に禁止
+            CASE TNUM("アナル愛撫"), TNUM("胸愛撫"), TNUM("アソコ愛撫"), TNUM("指挿入れ")
+                SIF INSERT("駅弁") || INSERT("背面駅弁")
+                    RETURNF 1
+            ;禁止体位など
+            CASE TNUM("正常位"), TNUM("アナル正常位")
+                SIF INSERT("背面座位")
+                    RETURNF 1
+            CASE TNUM("後背位"), TNUM("アナル後背位")
+                SIF INSERT("対面座位")
+                    RETURNF 1
+            CASE TNUM("対面座位"), TNUM("アナル対面座位")
+                SIF INSERT("後背位") || INSERT("背面座位")
+                    RETURNF 1
+            CASE TNUM("背面座位"), TNUM("アナル背面座位")
+                SIF INSERT("正常位") || INSERT("対面座位")
+                    RETURNF 1
+        ENDSELECT
+    ENDIF
+
+    ;場所による制限
+    SELECTCASE TRAINNAME_EX(ARG)
+    CASE "お風呂場プレイ"
+        SIF PLACE("お風呂場") == 0
+            RETURNF 1
+    CASE "新妻プレイ"
+        SIF PLACE("自宅") == 0
+            RETURNF 1
+    CASE "室内露出プレイ"
+        SIF PLACE("自宅") == 0 && PLACE("部室") == 0
+            RETURNF 1
+    ENDSELECT
+
+    ;プレイの制限
+    ;受け手が制限されている
+    IF PLAYER != MASTER && COND("身嗜み：性行為の制限")
+        SELECTCASE ARG
+        CASE TNUM("正常位") TO TNUM("正常位") + 9
+            SIF COND("身嗜み：Ｖ独占")
+                RETURNF 1
+        CASE TNUM("アナル正常位") TO TNUM("アナル正常位") + 9
+            SIF COND("身嗜み：Ａ独占")
+                RETURNF 1
+        CASE TNUM("フェラチオ"), TNUM("アナル奉仕"), TNUM("奉仕クンニ"), TNUM("シックスナイン"), TNUM("イラマチオ"), TNUM("ディープスロート")
+            SIF COND("身嗜み：口独占")
+                RETURNF 1
+        CASE TNUM("キスする")
+            SIF COND("身嗜み：キス独占")
+                RETURNF 1
+        CASE TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9
+            SIF HAVE_PENIS(TARGET) && COND("身嗜み：Ｐ独占")
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+    ;攻め手が制限されている
+    IF COND("身嗜み：性行為の制限", PLAYER)
+        SELECTCASE ARG
+        CASE TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 4
+            SIF COND("身嗜み：Ｖ独占", PLAYER)
+                RETURNF 1
+        CASE TNUM("Ａ正常位奉仕") TO TNUM("正常位奉仕") + 4
+            SIF COND("身嗜み：Ａ独占", PLAYER)
+                RETURNF 1
+        CASE TNUM("クンニ"), TNUM("フェラする"), TNUM("アナル舐め")
+            SIF COND("身嗜み：口独占", PLAYER)
+                RETURNF 1
+        CASE TNUM("キスする")
+            SIF COND("身嗜み：キス独占", PLAYER)
+                RETURNF 1
+        CASE TNUM("正常位") TO TNUM("正常位") + 19, TNUM("イラマチオ"), TNUM("ディープスロート")
+            SIF HAVE_PENIS(PLAYER) && COND("身嗜み：Ｐ独占", PLAYER)
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+
+    ;一部ハードコマンドは屈服刻印やマゾっ気が必要(実行条件があるものは除く)
+    SELECTCASE ARG
+        CASE TNUM("鼻フック"), TNUM("アイマスク"), TNUM("口枷")
+            SIF MARK:屈服刻印 == 0 && ABL:マゾっ気 == 0 && ABL:信頼 < 5 && ABL:欲望 < 5 && TALENT:倒錯的 == 0
+                RETURNF 1
+        CASE TNUM("拘束する")
+            SIF MARK:屈服刻印 < 1 && ABL:マゾっ気 < 1 && TALENT:倒錯的 == 0
+                RETURNF 1
+        CASE TNUM("浣腸")
+            SIF MARK:屈服刻印 < 2 && ABL:マゾっ気 < 2
+                RETURNF 1
+    ENDSELECT
+
+    ;挿入系コマンドの一括処理や汚れなどによるプレイの制限
+    SELECTCASE ARG
+        CASE TNUM("クンニ"), TNUM("フェラする"), TNUM("キスする"), TNUM("アナル舐め"), TNUM("手コキする"), TNUM("パイズリする"), TNUM("シックスナイン")
+            ;女王様プレイor押し倒しなら汚れで文句は言えない
+            IF TEQUIP:PLAYER:女王様プレイ == 0 && TEQUIP:押し倒し == 0
+                IF TALENT:PLAYER:汚臭鈍感 || TALENT:PLAYER:汚れ無視
+                ;あなたの性癖とTARGETの属性が２個以上合致
+                ;ELSEIF PLAYER == MASTER && (CALCF("属性突かれ", TARGET) >= 2 || TALENT:相思相愛)
+                ELSEIF PLAYER == MASTER
+                ELSEIF PLAYER == ASSI && ABL:ASSI:信頼 >= 4
+                ELSE
+                    LOCAL = 0
+                    SELECTCASE ARG
+                    CASE TNUM("クンニ")
+                        LOCAL = STAIN:Ｖ
+                    CASE TNUM("フェラする"), TNUM("手コキする"), TNUM("パイズリする")
+                        LOCAL = STAIN:Ｐ
+                    CASE TNUM("キスする")
+                        LOCAL = STAIN:Ｍ
+                    CASE TNUM("アナル舐め")
+                        LOCAL = STAIN:Ａ
+                    CASE TNUM("シックスナイン")
+                        SIF TALENT:オトコ == 0
+                            LOCAL |= STAIN:Ｖ
+                        SIF HAVE_PENIS(TARGET)
+                            LOCAL |= STAIN:Ｐ
+                    ENDSELECT
+
+                    SIF CHECK_STAIN(LOCAL, "破瓜の血")
+                        RETURNF 1
+                    IF CHECK_STAIN(LOCAL, "Ａ") && COND("アナルに弱い", PLAYER) == 0
+                        SIF TEQUIP:お風呂上り == 0 || ARG != 9
+                            RETURNF 1
+                    ENDIF
+                    IF TALENT:PLAYER:オトコ && TALENT:PLAYER:両刀 == 0 && CHECK_STAIN(LOCAL, "Ｐ") && COND("♂に弱い", PLAYER) == 0
+                        SIF TEQUIP:お風呂上り == 0 || ARG != 4
+                            RETURNF 1
+                    ENDIF
+                    IF TALENT:PLAYER:オンナ && TALENT:PLAYER:両刀 == 0 && CHECK_STAIN(LOCAL, "Ｖ") && COND("♀に弱い", PLAYER) == 0
+                        SIF TEQUIP:お風呂上り == 0 || ARG != 1
+                            RETURNF 1
+                    ENDIF
+                    ;SIF ABL:PLAYER:精液中毒 == 0 && TALENT:PLAYER:両刀 == 0 && CHECK_STAIN(LOCAL, "精液")
+                    ;	RETURNF 1
+                ENDIF
+            ENDIF
+        ;Ｖインサートコマンド
+        CASE TNUM("正常位") TO TNUM("正常位") + 9
+            IF COND("調教中") && CONFIG("準備不足フィルタ")
+                SIF CHOSECOMS("Ｖ挿入") == 0 && COND("Ｖ潤十分") == 0
+                    RETURNF 1
+            ENDIF
+            SIF USE_V(TARGET) == 0 || TEQUIP:PLAYER:カテーテル
+                RETURNF 1
+            ;調教者がペニスあり、もしくはペニスバンドがないとダメ
+            SIF HAVE_PENIS(PLAYER) == 0 && COND("ペニバン", PLAYER) == 0
+                RETURNF 1
+            ;調教中でないなら2LV以上でかいペニスは避ける
+            SIF COND("調教中") == 0
+                RETURNF 1
+            IF TEQUIP:押し倒し
+                SIF TALENT:淫乱 + !TALENT:恋慕
+                    RETURNF 1
+                ;押し倒しは生セックス！
+                SIF COND("女性主導生セックス") == 0
+                    RETURNF 1
+                ;あなたが恍惚＆まだインサートした事が無いならしてこない
+                SIF STATE("恍惚", PLAYER) && FIRSTCOMS("Ｖ挿入") == 0
+                    RETURNF 1
+                ;あなたが骨抜き＆まだインサートした事が無いならしてこない
+                SIF STATE("骨抜き", PLAYER) && FIRSTCOMS("Ｖ挿入") == 0
+                    RETURNF 1
+            ENDIF
+        ;Ａインサートコマンド
+        CASE TNUM("アナル正常位") TO TNUM("アナル正常位") + 9
+            IF COND("調教中") && CONFIG("準備不足フィルタ")
+                SIF CHOSECOMS("Ａ挿入") == 0 && COND("Ａ潤十分") == 0
+                    RETURNF 1
+            ENDIF
+            SIF USE_A(TARGET) == 0 || TEQUIP:PLAYER:カテーテル
+                RETURNF 1
+            ;調教者がペニスあり、もしくはペニスバンドがないとダメ
+            SIF HAVE_PENIS(PLAYER) == 0 && COND("ペニバン", PLAYER) == 0
+                RETURNF 1
+            ;調教中でないなら2LV以上でかいペニスは避ける
+            SIF COND("調教中") == 0
+                RETURNF 1
+            SIF TEQUIP:押し倒し && !TALENT:恋慕
+                RETURNF 1
+            ;合意or拘束などが必要
+            IF COND("合意：アナルセックス") == 0 && TEQUIP:拘束 == 0
+                SIF COND("なし崩しでＡ挿入可") == 0
+                    RETURNF 1
+                ;あなたが恍惚＆まだインサートした事が無いならしてこない
+                SIF STATE("恍惚", PLAYER) && FIRSTCOMS("Ａ挿入") == 0
+                    RETURNF 1
+                ;あなたが骨抜き＆まだインサートした事が無いならしてこない
+                SIF STATE("骨抜き", PLAYER) && FIRSTCOMS("Ａ挿入") == 0
+                    RETURNF 1
+            ENDIF
+
+            ;調教相手がペニスあり、もしくはペニスバンドがないとダメ
+            SIF PENIS(TARGET) == 0 && COND("ペニバン") == 0
+                RETURNF 1
+            SIF TEQUIP:カテーテル
+                RETURNF 1
+        ;フィスト
+        CASE TNUM("フィストファック"), TNUM("アナルフィスト"), TNUM("両穴フィスト")
+            ;手が使えないとダメ
+            SIF COND("指の使用", PLAYER) == 0
+                RETURNF 1
+            IF ARG == TNUM("フィストファック")
+                SIF USE_V(TARGET) == 0
+                    RETURNF 1
+                ;処女はダメ
+                SIF TALENT:処女 == 1
+                    RETURNF 1
+            ELSEIF ARG == TNUM("アナルフィスト")
+                SIF USE_A(TARGET) == 0
+                    RETURNF 1
+                ;液剤多めの浣腸中
+                SIF COND("液体浣腸")
+                    RETURNF 1
+            ELSEIF ARG == TNUM("両穴フィスト")
+                SIF USE_V(TARGET) == 0
+                    RETURNF 1
+                SIF TALENT:処女 == 1
+                    RETURNF 1
+                SIF USE_A(TARGET) == 0
+                    RETURNF 1
+                ;液剤多めの浣腸中
+                SIF COND("液体浣腸")
+                    RETURNF 1
+            ENDIF
+        ;助手が必須のコマンドは、助手が居なかったりダウンしてたらダメ
+        CASE TNUM("二人に押し倒される")
+            SIF ASSI <= 0 || STATE("撃沈", ASSI) || TEQUIP:ビデオカメラ
+                RETURNF 1
+            SIF COND("押し倒し騎乗位実行可能", ASSI) == 0
+                RETURNF 1
+        CASE TNUM("抱きしめる")
+            ;手が使えないとダメ
+            SIF COND("指の使用", PLAYER) == 0
+                RETURNF 1
+    ENDSELECT
+
+    ;服装による制限
+    SELECTCASE ARG
+        CASE TNUM("愛撫"), TNUM("胸の谷間を犯す"), TNUM("ニプルファック"), TNUM("パイズリ"), TNUM("ぱふぱふ")
+            SIF CHECK_SHIRT("鎧") && CHECK_CLO("谷間露出") + CHECK_CLO("乳首露出") + CHECK_CLO("はだけ可") == 0
+                RETURNF 1
+    ENDSELECT
+
+
+    ;手が拘束されている
+    IF COND("指の使用") == 0
+        SELECTCASE ARG
+            CASE TNUM("着せ替え")
+                SIF TEQUIP:押し倒し
+                    RETURNF 1
+            CASE TNUM("自慰"), TNUM("くぱぁさせる"), TNUM("Ａくぱぁさせる"), TNUM("手淫"), TNUM("パイズリ"), TNUM("泡踊り"), TNUM("ぱんつコキ"), TNUM("足舐め奉仕"), TNUM("ぱふぱふ") TO TNUM("ぱふぱふ") + 3, TNUM("お風呂場プレイ"), TNUM("新妻プレイ"), TNUM("押し倒される") TO TNUM("押し倒される") + 2
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+    ;足が拘束されている
+    IF COND("脚の使用") == 0
+        SELECTCASE ARG
+            CASE TNUM("泡踊り"), TNUM("足コキ"), TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9, TNUM("野外プレイ") TO TNUM("室内露出プレイ"), TNUM("押し倒される"), TNUM("二人に押し倒される")
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+    ;拘束
+    IF TEQUIP:拘束
+        ;縄：逆海老
+        IF BIND("縄：逆海老", TEQUIP:拘束)
+            SELECTCASE ARG
+                CASE TNUM("後背位"), TNUM("挿入Ｇスポ責め") TO TNUM("挿入Ｇスポ責め") + 3, TNUM("アナル後背位")
+                CASE TNUM("クンニ"), TNUM("アナル舐め"), TNUM("正常位") TO TNUM("正常位") + 19, TNUM("剃毛"), TNUM("ピアッシング")
+                    RETURNF 1
+            ENDSELECT
+        ;縄：足吊り
+        ELSEIF BIND("縄：足吊り", TEQUIP:拘束)
+            SELECTCASE ARG
+                ;正常位はおかしい気もするがまぁ前からの時ということで
+                CASE TNUM("正常位"), TNUM("後背位"), TNUM("挿入Ｇスポ責め") TO TNUM("挿入Ｇスポ責め") + 3, TNUM("アナル正常位"), TNUM("アナル後背位")
+                CASE TNUM("正常位") TO TNUM("正常位") + 19, TNUM("素股"), TNUM("シックスナイン"), TNUM("正常位奉仕"), TNUM("後背位奉仕"), TNUM("Ａ正常位奉仕"), TNUM("Ａ後背位奉仕")
+                    RETURNF 1
+            ENDSELECT
+        ;縄
+        ELSEIF BIND("縄", TEQUIP:拘束)
+            SELECTCASE ARG
+                CASE TNUM("貝合わせ"), TNUM("素股"), TNUM("シックスナイン"), TNUM("正常位奉仕"), TNUM("後背位奉仕"), TNUM("Ａ正常位奉仕"), TNUM("Ａ後背位奉仕")
+                    RETURNF 1
+            ENDSELECT
+        ;拘束テーブル
+        ELSEIF BIND("四つん這い", TEQUIP:拘束)
+            SELECTCASE ARG
+                CASE TNUM("後背位"), TNUM("挿入Ｇスポ責め") TO TNUM("挿入Ｇスポ責め") + 3, TNUM("アナル後背位")
+                CASE TNUM("正常位") TO TNUM("正常位") + 19, TNUM("素股"), TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9, TNUM("野外プレイ")
+                    RETURNF 1
+            ENDSELECT
+        ;拘束ベッド
+        ELSEIF BIND("ベッド", TEQUIP:拘束)
+            SELECTCASE ARG
+                CASE TNUM("正常位"), TNUM("挿入Ｇスポ責め") TO TNUM("挿入Ｇスポ責め") + 3, TNUM("アナル正常位"), TNUM("騎乗位で犯す"), TNUM("Ａ騎乗位で犯す")
+                CASE TNUM("正常位") TO TNUM("正常位") + 19, TNUM("素股"), TNUM("シックスナイン"), TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9, TNUM("野外プレイ")
+                    RETURNF 1
+            ENDSELECT
+        ;M字拘束台
+        ELSEIF BIND("Ｍ字開脚", TEQUIP:拘束)
+            SELECTCASE ARG
+                CASE TNUM("正常位"), TNUM("アナル正常位"), 
+                CASE TNUM("正常位") TO TNUM("正常位") + 19, TNUM("フェラチオ"), TNUM("素股"), TNUM("奉仕クンニ"), TNUM("シックスナイン"), TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9, TNUM("イラマチオ"), TNUM("ディープスロート"), TNUM("野外プレイ")
+                    RETURNF 1
+            ENDSELECT
+        ;ミスリルチェーン(吊り)
+        ELSEIF BIND("吊り", TEQUIP:拘束)
+            SELECTCASE ARG
+                CASE TNUM("正常位"), TNUM("後背位"), TNUM("アナル正常位"), TNUM("アナル後背位")
+                CASE TNUM("正常位") TO TNUM("正常位") + 19, TNUM("フェラチオ"), TNUM("素股"), TNUM("奉仕クンニ"), TNUM("シックスナイン"), TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9, TNUM("イラマチオ"), TNUM("ピアッシング"), TNUM("ディープスロート"), TNUM("野外プレイ")
+                    RETURNF 1
+            ENDSELECT
+        ENDIF
+    ENDIF
+
+    IF TEQUIP:押し倒し
+        IF COND("主導権無し")
+            SELECTCASE ARG
+                CASE TNUM("二人に押し倒される"), TNUM("もがく"), TNUM("なすがまま"), TNUM("相手にまかせる")
+                CASEELSE
+                    RETURNF 1
+            ENDSELECT
+        ENDIF
+
+        SELECTCASE ARG
+            ;解除のみは可能
+            CASE TNUM("バイブ"), TNUM("アナルバイブ"), TNUM("アナルプラグ"), TNUM("オナホール"), TNUM("電話させる")
+                SIF CHECK_TEQUIP(ARG) == 0
+                    RETURNF 1
+            ;実行可能なコマンド
+            CASE TNUM("クンニ"), TNUM("フェラする") , TNUM("キスする"), TNUM("アナル舐め"), TNUM("パイズリする"), TNUM("騎乗位") TO TNUM("騎乗位") + 4, TNUM("アナル騎乗位"), TNUM("貝合わせ"), TNUM("ニプルファック"), TNUM("手淫") TO TNUM("シックスナイン"), TNUM("尻コキ") TO TNUM("オナホコキ"), TNUM("正常位奉仕"), TNUM("Ａ後背位奉仕"), TNUM("放尿"), TNUM("剃毛"), TNUM("ディープスロート"), TNUM("ビデオカメラ"), TNUM("着せ替え"), TNUM("二人に押し倒される"), TNUM("具現"), TNUM("もがく") TO TNUM("自慰する"), TNUM("相手にまかせる")
+
+            CASEELSE
+                RETURNF 1
+        ENDSELECT
+        ;Ｗ押し倒し
+        IF TEQUIP:Ｗ押し倒し
+            SELECTCASE ARG
+                CASE TNUM("愛撫"), TNUM("手コキする") TO TNUM("足コキする"), TNUM("貝合わせ"), TNUM("ニプルファック"), TNUM("シックスナイン"), TNUM("オナホコキ"), TNUM("放尿"), TNUM("剃毛"), TNUM("ディープスロート"), TNUM("着せ替え"), TNUM("二人に押し倒される"), TNUM("電話させる"), TNUM("媚薬"), TNUM("自慰する")
+                    RETURNF 1
+            ENDSELECT
+        ENDIF
+    ENDIF
+
+    ;野外、室内露出、お風呂など部屋の外でのプレイの制限
+    IF TEQUIP:野外プレイ
+        SELECTCASE ARG
+            ;通常は実行不可なグループの中で例外的に実行可能なコマンド
+            CASE TNUM("素股"), TNUM("尻コキ"), TNUM("スパンキング"), TNUM("何もしない"), TNUM("放尿"), TNUM("ディープスロート")
+            ;解除のみは可能
+            CASE TNUM("バイブ"), TNUM("アナルバイブ"), TNUM("アナルプラグ"), TNUM("オナホール"), TNUM("アイマスク") TO TNUM("浣腸")
+                SIF CHECK_TEQUIP(ARG) == 0
+                    RETURNF 1
+            ;実行不可能なコマンド
+            CASE TNUM("ローター") TO TNUM("ローター") + 9, TNUM("素股") TO TNUM("素股") + 19, TNUM("正常位奉仕") TO TNUM("正常位奉仕") + 9, TNUM("スパンキング") TO TNUM("写真撮影") TNUM("お風呂場プレイ") TO TNUM("室内露出プレイ")
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+    IF TEQUIP:お風呂プレイ
+        SELECTCASE ARG
+            ;解除のみは可能
+            CASE TNUM("アイマスク") TO TNUM("口枷"), TNUM("新妻プレイ")
+                SIF CHECK_TEQUIP(ARG) == 0
+                    RETURNF 1
+            ;実行不可能なコマンド
+            CASE TNUM("鼻フック") TO TNUM("口枷"), TNUM("新妻プレイ"), TNUM("室内露出プレイ"), TNUM("電話させる")
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+    IF TEQUIP:室内露出プレイ
+        SELECTCASE ARG
+            ;実行不可能なコマンド
+            CASE TNUM("野外プレイ") TO TNUM("新妻プレイ")
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+
+    ;女王様プレイ(大幅な変更の予定あり)
+    IF TEQUIP:女王様プレイ
+        ;実行可能なコマンド
+        SELECTCASE ARG
+            CASE TNUM("クンニ"), TNUM("フェラする"), TNUM("アナル舐め"), TNUM("バイブ"), TNUM("アナルバイブ"), TNUM("スパンキング")
+            ;LV2コマンド
+            CASE TNUM("手淫"), TNUM("足コキ"), TNUM("後背位奉仕"), TNUM("Ａ後背位奉仕"), TNUM("フィストファック") TO TNUM("剃毛"), TNUM("ピアッシング")
+                SIF TEQUIP:女王様プレイ < 2
+                    RETURNF 1
+            ;LV3コマンド
+            CASE TNUM("正常位") TO TNUM("正常位") + 19
+                SIF TEQUIP:女王様プレイ < 3
+                    RETURNF 1
+            CASEELSE
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+
+    IF TEQUIP:新妻プレイ
+        ;実行不可なコマンド
+        SELECTCASE ARG
+            ;CASE 36, 37, 131, 132, 135, TNUM("イラマチオ") TO 143, 146, 147, 172, TNUM("室内露出プレイ"), TNUM("二人に押し倒される")
+            CASE TNUM("野外プレイ"), TNUM("室内露出プレイ"), TNUM("二人に押し倒される")
+                RETURNF 1
+        ENDSELECT
+    ENDIF
+
+    ; ;複数参加コマンドの体勢的な可否(TARGET:1…主に、助手を自動で動かす時に用いる)
+    ; IF TEQUIP:Ｗ押し倒し && TARGET:1
+    ;     SELECTCASE ARG
+    ;         CASE TNUM("クンニ")
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ顔", "Ｔアソコ")
+    ;                 RETURNF 1
+    ;         CASE 4
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ顔", "Ｔペニス")
+    ;                 RETURNF 1
+    ;         CASE 5
+    ;             SIF FORBIDCOM(TARGET:1, "Ｔ胸") || TEQUIP:押し倒し
+    ;                 RETURNF 1
+    ;         CASE 6
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ顔", "Ｔ顔")
+    ;                 RETURNF 1
+    ;         CASE 9
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ顔", "Ｔアナル")
+    ;                 RETURNF 1
+    ;         CASE TNUM("正常位"), 62, 63
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔアソコ", "Ｔ前面")
+    ;                 RETURNF 1
+    ;         CASE TNUM("後背位")
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔアソコ", "Ｔ後面")
+    ;                 RETURNF 1
+    ;         CASE 64
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔ下半身", "Ｔ後面")
+    ;                 RETURNF 1
+    ;         CASE 65
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｐ下半身", "Ｔ下半身")
+    ;                 RETURNF 1
+    ;         CASE TNUM("挿入Ｇスポ責め") TO TNUM("挿入Ｇスポ責め") + 3
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｐ下半身", "Ｔ下半身")
+    ;                 RETURNF 1
+
+    ;         CASE TNUM("アナル正常位"), 72, 73
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔアナル", "Ｔ前面")
+    ;                 RETURNF 1
+    ;         CASE TNUM("アナル後背位")
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔアナル", "Ｔ後面")
+    ;                 RETURNF 1
+    ;         CASE 74
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔ下半身", "Ｔ後面")
+    ;                 RETURNF 1
+    ;         CASE 75
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｐ下半身", "Ｔ下半身")
+    ;                 RETURNF 1
+    ;         CASE 76 TO 79
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｐ下半身", "Ｔ下半身")
+    ;                 RETURNF 1
+    ;         ;貝合わせ
+    ;         CASE TNUM("貝合わせ")
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ下半身", "Ｔ下半身")
+    ;                 RETURNF 1
+    ;         ;尿道
+    ;         CASE 83, 85, 86
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔアソコ", "Ｔ前面")
+    ;                 RETURNF 1
+    ;         CASE 84
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔアソコ", "Ｔ後面")
+    ;                 RETURNF 1
+    ;         CASE 87
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｔ下半身", "Ｔ後面")
+    ;                 RETURNF 1
+    ;         CASE 88
+    ;             SIF FORBIDCOM(TARGET:1, "セックス", "Ｐ下半身", "Ｔ下半身")
+    ;                 RETURNF 1
+
+    ;         ;手コキなどPLAYERのペニスを手とかで責める
+    ;         CASE 90
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "手コキ")
+    ;                 RETURNF 1
+    ;         CASE TNUM("フェラチオ")
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "フェラチオ")
+    ;                 RETURNF 1
+    ;         CASE 92
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "パイズリ")
+    ;                 RETURNF 1
+    ;         CASE TNUM("素股"), TNUM("尻コキ")
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "素股")
+    ;                 RETURNF 1
+    ;         CASE 94
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "泡踊り")
+    ;                 RETURNF 1
+    ;         CASE 95
+    ;             IF PENIS(MASTER)
+    ;                 SIF FORBIDCOM(TARGET:1, "Ｐペニス", "足コキ")
+    ;                     RETURNF 1
+    ;             ELSE
+    ;                 SIF FORBIDCOM(TARGET:1, "Ｐアソコ", "足コキ")
+    ;                     RETURNF 1
+    ;             ENDIF
+    ;         CASE 96
+    ;             ;現状封印
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐアナル", "Ｐ後面")
+    ;                 RETURNF 1
+    ;         CASE 97
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "ぱんつコキ")
+    ;                 RETURNF 1
+    ;         CASE TNUM("奉仕クンニ")
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐアソコ", "Ｐ前面", "Ｔ顔")
+    ;                 RETURNF 1
+    ;         CASE 104
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ顔")
+    ;                 RETURNF 1
+    ;         ;逆アナル
+    ;         CASE 125 TO 129
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ下半身", "Ｐ後面")
+    ;                 RETURNF 1
+    ;         ;逆レイプなどPLAYERのアソコを責める
+    ;         CASE TNUM("正常位奉仕") TO 124
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ下半身", "Ｐ前面")
+    ;                 RETURNF 1
+    ;         CASE TNUM("イラマチオ"), TNUM("ディープスロート")
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐペニス", "フェラチオ")
+    ;                 RETURNF 1
+    ;         CASE 141
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ指", "Ｔアソコ")
+    ;                 RETURNF 1
+    ;         CASE 142
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ指", "Ｔアナル")
+    ;                 RETURNF 1
+    ;         CASE 143
+    ;             SIF FORBIDCOM(TARGET:1, "Ｐ指", "Ｔアソコ", "Ｔアナル")
+    ;                 RETURNF 1
+    ;     ENDSELECT
+    ; ENDIF
+
+
+    RETURNF 0
+
+
+;-------------------------------------------------
+;ARGが-1だと空文字を返すTRAINNAME
+;-------------------------------------------------
+@TRAINNAME_EX(ARG)
+#FUNCTIONS
+    SIF ARG < 0 || ARG >= VARSIZE(TRAIN)
+        RETURNF ""
+    RETURNF TRAINNAME:ARG
+
+@PRINT_TRAIN_NAME(ARG)
+    STR:今回コマンド = %TRAIN_NAME(ARG)%
+    PRINTFORML %STR:今回コマンド%
+
+;-------------------------------------------------
+;変化する要素を加味したTRAINNAME（コマンド中の表示）
+;-------------------------------------------------
+@TRAIN_NAME(ARG)
+#FUNCTIONS
+#DIMS MEMO_TRAINNAME
+    ;３Ｐの時
+    ; IF CHECK_COM("３Ｐ奉仕") && COND("３Ｐ")
+    ;     LOCALS = %TRAINNAME_EX(SELECTCOM:2)% ＆ %TRAINNAME_EX(ARG)%
+    ;     SELECTCASE ARG
+    ;         CASE 82
+    ;             SIF CHECK_COM("左右ニプルファック", ARG)
+    ;                 LOCALS = 左右ニプルファック
+    ;         CASE 90
+    ;             SIF CHECK_COM("３Ｐ奉仕", ARG) == 90
+    ;                 LOCALS = 二本手コキ
+    ;         CASE 91
+    ;             SIF CHECK_COM("３Ｐ奉仕", ARG) == 91
+    ;                 LOCALS = 二本フェラ
+    ;     ENDSELECT
+    ;     RETURNF LOCALS
+    ; ENDIF
+
+    LOCALS = %TRAIN_NAME_SELECT(ARG)%
+    MEMO_TRAINNAME = %LOCALS%
+    SELECTCASE ARG
+        ; CASE 0
+        ;     IF CHECK_COM("ローションマッサージ", ARG)
+        ;         LOCALS = ローション尻愛撫
+        ;     ENDIF
+        ; CASE 60 TO 69
+        ;     IF ARG == 60
+        ;         IF CHECK_COM("Ｖ二本挿入")
+        ;             LOCALS = Ｖ二本挿入
+        ;         ELSEIF CHECK_COM("二穴挿入")
+        ;             LOCALS = 二穴挿入
+        ;         ENDIF
+        ;     ELSEIF ARG == 65 && INSERT("ワイルドスウィング")
+        ;         LOCALS = ワイルドスウィング
+        ;     ELSEIF ARG == 66
+        ;         LOCALS = %TRAINNAME_EX(ARG)%
+        ;         SIF INSERT("騎乗位")
+        ;             LOCALS = 騎乗Ｇスポ責め
+        ;     ELSEIF ARG == 67
+        ;         LOCALS = %TRAINNAME_EX(ARG)%
+        ;         ;屈曲位で連続実行
+        ;         IF PREVCOM == 67 && INSERT("屈曲位")
+        ;             LOCALS = 種付けプレス
+        ;         ELSEIF HAVE_PENIS(PLAYER) && STATE("ハードスキン", PLAYER) && TEQUIP:押し倒し == 0
+        ;             LOCALS = ハードピストン
+        ;         ELSEIF INSERT("騎乗位")
+        ;             LOCALS = 騎乗子宮口責め
+        ;         ENDIF
+        ;     ENDIF
+        ;     SIF TEQUIP:アナルバイブ && LOCALS == MEMO_TRAINNAME
+        ;         LOCALS = 疑似二穴%MEMO_TRAINNAME%
+        ; CASE 70 TO 79
+        ;     IF ARG == 75 && INSERT("ワイルドスウィング")
+        ;         LOCALS = Ａワイルドスウィング
+        ;     ELSEIF ARG == PREVCOM && HAVE_PENIS(PLAYER) && COND("前Ｔ調教者") == PLAYER && STATE("ハードスキン", PLAYER) && INSERT("Ａインサート")
+        ;         LOCALS = ハードアナルピストン
+        ;     ELSEIF CHECK_COM("結腸責め", ARG)
+        ;         SIF TEQUIP:押し倒し
+        ;             LOCALS = 結腸挿入騎乗位
+        ;     ENDIF
+        ;     IF ARG == 71
+        ;         IF CHECK_COM("Ａ二本挿入")
+        ;             LOCALS = Ａ二本挿入
+        ;         ELSEIF CHECK_COM("二穴挿入")
+        ;             LOCALS = 二穴挿入
+        ;         ENDIF
+        ;     ENDIF
+        ;     SIF TEQUIP:バイブ && LOCALS == MEMO_TRAINNAME
+        ;         LOCALS = 疑似二穴%MEMO_TRAINNAME%
+    ENDSELECT
+    RETURNF LOCALS
+
+
+;-------------------------------------------------
+;変化する要素を加味したTRAINNAME（コマンド選択するときの表示）
+;-------------------------------------------------
+@TRAIN_NAME_SELECT(ARG)
+#FUNCTIONS
+#DIMS PLAY_ONANIE
+
+    LOCALS = %TRAIN_NAME_STANDARD(ARG)%
+    ;特殊な名前
+    SELECTCASE ARG
+        ; CASE 0
+        ;     SIF CHECK_COM("ローションマッサージ", ARG)
+        ;         LOCALS = ローション尻愛撫
+        ; CASE 1
+        ;     IF CHECK_COM("恥垢お掃除クンニ", ARG)
+        ;         LOCALS = 恥垢お掃除クンニ
+        ;     ELSEIF CHECK_COM("お掃除クンニ", ARG)
+        ;         LOCALS = お掃除クンニ
+        ;     ENDIF
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 顔面騎乗
+        ;     SIF CHECK_COM("万謝の口付け", ARG)
+        ;         LOCALS = 万謝の口付け
+        ; CASE 2
+        ;     IF TEQUIP:アナルバイブ
+        ;         IF CHECK_COM("結腸責め", ARG)
+        ;             LOCALS = Ａバイブ結腸責め
+        ;         ELSE
+        ;             LOCALS = Ａバイブ弄り
+        ;         ENDIF
+        ;     ENDIF
+        ; CASE 3
+        ; ;	PLAY_ONANIE = %CHECK_ONANIE(ARG)%
+
+        ;     IF CHECK_COM("６９自慰", ARG)
+        ;         LOCALS = ６９自慰
+        ;     ELSEIF STRCOUNT(PLAY_ONANIE, "オナホ")
+        ;         LOCALS = オナホ%LOCALS%
+        ;     ELSEIF STRCOUNT(PLAY_ONANIE, "三穴バイブ")
+        ;         LOCALS = 三穴バイブ%LOCALS%
+        ;     ELSEIF STRCOUNT(PLAY_ONANIE, "両穴バイブ")
+        ;         LOCALS = 二穴バイブ%LOCALS%
+        ;     ELSEIF STRCOUNT(PLAY_ONANIE, "Ｖバイブ")
+        ;         LOCALS = バイブ%LOCALS%
+        ;     ELSEIF STRCOUNT(PLAY_ONANIE, "Ａバイブ")
+        ;         LOCALS = Ａバイブ%LOCALS%
+        ;     ENDIF
+
+        ;     IF CHECK_COM("インサート自慰")
+        ;         IF INSERT("Ｖインサート")
+        ;             LOCALS = %CONDS("体位")%%LOCALS%
+        ;         ELSEIF INSERT("Ａインサート")
+        ;             LOCALS = Ａ%CONDS("体位")%%LOCALS%
+        ;         ENDIF
+        ;     ENDIF
+        ;     SIF STRLENS(LOCALS) > 14
+        ;         RETURNF LOCALS
+
+        ;     IF TEQUIP:ビデオカメラ
+        ;         LOCALS = 公開%LOCALS%
+        ;     ELSEIF TEQUIP:野外プレイ
+        ;         LOCALS = 野外%LOCALS%
+        ;     ENDIF
+        ; CASE 11
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 胸の谷間を犯す
+        ; CASE 12
+        ;     SIF HAVE_PENIS(TARGET) == 0
+        ;         LOCALS = 足で股間を弄ぶ
+        ; CASE 13
+        ;     IF PREVCOM == 13
+        ;         IF COND("両穴くぱぁ")
+        ;             LOCALS = 両穴観察
+        ;         ELSE
+        ;             LOCALS = アソコ観察
+        ;         ENDIF
+        ;     ELSEIF PREVCOM == 14 && CHECK_COM("両穴くぱぁ")
+        ;         LOCALS = 両穴くぱぁさせる
+        ;     ENDIF
+        ; CASE 14
+        ;     IF PREVCOM == 14
+        ;         IF COND("両穴くぱぁ")
+        ;             LOCALS = 両穴観察
+        ;         ELSE
+        ;             LOCALS = アナル観察
+        ;         ENDIF
+        ;     ELSEIF PREVCOM == 13 && CHECK_COM("両穴くぱぁ")
+        ;         LOCALS = 両穴くぱぁさせる
+        ;     ENDIF
+        ; CASE 31
+        ;     SIF TEQUIP:バイブ
+        ;         LOCALS = バイブを抜く
+        ; CASE 33
+        ;     IF COND("アナルパール")
+        ;         LOCALS = アナルパールを抜く
+        ;     ELSEIF TEQUIP:アナルバイブ
+        ;         LOCALS = Ａバイブを抜く
+        ;     ENDIF
+        ; CASE 34
+        ;     SIF TEQUIP:浣腸セット
+        ;         LOCALS = アナルプラグを抜く
+        ; CASE 99
+        ;     IF TEQUIP:シックスナイン
+        ;         LOCALS = シックスナイン終了
+        ;     ;相互お掃除プレイ
+        ;     ELSEIF CHECK_COM("お掃除フェラ", 91) + CHECK_COM("お掃除クンニ", 98) && CHECK_COM("お掃除フェラ", 4) + CHECK_COM("お掃除クンニ", 1)
+        ;         LOCALS = 相互お掃除６９
+        ;     ENDIF
+        ;     IF TEQUIP:押し倒し
+        ;         LOCALS = 聖水プレイ
+        ;     ELSEIF CHECK_COM("強制放尿", ARG)
+        ;         LOCALS = 強制放尿
+        ;     ENDIF
+        ; CASE 145
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 逆剃毛
+        ; CASE 150
+        ;     SIF TEQUIP:ディープスロート
+        ;         LOCALS = ディープスロート終了
+        ; CASE 170
+        ;     SIF TEQUIP:ビデオカメラ
+        ;         LOCALS = 撮影終了
+        ; CASE 171
+        ;     SIF TEQUIP:野外プレイ
+        ;         LOCALS = 野外プレイ終了
+        ; CASE 172
+        ;     SIF TEQUIP:お風呂プレイ
+        ;         LOCALS = 風呂から出る
+        ; CASE 173
+        ;     SIF TEQUIP:新妻プレイ
+        ;         LOCALS = 新妻プレイ終了
+        ; CASE 174
+        ;     SIF TEQUIP:室内露出プレイ
+        ;         LOCALS = 露出プレイ終了
+        ; CASE 182
+        ;     SIF TEQUIP:PLAYER:押し倒し
+        ;         LOCALS = 押し倒し終了
+
+        ; CASE 280
+        ;     SIF TEQUIP:PLAYER:拘束 || STATE("バインド", PLAYER)
+        ;         LOCALS = ふりほどく
+
+        ; ;自慰する
+        ; CASE 282
+        ;     SELECTCASE PREVCOM
+        ;     CASE 3
+        ;         LOCALS = 相互自慰
+        ;     CASE 1, 4, 9, 13, 14
+        ;     CASEELSE
+        ;         SIF TEQUIP:PLAYER:自慰する == 3
+        ;             LOCALS = 相互自慰
+        ;     ENDSELECT
+        ; CASE 285
+        ;     SIF CHECK_COM("優しく抱きしめる", ARG)
+        ;         LOCALS = 優しく抱きしめる
+    ENDSELECT
+    RETURNF LOCALS
+
+
+;-------------------------------------------------
+;おもに押し倒しなど場面変化を考慮した標準のTRAINNAME
+;（ここで設定したものにコマンド名が変わっても、コマンドの色が変化しない）
+;-------------------------------------------------
+@TRAIN_NAME_STANDARD(ARG)
+#FUNCTIONS
+    LOCALS = %TRAINNAME_EX(ARG)%
+    SELECTCASE ARG
+        ; CASE 1
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 顔面騎乗
+        ; CASE 9
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = Ａ顔面騎乗
+        ; CASE 11
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 胸の谷間を犯す
+        ; CASE 12
+        ;     SIF HAVE_PENIS(TARGET) == 0
+        ;         LOCALS = 足で股間を弄ぶ
+        ; CASE 120
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 逆レイプ
+        ; CASE 126
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 逆アナル
+        ; CASE 144
+        ;     SIF TEQUIP:押し倒し
+        ;         LOCALS = 聖水プレイ
+        ; CASE 175
+        ;     IF TEQUIP:押し倒し
+        ;         IF EQUIP:パンツ && EQUIP:ボディスーツ + EQUIP:アウター == 0 && CHECK_CLO("パンツ露出")
+        ;             LOCALS = 下着を脱ぐ
+        ;         ELSE
+        ;             LOCALS = ハダカになる
+        ;         ENDIF
+        ;     ELSEIF TEQUIP:拘束 && TEQUIP:押し倒し == 0
+        ;         IF EQUIP:パンツ && EQUIP:ボディスーツ + EQUIP:アウター == 0 && CHECK_CLO("パンツ露出")
+        ;             LOCALS = 下着を脱がす
+        ;         ELSE
+        ;             LOCALS = ハダカにする
+        ;         ENDIF
+        ;     ENDIF
+        ; CASE 280
+        ;     SIF TEQUIP:PLAYER:拘束 || STATE("バインド", PLAYER)
+        ;         LOCALS = ふりほどく
+        ; CASE 283
+        ;     SIF CHECK_COM("褒める", ARG)
+        ;         LOCALS = 褒める
+    ENDSELECT
+    RETURNF LOCALS
+
+
+;-------------------------------------------------
+;派生コマンドなどを判定する関数
+;-------------------------------------------------
+@CHECK_COM(ARGS, ARG)
+#FUNCTION
+    VARSET LOCAL
+    VARSET RESULT
+    SELECTCASE ARGS
+        CASE "ローションマッサージ"
+            ; RESULT = LAST_PLAYER_SAME(TARGET,PLAYER) && ARG == TNUM("愛撫") && PREVCOM:TARGET == TNUM("ローション")
+            RESULT = ARG == TNUM("愛撫") && PREVCOM:TARGET == TNUM("ローション")
+    ENDSELECT
+    RETURNF RESULT
+
+;------------------------------------------------------------------------
+;TARGETによる否定判定
+;------------------------------------------------------------------------
+@CANCEL_CHECK()
+#FUNCTION
+    RETURNF TFLAG:コマンドキャンセル || NEXTCOM == 999
+
+;-------------------------------------------------
+;TARGETにおけるコマンドARGがPLAYERとしてはどのコマンドに相当するかを返す
+;例)クンニの逆は奉仕クンニなのでPREVCOM(TNUM("クンニ") ) = TNUM("奉仕クンニ")
+;-------------------------------------------------
+@REVCOM(ARG)
+#FUNCTION
+    SELECTCASE ARG
+        CASE TNUM("クンニ"), TNUM("奉仕クンニ")
+            RETURNF TNUM("クンニ") + TNUM("奉仕クンニ") - ARG
+        CASE TNUM("自慰"), TNUM("自慰する")
+            RETURNF TNUM("自慰") + TNUM("自慰する") - ARG
+        CASE TNUM("フェラする"), TNUM("フェラチオ")
+            RETURNF TNUM("フェラする") + TNUM("フェラチオ") - ARG
+        CASE TNUM("胸愛撫"), TNUM("胸愛撫させる")
+            RETURNF TNUM("胸愛撫") + TNUM("胸愛撫させる") - ARG
+        CASE TNUM("アナル舐め"), TNUM("アナル奉仕")
+            RETURNF TNUM("アナル舐め") + TNUM("アナル奉仕") - ARG
+        CASE TNUM("手コキする"), TNUM("手淫")
+            RETURNF TNUM("手コキする") + TNUM("手淫") - ARG
+        CASE TNUM("パイズリする"), TNUM("パイズリ")
+            RETURNF TNUM("パイズリする") + TNUM("パイズリ") - ARG
+        CASE TNUM("足コキする"), TNUM("足コキ")
+            RETURNF TNUM("足コキする") + TNUM("足コキ") - ARG
+        CASE TNUM("バイブ"), TNUM("逆バイブ")
+            RETURNF TNUM("バイブ") + TNUM("逆バイブ") - ARG
+        CASE TNUM("アナルバイブ"), TNUM("逆Ａバイブ")
+            RETURNF TNUM("アナルバイブ") + TNUM("逆Ａバイブ") - ARG
+        CASE TNUM("オナホール"), TNUM("オナホコキ")
+            RETURNF TNUM("オナホール") + TNUM("オナホコキ") - ARG
+        CASE TNUM("正常位"), TNUM("正常位奉仕")
+            RETURNF TNUM("正常位") + TNUM("正常位奉仕") - ARG
+        CASE TNUM("後背位"), TNUM("後背位奉仕")
+            RETURNF TNUM("後背位") + TNUM("後背位奉仕") - ARG
+        CASE TNUM("騎乗位"), TNUM("騎乗位で犯す")
+            RETURNF TNUM("騎乗位") + TNUM("騎乗位で犯す") - ARG
+        CASE TNUM("アナル正常位"), TNUM("Ａ正常位奉仕")
+            RETURNF TNUM("アナル正常位") + TNUM("Ａ正常位奉仕") - ARG
+        CASE TNUM("アナル後背位"), TNUM("Ａ後背位奉仕")
+            RETURNF TNUM("アナル後背位") + TNUM("Ａ後背位奉仕") - ARG
+        CASE TNUM("アナル騎乗位"), TNUM("Ａ騎乗位で犯す")
+            RETURNF TNUM("アナル騎乗位") + TNUM("Ａ騎乗位で犯す") - ARG
+    ENDSELECT
+    RETURNF ARG
+
+
+;-------------------------------------------------
+;GETNUM(TRAINNAME, "フェラチオ")が長すぎるのでTNUM("フェラチオ")と書けるようにしただけの関数
+;ARGSが空白だったりTRAINNAMEに該当するものが無い文字列の場合には-1が返る
+;-------------------------------------------------
+@TNUM(ARGS)
+#FUNCTION
+    RESULT = GETNUM(TRAINNAME, ARGS)
+    RETURNF RESULT
+
+;-------------------------------------------------
+;GETNUM(STAIN, "口")が長すぎるのでSTNNUM("口")と書けるようにしただけの関数
+;ARGSが空白だったりSTAINNAMEに該当するものが無い文字列の場合には-1が返る
+;-------------------------------------------------
+@STNNUM(ARGS)
+#FUNCTION
+    RESULT = GETNUM(STAIN, ARGS)
+    RETURNF RESULT
+
+;-------------------------------------------------
+;前回のターゲットに調教命令を実行したプレイヤーが同じか確認
+;ARG:ターゲットID
+;ARG:1:プレイヤーID
+;-------------------------------------------------
+@LAST_PLAYER_SAME(ARG=0,ARG:1=0)
+#FUNCTION
+    VARSET LOCALS
+    ;記録を分解する。LOCALS:XX = ID となる
+    SPLIT CSTR:ARG:前回プレイヤー, "/", LOCALS
+
+    FOR LOCAL, 0, 50
+        SIF LOCALS:LOCAL == ""
+            BREAK
+        RESULT = TOINT(LOCALS:LOCAL) == ARG:1
+        SIF RESULT
+            RETURNF RESULT
+    NEXT
+    RETURNF RESULT
+
+;-------------------------------------------------
+;倍率の計算
+;ARG:100％倍率
+;-------------------------------------------------
+@APPLY_EX_RATE(ARG)
+	FOR LOCAL, 0, VARSIZE("EX")
+        NOWEX:LOCAL = NOWEX:LOCAL * ARG / 100
+        NOWEX:PLAYER:LOCAL = NOWEX:PLAYER:LOCAL * ARG / 100
+	NEXT
+    ; VARSET NOWEX:TARGET:0
+    ; VARSET NOWEX:PLAYER:0
+
+;-------------------------------------------------
+;倍率の計算
+;ARG:100％倍率
+;-------------------------------------------------
+@APPLY_SOURCE_RATE(ARG)
+	FOR LOCAL, 0, VARSIZE("SOURCE")
+        TMP_SRC:TARGET:LOCAL = TMP_SRC:TARGET:LOCAL * ARG / 100
+        TMP_SRC:PLAYER:LOCAL = TMP_SRC:PLAYER:LOCAL * ARG / 100
+	NEXT
+    ; VARSET TMP_SRC:TARGET:0
+    ; VARSET TMP_SRC:PLAYER:0
+
+;-------------------------------------------------
+;プレイヤーがキスを実行できるかどうか
+;-------------------------------------------------
+@WILL_PLAYER_KISS
+#FUNCTION
+    ;奴隷の口が愛液、精液、アナル、尿で汚れており、
+    ;汚臭敏感で従順3以下のASSIの場合キスはしない（汚れ無視なら問題なし）
+    RESULT = PLAYER == MASTER || !(CHECK_BITS_NOT_IN_MASK(STAIN:ARG:口,STAIN_Ｐ,STAIN_乳) && ABL:PLAYER:信頼 <= 3 && IS_汚臭敏感(PLAYER) && !TALENT:PLAYER:汚れ無視) 
+    ;ボールギャグ使用中もキスはなし
+    RESULT &= !TEQUIP:ボールギャグ
+    ;初キス未体験だとキスを避ける
+    RESULT &= CFLAG:初キス相手
+
+    RETURNF RESULT
+
+@CHECK_BITS_NOT_IN_MASK(ARG=0,ARG:1=0,ARG:2=0,ARG:3=0,ARG:4=0,ARG:5=0,ARG:6=0,ARG:7=0,ARG:8=0)
+#FUNCTION
+    FOR LOCAL, 1, 8
+        LOCAL:1 = LOCAL:1 | ARG:LOCAL
+    NEXT
+    RESULT = ARG ^ LOCAL:1
+    RETURNF RESULT
+
+;-------------------------------------------------
+;汚れの計算
+;ARG:0:相手キャラID
+;ARG:1:STAIN部位
+;ARG:2:自キャラID
+;ARG:3:自キャラ接触部位、現在は口に対する部分かそれ以外でどのSTAINを結果に加算するかを決める
+;-------------------------------------------------
+@COM_汚れ(ARG,ARG:1,ARG:2,ARG:3)
+#FUNCTION
+    RESULT = 0
+    ;尿の汚れ
+    SIF STAIN:ARG:(ARG:1) & STAIN_尿
+        RESULT += 3
+    SIF ARG:3 = STNNUM("口") && STAIN:ARG:(ARG:1) & STAIN_Ｖ
+        RESULT += 1
+    SIF ARG:3 = STNNUM("口") && STAIN:ARG:(ARG:1) & STAIN_Ｐ
+        RESULT += 2
+    ;精液の汚れ
+    SIF STAIN:ARG:(ARG:1) & STAIN_精
+        RESULT += 3
+    ;アナルの汚れ
+    SIF STAIN:ARG:(ARG:1) & STAIN_Ａ
+        RESULT += 7
+    SIF ARG:3 = STNNUM("口") && STAIN:ARG:(ARG:1) & STAIN_乳
+        RESULT += 1
+    ;尿の汚れ
+    SIF STAIN:ARG:(ARG:1) & STAIN_尿
+        RESULT += 3
+    ;獣姦の場合は汚れ7
+    SIF TEQUIP:ARG:獣姦プレイ
+        RESULT += 7
+
+    RESULT *= 5
+    SIF IS_汚臭鈍感(ARG:2)
+        RESULT /= 3
+    SIF IS_汚臭敏感(ARG:2)
+        RESULT *= 2
+
+    SELECTCASE ARG:3
+        CASE STNNUM("口")
+            RESULT *= 4
+        CASE STNNUM("手")
+            RESULT /= 2
+        CASE STNNUM("ペニス")
+            RESULT *= 1
+        CASE STNNUM("ヴァギナ")
+            RESULT *= 2
+        CASE STNNUM("アナル")
+            RESULT /= 5
+        CASE STNNUM("胸")
+            RESULT *= 1
+        CASE STNNUM("足")
+            RESULT /= 2
+        CASE STNNUM("顔")
+            RESULT /= 3
+        CASE STNNUM("髪")
+            RESULT /= 2
+        CASEELSE
+    ENDSELECT
+    RETURNF RESULT
+
+@CHECK_BITS_NOT_IN_MASK(ARG=0,ARG:1=0,ARG:2=0,ARG:3=0,ARG:4=0,ARG:5=0,ARG:6=0,ARG:7=0,ARG:8=0)
+#FUNCTION
+    FOR LOCAL, 1, 8
+        LOCAL:1 = LOCAL:1 | ARG:LOCAL
+    NEXT
+    RESULT = ARG ^ LOCAL:1
+    RETURNF RESULT
+
+-------------------------------------------------
+;母乳体質への変化
+;-------------------------------------------------
+@EVENT_JUNYU
+    ;【母乳体質】無しかつ【小柄】で無し【貧乳】無しかつ【オトコ】でない
+    SIF TALENT:母乳体質  || IS_小柄(TARGET) || IS_貧乳(TARGET) || IS_MALE(TARGET)
+        RETURN 0
+    ;更に［Ｂ感度］５以上かつ【巨乳】か【爆乳】で触手調教や獣姦でなく
+    SIF ABL:Ｂ感覚 <= 4 || !IS_チチユレ(TARGET) || TEQUIP:触手召喚 || TEQUIP:獣姦プレイ
+        RETURN 0
+    ;調教者が【幼稚】か【幼児退行】か【未熟】
+    SIF !TALENT:PLAYER:幼稚 && !TALENT:PLAYER:幼児退行 && !TALENT:PLAYER:未熟
+        RETURN 0
+    ;「調教対象」から「調教者」への関係が150以上か主人プレイで愛
+    SIF RELATION:(NO:PLAYER) < 150 && (PLAYER != MASTER || !TALENT:恋心)
+        RETURN 0
+    PRINTFORML %NAME:PLAYER%に乳房を吸われる内に、%NAME:TARGET%は母乳が出るようになった…
+    TALENT:母乳体質 = 1
+
+    RETURN 1
+
+;-------------------------------------------------
+;精通
+;-------------------------------------------------
+@EVENT_SEITSU
+    ;【オトコ】か【ふたなり】であり【未熟】
+    SIF !HAVE_PENIS(TARGET) || !TALENT:未熟
+        RETURN 0
+    ;更に［Ｃ感度］５以上で触手調教や獣姦でなく
+    SIF ABL:Ｃ感覚 <= 4 || TEQUIP:触手召喚 || TEQUIP:獣姦プレイ
+        RETURN 0
+    ;「調教対象」から「調教者」への関係が150以上
+    SIF RELATION:TARGET:(NO:PLAYER) < 150
+        RETURN 0
+    PRINTFORML %NAME:PLAYER%に%CSTR:男性器呼び方%を吸われる内に、%NAME:TARGET%は精通を迎えた…
+    TALENT:未熟 = 0
+
+    RETURN 1
+
+;-------------------------------------------------
+;SOURCEの上昇を計算する関数
+;-------------------------------------------------
+@CALC_刺激SOURCE(ARGS, CHARANO, TYPE)
+#FUNCTION
+#DIM CHARANO
+#DIM TYPE
+	VARSET RESULT
+	SELECTCASE ARGS
+		CASE "Ｃ刺激"
+			RESULT = CALC_刺激(ABL:CHARANO:Ｃ感覚, TYPE)
+            ;直接刺激できないとペナルティ
+            SIF !CHECK_CLO("ずらし可", CHARANO)
+                RESULT = MULTIPLY(LOCAL, 40 + ABL:CHARANO:Ｃ感覚*5)
+		CASE "Ｖ刺激"
+			RESULT = CALC_刺激(ABL:CHARANO:Ｖ感覚, TYPE)
+		CASE "Ａ刺激"
+			RESULT = CALC_刺激(ABL:CHARANO:Ａ感覚, TYPE)
+		CASE "Ｂ刺激"
+			RESULT = CALC_刺激(ABL:CHARANO:Ｂ感覚, TYPE)
+            ;直接刺激できないとペナルティ
+            SIF !CHECK_CLO("はだけ可", CHARANO) && !CHECK_CLO("谷間露出", CHARANO) && !CHECK_CLO("乳房露出", CHARANO) 
+                RESULT = MULTIPLY(LOCAL, 40 + ABL:CHARANO:Ｂ感覚*5)
+	ENDSELECT
+	RETURNF RESULT
+
+@CALC_刺激(感覚,TYPE)
+#FUNCTION
+#DIM 感覚
+#DIM TYPE
+	;上昇曲線としてはへの字型にする
+	SELECTCASE 感覚
+		CASE 0
+			RESULT = 100
+		CASE 1 TO 4
+			RESULT = 感覚*200
+		CASE 5 TO 10
+			RESULT = 800 + (感覚 - 4)*100
+		CASEELSE
+			RESULT = 1400 + (感覚 - 10)*10
+	ENDSELECT
+
+	SELECTCASE TYPE
+		;道具の使用（基本値）
+		CASE 刺激_補正なし
+		;舌や指などで刺激(緩やかな上昇)
+		CASE 刺激_緩やか
+			RESULT = MULTIPLY(RESULT, 40 + MIN(感覚, 10)*5)
+		;素股系(刺激は副産物。弱め)
+		CASE 刺激_弱め
+			RESULT = MULTIPLY(RESULT, 20)
+		;逆セックス系(強め)
+		CASE 刺激_強め
+			RESULT = MULTIPLY(RESULT, 5 + MIN(感覚, 10)*15)
+		;逆アナル系(強め)
+		CASE 刺激_急激
+			RESULT = MULTIPLY(RESULT, MAX(MIN(感覚, 10)*50 - 200, (MIN(感覚, 10) + 1)*5) )
+	ENDSELECT
+	RETURNF RESULT
+
+;-------------------------------------------------
+;PLAYERCHARAの屈従を計算する関数
+;RESULT:PLAYERCHARAの屈従
+;-------------------------------------------------
+@CALC_屈従(PLAYERCHARA,TARGETCHARA,MODE,TYPE)
+#FUNCTION
+#DIM PLAYERCHARA
+#DIM TARGETCHARA
+#DIM MODE
+#DIM TYPE
+    VARSET RESULT
+	SELECTCASE MODE
+		;PLAYERCHARAが主導的にTARGETCHARAにコマンドを実行したときもしくはPLAYERCHARAがTARGETCHARAにPLAYERCHARAに奉仕するように命令したとき
+		CASE 主導_調教
+            ;PLAYERCHARAが主導的でもマゾければ勝手に奉仕する屈従感じるよねってことで
+            IF TALENT:PLAYERCHARA:マゾ
+                RESULT += 50 * LIMIT(ABL:PLAYERCHARA:マゾっ気,1,5) + 100 * LIMIT(ABL:PLAYERCHARA:マゾっ気 - 3,0,7)
+                RESULT += 10 * LIMIT(ABL:TARGETCHARA:サドっ気,0,5) + 10 * LIMIT(ABL:TARGETCHARA:サドっ気 - 3,0,7)
+                ;隠れマゾは半減しとく
+                SIF TALENT:PLAYERCHARA:マゾ < 0
+                    RESULT = MULTIPLY(RESULT, 50) 
+            ;それ以外の場合自発的にPLAYERが実行するのでPLAYERCHARA屈従はなし
+            ELSE
+            ENDIF
+		;PLAYERCHARAがTARGETCHARAに命令されて奉仕したときもしくはPLAYERCHARAが主導的なTARGETCHARAにコマンドを実行されたとき
+        ;要するに上の逆
+		CASE 主導_被調教
+            ;マゾっ気
+            RESULT += 100 * LIMIT(ABL:PLAYERCHARA:マゾっ気,1,5) + 100 * LIMIT(ABL:PLAYERCHARA:マゾっ気 - 3,0,7)
+            RESULT += 10 * LIMIT(ABL:TARGETCHARA:サドっ気,0,5) + 10 * LIMIT(ABL:TARGETCHARA:サドっ気 - 3,0,7)
+            ;サドは多分マゾの命令をおねだり的に勝手に解釈するんじゃないかなということで下げる
+            IF ABL:TARGETCHARA:マゾっ気 && TALENT:PLAYERCHARA:サド
+                RESULT = MULTIPLY(RESULT, 50) 
+            ;サド同志は屈辱的
+            ELSEIF TALENT:PLAYERCHARA:サド && TALENT:TARGETCHARA:サド
+                RESULT = 100 + MULTIPLY(RESULT, 120) 
+            ENDIF
+		;PLAYERCHARAがMASTERに命令されて別のTARGETCHARAにコマンドを実行したとき
+        ;対応するTARGETCHARAのモードは主導_被調教
+		CASE 主導_被命令
+            ;マゾっ気
+            RESULT += 100 * LIMIT(ABL:PLAYERCHARA:マゾっ気,1,5) + 100 * LIMIT(ABL:PLAYERCHARA:マゾっ気 - 3,0,7)
+            RESULT += 10 * LIMIT(ABL:MASTER:サドっ気,0,5) + 10 * LIMIT(ABL:MASTER:サドっ気 - 3,0,7)
+            ;PLAYERCHARAからMASTERへの相性を見る
+            SELECTCASE RELATION:PLAYERCHARA:(NO:MASTER)
+                CASE IS < 50
+                    TIMES RESULT, 0.5
+                CASE IS < 90
+                    TIMES RESULT, 0.75
+                CASE IS < 110
+                    TIMES RESULT, 1
+                CASE IS < 150
+                    TIMES RESULT, 1.25
+                CASE IS < 200
+                    TIMES RESULT, 1.5
+                CASE IS < 300
+                    TIMES RESULT, 1.75
+                CASEELSE
+                    TIMES RESULT, 2
+            ENDSELECT
+
+            IF TALENT:PLAYERCHARA:マゾ > 0
+                RESULT = MULTIPLY(RESULT, 150) 
+            ;隠れマゾ
+            ELSEIF TALENT:PLAYERCHARA:マゾ < 0
+                RESULT = MULTIPLY(RESULT, 120) 
+            ;サドはそれほどでもない
+            IF TALENT:PLAYERCHARA:サド > 0
+                RESULT = MULTIPLY(RESULT, 70) 
+            ;隠れサド
+            ELSEIF TALENT:PLAYERCHARA:サド < 0
+                RESULT = MULTIPLY(RESULT, 90) 
+            ENDIF
+
+	ENDSELECT
+	SELECTCASE TYPE
+		;基本値
+		CASE 刺激_補正なし
+		;緩やかな上昇
+		CASE 刺激_緩やか
+			RESULT = MULTIPLY(RESULT, 40 + MIN(ABL:PLAYERCHARA:マゾっ気, 10)*5)
+			RESULT:1 = MULTIPLY(RESULT:1, 40 + MIN(ABL:TARGETCHARA:マゾっ気, 10)*5)
+		;弱め
+		CASE 刺激_弱め
+			RESULT = MULTIPLY(RESULT, 20)
+			RESULT:1 = MULTIPLY(RESULT:1, 20)
+		;強め
+		CASE 刺激_強め
+			RESULT = MULTIPLY(RESULT, 5 + MIN(ABL:PLAYERCHARA:マゾっ気, 10)*15)
+			RESULT:1 = MULTIPLY(RESULT:1, 5 + MIN(ABL:TARGETCHARA:マゾっ気, 10)*15)
+		;急激
+		CASE 刺激_急激
+			RESULT = MULTIPLY(RESULT, MAX(MIN(ABL:PLAYERCHARA:マゾっ気, 10)*50 - 200, (MIN(ABL:PLAYERCHARA:マゾっ気, 10) + 1)*5) )
+			RESULT:1 = MULTIPLY(RESULT:1, MAX(MIN(ABL:TARGETCHARA:マゾっ気, 10)*50 - 200, (MIN(ABL:TARGETCHARA:マゾっ気, 10) + 1)*5) )
+	ENDSELECT
+	RETURNF RESULT
+
+;-------------------------------------------------
+;PLAYERCHARAの達成を計算する関数
+;RESULT:PLAYERCHARAの達成
+;-------------------------------------------------
+@CALC_達成(PLAYERCHARA,TARGETCHARA,MODE,TYPE)
+#FUNCTION
+#DIM PLAYERCHARA
+#DIM TARGETCHARA
+#DIM MODE
+#DIM TYPE
+    VARSET RESULT
+	SELECTCASE MODE
+		;PLAYERCHARAが主導的にTARGETCHARAにコマンドを実行したときもしくはPLAYERCHARAがTARGETCHARAにPLAYERCHARAに奉仕するように命令したとき
+		CASE 主導_調教
+            IF TALENT:PLAYERCHARA:サド
+                RESULT += 50 * LIMIT(ABL:PLAYERCHARA:サドっ気,1,5) + 100 * LIMIT(ABL:PLAYERCHARA:サドっ気 - 3,0,7)
+                ;隠れサドは半減しとく
+                SIF TALENT:PLAYERCHARA:サド < 0
+                    RESULT = MULTIPLY(RESULT, 50) 
+            ;それ以外の場合自発的にPLAYERが実行するので屈従はなし
+            ELSE
+            ENDIF
+		;PLAYERCHARAがTARGETCHARAに命令されて奉仕したときもしくはPLAYERCHARAが主導的なTARGETCHARAにコマンドを実行されたとき
+        ;要するに上の逆
+		CASE 主導_被調教
+            ;マゾっ気
+            RESULT += 100 * LIMIT(ABL:PLAYERCHARA:サドっ気,1,5) + 100 * LIMIT(ABL:TARGETCHARA:サドっ気 - 3,0,7)
+            ;サドは多分マゾの命令をおねだり的に勝手に解釈するんじゃないかなということで下げる
+            IF TALENT:TARGETCHARA:マゾ && TALENT:PLAYERCHARA:サド
+                RESULT = MULTIPLY(RESULT, 50) 
+                ;隠れサドは半減しとく
+                SIF TALENT:PLAYERCHARA:サド < 0
+                    RESULT = MULTIPLY(RESULT, 50) 
+                ;隠れマゾは半減しとく
+                SIF TALENT:PLAYERCHARA:マゾ < 0
+                    RESULT = MULTIPLY(RESULT, 50) 
+            ENDIF
+		;PLAYERがMASTERに命令されて別のTARGETにコマンドを実行したとき
+        ;対応するTARGETのモードは主導_被調教
+		CASE 主導_被命令
+			RESULT = MULTIPLY(LOCAL, 20)
+	ENDSELECT
+	SELECTCASE TYPE
+		;基本値
+		CASE 刺激_補正なし
+		;緩やかな上昇
+		CASE 刺激_緩やか
+			RESULT = MULTIPLY(RESULT, 40 + MIN(ABL:PLAYERCHARA:マゾっ気, 10)*5)
+			RESULT:1 = MULTIPLY(RESULT:1, 40 + MIN(ABL:TARGETCHARA:マゾっ気, 10)*5)
+		;弱め
+		CASE 刺激_弱め
+			RESULT = MULTIPLY(RESULT, 20)
+			RESULT:1 = MULTIPLY(RESULT:1, 20)
+		;強め
+		CASE 刺激_強め
+			RESULT = MULTIPLY(RESULT, 5 + MIN(ABL:PLAYERCHARA:マゾっ気, 10)*15)
+			RESULT:1 = MULTIPLY(RESULT:1, 5 + MIN(ABL:TARGETCHARA:マゾっ気, 10)*15)
+		;急激
+		CASE 刺激_急激
+			RESULT = MULTIPLY(RESULT, MAX(MIN(ABL:PLAYERCHARA:マゾっ気, 10)*50 - 200, (MIN(ABL:PLAYERCHARA:マゾっ気, 10) + 1)*5) )
+			RESULT:1 = MULTIPLY(RESULT:1, MAX(MIN(ABL:TARGETCHARA:マゾっ気, 10)*50 - 200, (MIN(ABL:TARGETCHARA:マゾっ気, 10) + 1)*5) )
+	ENDSELECT
+	RETURNF RESULT
+
+

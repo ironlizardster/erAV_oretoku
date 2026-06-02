@@ -134,7 +134,7 @@ SIF A < V
 $SUCCESS_LOOP
 
 SAVESTR:0 = 剃毛
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -342,7 +342,7 @@ ENDIF
 CFLAG:陰毛状態 = 1
 
 ;屈服刻印３に相当
-TFLAG:屈服刻印2 = 3
+TFLAG:屈服刻印取得 = 3
 
 RETURN 1
 ;

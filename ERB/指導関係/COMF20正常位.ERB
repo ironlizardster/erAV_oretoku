@@ -8,7 +8,7 @@
 IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
 	;正常位・キスと正常位・胸愛撫を連続実行し（逆順可）、かつ実行条件を満たすと正常位SPに
 	;(前々回のコマンドが正常位・極で正常位・キスor胸愛撫でも可能)
-	IF (TFLAG:前々回のコマンド == [[TRAIN:正常位キス]] && PREVCOM == [[TRAIN:正常位胸愛撫]]) || (TFLAG:前々回のコマンド == [[TRAIN:正常位胸愛撫]] && PREVCOM == [[TRAIN:正常位キス]]) || TFLAG:前々回のコマンド == [[TRAIN:正常位ＳＰ]] && (PREVCOM == [[TRAIN:正常位キス]] || PREVCOM == [[TRAIN:正常位胸愛撫]]) || PREVCOM == [[TRAIN:正常位ＳＰ]]
+	IF (TFLAG:前々回のコマンド == TNUM("正常位キス]] && PREVCOM == [[TRAIN:正常位胸愛撫]]) || (TFLAG:前々回のコマンド == [[TRAIN:正常位胸愛撫]] && PREVCOM == [[TRAIN:正常位キス]]) || TFLAG:前々回のコマンド == [[TRAIN:正常位ＳＰ]] && (PREVCOM == [[TRAIN:正常位キス]] || PREVCOM == [[TRAIN:正常位胸愛撫]]) || PREVCOM == [[TRAIN:正常位ＳＰ")
 		CALL COM_ABLE130
 		SIF RESULT == 1
 			JUMP COM130
@@ -18,7 +18,7 @@ ENDIF
 ;前のプレイが正常位か正常位・キスか正常位・胸愛撫かつ調教者の技巧3以上の場合、挿入Ｇスポ責めまたは挿入子宮口責めへ派生
 ;Ｖ感覚が高く欲情しているほど子宮口へ行きやすい
 IF FLAG:追加コマンドなし == 0
-	IF (PREVCOM == [[TRAIN:正常位]] || PREVCOM == [[TRAIN:正常位キス]] ||PREVCOM == [[TRAIN:正常位胸愛撫]])&& ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
+	IF (PREVCOM == TNUM("正常位]] || PREVCOM == [[TRAIN:正常位キス]] ||PREVCOM == [[TRAIN:正常位胸愛撫"))&& ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;欲情
 		IF PALAM:欲情 < PALAMLV:1
 			A = 1
@@ -56,7 +56,7 @@ SIF RESULT == 0
 
 ;前回の調教が3Pのとき3Pへ
 TFLAG:３Ｐ継続中 = 0
-IF PREVCOM == [[TRAIN:３Ｐ]]
+IF PREVCOM == TNUM("３Ｐ")
 	CALL COM_ABLE64
 	IF RESULT == 1
 		TFLAG:３Ｐ継続中 = 1
@@ -65,7 +65,7 @@ IF PREVCOM == [[TRAIN:３Ｐ]]
 ;調教者が前回:助手で今回:主人か、前回:主人で今回:助手のとき
 ELSEIF (ASSIPLAY && TFLAG:前回の調教者が助手 == 0) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手)
 	;前回の調教が後背位アナルかフェラチオかイラマチオのとき3Pへ
-	IF PREVCOM == [[TRAIN:後背位アナル]] || PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ]]
+	IF PREVCOM == TNUM("後背位アナル]] || PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ")
 		CALL COM_ABLE64
 		SIF RESULT == 1
 			JUMP COM64
@@ -74,7 +74,7 @@ ENDIF
 
 PRINTL 正常位
 SAVESTR:0 = 正常位
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ
 TFLAG:V経験を伴うコマンド = 1

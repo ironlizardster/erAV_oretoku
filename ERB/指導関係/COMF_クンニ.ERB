@@ -1,0 +1,113 @@
+﻿;-------------------------------------------------
+;クンニ実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:クンニ]]
+#FUNCTION
+    ;クンニ実行判定
+    RESULT = COMABLE_DEF(TNUM("クンニ")) && COND("口の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:クンニ]]
+    IF TEQUIP:獣姦プレイ
+        PRINTFORM 犬の舌が
+    ELSE
+        PRINTFORM %CALLNAME:PLAYER%は
+    ENDIF
+    ;岩清水
+    IF TEQUIP:羞恥大鏡プレイ
+        PRINTFORM %CALLNAME:TARGET%を顔の上に跨らせ、音を立てながら秘唇を啜り上げ
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%の秘唇を丁寧に舐めほぐし
+    ENDIF
+    IF IS_FUTA(TARGET) && PALAM:欲情 >= PALAMLV:3
+        PRINT 、そそり勃ったペニスに舌を這わせて舐め上げ
+    ELSEIF IS_FUTA(TARGET)
+        PRINT 、ペニスの付け根を舌で舐め上げ
+    ELSEIF PALAM:欲情 >= PALAMLV:3
+        PRINT 、尖りきったクリトリスを舌で吸い上げ
+    ENDIF
+    PRINTL た…
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:クンニ]](ARG=100)
+    ;快Ｃのソース
+    TMP_SRC:TARGET:快Ｃ += CALC_刺激SOURCE("Ｃ刺激", TARGET, 刺激_緩やか)
+    
+    ;△COMF69との液体系ソース量の差が大きい（10倍）のでこっちを倍にしてみる
+    ;こっち50:50で向こうを50:950とかでもいいんだけど、100:900のほうがなんとなく好みなので……
+    TMP_SRC:TARGET:液体追加 = 100
+    TMP_SRC:TARGET:愛液分泌 = 100
+    TMP_SRC:TARGET:露出 = 220
+    TMP_SRC:TARGET:逸脱 = 50
+    SIF IS_汚臭鈍感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("口"),STNNUM("ヴァギナ"),1,3) * 5 / 3
+    SIF IS_汚臭敏感(TARGET)
+        TMP_SRC:TARGET:不潔 += COM_汚れ(PLAYER,STNNUM("口"),STNNUM("ヴァギナ"),1,3) * 5 * 2
+    
+    ;調教者のTALENT:舌使いをみる
+    IF TALENT:PLAYER:舌使い || TEQUIP:獣姦プレイ
+        TIMES TMP_SRC:TARGET:快Ｃ , 2.00
+        TMP_SRC:TARGET:恭順 += TMP_SRC:TARGET:快Ｃ/20
+    ENDIF
+
+    ;調教者
+    TMP_SRC:PLAYER:屈従 = 10
+    SIF IS_MALE(TARGET) && IS_MALE(PLAYER) && !TALENT:PLAYER:両刀
+        TMP_SRC:PLAYER:屈従 += 40
+
+    TMP_SRC:PLAYER:逸脱 = 20
+    SIF IS_汚臭鈍感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("ヴァギナ"),STNNUM("口"),1,1) * 10 / 3
+    SIF IS_汚臭敏感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("ヴァギナ"),STNNUM("口"),1,1) * 10 * 2
+
+    TMP_SRC:PLAYER:性行動 = 200 + MIN(ABL:PLAYER:奉仕精神, 5) * 30
+    TEMP_NUM = 50 + MIN(ABL:PLAYER:奉仕精神, 5) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 3,0,2) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 50
+    IF TEQUIP:PLAYER:奉仕
+        TMP_SRC:PLAYER:屈従 += TEMP_NUM
+        TMP_SRC:PLAYER:達成 += TEMP_NUM / 10
+        TMP_SRC:TARGET:達成 += 10 + MIN(ABL:サドっ気, 5) * 10 + LIMIT(ABL:PLAYER:サドっ気 - 1,0,4) * 10 + LIMIT(ABL:PLAYER:サドっ気 - 3,0,2) * 20 + LIMIT(ABL:PLAYER:サドっ気 - 4,0,1) * 30
+    ELSE
+        TMP_SRC:PLAYER:達成 += TEMP_NUM
+    ENDIF
+
+    CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:クンニ]](ARG=100)
+    NOWEX:体力変動 += 5
+    NOWEX:気力変動 += 5
+        
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 3
+        NOWEX:PLAYER:レズ経験 = 3
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 1
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 1
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:クンニ]]
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    STAIN:ヴァギナ |= STAIN:PLAYER:口
+    STAIN:PLAYER:口 |= STAIN:ヴァギナ
+

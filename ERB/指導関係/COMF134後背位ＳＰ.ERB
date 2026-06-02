@@ -15,7 +15,7 @@ SIF RESULT == 0
 
 PRINTL 後背位ＳＰ
 SAVESTR:0 = 後背位ＳＰ
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ(処女膜再生対応)
 TFLAG:V経験を伴うコマンド = 1
@@ -250,7 +250,7 @@ IF TALENT:恋心
 ENDIF
 
 ;後背位スパンキングを挟んでいた場合、マゾっ気補正がさらにかかる
-IF TFLAG:前々回のコマンド == [[TRAIN:後背位スパンキング]] || PREVCOM == [[TRAIN:後背位スパンキング]]
+IF TFLAG:前々回のコマンド == TNUM("後背位スパンキング]] || PREVCOM == [[TRAIN:後背位スパンキング")
 	;ABL:マゾっ気をみる
 	IF ABL:マゾっ気 == 0
 		TIMES SOURCE:快Ｖ , 0.60

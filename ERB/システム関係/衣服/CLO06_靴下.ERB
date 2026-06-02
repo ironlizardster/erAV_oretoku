@@ -1,0 +1,186 @@
+﻿;-------------------------------------------------
+;キャラARGにARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_SOCKS, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:靴下%
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする
+	STAIN:ARG:靴下 = 0
+	IF COND("脚の使用", ARG)
+		CALL PALAM_SOCKS, ARGS, ARG
+	ELSE
+		CSTR:ARG:靴下 = 
+	ENDIF
+	EQUIP:ARG:靴下 = STRLENS(CSTR:ARG:靴下)
+	SIF MEMO_CLO != CSTR:ARG:靴下
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGの靴下の名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@SOCKS(ARG, ARGS)
+#FUNCTIONS
+#DIMS COLOR_ABOUT
+
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "略"
+			IF CHECK_SOCKS("足袋", ARG)
+				RESULTS = 足袋
+			ELSEIF CHECK_SOCKS("タイツ", ARG)
+				RESULTS = タイツ
+			ELSEIF CHECK_SOCKS("パンスト", ARG)
+				RESULTS = パンスト
+			ELSEIF CHECK_SOCKS("レギンス", ARG)
+				RESULTS = レギンス
+			ELSEIF CHECK_SOCKS("ストッキング", ARG)
+				RESULTS = ストッキング
+			ELSEIF CHECK_SOCKS("ニーソ", ARG)
+				RESULTS = ニーソ
+			ELSEIF EQUIP:ARG:靴下
+				RESULTS = 靴下
+			ENDIF
+		CASE "種類"
+			IF CHECK_SOCKS("足袋", ARG)
+				RESULTS = 足袋
+			ELSEIF CHECK_SOCKS("パンスト", ARG)
+				RESULTS = パンスト
+			ELSEIF CHECK_SOCKS("レギンス", ARG)
+				RESULTS = レギンス
+			ELSEIF CHECK_SOCKS("ガーターストッキング", ARG)
+				RESULTS = ガーターストッキング
+			ELSEIF CHECK_SOCKS("ガーターニーソ", ARG)
+				RESULTS = ガーターニーソ
+			ELSEIF CHECK_SOCKS("ストッキング", ARG)
+				RESULTS = ストッキング
+			ELSEIF CHECK_SOCKS("ニーソ", ARG)
+				RESULTS = ニーソ
+			ELSEIF EQUIP:ARG:靴下
+				RESULTS = 靴下
+			ENDIF
+		CASE ""
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:靴下, "/", RESULTS
+			COLOR_ABOUT = %CLOCOLOR(CSTR:ARG:靴下, "形容詞")%
+
+			SELECTCASE COLOR_ABOUT
+				CASE ""
+				CASEELSE
+					RESULTS = %CLOCOLOR(CSTR:ARG:靴下, "形容詞")%%RESULTS%
+			ENDSELECT
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番の靴下の名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_SOCKS(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		CASE 1
+			RESULTS = ショートソックス
+		CASE 2
+			RESULTS = 学校指定ソックス
+		CASE 3
+			RESULTS = ハイソックス
+		CASE 4
+			RESULTS = ルーズソックス
+		CASE 5
+			RESULTS = ニーソックス
+		CASE 6
+			RESULTS = 黒ストッキング
+		CASE 7
+			RESULTS = ガーターストッキング
+		CASE 8
+			RESULTS = ニーハイネットストッキング
+		CASE 9
+			RESULTS = 白ストッキング
+		CASE 99
+			RESULTS = ガラスのニーソックス
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGに靴下ARGSを着せた場合のCSTR処理
+;-------------------------------------------------
+@PALAM_SOCKS, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			CSTR:ARG:靴下 = 
+		CASE "ソックス"
+			CSTR:ARG:靴下 = ソックス/足首まで/
+		CASE "ハイソックス"
+			CSTR:ARG:靴下 = ハイソックス/
+		CASE "ニーソックス"
+			CSTR:ARG:靴下 = ニーソックス/
+		CASE "サイハイソックス"
+			CSTR:ARG:靴下 = サイハイソックス/太ももまで/
+
+		CASE "ストッキング"
+			CSTR:ARG:靴下 = ストッキング/太ももまで/
+		CASE "網ストッキング"
+			CSTR:ARG:靴下 = 網ストッキング/レース/太ももまで/
+		CASE "ガーターストッキング"
+			CSTR:ARG:靴下 = ガーターストッキング/太ももまで/
+		CASE "ガーターニーソ"
+			CSTR:ARG:靴下 = ガーターニーソ/太ももまで/
+
+		CASE "逆バニータイツ"
+			CSTR:ARG:靴下 = 逆バニータイツ/太ももまで/
+
+		CASE "フリルソックス"
+			CSTR:ARG:靴下 = フリルソックス/足首まで/
+		CASE "フリルニーソ"
+			CSTR:ARG:靴下 = フリルニーソ/
+		CASE "フリルオーバーニーソ"
+			CSTR:ARG:靴下 = フリルオーバーニーソ/太ももまで/
+
+		CASE "足袋"
+			CSTR:ARG:靴下 = 足袋/足首まで/
+
+		CASE "黒いニーソックス"
+			CSTR:ARG:靴下 = 黒いニーソックス/
+		CASE "靴下"
+			CSTR:ARG:靴下 = 靴下/
+		CASEELSE
+			CSTR:ARG:靴下 = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:靴下 = %MERGE_STR(CSTR:ARG:靴下, STR_ADD)%
+
+;-------------------------------------------------
+;靴下ARGSの番号
+;-------------------------------------------------
+@NUM_SOCKS(ARGS)
+#FUNCTION
+#DIM LCOUNT
+
+	FOR LCOUNT, 100, 400
+		SELECTCASE NAME_SOCKS(LCOUNT)
+			CASE ARGS
+				RETURNF LCOUNT
+		ENDSELECT
+	NEXT
+	RETURNF 100
+
+;-------------------------------------------------
+;ARGの靴下が条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_SOCKS(ARGS, ARG)
+#FUNCTION
+	SIF ARG == 0 && TARGET
+		ARG = TARGET
+	SIF EQUIP:ARG:靴下 == 0
+		RETURNF 0
+	SIF STRCOUNT(CSTR:ARG:靴下, ARGS)
+		RETURNF 1
+	RETURNF 0
+

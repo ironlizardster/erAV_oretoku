@@ -5,7 +5,7 @@
 @COM33
 
 ;調教者が主人で、前回の調教が貝あわせ(助手)かダブル素股だとダブル素股に
-IF ASSIPLAY == 0 && (PREVCOM == [[TRAIN:ダブル素股]] || (TFLAG:前回の調教者が助手 && PREVCOM == [[TRAIN:貝あわせ]]))
+IF ASSIPLAY == 0 && (PREVCOM == TNUM("ダブル素股]] || (TFLAG:前回の調教者が助手 && PREVCOM == [[TRAIN:貝あわせ")))
 	CALL COM_ABLE70
 	SIF RESULT == 1
 		JUMP COM70
@@ -204,7 +204,7 @@ SIF A < V
 	RETURN 0
 
 SAVESTR:0 = 素股
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -507,7 +507,7 @@ E = 0
 TFLAG:快楽経験 = 1
 
 ;屈服刻印１に相当
-TFLAG:屈服刻印2 = 1
+TFLAG:屈服刻印取得 = 1
 
 ;調教者がふたなり
 IF IS_FUTA(PLAYER)

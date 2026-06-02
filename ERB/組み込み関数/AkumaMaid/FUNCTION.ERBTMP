@@ -4221,7 +4221,7 @@ CASE "絶頂"
 	CASE IS < MAXBASE:ARG:絶頂
 		RETURNF 0
 	CASE IS < MAXBASE:ARG:絶頂*2
-		SIF COND("絶頂許可", PLAYER) == 0 && TEQUIP:ARG:逆調教 == 0
+		SIF COND("絶頂許可", PLAYER) == 0 && TEQUIP:ARG:奉仕 == 0
 			RETURNF 0
 	ENDSELECT
 

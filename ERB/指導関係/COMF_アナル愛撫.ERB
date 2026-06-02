@@ -1,0 +1,591 @@
+﻿;-------------------------------------------------
+;アナル愛撫実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:アナル愛撫]]
+#FUNCTION
+    ;アナル愛撫実行判定
+    RESULT = COMABLE_DEF(TNUM("アナル愛撫")) && COND("手の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:アナル愛撫]]
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激している…
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激している…
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差しした…
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしてやった…
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじってやった…
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわした…
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:アナル愛撫]](ARG=100)
+    ;快Ａのソース
+    TMP_SRC:TARGET:快Ａ += CALC_刺激SOURCE("Ａ刺激", TARGET, 刺激_緩やか)
+
+    TMP_SRC:TARGET:露出 = 850
+    TMP_SRC:TARGET:逸脱 = 200
+
+    SIF !TEQUIP:PLAYER:奉仕
+        TMP_SRC:TARGET:屈従 += 300 + MIN(ABL:Ａ感覚, 5) * 50 + LIMIT(ABL:Ａ感覚 - 2,0,4) * 200 + LIMIT(ABL:Ａ感覚 - 3,0,2) * 100 + LIMIT(ABL:Ａ感覚 - 4,0,1) * 150
+
+    ;EXP:Ａ経験をみる
+    SELECTCASE GETEXPLV(EXP:Ａ経験, 5)
+        CASE 0
+            TIMES TMP_SRC:TARGET:快Ａ , 0.20
+            TIMES TMP_SRC:TARGET:屈従, 0.20
+            TMP_SRC:TARGET:痛覚 = 500
+            TMP_SRC:TARGET:逸脱 += 200
+        CASE 1
+            TIMES TMP_SRC:TARGET:快Ａ , 0.50
+            TIMES TMP_SRC:TARGET:屈従, 0.50
+            TMP_SRC:TARGET:痛覚 = 400
+            TMP_SRC:TARGET:逸脱 += 100
+        CASE 2
+            TIMES TMP_SRC:TARGET:快Ａ , 1.00
+            TIMES TMP_SRC:TARGET:屈従, 1.00
+            TMP_SRC:TARGET:痛覚 = 300
+            TMP_SRC:TARGET:逸脱 += 50
+        CASE 3
+            TIMES TMP_SRC:TARGET:快Ａ , 1.20
+            TIMES TMP_SRC:TARGET:屈従, 1.20
+            TMP_SRC:TARGET:痛覚 = 200
+        CASE 4
+            TIMES TMP_SRC:TARGET:快Ａ , 1.60
+            TIMES TMP_SRC:TARGET:屈従, 1.60
+            TMP_SRC:TARGET:痛覚 = 100
+        CASEELSE
+            TIMES TMP_SRC:TARGET:快Ａ , 1.80
+            TIMES TMP_SRC:TARGET:屈従, 1.80
+            TMP_SRC:TARGET:痛覚 = 50
+    ENDSELECT
+
+    ;PALAM:潤滑をみる
+    SELECTCASE GETPALAMLV(PALAM:潤滑 , 4)
+        CASE 0
+            TIMES TMP_SRC:TARGET:快Ａ , 0.10
+            TIMES TMP_SRC:TARGET:屈従, 0.10
+            TIMES TMP_SRC:TARGET:痛覚 , 3.00
+        CASE 1
+            TIMES TMP_SRC:TARGET:快Ａ , 0.20
+            TIMES TMP_SRC:TARGET:屈従, 0.20
+            TIMES TMP_SRC:TARGET:痛覚 , 2.00
+        CASE 2
+            TIMES TMP_SRC:TARGET:快Ａ , 0.60
+            TIMES TMP_SRC:TARGET:屈従, 0.60
+            TIMES TMP_SRC:TARGET:痛覚 , 1.00
+        CASE 3
+            TIMES TMP_SRC:TARGET:快Ａ , 1.00
+            TIMES TMP_SRC:TARGET:屈従, 1.00
+            TIMES TMP_SRC:TARGET:痛覚 , 0.50
+        CASEELSE
+            TIMES TMP_SRC:TARGET:快Ａ , 2.00
+            TIMES TMP_SRC:TARGET:屈従, 2.00
+            TIMES TMP_SRC:TARGET:痛覚 , 0.10
+    ENDSELECT
+
+    ;PALAM:欲情をみる
+    SELECTCASE GETPALAMLV(PALAM:欲情 , 4)
+        CASE 0
+            TIMES TMP_SRC:TARGET:快Ａ , 0.30
+            TIMES TMP_SRC:TARGET:屈従, 0.30
+        CASE 1
+            TIMES TMP_SRC:TARGET:快Ａ , 0.60
+            TIMES TMP_SRC:TARGET:屈従, 0.60
+        CASE 2
+            TIMES TMP_SRC:TARGET:快Ａ , 1.00
+            TIMES TMP_SRC:TARGET:屈従, 1.00
+        CASE 3
+            TIMES TMP_SRC:TARGET:快Ａ , 1.30
+            TIMES TMP_SRC:TARGET:屈従, 1.30
+        CASEELSE
+            TIMES TMP_SRC:TARGET:快Ａ , 1.60
+            TIMES TMP_SRC:TARGET:屈従, 1.60
+    ENDSELECT
+
+    ;Ａ敏感、鈍感をみる
+    ;快Ａ自体のチェックは後でまとめてやる
+    IF IS_Ａ鈍感(TARGET)
+        TIMES TMP_SRC:TARGET:痛覚 , 0.60
+        TIMES TMP_SRC:TARGET:屈従 , 0.60
+        TIMES TMP_SRC:TARGET:逸脱 , 0.60
+    ELSEIF IS_Ａ敏感(TARGET)
+        TIMES TMP_SRC:TARGET:痛覚 , 1.50
+        TIMES TMP_SRC:TARGET:屈従 , 1.50
+        TIMES TMP_SRC:TARGET:逸脱 , 1.50
+    ENDIF
+
+    ;処女で貞操観念
+    IF IS処女(TARGET) && IS_貞操観念(TARGET)
+        TIMES TMP_SRC:TARGET:屈従 , 0.80
+        TIMES TMP_SRC:TARGET:逸脱 , 0.50
+    ENDIF
+
+    ;未熟
+    SIF TALENT:未熟
+        TIMES TMP_SRC:TARGET:痛覚 , 2.00
+
+    ;調教者
+    TMP_SRC:PLAYER:屈従 = 100
+    SIF ((IS_FEMALE(TARGET) && IS_FEMALE(PLAYER)) || (IS_MALE(TARGET) && IS_MALE(PLAYER))) && !TALENT:PLAYER:両刀
+        TMP_SRC:PLAYER:屈従 += 400
+
+    TMP_SRC:PLAYER:逸脱 = 200
+    SIF IS_汚臭鈍感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("アナル"),STNNUM("手"),1,3) * 5 / 3
+    SIF IS_汚臭敏感(PLAYER)
+        TMP_SRC:PLAYER:不潔 += COM_汚れ(TARGET,STNNUM("アナル"),STNNUM("手"),1,3) * 5 * 2
+
+    TMP_SRC:PLAYER:性行動 = 250 + MIN(ABL:PLAYER:奉仕精神, 5) * 50
+    TEMP_NUM = 50 + MIN(ABL:PLAYER:奉仕精神, 5) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 3,0,2) * 100 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 100
+    IF TEQUIP:PLAYER:奉仕
+        TMP_SRC:PLAYER:屈従 += TEMP_NUM
+        TMP_SRC:PLAYER:達成 += TEMP_NUM / 10
+        TMP_SRC:TARGET:達成 += 10 + MIN(ABL:サドっ気, 5) * 10 + LIMIT(ABL:PLAYER:サドっ気 - 1,0,4) * 10 + LIMIT(ABL:PLAYER:サドっ気 - 3,0,2) * 20 + LIMIT(ABL:PLAYER:サドっ気 - 4,0,1) * 30
+    ELSE
+        TMP_SRC:PLAYER:達成 += TEMP_NUM
+    ENDIF
+
+	CALL APPLY_SOURCE_RATE(ARG)
+
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:アナル愛撫]](ARG=100)
+    NOWEX:体力変動 += 20
+    NOWEX:気力変動 += 50
+
+    NOWEX:Ａ経験 = 1 + ABL:Ａ感覚 > 1 + ABL:Ａ感覚 > 4 + ABL:Ａ感覚 > 7
+        
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 2
+        NOWEX:PLAYER:レズ経験 = 2
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 5
+        NOWEX:PLAYER:ＢＬ経験 = 5
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 2
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 2
+    ENDIF
+
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:アナル愛撫]]
+    TCVAR:快楽経験 |= ABL:Ａ感覚 > 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れの処理
+    ;-------------------------------------------------
+    IF TEQUIP:触手召喚
+        ;奴隷のＡに触手の汚れがつく
+        STAIN:アナル |= 2
+        STAIN:アナル |= 4
+    ELSE
+        ;奴隷のＡ⇔調教者の指の汚れが移動
+        STAIN:アナル |= STAIN:PLAYER:手
+        STAIN:PLAYER:手 |= STAIN:アナル
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:胸愛撫]]アナル愛撫
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激していながら
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激していながら
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差ししながら
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしながら
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじながら
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわしながら
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+
+    IF TEQUIP:獣姦プレイ
+        PRINTFORM 犬はぴちゃぴちゃと音を立てて、
+                        ;****スライムパッチ追加ここから****
+    ELSEIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+                        ;****スライムパッチ追加ここまで****
+        PRINTFORM %CALLNAME:PLAYER%は
+        SIF CFLAG:ピアス状況 & 1
+            PRINTL 、乳首を貫く金属製のピアスを軽く引っ張りながら、
+    ENDIF
+    PRINTFORM %CALLNAME:TARGET%の
+    IF IS_絶壁(TARGET)
+        PRINT 真っ平らな
+    ELSEIF IS_小柄(TARGET) && IS_貧乳(TARGET)
+        PRINT 僅かに膨らみが感じられる程度の
+    ELSEIF IS_貧乳(TARGET)
+        PRINT 標準よりやや小さめの
+    ELSEIF IS_巨乳(TARGET)
+        PRINT 手から溢れそうなほどの
+    ELSEIF IS_デカパイ(TARGET)
+        PRINT 片乳だけで一抱えもある
+    ENDIF
+                        ;****スライムパッチ追加ここから****
+    IF TEQUIP:スライム生成
+        PRINTFORML 胸に纏わり付いたスライムは%CALLNAME:TARGET%の胸に集まり始めた…
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTL 胸を絞り上げるように、幾本もの触手が絡みついた…
+    ELSEIF TEQUIP:獣姦プレイ
+        PRINTL 胸をねぶりまわしている…
+    ELSEIF PALAM:欲情 > PALAMLV:3 && TEQUIP:搾乳機 == 0 && TEQUIP:ニプルキャップ == 0
+        PRINTL 胸の先端の、すっかり硬くなった突起をつまみあげた…
+    ELSEIF IS_絶壁(TARGET)
+        PRINTL 胸を撫で回した…
+    ELSE
+        PRINTL 胸を揉みしだいた…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:手マン]]アナル愛撫
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激していながら
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激していながら
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差ししながら
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしながら
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじながら
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわしながら
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+
+    IF IS_FUTA(TARGET) && PALAM:欲情 >= PALAMLV:3
+        PRINT そそり勃ったペニスに指を絡めて擦りあげている
+    ELSEIF IS_FUTA(TARGET)
+        PRINT ペニスを指で愛撫している
+    ELSEIF PALAM:欲情 >= PALAMLV:3
+        PRINT 尖りきったクリトリスを指で摘まみ上げた
+    ELSE
+        PRINT クリトリスを指でこねくり回した
+    ENDIF
+    PRINTL …
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:指挿入れ]]アナル愛撫
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激していながら
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激していながら
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差ししながら
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしながら
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじながら
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわしながら
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+    IF EXP:Ｖ経験 == 0
+        PRINT 男を知らない
+    ELSEIF PALAM:潤滑 >= PALAMLV:4
+        PRINT 濡れそぼった
+    ENDIF
+    IF TALENT:幼稚
+        PRINT 幼いワレメ
+    ELSE
+        PRINT 秘裂
+    ENDIF
+    IF TEQUIP:バイブ
+        PRINTFORML の中で、妖しくうねるバイブを前後に抜き差しした
+    ELSE
+        PRINTFORML に自分の指をゆっくりと挿入した…
+    ENDIF
+    ;Gスポット刺激
+    IF TEQUIP:バイブ && PALAM:欲情 >= PALAMLV:3 && ABL:Ｖ感覚 >= 3
+        PRINTFORML %CALLNAME:TARGET%の膣は、蜜に濡れたバイブにねっとりと絡み付いている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 <= PALAMLV:3 && ABL:Ｖ感覚 >= 3
+        PRINTFORML %CALLNAME:TARGET%はバイブの刺激に悶えている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 >= PALAMLV:3 && ABL:Ｖ感覚 <= 2
+        PRINTFORML %CALLNAME:TARGET%は頬を染めて時折声を上げている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 <= PALAMLV:3 && ABL:Ｖ感覚 <= 2
+        PRINTFORML %CALLNAME:TARGET%は少し苦しそうな表情をしている…
+    ELSEIF EXP:Ｖ経験 <= 1
+        PRINTFORML %CALLNAME:TARGET%は膣内の異物感に怯えている…
+    ELSEIF EXP:Ｖ経験 >= 1 && EXP:Ｖ経験 <= 30
+        PRINTFORML %CALLNAME:TARGET%は指の感触に吐息を吐いて耐えている…
+    ELSEIF EXP:Ｖ経験 >= 31 && EXP:Ｖ経験 <= 50
+        PRINTFORML %CALLNAME:TARGET%は指の感触を楽しんでいるようだ…
+    ELSEIF EXP:Ｖ経験 >= 51 && EXP:Ｖ経験 <= 80
+        PRINTFORML %CALLNAME:TARGET%は指のうごめく感触にうっとりとしている…
+    ELSEIF EXP:Ｖ経験 >= 81 && EXP:Ｖ経験 <= 120
+        PRINTFORML %CALLNAME:TARGET%はお腹の中をかき回される感覚に熱い吐息を吐いて悶えている…
+    ELSEIF EXP:Ｖ経験 >= 121
+        PRINTFORML %CALLNAME:TARGET%は涎をたらし、自ら腰を振って快楽を貪っている…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:Ｇスポット刺激]]アナル愛撫
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激していながら
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激していながら
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差ししながら
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしながら
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじながら
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわしながら
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+    IF EXP:Ｖ経験 == 0
+        PRINT 男を知らない
+    ELSEIF PALAM:潤滑 >= PALAMLV:4
+        PRINT 濡れそぼった
+    ENDIF
+    IF TALENT:幼稚
+        PRINT 幼いワレメ
+    ELSE
+        PRINT 秘裂
+    ENDIF
+    IF TEQUIP:バイブ
+        PRINTFORML の中で、妖しくうねるバイブを前後に抜き差しした
+    ELSE
+        PRINTFORML に自分の指をゆっくりと挿入した…
+    ;Gスポット刺激
+    IF TEQUIP:バイブ
+        PRINTFORML %CALLNAME:PLAYER%は巧みにバイブを操り、敏感な天井をなぶった…
+    ELSE
+        PRINTFORML %CALLNAME:PLAYER%は%CALLNAME:TARGET%の膣の中で指を曲げ、ザラついた天井を刺激した…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:クンニ]]指挿入れアナル愛撫
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激していながら
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激していながら
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差ししながら
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしながら
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじながら
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわしながら
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+    IF EXP:Ｖ経験 == 0
+        PRINT 男を知らない
+    ELSEIF PALAM:潤滑 >= PALAMLV:4
+        PRINT 濡れそぼった
+    ENDIF
+    IF TALENT:幼稚
+        PRINT 幼いワレメ
+    ELSE
+        PRINT 秘裂
+    ENDIF
+    IF TEQUIP:バイブ
+        PRINTFORML の中で、妖しくうねるバイブを前後に抜き差ししながら秘豆を舌の先で刺激した
+    ELSE
+        PRINTFORML に自分の指をゆっくりと挿入しながら秘豆を舌の先で刺激した
+    ENDIF
+    ;Gスポット刺激
+    IF TEQUIP:バイブ && PALAM:欲情 >= PALAMLV:3 && ABL:Ｖ感覚 >= 3
+        PRINTFORML %CALLNAME:TARGET%の膣は、蜜に濡れたバイブにねっとりと絡み付いている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 <= PALAMLV:3 && ABL:Ｖ感覚 >= 3
+        PRINTFORML %CALLNAME:TARGET%はバイブの刺激に悶えている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 >= PALAMLV:3 && ABL:Ｖ感覚 <= 2
+        PRINTFORML %CALLNAME:TARGET%は頬を染めて時折声を上げている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 <= PALAMLV:3 && ABL:Ｖ感覚 <= 2
+        PRINTFORML %CALLNAME:TARGET%は少し苦しそうな表情をしている…
+    ELSEIF EXP:Ｖ経験 <= 1
+        PRINTFORML %CALLNAME:TARGET%は膣内の異物感に怯えている…
+    ELSEIF EXP:Ｖ経験 >= 1 && EXP:Ｖ経験 <= 30
+        PRINTFORML %CALLNAME:TARGET%は指の感触に吐息を吐いて耐えている…
+    ELSEIF EXP:Ｖ経験 >= 31 && EXP:Ｖ経験 <= 50
+        PRINTFORML %CALLNAME:TARGET%は指の感触を楽しんでいるようだ…
+    ELSEIF EXP:Ｖ経験 >= 51 && EXP:Ｖ経験 <= 80
+        PRINTFORML %CALLNAME:TARGET%は指のうごめく感触にうっとりとしている…
+    ELSEIF EXP:Ｖ経験 >= 81 && EXP:Ｖ経験 <= 120
+        PRINTFORML %CALLNAME:TARGET%はお腹の中をかき回される感覚に熱い吐息を吐いて悶えている…
+    ELSEIF EXP:Ｖ経験 >= 121
+        PRINTFORML %CALLNAME:TARGET%は涎をたらし、自ら腰を振って快楽を貪っている…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:指挿入れ]]アナル愛撫フェラチオ
+                        ;****スライムパッチ追加ここから****
+    SIF TEQUIP:触手召喚 == 0 && TEQUIP:スライム生成 == 0
+        PRINTFORM %CALLNAME:PLAYER%は
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激していながら
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激していながら
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差ししながら
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れしながら
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじながら
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわしながら
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%のアナルを弄っ
+        SIF PALAM:欲情 >= PALAMLV:3 && ABL:Ａ感覚 >= 3
+            PRINT て、指先で直腸までかきまわし
+        PRINTL た…
+    ENDIF
+    IF EXP:Ｖ経験 == 0
+        PRINT 男を知らない
+    ELSEIF PALAM:潤滑 >= PALAMLV:4
+        PRINT 濡れそぼった
+    ENDIF
+    IF TALENT:幼稚
+        PRINT 幼いワレメ
+    ELSE
+        PRINT 秘裂
+    ENDIF
+    IF TEQUIP:バイブ
+        PRINTFORML の中で、妖しくうねるバイブを前後に抜き差ししながらペニスを口に咥えて舐めまわした
+    ELSE
+        PRINTFORML に自分の指をゆっくりと挿入しながらペニスを口に咥えて舐めまわした
+    ENDIF
+    ;Gスポット刺激
+    IF TEQUIP:バイブ && PALAM:欲情 >= PALAMLV:3 && ABL:Ｖ感覚 >= 3
+        PRINTFORML %CALLNAME:TARGET%の膣は、蜜に濡れたバイブにねっとりと絡み付いている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 <= PALAMLV:3 && ABL:Ｖ感覚 >= 3
+        PRINTFORML %CALLNAME:TARGET%はバイブの刺激に悶えている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 >= PALAMLV:3 && ABL:Ｖ感覚 <= 2
+        PRINTFORML %CALLNAME:TARGET%は頬を染めて時折声を上げている…
+    ELSEIF TEQUIP:バイブ && PALAM:欲情 <= PALAMLV:3 && ABL:Ｖ感覚 <= 2
+        PRINTFORML %CALLNAME:TARGET%は少し苦しそうな表情をしている…
+    ELSEIF EXP:Ｖ経験 <= 1
+        PRINTFORML %CALLNAME:TARGET%は膣内の異物感に怯えている…
+    ELSEIF EXP:Ｖ経験 >= 1 && EXP:Ｖ経験 <= 30
+        PRINTFORML %CALLNAME:TARGET%は指の感触に吐息を吐いて耐えている…
+    ELSEIF EXP:Ｖ経験 >= 31 && EXP:Ｖ経験 <= 50
+        PRINTFORML %CALLNAME:TARGET%は指の感触を楽しんでいるようだ…
+    ELSEIF EXP:Ｖ経験 >= 51 && EXP:Ｖ経験 <= 80
+        PRINTFORML %CALLNAME:TARGET%は指のうごめく感触にうっとりとしている…
+    ELSEIF EXP:Ｖ経験 >= 81 && EXP:Ｖ経験 <= 120
+        PRINTFORML %CALLNAME:TARGET%はお腹の中をかき回される感覚に熱い吐息を吐いて悶えている…
+    ELSEIF EXP:Ｖ経験 >= 121
+        PRINTFORML %CALLNAME:TARGET%は涎をたらし、自ら腰を振って快楽を貪っている…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:アナル愛撫]]手コキ
+    PRINTFORM %CALLNAME:PLAYER%は
+    IF TALENT:PLAYER:マゾ
+        PRINT うっとりとした表情をして
+    ENDIF
+    PRINTFORM 四つん這いになった%CALLNAME:TARGET%のペニスを扱きながら、%CALLNAME:TARGET%の
+    IF ABL:TARGET:Ａ感覚 >= 3
+        PRINTFORM 快楽にヒクつく
+    ELSE
+        PRINTFORM 固く閉ざされた
+    ENDIF
+    PRINTL 薄桃色のすぼまりの中に
+                        ;****スライムパッチ追加ここから****
+    IF TEQUIP:スライム生成
+        PRINTFORML スライムが%CALLNAME:TARGET%のアナルを刺激した…
+                        ;****スライムパッチ追加ここまで****
+    ELSEIF TEQUIP:触手召喚
+        PRINTFORML 粘液に塗れた触手が%CALLNAME:TARGET%のアナルを刺激した…
+    ELSEIF TEQUIP:アナルバイブ
+        PRINTFORML 小刻みに震えるアナルバイブを前後に抜き差しした…
+    ELSEIF TEQUIP:アナルビーズ
+        PRINTFORML アナルスティックを軽く出し入れした…
+    ELSEIF TEQUIP:浣腸セット
+        PRINTFORML 排泄感に震える菊穴をプラグでグリグリとほじった…
+    ELSEIF TEQUIP:アナル電極
+        PRINTFORML かすかに音を立てる電極でグリグリと菊穴をこねくりまわした…
+    ELSE
+        PRINTFORML 指をつきいれた…
+    ENDIF
+

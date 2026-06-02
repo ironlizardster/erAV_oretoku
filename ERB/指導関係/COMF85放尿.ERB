@@ -10,7 +10,7 @@ SIF TEQUIP:野外プレイ
 	PRINT 野外
 PRINTL 放尿
 SAVESTR:0 = 放尿
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;ソースの計算
@@ -179,7 +179,7 @@ STAIN:ペニス |= 32
 STAIN:ヴァギナ |= 32
 
 ;屈服刻印２に相当
-TFLAG:屈服刻印2 = 2
+TFLAG:屈服刻印取得 = 2
 
 IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
 	PRINTS EXPNAME:[[EXP:レズ経験]]

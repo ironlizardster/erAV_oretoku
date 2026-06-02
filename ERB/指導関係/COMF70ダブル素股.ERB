@@ -217,7 +217,7 @@ SIF A < V
 
 SELECTCOM = 70
 SAVESTR:0 = ダブル素股
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -565,7 +565,7 @@ E = 0
 TFLAG:快楽経験 = 1
 
 ;屈服刻印１に相当
-TFLAG:屈服刻印2 = 1
+TFLAG:屈服刻印取得 = 1
 
 ;調教者がふたなり
 IF IS_FUTA(PLAYER)

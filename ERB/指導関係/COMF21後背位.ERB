@@ -12,7 +12,7 @@ SIF RESULT == 0
 IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
 	;まず後背位・胸愛撫か後背位・スパンキング、次に立ちバックを実行し、かつ実行条件を満たすと後背位SPに
 	;(前々回のコマンドが後背位ＳＰで立ちバックからでも可能)
-	IF (TFLAG:前々回のコマンド == [[TRAIN:後背位胸愛撫]] || TFLAG:前々回のコマンド == [[TRAIN:後背位スパンキング]] || TFLAG:前々回のコマンド == [[TRAIN:後背位ＳＰ]]) && PREVCOM == [[TRAIN:立ちバック]]
+	IF (TFLAG:前々回のコマンド == TNUM("後背位胸愛撫]] || TFLAG:前々回のコマンド == [[TRAIN:後背位スパンキング]] || TFLAG:前々回のコマンド == [[TRAIN:後背位ＳＰ]]) && PREVCOM == [[TRAIN:立ちバック")
 		CALL COM_ABLE134
 		SIF RESULT == 1
 			JUMP COM134
@@ -21,7 +21,7 @@ ENDIF
 
 ;前回の調教が3Pのとき3Pへ
 TFLAG:３Ｐ継続中 = 0
-IF PREVCOM == [[TRAIN:３Ｐ]]
+IF PREVCOM == TNUM("３Ｐ")
 	CALL COM_ABLE64
 	IF RESULT == 1
 		TFLAG:３Ｐ継続中 = 1
@@ -30,7 +30,7 @@ IF PREVCOM == [[TRAIN:３Ｐ]]
 ;調教者が前回:助手で今回:主人か、前回:主人で今回:助手のとき
 ELSEIF (ASSIPLAY && TFLAG:前回の調教者が助手 == 0) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手)
 	;前回の調教が後背位アナルかフェラチオかイラマチオのときは3Pへ
-	IF PREVCOM == [[TRAIN:後背位アナル]] || PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ]]
+	IF PREVCOM == TNUM("後背位アナル]] || PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ")
 		CALL COM_ABLE64
 		SIF RESULT == 1
 			JUMP COM64
@@ -40,7 +40,7 @@ ENDIF
 ;前のプレイが後背位かつ調教者の技巧3以上の場合、挿入Ｇスポ責めまたは挿入子宮口責めへ派生
 ;Ｖ感覚が高く欲情しているほど子宮口へ行きやすい
 IF FLAG:追加コマンドなし == 0
-	IF PREVCOM == [[TRAIN:後背位]] && ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
+	IF PREVCOM == TNUM("後背位") && ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;欲情
 		IF PALAM:欲情 < PALAMLV:1
 			A = 1
@@ -73,7 +73,7 @@ ENDIF
 
 PRINTL 後背位
 SAVESTR:0 = 後背位
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ(処女膜再生対応)
 TFLAG:V経験を伴うコマンド = 1

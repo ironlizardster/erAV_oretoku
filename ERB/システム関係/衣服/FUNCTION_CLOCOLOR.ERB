@@ -1,0 +1,991 @@
+﻿;-------------------------------------------------
+;ARGSが色を表す文字列かを判定する。色の種類を増やしたらここにも追加する事
+;各色についての名称はここに書いたものに統一する。紺色、緑色には注意
+;-------------------------------------------------
+@IS_CLOCOLOR(ARGS)
+#FUNCTION
+#DIM LCOUNT
+VARSET LOCALS
+SPLIT TEXT_ALLCOLOR(), "/", LOCALS
+FOR LCOUNT, 0, 100
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		RETURNF 0
+	CASE ARGS
+		RETURNF 1
+	ENDSELECT
+NEXT
+
+@TEXT_ALLCOLOR()
+#FUNCTIONS
+LOCALS = 紅白/緑と白/青と白/黄色と白/黒と白/ピンク/オレンジ/白黒/花柄/
+LOCALS += "いちご柄/くま柄/さかな柄/ねこ柄/ひよこ柄/りぼん柄/水玉模様/水玉ピンク/水玉黒/水玉黄色/水玉水色/水玉白黒/水玉白/"
+LOCALS += "黄色/橙色/黒/濃紫/紫/薄青色/青/紺色/真紅/赤/薄桃色/桃色/純白/白/緑色/薄緑/灰色/水色/焦茶色/茶色/ベージュ/"
+LOCALS += "縞々/水玉色/豹柄/牛柄/虎柄/子供パンツカラー/おとなしい色/Ｈな色/ランダムカラー/ビキニカラー/ギャル/男物の色/柄/"
+;色のあるなしがバグの温床なので全てＯＫとして、後で本体側が使いやすい方を自動選択させる
+LOCALS += "オレンジ色/黒色/紫色/青色/赤色/桃/白色/薄緑色/縞々色/水玉色/ギャル色/"
+LOCALS += "黄/橙/紺/薄青/薄桃/桃色/緑/灰/焦茶/茶/"
+;特殊
+LOCALS += "藤の花/"
+RETURNF LOCALS
+
+;-------------------------------------------------
+;衣装文字列ARGSにARGS:1を、以下のルールを守りながら混ぜる
+;・色に関してはARGS:1の要素で上書きさせる
+;・フロントリボン属性は"フロントリボン"を含む文字列と入れ替え
+;・共通属性追加済/は末尾に付け直す
+;-------------------------------------------------
+@MERGE_STR(ARGS, ARGS:1)
+#FUNCTIONS
+#DIM LCOUNT
+#DIMS STR_ADD
+
+SIF ARGS:1 == "" || ARGS == ""
+	RETURNF ARGS
+
+STR_ADD = 
+;ARGS:1の色文字列を使える状態に変換しながら、ARGSに混ぜる文字列STR_ADDに作り変える
+VARSET LOCALS
+SPLIT ARGS:1, "/", LOCALS
+FOR LCOUNT, 0, 10
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		;色文字列は使える状態に変換
+		SIF IS_CLOCOLOR(LOCALS:LCOUNT)
+			LOCALS:LCOUNT = %SET_CLOCOLOR(LOCALS:LCOUNT)%
+		STR_ADD += @"%LOCALS:LCOUNT%\/"
+	ENDSELECT
+NEXT
+
+;STR_ADDが色に関する場合は、ARGSから色文字列を抜く
+SIF STR_ADD != RESET_CLOCOLOR(STR_ADD)
+	ARGS = %RESET_CLOCOLOR(ARGS)%
+;STR_ADDがフロントリボンに関する場合はARGSからフロントリボン属性を抜く
+IF STRCOUNT(STR_ADD, "フロントリボン") && STRCOUNT(ARGS, "フロントリボン")
+	VARSET LOCALS
+	SPLIT ARGS, "/", LOCALS
+	ARGS = 
+	FOR LCOUNT, 0, 100
+		SELECTCASE LOCALS:LCOUNT
+		CASE ""
+			BREAK
+		CASEELSE
+			SIF STRCOUNT(LOCALS:LCOUNT, "フロントリボン")
+				CONTINUE
+			ARGS += @"%LOCALS:LCOUNT%\/"
+		ENDSELECT
+	NEXT
+ENDIF
+;共通属性追加済みを末尾に付け直す処理
+IF STRCOUNT(ARGS, "共通属性追加済")
+	ARGS = %EXTSTR(ARGS, "", "共通属性追加済/")%
+	STR_ADD += "共通属性追加済/"
+ENDIF
+
+ARGS += @"%STR_ADD%"
+
+RETURNF ARGS
+
+;-------------------------------------------------
+;衣装文字列ARGSから色に関するものを消し去る
+;色に関わる文字列かどうかは@IS_CLOCOLORで判定する
+;-------------------------------------------------
+@RESET_CLOCOLOR(ARGS)
+#FUNCTIONS
+#DIM LCOUNT
+
+VARSET LOCALS
+SPLIT ARGS, "/", LOCALS
+
+ARGS = 
+FOR LCOUNT, 0, 100
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		SIF IS_CLOCOLOR(LOCALS:LCOUNT)
+			CONTINUE
+		ARGS += @"%LOCALS:LCOUNT%\/"
+	ENDSELECT
+NEXT
+RETURNF ARGS
+
+;-------------------------------------------------
+;衣装文字列ARGSから色に関するもの＆フロントリボン属性のみを /色/フロントリボン属性 の形で抜き出す
+;色に関わる文字列かどうかは@IS_CLOCOLORで判定する
+;-------------------------------------------------
+@CHECK_ADDCLO(ARGS)
+#FUNCTIONS
+#DIM LCOUNT
+
+VARSET LOCALS
+SPLIT ARGS, "/", LOCALS
+
+ARGS = 
+FOR LCOUNT, 0, 100
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		SIF IS_CLOCOLOR(LOCALS:LCOUNT) || STRCOUNT(LOCALS:LCOUNT, "フロントリボン")
+			ARGS += @"\/%LOCALS:LCOUNT%"
+	ENDSELECT
+NEXT
+RETURNF ARGS
+
+;-------------------------------------------------
+;衣装文字列ARGSから色に関するものを返す
+;色に関わる文字列かどうかは@IS_CLOCOLORで判定する
+;注意：これは@CLOCOLOR内部での計算が主な用途
+;-------------------------------------------------
+@CHECK_CLOCOLOR(ARGS)
+#FUNCTIONS
+#DIM LCOUNT
+
+;文字列に / を含まない場合はアクセサリなので特殊な判定をする
+SIF STRCOUNT(ARGS, "/") == 0
+	RETURNF CHECK_OTHERCOLOR(ARGS)
+
+VARSET LOCALS
+SPLIT ARGS, "/", LOCALS
+
+FOR LCOUNT, 0, 100
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		SIF IS_CLOCOLOR(LOCALS:LCOUNT)
+			RETURNF LOCALS:LCOUNT
+	ENDSELECT
+NEXT
+RETURNF ""
+
+;-------------------------------------------------
+;衣装文字列ARGSが色に関するものを含んでいるだけでそれを返す。主にアクセサリ用
+;-------------------------------------------------
+@CHECK_OTHERCOLOR(ARGS)
+#FUNCTIONS
+#DIM LCOUNT
+
+VARSET LOCALS
+SPLIT TEXT_ALLCOLOR(), "/", LOCALS
+
+FOR LCOUNT, 0, 100
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		SIF STRCOUNT(ARGS, LOCALS:LCOUNT)
+			RETURNF LOCALS:LCOUNT
+	ENDSELECT
+NEXT
+RETURNF ""
+
+;-------------------------------------------------
+;衣装文字列ARGSから色を返させる。ARGS:1に"形容詞"等を入れる事で変化を出せる
+;-------------------------------------------------
+@CLOCOLOR(ARGS, ARGS:1)
+#FUNCTIONS
+#DIMS COLOR_ABOUT
+#DIMS COLOR_PATTERN
+
+COLOR_PATTERN = 
+;柄物チェック
+IF STRCOUNT(ARGS, "縞々")
+	COLOR_PATTERN = 縞々
+ELSEIF STRCOUNT(ARGS, "水玉")
+	COLOR_PATTERN = 水玉模様
+ELSEIF STRCOUNT(ARGS, "豹柄")
+	COLOR_PATTERN = 豹柄
+ENDIF
+
+COLOR_ABOUT = %CHECK_CLOCOLOR(ARGS)%
+
+VARSET LOCALS
+SELECTCASE ARGS:1
+CASE "色のみ"
+	LOCALS = %COLOR_ABOUT%
+CASE "形容詞"
+	SIF COLOR_PATTERN != ""
+		COLOR_ABOUT = %COLOR_PATTERN%
+
+	SELECTCASE COLOR_ABOUT
+	CASE ""
+	CASE "赤", "青", "黒", "白"
+		LOCALS = %COLOR_ABOUT%い
+	CASE "柄"
+		LOCALS = %COLOR_ABOUT%有りの
+	CASEELSE
+		LOCALS = %COLOR_ABOUT%の
+	ENDSELECT
+CASEELSE
+	SIF COLOR_PATTERN != ""
+		COLOR_ABOUT = %COLOR_PATTERN%
+	LOCALS = %COLOR_ABOUT%
+ENDSELECT
+RETURNF LOCALS
+
+
+;-------------------------------------------------
+;衣装ARGS:1に、色ARGSを適用する関数。もしもARGSが使えない場合は、使用可能な別の色がARGSに代入される
+;ARGS:1には衣装の文字列が入っている事があり参照できる（水玉模様のレースのパンツ、等が起きないように参照するため）
+;-------------------------------------------------
+@SET_CLOCOLOR(ARGS, ARGS:1)
+#FUNCTIONS
+#DIMS COLOR_USABLE
+
+SIF SAVESTR:下着の指定色 != ""
+	RETURNF SAVESTR:下着の指定色
+
+;まずは間違いが起きやすい色(緑色or緑、など)の変換
+SELECTCASE ARGS
+CASE "オレンジ色", "黒色", "紫色", "青色", "赤色", "白色", "薄緑色", "縞々色", "水玉色", "ギャル色"
+	ARGS = %SUBSTRINGU(ARGS, 0, STRLENSU(ARGS) - 1)%
+CASE "黄", "橙", "紺", "薄青", "薄桃", "緑", "灰", "水", "茶"
+	ARGS = %ARGS%色
+ENDSELECT
+
+SELECTCASE ARGS
+;絶対に変更が起きないもの
+CASE "水玉模様"
+	RETURNF ARGS
+CASE "縞々"
+	LOCALS = %TEXTR("紅白/緑と白/青と白/黄色と白/黒と白")%
+CASE "花柄"
+	LOCALS = %TEXTR("桃色/水色/薄緑/青")%
+CASE "水玉"
+	LOCALS = 水玉%TEXTR("ピンク/黄色/黒/水色/白/白黒")%
+CASE "おとなしい色"
+	LOCALS = %TEXTR("薄桃色/薄緑/橙色/薄青色/白/純白")%
+CASE "ギャル"
+	LOCALS = %TEXTR("豹柄/黒/紫/赤")%
+CASE "Ｈな色"
+	LOCALS = %TEXTR("黒/紫/真紅/赤/純白")%
+CASE "男物の色"
+	LOCALS = %TEXTR("黒/紺色")%
+CASE "子供パンツカラー"
+	LOCALS = %TEXTR("白/いちご柄/くま柄/さかな柄/ねこ柄/ひよこ柄/りぼん柄/水玉模様/緑色")%
+CASE "ランダムカラー"
+	LOCALS = %TEXTR("黄色/橙色/黒/紫/青/紺色/薄青色/赤/薄桃色/白/緑色/薄緑")%
+CASE "ビキニカラー"
+	LOCALS = %TEXTR("白/黒/灰色/赤/桃色/紫/青/水色/薄緑/緑色/黄色")%
+CASEELSE
+	LOCALS = %ARGS%
+ENDSELECT
+
+COLOR_USABLE = 
+;大人の事情により色制限がかかるものの管理。ARGS:1 == ""ならLOCALSが返る
+;まずは後面要素
+IF STRCOUNT(ARGS:1, "Ｔバック")
+	IF STRCOUNT(ARGS:1, "紐パン")
+		IF STRCOUNT(ARGS:1, "水玉")
+			COLOR_USABLE = %CUSEABLE("水玉紐Ｔバック")%
+		ELSE
+			COLOR_USABLE = %CUSEABLE("紐Ｔバック")%
+		ENDIF
+	ELSE
+		COLOR_USABLE = %CUSEABLE("汎用Ｔバック")%
+	ENDIF
+ENDIF
+;ついで前面
+IF STRCOUNTS(ARGS:1, "タンクトップ")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("タンクトップ"), COLOR_USABLE)%
+ELSEIF STRCOUNTS(ARGS:1, "オープンクロッチ")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("オープンクロッチパンツ"), COLOR_USABLE)%
+ELSEIF STRCOUNTS(ARGS:1, "マイクロショーツ")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("マイクロショーツ"), COLOR_USABLE)%
+ELSEIF STRCOUNTS(ARGS:1, "Ｇストリング", "マイクロビキニ", "ティアドロップ")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("汎用Ｔバック"), COLOR_USABLE)%
+ELSEIF STRCOUNT(ARGS:1, "褌")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("褌"), COLOR_USABLE)%
+ELSEIF STRCOUNT(ARGS:1, "ハイレグ") && STRCOUNT(ARGS:1, "紐パン")
+	IF STRCOUNT(ARGS:1, "水玉")
+		COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("水玉紐ハイレグ"), COLOR_USABLE)%
+	ELSE
+		COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("紐ハイレグ"), COLOR_USABLE)%
+	ENDIF
+ELSEIF STRCOUNT(ARGS:1, "ボーイレッグ")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("ボーイレッグ"), COLOR_USABLE)%
+ELSEIF STRCOUNT(ARGS:1, "ローレグ")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("ローレグパンツ"), COLOR_USABLE)%
+ELSEIF STRCOUNTS(ARGS:1, "ショーツ", "パンティ", "レースのパンツ", "ハイレグ", "ハイレグパンツ", "ローライズパンツ", "フリル")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("ショーツ"), COLOR_USABLE)%
+ELSEIF STRCOUNT(ARGS:1, "Ｃストリング")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("Ｃストリング"), COLOR_USABLE)%
+ELSEIF STRCOUNT(ARGS:1, "ハート型前貼り")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("ハート型前貼り"), COLOR_USABLE)%
+ELSEIF STRCOUNT(ARGS:1, "前貼り")
+	COLOR_USABLE = %EXTRACT_COMMON_COLOR(CUSEABLE("前貼り"), COLOR_USABLE)%
+ENDIF
+IF EXTRACT_COMMON_COLOR(COLOR_USABLE, LOCALS) != ""
+	RETURNF LOCALS
+ELSE
+	RETURNF TEXTR(COLOR_USABLE)
+ENDIF
+
+
+;-------------------------------------------------
+;キャラARGのパンツの色をARGSにし、その後ブラの色をパンツに合わせる
+;-------------------------------------------------
+@EQ_CLOCOLOR, ARG, ARGS
+#DIM LCOUNT
+SIF ARG <= 0 && TARGET > 0
+	ARG = TARGET
+SELECTCASE ARGS
+CASE ""
+	;ブラの色をパンツに合わせる
+	SIF EQUIP:ARG:ブラ && EQUIP:ARG:パンツ
+		CSTR:ARG:ブラ = %MERGE_STR(CSTR:ARG:ブラ, CHECK_CLOCOLOR(CSTR:ARG:パンツ) )%
+CASEELSE
+	;パンツとブラの色をARGSに変える
+	SIF EQUIP:ARG:パンツ
+		CSTR:ARG:パンツ = %MERGE_STR(CSTR:ARG:パンツ, ARGS)%
+	SIF EQUIP:ARG:ブラ
+		CSTR:ARG:ブラ = %MERGE_STR(CSTR:ARG:ブラ, ARGS)%
+ENDSELECT
+
+EQUIP:ARG:パンツ = STRLENS(CSTR:ARG:パンツ)
+EQUIP:ARG:ブラ = STRLENS(CSTR:ARG:ブラ)
+
+;-------------------------------------------------
+;ARGが服装ARGSを着る際にどの色を着るかを決める
+;ARGS:1に色が入っている場合にはそれを優先する
+;-------------------------------------------------
+@CLOCOLOR_MAIDFACE(ARGS, ARGS:1, ARG)
+#FUNCTIONS
+#DIM LCOUNT
+;その衣装で使うことが出来る色を/区切りで記述して、CSTR:好きな色 に対応できるようにする
+#DIMS COLOR_USABLE
+#DIMS COLOR_CHOICES
+#DIMS COLOR_DEFO
+
+SIF ARGS == ""
+	RETURNF ""
+
+COLOR_DEFO = 
+COLOR_CHOICES = 
+COLOR_USABLE = %CUSEABLE(ARGS, ARG)%
+
+SIF ARGS:1 != "" && (STRCOUNT(COLOR_USABLE, ARGS:1) || COLOR_USABLE == "")
+	RETURNF ARGS:1
+
+VARSET LOCALS
+SPLIT COLOR_USABLE, "/", LOCALS
+;各衣裳のデフォカラーをここで決めておく
+COLOR_DEFO = %LOCALS:0%
+
+FOR LCOUNT, 0, 10
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		SIF STRCOUNT(CSTR:ARG:好きな色, LOCALS:LCOUNT) == 0
+			CONTINUE
+
+		COLOR_CHOICES = %LOCALS:LCOUNT%
+		BREAK
+	ENDSELECT
+NEXT
+
+SIF COLOR_CHOICES != ""
+	RETURNF COLOR_CHOICES
+
+;学年や立場などでの自動決定があるならここに書く
+SELECTCASE ARGS
+CASE "セーラー"
+	;SIF CHECK_SHIRT("セーラー夏服", ARG)
+	;	RETURNF "白"
+	SELECTCASE CSTR:ARG:学年
+	CASE "初等部", "中等部"
+		RETURNF "紺色"
+	CASEELSE
+		RETURNF "青"
+	ENDSELECT
+CASE "ブレザー", "ネクタイブレザー", "男子ブレザー"
+	IF CHECK_SHIRT("男物", ARG)
+		IF COND("教員", ARG)
+			RETURNF "黒"
+		ELSE
+			RETURNF "茶色"
+		ENDIF
+	ELSEIF COND("教員", ARG)
+		RETURNF "赤"
+	ELSE
+		SELECTCASE CSTR:ARG:学年
+		CASE "初等部", "中等部"
+			RETURNF "青"
+		CASEELSE
+			RETURNF "茶色"
+		ENDSELECT
+	ENDIF
+CASE "ネクタイブラウス"
+	IF COND("教員", ARG)
+		RETURNF "青"
+	ELSEIF CHECK_SHIRT("男物", ARG)
+		RETURNF "黒"
+	ELSE
+		RETURNF "赤"
+	ENDIF
+CASE "リボンブラウス"
+	IF COND("教員", ARG)
+		RETURNF "青"
+	ELSEIF CHECK_SHIRT("男物", ARG)
+		RETURNF "黒"
+	ELSE
+		SELECTCASE CSTR:ARG:学年
+		CASE "初等部", "中等部"
+			RETURNF "緑色"
+		CASEELSE
+			RETURNF "赤"
+		ENDSELECT
+	ENDIF
+CASE "ジャージ"
+	IF COND("教員", ARG)
+		IF STRCOUNT(CSTR:ARG:学年, "体育")
+			RETURNF "緑色"
+		ELSE
+			RETURNF "黒"
+		ENDIF
+	ELSE
+		SELECTCASE CSTR:ARG:学年
+		CASE "初等部"
+			RETURNF "青"
+		CASE "中等部"
+			RETURNF "青"
+		CASE "１年生"
+			RETURNF "緑色"
+		CASE "２年生"
+			RETURNF "赤"
+		CASE "３年生"
+			RETURNF "黒"
+		CASEELSE
+			RETURNF "赤"
+		ENDSELECT
+	ENDIF
+CASE "詰襟ジャージ"
+	IF COND("教員", ARG)
+		RETURNF "橙色"
+	ELSEIF CHECK_SHIRT("男物", ARG)
+		RETURNF "黄色"
+	ELSE
+		SELECTCASE CSTR:ARG:学年
+		CASE "初等部", "中等部"
+			RETURNF "緑色"
+		CASEELSE
+			RETURNF "赤"
+		ENDSELECT
+	ENDIF
+CASE "ブルマ", "体操服", "ハイレグブルマ", "体操服(短)"
+	IF COND("教員", ARG)
+		RETURNF "赤"
+	ELSE
+		SELECTCASE CSTR:ARG:学年
+		CASE "初等部"
+			RETURNF "水色"
+		CASE "中等部"
+			RETURNF "緑色"
+		CASE "１年生"
+			RETURNF "紺色"
+		CASE "２年生"
+			RETURNF "紺色"
+		CASE "３年生"
+			RETURNF "紺色"
+		CASEELSE
+			RETURNF "赤"
+		ENDSELECT
+	ENDIF
+CASE "スパッツ"
+	SELECTCASE CSTR:ARG:学年
+	CASE "初等部", "中等部", "１年生", "２年生", "３年生"
+		RETURNF "黒"
+	CASEELSE
+		RETURNF "柄"
+	ENDSELECT
+CASE "競泳水着"
+	IF COND("教員", ARG)
+		IF STRCOUNT(CSTR:ARG:学年, "体育")
+			RETURNF "赤"
+		ELSE
+			RETURNF "黒"
+		ENDIF
+	ELSE
+		SELECTCASE CSTR:ARG:学年
+		CASE "初等部", "中等部"
+			RETURNF "赤"
+		CASE "１年生", "２年生", "３年生"
+			RETURNF "青"
+		CASEELSE
+			RETURNF "黒"
+		ENDSELECT
+	ENDIF
+CASE "チャイナドレス"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "黒"
+		RETURNF "赤"
+	CASEELSE
+		IF COND("教員", ARG)
+			RETURNF "黒"
+		ELSE
+			RETURNF "赤"
+		ENDIF
+	ENDSELECT
+CASE "バニースーツ"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "黒"
+		RETURNF "赤"
+	CASE "金"
+		RETURNF "青"
+	CASEELSE
+		IF COND("教員", ARG)
+			RETURNF "黒"
+		ELSE
+			RETURNF "赤"
+		ENDIF
+	ENDSELECT
+CASE "振袖"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "黒"
+		SELECTCASE NORM(1315, ARG)%4
+		CASE 0
+			RETURNF "紫"
+		CASE 1
+			RETURNF "青"
+		CASE 2
+			RETURNF "赤"
+		CASE 3
+			RETURNF "緑色"
+		ENDSELECT
+	CASE "赤"
+		SELECTCASE NORM(1315, ARG)%4
+		CASE 0
+			RETURNF "黒"
+		CASE 1
+			RETURNF "紫"
+		CASE 2
+			RETURNF "青"
+		CASE 3
+			RETURNF "緑色"
+		ENDSELECT
+	CASEELSE
+		SELECTCASE NORM(1315, ARG)%5
+		CASE 0
+			RETURNF "黒"
+		CASE 1
+			RETURNF "紫"
+		CASE 2
+			RETURNF "青"
+		CASE 3
+			RETURNF "赤"
+		CASE 4
+			RETURNF "緑色"
+		ENDSELECT
+	ENDSELECT
+CASE "浴衣"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "金"
+		SELECTCASE NORM(1316, ARG)%4
+		CASE 0
+			RETURNF "黒"
+		CASE 1
+			RETURNF "赤"
+		CASE 2
+			RETURNF "緑色"
+		CASE 3
+			RETURNF "青"
+		ENDSELECT
+	CASEELSE
+		SELECTCASE NORM(1316, ARG)%5
+		CASE 0
+			RETURNF "黄色"
+		CASE 1
+			RETURNF "黒"
+		CASE 2
+			RETURNF "赤"
+		CASE 3
+			RETURNF "緑色"
+		CASE 4
+			RETURNF "青"
+		ENDSELECT
+	ENDSELECT
+CASE "和服"
+	SELECTCASE NORM(1317, ARG)%5
+	CASE 0
+		RETURNF "黒"
+	CASE 1
+		RETURNF "青"
+	CASE 2
+		RETURNF "赤"
+	CASE 3
+		RETURNF "白"
+	CASE 4
+		RETURNF "緑色"
+	ENDSELECT
+CASE "眼鏡"
+	IF STRCOUNT(CSTR:ARG:好きな色, "黒")
+		RETURNF "黒"
+	ELSEIF STRCOUNT(CSTR:ARG:好きな色, "赤")
+		RETURNF "赤"
+	ELSEIF STRCOUNT(CSTR:ARG:好きな色, "青")
+		RETURNF "青"
+	ELSE
+		SELECTCASE CONDS("肌の色", ARG)
+		CASE "普通"
+			RETURNF "黒"
+		CASE "褐色肌", "色黒"
+			SELECTCASE CONDS("右目の色", ARG)
+			CASE "赤", "紅"
+				RETURNF "青"
+			CASEELSE
+				RETURNF "赤"
+			ENDSELECT
+		CASEELSE
+			SELECTCASE CONDS("右目の色", ARG)
+			CASE "赤", "紅"
+				RETURNF "黒"
+			CASEELSE
+				RETURNF "赤"
+			ENDSELECT
+		ENDSELECT
+	ENDIF
+CASE "ベレー帽"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "青"
+		RETURNF "茶色"
+	CASE "黒", "銀", "緑"
+		RETURNF "赤"
+	CASE "金", "赤", "茶", "桃"
+		RETURNF "緑色"
+	CASEELSE
+		RETURNF "白"
+	ENDSELECT
+CASE "両側リボン", "片側リボン"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "桃", "紫"
+		RETURNF "白"
+	CASE "青", "緑"
+		RETURNF "黄"
+	CASE "金"
+		RETURNF "青"
+	CASE "赤"
+		RETURNF "緑"
+	CASEELSE
+		RETURNF "赤"
+	ENDSELECT
+CASE "両側リボンお団子", "片側リボンお団子"
+	SELECTCASE CONDS("髪色の種類", ARG)
+	CASE "赤", "桃", "紫", "黒", "茶"
+		RETURNF "白"
+	CASEELSE
+		RETURNF "黒"
+	ENDSELECT
+ENDSELECT
+
+
+
+;まだ決まっていない場合はデフォカラーを採用
+RETURNF COLOR_DEFO
+
+;キャラARGの身に着けている衣装ARGSが、色ARGS:1を使ってよいか見る
+@CHECK_CUSEABLE(ARGS, ARGS:1, ARG)
+#FUNCTION
+SIF STRCOUNT(@"/%CUSEABLE(ARGS, ARG)%/", @"/%ARGS:1%/")
+	RETURNF 1
+RETURNF 0
+
+
+;現状だとセーラー服とマフラー以外はARG省略しても良い
+@CUSEABLE(ARGS, ARG)
+#FUNCTIONS
+#DIMS COLOR_USABLE
+
+SIF ARG == 0 && TARGET
+	ARG = TARGET
+
+COLOR_USABLE = 
+
+SELECTCASE ARGS
+CASE ""
+	RETURNF ""
+CASE "パレオ"
+	COLOR_USABLE = 白/黒/青/桃色/水色/緑色/黄色
+CASE "花柄パレオ"
+	COLOR_USABLE = 桃色/水色/薄緑/青
+CASE "プリーツスカート", "ロングプリーツスカート", "ミニプリーツスカート", "超ミニプリーツスカート", "マイクロプリーツスカート"
+	COLOR_USABLE = 紺色/黒/灰色/白/赤
+CASE "チェックスカート", "ロングチェックスカート", "ミニチェックスカート", "超ミニチェックスカート", "マイクロチェックスカート"
+	COLOR_USABLE = 赤/灰色/青/黄色
+CASE "タイトスカート", "ロングタイトスカート", "ミニタイトスカート", "マイクロタイトスカート"
+	COLOR_USABLE = 黒/灰色/青/赤
+
+CASE "オーバーオール"
+	COLOR_USABLE = 青/白/桃色
+
+;萌え袖グループ
+CASE "カーディガン", "前開きカーディガン", "肩出しジャケット", "ミニスカカーディガン"
+	COLOR_USABLE = 橙色/灰色/赤/青/緑色/濃紫/桃色/白/黒
+CASE "丸襟シャツ"
+	COLOR_USABLE = 白/赤/青/緑色
+CASE "フリルワンピース"
+	COLOR_USABLE = 赤/青/緑色/黒
+CASE "肩出しワンピース"
+	COLOR_USABLE = 白/桃色/水色/黒
+CASE "Ｔシャツ", "変な柄のＴシャツ"
+	COLOR_USABLE = 黄色/白/黒/赤/緑色/青/紫/桃色/橙色
+CASE "変な柄"
+	COLOR_USABLE = 漢字１/英字１/英字２/ＡＡ１
+CASE "パジャマ"
+	COLOR_USABLE = 薄緑/白/紺色/桃色/水色
+CASE "パーカー", "ロングパーカー", "ノースリーブパーカー", "前開きパーカー"
+	COLOR_USABLE = 黒/灰色/白/青/赤
+CASE "どてら"
+	COLOR_USABLE = 茶色/灰色/赤/緑色/紺色
+CASE "ゴシック風ケープ"
+	COLOR_USABLE = 赤/青/緑色
+CASE "ゴスロリドレス"
+	COLOR_USABLE = 黒/赤/白
+CASE "サマードレス"
+	COLOR_USABLE = 黒/緑色/赤/白
+CASE "チュニック"
+	COLOR_USABLE = 黄色/紺色
+CASE "中世チュニック"
+	COLOR_USABLE = 赤/緑色/青
+CASE "執事服"
+	COLOR_USABLE = 黒/灰色/緑色
+CASE "メイド服", "シックなメイド服", "ミニスカメイド", "フレンチメイド"
+	COLOR_USABLE = 青/黒/赤/緑色/桃色/水色
+CASE "胸開きチャイナドレス"
+	COLOR_USABLE = 黒/赤/青/緑色/白
+CASE "チャイナドレス"
+	COLOR_USABLE = 赤/青/黒/緑色
+CASE "へそ出しブラウス"
+	COLOR_USABLE = 白/紫
+CASE "ブラウス", "ルーズブラウス", "アメスク"
+	COLOR_USABLE = 白
+CASE "ノースリーブ", "ノースリーブブラウス", "ノースリーブＢ", "ノースリーブブラウスＢ", "へそ出しノースリーブ", "へそ出しノースリーブブラウス"
+	COLOR_USABLE = 白
+CASE "ネクタイブラウス"
+	COLOR_USABLE = 赤/青/黒
+CASE "リボンブラウス", "リボンタイブラウス", "女教師"
+	COLOR_USABLE = 赤/青/黒/緑色
+CASE "フリルブラウス"
+	COLOR_USABLE = 黒/白
+CASE "レースブラウス"
+	COLOR_USABLE = 黒/白/ベージュ
+CASE "ネクタイノースリーブブラウス", "へそ出しネクタイノースリーブブラウス"
+	COLOR_USABLE = 赤/黒/青/紫
+CASE "シャツジャケット", "前開きシャツ"
+	COLOR_USABLE = 白/黒/緑色/紺色
+CASE "セーラー服", "セーラー夏服", "ノースリーブセーラー服", "ミニスカセーラー服", "ミニマムセーラー服"
+	COLOR_USABLE = 青/紺色/白/黒/赤/灰色
+CASE "ブレザー", "ネクタイブレザー", "リボンタイブレザー", "ミニスカブレザー", "スカートブレザー", "男子ブレザー"
+	COLOR_USABLE = 茶色/灰色/青/赤/緑色/黒
+CASE "ベスト", "ミニスカベスト", "男子ベスト"
+	COLOR_USABLE = 茶色/青/赤/灰色/緑色/黒
+CASE "学ラン"
+	COLOR_USABLE = 黒
+CASE "体操服", "体操服(短)", "体操服ブルマ", "体操服ハイレグブルマ", "前開きジャージブルマ", "体操服ハーフパンツ", "体操服スパッツ", "体操服ジャージ"
+	COLOR_USABLE = 紺色/水色/赤/緑色
+
+CASE "ジャージ", "ミニスカジャージ", "スカートジャージ", "前開きジャージ", "ジャージブルマ", "ジャージハイレグブルマ", "ジャージハーフパンツ", "ジャージスパッツ", "上下ジャージ"
+	COLOR_USABLE = 黒/青/赤/緑色
+CASE "詰襟ジャージ"
+	COLOR_USABLE = 黄色/青/赤/白/緑色/橙色
+CASE "タンクトップ", "へそ出しタンクトップ", "スポーツブラ"
+	COLOR_USABLE = 白/灰色/青/緑色
+CASE "キャミソール"
+	COLOR_USABLE = 黄色/黒/青/赤/白/緑色/橙色/ベージュ
+CASE "オフショルダー"
+	COLOR_USABLE = ベージュ/黒/白/灰色
+CASE "ニットセーター"
+	COLOR_USABLE = 茶色/緑色/白/赤/紺色/水色
+CASE "縦セーター"
+	COLOR_USABLE = 茶色/灰色/紺色/赤/緑色/黒/紫
+CASE "ノースリーブタートルネック"
+	COLOR_USABLE = 白/灰色/赤/青/ベージュ/緑色/濃紫/薄桃色/黒/焦茶色
+CASE "振袖"
+	COLOR_USABLE = 赤/黒/紫/青/緑色
+CASE "浴衣"
+	COLOR_USABLE = 黄色/黒/青/赤/緑色
+CASE "和服"
+	COLOR_USABLE = 黒/青/赤/白/緑色/橙色
+
+CASE "下着ブラ", "３／４カップブラ", "ハーフカップブラ", "マイクロブラ", "シェルフブラ"
+	COLOR_USABLE = 白/黒/桃色/青/緑色/黄色/豹柄
+CASE "カップブラ", "シンプルブラ", "フルカップブラ", "オープンブラ", "レースのブラ", "チューブトップ"
+	COLOR_USABLE = 白/黒/赤/青/緑色/黄色/紫/桃色/豹柄
+CASE "フリルブラ"
+	COLOR_USABLE = 白/黒/赤/青/緑色/黄色/ベージュ
+CASE "ビキニブラ"
+	COLOR_USABLE = 白/黒/赤/青/緑色/黄色/灰色/紫/桃色/豹柄
+CASE "フリルビキニブラ"
+	COLOR_USABLE = 白/黒/赤/青/緑色/黄色/橙色/豹柄
+CASE "マイクロビキニブラ"
+	COLOR_USABLE = 白/黒/赤/青/緑色/黄色/豹柄
+CASE "猫型ブラ"
+	COLOR_USABLE = 白/桃色/黒
+CASE "さらし"
+	COLOR_USABLE = 白
+CASE "競泳水着"
+	COLOR_USABLE = 青/黒/赤/緑色
+CASE "新スク水"
+	COLOR_USABLE = 紺色
+CASE "スク水"
+	COLOR_USABLE = 紺色/白
+CASE "ベビードール"
+	COLOR_USABLE = 黒/赤/緑色
+CASE "ネグリジェ"
+	COLOR_USABLE = 白/黒/桃色
+CASE "ボンデージ"
+	COLOR_USABLE = 黒/赤
+CASE "両側リボン", "片側リボン"
+	COLOR_USABLE = 赤/白/黄/青/緑
+CASE "両側リボンお団子", "片側リボンお団子"
+	COLOR_USABLE = 白/黒
+CASE "ブルマ"
+	COLOR_USABLE = 赤/紺色/水色/緑色
+CASE "学生ズボン"
+	COLOR_USABLE = 黒
+CASE "スラックス"
+	COLOR_USABLE = 黒/青/灰色/緑色/桃色/白
+CASE "ホットパンツ", "ダメージホットパンツ", "ミニホットパンツ", "前開きホットパンツ", "ロングパンツ", "前開きロングパンツ", "ズボン"
+	COLOR_USABLE = 青/黒/灰色/緑色/桃色/白
+CASE "ショートパンツ", "ダメージショートパンツ", "ミニショートパンツ", "前開きショートパンツ"
+	COLOR_USABLE = 青/黒/灰色/緑色/桃色/白
+CASE "ジーンズ", "前開きジーンズ", "ローライズジーンズ"
+	COLOR_USABLE = 青/黒/灰色/緑色/桃色/白
+CASE "バニースーツ", "うさ耳", "蝶ネクタイ", "生足バニースーツ", "パンストバニースーツ", "タイツバニースーツ", "オープンパンストバニースーツ", "オープンタイツバニースーツ", "オープン網タイツバニースーツ"
+	COLOR_USABLE = 赤/黒/青/紫/白
+CASE "逆バニースーツ"
+	COLOR_USABLE = 赤
+CASE "スパッツ"
+	COLOR_USABLE = 黒/柄
+CASE "パンスト", "オープンパンスト"
+	COLOR_USABLE = 黒/赤/白
+CASE "タイツ", "オープンタイツ"
+	COLOR_USABLE = 黒/赤
+CASE "網タイツ", "オープン網タイツ", "網パンスト", "オープン網パンスト"
+	COLOR_USABLE = 黒
+CASE "ガーターベルト", "ガーターニーソ", "ガーターストッキング"
+	COLOR_USABLE = 純白/白/黒/赤/真紅/桃色/青/紺色/薄緑
+;以下はパンツ
+CASE "ビキニ", "紐ビキニ"
+	COLOR_USABLE = 白/黒/灰色/赤/桃色/紫/青/水色/薄緑/緑色/黄色
+CASE "Ｇストリング"
+	COLOR_USABLE = 白/黒/紫/赤/青/緑色/黄色/豹柄
+CASE "ショーツ", "シンプルショーツ", "パンティ", "レースのパンツ", "ハイレグ", "ハイレグパンツ", "ローライズパンツ", "フリルのパンツ"
+	COLOR_USABLE = 純白/白/黒/赤/青/緑色/黄色/紫/桃色
+
+CASE "フロントリボンショーツ", "フロントリボンパンティ"
+	COLOR_USABLE = 三角黄/三角黒/三角青/三角赤/三角白/紐黄/紐黒/紐青/紐赤/紐白
+CASE "フロントリボンフリルのパンツ"
+	COLOR_USABLE = 紐黄/紐黒/紐青/紐赤/紐白
+
+CASE "ハイレグブルマ"
+	COLOR_USABLE = 紺色/赤/水色/緑色
+CASE "紐Ｔバック", "紐ハイレグ", "紐パン", "Ｔバック"
+	COLOR_USABLE = 白/黒/灰色/赤/桃色/紫/青/水色/薄緑/緑色/黄色/豹柄/牛柄/虎柄
+CASE "水玉紐Ｔバック", "水玉紐ハイレグ", "水玉Ｔバック", "水玉模様のブラ"
+	COLOR_USABLE = 水玉ピンク/水玉黒/水玉黄色/水玉水色/水玉白黒/水玉白
+CASE "褌"
+	COLOR_USABLE = 黒/赤/桃色/白
+CASE "子供パンツ"
+	COLOR_USABLE = 白/いちご柄/くま柄/さかな柄/ねこ柄/ひよこ柄/りぼん柄/水玉模様/緑色
+CASE "マイクロビキニ", "ティアドロップビキニ", "汎用Ｔバック"
+	COLOR_USABLE = 黒/紫/赤/青/白/豹柄
+CASE "マイクロショーツ"
+	COLOR_USABLE = 黒/紫/赤/青/白
+CASE "ローレグパンツ"
+	COLOR_USABLE = 黒/紫/赤/緑色/青/黄色/白
+CASE "ボーイレッグ", "トランクス"
+	COLOR_USABLE = 黒/紫/桃色/緑色/青/黄色/白
+CASE "サーフパンツ"
+	COLOR_USABLE = 黒
+CASE "縞々パンツ", "縞パン", "縞々ブラ"
+	COLOR_USABLE = 紅白/緑と白/青と白/黄色と白/黒と白
+CASE "ドロワーズ"
+	COLOR_USABLE = 黒/白
+CASE "オープンクロッチパンツ", "すじオープンクロッチパンツ"
+	COLOR_USABLE = 純白/白/黒/紫/真紅/赤
+CASE "前貼り"
+	COLOR_USABLE = 白
+CASE "ハート型前貼り", "Ｃストリング", "ニプレス", "ハート型ニプレス", "丸型ニプレス", "×型ニプレス", "星型ニプレス"
+	COLOR_USABLE = 黒/桃色/青
+CASE "葉っぱパンツ"
+	COLOR_USABLE = 緑色
+
+CASE "手袋", "絹手袋", "革手袋", "指抜きグローブ", "シルクグローブ", "ドレスグローブ", "レザースリーブ", "ドレススリーブ", "アームバインダー"
+	COLOR_USABLE = 白/黒
+
+CASE "眼鏡", "ブロー眼鏡", "フルリム眼鏡", "フィンチ眼鏡", "ロイド眼鏡"
+	COLOR_USABLE = 黒/赤/青
+CASE "目隠し"
+	COLOR_USABLE = 白/黒
+
+CASE "マフラー"
+	IF CEVENT("猩々木に祝福を祈る", ARG)
+		COLOR_USABLE = 橙色/緑色/紫/赤/黄色/青/白/藤の花
+	ELSE
+		COLOR_USABLE = 橙色/緑色/紫/赤/黄色/青/白
+	ENDIF
+CASE "鈴付き首輪"
+	COLOR_USABLE = 黒/茶色/赤
+
+CASE "ベレー帽"
+	COLOR_USABLE = 赤/白/緑色/茶色
+CASE "キャスケット帽"
+	COLOR_USABLE = 茶色/黒/灰色/白/赤/青/緑色
+CASE "水兵帽"
+	COLOR_USABLE = 白/青/赤/桃色/茶色/黒
+
+
+CASE "ダッフルコート"
+	COLOR_USABLE = 茶色/白/青/黒/焦茶色
+CASE "コート"
+	COLOR_USABLE = 茶色/赤/白
+CASE "ワークエプロン"
+	COLOR_USABLE = 橙色/灰色/赤/青/緑色/濃紫/桃色/白/黒
+CASE "サスペンダー"
+	COLOR_USABLE = 黒/白/茶色/赤/青/焦茶色
+CASE "フリルサスペンダー"
+	COLOR_USABLE = 白/黒/桃色
+
+CASEELSE
+	COLOR_USABLE = 
+ENDSELECT
+
+RETURNF COLOR_USABLE
+
+
+;-------------------------------------------------
+;色文字列ARGSとARGS:1の共通の色文字列のみを取り出す
+;もしも片方が空文字ならもう片方を返す
+;-------------------------------------------------
+@EXTRACT_COMMON_COLOR(ARGS, ARGS:1)
+#FUNCTIONS
+#DIM LCOUNT
+#DIMS TEXT_EXTRACT
+
+SIF ARGS:1 == ""
+	RETURNF ARGS
+SIF ARGS == ""
+	RETURNF ARGS:1
+
+TEXT_EXTRACT = 
+VARSET LOCALS
+SPLIT ARGS:1, "/", LOCALS
+
+FOR LCOUNT, 0, 100
+	SELECTCASE LOCALS:LCOUNT
+	CASE ""
+		BREAK
+	CASEELSE
+		SIF STRCOUNT(@"\/%ARGS%\/", @"\/%LOCALS:LCOUNT%\/") == 0
+			CONTINUE
+		SIF TEXT_EXTRACT != ""
+			TEXT_EXTRACT += "/"
+		TEXT_EXTRACT += @"%LOCALS:LCOUNT%"
+	ENDSELECT
+NEXT
+RETURNF TEXT_EXTRACT

@@ -1,0 +1,166 @@
+﻿;-------------------------------------------------
+;キャラARGにARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_SHOES, ARGS, ARG
+#DIMS MEMO_CLO
+
+	MEMO_CLO = %CSTR:ARG:靴%
+
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする
+	STAIN:ARG:靴 = 0
+	IF COND("靴の着用", ARG)
+		CALL PALAM_SHOES, ARGS, ARG
+	ELSE
+		CSTR:ARG:靴 = 
+	ENDIF
+	EQUIP:ARG:靴 = STRLENS(CSTR:ARG:靴)
+	SIF MEMO_CLO != CSTR:ARG:靴
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGの靴の名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@SHOES(ARG, ARGS)
+#FUNCTIONS
+
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "略"
+			IF CHECK_SHOES("パンプス", ARG)
+				RESULTS = パンプス
+			ELSEIF CHECK_SHOES("ローファー", ARG)
+				RESULTS = ローファー
+			ELSEIF CHECK_SHOES("サンダル", ARG)
+				RESULTS = サンダル
+			ELSEIF CHECK_SHOES("ブーツ", ARG)
+				RESULTS = ブーツ
+			ELSEIF CHECK_SHOES("ハイヒール", ARG)
+				RESULTS = ハイヒール
+			ELSEIF CHECK_SHOES("草履", ARG)
+				RESULTS = 草履
+			ELSEIF CHECK_SHOES("ミュール", ARG)
+				RESULTS = ミュール
+			ELSEIF CHECK_SHOES("スニーカー", ARG)
+				RESULTS = スニーカー
+			ELSEIF CHECK_SHOES("下駄", ARG)
+				RESULTS = 下駄
+			ELSEIF CHECK_SHOES("モカシン", ARG)
+				RESULTS = モカシン
+			ELSEIF EQUIP:ARG:靴
+				RESULTS = 靴
+			ELSE
+				RESULTS = 足
+			ENDIF
+		CASE "種類"
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:靴, "/", RESULTS
+		CASE ""
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:靴, "/", RESULTS
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番の靴の名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_SHOES(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+
+	SELECTCASE ARG
+		CASE 1 
+			RESULTS = スニーカー
+		CASE 2 
+			RESULTS = 学校指定ローファー
+		CASE 3 
+			RESULTS = パンプス
+		CASE 4 
+			RESULTS = ハイヒール
+		CASE 5 
+			RESULTS = サンダル
+		CASE 6 
+			RESULTS = ビーチサンダル
+		CASE 7 
+			RESULTS = ナースサンダル
+		CASE 8 
+			RESULTS = パールピンクミュール
+		CASE 9 
+			RESULTS = 下駄
+		CASE 10 
+			RESULTS = もこもこスリッパ
+		CASE 11 
+			RESULTS = なぜか便所スリッパ
+		CASE 12 
+			RESULTS = 編み上げブーツ
+		CASE 13 
+			RESULTS = カウボーイブーツ
+		CASE 14 
+			RESULTS = ピンヒールニーハイブーツ
+		CASE 15 
+			RESULTS = クロックス
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGに靴ARGSを着せた場合のCSTR処理
+;-------------------------------------------------
+@PALAM_SHOES, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			CSTR:ARG:靴 = 
+		CASE "パンプス"
+			CSTR:ARG:靴 = パンプス/足首まで/
+		CASE "ローファー"
+			CSTR:ARG:靴 = ローファー/足首まで/
+		CASE "サンダル"
+			CSTR:ARG:靴 = サンダル/足首まで/足指露出/
+		CASE "ショートブーツ"
+			CSTR:ARG:靴 = ショートブーツ/足首まで/
+		CASE "ブーツ"
+			CSTR:ARG:靴 = ブーツ/
+		CASE "ロングブーツ"
+			CSTR:ARG:靴 = ロングブーツ/
+		CASE "ハイヒール"
+			CSTR:ARG:靴 = ハイヒール/足首まで/
+		CASE "草履"
+			CSTR:ARG:靴 = 草履/足首まで/
+		CASE "ミュール"
+			CSTR:ARG:靴 = ミュール/足首まで/
+		CASE "スニーカー"
+			CSTR:ARG:靴 = スニーカー/足首まで/
+		CASE "ブーティ"
+			CSTR:ARG:靴 = ブーティ/足首まで/
+		CASE "下駄"
+			CSTR:ARG:靴 = 下駄/足首まで/足指露出/
+		CASE "バレエシューズ"
+			CSTR:ARG:靴 = バレエシューズ/足首まで/
+		CASE "モカシン"
+			CSTR:ARG:靴 = モカシン/足首まで/
+		CASE "靴"
+			CSTR:ARG:靴 = 靴/足首まで/
+		CASE "皮靴"
+			CSTR:ARG:靴 = 皮靴/足首まで/
+		CASEELSE
+			CSTR:ARG:靴 = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:靴 = %MERGE_STR(CSTR:ARG:靴, STR_ADD)%
+
+;-------------------------------------------------
+;ARGの靴が条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_SHOES(ARGS, ARG)
+#FUNCTION
+	SIF EQUIP:ARG:靴 == 0
+		RETURNF 0
+	SIF STRCOUNT(CSTR:ARG:靴, ARGS)
+		RETURNF 1
+	RETURNF 0
+

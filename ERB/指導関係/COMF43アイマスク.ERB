@@ -6,7 +6,7 @@
 
 PRINTL アイマスク
 SAVESTR:0 = アイマスク
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 LOSEBASE:体力 += 0
 ;緊縛経験が高いと消費減少
@@ -165,8 +165,8 @@ SOURCE:愛液分泌 += A
 SOURCE:露出 += B
 SOURCE:逸脱 += C
 
-UP:[[UP:欲情]] += A
-UP:[[UP:恐怖]] += SOURCE:逸脱
+UP:欲情 += A
+UP:恐怖 += SOURCE:逸脱
 
 ;-------------------------------------------------
 ;経験上昇

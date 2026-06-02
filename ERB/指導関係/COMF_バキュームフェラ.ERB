@@ -1,0 +1,179 @@
+﻿;-------------------------------------------------
+;バキュームフェラ実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:バキュームフェラ]]
+#FUNCTION
+    ;バキュームフェラ実行判定
+    RESULT = COMABLE_DEF(TNUM("バキュームフェラ")) && COND("口の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:バキュームフェラ]]
+    PRINTFORM %CALLNAME:PLAYER%は%CALLNAME:TARGET%の亀頭を舌で
+    IF TALENT:PLAYER:舌使い
+        PRINT ねぶり回し、
+    ELSE
+        PRINT 舐め上げ、
+    ENDIF
+    PRINT 頬を窄め卑猥な音を響かせながら、
+    SIF ABL:PLAYER:技巧 >= 4 && ABL:PLAYER:奉仕技術 >= 3
+        PRINT 腰が抜けるかと思うほど
+    PRINTL 強烈に吸い付いた…
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:バキュームフェラ]](ARG=100)
+    ;-------------------------------------------------
+    ;バキュームフェラをされた対象
+    ;-------------------------------------------------
+    ;快Ｃのソース
+    ;ABL:技巧をみる
+    TMP_SRC:TARGET:快Ｃ += 1500 + MIN(ABL:PLAYER:技巧, 5) * 500 + LIMIT(ABL:PLAYER:技巧 - 1,0,4) * 100 + LIMIT(ABL:PLAYER:技巧 - 2,0,3) * 200
+    TMP_SRC:TARGET:露出 = 220
+    TMP_SRC:TARGET:逸脱 = 200
+
+    ;調教者のTALENT:舌使いをみる
+    IF TALENT:PLAYER:舌使い || TEQUIP:獣姦プレイ
+        TIMES TMP_SRC:TARGET:快Ｃ , 2.00
+        TMP_SRC:TARGET:恭順 += TMP_SRC:TARGET:快Ｃ/20
+    ENDIF
+
+    IF PLAYER == MASTER || TARGET == MASTER
+        TEMP_NUM = TARGET
+        SIF TARGET == MASTER
+            TEMP_NUM = PLAYER
+        ;ABL:従順をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:信頼, 5)*10 + 80) / 100
+
+        ; ;ABL:奉仕精神をみる
+        ; TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:奉仕精神, 6)*30 + 50) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:PLAYER:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:射精中毒, 5)*10 + 80) / 100
+    ELSE
+        ;TARGETからPLAYERへの相性を見る
+        SELECTCASE RELATION:(NO:PLAYER)
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+     ENDIF
+
+    ;奉仕者
+    TMP_SRC:PLAYER:屈従 += 1800
+    TMP_SRC:PLAYER:逸脱 += 600
+
+    ;ABL:奉仕精神をみる
+    TMP_SRC:PLAYER:性行動 += 620 + MIN(ABL:PLAYER:奉仕精神, 5) * 80
+    TMP_SRC:PLAYER:達成 += 150 + MIN(ABL:PLAYER:奉仕精神, 5) * 150 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 150 + LIMIT(ABL:PLAYER:奉仕精神 - 3,0,2) * 300 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 100
+    TMP_SRC:PLAYER:不潔 += 100 + COM_汚れ(TARGET,STNNUM("ペニス"),STNNUM("口"),1,1) * 40
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:PLAYER:技巧
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.5
+            TIMES TMP_SRC:PLAYER:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 0.8
+            TIMES TMP_SRC:PLAYER:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.2
+            TIMES TMP_SRC:PLAYER:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.5
+            TIMES TMP_SRC:PLAYER:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 2
+            TIMES TMP_SRC:PLAYER:達成 , 2
+    ENDSELECT
+
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:PLAYER:奉仕精神
+        CASE 0
+            TIMES TMP_SRC:PLAYER:不潔 , 4.00
+        CASE 1
+            TIMES TMP_SRC:PLAYER:不潔 , 2.5
+        CASE 2
+            TIMES TMP_SRC:PLAYER:不潔 , 1.5
+        CASE 3
+            TIMES TMP_SRC:PLAYER:不潔 , 1
+        CASE 4
+            TIMES TMP_SRC:PLAYER:不潔 , 0.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:不潔 , 0.1
+    ENDSELECT
+    
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:バキュームフェラ]](ARG=100)
+    NOWEX:TARGET:体力変動 += 10
+    NOWEX:TARGET:気力変動 += 10
+    NOWEX:PLAYER:体力変動 += 15
+    NOWEX:PLAYER:気力変動 += 15
+    SIF !TALENT:PLAYER:精愛味覚
+        NOWEX:PLAYER:気力変動 *= 10
+
+    NOWEX:PLAYER:フェラ経験 += 1
+
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 7
+        NOWEX:PLAYER:レズ経験 = 7
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 7
+        NOWEX:PLAYER:ＢＬ経験 = 7
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 2
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 2
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:バキュームフェラ]]
+    SIF PLAYER == MASTER
+        TCVAR:主人経験 += 1
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+        ;屈服刻印３に相当
+        TCVAR:PLAYER:屈服刻印取得 = 2
+    ENDIF
+
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れの処理
+    ;-------------------------------------------------
+    ;奴隷のＰ⇔調教者の口の汚れが移動
+    STAIN:PLAYER:口 |= STAIN:ペニス
+    STAIN:ペニス = STAIN_Ｐ
+

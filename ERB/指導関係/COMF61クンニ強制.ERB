@@ -9,7 +9,7 @@ SIF RESULT == 0
 ;前回と今回の調教者が同じ
 IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
 	;縄使用中でなく、前回の調教がクンニかフェラするかシックスナインだとシックスナインに
-	IF (PREVCOM == [[TRAIN:クンニ]] || PREVCOM == [[TRAIN:フェラする]] || PREVCOM == [[TRAIN:シックスナイン]]) && TEQUIP:縄 == 0
+	IF (PREVCOM == TNUM("クンニ]] || PREVCOM == [[TRAIN:フェラする]] || PREVCOM == [[TRAIN:シックスナイン")) && TEQUIP:縄 == 0
 		CALL COM_ABLE69
 		SIF RESULT == 1
 			JUMP COM69
@@ -198,7 +198,7 @@ SIF A < V
 	RETURN 0
 
 SAVESTR:0 = クンニ強制
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -434,6 +434,6 @@ ENDIF
 TFLAG:快楽経験 = 1
 
 ;屈服刻印１に相当
-TFLAG:屈服刻印2 = 1
+TFLAG:屈服刻印取得 = 1
 
 RETURN 1

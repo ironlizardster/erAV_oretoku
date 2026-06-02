@@ -1,0 +1,189 @@
+﻿;-------------------------------------------------
+;泡踊り実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:泡踊り]]
+#FUNCTION
+    ;泡踊り実行判定
+    RESULT = COMABLE_DEF(TNUM("泡踊り")) && COND("指の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:泡踊り]]
+    PRINTFORM %CALLNAME:PLAYER%はソープを泡立たせて自分に塗りたくり、
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        PRINT うっとりとした表情をしつつ
+    IF IS_大柄(PLAYER)
+        PRINTFORM %CALLNAME:TARGET%をすっぽり包み込むようにして
+    ELSEIF IS_小柄(PLAYER)
+        PRINTFORM %CALLNAME:TARGET%に小さな身体を目一杯擦りつけて
+    ELSEIF IS_チチユレ(PLAYER)
+        PRINTFORM %CALLNAME:TARGET%に豊満な胸とふくよかな肌を擦りつけて
+    ELSE
+        PRINTFORM %CALLNAME:TARGET%に全身を擦りつけて
+    ENDIF
+    PRINTL 愛撫した…
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:泡踊り]](ARG=100)
+    ;-------------------------------------------------
+    ;泡踊りをされた対象
+    ;-------------------------------------------------
+    ;快Ｂのソース
+    TMP_SRC:TARGET:快Ｂ += CALC_刺激SOURCE("Ｂ刺激", TARGET, 刺激_緩やか)
+    ;快Ｃのソース
+    TMP_SRC:TARGET:快Ｃ += CALC_刺激SOURCE("Ｃ刺激", TARGET, 刺激_緩やか)
+    ;情愛のソース
+    TMP_SRC:TARGET:情愛 += 10 * MIN(ABL:Ｂ感覚 + 1, 4) + 10 * MIN(ABL:Ｃ感覚 + 1, 4)
+    TMP_SRC:TARGET:性行動 += 100
+
+    IF PLAYER == MASTER || TARGET == MASTER
+        TEMP_NUM = TARGET
+        SIF TARGET == MASTER
+            TEMP_NUM = PLAYER
+        ;ABL:従順をみる
+        TMP_SRC:TARGET:快Ｂ = TMP_SRC:TARGET:快Ｂ * (MIN(ABL:TEMP_NUM:信頼, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:信頼, 5)*10 + 80) / 100
+
+        ;ABL:奉仕精神をみる
+        TMP_SRC:TARGET:快Ｂ = TMP_SRC:TARGET:快Ｂ * (MIN(ABL:TEMP_NUM:奉仕精神, 6)*30 + 50) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:奉仕精神, 6)*30 + 50) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:TARGET:快Ｂ = TMP_SRC:TARGET:快Ｂ * (MIN(ABL:TEMP_NUM:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:PLAYER:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:射精中毒, 5)*10 + 80) / 100
+    ELSE
+        ;TARGETからPLAYERへの相性を見る
+        SELECTCASE RELATION:(NO:PLAYER)
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｂ , 0.5
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｂ , 0.75
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｂ , 1
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｂ , 1.25
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｂ , 1.5
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｂ , 1.75
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｂ , 2
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+    ENDIF
+
+    ;奉仕者
+    TMP_SRC:PLAYER:屈従 = 2000
+    TMP_SRC:PLAYER:逸脱 = 1500
+
+    ;ABL:奉仕精神をみる
+    TMP_SRC:PLAYER:性行動 += 500 + MIN(ABL:PLAYER:奉仕精神, 5) * 200
+    TMP_SRC:PLAYER:達成 += 300 + MIN(ABL:PLAYER:奉仕精神, 5) * 200 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 100 + LIMIT(ABL:PLAYER:奉仕精神 - 2,0,3) * 100 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 300
+    TMP_SRC:PLAYER:不潔 += 250 - MIN(ABL:PLAYER:奉仕精神, 5) * 50
+
+    ;快Ｂのソース
+    TMP_SRC:PLAYER:快Ｂ += CALC_刺激SOURCE("Ｂ刺激", PLAYER, 刺激_弱め)
+    ;快Ｃのソース
+    TMP_SRC:PLAYER:快Ｃ += CALC_刺激SOURCE("Ｃ刺激", PLAYER, 刺激_弱め)
+
+    SIF IS_巨乳(PLAYER)
+        TIMES TMP_SRC:PLAYER:快Ｂ, 1.20
+    ; IF IS_Ｂ敏感(PLAYER)
+    ;     TIMES TMP_SRC:PLAYER:快Ｂ, 1.20
+    ; ELSEIF IS_Ｂ鈍感(PLAYER)
+    ;     TIMES TMP_SRC:PLAYER:快Ｂ, 0.70
+    ; ENDIF
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:技巧
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.80
+            TIMES TMP_SRC:PLAYER:達成 , 0.80
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1.3
+            TIMES TMP_SRC:PLAYER:達成 , 1.3
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.6
+            TIMES TMP_SRC:PLAYER:達成 , 1.6
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.9
+            TIMES TMP_SRC:PLAYER:達成 , 1.9
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 2.3
+            TIMES TMP_SRC:PLAYER:達成 , 2.3
+    ENDSELECT
+    
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:泡踊り]](ARG=100)
+    NOWEX:TARGET:体力変動 += 10
+    NOWEX:TARGET:気力変動 += 10
+    NOWEX:PLAYER:体力変動 += 30
+    NOWEX:PLAYER:気力変動 += 30
+
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 7
+        NOWEX:PLAYER:レズ経験 = 7
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 7
+        NOWEX:PLAYER:ＢＬ経験 = 7
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 2
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 2
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:泡踊り]]
+    SIF PLAYER == MASTER
+        TCVAR:主人経験 += 1
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+        ;屈服刻印３に相当
+        TCVAR:PLAYER:屈服刻印取得 = 3
+    ENDIF
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れの処理
+    ;-------------------------------------------------
+    STAIN:口 = 0
+    STAIN:手 = 0
+    STAIN:ペニス = 2
+    STAIN:ヴァギナ = 1
+    STAIN:アナル = 8
+
+    STAIN:PLAYER:口 = 0
+    STAIN:PLAYER:手 = 0
+    STAIN:PLAYER:ペニス = 2
+    STAIN:PLAYER:ヴァギナ = 1
+    STAIN:PLAYER:アナル = 8
+

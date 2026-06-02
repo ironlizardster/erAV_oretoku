@@ -6,7 +6,7 @@
 
 PRINTL 腹パン
 SAVESTR:0 = 腹パン
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;実際には苦痛があるためもっと体力気力をもっていかれる
 LOSEBASE:体力 += 0
@@ -44,7 +44,7 @@ ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER)
 ENDIF
 
 ;屈服刻印３に相当
-TFLAG:屈服刻印2 = 3
+TFLAG:屈服刻印取得 = 3
 
 SIF ASSIPLAY == 0 && ABL:マゾっ気 >= 3
 	TFLAG:主人経験 += 1

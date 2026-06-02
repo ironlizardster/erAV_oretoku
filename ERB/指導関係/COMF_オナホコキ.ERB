@@ -1,0 +1,193 @@
+﻿;-------------------------------------------------
+;オナホコキ実行判定
+;-------------------------------------------------
+@COMABLE_オナホコキ
+#FUNCTION
+    ;オナホコキ実行判定
+    RESULT = COMABLE_DEF(TNUM("オナホコキ")) && COND("指の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_オナホコキ
+    IF TEQUIP:オナホール
+        PRINTFORML %CALLNAME:TARGET%からオナホールを外した
+    ELSE
+        PRINTFORML %CALLNAME:TARGET%のペニスをオナホールに挿入した
+    ENDIF
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_オナホコキ(ARG=100)
+    ;-------------------------------------------------
+    ;オナホコキをされた対象
+    ;-------------------------------------------------
+    TMP_SRC:TARGET:露出 = 120
+    TMP_SRC:TARGET:逸脱 = 70
+    TMP_SRC:TARGET:性行動 += 250 + MIN(ABL:PLAYER:奉仕精神, 5) * 50
+    TMP_SRC:TARGET:不潔 += 60 + COM_汚れ(PLAYER,STNNUM("手"),STNNUM("ペニス"),1,4) * 10
+
+    ;快Ｃのソース
+    ;ABL:技巧をみる
+    TMP_SRC:TARGET:快Ｃ += 200 + MIN(ABL:PLAYER:技巧, 5) * 200 + LIMIT(ABL:PLAYER:技巧 - 1,0,4) * 300 + LIMIT(ABL:PLAYER:技巧 - 2,0,3) * 200 + LIMIT(ABL:PLAYER:技巧 - 1,0,2) * 100
+
+    IF PLAYER == MASTER || TARGET == MASTER
+        TEMP_NUM = TARGET
+        SIF TARGET == MASTER
+            TEMP_NUM = PLAYER
+        ;ABL:従順をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:信頼, 5)*10 + 80) / 100
+
+        ;ABL:奉仕精神をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:奉仕精神, 6)*30 + 50) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:PLAYER:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:射精中毒, 5)*10 + 80) / 100
+    ELSE
+        ;TARGETからPLAYERへの相性を見る
+        SELECTCASE RELATION:(NO:PLAYER)
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+     ENDIF
+
+    ;ABL:マゾっ気をみる
+    TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:マゾっ気, 5)*10 + 90) / 100
+
+; ;プレイヤーのABL:Ｃ感覚をみる
+; IF ABL:PLAYER:Ｃ感覚 == 0
+; 	TIMES B , 1.00
+; ELSEIF ABL:PLAYER:Ｃ感覚 == 1
+; 	TIMES B , 1.50
+; ELSEIF ABL:PLAYER:Ｃ感覚 == 2
+; 	TIMES B , 2.00
+; ELSEIF ABL:PLAYER:Ｃ感覚 == 3
+; 	TIMES B , 2.50
+; ELSEIF ABL:PLAYER:Ｃ感覚 == 4
+; 	TIMES B , 3.50
+; ELSE
+; 	TIMES B , 5.00
+; ENDIF
+
+    ;奉仕者
+    TMP_SRC:PLAYER:屈従 = 500
+    TMP_SRC:PLAYER:逸脱 = 100
+
+    ;ABL:奉仕精神をみる
+    TMP_SRC:PLAYER:性行動 += 250 + MIN(ABL:PLAYER:奉仕精神, 5) * 50
+    TMP_SRC:PLAYER:達成 += 50 + MIN(ABL:PLAYER:奉仕精神, 5) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 50 + LIMIT(ABL:PLAYER:奉仕精神 - 3,0,2) * 100 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 50
+    TMP_SRC:PLAYER:不潔 += 60 + COM_汚れ(TARGET,STNNUM("ペニス"),STNNUM("手"),1,4) * 10
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:PLAYER:技巧
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.5
+            TIMES TMP_SRC:PLAYER:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 0.8
+            TIMES TMP_SRC:PLAYER:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.2
+            TIMES TMP_SRC:PLAYER:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.5
+            TIMES TMP_SRC:PLAYER:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 2
+            TIMES TMP_SRC:PLAYER:達成 , 2
+    ENDSELECT
+
+    ;ABL:サドっ気をみる
+    TMP_SRC:PLAYER:性行動 = TMP_SRC:PLAYER:性行動 * (100+MIN(ABL:PLAYER:サドっ気, 5)*20) / 100
+    TMP_SRC:PLAYER:達成 = TMP_SRC:PLAYER:達成 * (100+MIN(ABL:PLAYER:サドっ気, 5)*20) / 100
+
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:PLAYER:奉仕精神
+        CASE 0
+            TIMES TMP_SRC:PLAYER:不潔 , 4.00
+        CASE 1
+            TIMES TMP_SRC:PLAYER:不潔 , 2.5
+        CASE 2
+            TIMES TMP_SRC:PLAYER:不潔 , 1.5
+        CASE 3
+            TIMES TMP_SRC:PLAYER:不潔 , 1
+        CASE 4
+            TIMES TMP_SRC:PLAYER:不潔 , 0.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:不潔 , 0.1
+    ENDSELECT
+    
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_オナホコキ(ARG=100)
+    NOWEX:TARGET:体力変動 += 10
+    NOWEX:TARGET:気力変動 += 20
+    NOWEX:PLAYER:体力変動 += 10
+    NOWEX:PLAYER:気力変動 += 10
+
+    NOWEX:PLAYER:嗜虐快楽経験 += ABL:PLAYER:サドっ気 + ABL:マゾっ気
+    NOWEX:被虐快楽経験 += ABL:PLAYER:サドっ気 + ABL:マゾっ気
+
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 1
+        NOWEX:PLAYER:レズ経験 = 1
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 1
+        NOWEX:PLAYER:ＢＬ経験 = 1
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 1
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 1
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_オナホコキ
+    SIF PLAYER == MASTER
+        TCVAR:主人経験 += 1
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+        ;屈服刻印１に相当
+        TCVAR:PLAYER:屈服刻印取得 = 1
+    ENDIF
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れ
+    ;-------------------------------------------------
+    ;PLAYERのオナホ⇔TARGETのＰの汚れが移動
+    IF HAVE_PENIS(TARGET)
+        STAIN:PLAYER:手 |= STAIN:ペニス
+        STAIN:ペニス |= STAIN:PLAYER:手
+    ENDIF
+

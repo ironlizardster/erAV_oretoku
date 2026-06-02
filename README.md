@@ -24,3 +24,10 @@ https://github.com/ironlizardster/erAV_oretoku
 - キャラ情報などの表示がいまいち気に入らないのでeraAkumaMaidさんの情報の表示の仕方を参考にキャラ情報やミッションのテキストのフォーマットを変える
 
 リリースできるようになるにはいろいろセーブ関連の変更があるので特に上二つの変更が終わるまで待たせることになる
+
+# 調教のフローの予定（V2.x）
+- COMABLEXXはSHOW_USERCOMで表示予定なので全部別の名前に変える
+- 基本的にABLE,COM,MESSAGE,SOURCE,FLAG,NOWEXなどをCOMFファイルにコマンドごとに実装してTRAINIDじゃなくてTRAIN名を使うことでマジックナンバーを減らす
+- TRAINに含まれる命令はTRYCALLFORM命令でNOWEXのリセット,EVENTCOM,SOURCE_CHECK,EVENTCOMEND(初キスやらなにやら)とかUSERCOMの中でマニュアルで呼び出す
+- ユーザー変数TMP_SRCを調教中の一時的なSOURCEの数値とする。命令で一時的SOURCEを計算した後まとめて倍率かけてSOURCEに代入、さらにTMP_SRCをキャラごとクリアすること
+- 複合的なコマンド（フェラ自慰、正常位キス）はTEQUIPでTRAINIDの小さいほうから先に100%で実行したあとに120%/複合した数で実行する。なので単独の命令としては実装しなくてもいい。それでもテキストは必要か

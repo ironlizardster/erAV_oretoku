@@ -1,0 +1,225 @@
+﻿;-------------------------------------------------
+;キャラARGにボディスーツARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_BODYS, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:ボディスーツ%
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする
+	STAIN:ARG:ボディスーツボトム = 0
+	STAIN:ARG:ボディスーツトップ = 0
+
+	CALL PALAM_BODYS, ARGS, ARG
+	;コモンフラグを設定する
+	CSTR:ARG:ボディスーツ = %SET_CLO_COMMON(CSTR:ARG:ボディスーツ, ARG)%
+
+	EQUIP:ARG:ボディスーツ = STRLENS(CSTR:ARG:ボディスーツ)
+
+	;下着は脱がす
+	IF EQUIP:ARG:ボディスーツ
+		CALL SET_PANTIES, "", ARG
+		CALL SET_BRA, "", ARG
+	ENDIF
+	SIF MEMO_CLO != CSTR:ARG:ボディスーツ
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGのボディスーツの名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@BODYS(ARG, ARGS)
+#FUNCTIONS
+
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "略"
+			IF CHECK_BODYS("競泳水着", ARG)
+				RESULTS = 競泳水着
+			ELSEIF CHECK_BODYS("スク水", ARG)
+				RESULTS = スク水
+			ELSEIF CHECK_BODYS("ワンピース水着", ARG)
+				IF CHECK_BODYS("食い込み", ARG)
+					RESULTS = ハイレグ水着
+				ELSE
+					RESULTS = ワンピース水着
+				ENDIF
+			ELSEIF CHECK_BODYS("スリングショット", ARG)
+				RESULTS = スリングショット
+			ELSEIF CHECK_BODYS("ボンデージ", ARG)
+				RESULTS = ボンデージ
+			ELSEIF CHECK_BODYS("バニー", ARG)
+				RESULTS = バニースーツ
+			ELSEIF CHECK_BODYS("レオタード", ARG)
+				RESULTS = レオタード
+			ELSEIF CHECK_BODYS("水着", ARG)
+				RESULTS = 水着
+			ELSE
+				RESULTS = ボディスーツ
+			ENDIF
+		CASE "種類"
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:ボディスーツ, "/", RESULTS
+		CASE ""
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:ボディスーツ, "/", RESULTS
+			RESULTS '= @"%CLOCOLOR(CSTR:ARG:ボディスーツ, "形容詞")%%RESULTS%"
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番のボディスーツの名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_BODYS(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		; 股間を覆わないタイプで全裸で付ける全身衣装(241～250)
+		CASE 241:
+			RESULTS = "ボンテージ/レザー/ファスナー/谷間露出/乳首露出/へそ露出/";
+		CASE 242:
+			RESULTS = "淫魔のボンテージ/レザー/ファスナー/Ｔバック/谷間露出/乳首露出/へそ露出/";
+		CASE 243:
+			RESULTS = "ベリーダンスの衣装/谷間露出/へそ露出/";
+		CASE 244:
+			RESULTS = "旧型スクール水着/水着";
+		CASE 245:
+			RESULTS = "ラバーボディスーツ";
+		CASE 246:
+			RESULTS = "スリングショット/水着/ハイレグ/Ｔバック/谷間露出/へそ露出/";
+		; 股間を覆うタイプでの全身衣装(251～290)
+		CASE 251:
+			RESULTS = "全身タイツ/ずれ不可/コキ不可";
+		CASE 252:
+			RESULTS = "オーバーオール/ずれ不可/コキ不可/ズボン/男物可/社会の窓/スカート不可/";
+		CASE 253:
+			RESULTS = "プロペラ団コスチューム";
+		CASE 254:
+			RESULTS = "バニースーツ/Ｔバック/谷間露出/ハーフカップ/";
+		CASE 255:
+			RESULTS = "ズーコの着ぐるみ/ずれ不可/コキ不可";
+		; 股間を覆うタイプで全裸で付ける全身衣装(291～300)
+		CASE 291:
+			RESULTS = "スクール水着/水着";
+		CASE 292:
+			RESULTS = "ブラックのコスチューム";
+		CASE 295:
+			RESULTS = "レオタード";                             
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGにボディスーツARGSを着せた場合のCSTR処理
+;-------------------------------------------------
+@PALAM_BODYS, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			CSTR:ARG:ボディスーツ = 
+		CASE "レオタード"
+			CSTR:ARG:ボディスーツ = レオタード/
+		CASE "セクシーレオタード"
+			CSTR:ARG:ボディスーツ = セクシーレオタード/ハイレグ/谷間露出/
+		CASE "エナメルレオタード"
+			CSTR:ARG:ボディスーツ = エナメルレオタード/ハイレグ/Ｔバック/ファスナー/谷間露出/
+		CASE "バニースーツ"
+			CSTR:ARG:ボディスーツ = バニースーツ/%CLOCOLOR_MAIDFACE("バニースーツ", "", ARG)%/Ｔバック/谷間露出/ハーフカップ/
+		CASE "ハイレグバニー"
+			CSTR:ARG:ボディスーツ = ハイレグバニー/%CLOCOLOR_MAIDFACE("バニースーツ", "", ARG)%/Ｔバック/エナメル/谷間露出/ハーフカップ/
+		CASE "ボンデージ"
+			CSTR:ARG:ボディスーツ = ボンデージ/%CLOCOLOR_MAIDFACE("ボンデージ", "", ARG)%/レザー/ファスナー/谷間露出/乳首露出/へそ露出/
+		CASE "紐ボンデージ"
+			CSTR:ARG:ボディスーツ = 紐ボンデージ/%CLOCOLOR_MAIDFACE("ボンデージ", "", ARG)%/レザー/ファスナー/谷間露出/乳首露出/へそ露出/
+		CASE "新スク水"
+			CSTR:ARG:ボディスーツ = 新スク水/水着/紺色/
+		CASE "スク水"
+			CSTR:ARG:ボディスーツ = スク水/水着/%CLOCOLOR_MAIDFACE("スク水", "", ARG)%/
+		CASE "ワンピース水着"
+			CSTR:ARG:ボディスーツ = ワンピース水着/
+		CASE "ハイレグワンピ"
+			CSTR:ARG:ボディスーツ = ハイレグワンピ/ハイレグ/ワンピース水着/
+		CASE "ハイレグ水着"
+			CSTR:ARG:ボディスーツ = ハイレグ水着/Ｔバック/ワンピース水着/
+		CASE "競泳水着"
+			CSTR:ARG:ボディスーツ = 競泳水着/%CLOCOLOR_MAIDFACE("競泳水着", "", ARG)%/ハイレグ/
+		CASE "スリングショット"
+			CSTR:ARG:ボディスーツ = スリングショット/水着/ハイレグ/Ｔバック/谷間露出/へそ露出/
+		CASEELSE
+			CSTR:ARG:ボディスーツ = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:ボディスーツ = %MERGE_STR(CSTR:ARG:ボディスーツ, STR_ADD)%
+
+
+;-------------------------------------------------
+;ARGのボディスーツが条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_BODYS(ARGS, ARG)
+#FUNCTION
+
+	SIF EQUIP:ARG:ボディスーツ == 0
+		RETURNF 0
+	SELECTCASE ARGS
+		CASE "はだけ可"
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "はだけた", "はだけ不可")
+				RETURNF 0
+			RETURNF 1
+		;主に"アソコのチラ見せ撮影"の判定で使う
+		CASE "めくり可能"
+			;めくれなさそうなもの
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ファスナー", "レザー")
+				RETURNF 0
+			RETURNF 1
+		;ずれ不可でなく、ずらしていない
+		CASE "ずらし可", "ずらせる"
+			SIF STRCOUNT(CSTR:ARG:ボディスーツ, "Ｖ露出")
+				RETURNF 0
+			IF STRCOUNT(CSTR:ARG:ボディスーツ, "ファスナー")
+				SIF STRCOUNT(CSTR:ARG:ボディスーツ, "ファスナー開")
+					RETURNF 0
+				RETURNF 1
+			ENDIF
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ずらした", "ずれ不可")
+				RETURNF 0
+			RETURNF 1
+		;ファスナーがあり、あけていない
+		CASE "ファスナー閉"
+			SIF STRCOUNT(CSTR:ARG:ボディスーツ, "ファスナー開")
+				RETURNF 0
+			SIF STRCOUNT(CSTR:ARG:ボディスーツ, "ファスナー")
+				RETURNF 1
+		CASE "ＶＡ露出"
+			SIF STRCOUNT(CSTR:ARG:ボディスーツ, "Ｖ露出") && STRCOUNT(CSTR:ARG:ボディスーツ, "Ａ露出")
+				RETURNF 1
+		CASE "クロッチ"
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ファスナー開", "ずらした", "破いた", "Ｖ露出", "スリット")
+				RETURNF 0
+			RETURNF 1
+		CASE "Ａクロッチ"
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ファスナー開", "ずらした", "破いた", "Ａ露出", "スリット")
+				RETURNF 0
+			RETURNF 1
+		CASE "食い込み"
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ハイレグ")
+				RETURNF 1
+		CASE "蒸れ"
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた")
+				RETURNF 0
+			SIF CHECK_STAIN(STAIN:ARG:ボディスーツボトム, "蒸れ")
+				RETURNF 1
+		CASE "染み"
+			SIF STRCOUNTS(CSTR:ARG:ボディスーツ, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた", "通気性無し")
+				RETURNF 0
+			SIF CHECK_STAIN(STAIN:ARG:ボディスーツボトム, "濡れ")
+				RETURNF 1
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:ボディスーツ, ARGS)
+				RETURNF 1
+	ENDSELECT
+
+	RETURNF 0

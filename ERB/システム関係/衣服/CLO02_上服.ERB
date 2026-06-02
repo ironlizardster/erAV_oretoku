@@ -1,0 +1,601 @@
+﻿;-------------------------------------------------
+;キャラARGに服ARGSを着せる。ARGS == ""なら脱がす
+;ワンピースor上下セット属性を持つ服はスカートも同時に設定する
+;-------------------------------------------------
+@SET_UPPER, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:上服%
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする	
+	STAIN:ARG:上服 = 0
+
+	CALL PALAM_UPPER, ARGS, ARG
+
+	;コモンフラグを設定する
+	CSTR:ARG:上服 = %SET_CLO_COMMON(CSTR:ARG:上服, ARG)%
+	EQUIP:ARG:上服 = STRLENS(CSTR:ARG:上服)
+
+	IF (CHECK_UPPER("ワンピース", ARG) || CHECK_LOWER("ズボンセット", ARG) || CHECK_UPPER("上下セット", ARG)) && CSTR:ARG:上服 != CSTR:ARG:下服
+		CALL SET_LOWER, ARGS, ARG
+	;服がワンピースじゃない場合にスカートがワンピースなのは脱がせ忘れなので、スカートを脱がす
+	ELSEIF CHECK_LOWER("ワンピース", ARG) || CHECK_LOWER("ズボンセット", ARG) || CHECK_LOWER("上下セット", ARG)
+		CALL SET_LOWER, "", ARG
+	ENDIF
+	SIF !TFLAG:着替えた && MEMO_CLO != CSTR:ARG:上服
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGのシャツの名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@UPPER(ARG, ARGS)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "柄"
+			SIF CHECK_UPPER("柄：", ARG) == 0
+				RETURNF RESULTS
+			RETURNF EXTSTR(CSTR:ARG:上服, "柄：", "/")
+		CASE "略"
+			IF CHECK_UPPER("鎧", ARG)
+				RESULTS = 鎧
+			ELSEIF CHECK_UPPER("セーター", ARG)
+				RESULTS = セーター
+			ELSEIF CHECK_UPPER("パジャマ", ARG)
+				RESULTS = パジャマ
+			ELSEIF CHECK_UPPER("ネグリジェ", ARG)
+				RESULTS = ネグリジェ
+			ELSEIF CHECK_UPPER("ベビードール", ARG)
+				RESULTS = ベビードール
+			ELSEIF CHECK_UPPER("ビスチェ", ARG)
+				RESULTS = ビスチェ
+			ELSEIF CHECK_UPPER("修道服", ARG)
+				RESULTS = 修道服
+			;ゴスロリドレスとサマードレスの略称はドレスで良いかも
+			;ELSEIF CHECK_UPPER("ゴスロリドレス", ARG)
+			;	RESULTS = ゴスロリドレス
+			;ELSEIF CHECK_UPPER("サマードレス", ARG)
+			;	RESULTS = サマードレス
+			ELSEIF CHECK_UPPER("ドレス", ARG)
+				RESULTS = ドレス
+			ELSEIF CHECK_UPPER("巫女服", ARG)
+				RESULTS = 白衣
+			ELSEIF CHECK_UPPER("ブラウス", ARG)
+				RESULTS = ブラウス
+			ELSEIF CHECK_UPPER("ブレザー", ARG)
+				RESULTS = ブレザー
+			ELSEIF CHECK_UPPER("ベスト", ARG)
+				RESULTS = ベスト
+			ELSEIF CHECK_UPPER("セーラー", ARG)
+				RESULTS = セーラー服
+			ELSEIF CHECK_UPPER("チャイナドレス", ARG)
+				RESULTS = チャイナドレス
+			ELSEIF CHECK_UPPER("ナース服", ARG)
+				RESULTS = ナース服
+			ELSEIF CHECK_UPPER("体操服", ARG)
+				RESULTS = 体操服
+			ELSEIF CHECK_UPPER("執事服", ARG)
+				RESULTS = 執事服
+			ELSEIF CHECK_UPPER("メイド服", ARG)
+				RESULTS = メイド服
+			ELSEIF CHECK_UPPER("振袖", ARG)
+				RESULTS = 振袖
+			ELSEIF CHECK_UPPER("浴衣", ARG)
+				RESULTS = 浴衣
+			ELSEIF CHECK_UPPER("どてら", ARG)
+				RESULTS = どてら
+			ELSEIF CHECK_UPPER("着物", ARG)
+				RESULTS = 着物
+			ELSEIF CHECK_UPPER("キャミソール", ARG)
+				RESULTS = キャミソール
+			ELSEIF CHECK_UPPER("スーツ", ARG)
+				RESULTS = スーツ
+			ELSEIF CHECK_UPPER("Ｙシャツ", ARG)
+				RESULTS = Ｙシャツ
+			ELSEIF CHECK_UPPER("ワイシャツ", ARG)
+				RESULTS = ワイシャツ
+			ELSEIF CHECK_UPPER("Ｔシャツ", ARG)
+				RESULTS = Ｔシャツ
+			ELSEIF CHECK_UPPER("ウェイトレス", ARG)
+				RESULTS = ウェイトレスの制服
+			ELSEIF CHECK_UPPER("ジャージ", ARG)
+				RESULTS = ジャージ
+			ELSEIF CHECK_UPPER("アイドル衣装", ARG)
+				RESULTS = アイドル衣装
+			ELSEIF CHECK_UPPER("ローブ", ARG)
+				RESULTS = ローブ
+			ELSEIF CHECK_UPPER("サンタ服", ARG)
+				RESULTS = サンタ服
+			ELSEIF CHECK_UPPER("逆バニースーツ", ARG)
+				RESULTS = 逆バニースーツ
+			ELSE
+				RESULTS = 服
+			ENDIF
+		CASE "種類"
+			;RESULTS:0に名称が入る
+			SPLIT CSTR:ARG:上服, "/", RESULTS
+			SIF CHECK_UPPER("巫女服", ARG)
+				RESULTS = 白衣
+		CASE ""
+			;RESULTS:0に名称が入る
+			SPLIT CSTR:ARG:上服, "/", RESULTS
+			SIF CHECK_UPPER("巫女服", ARG)
+				RESULTS = 白衣
+			RESULTS '= @"%CLOCOLOR(CSTR:ARG:上服, "形容詞")%%RESULTS%"
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番のシャツの名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_UPPER(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		; 股間を覆わないのツーピース(1～100)
+		CASE 1:
+			RESULTS = "普段着/上下セット/スカート";
+		CASE 2:
+			RESULTS = "極亜久高校制服/上下セット/スカート";
+		CASE 3:
+			RESULTS = "日の出高校制服/上下セット/スカート";
+		CASE 4:
+			RESULTS = "花丸高校制服/上下セット/スカート";
+		CASE 5:
+			RESULTS = "親切高校制服/上下セット/スカート";
+		CASE 6:
+			RESULTS = "星英高校制服/上下セット/スカート";
+		CASE 7:
+			RESULTS = "パライソ中学制服/上下セット/スカート";
+		CASE 8:
+			RESULTS = "私立メキメキ学園制服/上下セット/スカート";
+		CASE 17:
+			RESULTS = "高校制服/上下セット/スカート";
+		CASE 18:
+			RESULTS = "中学制服/上下セット/スカート";
+		CASE 19:
+			RESULTS = "セーラー服/上下セット/スカート";
+		CASE 20:
+			RESULTS = "麻帆良女子中学制服/上下セット/スカート";
+		CASE 21:
+			RESULTS = "スーツ/上下セット/スカート";
+		CASE 22:
+			RESULTS = "子供服/上下セット/スカート";
+		CASE 23:
+			RESULTS = "ブランド服/上下セット/スカート";
+		CASE 24:
+			RESULTS = "ナース服/ワンピース";
+		CASE 25:
+			RESULTS = "メイド服/ワンピース";
+		CASE 26:
+			RESULTS = "ウェイトレス制服/上下セット/スカート";
+		CASE 27:
+			RESULTS = "コンビニ制服/上下セット/スカート";
+		CASE 28:
+			RESULTS = "事務員制服/上下セット/スカート";
+		CASE 29:
+			RESULTS = "ＣＰＧ制服/上下セット/スカート";
+		CASE 30:
+			RESULTS = "パンクロリータ/上下セット/スカート";
+		CASE 31:
+			RESULTS = "ブレザー/上下セット/スカート";
+		CASE 32:
+			RESULTS = "喪服/上下セット/スカート";
+		CASE 40:
+			RESULTS = "キャミソール";
+		CASE 51:
+			RESULTS = "軍服/上下セット/スカート";
+		CASE 52:
+			RESULTS = "ゴシックロリータ/上下セット/スカート";
+		CASE 53:
+			RESULTS = "麻帆良芸大付属中制服/上下セット/スカート";
+		CASE 54:
+			RESULTS = "チアリーダー衣装/上下セット/スカート";
+		CASE 55:
+			RESULTS = "テニスウェア/上下セット/スカート";
+		CASE 56:
+			RESULTS = "ハロウィン魔女っ子服/上下セット/スカート";
+		CASE 99:
+			RESULTS = "ガラスのメイド服/上下セット/スカート";
+		; 股間を覆うタイプのツーピース(101～200)
+		CASE 101:
+			RESULTS = "普段着/ズボンセット";
+		CASE 102:
+			RESULTS = "スーツ/ズボンセット";
+		CASE 103:
+			RESULTS = "ジャージ/ズボンセット";
+		CASE 104:
+			RESULTS = "巫女服/ズボンセット";
+		CASE 105:
+			RESULTS = "野球のユニフォーム/ズボンセット";
+		CASE 106:
+			RESULTS = "軍服/ズボンセット";
+		CASE 108:
+			RESULTS = "ブレザー/ズボンセット";
+		CASE 109:
+			RESULTS = "体操着";
+		CASE 110:
+			RESULTS = "忍者袴/ズボンセット";
+		CASE 111:
+			RESULTS = "王子の正装/ズボンセット";
+		CASE 122:
+			RESULTS = "子供服/ズボンセット";
+		CASE 131:
+			RESULTS = "パジャマ/ズボンセット";
+		CASE 140:
+			RESULTS = "ラスタシャーリングベアトップ";
+		CASE 192:
+			RESULTS = "陸上部ユニフォーム/上下セット";
+		; 股間を覆わないタイプの全身衣装(201～240)
+		CASE 201:
+			RESULTS = "ワンピーススカート/ワンピース";
+		CASE 202:
+			RESULTS = "和服/ワンピース/着物";
+		CASE 203:
+			RESULTS = "カクテルドレス/ワンピース";
+		CASE 204:
+			RESULTS = "浴衣/ワンピース/着物";
+		CASE 205:
+			RESULTS = "マイクロミニタイトワンピース/ワンピース";
+		CASE 221:
+			RESULTS = "チャイナドレス/ワンピース";
+		CASE 222:
+			RESULTS = "フェミニンワンピース/ワンピース";
+		CASE 229:
+			RESULTS = "中学校制服/ワンピース";
+		CASE 230:
+			RESULTS = "聖ウルスラ高校制服/ワンピース";
+		CASE 231:
+			RESULTS = "修道服/ワンピース";
+		CASE 232:
+			RESULTS = "ワンピーススーツ/ワンピース";
+		CASE 233:
+			RESULTS = "女陰陽師の衣装/ワンピース";
+		CASE 240:
+			RESULTS = "ウェディングドレス/ワンピース";
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGに服ARGSを着せた場合のCSTR処理。ARGSは/で区切って追加属性をくっつける事も出来る
+;例）CALL SET_UPPER, "シャツジャケット/緑色/腋露出" とすると、CSTR:ARG:上服 の末尾に本来の文字列に加えて 緑色/腋露出/ が追加される
+;上下セットはコスプレや制服などの明らかに上下セットになってるもの以外は禁止
+;-------------------------------------------------
+@PALAM_UPPER, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			IF CHECK_UPPER("ワンピース", ARG) || CHECK_LOWER("ズボンセット", ARG) || CHECK_UPPER("上下セット", ARG)
+				CSTR:ARG:下服 = 
+				EQUIP:ARG:下服 = 0
+			ENDIF
+			CSTR:ARG:上服 = 
+		CASE @"%CALLNAME:MASTER%のＹシャツ"
+			IF TALENT:ARG:小柄
+				CSTR:ARG:上服 = %CALLNAME:MASTER%のＹシャツ/ワンピース/
+				CSTR:ARG:下服 = 裾/ワンピース/ミニ/
+			ELSE
+				CSTR:ARG:上服 = %CALLNAME:MASTER%のＹシャツ/
+			ENDIF
+
+		;コスプレ
+		CASE "メイド服"
+			CSTR:ARG:上服 = メイド服/ワンピース/
+			CSTR:ARG:下服 = エプロンスカート/ロング/フリル/ワンピース/
+		CASE "ミニスカメイド"
+			CSTR:ARG:上服 = ミニスカメイド/メイド服/ワンピース/
+			CSTR:ARG:下服 = エプロンスカート/ミニスカ/フリル/ワンピース/
+		CASE "フレンチメイド"
+			CSTR:ARG:上服 = フレンチメイド/上下セット/腋露出/メイド服/フリル/
+			CSTR:ARG:下服 = エプロンスカート/超ミニスカ/フリル/ワンピース/
+		CASE "エプロン"
+			CSTR:ARG:上服 = エプロン/ワンピース/
+			CSTR:ARG:下服 = 裾/エプロン/ミニスカ/フリル/ワンピース/
+		CASE "ナース服"
+			CSTR:ARG:上服 = ナース服/ワンピース/
+			CSTR:ARG:下服 = スカート/ミニ/ワンピース/
+		CASE "チャイナドレス"
+			CSTR:ARG:上服 = チャイナドレス/腋露出/ワンピース/
+			CSTR:ARG:下服 = 前垂れ/タイト/スリット/ワンピース/
+		CASE "胸開きチャイナドレス"
+			CSTR:ARG:上服 = 胸開きチャイナドレス/腋露出/ワンピース/谷間露出/
+			CSTR:ARG:下服 = 前垂れ/タイト/スリット/ワンピース/
+		CASE "巫女服"
+			CSTR:ARG:上服 = 巫女服/上下セット/
+			CSTR:ARG:下服 = 緋袴/
+		CASE "ミニスカ巫女"
+			CSTR:ARG:上服 = ミニスカ巫女服/上下セット/
+			CSTR:ARG:下服 = ミニスカート/
+		CASE "腋巫女"
+			CSTR:ARG:上服 = 腋巫女/巫女服/上下セット/腋露出/
+			CSTR:ARG:下服 = マイクロミニスカート/超ミニ/
+		CASE "ウェディングドレス"
+			CSTR:ARG:上服 = ウェディングドレス/ワンピース/谷間露出/
+			CSTR:ARG:下服 = ヒップボーンスカート/ロング/ワンピース/
+		CASE "チアユニフォーム"
+			CSTR:ARG:上服 = チアユニフォーム/上下セット/腋露出/要たくし上げ/
+			CSTR:ARG:下服 = ミニスカート/プリーツ/
+		CASE "修道服"
+			CSTR:ARG:上服 = 修道服/ワンピース/要たくし上げ/
+			CSTR:ARG:下服 = ロングスカート/ワンピース/
+		CASE "ゴスロリドレス"
+			CSTR:ARG:上服 = ゴスロリドレス/上下セット/
+			CSTR:ARG:下服 = スカート/
+		CASE "アイドル衣装"
+			CSTR:ARG:上服 = アイドル衣装/上下セット/
+			CSTR:ARG:下服 = スカート/
+		CASE "ベビードール"
+			CSTR:ARG:上服 = ベビードール/ワンピース/腋露出/シースルー/要たくし上げ/ランジェリー/
+			CSTR:ARG:下服 = 裾/超ミニ/ベビードール/シースルー/ワンピース/
+		CASE "ネグリジェ"
+			CSTR:ARG:上服 = ネグリジェ/ワンピース/腋露出/シースルー/要たくし上げ/
+			CSTR:ARG:下服 = 裾/シースルー/ワンピース/
+		CASE "パジャマ"
+			CSTR:ARG:上服 = パジャマ/
+		CASE "サンタ服"
+			CSTR:ARG:上服 = サンタ服/ワンピース/
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "逆バニースーツ"
+			CSTR:ARG:上服 = 逆バニースーツ/乳房露出/谷間露出/脇露出/へそ露出/はだけ不可/
+
+		;和装
+		CASE "和服"
+			CSTR:ARG:上服 = 和服/ワンピース/着物/
+			CSTR:ARG:下服 = 裾/ワンピース/着物/
+		CASE "振袖"
+			CSTR:ARG:上服 = 振袖/ワンピース/着物/
+			CSTR:ARG:下服 = 裾/振袖/ワンピース/着物/
+		CASE "浴衣"
+			CSTR:ARG:上服 = 浴衣/ワンピース/
+			CSTR:ARG:下服 = 裾/浴衣/ワンピース/
+		CASE "どてら"
+			CSTR:ARG:上服 = どてら/ワンピース/
+			CSTR:ARG:下服 = 裾/ワンピース/
+
+		;制服
+		CASE "セーラー服"
+			IF COND("夏", ARG)
+				CSTR:ARG:上服 = セーラー服/セーラー夏服/上下セット/要たくし上げ/へそ露出/汗透け/
+			ELSE
+				CSTR:ARG:上服 = セーラー服/上下セット/要たくし上げ/
+			ENDIF
+			CSTR:ARG:下服 = プリーツスカート/
+		CASE "ミニスカセーラー服"
+			CSTR:ARG:上服 = セーラー服/上下セット/要たくし上げ/
+			CSTR:ARG:下服 = プリーツミニスカート/
+		CASE "ミニマムセーラー服"
+			CSTR:ARG:上服 = ミニマムセーラー服/上下セット/要たくし上げ/腋露出/へそ露出/汗透け/
+			CSTR:ARG:下服 = マイクロプリーツスカート/超ミニ/
+		CASE "ノースリーブセーラー服"
+			CSTR:ARG:上服 = ノースリーブセーラー服/上下セット/要たくし上げ/腋露出/汗透け/
+			CSTR:ARG:下服 = プリーツスカート/
+		;萌え袖オプションがあります
+		CASE "カーディガン"
+			CSTR:ARG:上服 = カーディガン/上下セット/
+			CSTR:ARG:下服 = チェックスカート/
+		CASE "ミニスカカーディガン"
+			CSTR:ARG:上服 = カーディガン/上下セット/
+			CSTR:ARG:下服 = チェックミニスカート/
+		CASE "萌え袖カーディガン"
+			CSTR:ARG:上服 = カーディガン/上下セット/萌え袖/
+			CSTR:ARG:下服 = チェックスカート/
+
+		CASE "ブレザー"
+			CSTR:ARG:上服 = ブレザー/上下セット/
+			CSTR:ARG:下服 = チェックスカート/
+		CASE "リボンタイブレザー"
+			CSTR:ARG:上服 = リボンタイブレザー/上下セット/
+			CSTR:ARG:下服 = チェックスカート/
+		CASE "ネクタイブレザー"
+			CSTR:ARG:上服 = ネクタイブレザー/上下セット/
+			CSTR:ARG:下服 = チェックスカート/
+		CASE "ミニスカブレザー"
+			CSTR:ARG:上服 = ブレザー/上下セット/
+			CSTR:ARG:下服 = チェックミニスカート/
+		CASE "アメスク"
+			CSTR:ARG:上服 = ルーズブラウス/谷間露出/汗透け/へそ露出/上下セット/アメスク/
+			CSTR:ARG:下服 = マイクロチェックスカート/超ミニ/
+		CASE "学ラン"
+			CSTR:ARG:上服 = 学ラン/男物/ズボンセット/
+			CSTR:ARG:アウター = 学生ズボン/ずれ不可/コキ不可/ズボン/男物/社会の窓/ロングパンツ/
+		CASE "男子ブレザー"
+			CSTR:ARG:上服 = ネクタイブレザー/男物/ズボンセット/
+			CSTR:ARG:アウター = スラックス/ずれ不可/コキ不可/ズボン/男物/社会の窓/ロングパンツ/
+		CASE "シャツジャケット"
+			CSTR:ARG:上服 = シャツジャケット/男物/
+		CASE "前開きシャツ"
+			CSTR:ARG:上服 = 前開きシャツ/谷間露出/汗透け/
+		CASE "ベスト"
+			CSTR:ARG:上服 = ベスト/
+		CASE "男子ベスト"
+			CSTR:ARG:上服 = ベスト/男物/
+
+		;体操服
+		CASE "体操服"
+			CSTR:ARG:上服 = 体操服/要たくし上げ/%CLOCOLOR_MAIDFACE("体操服", "", ARG)%/
+		CASE "体操服(短)", "体操服（短）"
+			CSTR:ARG:上服 = 体操服(短)/要たくし上げ/へそ露出/%CLOCOLOR_MAIDFACE("体操服", "", ARG)%/
+		CASE "ジャージ"
+			CSTR:ARG:上服 = ジャージ/%CLOCOLOR_MAIDFACE("ジャージ", "", ARG)%/
+		CASE "詰襟ジャージ"
+			CSTR:ARG:上服 = 詰襟ジャージ/
+
+		;普段着など
+		CASE "ブラウス"
+			CSTR:ARG:上服 = ブラウス/汗透け/
+		CASE "へそ出しブラウス"
+			CSTR:ARG:上服 = ブラウス/汗透け/へそ露出/
+		CASE "ネクタイブラウス"
+			CSTR:ARG:上服 = ネクタイブラウス/汗透け/
+			CSTR:ARG:下服 = チェックスカート/
+		CASE "リボンタイブラウス"
+			CSTR:ARG:上服 = リボンタイブラウス/汗透け/
+			CSTR:ARG:下服 = チェックスカート/
+		CASE "ノースリーブ", "ノースリーブブラウス"
+			CSTR:ARG:上服 = ノースリーブブラウス/汗透け/腋露出/
+		CASE "ノースリーブＢ", "ノースリーブブラウスＢ"
+			CSTR:ARG:上服 = ノースリーブブラウスＢ/汗透け/腋露出/
+		CASE "ネクタイノースリーブブラウス"
+			CSTR:ARG:上服 = ノースリーブブラウス/汗透け/腋露出/ネクタイ/
+
+		CASE "へそ出しノースリーブ", "へそ出しノースリーブブラウス"
+			CSTR:ARG:上服 = ノースリーブブラウス/汗透け/腋露出/へそ露出/
+		CASE "へそ出しネクタイノースリーブブラウス"
+			CSTR:ARG:上服 = ノースリーブブラウス/汗透け/腋露出/ネクタイ/へそ露出/
+
+		CASE "ルーズブラウス"
+			CSTR:ARG:上服 = ルーズブラウス/谷間露出/汗透け/へそ露出/
+		CASE "フリルブラウス"
+			CSTR:ARG:上服 = フリルブラウス/汗透け/フリル/
+		CASE "レースブラウス"
+			CSTR:ARG:上服 = レースブラウス/汗透け/
+
+		CASE "Ｔシャツ"
+			CSTR:ARG:上服 = Ｔシャツ/要たくし上げ/
+		CASE "へそ出しＴシャツ"
+			CSTR:ARG:上服 = へそ出しＴシャツ/へそ露出/要たくし上げ/
+		CASE "変な柄のＴシャツ"
+			CSTR:ARG:上服 = 変な柄のＴシャツ/要たくし上げ/
+		CASE "だぼだぼＴシャツ"
+			CSTR:ARG:上服 = だぼだぼＴシャツ/ワンピース/要たくし上げ/
+			CSTR:ARG:下服 = シャツの裾/超ミニ/Ｔシャツ/ワンピース/
+		;Ｙシャツとワイシャツ……？まぁ好きな方選んでよって事で
+		CASE "Ｙシャツ"
+			CSTR:ARG:上服 = Ｙシャツ/汗透け/
+		CASE "ワイシャツ"
+			CSTR:ARG:上服 = ワイシャツ/汗透け/
+		CASE "はだけシャツ"
+			CSTR:ARG:上服 = はだけシャツ/要たくし上げ/
+
+		CASE "カットソー"
+			CSTR:ARG:上服 = カットソー/
+		CASE "バックリボンカットソー"
+			CSTR:ARG:上服 = バックリボンカットソー/
+
+		CASE "タートルネック"
+			CSTR:ARG:上服 = タートルネック/要たくし上げ/
+		CASE "胸開きタートルネック"
+			CSTR:ARG:上服 = 胸開きタートルネック/谷間露出/要たくし上げ/
+		CASE "リボン付きオフショル"
+			CSTR:ARG:上服 = リボン付きオフショル/
+		CASE "ニットオフショル"
+			CSTR:ARG:上服 = ニットオフショル/
+		CASE "オフショルダー"
+			CSTR:ARG:上服 = オフショルダー/
+		CASE "ゴシック風ケープ"
+			CSTR:ARG:上服 = ゴシック風ケープ/
+		CASE "縦セーター"
+			CSTR:ARG:上服 = 縦セーター/要たくし上げ/
+		CASE "ニットセーター"
+			CSTR:ARG:上服 = ニットセーター/要たくし上げ/
+		CASE "背中開きニットセーター"
+			CSTR:ARG:上服 = 背中開きニットセーター/要たくし上げ/
+		CASE "萌え袖セーター"
+			CSTR:ARG:上服 = 萌え袖セーター/要たくし上げ/
+		CASE "ノースリーブセーター"
+			CSTR:ARG:上服 = ノースリーブセーター/要たくし上げ/腋露出/
+		CASE "ノースリーブタートルネック"
+			CSTR:ARG:上服 = ノースリーブタートルネック/要たくし上げ/腋露出/
+
+		CASE "キャミソール"
+			CSTR:ARG:上服 = キャミソール/腋露出/要たくし上げ/へそ露出/
+		CASE "タンクトップ"
+			CSTR:ARG:上服 = タンクトップ/腋露出/汗透け/要たくし上げ/
+		CASE "へそ出しタンクトップ"
+			CSTR:ARG:上服 = へそ出しタンクトップ/腋露出/汗透け/へそ露出/要たくし上げ/
+		CASE "ショートコート"
+			CSTR:ARG:上服 = ショートコート/
+		CASE "サマードレス"
+			CSTR:ARG:上服 = サマードレス/腋露出/ワンピース/
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "ワンピース", "白いワンピース"
+			CSTR:ARG:上服 = 白いワンピース/要たくし上げ/
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "フリルワンピース"
+			CSTR:ARG:上服 = フリルワンピース/要たくし上げ/%CLOCOLOR_MAIDFACE("フリルワンピース", "", ARG)%/
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "肩出しワンピース"
+			CSTR:ARG:上服 = 肩出しワンピース/腋露出/要たくし上げ/%CLOCOLOR_MAIDFACE("肩出しワンピース", "", ARG)%/
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "甘ロリワンピース"
+			CSTR:ARG:上服 = 甘ロリワンピース/ワンピース/
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "ゴシックワンピース"
+			CSTR:ARG:上服 = ゴシックワンピース/汗透け/フリル/ワンピース/
+			CSTR:ARG:下服 = ゴシックワンピース/フリル/ワンピース/
+		CASE "ゴシックドレス"
+			CSTR:ARG:上服 = ゴシックドレス/汗透け/フリル/ワンピース/
+			CSTR:ARG:下服 = ゴシックワンピース/フリル/ワンピース/
+		CASE "チュニック"
+			CSTR:ARG:上服 = チュニック/要たくし上げ
+		CASE "中世チュニック"
+			CSTR:ARG:上服 = 中世チュニック/要たくし上げ
+		CASE "汚れたワンピース"
+			CSTR:ARG:上服 = 汚れたワンピース/ワンピース/
+			CSTR:ARG:下服 = 汚れたスカート/ワンピース/
+		CASE "パーカー"
+			CSTR:ARG:上服 = パーカー/要たくし上げ/%CLOCOLOR_MAIDFACE("パーカー", "", ARG)%/
+		CASE "ノースリーブパーカー"
+			CSTR:ARG:上服 = ノースリーブパーカー/要たくし上げ/腋露出/%CLOCOLOR_MAIDFACE("ノースリーブパーカー", "", ARG)%/
+		CASE "ロングパーカー"
+			CSTR:ARG:上服 = ロングパーカー/要たくし上げ/ワンピース/%CLOCOLOR_MAIDFACE("パーカー", "", ARG)%/
+			CSTR:ARG:下服 = 裾/ワンピース/ロングパーカー/
+		CASE "前開きパーカー"
+			CSTR:ARG:上服 = 前開きパーカー/要たくし上げ/%CLOCOLOR_MAIDFACE("パーカー", "", ARG)%/
+		CASE "赤黒いノースリーブパーカー"
+			CSTR:ARG:上服 = 赤黒いノースリーブパーカー/腋露出/ワンピース/要たくし上げ/
+			CSTR:ARG:下服 = 裾/ワンピース/ロングパーカー/
+		CASE "白と金の装飾のされた民族衣装"
+			CSTR:ARG:上服 = 白と金の装飾のされた民族衣装/ワンピース/要たくし上げ
+			CSTR:ARG:下服 = スカート/ワンピース/
+		CASE "スーツ"
+			CSTR:ARG:上服 = スーツ/
+		CASE "執事服"
+			CSTR:ARG:上服 = 執事服/男物/ズボンセット/
+			CSTR:ARG:アウター = スラックス/ずれ不可/コキ不可/ズボン/男物可/社会の窓/ロングパンツ/
+		CASE "バスタオル"
+			CSTR:ARG:上服 = バスタオル/ワンピース/要たくし上げ
+			CSTR:ARG:下服 = 裾/ワンピース/
+		CASEELSE
+			CSTR:ARG:上服 = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:上服 = %MERGE_STR(CSTR:ARG:上服, STR_ADD)%
+
+;-------------------------------------------------
+;ARGのシャツが条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_UPPER(ARGS, ARG)
+#FUNCTION
+	SIF EQUIP:ARG:上服 == 0
+		RETURNF 0
+	SELECTCASE ARGS
+		CASE "Ｙシャツ"
+			SIF STRCOUNTS(CSTR:ARG:上服, "Ｙシャツ", "ワイシャツ")
+				RETURNF 1
+		CASE "ネクタイブレザー"
+			SIF STRCOUNT(CSTR:ARG:上服, ARGS)
+				RETURNF 1
+			SIF STRCOUNT(CSTR:ARG:上服, "ブレザー") && CHECK_OTHER("ネクタイ", ARG)
+				RETURNF 1
+		CASE "ネクタイブラウス"
+			SIF STRCOUNT(CSTR:ARG:上服, ARGS)
+				RETURNF 1
+			SIF STRCOUNT(CSTR:ARG:上服, "ブラウス") && CHECK_OTHER("ネクタイ", ARG)
+				RETURNF 1
+		CASE "はだけ可"
+			SIF STRCOUNT(CSTR:ARG:上服, "はだけた")
+				RETURNF 0
+			SIF STRCOUNT(CSTR:ARG:上服, "はだけ不可")
+				RETURNF 0
+			RETURNF 1
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:上服, ARGS)
+				RETURNF 1
+	ENDSELECT
+
+	RETURNF 0
+

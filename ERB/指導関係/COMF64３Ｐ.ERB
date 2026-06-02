@@ -13,21 +13,21 @@
 @COM64
 
 ;直接コマンドを指定した場合
-IF SELECTCOM == [[TRAIN:３Ｐ]]
+IF SELECTCOM == TNUM("３Ｐ")
 	TFLAG:３Ｐのときの主人のコマンド = 1
 	TFLAG:３Ｐのときの助手のコマンド = 2
 ELSE
-	SIF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:後背位]]
+	SIF SELECTCOM == TNUM("正常位]] || SELECTCOM == [[TRAIN:後背位")
 		A = 1
-	SIF SELECTCOM == [[TRAIN:後背位アナル]]
+	SIF SELECTCOM == TNUM("後背位アナル")
 		A = 2
-	SIF SELECTCOM == [[TRAIN:フェラチオ]] || SELECTCOM == [[TRAIN:イラマチオ]]
+	SIF SELECTCOM == TNUM("フェラチオ]] || SELECTCOM == [[TRAIN:イラマチオ")
 		A = 3
-	SIF PREVCOM == [[TRAIN:正常位]] || PREVCOM == [[TRAIN:後背位]]
+	SIF PREVCOM == TNUM("正常位]] || PREVCOM == [[TRAIN:後背位")
 		B = 1
-	SIF PREVCOM == [[TRAIN:後背位アナル]]
+	SIF PREVCOM == TNUM("後背位アナル")
 		B = 2
-	SIF PREVCOM == [[TRAIN:フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ]]
+	SIF PREVCOM == TNUM("フェラチオ]] || PREVCOM == [[TRAIN:イラマチオ")
 		B = 3
 	;前回コマンドが3Pでない
 	IF TFLAG:３Ｐ継続中 == 0
@@ -69,7 +69,7 @@ ELSE
 ENDIF
 SELECTCOM = 64
 SAVESTR:0 = 3P
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ(処女膜再生対応)
 SIF TFLAG:３Ｐのときの主人のコマンド == 1 || TFLAG:３Ｐのときの助手のコマンド == 1
@@ -649,7 +649,7 @@ ENDIF
 TFLAG:快楽経験 = 1
 
 ;屈服刻印２に相当
-TFLAG:屈服刻印2 = 2
+TFLAG:屈服刻印取得 = 2
 
 RETURN 1
 

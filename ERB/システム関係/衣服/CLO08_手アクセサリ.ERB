@@ -1,0 +1,114 @@
+﻿;-------------------------------------------------
+;キャラARGに手袋ARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_HANDACC, ARGS, ARG
+#DIMS MEMO_CLO
+
+	MEMO_CLO = %CSTR:ARG:手アクセサリ%
+
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする
+	STAIN:ARG:手アクセサリ = 0
+
+	CALL PALAM_HANDACC, ARGS, ARG
+
+	EQUIP:ARG:手アクセサリ = STRLENS(CSTR:ARG:手アクセサリ)
+	SIF MEMO_CLO != CSTR:ARG:手アクセサリ
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGの手袋の名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@HANDACC(ARG, ARGS)
+#FUNCTIONS
+
+	VARSET LOCALS
+	SELECTCASE ARGS
+		CASE "略"
+			IF CHECK_HANDACC("手露出", ARG)
+				LOCALS = 手
+			ELSEIF CHECK_HANDACC("指露出", ARG)
+				LOCALS = 指
+			ELSEIF CHECK_HANDACC("鎧", ARG)
+				LOCALS = 篭手
+			ELSEIF CHECK_HANDACC("肉球", ARG)
+				LOCALS = 肉球
+			ELSE
+				LOCALS = 手袋
+			ENDIF
+		CASE "種類"
+			;LOCALSに名称が入る
+			SPLIT CSTR:ARG:手アクセサリ, "/", LOCALS
+		CASE ""
+			;LOCALSに名称が入る
+			SPLIT CSTR:ARG:手アクセサリ, "/", LOCALS
+	ENDSELECT
+	RETURNF LOCALS
+
+;-------------------------------------------------
+;ARG番の手袋の名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_HANDACC(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		CASE 53
+			RESULTS = ロンググローブ
+		CASE 66
+			RESULTS = チアボンボン
+		CASE 74
+			RESULTS = バングル＆リング
+		CASE 83
+			RESULTS = レースパーティグローブ
+		CASE 85
+			RESULTS = エナメルロンググローブ
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGに手袋ARGSを着せた場合のCSTR処理
+;-------------------------------------------------
+@PALAM_HANDACC, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			CSTR:ARG:手アクセサリ = 
+		CASE "手袋"
+			CSTR:ARG:手アクセサリ = 手袋/
+		CASE "絹手袋"
+			CSTR:ARG:手アクセサリ = 絹手袋/
+		CASE "革手袋"
+			CSTR:ARG:手アクセサリ = 革手袋/
+		CASE "シルクグローブ"
+			CSTR:ARG:手アクセサリ = シルクグローブ/
+		CASE "ドレスグローブ"
+			CSTR:ARG:手アクセサリ = ドレスグローブ/ロング/レース/
+		CASE "レザースリーブ"
+			CSTR:ARG:手アクセサリ = レザースリーブ/肘まで/手露出/
+		CASE "ドレススリーブ"
+			CSTR:ARG:手アクセサリ = ドレススリーブ/ロング/レース/手露出/
+		CASE "アームバインダー"
+			CSTR:ARG:手アクセサリ = アームバインダー/ロング/革/指の使用禁止
+		CASEELSE
+			CSTR:ARG:手アクセサリ = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:手アクセサリ = %MERGE_STR(CSTR:ARG:手アクセサリ, STR_ADD)%
+
+;-------------------------------------------------
+;ARGの手袋が条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_HANDACC(ARGS, ARG)
+#FUNCTION
+
+	SIF EQUIP:ARG:手アクセサリ == 0
+		RETURNF 0
+	SIF STRCOUNT(CSTR:ARG:手アクセサリ, ARGS)
+		RETURNF 1
+	RETURNF 0
+

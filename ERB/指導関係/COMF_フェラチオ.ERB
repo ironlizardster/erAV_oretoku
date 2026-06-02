@@ -1,0 +1,375 @@
+﻿;-------------------------------------------------
+;フェラチオ実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:フェラチオ]]
+#FUNCTION
+    ;フェラチオ実行判定
+    RESULT = COMABLE_DEF(TNUM("フェラチオ")) && COND("口の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:フェラチオ]]
+    IF TEQUIP:獣姦プレイ
+        PRINTFORM 犬は
+    ELSE
+        PRINTFORM %CALLNAME:PLAYER%は
+    ENDIF
+    SIF TALENT:PLAYER:恋心 && TARGET = MASTER && TEQUIP:獣姦プレイ == 0
+        PRINT 慈しむような表情で、
+    SIF TALENT:PLAYER:淫乱
+        PRINT 自ら
+    PRINTFORM %CALLNAME:TARGET%の
+    SIF TALENT:淫乱 || PALAM:欲情 >= PALAMLV:3
+        PRINT 硬くそそり勃った
+    PRINTL ペニスを口に咥えて舐めまわした…
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:フェラチオ]](ARG=100)
+    ;-------------------------------------------------
+    ;フェラチオをされた対象
+    ;-------------------------------------------------
+    ;快Ｃのソース
+    TMP_SRC:TARGET:快Ｃ += CALC_刺激SOURCE("Ｃ刺激", TARGET, 刺激_緩やか)
+    TMP_SRC:TARGET:露出 = 220
+    TMP_SRC:TARGET:逸脱 = 50
+
+    ;調教者のTALENT:舌使いをみる
+    IF TALENT:PLAYER:舌使い || TEQUIP:獣姦プレイ
+        TIMES TMP_SRC:TARGET:快Ｃ , 2.00
+        TMP_SRC:TARGET:恭順 += TMP_SRC:TARGET:快Ｃ/20
+    ENDIF
+
+    IF PLAYER == MASTER || TARGET == MASTER
+        TEMP_NUM = TARGET
+        SIF TARGET == MASTER
+            TEMP_NUM = PLAYER
+        ;ABL:従順をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:信頼, 5)*10 + 80) / 100
+
+        ; ;ABL:奉仕精神をみる
+        ; TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TEMP_NUM:奉仕精神, 6)*30 + 50) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:PLAYER:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:射精中毒, 5)*10 + 80) / 100
+    ELSE
+        ;TARGETからPLAYERへの相性を見る
+        SELECTCASE RELATION:(NO:PLAYER)
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+    ENDIF
+
+    ;奉仕者
+    TMP_SRC:PLAYER:屈従 += 1500
+    TMP_SRC:PLAYER:逸脱 += 500
+
+    ;ABL:奉仕精神をみる
+    TMP_SRC:PLAYER:性行動 += 420 + MIN(ABL:PLAYER:奉仕精神, 5) * 80
+    TMP_SRC:PLAYER:達成 += 150 + MIN(ABL:PLAYER:奉仕精神, 5) * 150 + LIMIT(ABL:PLAYER:奉仕精神 - 1,0,4) * 150 + LIMIT(ABL:PLAYER:奉仕精神 - 3,0,2) * 300 + LIMIT(ABL:PLAYER:奉仕精神 - 4,0,1) * 100
+    TMP_SRC:PLAYER:不潔 += 100 + COM_汚れ(TARGET,STNNUM("ペニス"),STNNUM("口"),1,1) * 40
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:PLAYER:技巧
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.5
+            TIMES TMP_SRC:PLAYER:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 0.8
+            TIMES TMP_SRC:PLAYER:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.2
+            TIMES TMP_SRC:PLAYER:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.5
+            TIMES TMP_SRC:PLAYER:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 2
+            TIMES TMP_SRC:PLAYER:達成 , 2
+    ENDSELECT
+
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:PLAYER:奉仕精神
+        CASE 0
+            TIMES TMP_SRC:PLAYER:不潔 , 4.00
+        CASE 1
+            TIMES TMP_SRC:PLAYER:不潔 , 2.5
+        CASE 2
+            TIMES TMP_SRC:PLAYER:不潔 , 1.5
+        CASE 3
+            TIMES TMP_SRC:PLAYER:不潔 , 1
+        CASE 4
+            TIMES TMP_SRC:PLAYER:不潔 , 0.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:不潔 , 0.1
+    ENDSELECT
+    
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:フェラチオ]](ARG=100)
+    NOWEX:TARGET:体力変動 += 5
+    NOWEX:TARGET:気力変動 += 5
+    NOWEX:PLAYER:体力変動 += 10
+    NOWEX:PLAYER:気力変動 += 10
+    SIF !TALENT:PLAYER:精愛味覚
+        NOWEX:PLAYER:気力変動 *= 10
+
+    NOWEX:PLAYER:フェラ経験 += 1
+
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 3
+        NOWEX:PLAYER:レズ経験 = 3
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 3
+        NOWEX:PLAYER:ＢＬ経験 = 3
+    ENDIF
+
+    IF CFLAG:好感度 >= 1000 && PLAYER == MASTER
+        NOWEX:愛情経験 += 2
+    ELSEIF CFLAG:PLAYER:好感度 >= 1000 && TARGET == MASTER
+        NOWEX:PLAYER:愛情経験 += 2
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:フェラチオ]]
+    SIF PLAYER == MASTER
+        TCVAR:主人経験 += 1
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+        ;屈服刻印３に相当
+        TCVAR:PLAYER:屈服刻印取得 = 2
+    ENDIF
+
+    IF TEQUIP:PLAYER:獣姦プレイ && !CFLAG:PLAYER:初キス相手
+        ;犬の%CSTR:男性器呼び方%と初キス
+		;屈服刻印３に相当
+		TCVAR:PLAYER:屈服刻印2 = 3
+    ENDIF
+
+    TCVAR:快楽経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れの処理
+    ;-------------------------------------------------
+    ;奴隷のＰ⇔調教者の口の汚れが移動
+    STAIN:ペニス |= STAIN:PLAYER:口
+    STAIN:PLAYER:口 |= STAIN:ペニス
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:フェラチオ]]オナニー
+    PRINTFORM %CALLNAME:PLAYER%は
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        PRINT 熱っぽい表情で
+    SIF TALENT:PLAYER:淫乱
+        PRINT 淫猥な表情で
+    SIF TALENT:PLAYER:舌使い
+        PRINT 舌を竿に絡めて
+    PRINT ペニスを咥えたまま自らの
+    IF TEQUIP:PLAYER:バイブ && TEQUIP:PLAYER:アナルバイブ
+        PRINTL 秘部とアナルに差し込まれたバイブを抜き差しした…
+    ELSEIF TEQUIP:PLAYER:バイブ
+        PRINTL 秘部に差し込まれたバイブを抜き差しした…
+    ELSEIF TEQUIP:PLAYER:アナルバイブ
+        PRINTL アナルに差し込まれたバイブを抜き差しした…
+    ELSE
+        IF IS_MALE(PLAYER)
+            PRINTL 陰茎をしごいた…
+        ELSE
+            PRINTL 秘部をまさぐった…
+        ENDIF
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:フェラチオ]]ローター自慰
+    PRINTFORM %CALLNAME:PLAYER%は
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        PRINT 熱っぽい表情で
+    SIF TALENT:PLAYER:淫乱
+        PRINT 淫猥な表情で
+    SIF TALENT:PLAYER:舌使い
+        PRINT 舌を竿に絡めて
+    PRINT ペニスを咥えたまま自ら
+
+    IF IS_MALE(PLAYER)
+        SAVESTR:2 = 陰茎をしごき
+        SAVESTR:3 = 牡
+    ELSEIF !IS_FUTA(PLAYER)
+        SAVESTR:2 = 秘部をまさぐり
+        SAVESTR:3 = 牝
+    ELSEIF IS_FUTA(PLAYER)
+        SAVESTR:2 = 勃起したふたなりペニスをしごき、秘部をまさぐり
+        SAVESTR:3 = 牝
+    ENDIF
+    
+    IF TCVAR:PLAYER:やる気 < TCVAR:PLAYER:難易度
+        PRINTFORML %CALLNAME:PLAYER%に自慰を命令してみたが拒否された。もう少し調教が必要なようだ。
+    ELSEIF TCVAR:PLAYER:やる気 > TCVAR:PLAYER:難易度 && TCVAR:PLAYER:やる気 < 50
+        ;着衣設定
+        IF CFLAG:PLAYER:着衣状態 & 8
+            CALL PRINT_上着タイプ(PLAYER)
+            PRINT の前をめくり上げて性器をあらわにし、
+        ENDIF
+        SIF IS_プライド高い(PLAYER)
+            PRINT プライドの高さを見せながら
+        IF TALENT:PLAYER:感情乏しい
+            PRINT 無表情な顔で黙々と
+        ELSEIF TALENT:PLAYER:臆病 || IS_大人しい(PLAYER)
+            PRINT 震える指先で、
+        ELSEIF TALENT:PLAYER:ナマイキ
+            PRINT 反抗的に睨んできたが、
+        ELSEIF TALENT:PLAYER:気丈
+            PRINT 屈辱に唇を噛み締めて、
+        ELSEIF IS_恥じらい(PLAYER)
+            PRINT 恥ずかしさに耳まで真っ赤になりながら、
+        ENDIF
+        SIF TEQUIP:PLAYER:撮影中
+            PRINT ビデオカメラの前で
+        IF PALAM:PLAYER:欲情 >= PALAMLV:3
+            PRINT 硬く尖ったクリトリスに震えるローターを押し当てて
+        ELSE
+            PRINT クリトリスに震えるローターを押し当てて
+        ENDIF
+        PRINTL オナニーを始めた。
+    IF TCVAR:PLAYER:やる気 >=50 && TCVAR:PLAYER:やる気 < 80
+        PRINTFORML 調教の成果が出たのか、%CALLNAME:PLAYER%は%CALLNAME:TARGET%の命令に従って従順にオナニーを始めた。
+    ELSEIF TCVAR:PLAYER:やる気 >= 80
+        PRINTFORML %CALLNAME:TARGET%からの自慰の命令に嫌がるそぶりも見せず、%CALLNAME:PLAYER%は完全に飼いならされた%SAVESTR:3%の表情でオナニーを始めた。
+    ENDIF
+    IF TEQUIP:PLAYER:バイブ && TEQUIP:PLAYER:アナルバイブ && ABL:PLAYER:Ｖ感覚 >= 5 && ABL:PLAYER:Ａ感覚 >= 5 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%はよだれをふきこぼし、ビクビクと身体を痙攣させながら鳴き叫んでいる
+        PRINTFORML どうやら絶頂から降りられず、イキっぱなしになっているようだ…
+    ELSEIF TEQUIP:PLAYER:バイブ && ABL:PLAYER:Ｖ感覚 >= 5 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%は愛液が飛び散るのもお構いなしに、バイブを激しく出し入れしている
+        PRINTFORML どうやらもうほかの事を気にする余裕も無いようだ…
+    ELSEIF TEQUIP:PLAYER:アナルバイブ && ABL:PLAYER:Ａ感覚 >= 5 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%はガクガク身体を震わせながら、アヌスにバイブを突きこんでいる
+        PRINTFORML どうやら襞をえぐられるたびに何度も絶頂してしまっているようだ…
+    ELSEIF ABL:PLAYER:信頼 >= 3 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%は嬌声をあげながら一心不乱に自らの%SAVESTR:2%続けている
+        PRINTFORML どうやら止めたくても手が勝手に動いて止まらないようだ…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:フェラチオ]]電マ自慰
+    PRINTFORM %CALLNAME:PLAYER%は
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        PRINT 熱っぽい表情で
+    SIF TALENT:PLAYER:淫乱
+        PRINT 淫猥な表情で
+    SIF TALENT:PLAYER:舌使い
+        PRINT 舌を竿に絡めて
+    PRINT ペニスを咥えたまま自ら
+
+    IF IS_MALE(PLAYER)
+        SAVESTR:2 = 陰茎をしごき
+        SAVESTR:3 = 牡
+    ELSEIF !IS_FUTA(PLAYER)
+        SAVESTR:2 = 秘部をまさぐり
+        SAVESTR:3 = 牝
+    ELSEIF IS_FUTA(PLAYER)
+        SAVESTR:2 = 勃起したふたなりペニスをしごき、秘部をまさぐり
+        SAVESTR:3 = 牝
+    ENDIF
+    
+    IF TCVAR:PLAYER:やる気 < TCVAR:PLAYER:難易度
+        PRINTFORML %CALLNAME:PLAYER%に自慰を命令してみたが拒否された。もう少し調教が必要なようだ。
+    ELSEIF TCVAR:PLAYER:やる気 > TCVAR:PLAYER:難易度 && TCVAR:PLAYER:やる気 < 50
+        ;着衣設定
+        IF CFLAG:PLAYER:着衣状態 & 8
+            CALL PRINT_上着タイプ(PLAYER)
+            PRINT の前をめくり上げて性器をあらわにし、
+        ENDIF
+        SIF IS_プライド高い(PLAYER)
+            PRINT プライドの高さを見せながら
+        IF TALENT:PLAYER:感情乏しい
+            PRINT 無表情な顔で黙々と
+        ELSEIF TALENT:PLAYER:臆病 || IS_大人しい(PLAYER)
+            PRINT 震える指先で、
+        ELSEIF TALENT:PLAYER:ナマイキ
+            PRINT 反抗的に睨んできたが、
+        ELSEIF TALENT:PLAYER:気丈
+            PRINT 屈辱に唇を噛み締めて、
+        ELSEIF IS_恥じらい(PLAYER)
+            PRINT 恥ずかしさに耳まで真っ赤になりながら、
+        ENDIF
+        SIF TEQUIP:PLAYER:撮影中
+            PRINT ビデオカメラの前で
+        IF HAVE_PENIS(PLAYER)
+            PRINT 股間
+        ELSE
+            PRINT 秘所
+        ENDIF
+        PRINT に振動している電気按摩を押しつけて
+        PRINTL オナニーを始めた。
+    IF TCVAR:PLAYER:やる気 >=50 && TCVAR:PLAYER:やる気 < 80
+        PRINTFORML 調教の成果が出たのか、%CALLNAME:PLAYER%は%CALLNAME:TARGET%の命令に従って従順にオナニーを始めた。
+    ELSEIF TCVAR:PLAYER:やる気 >= 80
+        PRINTFORML %CALLNAME:TARGET%からの自慰の命令に嫌がるそぶりも見せず、%CALLNAME:PLAYER%は完全に飼いならされた%SAVESTR:3%の表情でオナニーを始めた。
+    ENDIF
+    IF TEQUIP:PLAYER:バイブ && TEQUIP:PLAYER:アナルバイブ && ABL:PLAYER:Ｖ感覚 >= 5 && ABL:PLAYER:Ａ感覚 >= 5 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%はよだれをふきこぼし、ビクビクと身体を痙攣させながら鳴き叫んでいる
+        PRINTFORML どうやら絶頂から降りられず、イキっぱなしになっているようだ…
+    ELSEIF TEQUIP:PLAYER:バイブ && ABL:PLAYER:Ｖ感覚 >= 5 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%は愛液が飛び散るのもお構いなしに、バイブを激しく出し入れしている
+        PRINTFORML どうやらもうほかの事を気にする余裕も無いようだ…
+    ELSEIF TEQUIP:PLAYER:アナルバイブ && ABL:PLAYER:Ａ感覚 >= 5 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%はガクガク身体を震わせながら、アヌスにバイブを突きこんでいる
+        PRINTFORML どうやら襞をえぐられるたびに何度も絶頂してしまっているようだ…
+    ELSEIF ABL:PLAYER:信頼 >= 3 && ABL:PLAYER:Ｃ感覚 >= 5 && ABL:PLAYER:Ｂ感覚 >= 5 && PALAM:PLAYER:欲情 >= PALAMLV:4 && PREVCOM:PLAYER == TNUM("オナニー")
+        PRINTFORML %CALLNAME:PLAYER%は嬌声をあげながら一心不乱に自らの%SAVESTR:2%続けている
+        PRINTFORML どうやら止めたくても手が勝手に動いて止まらないようだ…
+    ENDIF
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:フェラチオ]]パイズリ
+    PRINTFORM %CALLNAME:PLAYER%は
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        PRINT うっとりとした表情をしながら、
+    IF IS_貧乳(PLAYER)
+        PRINTL 薄い胸にペニスを擦りつけ、亀頭に舌を這わせた…
+    ELSEIF IS_巨乳(PLAYER)
+        PRINTL ペニスを豊満な胸で包み込み、頭を出したペニスを舐めて刺激している…
+    ELSEIF IS_デカパイ(PLAYER)
+        PRINTL 豊満すぎる程の胸でペニスを包み隠してしまい、自分の胸に顔を突っ込んでペニスを舐め上げている…
+    ELSE
+        PRINTL 胸でペニスをはさみ、ペニスを舐めて刺激している…
+    ENDIF
+

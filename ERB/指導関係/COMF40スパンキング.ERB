@@ -7,7 +7,7 @@
 ;前回と今回の調教者が同じ
 IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
 	;前回の調教が後背位、後背位・胸愛撫、立ちバック、後背位ＳＰだと後背位・スパンキングに
-	IF PREVCOM == [[TRAIN:後背位]] || PREVCOM == [[TRAIN:後背位胸愛撫]] || PREVCOM == [[TRAIN:立ちバック]] || PREVCOM == [[TRAIN:後背位ＳＰ]]
+	IF PREVCOM == TNUM("後背位]] || PREVCOM == [[TRAIN:後背位胸愛撫]] || PREVCOM == [[TRAIN:立ちバック]] || PREVCOM == [[TRAIN:後背位ＳＰ")
 		CALL COM_ABLE132
 		SIF RESULT == 1
 			JUMP COM132
@@ -16,7 +16,7 @@ ENDIF
 
 PRINTL スパンキング
 SAVESTR:0 = スパンキング
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;実際には苦痛があるためもっと体力気力をもっていかれる
 LOSEBASE:体力 += 80

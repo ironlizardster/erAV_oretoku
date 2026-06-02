@@ -6,7 +6,7 @@
 
 PRINTL ボンデージ装着
 SAVESTR:0 = ボンデージ装着
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;終了時は修正なし
 IF TEQUIP:助手ボンデージ
@@ -118,7 +118,7 @@ SIF TALENT:臆病
 
 SOURCE:逸脱 += A
 
-UP:[[UP:恐怖]] += SOURCE:逸脱
+UP:恐怖 += SOURCE:逸脱
 
 ;-------------------------------------------------
 ;経験上昇

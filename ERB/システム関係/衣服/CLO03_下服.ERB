@@ -1,0 +1,454 @@
+﻿;-------------------------------------------------
+;キャラARGにARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_LOWER, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:下服%
+	;汚れ＆ずれたりしたフラグ等を初期化して新品にする
+	STAIN:ARG:下服 = 0
+
+	CALL PALAM_LOWER, ARGS, ARG
+
+	;コモンフラグを設定する
+	CSTR:ARG:下服 = %SET_CLO_COMMON(CSTR:ARG:下服, ARG)%
+	EQUIP:ARG:下服 = STRLENS(CSTR:ARG:下服)
+
+	;セットじゃない場合に上服のセットを脱がす
+	IF (CHECK_UPPER("ワンピース", ARG) || CHECK_LOWER("ズボンセット", ARG) || CHECK_UPPER("上下セット", ARG)) && CSTR:ARG:上服 != CSTR:ARG:下服
+		CALL SET_UPPER, "", ARG
+
+	SIF !TFLAG:着替えた && MEMO_CLO != CSTR:ARG:下服
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGの下服の名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@LOWER(ARG, ARGS)
+#FUNCTIONS
+#DIM LCOUNT
+#DIMS COLOR_ABOUT
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "略"
+			IF CHECK_LOWER("ブルマ", ARG)
+				RESULTS = ブルマ
+			ELSEIF CHECK_LOWER("ホットパンツ", ARG)
+				RESULTS = ホットパンツ
+			ELSEIF CHECK_LOWER("ショートパンツ", ARG)
+				RESULTS = ショートパンツ
+			ELSEIF CHECK_LOWER("スパッツ", ARG)
+				RESULTS = スパッツ
+			ELSEIF CHECK_LOWER("パジャマ", ARG)
+				RESULTS = パジャマズボン
+			ELSEIF CHECK_LOWER("ハーフパンツ", ARG)
+				RESULTS = ハーフパンツ
+			ELSEIF CHECK_LOWER("ショートパンツ", ARG)
+				RESULTS = ショートパンツ
+			ELSEIF CHECK_LOWER("ジャージ", ARG)
+				RESULTS = ジャージ
+			;ELSEIF CHECK_LOWER("ローライズジーンズ", ARG)
+			;	RESULTS = ローライズジーンズ
+			ELSEIF CHECK_LOWER("ジーンズ", ARG)
+				RESULTS = ジーンズ
+			ELSEIF CHECK_LOWER("キュロットスカート", ARG)
+				RESULTS = キュロット
+			ELSEIF CHECK_LOWER("馬上袴", ARG)
+				RESULTS = 袴
+			ELSEIF CHECK_UPPER("巫女服", ARG)
+				RESULTS = 緋袴
+			ELSEIF CHECK_LOWER("網タイツ", ARG) || CHECK_LOWER("網パンスト", ARG)
+				RESULTS = "網タイツ"
+			ELSEIF CHECK_LOWER("タイツ", ARG)
+				RESULTS = "タイツ"
+			ELSEIF CHECK_LOWER("パンスト", ARG)
+				RESULTS = "パンスト"
+			ELSEIF CHECK_LOWER("レギンス", ARG)
+				RESULTS = レギンス
+			ELSEIF EQUIP:ARG:下服
+				RESULTS = ズボン
+			ELSEIF CHECK_LOWER("鎧", ARG)
+				RESULTS = 垂れ
+			ELSEIF CHECK_LOWER("パレオ", ARG)
+				RESULTS = パレオ
+			ELSEIF CHECK_LOWER("ベビードール", ARG)
+				RESULTS = 裾
+			ELSEIF CHECK_LOWER("シャツ", ARG)
+				RESULTS = 裾
+			ELSEIF CHECK_LOWER("袴", ARG)
+				RESULTS = 袴
+			ELSEIF CHECK_LOWER("和服", ARG) || CHECK_LOWER("振袖", ARG) || CHECK_LOWER("着物", ARG) || CHECK_LOWER("浴衣", ARG)
+				RESULTS = 裾
+			ELSEIF CHECK_LOWER("巻きスカート", ARG)
+				RESULTS = 腰布
+			ELSEIF CHECK_LOWER("裾", ARG)
+				RESULTS = 裾
+			ELSEIF CHECK_LOWER("前垂れ", ARG)
+				RESULTS = 前垂れ
+			ELSE
+				RESULTS = スカート
+			ENDIF
+			SIF CHECK_LOWER("オープン", ARG)
+				RESULTS = "オープン"+RESULTS
+		CASE "種類"
+			SPLIT CSTR:ARG:下服, "/", RESULTS
+			SIF CHECK_UPPER("巫女服", ARG)
+				RESULTS = 緋袴
+		CASE ""
+			;RESULTS:0に名称、RESULTS:1～に色が入る場合がある
+			SPLIT CSTR:ARG:下服, "/", RESULTS
+			SIF CHECK_UPPER("巫女服", ARG)
+				RESULTS = 緋袴
+			RESULTS '= @"%CLOCOLOR(CSTR:ARG:下服, "形容詞")%%RESULTS%"
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番の下服の名称
+;-------------------------------------------------
+@NAME_LOWER(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		; 股間を覆わないのツーピース(1～100)
+		CASE 1:
+			RESULTS = "普段着/上下セット/スカート";
+		CASE 2:
+			RESULTS = "極亜久高校制服/上下セット/スカート";
+		CASE 3:
+			RESULTS = "日の出高校制服/上下セット/スカート";
+		CASE 4:
+			RESULTS = "花丸高校制服/上下セット/スカート";
+		CASE 5:
+			RESULTS = "親切高校制服/上下セット/スカート";
+		CASE 6:
+			RESULTS = "星英高校制服/上下セット/スカート";
+		CASE 7:
+			RESULTS = "パライソ中学制服/上下セット/スカート";
+		CASE 8:
+			RESULTS = "私立メキメキ学園制服/上下セット/スカート";
+		CASE 17:
+			RESULTS = "高校制服/上下セット/スカート";
+		CASE 18:
+			RESULTS = "中学制服/上下セット/スカート";
+		CASE 19:
+			RESULTS = "セーラー服/上下セット/スカート";
+		CASE 20:
+			RESULTS = "麻帆良女子中学制服/上下セット/スカート";
+		CASE 21:
+			RESULTS = "スーツ/上下セット/スカート";
+		CASE 22:
+			RESULTS = "子供服/上下セット/スカート";
+		CASE 23:
+			RESULTS = "ブランド服/上下セット/スカート";
+		CASE 24:
+			RESULTS = "ナース服/ワンピース";
+		CASE 25:
+			RESULTS = "メイド服/ワンピース";
+		CASE 26:
+			RESULTS = "ウェイトレス制服/上下セット/スカート";
+		CASE 27:
+			RESULTS = "コンビニ制服/上下セット/スカート";
+		CASE 28:
+			RESULTS = "事務員制服/上下セット/スカート";
+		CASE 29:
+			RESULTS = "ＣＰＧ制服/上下セット/スカート";
+		CASE 30:
+			RESULTS = "パンクロリータ/上下セット/スカート";
+		CASE 31:
+			RESULTS = "ブレザー/上下セット/スカート";
+		CASE 32:
+			RESULTS = "喪服/上下セット/スカート";
+		CASE 40:
+			RESULTS = "デニムミニスカート";
+		CASE 51:
+			RESULTS = "軍服/上下セット/スカート";
+		CASE 52:
+			RESULTS = "ゴシックロリータ/上下セット/スカート";
+		CASE 53:
+			RESULTS = "麻帆良芸大付属中制服/上下セット/スカート";
+		CASE 54:
+			RESULTS = "チアリーダー衣装/上下セット/スカート";
+		CASE 55:
+			RESULTS = "テニスウェア/上下セット/スカート";
+		CASE 56:
+			RESULTS = "ハロウィン魔女っ子服/上下セット/スカート";
+		CASE 99:
+			RESULTS = "ガラスのメイド服/上下セット/スカート";
+		; 股間を覆うタイプのツーピース(101～200)
+		CASE 101:
+			RESULTS = "普段着/ズボンセット";
+		CASE 102:
+			RESULTS = "スーツ/ズボンセット";
+		CASE 103:
+			RESULTS = "ジャージ/ズボンセット";
+		CASE 104:
+			RESULTS = "巫女服/ズボンセット";
+		CASE 105:
+			RESULTS = "野球のユニフォーム/ズボンセット";
+		CASE 106:
+			RESULTS = "軍服/ズボンセット";
+		CASE 108:
+			RESULTS = "ブレザー/ズボンセット";
+		CASE 109:
+			RESULTS = "ブルマ";
+		CASE 110:
+			RESULTS = "忍者袴/ズボンセット";
+		CASE 111:
+			RESULTS = "王子の正装/ズボンセット";
+		CASE 122:
+			RESULTS = "子供服/ズボンセット";
+		CASE 131:
+			RESULTS = "パジャマ/ズボンセット";
+		CASE 140:
+			RESULTS = "ラスタティアードミニスカート";
+		; 股間を覆うタイプで全裸で付けるツーピース(191～200)
+		CASE 192:
+			RESULTS = "陸上部ユニフォーム/上下セット";
+		; 股間を覆わないタイプの全身衣装(201～240)
+		CASE 201:
+			RESULTS = "ワンピーススカート/ワンピース";
+		CASE 202:
+			RESULTS = "和服/ワンピース/着物";
+		CASE 203:
+			RESULTS = "カクテルドレス/ワンピース";
+		CASE 204:
+			RESULTS = "浴衣/ワンピース/着物";
+		CASE 205:
+			RESULTS = "マイクロミニタイトワンピース/ワンピース";
+		CASE 221:
+			RESULTS = "チャイナドレス/ワンピース";
+		CASE 222:
+			RESULTS = "フェミニンワンピース/ワンピース";
+		CASE 229:
+			RESULTS = "中学校制服/ワンピース";
+		CASE 230:
+			RESULTS = "聖ウルスラ高校制服/ワンピース";
+		CASE 231:
+			RESULTS = "修道服/ワンピース";
+		CASE 232:
+			RESULTS = "ワンピーススーツ/ワンピース";
+		CASE 233:
+			RESULTS = "女陰陽師の衣装/ワンピース";
+		CASE 240:
+			RESULTS = "ウェディングドレス/ワンピース";               
+	ENDSELECT
+	RETURNF RESULTS
+
+
+;-------------------------------------------------
+;キャラARGに下服ARGSを着せた場合のCSTR処理
+;-------------------------------------------------
+@PALAM_LOWER, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			CSTR:ARG:下服 = 
+		CASE "ブルマ"
+			CSTR:ARG:下服 = ブルマ/%CLOCOLOR_MAIDFACE("ブルマ", "", ARG)%/
+		;CASE "ハイレグブルマ"
+		;	CSTR:ARG:下服 = ハイレグブルマ/%CLOCOLOR_MAIDFACE("ブルマ", "", ARG)%/Ｔバック/
+		CASE "スパッツ"
+			CSTR:ARG:下服 = スパッツ/ずれ不可/%CLOCOLOR_MAIDFACE("スパッツ", "", ARG)%/
+		CASE "ホットパンツ", "ショートパンツ"
+			CSTR:ARG:下服 = %ARGS%/ずれ不可/コキ不可/隙間チラ可/ズボン/社会の窓/%CLOCOLOR_MAIDFACE("ホットパンツ", "", ARG)%/
+		CASE "前開きホットパンツ", "前開きショートパンツ"
+			CSTR:ARG:下服 = %ARGS%/ずれ不可/コキ不可/隙間チラ可/ズボン/社会の窓/%CLOCOLOR_MAIDFACE("ホットパンツ", "", ARG)%/
+		CASE "ダメージホットパンツ", "ダメージショートパンツ"
+			CSTR:ARG:下服 = %ARGS%/ずれ不可/コキ不可/隙間チラ可/ズボン/社会の窓/%CLOCOLOR_MAIDFACE("ホットパンツ", "", ARG)%/
+		CASE "ミニホットパンツ", "ミニショートパンツ"
+			CSTR:ARG:下服 = %ARGS%/ずれ不可/コキ不可/隙間チラ可/ローライズ/ズボン/社会の窓/%CLOCOLOR_MAIDFACE("ホットパンツ", "", ARG)%/
+		CASE "ロングパンツ"
+			CSTR:ARG:下服 = ロングパンツ/ずれ不可/コキ不可/ズボン/ロングパンツ/%CLOCOLOR_MAIDFACE("ロングパンツ", "", ARG)%/
+		CASE "前開きロングパンツ"
+			CSTR:ARG:下服 = 前開きロングパンツ/ずれ不可/コキ不可/ズボン/ロングパンツ/%CLOCOLOR_MAIDFACE("ロングパンツ", "", ARG)%/
+
+		CASE "ハーフパンツ"
+			CSTR:ARG:下服 = ハーフパンツ/ずれ不可/コキ不可/隙間チラ可/ズボン/男物可/
+		CASE "ジャージズボン"
+			CSTR:ARG:下服 = ジャージズボン/ずれ不可/コキ不可/ズボン/男物可/
+		CASE "ジーンズ"
+			CSTR:ARG:下服 = ジーンズ/ずれ不可/コキ不可/ズボン/男物可/社会の窓/ロングパンツ/%CLOCOLOR_MAIDFACE("ジーンズ", "", ARG)%/
+		CASE "前開きジーンズ"
+			CSTR:ARG:下服 = 前開きジーンズ/ずれ不可/コキ不可/ズボン/男物可/社会の窓/ロングパンツ/%CLOCOLOR_MAIDFACE("ジーンズ", "", ARG)%/
+		CASE "ローライズジーンズ"
+			CSTR:ARG:下服 = ローライズジーンズ/ずれ不可/コキ不可/ズボン/社会の窓/ロングパンツ/%CLOCOLOR_MAIDFACE("ジーンズ", "", ARG)%/
+		CASE "レギンス"
+			CSTR:ARG:下服 = レギンス/ずれ不可/コキ不可/ズボン/
+		CASE "スキニーパンツ"
+			CSTR:ARG:下服 = スキニーパンツ/ずれ不可/コキ不可/ズボン/ロングパンツ/%CLOCOLOR_MAIDFACE("ロングパンツ", "", ARG)%/
+
+		CASE "パンスト"
+			CSTR:ARG:下服 = パンスト/ずれ不可/コキ不可/シースルー/%CLOCOLOR_MAIDFACE("パンスト", "", ARG)%/
+		CASE "網パンスト"
+			CSTR:ARG:下服 = 網パンスト/ずれ不可/コキ不可/レース/黒/
+		CASE "オープンパンスト"
+			CSTR:ARG:下服 = オープンパンスト/ずれ不可/コキ不可/Ｖ露出/Ａ露出/
+		CASE "パンスト黒", "黒いパンスト"
+			CSTR:ARG:下服 = パンスト/ずれ不可/コキ不可/シースルー/黒/
+		CASE "パンスト赤"
+			CSTR:ARG:下服 = パンスト/ずれ不可/コキ不可/シースルー/赤/
+		CASE "パンスト白"
+			CSTR:ARG:下服 = パンスト/ずれ不可/コキ不可/シースルー/白/
+
+		CASE "タイツ"
+			CSTR:ARG:下服 = タイツ/ずれ不可/コキ不可/%CLOCOLOR_MAIDFACE("タイツ", "", ARG)%/
+		CASE "オープンタイツ"
+			CSTR:ARG:下服 = オープンタイツ/ずれ不可/コキ不可/Ｖ露出/Ａ露出/%CLOCOLOR_MAIDFACE("タイツ", "", ARG)%/
+		CASE "網タイツ"
+			CSTR:ARG:下服 = 網タイツ/ずれ不可/コキ不可/黒/
+		CASE "オープン網タイツ"
+			CSTR:ARG:下服 = オープン網タイツ/ずれ不可/コキ不可/Ｖ露出/Ａ露出/黒/
+
+		CASE "オーバーオール"
+			CSTR:ARG:下服 = オーバーオール/ずれ不可/コキ不可/ズボン/男物可/社会の窓/スカート不可/
+
+		CASE "ズボン"
+			CSTR:ARG:下服 = ズボン/ずれ不可/コキ不可/ズボン/男物可/社会の窓/ロングパンツ/%CLOCOLOR_MAIDFACE("ロングパンツ", "", ARG)%/
+		CASE "前開きズボン"
+			CSTR:ARG:下服 = 前開きズボン/ずれ不可/コキ不可/ズボン/男物可/社会の窓/ロングパンツ/%CLOCOLOR_MAIDFACE("ロングパンツ", "", ARG)%/
+		CASE "スラックス"
+			CSTR:ARG:下服 = スラックス/ずれ不可/コキ不可/ズボン/男物可/社会の窓/ロングパンツ/%CLOCOLOR_MAIDFACE("ロングパンツ", "", ARG)%/
+		CASE "キュロットスカート"
+			CSTR:ARG:下服 = キュロットスカート/ずれ不可/コキ不可/隙間チラ可/ズボン/
+		CASE "馬上袴"
+			CSTR:ARG:下服 = 馬上袴/ずれ不可/コキ不可/ズボン/男物可/スカート不可/
+		CASE "巫女服"
+			CSTR:ARG:下服 = 巫女服/ズボンセット/ずれ不可/コキ不可/ズボン/男物可/スカート不可/
+		CASE "サンタズボン"
+			CSTR:ARG:下服 = サンタズボン/ずれ不可/コキ不可/ズボン/男物可/
+		CASE "パニエ入りサーキュラスカート"
+			CSTR:ARG:下服 = パニエ入りサーキュラスカート/フリル/
+		CASE "花柄パレオ"
+			CSTR:ARG:下服 = 花柄パレオ/水着/花柄/
+		CASE "パレオ"
+			CSTR:ARG:下服 = パレオ/水着/
+		CASE "タイトスカート", "ロングタイトスカート", "ミニタイトスカート", "マイクロタイトスカート"
+			CSTR:ARG:下服 = %ARGS%/シャツイン/
+		CASEELSE
+			CSTR:ARG:下服 = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:下服 = %MERGE_STR(CSTR:ARG:下服, STR_ADD)%
+
+
+;-------------------------------------------------
+;ARGの下服が条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_LOWER(ARGS, ARG)
+#FUNCTION
+	SIF EQUIP:ARG:下服 == 0
+		RETURNF 0
+
+	SELECTCASE ARGS
+		CASE "シャツ"
+			SIF STRCOUNT(CSTR:ARG:下服, "シャツ") && STRCOUNT(CSTR:ARG:下服, "シャツイン") == 0
+				RETURNF 1
+		CASE "超ミニ"
+			SIF STRCOUNTS(CSTR:ARG:下服, "超ミニ", "マイクロ")
+				RETURNF 1
+		CASE "ミニ"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ミニ", "マイクロ")
+				RETURNF 1
+		CASE "スカート"
+			SIF STRCOUNTS(CSTR:ARG:下服, "スカート", "ワンピース")
+				RETURNF 1
+		CASE "前開き可"
+			;既に開かれている
+			SIF STRCOUNT(CSTR:ARG:下服, "前開き")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:下服, "ホットパンツ", "ロングパンツ")
+				RETURNF 1
+		CASE "パンスト"
+			;タイツもOK
+			SIF STRCOUNTS(CSTR:ARG:下服, "パンスト", "タイツ") == 0
+				RETURNF 0
+			RETURNF 1
+		;主に埴輪ルックの判定で使う
+		CASE "丈長ズボン"
+			;ズボンじゃないとダメ
+			SIF STRCOUNTS(CSTR:ARG:下服, "ズボン", "ロングパンツ") == 0
+				RETURNF 0
+			;丈の短いもの
+			SIF STRCOUNTS(CSTR:ARG:下服, "ホットパンツ", "ショート")
+				RETURNF 0
+			RETURNF 1
+		CASE "股間の隙間"
+			;太ももの付け根までを布地が締め付けている服
+			SIF STRCOUNTS(CSTR:ARG:下服, "スパッツ", "ホットパンツ", "ショートパンツ")
+				RETURNF 1
+		;主に"アソコのチラ見せ撮影"の判定で使う
+		CASE "めくり可能"
+			;めくれなさそうなもの
+			SIF STRCOUNTS(CSTR:ARG:下服, "パンスト", "ずれ不可")
+				RETURNF 0
+			RETURNF 1
+		;ずれ不可でなく、ずらしていない
+		CASE "ずらし可", "ずらせる"
+			SIF STRCOUNT(CSTR:ARG:下服, "Ｖ露出")
+				RETURNF 0
+			IF STRCOUNT(CSTR:ARG:下服, "ファスナー")
+				SIF STRCOUNT(CSTR:ARG:下服, "ファスナー開")
+					RETURNF 0
+				RETURNF 1
+			ENDIF
+			SIF STRCOUNTS(CSTR:ARG:下服, "ずらした", "ずれ不可")
+				RETURNF 0
+			RETURNF 1
+		;パンストで、破いていない
+		CASE "破ける"
+			SIF STRCOUNT(CSTR:ARG:下服, "破いた")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:下服, "パンスト", "網タイツ")
+				RETURNF 1
+		;ファスナーがあり、あけていない
+		CASE "ファスナー閉"
+			SIF STRCOUNT(CSTR:ARG:下服, "ファスナー開")
+				RETURNF 0
+			SIF STRCOUNT(CSTR:ARG:下服, "ファスナー")
+				RETURNF 1
+		CASE "ＶＡ露出"
+			SIF STRCOUNT(CSTR:ARG:下服, "Ｖ露出") && STRCOUNT(CSTR:ARG:下服, "Ａ露出")
+				RETURNF 1
+			SIF STRCOUNT(CSTR:ARG:下服, "オープン")
+				RETURNF 1
+		CASE "クロッチ"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ファスナー開", "ずらした", "破いた", "Ｖ露出", "スリット", "オープン")
+				RETURNF 0
+			RETURNF 1
+		CASE "クロッチありパンスト"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ファスナー開", "ずらした", "破いた", "Ｖ露出", "スリット", "オープン")
+				RETURNF 0
+			SIF STRCOUNT(CSTR:ARG:下服, "パンスト")
+				RETURNF 1
+		CASE "Ａクロッチ"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ファスナー開", "ずらした", "破いた", "Ａ露出", "スリット", "オープン")
+				RETURNF 0
+			RETURNF 1
+		CASE "食い込み"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた", "オープン")
+				RETURNF 0
+			SIF STRCOUNTS(CSTR:ARG:下服, "ハイレグ")
+				RETURNF 1
+		CASE "ローライズ"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ローライズ", "ローレグ")
+				RETURNF 1
+		CASE "蒸れ"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた", "オープン")
+				RETURNF 0
+			SIF CHECK_STAIN(STAIN:ARG:下服, "蒸れ")
+				RETURNF 1
+		CASE "染み"
+			SIF STRCOUNTS(CSTR:ARG:下服, "ずらした", "ファスナー開", "Ｖ露出", "スリット", "破いた", "通気性無し", "オープン")
+				RETURNF 0
+			SIF CHECK_STAIN(STAIN:ARG:下服, "濡れ")
+				RETURNF 1
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:下服, ARGS)
+				RETURNF 1
+	ENDSELECT
+	RETURNF 0

@@ -1,0 +1,333 @@
+﻿;-------------------------------------------------
+;ダブルパイズリ実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:ダブルパイズリ]]
+#FUNCTION
+    ;ダブルパイズリ実行判定
+    RESULT = COMABLE_DEF(TNUM("ダブルパイズリ")) && COND("乳首の使用", PLAYER) && COND("乳首の使用", PLAYER:1)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:ダブルパイズリ]]
+    ; TFLAG:近親相姦 = 0
+    ; CALL INCEST
+    ; IF (TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2) && HAVE_VAGINA(TARGET) && HAVE_VAGINA((PLAYER:1))
+    ; 	PRINT 母娘
+    ; ELSEIF TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2
+    ; 	PRINT 親子
+    ; ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && HAVE_VAGINA(TARGET) && HAVE_VAGINA((PLAYER:1))
+    ; 	PRINT 姉妹
+    ; ELSEIF  (TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4) && IS_MALE(TARGET) && IS_MALE((PLAYER:1))
+    ; 	PRINT 兄弟
+    ; ELSEIF  TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4
+    ; 	PRINT 兄妹
+    ; ELSEIF  TFLAG:近親相姦 == 5 || TFLAG:近親相姦 == 6
+    ; 	PRINT 従姉弟
+    ; ENDIF
+    ; PRINTL ダブルパイズリ
+	PRINTFORML %CALLNAME:PLAYER%と%CALLNAME:(PLAYER:1)%は二人の乳房で%CALLNAME:TARGET%のペニスを両側から挟み、擦りあげている…
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:ダブルパイズリ]](ARG=100)
+    ;-------------------------------------------------
+    ;ダブルパイズリをされた対象
+    ;-------------------------------------------------
+    ;快Ｃのソース
+    ;ABL:技巧をみる
+    TEMP_NUM = MIN(ABL:PLAYER:技巧, ABL:(PLAYER:1):技巧)
+    TMP_SRC:TARGET:快Ｃ += 1200 + MIN(TEMP_NUM, 5) * 300 + LIMIT(TEMP_NUM - 1,0,4) * 100 + LIMIT(TEMP_NUM - 2,0,3) * 100
+    TEMP_NUM = MAX(ABL:PLAYER:技巧, ABL:(PLAYER:1):技巧)
+    SELECTCASE TEMP_NUM 
+        CASE 3
+            TIMES TMP_SRC:TARGET:快Ｃ, 1.20
+        CASE 4
+            TIMES TMP_SRC:TARGET:快Ｃ, 1.50
+        CASE IS > 4
+            TIMES TMP_SRC:TARGET:快Ｃ, 1.80
+    ENDSELECT
+    TMP_SRC:TARGET:露出 = 220
+    TMP_SRC:TARGET:逸脱 = 100
+
+    ;TALENT:舌使いをみる
+    IF TALENT:PLAYER:舌使い && TALENT:(PLAYER:1):舌使い
+        TIMES TMP_SRC:TARGET:快Ｃ, 4.00
+        TMP_SRC:TARGET:恭順 += TMP_SRC:TARGET:快Ｃ/20
+    ELSEIF TALENT:PLAYER:舌使い || TALENT:(PLAYER:1):舌使い
+        TIMES TMP_SRC:TARGET:快Ｃ, 2.00
+        TMP_SRC:TARGET:恭順 += TMP_SRC:TARGET:快Ｃ/20
+    ENDIF
+
+    IF TARGET == MASTER
+        ;ABL:従順をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:PLAYER:信頼, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:(PLAYER:1):信頼, 5)*10 + 80) / 100
+
+        ; ;ABL:奉仕精神をみる
+        ; TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:奉仕精神, 6)*30 + 50) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:PLAYER:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:(PLAYER:1):精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:射精中毒, 5)*10 + 80) / 100
+    ELSEIF PLAYER == MASTER || (PLAYER:1) == MASTER
+        TEMP_NUM = PLAYER
+        SIF PLAYER == MASTER
+            TEMP_NUM = (PLAYER:1)
+        ;ABL:従順をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:MASTER:信頼, 5)*10 + 80) / 100
+
+        ; ;ABL:奉仕精神をみる
+        ; TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:MASTER:奉仕精神, 6)*30 + 50) / 100
+
+        ;ABL:精液中毒をみる
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:MASTER:精液中毒, 5)*10 + 80) / 100
+        TMP_SRC:TARGET:快Ｃ = TMP_SRC:TARGET:快Ｃ * (MIN(ABL:TARGET:射精中毒, 5)*10 + 80) / 100
+        ;TARGETからTEMP_NUMへの相性を見る
+        SELECTCASE RELATION:TARGET:(NO:TEMP_NUM)
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+    ELSE
+        ;TARGETからPLAYERへの相性を見る
+        SELECTCASE RELATION:(NO:PLAYER)
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+        ;TARGETから(PLAYER:1)への相性を見る
+        SELECTCASE RELATION:(NO:(PLAYER:1))
+            CASE IS < 50
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.5
+            CASE IS < 90
+                TIMES TMP_SRC:TARGET:快Ｃ , 0.75
+            CASE IS < 110
+                TIMES TMP_SRC:TARGET:快Ｃ , 1
+            CASE IS < 150
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.25
+            CASE IS < 200
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.5
+            CASE IS < 300
+                TIMES TMP_SRC:TARGET:快Ｃ , 1.75
+            CASEELSE
+                TIMES TMP_SRC:TARGET:快Ｃ , 2
+        ENDSELECT
+     ENDIF
+
+    ;奉仕者
+    TMP_SRC:PLAYER:屈従 += 1500
+    TMP_SRC:PLAYER:逸脱 += 500
+    TMP_SRC:(PLAYER:1):屈従 += 1500
+    TMP_SRC:(PLAYER:1):逸脱 += 500
+
+    ;ABL:奉仕精神をみる
+    TMP_SRC:PLAYER:性行動 += 800 + MIN(ABL:PLAYER:奉仕精神, 5) * 250
+    TMP_SRC:PLAYER:達成 += 600 + MIN(ABL:PLAYER:奉仕精神, 5) * 300
+    TMP_SRC:PLAYER:不潔 += 100 + COM_汚れ(TARGET,STNNUM("ペニス"),STNNUM("口"),1,1) * 40
+    TMP_SRC:(PLAYER:1):性行動 += 800 + MIN(ABL:(PLAYER:1):奉仕精神, 5) * 250
+    TMP_SRC:(PLAYER:1):達成 += 600 + MIN(ABL:(PLAYER:1):奉仕精神, 5) * 300
+    TMP_SRC:(PLAYER:1):不潔 += 100 + COM_汚れ(TARGET,STNNUM("ペニス"),STNNUM("口"),1,1) * 40
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:PLAYER:技巧
+        CASE 0
+            TIMES TMP_SRC:PLAYER:性行動 , 0.5
+            TIMES TMP_SRC:PLAYER:達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:PLAYER:性行動 , 0.8
+            TIMES TMP_SRC:PLAYER:達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:PLAYER:性行動 , 1
+            TIMES TMP_SRC:PLAYER:達成 , 1
+        CASE 3
+            TIMES TMP_SRC:PLAYER:性行動 , 1.2
+            TIMES TMP_SRC:PLAYER:達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:PLAYER:性行動 , 1.5
+            TIMES TMP_SRC:PLAYER:達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:性行動 , 2
+            TIMES TMP_SRC:PLAYER:達成 , 2
+    ENDSELECT
+
+    ;ABL:技巧をみる
+    SELECTCASE ABL:(PLAYER:1):技巧
+        CASE 0
+            TIMES TMP_SRC:(PLAYER:1):性行動 , 0.5
+            TIMES TMP_SRC:(PLAYER:1):達成 , 0.5
+        CASE 1
+            TIMES TMP_SRC:(PLAYER:1):性行動 , 0.8
+            TIMES TMP_SRC:(PLAYER:1):達成 , 0.8
+        CASE 2
+            TIMES TMP_SRC:(PLAYER:1):性行動 , 1
+            TIMES TMP_SRC:(PLAYER:1):達成 , 1
+        CASE 3
+            TIMES TMP_SRC:(PLAYER:1):性行動 , 1.2
+            TIMES TMP_SRC:(PLAYER:1):達成 , 1.2
+        CASE 4
+            TIMES TMP_SRC:(PLAYER:1):性行動 , 1.5
+            TIMES TMP_SRC:(PLAYER:1):達成 , 1.5
+        CASEELSE
+            TIMES TMP_SRC:(PLAYER:1):性行動 , 2
+            TIMES TMP_SRC:(PLAYER:1):達成 , 2
+    ENDSELECT
+
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:PLAYER:奉仕精神
+        CASE 0
+            TIMES TMP_SRC:PLAYER:不潔 , 4.00
+        CASE 1
+            TIMES TMP_SRC:PLAYER:不潔 , 2.5
+        CASE 2
+            TIMES TMP_SRC:PLAYER:不潔 , 1.5
+        CASE 3
+            TIMES TMP_SRC:PLAYER:不潔 , 1
+        CASE 4
+            TIMES TMP_SRC:PLAYER:不潔 , 0.5
+        CASEELSE
+            TIMES TMP_SRC:PLAYER:不潔 , 0.1
+    ENDSELECT
+    
+    ;ABL:奉仕精神をみる
+    SELECTCASE ABL:(PLAYER:1):奉仕精神
+        CASE 0
+            TIMES TMP_SRC:(PLAYER:1):不潔 , 4.00
+        CASE 1
+            TIMES TMP_SRC:(PLAYER:1):不潔 , 2.5
+        CASE 2
+            TIMES TMP_SRC:(PLAYER:1):不潔 , 1.5
+        CASE 3
+            TIMES TMP_SRC:(PLAYER:1):不潔 , 1
+        CASE 4
+            TIMES TMP_SRC:(PLAYER:1):不潔 , 0.5
+        CASEELSE
+            TIMES TMP_SRC:(PLAYER:1):不潔 , 0.1
+    ENDSELECT
+    
+    ;母娘（親子）ダブルパイズリの場合は屈従と逸脱３倍
+    IF TFLAG:近親相姦 == 1 || TFLAG:近親相姦 == 2
+        TIMES TMP_SRC:PLAYER:屈従 , 3.00
+        TIMES TMP_SRC:PLAYER:逸脱 , 3.00
+        TIMES TMP_SRC:(PLAYER:1):屈従 , 3.00
+        TIMES TMP_SRC:(PLAYER:1):逸脱 , 3.00
+    ;姉妹（兄弟）ダブルパイズリの場合は屈従と逸脱２倍
+    ELSEIF TFLAG:近親相姦 == 3 || TFLAG:近親相姦 == 4
+        TIMES TMP_SRC:PLAYER:屈従 , 2.00
+        TIMES TMP_SRC:PLAYER:逸脱 , 2.00
+        TIMES TMP_SRC:(PLAYER:1):屈従 , 2.00
+        TIMES TMP_SRC:(PLAYER:1):逸脱 , 2.00
+    ENDIF
+
+	CALL APPLY_SOURCE_RATE(ARG)
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:ダブルパイズリ]](ARG=100)
+    NOWEX:TARGET:体力変動 += 5
+    NOWEX:TARGET:気力変動 += 5
+    NOWEX:(PLAYER:1):体力変動 += 10
+    NOWEX:(PLAYER:1):気力変動 += 10
+    NOWEX:PLAYER:体力変動 += 10
+    NOWEX:PLAYER:気力変動 += 10
+    SIF !TALENT:PLAYER:精愛味覚
+        NOWEX:PLAYER:気力変動 *= 10
+    SIF !TALENT:(PLAYER:1):精愛味覚
+        NOWEX:(PLAYER:1):気力変動 *= 10
+
+    NOWEX:PLAYER:フェラ経験 += 1
+    NOWEX:(PLAYER:1):フェラ経験 += 1
+
+    ;レズ経験・ホモ経験
+    IF HAVE_VAGINA(TARGET) && HAVE_VAGINA(PLAYER) 
+        NOWEX:レズ経験 = 7
+        NOWEX:PLAYER:レズ経験 = 7
+    ELSEIF IS_MALE(TARGET) && IS_MALE(PLAYER) 
+        NOWEX:ＢＬ経験 = 7
+        NOWEX:PLAYER:ＢＬ経験 = 7
+    ENDIF
+
+     IF HAVE_VAGINA(PLAYER:1) && HAVE_VAGINA(TARGET) 
+        NOWEX:(PLAYER:1):レズ経験 = 7
+        NOWEX:レズ経験 = 7
+    ELSEIF IS_MALE(PLAYER:1) && IS_MALE(TARGET) 
+        NOWEX:(PLAYER:1):ＢＬ経験 = 7
+        NOWEX:ＢＬ経験 = 7
+    ENDIF
+
+   IF HAVE_VAGINA(PLAYER:1) && HAVE_VAGINA(PLAYER) 
+        NOWEX:(PLAYER:1):レズ経験 = 7
+        NOWEX:PLAYER:レズ経験 = 7
+    ELSEIF IS_MALE(PLAYER:1) && IS_MALE(PLAYER) 
+        NOWEX:(PLAYER:1):ＢＬ経験 = 7
+        NOWEX:PLAYER:ＢＬ経験 = 7
+    ENDIF
+
+    IF TARGET == MASTER
+        SIF CFLAG:好感度 >= 1000
+            NOWEX:愛情経験 += 1
+        SIF CFLAG:(PLAYER:1):好感度 >= 1000
+            NOWEX:(PLAYER:1):愛情経験 += 1
+    ELSEIF CFLAG:好感度 >= 1000 && (PLAYER == MASTER || PLAYER:1 == MASTER)
+        NOWEX:愛情経験 += 1
+    ENDIF
+    
+	CALL APPLY_EX_RATE(ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:ダブルパイズリ]]
+    IF PLAYER == MASTER || PLAYER:1 == MASTER
+        TCVAR:主人経験 += 1
+    ENDIF
+    IF TARGET == MASTER
+        TCVAR:PLAYER:主人経験 += 1
+        ;屈服刻印2に相当
+        TCVAR:PLAYER:屈服刻印取得 = 2
+        TCVAR:(PLAYER:1):主人経験 += 1
+        ;屈服刻印2に相当
+        TCVAR:(PLAYER:1):屈服刻印取得 = 2
+    ENDIF
+
+    TCVAR:快楽経験 = 1
+    TCVAR:(PLAYER:1):奉仕経験 = 1
+    TCVAR:PLAYER:奉仕経験 = 1
+    ;-------------------------------------------------
+    ;汚れの処理
+    ;-------------------------------------------------
+    ;奴隷のＰ⇔調教者の口の汚れが移動
+    STAIN:ペニス |= STAIN:PLAYER:胸
+    STAIN:ペニス |= STAIN:(PLAYER:1):胸
+    STAIN:PLAYER:胸 |= STAIN:ペニス
+	STAIN:(PLAYER:1):胸 |= STAIN:ペニス
+

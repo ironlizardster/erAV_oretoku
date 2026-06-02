@@ -4,7 +4,7 @@
 @COM121
 
 TFLAG:３Ｐ継続中 = 0
-IF SELECTCOM == [[TRAIN:騎乗位]]
+IF SELECTCOM == TNUM("騎乗位")
 	PRINTL 騎乗子宮口責め
 	SAVESTR:0 = 騎乗子宮口責め
 ELSE
@@ -13,7 +13,7 @@ ELSE
 ENDIF
 
 SELECTCOM = 121
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ
 TFLAG:V経験を伴うコマンド = 1
@@ -26,7 +26,7 @@ CALL COM_EJAC_PLAYER_SEX
 ;-------------------------------------------------
 ;ソースの計算
 ;-------------------------------------------------
-IF PREVCOM == [[TRAIN:騎乗位]]
+IF PREVCOM == TNUM("騎乗位")
 	LOSEBASE:体力 += 60
 	LOSEBASE:気力 += 150
 	SOURCE:露出 = 900
@@ -39,7 +39,7 @@ ENDIF
 SOURCE:快Ｃ = 0
 
 ;前方向挿入の場合（正常位・対面座位・騎乗位）
-IF PREVCOM == [[TRAIN:正常位]] || PREVCOM == [[TRAIN:対面座位]] || PREVCOM == [[TRAIN:騎乗位]]
+IF PREVCOM == TNUM("正常位]] || PREVCOM == [[TRAIN:対面座位]] || PREVCOM == [[TRAIN:騎乗位")
 	;ABL:Ｃ感覚をみる
 	IF ABL:Ｃ感覚 == 0
 		SOURCE:快Ｃ = 20
@@ -121,11 +121,11 @@ ELSE
 ENDIF
 
 ;対面座位だと効果が高い
-IF PREVCOM == [[TRAIN:対面座位]]
+IF PREVCOM == TNUM("対面座位")
 	TIMES SOURCE:快Ｖ , 1.30
 	TIMES SOURCE:情愛 , 1.10
 ;背面座位だと効果が低い
-ELSEIF PREVCOM == [[TRAIN:背面座位]]
+ELSEIF PREVCOM == TNUM("背面座位")
 	TIMES SOURCE:快Ｖ , 0.70
 	TIMES SOURCE:情愛 , 0.90
 ENDIF
@@ -215,7 +215,7 @@ ELSE
 	TIMES SOURCE:反感 , 0.30
 ENDIF
 
-IF PREVCOM == [[TRAIN:騎乗位]]
+IF PREVCOM == TNUM("騎乗位")
 	;ABL:奉仕精神をみる
 	IF ABL:奉仕技術 == 0
 		SOURCE:性行動 = 200

@@ -1,94 +1,459 @@
-;-------------------------------------------------
-;TALENT:ARG:�O���N��ɑ̌^�Ȃǂɂ��␳������������
+﻿;-------------------------------------------------
+;TALENT:ARG:外見年齢に体型などによる補正を加えたもの
 ;-------------------------------------------------
 @AGE(ARG)
 #FUNCTION
+	SELECTCASE CFLAG:ARG:外見年齢
+		CASE IS < 13
+			;ロリ
+			LOCAL = 1
+		CASE IS < 16
+			;厨
+			LOCAL = 2
+		CASE IS < 19
+			;お姉さん
+			LOCAL = 3
+		CASEELSE
+			;オトナ
+			LOCAL = 4
+	ENDSELECT
 
-SELECTCASE CFLAG:ARG:�O���N��
-	CASE IS < 13
-		;����
-		LOCAL = 1
-	CASE IS < 16
-		;�~
-		LOCAL = 2
-	CASE IS < 19
-		;���o����
-		LOCAL = 3
-	CASEELSE
-		;�I�g�i
-		LOCAL = 4
-ENDSELECT
+	IF NO:ARG
+		;もともとは小柄キャラではない
+		SIF IS_小柄(ARG) && CSVTALENT(NO:ARG, GETNUM(TALENT, "身長") ) >= 0
+			LOCAL -= 1
+	ENDIF
 
-IF NO:ARG
-	;���Ƃ��Ƃ͏����L�����ł͂Ȃ�
-	SIF IS_����(ARG) && CSVTALENT(NO:ARG, GETNUM(TALENT, "�g��") ) >= 0
-		LOCAL -= 1
-ENDIF
+	IF TALENT:ARG:オトコの娘
+		LOCAL = LIMIT(LOCAL, 1, 3)
+	ELSE
+		LOCAL = LIMIT(LOCAL, 1, 4)
+	ENDIF
 
-IF TALENT:ARG:�I�g�R�̖�
-	LOCAL = LIMIT(LOCAL, 1, 2)
-ELSE
-	LOCAL = LIMIT(LOCAL, 1, 4)
-ENDIF
-
-RETURNF LOCAL
+	RETURNF LOCAL
 
 
 ;-------------------------------------------------
-;ARG��(ARG:1 / 100)�{����
-;ARG = MULTIPLY(ARG, 150)�@�́@TIMES ARG, 1.50�@�Ɠ������B
-;ARG:2��ARG:1�̍ő�l
+;ARGを(ARG:1 / 100)倍する
+;ARG = MULTIPLY(ARG, 150)　は　TIMES ARG, 1.50　と等しい。
+;ARG:2はARG:1の最大値
 ;-------------------------------------------------
 @MULTIPLY(ARG, ARG:1, ARG:2)
 #FUNCTION
-;0�ȉ��̐����������Ƃ��ɂ� ARG:1 = 0 �Ƃ���
-SELECTCASE ARG:1
-	CASE IS <= 0
-		RETURNF 0
-	CASE IS > ARG:2
-		SIF ARG:2 > 0
-			ARG:1 = ARG:2
-ENDSELECT
-RETURNF ARG * ARG:1 / 100
+	;0以下の数をかけたときには ARG:1 = 0 とする
+	SELECTCASE ARG:1
+		CASE IS <= 0
+			RETURNF 0
+		CASE IS > ARG:2
+			SIF ARG:2 > 0
+				ARG:1 = ARG:2
+	ENDSELECT
+	RETURNF ARG * ARG:1 / 100
 
 
-;50�܂łƂ������Ƃ�
-@���[�}����(ARG)
+;50までということで
+@ローマ数字(ARG)
 #FUNCTIONS
-SELECTCASE ARG/10
-	CASE 0
-		LOCALS = 
-	CASE 1
-		LOCALS = �]
-	CASE 2
-		LOCALS = �]�]
-	CASE 3
-		LOCALS = �]�]�]
-	CASE 4
-		LOCALS = �]�k
-	CASE 5
-		LOCALS = �k
-ENDSELECT
+	SELECTCASE ARG/10
+		CASE 0
+			LOCALS = 
+		CASE 1
+			LOCALS = Ⅹ
+		CASE 2
+			LOCALS = ⅩⅩ
+		CASE 3
+			LOCALS = ⅩⅩⅩ
+		CASE 4
+			LOCALS = ⅩＬ
+		CASE 5
+			LOCALS = Ｌ
+	ENDSELECT
 
-SELECTCASE ARG%10
-	CASE 9
-		LOCALS += "�\"
-	CASE 8
-		LOCALS += "�["
-	CASE 7
-		LOCALS += "�Z"
-	CASE 6
-		LOCALS += "�Y"
-	CASE 5
-		LOCALS += "�X"
-	CASE 4
-		LOCALS += "�W"
-	CASE 3
-		LOCALS += "�V"
-	CASE 2
-		LOCALS += "�U"
-	CASE 1
-		LOCALS += "�T"
-ENDSELECT
-RETURNF LOCALS
+	SELECTCASE ARG%10
+		CASE 9
+			LOCALS += "Ⅸ"
+		CASE 8
+			LOCALS += "Ⅷ"
+		CASE 7
+			LOCALS += "Ⅶ"
+		CASE 6
+			LOCALS += "Ⅵ"
+		CASE 5
+			LOCALS += "Ⅴ"
+		CASE 4
+			LOCALS += "Ⅳ"
+		CASE 3
+			LOCALS += "Ⅲ"
+		CASE 2
+			LOCALS += "Ⅱ"
+		CASE 1
+			LOCALS += "Ⅰ"
+	ENDSELECT
+	RETURNF LOCALS
 
+;-------------------------------------------------
+;色々と計算する関数(#FUNCTION)
+;ARGは変更しない事。また、無限ループになりやすいのでCALCF内の別のものを参照することは禁止
+;-------------------------------------------------
+@CALC_発情(ARGS, CHARANO)
+#FUNCTION
+#DIM CHARANO
+	VARSET LOCAL
+	SELECTCASE ARGS
+		CASE "Ｃ"
+			SIF HAVE_PENIS(CHARANO)
+				RETURNF 0
+			;0通常 1皮の下で勃起 2顔を出す 3ギンギン
+			IF COND("調教中") == 0
+				SIF CFLAG:CHARANO:ムラムラ
+					LOCAL += 1
+			ELSE
+				SIF PALAM:CHARANO:欲情 >= 30000
+					LOCAL += 1
+				SIF (ABL:CHARANO:Ｃ感覚 >= 5 && PALAM:CHARANO:欲情 >= 3000) || EX:CHARANO:Ｃ絶頂
+					LOCAL += 1
+				SIF EX:CHARANO:Ｃ絶頂 >= 5
+					LOCAL += 1
+			ENDIF
+			SIF TALENT:CHARANO:淫核 && LOCAL < 2
+				LOCAL += 1
+			SIF CFLAG:CHARANO:ピアス状況 & ピアス_クリペニ
+				LOCAL = MAX(LOCAL + 1, 2)
+			SIF COND("陰核肥大", CHARANO)
+				LOCAL += 1
+
+		CASE "Ｖ"
+			SIF !HAVE_VAGINA(CHARANO)
+				RETURNF 0
+			;0通常 1発情 2ビショビショ 3愛液駄々漏れ
+			SIF TALENT:CHARANO:淫壷
+				LOCAL += 1
+			IF COND("調教中") == 0
+				SIF CFLAG:CHARANO:ムラムラ
+					LOCAL += 1
+			ELSE
+				;欲情(媚薬)
+				SIF PALAM:CHARANO:欲情 >= 10000 || TEQUIP:CHARANO:媚薬
+					LOCAL += 1
+				SIF ABL:CHARANO:Ｖ感覚 >= 3 && PALAM:CHARANO:欲情 >= 3000
+					LOCAL += 1
+				;絶頂
+				SIF EX:CHARANO:Ｖ絶頂 || EX:CHARANO:絶頂数合計 >= 3
+					LOCAL += 1
+				SIF EX:CHARANO:Ｖ絶頂 >= 3 || EX:CHARANO:絶頂数合計 >= 10
+					LOCAL += 1
+			ENDIF
+		CASE "Ｂ"
+			;0陥没 1通常 2しこりかけ 3勃起 4ギンギン
+			SIF TALENT:CHARANO:淫乳
+				LOCAL += 1
+			IF COND("調教中") == 0
+				SIF COND("欲求不満", CHARANO)
+					LOCAL += 1
+				SIF CFLAG:CHARANO:ムラムラ
+					LOCAL += 1
+			ELSE
+				SIF (ABL:CHARANO:Ｂ感覚 >= 5 && PALAM:CHARANO:欲情 >= 3000) || PALAM:CHARANO:欲情 >= 10000 || EX:CHARANO:Ｂ絶頂
+					LOCAL += 1
+				SIF PALAM:CHARANO:欲情 >= 30000
+					LOCAL += 1
+				SIF EX:CHARANO:Ｂ絶頂 >= 5
+					LOCAL += 1
+			ENDIF
+			SIF LOCAL == 0
+				LOCAL += 1
+	ENDSELECT
+	RETURNF LOCAL
+
+@STAIN_CALC_COSPLAY, ARG
+	SIF ARG == 0 && TARGET > 0
+		ARG = TARGET
+
+	SELECTCASE CUP:ARG:Ｖ潤
+	CASE IS >= 10000
+		LOCAL = 5
+	CASE IS >= 6000
+		LOCAL = 4
+	CASE IS >= 3000
+		LOCAL = 3
+	CASE IS >= 1500
+		LOCAL = 2
+	CASE IS >= 500
+		LOCAL = 1
+	CASEELSE
+		LOCAL = 0
+	ENDSELECT
+
+	SELECTCASE PALAM:ARG:Ｖ潤
+	CASE IS >= 30000
+		SIF LOCAL < 3
+			LOCAL = 3
+	CASE IS >= 10000
+		SIF LOCAL < 2
+			LOCAL = 2
+	CASE IS >= 3000
+		SIF LOCAL < 1
+			LOCAL = 1
+	ENDSELECT
+	SIF LOCAL < 2 && CALC_発情("Ｖ", ARG)
+		LOCAL += 1
+	SIF LOCAL < 2 && TALENT:ARG:常時Ｖバイブ
+		LOCAL += 1
+
+	;パンツの愛液汚れ
+	IF EQUIP:ARG:パンツ && CHECK_PANTIES("Ｖ露出", ARG) == 0
+		IF CHECK_PANTIES("通気性無し", ARG) == 0
+			SIF LOCAL >= 3
+				STAIN:ARG:パンツ = SET_STAIN(STAIN:ARG:パンツ, "濡れ")
+		ENDIF
+		SIF LOCAL >= 1
+			STAIN:ARG:パンツ = SET_STAIN(STAIN:ARG:パンツ, "蒸れ")
+	ENDIF
+	;下服(直穿き)の愛液汚れ
+	IF EQUIP:ARG:下服 && CHECK_LOWER("Ｖ露出", ARG) == 0
+		;通気性なし(濡れないけど、蒸れやすい)
+		IF CHECK_LOWER("通気性無し", ARG)
+			SIF LOCAL >= 1
+				STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "蒸れ")
+		;直穿き
+		ELSEIF CHECK_CLO("下服直穿き", ARG)
+			;ズボン生地
+			IF CHECK_LOWER("ズボン", ARG)
+				SIF LOCAL >= 5
+					STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "濡れ")
+				SIF LOCAL >= 3
+					STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "蒸れ")
+			ELSE
+				SIF LOCAL >= 4
+					STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "濡れ")
+				SIF LOCAL >= 2
+					STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "蒸れ")
+			ENDIF
+		;ぱんつ濡れ(ズボン生地と同様の難易度)
+		ELSEIF CHECK_STAIN(STAIN:ARG:パンツ, "濡れ")
+			SIF LOCAL >= 5
+				STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "濡れ")
+			SIF LOCAL >= 3
+				STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "蒸れ")
+		;ぱんつ蒸れ
+		ELSEIF CHECK_STAIN(STAIN:ARG:パンツ, "蒸れ")
+			SIF LOCAL >= 3
+				STAIN:ARG:下服 = SET_STAIN(STAIN:ARG:下服, "蒸れ")
+		ENDIF
+	ENDIF
+	;ボディスーツ（ボトム）の愛液汚れ
+	IF EQUIP:ARG:ボディスーツ && CHECK_BODYS("Ｖ露出", ARG) == 0
+		;通気性あり
+		IF CHECK_BODYS("通気性無し", ARG) == 0
+			SIF LOCAL >= 4
+				STAIN:ARG:ボディスーツボトム = SET_STAIN(STAIN:ARG:ボディスーツボトム, "濡れ")
+		ENDIF
+		SIF LOCAL >= 3
+			STAIN:ARG:ボディスーツボトム = SET_STAIN(STAIN:ARG:ボディスーツボトム, "蒸れ")
+	ENDIF
+
+;-------------------------------------------------
+;頻繁に使う条件のまとめ
+;LOCALを使う際には慎重に！！
+;ARGがARGSを満たすか判定する。ただし、挿入については@INSERTで管理する
+;素質については"素質名"を入れると機能し、その素質が無いのを条件とするときには"!素質名"とします
+;-------------------------------------------------
+@COND(ARGS, ARG, ARG:1)
+#FUNCTION
+#DIM LCOUNT
+
+	SIF ARG < 0
+		RETURNF 0
+	SIF ARG == 0 && TARGET
+		ARG = TARGET
+	SIF ARG:1 == 0 && TARGET
+		ARG:1 = TARGET
+	SELECTCASE ARGS
+	CASE "絶頂"
+		SIF COND("手加減中", ARG)
+			RETURNF 0
+		;絶頂＆射精
+		SELECTCASE ARG
+		CASE TARGET
+			RETURNF NOWEX:ARG:絶頂数合計 + NOWEX:ARG:射精
+		CASE PLAYER
+			RETURNF TCVAR:ARG:絶頂度
+		CASEELSE
+			RETURNF MAX(TCVAR:ARG:絶頂度, NOWEX:ARG:絶頂数合計, NOWEX:ARG:射精)
+		ENDSELECT
+	CASE "濃厚射精"
+		SIF NOWEX:ARG:濃厚射精 || TCVAR:ARG:濃厚射精
+			RETURNF 1
+
+	CASE "精通"
+		SIF PENIS(ARG) == 0 || EXP:ARG:射精経験 == 0 || TALENT:ARG:未成熟
+			RETURNF 0
+		SIF NOWEX:ARG:射精 && EXP:ARG:射精経験 == 1
+			RETURNF 1
+	CASE "前立腺刺激"
+		SIF PENIS(ARG) == 0
+			RETURNF 0
+		SIF INSERT("Ａインサート", ARG) && SIZE("ペニス", INSERT("Ａインサート相手") ) >= 2
+			RETURNF 1
+		SIF SIZE("アナルバイブ", ARG) >= 2
+			RETURNF 1
+		SIF TEQUIP:ARG:押し倒し
+			RETURNF 0
+
+		SELECTCASE SELECTCOM
+		CASE TNUM("アナルフィスト"), TNUM("両穴フィスト")
+			RETURNF 1
+		ENDSELECT
+
+	CASE "イきそう"
+		SELECTCASE ARG
+		CASE PLAYER
+			;絶頂ゲージの75％以上
+			SIF BASE:ARG:絶頂 >= MAXBASE:ARG:絶頂 * 3 / 4
+				RETURNF 1
+		CASEELSE
+			SIF EX:ARG:イくのをこらえた
+				RETURNF 1
+			;快感許容値の75％以上
+			SIF BASE:ARG:快感許容値オンナ >= MAXBASE:ARG:快感許容値オンナ * 3 / 4
+				RETURNF 1
+			;絶頂ゲージの75％以上
+			SIF BASE:ARG:絶頂 >= MAXBASE:ARG:絶頂 * 3 / 4
+				RETURNF 1
+		ENDSELECT
+	CASE "こらえる"
+		SIF TCVAR:ARG:強制射精
+			RETURNF 0
+		SIF TFLAG:余裕 >= 4 && NOWEX:ARG:ラグジャラスヒット == 0
+			RETURNF 1
+	CASE "潮噴き可能"
+		;"～可能"条件の否定
+		SIF CEVENT(@"%EXTSTR(ARGS, "", "可能")%禁止", ARG)
+			RETURNF 0
+		;女性器があることと、ある程度の尿意が必須
+		SIF TALENT:ARG:オトコ || BASE:ARG:尿意 < 1000
+			RETURNF 0
+		;尿道挿入中は不可
+		SIF INSERT("尿道インサート", ARG) || TEQUIP:ARG:尿道バイブ
+			RETURNF 0
+
+		;絶頂失禁体質などがあるなら条件緩和
+		IF TALENT:ARG:絶頂失禁体質 || TEQUIP:ARG:カテーテル || ABL:ARG:尿道拡張 >= SIZE("指")
+			SIF MAX(NOWEX:ARG:Ｃ絶頂 + NOWEX:ARG:尿道絶頂, NOWEX:ARG:Ｖ絶頂, NOWEX:ARG:Ａ絶頂, NOWEX:ARG:Ｂ絶頂, NOWEX:ARG:Ｍ絶頂) < 2
+				RETURNF 0
+			SIF MAX(NOWEX:ARG:Ｃ絶頂 + NOWEX:ARG:尿道絶頂, NOWEX:ARG:Ｖ絶頂) == 0 && MAX(NOWEX:ARG:Ａ絶頂, NOWEX:ARG:Ｂ絶頂, NOWEX:ARG:Ｍ絶頂) < 3
+				RETURNF 0
+		ELSE
+			SIF MAX(NOWEX:ARG:Ｃ絶頂 + NOWEX:ARG:尿道絶頂, NOWEX:ARG:Ｖ絶頂) < 3 || NOWEX:ARG:絶頂数合計 < 5
+				RETURNF 0
+			SIF BASE:ARG:尿意 < 10000
+				RETURNF 0
+		ENDIF
+		RETURNF 1
+	CASE "疲労"
+		;通常バリアントでの気力が無くなった状態に相当
+		SIF BASE:ARG:体力 < 500
+			RETURNF 1
+	CASE "前回絶頂", "前Ｔ絶頂"
+		SIF PREVPLAY("絶頂", ARG)
+			RETURNF 1
+	CASE "セフレ"
+		SIF TALENT:ARG:セフレ || TALENT:ARG:セフレ契約 || TALENT:ARG:性処理契約
+			RETURNF 1
+
+	CASE "両穴くぱぁ"
+		SIF GETBIT(TEQUIP:ARG:特殊行動, 4)
+			RETURNF 1
+	CASE "飲尿待機"
+		SIF GETBIT(TEQUIP:ARG:特殊行動, 5)
+			RETURNF 1
+
+	CASE "絶頂許可"
+		RETURNF TCVAR:ARG:絶頂許可
+	CASE "射精箇所変更"
+		RETURNF TCVAR:ARG:射精箇所の強制変更
+	CASE "派生前の選択コマンド"
+		RETURNF SELECTCOM:4
+	CASE "派生前の前回選択コマンド"
+		RETURNF PREVCOM:4
+	CASE "Ｗ押し倒し主導中"
+		SIF TEQUIP:ARG:Ｗ押し倒し == 1
+			RETURNF 1
+	CASE "Ｗ押し倒し補助中"
+		SIF TEQUIP:ARG:Ｗ押し倒し == 2
+			RETURNF 1
+	CASE "前回フェラ"
+		SELECTCASE PREVCOM
+		CASE 91, 99, 140, 150
+			SIF COND("前Ｔ調教者", ARG) == PLAYER && PENIS(PLAYER)
+				RETURNF 1
+		ENDSELECT
+	CASE "主人への恋慕"
+		SIF TALENT:ARG:恋慕 || CEVENT("助手調教での素質変化：恋慕外し", ARG)
+			RETURNF 1
+	CASE "口の使用"
+		;口枷
+		SIF TEQUIP:ARG:口枷 == 1
+			RETURNF 0
+		RETURNF 1
+	CASE "口淫中"
+		SELECTCASE SELECTCOM
+		CASE 6, 91, 99, 140, 150
+			RETURNF 1
+		ENDSELECT
+	CASE "視力"
+		;アイマスク
+		SIF TEQUIP:ARG:アイマスク
+			RETURNF 0
+		RETURNF 1
+	CASE "指の使用"
+		SIF GETBIT(TEQUIP:ARG:拘束, 20) || CHECK_手袋("指の使用禁止", ARG)
+			RETURNF 0
+		RETURNF 1
+	CASE "脚の使用"
+		SIF COND("種族：ラミア", ARG) || GETBIT(TEQUIP:ARG:拘束, 21)
+			RETURNF 0
+		RETURNF 1
+	CASE "脚が無い"
+		SIF COND("種族：ラミア", ARG)
+			RETURNF 1
+	CASE "靴の着用"
+		SIF COND("種族：ラミア", ARG) || GETBIT(TEQUIP:ARG:拘束, 21)
+			RETURNF 0
+		RETURNF 1
+
+	CASE "男の娘","オトコの娘"
+		SIF TALENT:ARG:オトコの娘 && !IS_大柄(ARG)
+			RETURNF 1
+	CASE "朝"
+		SIF TIME == 0
+			RETURNF 1
+	CASE "昼"
+		SIF TIME == 1
+			RETURNF 1
+	CASE "夜"
+		SIF TIME == 2
+			RETURNF 1
+	CASE "夕"
+		SIF TIME == 3
+			RETURNF 1
+	;相性チェック
+	CASE "相性☆"
+		SIF (ARG:1) <= 0 || ARG <= 0
+			RETURNF 0
+		SIF MIN(RELATION:ARG:(NO:(ARG:1)), RELATION:(NO:ARG) ) >= 200
+			RETURNF 1
+	CASE "相性◎"
+		SIF (ARG:1) <= 0 || ARG <= 0
+			RETURNF 0
+		SIF MIN(RELATION:ARG:(NO:(ARG:1)), RELATION:(NO:ARG) ) >= 150
+			RETURNF 1
+	;"漢数字の〇"と"記号の○"は分かりづら過ぎる
+	CASE "相性○", "相性〇"
+		SIF (ARG:1) <= 0 || ARG <= 0
+			RETURNF 0
+		SIF MIN(RELATION:ARG:(NO:(ARG:1)), RELATION:(NO:ARG) ) >= 120
+			RETURNF 1
+
+	ENDSELECT
+	RETURNF 0

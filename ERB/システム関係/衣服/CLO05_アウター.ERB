@@ -1,0 +1,99 @@
+﻿;-------------------------------------------------
+;キャラARGにアウターARGSを着せる。ARGS == ""なら脱がす
+;-------------------------------------------------
+@SET_OUTER, ARGS, ARG
+#DIMS MEMO_CLO
+	MEMO_CLO = %CSTR:ARG:アウター%
+
+	CALL PALAM_OUTER, ARGS, ARG
+	;コモンフラグを設定する
+	CSTR:ARG:アウター = %SET_CLO_COMMON(CSTR:ARG:アウター, ARG)%
+
+	EQUIP:ARG:アウター = STRLENS(CSTR:ARG:アウター)
+	SIF MEMO_CLO != CSTR:ARG:アウター
+		TFLAG:着替えた = 1
+
+;-------------------------------------------------
+;ARGのアウターの名前。ARGSに"略"と入れると略称になる
+;-------------------------------------------------
+@OUTER(ARG, ARGS)
+#FUNCTIONS
+
+	VARSET RESULTS
+	SELECTCASE ARGS
+		CASE "略"
+		CASE "種類"
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:アウター, "/", RESULTS
+		CASE ""
+			;RESULTSに名称が入る
+			SPLIT CSTR:ARG:アウター, "/", RESULTS
+			RESULTS '= @"%CLOCOLOR(CSTR:ARG:アウター, "形容詞")%%RESULTS%"
+	ENDSELECT
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;ARG番のアウターの名称。着せ替えなどで表を作る際に使う
+;-------------------------------------------------
+@NAME_OUTER(ARG)
+#FUNCTIONS
+	VARSET RESULTS
+	SELECTCASE ARG
+		CASE 1
+			RESULTS = エプロン
+		CASE 2
+			RESULTS = コート
+		CASE 3
+			RESULTS = 白衣
+		CASE 10
+			RESULTS = 地味な色のベスト
+		CASE 12
+			RESULTS = 風来坊のマント
+		CASE 40
+			RESULTS = スーツジャケット
+		CASE 41
+			RESULTS = 魔法使いのローブ
+		CASE 50
+			RESULTS = フリルエプロン
+		;体にまとわず濡らせないタイプ(51～65)
+		CASE 51
+			RESULTS = マフラー
+	ENDSELECT
+
+	RETURNF RESULTS
+
+;-------------------------------------------------
+;キャラARGにアウターARGSを着せた場合のCSTR処理
+;-------------------------------------------------
+@PALAM_OUTER, ARGS, ARG
+;追加で記述された属性を一時的に保管する
+#DIMS STR_ADD
+
+	STR_ADD = %EXTSTR(ARGS, "/")%
+	ARGS = %EXTSTR(ARGS, "", "/")%
+
+	SELECTCASE ARGS
+		CASE "", "無し"
+			CSTR:ARG:アウター = 
+		CASEELSE
+			CSTR:ARG:アウター = %ARGS%/
+	ENDSELECT
+
+	CSTR:ARG:アウター = %MERGE_STR(CSTR:ARG:アウター, STR_ADD)%
+
+
+;-------------------------------------------------
+;ARGのアウターが条件ARGSを満たすか確認する
+;-------------------------------------------------
+@CHECK_OUTER(ARGS, ARG)
+#FUNCTION
+
+	SIF EQUIP:ARG:アウター == 0
+		RETURNF 0
+	SELECTCASE ARGS
+		CASEELSE
+			SIF STRCOUNT(CSTR:ARG:アウター, ARGS)
+				RETURNF 1
+	ENDSELECT
+
+	RETURNF 0

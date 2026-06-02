@@ -7,7 +7,7 @@
 ;前のプレイが対面座位かつ調教者の技巧3以上の場合、挿入Ｇスポ責めまたは挿入子宮口責めへ派生
 ;Ｖ感覚が高く欲情しているほど子宮口へ行きやすい
 IF FLAG:追加コマンドなし == 0
-	IF PREVCOM == [[TRAIN:対面座位]] && ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
+	IF PREVCOM == TNUM("対面座位") && ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;欲情
 		IF PALAM:欲情 < PALAMLV:1
 			A = 1
@@ -46,7 +46,7 @@ SIF RESULT == 0
 
 PRINTL 対面座位
 SAVESTR:0 = 対面座位
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ(処女膜再生対応)
 TFLAG:V経験を伴うコマンド = 1

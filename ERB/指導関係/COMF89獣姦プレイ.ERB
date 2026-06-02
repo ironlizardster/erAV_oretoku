@@ -4,7 +4,7 @@
 @COM89
 PRINTL 獣姦プレイ
 SAVESTR:0 = 獣姦プレイ
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 IF TEQUIP:獣姦プレイ
 	TEQUIP:獣姦プレイ = 0
@@ -108,7 +108,7 @@ IF TALENT:牝犬
 	TIMES SOURCE:愛液分泌 , 3.00
 ENDIF
 
-IF SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:アナル奉仕]]
+IF SELECTCOM == TNUM("後背位]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:アナル奉仕")
 	TIMES SOURCE:逸脱 , 2.00
 ENDIF
 
@@ -193,27 +193,27 @@ SIF TALENT:牝犬
 	TIMES B , 2.00
 
 ;キス
-IF SELECTCOM == [[TRAIN:キスする]]
+IF SELECTCOM == TNUM("キスする")
 	B = 0
 	T += 2
 ;後背位
-ELSEIF SELECTCOM == [[TRAIN:後背位]]
+ELSEIF SELECTCOM == TNUM("後背位")
 	TIMES B , 1.00
 	T += 2
 ;後背位アナル
-ELSEIF SELECTCOM == [[TRAIN:後背位アナル]]
+ELSEIF SELECTCOM == TNUM("後背位アナル")
 	TIMES B , 1.50
 	T += 2
 ;手淫
-ELSEIF SELECTCOM == [[TRAIN:手淫]]
+ELSEIF SELECTCOM == TNUM("手淫")
 	TIMES B , 0.80
 	T += 1
 ;フェラチオ
-ELSEIF SELECTCOM == [[TRAIN:フェラチオ]]
+ELSEIF SELECTCOM == TNUM("フェラチオ")
 	TIMES B , 1.20
 	T += 2
 ;騎乗位
-ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
+ELSEIF SELECTCOM == TNUM("騎乗位")
 	TIMES B , 1.50
 	T += 3
 ELSE
@@ -276,7 +276,7 @@ IF E == 2
 	SIF BASE:MASTER:異種射精ゲージ >= EJAC
 		BASE:MASTER:異種射精ゲージ = EJAC-1
 	;膣内射精フラグ（犬）
-	SIF SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:騎乗位]]
+	SIF SELECTCOM == TNUM("後背位]] || SELECTCOM == [[TRAIN:騎乗位")
 		TFLAG:調教対象の膣内に射精 = 2
 	
 ;通常の射精
@@ -290,7 +290,7 @@ ELSEIF E == 1
 	SIF BASE:MASTER:異種射精ゲージ >= EJAC
 		BASE:MASTER:異種射精ゲージ = EJAC-1
 	;膣内射精フラグ（犬）
-	SIF SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:騎乗位]]
+	SIF SELECTCOM == TNUM("後背位]] || SELECTCOM == [[TRAIN:騎乗位")
 		TFLAG:調教対象の膣内に射精 = 1
 ENDIF
 
@@ -299,23 +299,23 @@ $END_EJAC
 ;-------------------------------------------------
 ;汚れ
 ;-------------------------------------------------
-SIF SELECTCOM == [[TRAIN:後背位]]
+SIF SELECTCOM == TNUM("後背位")
 	STAIN:ヴァギナ |= 2
-SIF SELECTCOM == [[TRAIN:後背位アナル]]
+SIF SELECTCOM == TNUM("後背位アナル")
 	STAIN:アナル |= 2
-SIF SELECTCOM == [[TRAIN:手淫]]
+SIF SELECTCOM == TNUM("手淫")
 	STAIN:手 |= 2
-SIF SELECTCOM == [[TRAIN:フェラチオ]]
+SIF SELECTCOM == TNUM("フェラチオ")
 	STAIN:口 |= 2
-SIF SELECTCOM == [[TRAIN:アナル奉仕]]
+SIF SELECTCOM == TNUM("アナル奉仕")
 	STAIN:口 |= 8
-SIF SELECTCOM == [[TRAIN:後背位]] && E > 0
+SIF SELECTCOM == TNUM("後背位") && E > 0
 	STAIN:ヴァギナ |= 4
-SIF SELECTCOM == [[TRAIN:後背位アナル]] && E > 0
+SIF SELECTCOM == TNUM("後背位アナル") && E > 0
 	STAIN:アナル |= 4
-SIF SELECTCOM == [[TRAIN:手淫]] && E > 0
+SIF SELECTCOM == TNUM("手淫") && E > 0
 	STAIN:手 |= 4
-SIF SELECTCOM == [[TRAIN:フェラチオ]] && E > 0
+SIF SELECTCOM == TNUM("フェラチオ") && E > 0
 	STAIN:口 |= 4
 
 ;犬が射精フラグ
@@ -333,13 +333,13 @@ IF IS処女(TARGET) && TFLAG:V経験を伴うコマンド && TALENT:動物耳 ==
 ENDIF
 
 ;獣姦で手淫なら屈服刻印２
-IF SELECTCOM == [[TRAIN:手淫]]
+IF SELECTCOM == TNUM("手淫")
 	;屈服刻印２に相当
-	TFLAG:屈服刻印2 = 2
+	TFLAG:屈服刻印取得 = 2
 ;獣姦でフェラチオ・後背位・後背位アナル・アナル奉仕・騎乗位だと屈服刻印３
-ELSEIF SELECTCOM == [[TRAIN:フェラチオ]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:騎乗位]] || SELECTCOM == [[TRAIN:アナル奉仕]]
+ELSEIF SELECTCOM == TNUM("フェラチオ]] || SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:騎乗位]] || SELECTCOM == [[TRAIN:アナル奉仕")
 	;屈服刻印３に相当
-	TFLAG:屈服刻印2 = 3
+	TFLAG:屈服刻印取得 = 3
 ENDIF
 
 RETURN 1

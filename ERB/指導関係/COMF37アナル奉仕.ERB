@@ -5,7 +5,7 @@
 @COM37
 
 IF (ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0)
-	IF PREVCOM == [[TRAIN:手淫]]
+	IF PREVCOM == TNUM("手淫")
 		CALL COM_ABLE138
 		SIF RESULT == 1
 			JUMP COM138
@@ -256,7 +256,7 @@ SIF A < V
 	RETURN 0
 
 SAVESTR:0 = アナル奉仕強制
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -328,7 +328,7 @@ IF TEQUIP:獣姦プレイ
 	IF !CFLAG:初キス相手
 		TFLAG:初キス口以外 = 1
 		;屈服刻印３に相当
-		TFLAG:屈服刻印2 = 3
+		TFLAG:屈服刻印取得 = 3
 		CALL 初キス喪失実行(TARGET,初相手_犬,CFLAG:実年齢,DAY:日付_月,DAY:日付_日,初場所_スタジオ,初状況_肛門,"犬")
 	ENDIF
 
@@ -507,7 +507,7 @@ ENDIF
 TFLAG:快楽経験 = 1
 
 ;屈服刻印３に相当
-TFLAG:屈服刻印2 = 3
+TFLAG:屈服刻印取得 = 3
 
 ;初キス
 ;標準の初キス判定を行うように

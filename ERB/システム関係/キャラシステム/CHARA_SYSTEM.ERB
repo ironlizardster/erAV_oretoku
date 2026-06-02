@@ -2,15 +2,15 @@
 ;キャラの身体測定の再計算結果をMAXBASEに代入することであたかもそのキャラがもともとこのような測定結果であるようにする
 ;///////////////////////////////////////////////
 @ＢＷＨリセット(ARG)
-;MAXBASEをキャラのもともとの設定として扱うことで変化を表現する
-CALL ＢＷＨ計測(ARG)
-MAXBASE:ARG:身長 = BASE:ARG:身長
-MAXBASE:ARG:体重 = BASE:ARG:体重
-MAXBASE:ARG:バスト = BASE:ARG:バスト
-MAXBASE:ARG:アンダーバスト = BASE:ARG:アンダーバスト
-MAXBASE:ARG:ウェスト = BASE:ARG:ウェスト
-MAXBASE:ARG:ヒップ = BASE:ARG:ヒップ
-MAXBASE:ARG:股下 = BASE:ARG:股下
+	;MAXBASEをキャラのもともとの設定として扱うことで変化を表現する
+	CALL ＢＷＨ計測(ARG)
+	MAXBASE:ARG:身長 = BASE:ARG:身長
+	MAXBASE:ARG:体重 = BASE:ARG:体重
+	MAXBASE:ARG:バスト = BASE:ARG:バスト
+	MAXBASE:ARG:アンダーバスト = BASE:ARG:アンダーバスト
+	MAXBASE:ARG:ウェスト = BASE:ARG:ウェスト
+	MAXBASE:ARG:ヒップ = BASE:ARG:ヒップ
+	MAXBASE:ARG:股下 = BASE:ARG:股下
 
 ;///////////////////////////////////////////////
 ;ARG:0 キャラ番号
@@ -29,214 +29,198 @@ MAXBASE:ARG:股下 = BASE:ARG:股下
 ;///////////////////////////////////////////////
 @ＢＷＨ計測(ARG,ARG:1=0,ARG:2=0,ARG:3=0)
 
-;ARG:1 0ではない場合身長を年齢と素質で再計算
-IF ARG:1
-	CALL RECALC身長(ARG)
-ENDIF
+	;ARG:1 0ではない場合身長を年齢と素質で再計算
+	IF ARG:1
+		CALL RECALC身長(ARG)
+	ENDIF
 
-;ARG:2 0ではない場合体重を年齢と素質で再計算
-IF ARG:2
-	CALL RECALC体重(ARG)
-ENDIF
+	;ARG:2 0ではない場合体重を年齢と素質で再計算
+	IF ARG:2
+		CALL RECALC体重(ARG)
+	ENDIF
 
-;ARG:3 0ではない場合股下を素質美脚で再計算
-IF ARG:3
-	VARSET LOCAL
-	IF TALENT:ARG:美脚
-		;大体平均の54.5±5.5%の範囲に収めてしかも微妙に疑似正規分布の平均±σのあたりの形の確率にしたいので上限と下限を平均±3σにする
-		LOCAL = NORMAL_RANDOM_NUM(1000,380,710)
-		WHILE LOCAL < 490 || LOCAL  > 600
+	;ARG:3 0ではない場合股下を素質美脚で再計算
+	IF ARG:3
+		VARSET LOCAL
+		IF TALENT:ARG:美脚
+			;大体平均の54.5±5.5%の範囲に収めてしかも微妙に疑似正規分布の平均±σのあたりの形の確率にしたいので上限と下限を平均±3σにする
 			LOCAL = NORMAL_RANDOM_NUM(1000,380,710)
-		WEND
+			WHILE LOCAL < 490 || LOCAL  > 600
+				LOCAL = NORMAL_RANDOM_NUM(1000,380,710)
+			WEND
+		ELSE
+			;現実の平均より長めの46%-49%未満にする
+			LOCAL = 460 + RAND:30
+		ENDIF
+		BASE:ARG:股下 = BASE:ARG:身長 * LOCAL / 1000
+	ENDIF
+
+	VARSET LOCAL
+	;ゴールデン係数LOCALがウェスト補正、LOCAL:1がヒップ補正、LOCAL:2がバスト補正
+	IF IS_MALE(ARG) && !TALENT:ARG:オトコの娘
+		LOCAL = 430
+		LOCAL:1 = 480
+		LOCAL:2 = 550
+	ELSEIF TALENT:ARG:オトコの娘
+		LOCAL = 400
+		LOCAL:1 = 500
+		LOCAL:2 = 530
+	;少女以下は体のラインがそれほど際立たない
+	ELSEIF IS_小柄(ARG)
+		LOCAL = 400
+		LOCAL:1 = 510
+		LOCAL:2 = 520
 	ELSE
-		;現実の平均より長めの46%-49%未満にする
-		LOCAL = 460 + RAND:30
+		SELECTCASE AGE(ARG)
+			;オトナ
+			CASE IS >= 4
+				LOCAL = 420 + RAND:6
+				LOCAL:1 = 560
+				LOCAL:2 = 550
+			;お姉さん
+			CASE 3
+				LOCAL = 410 + RAND:6
+				LOCAL:1 = 550
+				LOCAL:2 = 540
+			CASE 2
+				LOCAL = 400
+				LOCAL:1 = 530
+				LOCAL:2 = 530
+			CASE 1
+				LOCAL = 410
+				LOCAL:1 = 510
+				LOCAL:2 = 520
+		ENDSELECT
 	ENDIF
-	BASE:ARG:股下 = BASE:ARG:身長 * LOCAL / 1000
-ENDIF
 
-VARSET LOCAL
-;ゴールデン係数LOCALがウェスト補正、LOCAL:1がヒップ補正、LOCAL:2がバスト補正
-IF IS_MALE(ARG) && !TALENT:ARG:オトコの娘
-	LOCAL = 430
-	LOCAL:1 = 480
-	LOCAL:2 = 550
-ELSEIF TALENT:ARG:オトコの娘
-	LOCAL = 400
-	LOCAL:1 = 500
-	LOCAL:2 = 530
-;少女以下は体のラインがそれほど際立たない
-ELSEIF IS_小柄(ARG)
-	LOCAL = 400
-	LOCAL:1 = 510
-	LOCAL:2 = 520
-ELSE
-	SELECTCASE AGE(ARG)
-		;オトナ
-		CASE IS >= 4
-			LOCAL = 420 + RAND:6
-			LOCAL:1 = 560
-			LOCAL:2 = 550
-		;お姉さん
-		CASE 3
-			LOCAL = 410 + RAND:6
-			LOCAL:1 = 550
-			LOCAL:2 = 540
-		CASE 2
-			LOCAL = 400
-			LOCAL:1 = 530
-			LOCAL:2 = 530
+	;腰使いによる腰のくびれ＆大きなお尻
+	LOCAL -= MIN(RAND:(1 + TALENT:ARG:天性の腰使い*10), 20)
+	LOCAL:1 += MIN(RAND:(1 + TALENT:ARG:天性の腰使い*5), 20)
+
+	;ランダム変化
+	;誤差は90～110%+α(理想値よりもちょっと太めが平均)
+	WHILE LOCAL:3 < 90 || LOCAL:3  > 110
+		LOCAL:3  = NORMAL_RANDOM_NUM(700,0,200)
+	WEND
+
+	LOCAL = MULTIPLY(LOCAL, LOCAL:3)
+	LOCAL:1 = MULTIPLY(LOCAL:1, LIMIT(100 + NORMAL_RANDOM_NUM(40,-15,15), LOCAL:3 - 10, LOCAL:3 + 5) )
+	LOCAL:2 = MULTIPLY(LOCAL:2, LIMIT(100 + NORMAL_RANDOM_NUM(40,-15,15), LOCAL:3 - 10, LOCAL:3 + 5) )
+
+	BASE:ARG:ウェスト = LIMIT(BASE:ARG:身長*LOCAL/1000, BASE:ARG:身長*34/100, BASE:ARG:身長*(45 + AGE(ARG))/100)
+
+	IF IS_痩せぎみ(ARG)
+		BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/20)
+		;痩せぎみはバストにペナルティ
+		LOCAL:2 -= 20 - RAND:20
+	ELSEIF IS_スリム(ARG)
+		BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/30)
+	ELSEIF IS_ぽっちゃり(ARG)
+		BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/30)
+	ELSEIF IS_肥満(ARG)
+		BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/20)
+	ENDIF
+
+	BASE:ARG:ヒップ = LIMIT(BASE:ARG:身長*LOCAL:1/1000, BASE:ARG:ウェスト*130/100, BASE:ARG:ウェスト*(160 + AGE(ARG)*10)/100)
+
+	BASE:ARG:バスト = LIMIT(BASE:ARG:身長*LOCAL:2/1000, BASE:ARG:ウェスト*110/100, MAX(BASE:ARG:身長*LOCAL:2/1000, BASE:ARG:ウェスト*110/100))
+
+	IF IS_痩せぎみ(ARG)
+		IF BASE:ARG:ウェスト > BASE:ARG:身長 * 38 * 8 / 1000
+			BASE:ARG:ウェスト = BASE:ARG:身長 * 38 * 8 / 1000
+			BASE:ARG:ヒップ = MIN(BASE:ARG:ヒップ, BASE:ARG:ウェスト*(160 + AGE(ARG)*10) * 8 /1000)
+		ENDIF
+	ELSEIF IS_スリム(ARG)
+		IF BASE:ARG:ウェスト > BASE:ARG:身長 * 38 / 100
+			BASE:ARG:ウェスト = BASE:ARG:身長 * 38 / 100
+			BASE:ARG:ヒップ = MIN(BASE:ARG:ヒップ, BASE:ARG:ウェスト*(160 + AGE(ARG)*10)/100)
+		ENDIF
+	ELSEIF IS_ぽっちゃり(ARG)
+		IF BASE:ARG:ウェスト < BASE:ARG:身長 * 46 / 100
+			BASE:ARG:ウェスト = BASE:ARG:身長 * 46 / 100
+			BASE:ARG:ヒップ = MAX(BASE:ARG:ヒップ, BASE:ARG:ウェスト*130/100)
+		ENDIF
+	ELSEIF IS_肥満(ARG)
+		IF BASE:ARG:ウェスト < BASE:ARG:身長 * 46 * 12 / 1000
+			BASE:ARG:ウェスト = BASE:ARG:身長 * 46 * 12 / 1000
+			BASE:ARG:ヒップ = MAX(BASE:ARG:ヒップ, BASE:ARG:ウェスト*130 * 12/1000)
+		ENDIF
+	ELSE
+		SELECTCASE BASE:ARG:ウェスト
+		CASE IS >= BASE:ARG:身長 * 46 / 100
+			BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/30) + 1
+		CASE IS <= BASE:ARG:身長 * 38 / 100
+			BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/30) + 1
+		ENDSELECT
+	ENDIF
+
+	;アンダーバストのゴールデンを［（（ウエストの理想比率－１）＊0.9＋（トップバストの理想比率－１）＊0.1）＊0.75＋１］とする
+	;ゴールデンカノン (バスト = 身長*0.54, ウェスト = 身長*0.38, ヒップ = 身長*0.54)を参考
+	;ガチオトコの3sizeはバスト = 身長*0.55, ウェスト = 身長*0.43, ヒップ = 身長*0.48とする
+	;男の娘の3sizeはバスト = 身長*0.53, ウェスト = 身長*0.40, ヒップ = 身長*0.50とする
+	IF IS_MALE(ARG) && !TALENT:ARG:オトコの娘
+		;ガチオトコはバストのほうの影響がもっと強く、股下も影響しない
+		LOCAL:4 = 500 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 43) - 10000) * 3 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 55) - 10000) * 7) * 75) + 10000000) / 10000000
+	ELSEIF TALENT:ARG:オトコの娘
+		;オトコの娘はウエストの影響が幾分か強く、股下も影響する
+		LOCAL:4 = 490 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 40) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 53) - 10000) * 3) * 75) + 10000000) / 10000000
+	;少女以下は体のラインがそれほど際立たない
+	ELSEIF IS_小柄(ARG)
+		LOCAL:4 = 450 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 40) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 52) - 10000) * 3) * 75) + 10000000) / 10000000
+	ELSE
+		LOCAL:4 = 430 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 38) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 54) - 10000) * 3) * 75) + 10000000) / 10000000
+	ENDIF
+
+	;股下と身長の比例で0.45から0.52まで変化するとアンダーバストが2%縮む
+	SIF !IS_MALE(ARG) || TALENT:ARG:オトコの娘
+		LOCAL:4 = LOCAL:4 * ((BASE:ARG:股下 * 1000)/BASE:ARG:身長 - 450) * 2 / 7000
+
+	;TALENT:体型はBMI18から19までスリムでアンダーバストがゴールデンから最大10%縮む
+	;BMI18以下はやせすぎとしてアンダーバストがゴールデンから10%縮む
+	;BMI22から24までぽっちゃりとしてアンダーバストがゴールデンから最大10%増える
+	;BMI24以上は肥満としてアンダーバストがゴールデンから15%増える
+	SELECTCASE TALENT:ARG:体型
+		;BMI16 - 18
+		CASE -2
+			LOCAL:4 = LOCAL:4 * 90 / 100
+		;BMI18 - 20
+		CASE -1
+			LOCAL:4 = LOCAL:4 * (BASE:ARG:体重 * BASE:ARG:身長 * BASE:ARG:身長 - 18 * POWER(10, 10)) * 90 / 100 / (3 * POWER(10, 10))
+		;BMI22 - 24
 		CASE 1
-			LOCAL = 410
-			LOCAL:1 = 510
-			LOCAL:2 = 520
+			LOCAL:4 = LOCAL:4 * (BASE:ARG:体重 * BASE:ARG:身長 * BASE:ARG:身長 - 18 * POWER(10, 10)) * 110 / 100 / (3 * POWER(10, 10))
+		;BMI24 - 30
+		CASE 2
+			LOCAL:4 = LOCAL:4 * 115 / 100
 	ENDSELECT
-ENDIF
 
-;腰使いによる腰のくびれ＆大きなお尻
-LOCAL -= MIN(RAND:(1 + TALENT:ARG:天性の腰使い*10), 20)
-LOCAL:1 += MIN(RAND:(1 + TALENT:ARG:天性の腰使い*5), 20)
+	BASE:ARG:アンダーバスト = LIMIT(BASE:ARG:身長*LOCAL:4/1000, MAX(BASE:ARG:アンダーバスト,BASE:ARG:ウェスト*105/100), MAX(BASE:ARG:身長*LOCAL:4/1000, BASE:ARG:ウェスト*105/100))
 
-;ランダム変化
-;誤差は90～110%+α(理想値よりもちょっと太めが平均)
-WHILE LOCAL:3 < 90 || LOCAL:3  > 110
-	LOCAL:3  = NORMAL_RANDOM_NUM(700,0,200)
-WEND
-
-LOCAL = MULTIPLY(LOCAL, LOCAL:3)
-LOCAL:1 = MULTIPLY(LOCAL:1, LIMIT(100 + NORMAL_RANDOM_NUM(40,-15,15), LOCAL:3 - 10, LOCAL:3 + 5) )
-LOCAL:2 = MULTIPLY(LOCAL:2, LIMIT(100 + NORMAL_RANDOM_NUM(40,-15,15), LOCAL:3 - 10, LOCAL:3 + 5) )
-
-BASE:ARG:ウェスト = LIMIT(BASE:ARG:身長*LOCAL/1000, BASE:ARG:身長*34/100, BASE:ARG:身長*(45 + AGE(ARG))/100)
-
-IF IS_痩せぎみ(ARG)
-	BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/20)
-	;痩せぎみはバストにペナルティ
-	LOCAL:2 -= 20 - RAND:20
-ELSEIF IS_スリム(ARG)
-	BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/30)
-ELSEIF IS_ぽっちゃり(ARG)
-	BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/30)
-ELSEIF IS_肥満(ARG)
-	BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/20)
-ENDIF
-
-BASE:ARG:ヒップ = LIMIT(BASE:ARG:身長*LOCAL:1/1000, BASE:ARG:ウェスト*130/100, BASE:ARG:ウェスト*(160 + AGE(ARG)*10)/100)
-
-BASE:ARG:バスト = LIMIT(BASE:ARG:身長*LOCAL:2/1000, BASE:ARG:ウェスト*110/100, MAX(BASE:ARG:身長*LOCAL:2/1000, BASE:ARG:ウェスト*110/100))
-
-;;お姉さんやオトナは油断したりするのも良いよね…
-;IF AGE(ARG) >= 3
-;	SELECTCASE RAND:20 + (AGE(ARG) == 3) * RAND:10
-;	CASE 0
-;		BASE:ARG:ウェスト += BASE:ARG:身長*5/100
-;		BASE:ARG:ヒップ += BASE:ARG:身長*15/200
-;	CASE 1, 2
-;		BASE:ARG:ウェスト += BASE:ARG:身長*4/100
-;		BASE:ARG:ヒップ += BASE:ARG:身長*6/100
-;	CASE 3, 4
-;		BASE:ARG:ウェスト += BASE:ARG:身長*3/100
-;		BASE:ARG:ヒップ += BASE:ARG:身長*9/200
-;	CASE 5, 6
-;		BASE:ARG:ウェスト += BASE:ARG:身長*2/100
-;		BASE:ARG:ヒップ += BASE:ARG:身長*3/100
-;	ENDSELECT
-;ENDIF
-
-IF IS_痩せぎみ(ARG)
-	IF BASE:ARG:ウェスト > BASE:ARG:身長 * 38 * 8 / 1000
-		BASE:ARG:ウェスト = BASE:ARG:身長 * 38 * 8 / 1000
-		BASE:ARG:ヒップ = MIN(BASE:ARG:ヒップ, BASE:ARG:ウェスト*(160 + AGE(ARG)*10) * 8 /1000)
+	IF TALENT:ARG:乳房
+		SELECTCASE TALENT:ARG:乳房
+			CASE -2 ;絶壁
+				;5cm未満がAAAなので差が499以下であれば1とする。ただし武士の情けで最低0.1mmはアンダーバストより大きいものとする
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + RAND:498 + 1
+			CASE -1 ;貧乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 500 + RAND:499
+			CASE 0 ;並乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + RAND:749
+			CASE 1 ;巨乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 + RAND:749
+			CASE 2 ;爆乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 2 + RAND:749
+			CASE 3 ;超乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 3 + RAND:749
+			CASE 4 ;魔乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 4 + RAND:749
+			CASE 5 ;神乳
+				BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 5 + ABS(NORMAL_RANDOM_NUM(1000,-1 * 750 * 3,750 * 3))
+		ENDSELECT
 	ENDIF
-ELSEIF IS_スリム(ARG)
-	IF BASE:ARG:ウェスト > BASE:ARG:身長 * 38 / 100
-		BASE:ARG:ウェスト = BASE:ARG:身長 * 38 / 100
-		BASE:ARG:ヒップ = MIN(BASE:ARG:ヒップ, BASE:ARG:ウェスト*(160 + AGE(ARG)*10)/100)
-	ENDIF
-ELSEIF IS_ぽっちゃり(ARG)
-	IF BASE:ARG:ウェスト < BASE:ARG:身長 * 46 / 100
-		BASE:ARG:ウェスト = BASE:ARG:身長 * 46 / 100
-		BASE:ARG:ヒップ = MAX(BASE:ARG:ヒップ, BASE:ARG:ウェスト*130/100)
-	ENDIF
-ELSEIF IS_肥満(ARG)
-	IF BASE:ARG:ウェスト < BASE:ARG:身長 * 46 * 12 / 1000
-		BASE:ARG:ウェスト = BASE:ARG:身長 * 46 * 12 / 1000
-		BASE:ARG:ヒップ = MAX(BASE:ARG:ヒップ, BASE:ARG:ウェスト*130 * 12/1000)
-	ENDIF
-ELSE
-	SELECTCASE BASE:ARG:ウェスト
-	CASE IS >= BASE:ARG:身長 * 46 / 100
-		BASE:ARG:ウェスト -= RAND:(BASE:ARG:身長/30) + 1
-	CASE IS <= BASE:ARG:身長 * 38 / 100
-		BASE:ARG:ウェスト += RAND:(BASE:ARG:身長/30) + 1
-	ENDSELECT
-ENDIF
 
-;アンダーバストのゴールデンを［（（ウエストの理想比率－１）＊0.9＋（トップバストの理想比率－１）＊0.1）＊0.75＋１］とする
-;ゴールデンカノン (バスト = 身長*0.54, ウェスト = 身長*0.38, ヒップ = 身長*0.54)を参考
-;ガチオトコの3sizeはバスト = 身長*0.55, ウェスト = 身長*0.43, ヒップ = 身長*0.48とする
-;男の娘の3sizeはバスト = 身長*0.53, ウェスト = 身長*0.40, ヒップ = 身長*0.50とする
-IF IS_MALE(ARG) && !TALENT:ARG:オトコの娘
-	;ガチオトコはバストのほうの影響がもっと強く、股下も影響しない
-	LOCAL:4 = 500 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 43) - 10000) * 3 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 55) - 10000) * 7) * 75) + 10000000) / 10000000
-ELSEIF TALENT:ARG:オトコの娘
-	;オトコの娘はウエストの影響が幾分か強く、股下も影響する
-	LOCAL:4 = 490 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 40) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 53) - 10000) * 3) * 75) + 10000000) / 10000000
-;少女以下は体のラインがそれほど際立たない
-ELSEIF IS_小柄(ARG)
-	LOCAL:4 = 450 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 40) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 52) - 10000) * 3) * 75) + 10000000) / 10000000
-ELSE
-	LOCAL:4 = 430 * ((((BASE:ARG:ウェスト * 1000000 / (BASE:ARG:身長 * 38) - 10000) * 7 + (BASE:ARG:バスト * 1000000 / (BASE:ARG:身長 * 54) - 10000) * 3) * 75) + 10000000) / 10000000
-ENDIF
+	CALL RECALCカップサイズ(ARG)
 
-;股下と身長の比例で0.45から0.52まで変化するとアンダーバストが2%縮む
-SIF !IS_MALE(ARG) || TALENT:ARG:オトコの娘
-	LOCAL:4 = LOCAL:4 * ((BASE:ARG:股下 * 1000)/BASE:ARG:身長 - 450) * 2 / 7000
-
-;TALENT:体型はBMI18から19までスリムでアンダーバストがゴールデンから最大10%縮む
-;BMI18以下はやせすぎとしてアンダーバストがゴールデンから10%縮む
-;BMI22から24までぽっちゃりとしてアンダーバストがゴールデンから最大10%増える
-;BMI24以上は肥満としてアンダーバストがゴールデンから15%増える
-SELECTCASE TALENT:ARG:体型
-	;BMI16 - 18
-	CASE -2
-		LOCAL:4 = LOCAL:4 * 90 / 100
-	;BMI18 - 20
-	CASE -1
-		LOCAL:4 = LOCAL:4 * (BASE:ARG:体重 * BASE:ARG:身長 * BASE:ARG:身長 - 18 * POWER(10, 10)) * 90 / 100 / (3 * POWER(10, 10))
-	;BMI22 - 24
-	CASE 1
-		LOCAL:4 = LOCAL:4 * (BASE:ARG:体重 * BASE:ARG:身長 * BASE:ARG:身長 - 18 * POWER(10, 10)) * 110 / 100 / (3 * POWER(10, 10))
-	;BMI24 - 30
-	CASE 2
-		LOCAL:4 = LOCAL:4 * 115 / 100
-ENDSELECT
-
-BASE:ARG:アンダーバスト = LIMIT(BASE:ARG:身長*LOCAL:4/1000, MAX(BASE:ARG:アンダーバスト,BASE:ARG:ウェスト*105/100), MAX(BASE:ARG:身長*LOCAL:4/1000, BASE:ARG:ウェスト*105/100))
-
-IF TALENT:ARG:乳房
-	SELECTCASE TALENT:ARG:乳房
-		CASE -2 ;絶壁
-			;5cm未満がAAAなので差が499以下であれば1とする。ただし武士の情けで最低0.1mmはアンダーバストより大きいものとする
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + RAND:498 + 1
-		CASE -1 ;貧乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 500 + RAND:499
-		CASE 0 ;並乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + RAND:749
-		CASE 1 ;巨乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 + RAND:749
-		CASE 2 ;爆乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 2 + RAND:749
-		CASE 3 ;超乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 3 + RAND:749
-		CASE 4 ;魔乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 4 + RAND:749
-		CASE 5 ;神乳
-			BASE:ARG:バスト = BASE:ARG:アンダーバスト + 1000 + 750 * 5 + ABS(NORMAL_RANDOM_NUM(1000,-1 * 750 * 3,750 * 3))
-	ENDSELECT
-ENDIF
-
-CALL RECALCカップサイズ(ARG)
+	CALL RECALC尻サイズ(ARG)
 
 
 ;///////////////////////////////////////////////
@@ -244,72 +228,72 @@ CALL RECALCカップサイズ(ARG)
 ;ARG キャラ番号
 ;///////////////////////////////////////////////
 @RECALC身長(ARG)
-VARSET LOCAL
-IF !TALENT:ARG:身長
-	;身長を登録
-	;平均身長の設定(性別ごとに分岐)
-	;([同年代の男子]+[同年代の女子]+[男女の低いほう])/3で出した身長で仮設定。疑問が残る場合は変更してくれい
-	;定数はCHARA_CONST.ERHに
-	;男の娘の場合1/3で各々男子女子身長を採用、残りの1/3で特製値を使用
-	SELECTCASE CFLAG:ARG:外見年齢
-		CASE 8 TO 18 ;平均身長:0>8歳女子の平均身長,平均身長:12>8歳男子の平均身長,平均身長:24>8歳男の娘の仮想平均身長(仮)
-			BASE:ARG:身長 = HAVE_VAGINA(ARG) ? 平均身長:(CFLAG:ARG:外見年齢-8) # (!TALENT:ARG:オトコの娘 ? 平均身長:(CFLAG:ARG:外見年齢+8) # 平均身長:(CFLAG:ARG:外見年齢+17))
-		CASEELSE
-			BASE:ARG:身長 = HAVE_VAGINA(ARG) ? 平均身長:11 # (!TALENT:ARG:オトコの娘 ? 平均身長:23 # 平均身長:35)
-	ENDSELECT
-	;個人差補正と大柄小柄再計算
-	WHILE LOCAL < 75 || LOCAL > 125
-		LOCAL = NORMAL_RANDOM_NUM(617,30,170)
-	WEND
-	BASE:ARG:身長 = (BASE:ARG:身長 * LOCAL) / 100
-	SELECTCASE BASE:ARG:身長
-		;118cm～130cm
-		CASE IS < 13000 ;小柄Ⅲ
-			TALENT:ARG:身長 = -3
-		;131cm～143cm
-		CASE IS < 14300 ;小柄Ⅱ
-			TALENT:ARG:身長 = -2
-		;144cm～152cm
-		CASE IS < 15200 ;小柄
-			TALENT:ARG:身長 = -1
-		;153cm～165cm
-		CASE IS < 16500 ;普通
-			TALENT:ARG:身長 = 0
-		;166cm～175cm
-		CASE IS < 17500 ;大柄
-			TALENT:ARG:身長 = 1
-		;175cm～199cm
-		CASE IS < 18800 ;大柄Ⅱ
-			TALENT:ARG:身長 = 2
-		;200cm～220cm
-		CASE IS >18800 ;大柄Ⅲ
-			TALENT:ARG:身長 = 3
-	ENDSELECT
-ELSE
-	SELECTCASE TALENT:ARG:身長
-		;118cm～130cm
-		CASE -3
-			BASE:ARG:身長 = 11800 + RAND:1300
-		;131cm～143cm
-		CASE -2
-			BASE:ARG:身長 = 13100 + RAND:1300
-		;144cm～152cm
-		CASE -1
-			BASE:ARG:身長 = 14400 + RAND:900
-		;153cm～165cm
-		CASE 0
-			BASE:ARG:身長 = 15300 + RAND:1300
-		;166cm～175cm
-		CASE 1
-			BASE:ARG:身長 = 16600 + RAND:900
-		;175cm～188cm
-		CASE 2
-			BASE:ARG:身長 = 17500 + RAND:1300
-		;188cm～209cm
-		CASE 3
-			BASE:ARG:身長 = 18800 + RAND:2100
-	ENDSELECT
-ENDIF
+	VARSET LOCAL
+	IF !TALENT:ARG:身長
+		;身長を登録
+		;平均身長の設定(性別ごとに分岐)
+		;([同年代の男子]+[同年代の女子]+[男女の低いほう])/3で出した身長で仮設定。疑問が残る場合は変更してくれい
+		;定数はCHARA_CONST.ERHに
+		;男の娘の場合1/3で各々男子女子身長を採用、残りの1/3で特製値を使用
+		SELECTCASE CFLAG:ARG:外見年齢
+			CASE 8 TO 18 ;平均身長:0>8歳女子の平均身長,平均身長:12>8歳男子の平均身長,平均身長:24>8歳男の娘の仮想平均身長(仮)
+				BASE:ARG:身長 = HAVE_VAGINA(ARG) ? 平均身長:(CFLAG:ARG:外見年齢-8) # (!TALENT:ARG:オトコの娘 ? 平均身長:(CFLAG:ARG:外見年齢+8) # 平均身長:(CFLAG:ARG:外見年齢+17))
+			CASEELSE
+				BASE:ARG:身長 = HAVE_VAGINA(ARG) ? 平均身長:11 # (!TALENT:ARG:オトコの娘 ? 平均身長:23 # 平均身長:35)
+		ENDSELECT
+		;個人差補正と大柄小柄再計算
+		WHILE LOCAL < 75 || LOCAL > 125
+			LOCAL = NORMAL_RANDOM_NUM(617,30,170)
+		WEND
+		BASE:ARG:身長 = (BASE:ARG:身長 * LOCAL) / 100
+		SELECTCASE BASE:ARG:身長
+			;118cm～130cm
+			CASE IS < 13000 ;小柄Ⅲ
+				TALENT:ARG:身長 = -3
+			;131cm～143cm
+			CASE IS < 14300 ;小柄Ⅱ
+				TALENT:ARG:身長 = -2
+			;144cm～152cm
+			CASE IS < 15200 ;小柄
+				TALENT:ARG:身長 = -1
+			;153cm～165cm
+			CASE IS < 16500 ;普通
+				TALENT:ARG:身長 = 0
+			;166cm～175cm
+			CASE IS < 17500 ;大柄
+				TALENT:ARG:身長 = 1
+			;175cm～199cm
+			CASE IS < 18800 ;大柄Ⅱ
+				TALENT:ARG:身長 = 2
+			;200cm～220cm
+			CASE IS >18800 ;大柄Ⅲ
+				TALENT:ARG:身長 = 3
+		ENDSELECT
+	ELSE
+		SELECTCASE TALENT:ARG:身長
+			;118cm～130cm
+			CASE -3
+				BASE:ARG:身長 = 11800 + RAND:1300
+			;131cm～143cm
+			CASE -2
+				BASE:ARG:身長 = 13100 + RAND:1300
+			;144cm～152cm
+			CASE -1
+				BASE:ARG:身長 = 14400 + RAND:900
+			;153cm～165cm
+			CASE 0
+				BASE:ARG:身長 = 15300 + RAND:1300
+			;166cm～175cm
+			CASE 1
+				BASE:ARG:身長 = 16600 + RAND:900
+			;175cm～188cm
+			CASE 2
+				BASE:ARG:身長 = 17500 + RAND:1300
+			;188cm～209cm
+			CASE 3
+				BASE:ARG:身長 = 18800 + RAND:2100
+		ENDSELECT
+	ENDIF
 
 
 ;///////////////////////////////////////////////
@@ -325,60 +309,125 @@ ENDIF
 @RECALC体重(ARG)
 #DIM BMI
 
-VARSET LOCAL
-;体重=(BMI/身長(メートル単位))/身長(メートル単位)
-;現在身長は0.1mm単位、体重は10g単位で記録されているのでBMIは10^8倍*10^2倍で計算すると都合がいい
-;痩せすぎ、肥満気味補正
-;体型 ： 肥満ランク、マイナスは痩せ
-SELECTCASE TALENT:ARG:体型
-	;BMI16 - 18
-	CASE -2
-		BMI = 16 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
-	;BMI18 - 20
-	CASE -1
-		BMI = 18 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
-	;BMI20 - 22
-	CASE 0
-		BMI = 20 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
-	;BMI22 - 24
-	CASE 1
-		BMI = 22 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
-	;BMI24 - 30
-	CASE 2
-		BMI = 24 * POWER(10, 2) + RAND:(6 * POWER(10, 2))
-ENDSELECT
+	VARSET LOCAL
+	;体重=(BMI/身長(メートル単位))/身長(メートル単位)
+	;現在身長は0.1mm単位、体重は10g単位で記録されているのでBMIは10^8倍*10^2倍で計算すると都合がいい
+	;痩せすぎ、肥満気味補正
+	;体型 ： 肥満ランク、マイナスは痩せ
+	SELECTCASE TALENT:ARG:体型
+		;BMI16 - 18
+		CASE -2
+			BMI = 16 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+		;BMI18 - 20
+		CASE -1
+			BMI = 18 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+		;BMI20 - 22
+		CASE 0
+			BMI = 20 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+		;BMI22 - 24
+		CASE 1
+			BMI = 22 * POWER(10, 2) + RAND:(3 * POWER(10, 2))
+		;BMI24 - 30
+		CASE 2
+			BMI = 24 * POWER(10, 2) + RAND:(6 * POWER(10, 2))
+	ENDSELECT
 
-BASE:ARG:体重 = BMI * BASE:ARG:身長 * BASE:ARG:身長 / POWER(10, 8)
+	BASE:ARG:体重 = BMI * BASE:ARG:身長 * BASE:ARG:身長 / POWER(10, 8)
 
-IF !HAVE_VAGINA(ARG)
-	BASE:ARG:体重 = BASE:ARG:体重 * 10 / 8
-ENDIF
+	IF !HAVE_VAGINA(ARG)
+		BASE:ARG:体重 = BASE:ARG:体重 * 10 / 8
+	ENDIF
 
 
 ;///////////////////////////////////////////////
 ;カップサイズをバスト-アンダーバストで再計算
 ;///////////////////////////////////////////////
 @RECALCカップサイズ(ARG)
-;5cm未満がAAAなので差が499以下であれば1とする
-CFLAG:ARG:カップサイズ = (BASE:ARG:バスト - BASE:ARG:アンダーバスト) / 250
-SIF CFLAG:ARG:カップサイズ == 0
-	CFLAG:ARG:カップサイズ = 1
+	;5cm未満がAAAなので差が499以下であれば1とする
+	CFLAG:ARG:カップサイズ = (BASE:ARG:バスト - BASE:ARG:アンダーバスト) / 250
+	SIF CFLAG:ARG:カップサイズ == 0
+		CFLAG:ARG:カップサイズ = 1
 
-SELECTCASE CFLAG:ARG:カップサイズ
-	CASE IS <= 1 ;絶壁
-		TALENT:ARG:乳房 = -2
-	CASE IS <= 3 ;貧乳
-		TALENT:ARG:乳房 = -1
-	CASE IS <= 6 ;並乳
-		TALENT:ARG:乳房 = 0
-	CASE IS <= 9 ;巨乳
-		TALENT:ARG:乳房 = 1
-	CASE IS <= 12 ;爆乳
-		TALENT:ARG:乳房 = 2
-	CASE IS <= 15 ;超乳
-		TALENT:ARG:乳房 = 3
-	CASE IS <= 18 ;魔乳
-		TALENT:ARG:乳房 = 4
-	CASE IS > 18 ;神乳
-		TALENT:ARG:乳房 = 5
-ENDSELECT
+	SELECTCASE CFLAG:ARG:カップサイズ
+		CASE IS <= 1 ;絶壁
+			TALENT:ARG:乳房 = -2
+		CASE IS <= 3 ;貧乳
+			TALENT:ARG:乳房 = -1
+		CASE IS <= 6 ;並乳
+			TALENT:ARG:乳房 = 0
+		CASE IS <= 9 ;巨乳
+			TALENT:ARG:乳房 = 1
+		CASE IS <= 12 ;爆乳
+			TALENT:ARG:乳房 = 2
+		CASE IS <= 15 ;超乳
+			TALENT:ARG:乳房 = 3
+		CASE IS <= 18 ;魔乳
+			TALENT:ARG:乳房 = 4
+		CASE IS > 18 ;神乳
+			TALENT:ARG:乳房 = 5
+	ENDSELECT
+
+	;美乳はゴールデンとの比率の差で95%-105%の間であること
+	LOCAL = (BASE:ARG:バスト * 100 / (BASE:ARG:身長 * 54) + BASE:ARG:アンダーバスト * 100 / (BASE:ARG:身長 * 44) + BASE:ARG:ウェスト * 100 / (BASE:ARG:身長 * 38)) / 3
+	TALENT:ARG:美乳 = LOCAL > 95 && LOCAL < 105
+	
+
+;///////////////////////////////////////////////
+;尻サイズを身長比とウェスト比で再計算
+;///////////////////////////////////////////////
+@RECALC尻サイズ(ARG)
+	;巨尻の鑑定については身長比とウェスト比両方を算出し、小さい方を選択する
+	;身長比では100*ヒップ/身長の値で(細い, 普通, 巨尻, 爆尻, 超尻) = (50以下, 51～53, 54～56, 57～59, 60以上)
+	;ウェスト比では100*ウェスト/ヒップで(細い, 普通, 大きい, 爆尻, 超尻) = (74以上, 73～70, 69～66, 65～62、61以下)
+
+	;身長が0の事は無いが念のため
+	SIF BASE:ARG:身長 == 0
+		RETURN 
+
+	;とりあえずヒップサイズがＳ以下だと巨尻の資格無し
+	SELECTCASE BASE:ARG:ヒップ
+		CASE IS <= 86
+			SIF TALENT:ARG:小柄 == 0
+				RETURN
+	ENDSELECT
+
+	SELECTCASE 100*BASE:ARG:ヒップ/BASE:ARG:身長
+		;超尻
+		CASE IS >= 60
+			TALENT:ARG:尻サイズ = 3
+		;爆尻
+		CASE IS >= 57
+			TALENT:ARG:尻サイズ = 2
+		;巨尻
+		CASE IS >= 54
+			TALENT:ARG:尻サイズ = 1
+		;普通
+		CASE IS >= 51
+			TALENT:ARG:尻サイズ = 0
+		;細め
+		CASEELSE
+			TALENT:ARG:尻サイズ = -1
+	ENDSELECT
+
+	SELECTCASE 100 * BASE:ARG:ウェスト / BASE:ARG:ヒップ
+	;超尻
+	CASE IS <= 61
+		TALENT:ARG:尻サイズ = MIN(TALENT:ARG:尻サイズ, 3)
+	;爆尻
+	CASE IS <= 65
+		TALENT:ARG:尻サイズ = MIN(TALENT:ARG:尻サイズ, 2)
+	;巨尻
+	CASE IS <= 69
+		TALENT:ARG:尻サイズ = MIN(TALENT:ARG:尻サイズ, 1)
+	;普通
+	CASE IS <= 73
+		TALENT:ARG:尻サイズ = MIN(TALENT:ARG:尻サイズ, 0)
+	;細め
+	CASEELSE
+		TALENT:ARG:尻サイズ = MIN(TALENT:ARG:尻サイズ, -1)
+	ENDSELECT
+
+	;美尻はゴールデンとの比率の差で95%-105%の間であること
+	LOCAL = (BASE:ARG:ヒップ * 100 / (BASE:ARG:身長 * 54) + BASE:ARG:ウェスト * 100 / (BASE:ARG:身長 * 38)) / 2
+	TALENT:ARG:美尻 = LOCAL > 95 && LOCAL < 105
+

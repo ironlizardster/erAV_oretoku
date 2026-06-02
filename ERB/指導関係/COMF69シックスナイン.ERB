@@ -222,7 +222,7 @@ SIF A < V
 SELECTCOM = 69
 SAVESTR:0 = シックスナイン
 
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;-------------------------------------------------
 ;実行決定
@@ -425,7 +425,7 @@ ELSE
 	TIMES SOURCE:達成 , 1.70
 ENDIF
 
-IF PREVCOM == [[TRAIN:アナル舐め]]
+IF PREVCOM == TNUM("アナル舐め")
 	;ABL:Ａ感覚をみる
 	IF ABL:Ａ感覚 == 0
 		SOURCE:快Ａ = 5
@@ -589,7 +589,7 @@ SIF ASSIPLAY == 0 && EXP:Ｖ経験 >= EXPLV:3
 TFLAG:快楽経験 = 1
 
 ;屈服刻印２に相当
-TFLAG:屈服刻印2 = 2
+TFLAG:屈服刻印取得 = 2
 
 RETURN 1
 

@@ -6,7 +6,7 @@
 ;調教ソース確認後に表示されるテキスト
 ;SOURCR.ERBより呼び出し
 ;主にパラメータの上昇による反応や、「その調教の結果どういう事が起こったか」を描写するのに使う
-;表示される順番はTRAIN_MESSAGE_B→TRAIN_MESSAGE_Aである事に注意
+;表示される順番はTRAIN_MESSAGE→TRAIN_MESSAGE_Aである事に注意
 ;>@TEXT→@TRAIN_MESSAGE_Cに改名
 ;@TRAIN_MESSAGE_CをTRAIN_MESSAGE_Aにマージ
 ;失神パッチ適応用の処理を追加
@@ -23,7 +23,7 @@ DRAWLINE
 ;--------------------------------------------------------
 IF TFLAG:素股で射精 == 1
 	;兜あわせの場合
-	IF SELECTCOM == [[TRAIN:兜あわせ]]
+	IF SELECTCOM == TNUM("兜あわせ")
 		;相手も射精
 		IF TFLAG:調教対象が射精 >= 1
 			PRINTL 二人は同時に射精し、お互いのペニスに精液をぶちまけた…
@@ -33,9 +33,9 @@ IF TFLAG:素股で射精 == 1
 		ENDIF
 	;素股
 	ELSE
-	SIF SELECTCOM == [[TRAIN:素股]]
+	SIF SELECTCOM == TNUM("素股")
 		PRINTFORML 吐き出された精液が%CALLNAME:TARGET%の体を汚していった…
-	SIF SELECTCOM == [[TRAIN:助手を犯す]]
+	SIF SELECTCOM == TNUM("助手を犯す")
 		PRINTL 吐き出された精液が二人の体を汚していった…
 	ENDIF
 
@@ -44,7 +44,7 @@ IF TFLAG:素股で射精 == 1
 ;--------------------------------------------------------
 ELSEIF TFLAG:素股で射精 == 2
 	;兜あわせの場合
-	IF SELECTCOM == [[TRAIN:兜あわせ]]
+	IF SELECTCOM == TNUM("兜あわせ")
 		;相手も射精
 		IF TFLAG:調教対象が射精 >= 1
 			PRINTL 二人は同時に射精し、お互いのペニスに大量の精液をぶちまけた…
@@ -54,9 +54,9 @@ ELSEIF TFLAG:素股で射精 == 2
 		ENDIF
 	;素股
 	ELSE
-	SIF SELECTCOM == [[TRAIN:素股]]
+	SIF SELECTCOM == TNUM("素股")
 		PRINTFORML %CALLNAME:TARGET%の体は吐き出された大量の精液にまみれていった…
-	SIF SELECTCOM == [[TRAIN:助手を犯す]]
+	SIF SELECTCOM == TNUM("助手を犯す")
 		PRINTL 二人の体は吐き出された大量の精液にまみれていった…
 	ENDIF
 ENDIF
@@ -77,13 +77,13 @@ SIF TFLAG:触手が射精 == 2
 ;犬が射精
 ;--------------------------------------------------------
 IF TFLAG:犬が射精 > 0
-	IF SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:騎乗位]]
+	IF SELECTCOM == TNUM("後背位]] || SELECTCOM == [[TRAIN:騎乗位")
 		PRINTFORML %CALLNAME:TARGET%の膣内へ、獣の臭いのする熱い精液が注ぎ込まれた…
-	ELSEIF SELECTCOM == [[TRAIN:後背位アナル]]
+	ELSEIF SELECTCOM == TNUM("後背位アナル")
 		PRINTFORML %CALLNAME:TARGET%の直腸へ、獣の臭いのする熱い精液が注ぎ込まれた…
-	ELSEIF SELECTCOM == [[TRAIN:フェラチオ]]
+	ELSEIF SELECTCOM == TNUM("フェラチオ")
 		PRINTFORML %CALLNAME:TARGET%の口の中に、獣の臭いのする粘っこい精液が注ぎ込まれた…
-	ELSEIF SELECTCOM == [[TRAIN:手淫]]
+	ELSEIF SELECTCOM == TNUM("手淫")
 		PRINTFORML %CALLNAME:TARGET%の掌に、獣臭い精液がべっとりと粘りついた…
 	ENDIF
 ENDIF
@@ -103,7 +103,7 @@ ENDIF
 ;フェラ系コマンドやパイズリで、射精＋絶頂の際の冠頭文(修正)
 ;--------------------------------------------------------
 IF TFLAG:口で射精 > 0 && TFLAG:絶頂の強度 > 0
-	IF SELECTCOM == [[TRAIN:パイズリ]]
+	IF SELECTCOM == TNUM("パイズリ")
 		IF RAND:3 == 0
 			PRINTFORM 両の胸に押し包まれる圧迫感に
 		ELSEIF RAND:2 == 0
@@ -163,7 +163,7 @@ IF TFLAG:口で射精 > 0 && TFLAG:絶頂の強度 > 0
 		ENDIF
 	ENDIF
 	;ダブルフェラ、ダブルパイズリ
-	IF SELECTCOM == [[TRAIN:ダブルフェラ]] || SELECTCOM == [[TRAIN:ダブルパイズリ]]
+	IF SELECTCOM == TNUM("ダブルフェラ") || SELECTCOM == TNUM("ダブルパイズリ")
 		IF RAND:4 == 0
 			PRINTFORMW 、%CALLNAME:MASTER%がみなぎる猛りをぶちまけるやいなや、
 		ELSEIF RAND:3 == 0
@@ -177,7 +177,7 @@ IF TFLAG:口で射精 > 0 && TFLAG:絶頂の強度 > 0
 			PRINTFORML と、
 		ENDIF
 	;二本フェラ
-	ELSEIF SELECTCOM == [[TRAIN:キスする]]
+	ELSEIF SELECTCOM == TNUM("キスする")
 		IF TFLAG:助手が射精
 			PRINTFORMW 、%CALLNAME:MASTER%と%CALLNAME:PLAYER%がみなぎる猛りをぶちまけるやいなや、
 		ELSE
@@ -205,7 +205,7 @@ ENDIF
 ;--------------------------------------------------------
 IF TFLAG:口で射精 == 1
 	;フェラチオ
-	IF SELECTCOM == [[TRAIN:フェラチオ]]
+	IF SELECTCOM == TNUM("フェラチオ")
 		IF ABL:奉仕精神 >= 3
 			IF RAND:6 == 0
 				PRINTFORML %CALLNAME:TARGET%は喉を鳴らして精液を飲み干した…
@@ -234,7 +234,7 @@ IF TFLAG:口で射精 == 1
 			ENDIF
 		ENDIF
 	;パイズリ
-	ELSEIF SELECTCOM == [[TRAIN:パイズリ]]
+	ELSEIF SELECTCOM == TNUM("パイズリ")
 		IF IS_チチユレ(TARGET)
 			PRINTFORML %CALLNAME:TARGET%の胸の谷間に精液が溜まっている…
 		ELSE
@@ -247,10 +247,10 @@ IF TFLAG:口で射精 == 1
 			ENDIF
 		ENDIF
 	;ダブルフェラ
-	ELSEIF SELECTCOM == [[TRAIN:ダブルフェラ]]
+	ELSEIF SELECTCOM == TNUM("ダブルフェラ")
 		PRINTFORML %CALLNAME:TARGET%と%CALLNAME:ASSI%は精液を口で受け止めている…
 	;シックスナイン
-	ELSEIF SELECTCOM == [[TRAIN:シックスナイン]]
+	ELSEIF SELECTCOM == TNUM("シックスナイン")
 		IF RAND:4 == 0
 			PRINTFORML %CALLNAME:TARGET%は秘部への刺激に体を震わせながら精液を飲み込んでいく…
 		ELSEIF RAND:3 == 0
@@ -266,7 +266,7 @@ IF TFLAG:口で射精 == 1
 			ENDIF
 		ENDIF
 	;イラマチオ、ディープスロート
-	ELSEIF SELECTCOM == [[TRAIN:イラマチオ]] || SELECTCOM == [[TRAIN:ディープスロート]]
+	ELSEIF SELECTCOM == TNUM("イラマチオ]] || SELECTCOM == [[TRAIN:ディープスロート")
 		IF ABL:奉仕精神 >= 3
 			IF RAND:5 == 0
 				PRINTFORML %CALLNAME:TARGET%は喉を鳴らして精液を飲み干した…
@@ -289,14 +289,14 @@ IF TFLAG:口で射精 == 1
 			ENDIF
 		ENDIF
 	;パイズリフェラ
-	ELSEIF SELECTCOM == [[TRAIN:パイズリフェラ]]
+	ELSEIF SELECTCOM == TNUM("パイズリフェラ")
 		IF IS_貧乳(TARGET)
 			PRINTFORML %CALLNAME:PLAYER%はペニスを胸に擦りつけたまま%CALLNAME:TARGET%の口の中に精液を注ぎこんだ…
 		ELSE
 			PRINTFORML %CALLNAME:PLAYER%はペニスを胸に挟まれたまま%CALLNAME:TARGET%の口の中に精液を注ぎこんだ…
 		ENDIF
 	;手コキフェラ
-	ELSEIF SELECTCOM == [[TRAIN:手コキフェラ]]
+	ELSEIF SELECTCOM == TNUM("手コキフェラ")
 		IF ABL:奉仕精神 >= 3
 			PRINTFORML %CALLNAME:TARGET%は喉を鳴らして精液を飲み干した…
 		ELSE
@@ -307,7 +307,7 @@ IF TFLAG:口で射精 == 1
 		SIF ABL:精液中毒 >= 3 && IS_FUTA(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%は竿を絞るように扱いて、精液を啜り上げている
 	;バキュームフェラ
-	ELSEIF SELECTCOM == [[TRAIN:バキュームフェラ]]
+	ELSEIF SELECTCOM == TNUM("バキュームフェラ")
 		IF ABL:奉仕精神 >= 3
 			PRINTFORML ペニスに淫猥に吸い付く%CALLNAME:TARGET%の口の中へ精液を解き放った…
 		ELSE
@@ -321,7 +321,7 @@ IF TFLAG:口で射精 == 1
 ;--------------------------------------------------------
 ELSEIF TFLAG:口で射精 == 2
 	;フェラチオ
-	IF SELECTCOM == [[TRAIN:フェラチオ]]
+	IF SELECTCOM == TNUM("フェラチオ")
 		IF ABL:奉仕精神 >= 3
 			IF RAND:9 == 0
 				PRINTFORML 飲みきれなかった精液が%CALLNAME:TARGET%の口から溢れてきた…
@@ -352,7 +352,7 @@ ELSEIF TFLAG:口で射精 == 2
 			ENDIF
 		ENDIF
 	;パイズリ
-	ELSEIF SELECTCOM == [[TRAIN:パイズリ]]
+	ELSEIF SELECTCOM == TNUM("パイズリ")
 		IF RAND:3 == 0 && !IS_絶壁(TARGET)
 			PRINTFORML ぬめぬめとした精液が二つの乳房をてからせている…
 		ELSEIF RAND:2 == 0
@@ -361,10 +361,10 @@ ELSEIF TFLAG:口で射精 == 2
 			PRINTFORML 精液が%CALLNAME:TARGET%の胸を白く染め上げた…
 		ENDIF
 	;ダブルフェラ
-	ELSEIF SELECTCOM == [[TRAIN:ダブルフェラ]]
+	ELSEIF SELECTCOM == TNUM("ダブルフェラ")
 		PRINTFORML 大量の精液が%CALLNAME:TARGET%と%CALLNAME:ASSI%の顔中に降り注いだ…
 	;シックスナイン
-	ELSEIF SELECTCOM == [[TRAIN:シックスナイン]]
+	ELSEIF SELECTCOM == TNUM("シックスナイン")
 		IF RAND:4 == 0
 			PRINTFORML %CALLNAME:TARGET%は秘部への刺激に体を震わせながら精液を飲み込んでいく…
 		ELSEIF RAND:3 == 0
@@ -380,7 +380,7 @@ ELSEIF TFLAG:口で射精 == 2
 			ENDIF
 		ENDIF
 	;イラマチオ、ディープスロート
-	ELSEIF SELECTCOM == [[TRAIN:イラマチオ]] || SELECTCOM == [[TRAIN:ディープスロート]]
+	ELSEIF SELECTCOM == TNUM("イラマチオ]] || SELECTCOM == [[TRAIN:ディープスロート")
 		IF ABL:奉仕精神 >= 3
 			IF RAND:9 == 0
 				PRINTFORML 飲みきれなかった精液が%CALLNAME:TARGET%の口から溢れてきた…
@@ -412,7 +412,7 @@ ELSEIF TFLAG:口で射精 == 2
 			ENDIF
 		ENDIF
 	;パイズリフェラ
-	ELSEIF SELECTCOM == [[TRAIN:パイズリフェラ]]
+	ELSEIF SELECTCOM == TNUM("パイズリフェラ")
 		IF IS_貧乳(TARGET)
 			PRINTFORML %CALLNAME:PLAYER%はペニスを胸に擦りつけたまま%CALLNAME:TARGET%の口の中に大量の精液を注ぎこんだ…
 		ELSE
@@ -420,7 +420,7 @@ ELSEIF TFLAG:口で射精 == 2
 		ENDIF
 		PRINTL 口から溢れた精液がペニスと胸を白く汚していった…
 	;手コキフェラ
-	ELSEIF SELECTCOM == [[TRAIN:手コキフェラ]]
+	ELSEIF SELECTCOM == TNUM("手コキフェラ")
 		IF ABL:奉仕精神 >= 3
 			PRINTFORML 飲みきれなかった精液が%CALLNAME:TARGET%の口から溢れてきた…
 		ELSE
@@ -431,7 +431,7 @@ ELSEIF TFLAG:口で射精 == 2
 		SIF ABL:精液中毒 >= 3 && IS_FUTA(PLAYER)
 			PRINTFORML %CALLNAME:TARGET%は溢れた精液で口の周りをドロドロにしながらも竿を絞るように扱いて、精液を啜り上げている
 	;バキュームフェラ
-	ELSEIF SELECTCOM == [[TRAIN:バキュームフェラ]]
+	ELSEIF SELECTCOM == TNUM("バキュームフェラ")
 		IF ABL:奉仕精神 >= 3
 			PRINTFORML ペニスに淫猥に吸い付く%CALLNAME:TARGET%の口の中へ大量の精液を解き放った…
 		ELSE
@@ -557,7 +557,7 @@ ELSEIF TFLAG:102  == 2
 ;--------------------------------------------------------
 ;何もしない
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:何もしない]] && TFLAG:失神中終了 <= 1
+ELSEIF SELECTCOM == TNUM("何もしない") && TFLAG:失神中終了 <= 1
 	SIF PALAM:欲情 >= PALAMLV:3
 		PRINTFORM %CALLNAME:TARGET%は息を荒げ
 	SIF PALAM:欲情 >= PALAMLV:5
@@ -684,35 +684,35 @@ IF TFLAG:セックスで射精 > 0
 		PRINTFORML 精液を放った……
 	ELSEIF CFLAG:33 == 0 && (PALAM:欲情 < PALAMLV:4 || TFLAG:今回の調教で処女喪失)
 		;正常位、対面座位、
-		IF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:対面座位]]
+		IF SELECTCOM == TNUM("正常位]] || SELECTCOM == [[TRAIN:対面座位")
 			PRINT ペニスを抜き去られた秘裂からは
 			SIF TFLAG:今回の調教で処女喪失
 				PRINT 破瓜の血の混ざった
 			PRINTL 精液があふれ出してきた…
 		;後背位、背面座位
-		ELSEIF SELECTCOM == [[TRAIN:後背位]] || SELECTCOM == [[TRAIN:背面座位]]
+		ELSEIF SELECTCOM == TNUM("後背位]] || SELECTCOM == [[TRAIN:背面座位")
 			PRINT ペニスを抜き去られた秘裂からは
 			SIF TFLAG:今回の調教で処女喪失
 				PRINT 破瓜の血の混ざった
 			PRINTL 精液が垂れ落ちていった…
 		;アナルセックス
-		ELSEIF SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位アナル]]
+		ELSEIF SELECTCOM == TNUM("正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位アナル")
 			PRINTL アナルから漏れ出た腸液混じりの精液が尻の割れ目を伝って垂れ落ちていった…
 		;騎乗位
-		ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
+		ELSEIF SELECTCOM == TNUM("騎乗位")
 			PRINT ペニスを抜き去ると
 			SIF TFLAG:今回の調教で処女喪失
 				PRINT 破瓜の血の混ざった
 			PRINTL 精液があふれ出してきた…
 		;挿入子宮口責め
-		ELSEIF SELECTCOM == [[TRAIN:電マ自慰]]
+		ELSEIF SELECTCOM == TNUM("電マ自慰")
 			PRINTFORML %CALLNAME:TARGET%の子宮に熱い精液が注ぎ込まれていった…
 		ENDIF
 		TFLAG:今回の調教で処女喪失 = 0
 		TFLAG:挿しっぱなし = 0
 	ELSEIF CFLAG:33 == 0
 		;アナルセックス
-		IF SELECTCOM == [[TRAIN:正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位アナル]]
+		IF SELECTCOM == TNUM("正常位アナル]] || SELECTCOM == [[TRAIN:後背位アナル]] || SELECTCOM == [[TRAIN:対面座位アナル]] || SELECTCOM == [[TRAIN:背面座位アナル]] || SELECTCOM == [[TRAIN:騎乗位アナル")
 			IF RAND:6 == 0
 				PRINTFORML 精液に溢れた%CALLNAME:TARGET%の腸内は細かく震え、
 				PRINTFORML %CALLNAME:PLAYER%のペニスをきつく締めつけている…
@@ -940,7 +940,7 @@ ENDIF
 ;--------------------------------------------------------
 ;フェラで射精+絶頂後
 ;--------------------------------------------------------
-IF SELECTCOM == [[TRAIN:フェラチオ]] && TFLAG:口で射精 && TFLAG:絶頂の強度
+IF SELECTCOM == TNUM("フェラチオ") && TFLAG:口で射精 && TFLAG:絶頂の強度
 	PRINT そして
 	IF ABL:奉仕精神 >= 3
 		IF RAND:3 == 0
@@ -957,7 +957,7 @@ ENDIF
 ;--------------------------------------------------------
 ;シックスナインで絶頂後(修正)
 ;--------------------------------------------------------
-IF SELECTCOM == [[TRAIN:シックスナイン]] && TFLAG:絶頂の強度
+IF SELECTCOM == TNUM("シックスナイン") && TFLAG:絶頂の強度
 	SIF TFLAG:口で射精 > 0
 		PRINTFORM その後
 	IF RAND:4 == 0
@@ -985,9 +985,9 @@ ENDIF
 ;--------------------------------------------------------
 ;愛撫
 ;--------------------------------------------------------
-IF SELECTCOM == [[TRAIN:愛撫]] && TEQUIP:縄 == 0 && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ｃ]]
-	B = UP:[[UP:快Ｂ]]
+IF SELECTCOM == TNUM("愛撫") && TEQUIP:縄 == 0 && TFLAG:失神中終了 <= 1
+	A = UP:快Ｃ
+	B = UP:快Ｂ
 	C = A + B
 
 	IF C < 100
@@ -1042,8 +1042,8 @@ IF SELECTCOM == [[TRAIN:愛撫]] && TEQUIP:縄 == 0 && TFLAG:失神中終了 <= 
 ;--------------------------------------------------------
 ;クンニ
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:クンニ]]  && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ｃ]]
+ELSEIF SELECTCOM == TNUM("クンニ")  && TFLAG:失神中終了 <= 1
+	A = UP:快Ｃ
 
 	IF A < 300
 		PRINTFORML %CALLNAME:TARGET%のそこはまだしっとりと閉じたままだ。快楽を感じるにはもう少しかかるかもしれない。
@@ -1075,8 +1075,8 @@ ELSEIF SELECTCOM == [[TRAIN:クンニ]]  && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ;アナル愛撫
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:アナル愛撫]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ａ]]
+ELSEIF SELECTCOM == TNUM("アナル愛撫") && TFLAG:失神中終了 <= 1
+	A = UP:快Ａ
 
 	IF A < 300
 		PRINTFORM %CALLNAME:TARGET%は悲鳴を上げて体をよじる。
@@ -1120,10 +1120,10 @@ ELSEIF SELECTCOM == [[TRAIN:アナル愛撫]] && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ;自慰
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:オナニー]]
-	A = UP:[[UP:快Ｃ]]
-	B = UP:[[UP:快Ｖ]]
-	C = UP:[[UP:快Ａ]]
+ELSEIF SELECTCOM == TNUM("オナニー")
+	A = UP:快Ｃ
+	B = UP:快Ｖ
+	C = UP:快Ａ
 	D = UP:17
 	E = A + B + C + D
 
@@ -1178,11 +1178,11 @@ ELSEIF SELECTCOM == [[TRAIN:オナニー]]
 ;--------------------------------------------------------
 ;胸愛撫
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:胸愛撫]] && TEQUIP:獣姦プレイ == 0 && TFLAG:失神中終了 <= 1
+ELSEIF SELECTCOM == TNUM("胸愛撫") && TEQUIP:獣姦プレイ == 0 && TFLAG:失神中終了 <= 1
 	SIF IS_デカパイ(TARGET)
 		PRINTFORML %CALLNAME:PLAYER%の手は、%CALLNAME:TARGET%の乳にすっぽりと潜り込みそうになっている…… 
 
-	A = UP:[[UP:快Ｂ]]
+	A = UP:快Ｂ
 
 	IF TALENT:母乳体質 && TEQUIP:搾乳機 == 0 && TEQUIP:触手召喚 == 0
 		SAVESTR:2 = 吸い
@@ -1215,8 +1215,8 @@ ELSEIF SELECTCOM == [[TRAIN:胸愛撫]] && TEQUIP:獣姦プレイ == 0 && TFLAG:
 ;--------------------------------------------------------
 ;ローター
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:ローター]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ｃ]]
+ELSEIF SELECTCOM == TNUM("ローター") && TFLAG:失神中終了 <= 1
+	A = UP:快Ｃ
 	IF HAVE_PENIS(TARGET)
 		SAVESTR:2 = ペニス
 	ELSE
@@ -1247,8 +1247,8 @@ ELSEIF SELECTCOM == [[TRAIN:ローター]] && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ;バイブ
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:バイブ]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ｖ]]
+ELSEIF SELECTCOM == TNUM("バイブ") && TFLAG:失神中終了 <= 1
+	A = UP:快Ｖ
 
 	IF TEQUIP:バイブ
 		IF A < 300
@@ -1290,8 +1290,8 @@ ELSEIF SELECTCOM == [[TRAIN:バイブ]] && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ;Ｅマッサージャ
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:Ｅマッサージャ]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ｃ]]
+ELSEIF SELECTCOM == TNUM("Ｅマッサージャ") && TFLAG:失神中終了 <= 1
+	A = UP:快Ｃ
 	IF HAVE_PENIS(TARGET)
 		SAVESTR:2 = ペニス
 	ELSE
@@ -1319,8 +1319,8 @@ ELSEIF SELECTCOM == [[TRAIN:Ｅマッサージャ]] && TFLAG:失神中終了 <= 
 ;--------------------------------------------------------
 ;アナルバイブ
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:アナルバイブ]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ａ]]
+ELSEIF SELECTCOM == TNUM("アナルバイブ") && TFLAG:失神中終了 <= 1
+	A = UP:快Ａ
 
 	IF TEQUIP:アナルバイブ
 		IF A < 300
@@ -1363,8 +1363,8 @@ ELSEIF SELECTCOM == [[TRAIN:アナルバイブ]] && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ;電動クリキャップ
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:クリキャップ]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:快Ｃ]]
+ELSEIF SELECTCOM == TNUM("クリキャップ") && TFLAG:失神中終了 <= 1
+	A = UP:快Ｃ
 
 	IF A < 300
 		PRINTFORML %CALLNAME:TARGET%はクリトリスへの刺激に目を閉じて耐えている。
@@ -1383,29 +1383,29 @@ ELSEIF SELECTCOM == [[TRAIN:クリキャップ]] && TFLAG:失神中終了 <= 1
 ;--------------------------------------------------------
 ;正常位, 正常位アナル
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:正常位]] || SELECTCOM == [[TRAIN:正常位アナル]] && TFLAG:失神中終了 <= 1
+ELSEIF SELECTCOM == TNUM("正常位]] || SELECTCOM == [[TRAIN:正常位アナル") && TFLAG:失神中終了 <= 1
 	SIF TFLAG:セックスで射精 && ABL:信頼 >= 3 && ABL:欲望 >= 3
 		PRINTFORML %CALLNAME:TARGET%は%CALLNAME:PLAYER%に足を絡め腰を押し付けてきた…
 
 ;--------------------------------------------------------
 ;対面座位, 対面座位アナル
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:逆レイプ]] || SELECTCOM == [[TRAIN:対面座位アナル]] && TFLAG:失神中終了 <= 1
+ELSEIF SELECTCOM == TNUM("逆レイプ]] || SELECTCOM == [[TRAIN:対面座位アナル") && TFLAG:失神中終了 <= 1
 	SIF TFLAG:セックスで射精 && ABL:信頼 >= 3 && ABL:欲望 >= 3
 		PRINTFORML %CALLNAME:TARGET%は%CALLNAME:PLAYER%の首に手を回して抱きついてきた…
 
 ;--------------------------------------------------------
 ;背面座位, 背面座位アナル
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:逆アナルレイプ]] || SELECTCOM == [[TRAIN:背面座位アナル]] && TFLAG:失神中終了 <= 1
+ELSEIF SELECTCOM == TNUM("逆アナルレイプ]] || SELECTCOM == [[TRAIN:背面座位アナル") && TFLAG:失神中終了 <= 1
 	SIF TFLAG:セックスで射精 && ABL:信頼 >= 3 && ABL:欲望 >= 3
 		PRINTFORML %CALLNAME:TARGET%は背を仰け反らせて%CALLNAME:PLAYER%にしなだれかかった…
 
 ;--------------------------------------------------------
 ;騎乗位
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
-	A = UP:[[UP:快Ｖ]]
+ELSEIF SELECTCOM == TNUM("騎乗位")
+	A = UP:快Ｖ
 
 	IF A < 299 
 		PRINTFORML %CALLNAME:TARGET%は苦しそうにしながら命令に従って腰を振る。だが、まだ快楽を得るには遠いようだ。
@@ -1439,8 +1439,8 @@ ELSEIF SELECTCOM == [[TRAIN:騎乗位]]
 ;--------------------------------------------------------
 ;スパンキング、針、鞭
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:スパンキング]] || SELECTCOM == [[TRAIN:鞭]] || SELECTCOM == [[TRAIN:針]] && TFLAG:失神中終了 <= 1
-	A = UP:[[UP:苦痛]]
+ELSEIF SELECTCOM == TNUM("スパンキング]] || SELECTCOM == [[TRAIN:鞭]] || SELECTCOM == [[TRAIN:針") && TFLAG:失神中終了 <= 1
+	A = UP:苦痛
 
 	IF A < 300
 		B = 0
@@ -1476,7 +1476,7 @@ ELSEIF SELECTCOM == [[TRAIN:スパンキング]] || SELECTCOM == [[TRAIN:鞭]] |
 			PRINT 泣きじゃくりながら
 		PRINTL 必死で許しを請うている。
 	ENDIF
-	IF UP:[[UP:欲情]] > 1000
+	IF UP:欲情 > 1000
 		PRINTFORM しかしながら、%CALLNAME:TARGET%は苦痛に身をよじりつつも
 		IF HAVE_PENIS(TARGET)
 			PRINTFORML ペニスを勃起させている……
@@ -1487,7 +1487,7 @@ ELSEIF SELECTCOM == [[TRAIN:スパンキング]] || SELECTCOM == [[TRAIN:鞭]] |
 ;--------------------------------------------------------
 ;剃毛
 ;--------------------------------------------------------
-ELSEIF SELECTCOM == [[TRAIN:剃毛]] && TFLAG:失神中終了 <= 1
+ELSEIF SELECTCOM == TNUM("剃毛") && TFLAG:失神中終了 <= 1
 	IF RAND:3 == 0 && TEQUIP:縄 == 0
 		PRINTFORM %CALLNAME:TARGET%は剃り上げられた
 			IF CFLAG:性器 == 0
@@ -1550,7 +1550,7 @@ ENDIF
 ;-------------------------------------------------
 ;アナル奉仕＋絶頂無(修正)
 ;-------------------------------------------------
-IF SELECTCOM == [[TRAIN:アナル奉仕]] || SELECTCOM == [[TRAIN:アナル舐め手コキ]]
+IF SELECTCOM == TNUM("アナル奉仕]] || SELECTCOM == [[TRAIN:アナル舐め手コキ")
 	IF ABL:奉仕精神 >=3 && TFLAG:絶頂の強度 == 0
 		IF RAND:3 ==0
 			PRINTFORML %CALLNAME:TARGET%は肛門の周りを舐めあげ、舌先を長くのばし奥へと侵入させた

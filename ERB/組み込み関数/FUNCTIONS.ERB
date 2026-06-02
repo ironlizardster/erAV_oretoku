@@ -8,10 +8,10 @@
 ;主にCALL NOTHINGをGREPすることにより何が追加待ちかを調べる用途。
 ;=================================================
 @NOTHING
-RETURN 0
+	RETURN 0
 
 @PRINT_DAY_TIME
-PRINTFORML {DAY+1}日目\@ TIME ? 夜 # 昼 \@
+	PRINTFORML {DAY+1}日目\@ TIME ? 夜 # 昼 \@
 
 ;=================================================
 ;INCEST
@@ -25,7 +25,7 @@ PRINTFORML {DAY+1}日目\@ TIME ? 夜 # 昼 \@
 ;erAVにおいては25はミッション期限で使用のためコメントアウト。最下段からも外してある。
 ;=================================================
 @INCEST
-TFLAG:近親相姦 = 親族度(TARGET,PLAYER)
+	TFLAG:近親相姦 = 親族度(TARGET,PLAYER)
 
 ;=================================================
 ;親族度
@@ -41,32 +41,32 @@ TFLAG:近親相姦 = 親族度(TARGET,PLAYER)
 #DIMS DYNAMIC 親族設定, 2
 #DIM LCOUNT
 
-;関数の汎用性を考えて、敢えてREPEAT文の使用は避ける
-SPLIT CSTR:CHARA_NO1:親族関係, "/", 親族設定用
-FOR LCOUNT, 0, RESULT
-	;なぜか行連結で行頭にスペースが入るので削る
-	親族設定用:LCOUNT = %SUBSTRINGU(親族設定用:LCOUNT, 1)%
-	SIF 親族設定用:LCOUNT == ""
-		BREAK
-	SPLIT 親族設定用:LCOUNT, ":", 親族設定
-	IF 親族設定:0 == NAME:CHARA_NO2
-		SELECTCASE 親族設定:1
-			CASE "父", "母"
-				RETURNF 1
-			CASE "子", "娘"
-				RETURNF 2
-			CASE "兄", "姉"
-				RETURNF 3
-			CASE "弟", "妹"
-				RETURNF 4
-			CASE "従姉"
-				RETURNF 5
-			CASE "従弟"
-				RETURNF 6
-		ENDSELECT
-	ENDIF
-NEXT
-RETURNF 0
+	;関数の汎用性を考えて、敢えてREPEAT文の使用は避ける
+	SPLIT CSTR:CHARA_NO1:親族関係, "/", 親族設定用
+	FOR LCOUNT, 0, RESULT
+		;なぜか行連結で行頭にスペースが入るので削る
+		親族設定用:LCOUNT = %SUBSTRINGU(親族設定用:LCOUNT, 1)%
+		SIF 親族設定用:LCOUNT == ""
+			BREAK
+		SPLIT 親族設定用:LCOUNT, ":", 親族設定
+		IF 親族設定:0 == NAME:CHARA_NO2
+			SELECTCASE 親族設定:1
+				CASE "父", "母"
+					RETURNF 1
+				CASE "子", "娘"
+					RETURNF 2
+				CASE "兄", "姉"
+					RETURNF 3
+				CASE "弟", "妹"
+					RETURNF 4
+				CASE "従姉"
+					RETURNF 5
+				CASE "従弟"
+					RETURNF 6
+			ENDSELECT
+		ENDIF
+	NEXT
+	RETURNF 0
 
 ;
 ;================================================
@@ -78,14 +78,14 @@ RETURNF 0
 ;フォントと色を戻す機能完備。問題は一行用というところである
 ;------------------------------------------------
 @SERIHU,ARGS
-SETCOLOR 0xDDBBCC
-CHKFONT "あくびん"
-IF RESULT
-	SETFONT "あくびん"
-ENDIF
-PRINTFORML 「%ARGS%」
-SETFONT ""
-RESETCOLOR
+	SETCOLOR 0xDDBBCC
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTFORML 「%ARGS%」
+	SETFONT ""
+	RESETCOLOR
 
 ;================================================
 ;SERIHU_FULLCOLOR
@@ -95,15 +95,14 @@ RESETCOLOR
 ;第二引数は16進数0xRRGGBBである
 ;------------------------------------------------
 @SERIHU_FULLCOLOR,ARGS,ARG
-
-SETCOLOR ARG
-CHKFONT "あくびん"
-IF RESULT
-	SETFONT "あくびん"
-ENDIF
-PRINTFORML 「%ARGS%」
-SETFONT ""
-RESETCOLOR
+	SETCOLOR ARG
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTFORML 「%ARGS%」
+	SETFONT ""
+	RESETCOLOR
 
 ;================================================
 ;HINT_CHARA
@@ -114,11 +113,10 @@ RESETCOLOR
 ;第二引数は16進数0xRRGGBBである
 ;------------------------------------------------
 @HINT_CHARA,ARGS,ARG=0xCCCCFF
-
-SETCOLOR ARG
-PRINTFORM %ARGS%
-SETFONT ""
-RESETCOLOR
+	SETCOLOR ARG
+	PRINTFORM %ARGS%
+	SETFONT ""
+	RESETCOLOR
 
 ;===============================================
 ;DIGIT
@@ -129,15 +127,12 @@ RESETCOLOR
 @DIGIT(ARG)
 #FUNCTION
 #DIM LOOPCOUNT
-
-LOOPCOUNT = 0
-
-WHILE ARG
-	ARG /= 10
-	LOOPCOUNT ++
-WEND
-
-RETURNF LOOPCOUNT
+	LOOPCOUNT = 0
+	WHILE ARG
+		ARG /= 10
+		LOOPCOUNT ++
+	WEND
+	RETURNF LOOPCOUNT
 
 ;=================================================
 ; 経験増加処理
@@ -152,77 +147,77 @@ RETURNF LOOPCOUNT
 ;  TCVARの要素番号はEXPのものに合わせる
 ;=================================================
 @ADD_EXP(ARG, ARG:1 = 0,ARG:2 = -1)
-; 経験増加処理
-PRINTFORML %NAME:ARG%
-FOR LOCAL, 0, VARSIZE("EXP")
-	IF TCVAR:ARG:LOCAL
-		; 経験値の加算処理
-		; 経験名が定義されているのみ加算処理を行う
-		SIF ARG:2 >= 0 && TALENT:ARG:(ARG:2)
-			TCVAR:ARG:LOCAL *= 2
-		IF STRLENS(EXPNAME:LOCAL) > 0
-			EXP:ARG:LOCAL += TCVAR:ARG:LOCAL
-		ELSE
-			DEBUGPRINTFORML NOTICE: EXP:{LOCAL}は定義されていないため加算処理をスキップします
+	; 経験増加処理
+	PRINTFORML %NAME:ARG%
+	FOR LOCAL, 0, VARSIZE("EXP")
+		IF TCVAR:ARG:LOCAL
+			; 経験値の加算処理
+			; 経験名が定義されているのみ加算処理を行う
+			SIF ARG:2 >= 0 && TALENT:ARG:(ARG:2)
+				TCVAR:ARG:LOCAL *= 2
+			IF STRLENS(EXPNAME:LOCAL) > 0
+				EXP:ARG:LOCAL += TCVAR:ARG:LOCAL
+			ELSE
+				DEBUGPRINTFORML NOTICE: EXP:{LOCAL}は定義されていないため加算処理をスキップします
+			ENDIF
+			SIF ARG:1 == 0
+				PRINTFORML 　%EXPNAME:LOCAL% + {TCVAR:ARG:LOCAL}
 		ENDIF
-		SIF ARG:1 == 0
-			PRINTFORML 　%EXPNAME:LOCAL% + {TCVAR:ARG:LOCAL}
-	ENDIF
-NEXT
-VARSET TCVAR:ARG:Ｖ経験
+	NEXT
+	VARSET TCVAR:ARG:Ｖ経験
 
 ;=================================================
-; 経験増加処理
+; 宝珠増加処理
 ;--------------------------------------------
 ; 引数
 ;  ARG   増加処理を行うキャラ登録番号
 ;  ARG:1 メッセージマスクフラグ(1の場合メッセージ非表示)
-;  ARG:2 経験値倍増する素質の番号
+;  ARG:2 宝珠値倍増する素質の番号
 ;--------------------------------------------
 ; 備考
-;  増加する経験は呼び出し前にTCVARに格納しておくこと
+;  増加する宝珠は呼び出し前にTCVARに格納しておくこと
 ;  TCVARの要素番号はEXPのものに合わせる
 ;=================================================
 @ADD_JUEL(ARG, ARG:1 = 0,ARG:2 = -1)
-; 経験増加処理
-PRINTFORML %NAME:ARG%
-FOR LOCAL, 0, VARSIZE("JUEL")
-	IF GOTJUEL:ARG:LOCAL
-		; 経験値の加算処理
-		; 経験名が定義されているのみ加算処理を行う
-		SIF ARG:2 >= 0 && TALENT:ARG:(ARG:2)
-			GOTJUEL:ARG:LOCAL *= 2
-		IF STRLENS(PALAMNAME:LOCAL) > 0
-			JUEL:ARG:LOCAL += GOTJUEL:ARG:LOCAL
-		ELSE
-			DEBUGPRINTFORML NOTICE: PALAMNAME:{LOCAL}は定義されていないため加算処理をスキップします
+	; 宝珠増加処理
+	PRINTFORML %NAME:ARG%
+	FOR LOCAL, 0, VARSIZE("JUEL")
+		IF GOTJUEL:ARG:LOCAL
+			; 経験値の加算処理
+			; 経験名が定義されているのみ加算処理を行う
+			SIF ARG:2 >= 0 && TALENT:ARG:(ARG:2)
+				GOTJUEL:ARG:LOCAL *= 2
+			IF STRLENS(PALAMNAME:LOCAL) > 0
+				JUEL:ARG:LOCAL += GOTJUEL:ARG:LOCAL
+			ELSE
+				DEBUGPRINTFORML NOTICE: PALAMNAME:{LOCAL}は定義されていないため加算処理をスキップします
+			ENDIF
+			SIF ARG:1 == 0
+				PRINTFORML 　%PALAMNAME:LOCAL% + {GOTJUEL:ARG:LOCAL}
 		ENDIF
-		SIF ARG:1 == 0
-			PRINTFORML 　%PALAMNAME:LOCAL% + {GOTJUEL:ARG:LOCAL}
-	ENDIF
-NEXT
-VARSET GOTJUEL:ARG:快Ｃ
+	NEXT
+	VARSET GOTJUEL:ARG:快Ｃ
 
 ;-------------------------
 ;トグル式のボタンを描画する関数
 ;ARGS:0=表示する文字列、ARG:1=ボタンの番号、ARG:2=選択されているか否か
 ;-------------------------
 @PRINT_TOGGLE_BUTTON(ARGS:0, ARG:1, ARG:2)
-IF ARG:2
-	SETCOLOR 0x00FFFF
-ENDIF
-PRINTBUTTON ARGS:0, ARG:1
-RESETCOLOR
+	IF ARG:2
+		SETCOLOR 0x00FFFF
+	ENDIF
+	PRINTBUTTON ARGS:0, ARG:1
+	RESETCOLOR
 
 ;---------------------------------------------------------
 ;ハート表示用
 ;---------------------------------------------------------
 @HEART_CODE
-CHKFONT "あくびん"
-IF RESULT
-	SETFONT "あくびん"
-ENDIF
-PRINTFORM %UNICODE(0x2764)%
+	CHKFONT "あくびん"
+	IF RESULT
+		SETFONT "あくびん"
+	ENDIF
+	PRINTFORM %UNICODE(0x2764)%
 
 
 ;---------------------------------------------------------
@@ -235,15 +230,15 @@ PRINTFORM %UNICODE(0x2764)%
 #DIM LINE_END
 #DIM PAD_TO_LENGTH
 
-TEMP_STR = %STRING%
-IF ENABLE
-	PRINTBUTTON TEMP_STR,VALUE
-ELSE
-	SETCOLOR GET_COLOR_CODE("灰")
-	PRINTPLAINFORM %TEMP_STR%
-	RESETCOLOR
-ENDIF
-CALL POST_PRINT_BUTTON(STRING,LINE_END,PAD_TO_LENGTH)
+	TEMP_STR = %STRING%
+	IF ENABLE
+		PRINTBUTTON TEMP_STR,VALUE
+	ELSE
+		SETCOLOR GET_COLOR_CODE("灰")
+		PRINTPLAINFORM %TEMP_STR%
+		RESETCOLOR
+	ENDIF
+	CALL POST_PRINT_BUTTON(STRING,LINE_END,PAD_TO_LENGTH)
 
 ;---------------------------------------------------------
 ;クリックすると文字列を返すボタンを描画する関数
@@ -255,15 +250,15 @@ CALL POST_PRINT_BUTTON(STRING,LINE_END,PAD_TO_LENGTH)
 #DIM LINE_END
 #DIM PAD_TO_LENGTH
 
-TEMP_STR = %STRING%
-IF ENABLE
-	PRINTBUTTON TEMP_STR,VALUE
-ELSE
-	SETCOLOR GET_COLOR_CODE("灰")
-	PRINTPLAINFORM %TEMP_STR%
-	RESETCOLOR
-ENDIF
-CALL POST_PRINT_BUTTON(STRING,LINE_END,PAD_TO_LENGTH)
+	TEMP_STR = %STRING%
+	IF ENABLE
+		PRINTBUTTON TEMP_STR,VALUE
+	ELSE
+		SETCOLOR GET_COLOR_CODE("灰")
+		PRINTPLAINFORM %TEMP_STR%
+		RESETCOLOR
+	ENDIF
+	CALL POST_PRINT_BUTTON(STRING,LINE_END,PAD_TO_LENGTH)
 
 ;---------------------------------------------------------
 ;ボタン描画後パッドするか改行する関数
@@ -275,14 +270,14 @@ CALL POST_PRINT_BUTTON(STRING,LINE_END,PAD_TO_LENGTH)
 #DIM LINE_END
 #DIM PAD_TO_LENGTH
 
-TEMP_STR = %STRING%
-IF PAD_TO_LENGTH > 0
-	STRLENS TEMP_STR	
-	SIF PAD_TO_LENGTH - RESULT > 0
-		PRINTFORM %" " * (PAD_TO_LENGTH - RESULT)%
-ENDIF
-SIF LINE_END
-	CALL NEWLINE
+	TEMP_STR = %STRING%
+	IF PAD_TO_LENGTH > 0
+		STRLENS TEMP_STR	
+		SIF PAD_TO_LENGTH - RESULT > 0
+			PRINTFORM %" " * (PAD_TO_LENGTH - RESULT)%
+	ENDIF
+	SIF LINE_END
+		CALL NEWLINE
 
 ;---------------------------------------------------------
 ;ページ移動ボタンを描画する関数
@@ -290,37 +285,37 @@ SIF LINE_END
 @PRINT_PAGE_NAVI(CAN_NAVI_PREV,CAN_NAVI_NEXT)
 #DIM CAN_NAVI_PREV
 #DIM CAN_NAVI_NEXT
-TEMP_STR '= "[前のページ]"
-STRLENS TEMP_STR
-TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
-PRINTFORM %" " * TEMP_NUM%
-CALL PRINT_BUTTON(TEMP_STR,CAN_NAVI_PREV,COMMAND_PREV_PAGE)
-PRINTFORM %" " * TEMP_NUM%
+	TEMP_STR '= "[前のページ]"
+	STRLENS TEMP_STR
+	TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+	PRINTFORM %" " * TEMP_NUM%
+	CALL PRINT_BUTTON(TEMP_STR,CAN_NAVI_PREV,COMMAND_PREV_PAGE)
+	PRINTFORM %" " * TEMP_NUM%
 
-TEMP_STR '= "[戻る]"
-STRLENS TEMP_STR
-TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
-PRINTFORM %" " * TEMP_NUM%
-CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_GO_BACK)
-PRINTFORM %" " * TEMP_NUM%
+	TEMP_STR '= "[戻る]"
+	STRLENS TEMP_STR
+	TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+	PRINTFORM %" " * TEMP_NUM%
+	CALL PRINT_BUTTON(TEMP_STR,1,COMMAND_GO_BACK)
+	PRINTFORM %" " * TEMP_NUM%
 
-TEMP_STR '= "[次のページ]"
-STRLENS TEMP_STR
-TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
-PRINTFORM %" " * TEMP_NUM%
-CALL PRINT_BUTTON(TEMP_STR,CAN_NAVI_NEXT,COMMAND_NEXT_PAGE)
-PRINTFORM %" " * TEMP_NUM%
+	TEMP_STR '= "[次のページ]"
+	STRLENS TEMP_STR
+	TEMP_NUM = ((SHOWLENGTH / 3 - RESULT)/2)
+	PRINTFORM %" " * TEMP_NUM%
+	CALL PRINT_BUTTON(TEMP_STR,CAN_NAVI_NEXT,COMMAND_NEXT_PAGE)
+	PRINTFORM %" " * TEMP_NUM%
 
 ;---------------------------------------------------------
 ;はいいいえボタンを描画する関数
 ;---------------------------------------------------------
 @GET_はいいいえ()
-CALL PRINT_BUTTON("[はい]",1,COMMAND_はい,SHOWLENGTH / 3)
-CALL PRINT_BUTTON("[いいえ]",1,COMMAND_いいえ)
+	CALL PRINT_BUTTON("[はい]",1,COMMAND_はい,SHOWLENGTH / 3)
+	CALL PRINT_BUTTON("[いいえ]",1,COMMAND_いいえ)
 
-CALL INPUTF, COMMAND_はい, COMMAND_いいえ
+	CALL INPUTF, COMMAND_はい, COMMAND_いいえ
 
-RETURN RESULT
+	RETURN RESULT
 
 @LOOPRES, ARG:0 = __INT_MAX__, ARG:1 = __INT_MAX__, ARG:2 = __INT_MAX__, ARG:3 = __INT_MAX__, ARG:4 = __INT_MAX__, ARG:5 = __INT_MAX__, ARG:6 = __INT_MAX__, ARG:7 = __INT_MAX__, ARG:8 = __INT_MAX__, ARG:9 = __INT_MAX__
 #FUNCTION
@@ -328,10 +323,10 @@ RETURN RESULT
 ;DO～LOOP構文の記述を簡略化するための関数
 ;引数で指定された数字とRESULTを参照し、一致していれば0を返す(つまりLOOPを抜ける)
 ;現在同時に指定できるのは10個まで
-SIF MATCH(ARG, RESULT)
-	RETURNF 0
+	SIF MATCH(ARG, RESULT)
+		RETURNF 0
 
-RETURNF 1
+	RETURNF 1
 
 ;---------------------------------------------------------
 ;既定の数値を入力するまでループする関数
@@ -343,11 +338,11 @@ RETURNF 1
 ;LOOP LOOPRES(XX, XX, XX)
 ;を一行でやる関数 単純な選択肢などに使える
 
-DO
-	INPUT
-LOOP LOOPRES(数値:0, 数値:1, 数値:2, 数値:3, 数値:4, 数値:5, 数値:6, 数値:7, 数値:8, 数値:9)
+	DO
+		INPUT
+	LOOP LOOPRES(数値:0, 数値:1, 数値:2, 数値:3, 数値:4, 数値:5, 数値:6, 数値:7, 数値:8, 数値:9)
 
-RETURN RESULT
+	RETURN RESULT
 
 ;---------------------------------------------------------
 ;ヒントの色で文字列を囲む関数
@@ -355,8 +350,8 @@ RETURN RESULT
 @HTML_HINT(STRING)
 #FUNCTIONS
 #DIMS STRING
-
-RETURNF @"<font color='#0xCCCCFF'>%STRING%</font>"
+	RESULTS '= @"<font color='#0xCCCCFF'>%STRING%</font>"
+	RETURNF RESULTS
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;パラグラフを出力してWAITする
@@ -365,29 +360,29 @@ RETURNF @"<font color='#0xCCCCFF'>%STRING%</font>"
 #DIMS STRING
 #DIMS ALIGN
 
-HTML_PRINT @"<p align='%ALIGN%'>%STRING%</p>"
-WAIT
+	HTML_PRINT @"<p align='%ALIGN%'>%STRING%</p>"
+	WAIT
 
-@HTML_PRINT_萌(STRING,COLOR_CODE="#0xDDBBCC")
-#DIMS STRING
-#DIMS COLOR_CODE
-#DIMS 萌フォント
+	@HTML_PRINT_萌(STRING,COLOR_CODE="#0xDDBBCC")
+	#DIMS STRING
+	#DIMS COLOR_CODE
+	#DIMS 萌フォント
 
-萌フォント '= 萌フォントチェック()
-CHKFONT 萌フォント
-IF RESULT
-	;まきばフォント太Ｐはハートマークのコードが違う
-	SIF 萌フォント == "まきばフォント太Ｐ"
-		STRING '= REPLACE(STRING, "&#x2764;", "&#x250F;")
+	萌フォント '= 萌フォントチェック()
+	CHKFONT 萌フォント
+	IF RESULT
+		;まきばフォント太Ｐはハートマークのコードが違う
+		SIF 萌フォント == "まきばフォント太Ｐ"
+			STRING '= REPLACE(STRING, "&#x2764;", "&#x250F;")
 
-	STRING '= @"<font color='%COLOR_CODE%' face='" + 萌フォント + @"'>%STRING%</font>"
-ENDIF
+		STRING '= @"<font color='%COLOR_CODE%' face='" + 萌フォント + @"'>%STRING%</font>"
+	ENDIF
 
-[IF_DEBUG]
-DEBUGPRINTFORML %STRING%
-[ENDIF]
+	[IF_DEBUG]
+	DEBUGPRINTFORML %STRING%
+	[ENDIF]
 
-HTML_PRINT @"%STRING%"
+	HTML_PRINT @"%STRING%"
 
 
 ;---------------------------------------------------------
@@ -399,72 +394,72 @@ HTML_PRINT @"%STRING%"
 #DIM PART_COUNT
 #DIMS 萌フォント
 
-萌フォント '= 萌フォントチェック()
-CHKFONT 萌フォント
-IF RESULT
-	;まきばフォント太Ｐはハートマークのコードが違う
-	SIF 萌フォント == "まきばフォント太Ｐ"
-		STRING '= REPLACE(STRING, "&#x2764;", "&#x250F;")
+	萌フォント '= 萌フォントチェック()
+	CHKFONT 萌フォント
+	IF RESULT
+		;まきばフォント太Ｐはハートマークのコードが違う
+		SIF 萌フォント == "まきばフォント太Ｐ"
+			STRING '= REPLACE(STRING, "&#x2764;", "&#x250F;")
 
-	HTML_TAGSPLIT STRING
-	PART_COUNT = RESULT
+		HTML_TAGSPLIT STRING
+		PART_COUNT = RESULT
 
-	;REPLACEでRESULTSが変わってもいいようにLOCALSに保存する
-	FOR LOCAL, 0, PART_COUNT
-		LOCALS:LOCAL '= RESULTS:LOCAL
-	NEXT
+		;REPLACEでRESULTSが変わってもいいようにLOCALSに保存する
+		FOR LOCAL, 0, PART_COUNT
+			LOCALS:LOCAL '= RESULTS:LOCAL
+		NEXT
 
-	FOR LOCAL, 0, PART_COUNT
-		IF LOCALS:LOCAL == "<font color='#0xDDBBCC' face='あくびん'>"
-			REPLACE_STRING '= LOCALS:(LOCAL + 1)
-[IF_DEBUG]
-DEBUGPRINTFORML %REPLACE_STRING%
-DEBUGPRINTFORML %"<font color='#0xDDBBCC' face='" + 萌フォント + "'><b>" + REPLACE_STRING + "</b></font>"%
-[ENDIF]
-			STRING '= REPLACE(STRING, REPLACE_STRING, "<font color='#0xDDBBCC' face='" + 萌フォント + "'><b>" + REPLACE_STRING + "</b></font>")
-		ENDIF
-	NEXT
-ENDIF
+		FOR LOCAL, 0, PART_COUNT
+			IF LOCALS:LOCAL == "<font color='#0xDDBBCC' face='あくびん'>"
+				REPLACE_STRING '= LOCALS:(LOCAL + 1)
+	[IF_DEBUG]
+	DEBUGPRINTFORML %REPLACE_STRING%
+	DEBUGPRINTFORML %"<font color='#0xDDBBCC' face='" + 萌フォント + "'><b>" + REPLACE_STRING + "</b></font>"%
+	[ENDIF]
+				STRING '= REPLACE(STRING, REPLACE_STRING, "<font color='#0xDDBBCC' face='" + 萌フォント + "'><b>" + REPLACE_STRING + "</b></font>")
+			ENDIF
+		NEXT
+	ENDIF
 
-IF MASTER > -1
-	STRING '= REPLACE(STRING, "%CALLNAME:MASTER%", CALLNAME:MASTER)
-ELSE
-	STRING '= REPLACE(STRING, "%CALLNAME:MASTER%", "あなた")
-ENDIF
+	IF MASTER > -1
+		STRING '= REPLACE(STRING, "%CALLNAME:MASTER%", CALLNAME:MASTER)
+	ELSE
+		STRING '= REPLACE(STRING, "%CALLNAME:MASTER%", "あなた")
+	ENDIF
 
-[IF_DEBUG]
-DEBUGPRINTFORML %STRING%
-[ENDIF]
+	[IF_DEBUG]
+	DEBUGPRINTFORML %STRING%
+	[ENDIF]
 
-HTML_PRINT @"%STRING%"
+	HTML_PRINT @"%STRING%"
 
 
 @NEWLINE
-;LINEISEMPTYとPRINTLをやる関数
-SIF !LINEISEMPTY()
-	PRINTL 
+	;LINEISEMPTYとPRINTLをやる関数
+	SIF !LINEISEMPTY()
+		PRINTL 
 
 @萌フォントチェック
 #FUNCTIONS
 #DIMS 萌フォント = "あくびん", "まきばフォント太Ｐ",  "えり字"
 
-FOR LOCAL, 0, VARSIZE("萌フォント")
-	CHKFONT 萌フォント:LOCAL
-	SIF RESULT
-		RETURNF 萌フォント:LOCAL
-NEXT
-
-RETURNF "あくびん"
+	RESULTS = "あくびん"
+	FOR LOCAL, 0, VARSIZE("萌フォント")
+		CHKFONT 萌フォント:LOCAL
+		SIF RESULT
+			RESULTS = 萌フォント:LOCAL
+	NEXT
+	RETURNF RESULTS
 
 @RESET_DATA
-;RESETDATAとCLEARMEMORYを行う
-RESETDATA
-CALLF メモリ解放, "RESET_DATA"
+	;RESETDATAとCLEARMEMORYを行う
+	RESETDATA
+	CALLF メモリ解放, "RESET_DATA"
 
 @メモリ解放, ARGS
 #FUNCTION
-;DEBUGPRINTにメッセージを添えてCLEARMEMORYする関数
-DEBUGPRINTFORML メモリ解放:%ARGS%:{CLEARMEMORY()/1024/1024}MB
+	;DEBUGPRINTにメッセージを添えてCLEARMEMORYする関数
+	DEBUGPRINTFORML メモリ解放:%ARGS%:{CLEARMEMORY()/1024/1024}MB
 
 ;-------------------------------------------------
 ;@TEXTの#FUNCTIONS形式
@@ -473,57 +468,58 @@ DEBUGPRINTFORML メモリ解放:%ARGS%:{CLEARMEMORY()/1024/1024}MB
 #FUNCTIONS
 #DIM LCOUNT
 
-VARSET LOCALS
+	VARSET LOCALS
 
-SELECTCASE ARGS
-	CASE "0.1"
-		LOCALS = {ARG/10}.{ARG%10}
-	CASE "0.01"
-		LOCALS = {ARG/100}.{(ARG%100)/10}{ARG%10}
-	CASE "0.001"
-		LOCALS = {ARG/1000}.{(ARG%1000)/100}{(ARG%100)/10}{ARG%10}
-ENDSELECT
-RETURNF LOCALS
+	SELECTCASE ARGS
+		CASE "0.1"
+			LOCALS = {ARG/10}.{ARG%10}
+		CASE "0.01"
+			LOCALS = {ARG/100}.{(ARG%100)/10}{ARG%10}
+		CASE "0.001"
+			LOCALS = {ARG/1000}.{(ARG%1000)/100}{(ARG%100)/10}{ARG%10}
+	ENDSELECT
+	RESULTS = LOCALS
+	RETURNF LOCALS
 
 ;-------------------------------------------------
 ;バリアントバージョン
 ;-------------------------------------------------
 @VERS_STRING()
 #FUNCTIONS
-
-RETURNF "Ver."+TEXTS("0.01", GAMEBASE_VERSION)
+	RESULTS = "Ver."+TEXTS("0.01", GAMEBASE_VERSION)
+	RETURNF RESULTS
 
 ;;;ループやRESTART時に同じ物を表示しないようにCLEARLINEする関数
 @LOOP_CLEARLINE
-IF VARLINE > 0
-	CLEARLINE LINECOUNT-VARLINE
-	CALL GDISPOSEALL
-ENDIF
-VARLINE = LINECOUNT
+	IF VARLINE > 0
+		CLEARLINE LINECOUNT-VARLINE
+		CALL GDISPOSEALL
+	ENDIF
+	VARLINE = LINECOUNT
 
 ;;;現在表示してる最後の行がDRAWLINE行かどうかをチェックし、そうでなければDRAWLINEを引く関数
 @CHECKDRAWLINE
-SIF HTML_TOPLAINTEXT(HTML_GETPRINTEDSTR(0)) != DRAWLINESTR
-	DRAWLINE
+	SIF HTML_TOPLAINTEXT(HTML_GETPRINTEDSTR(0)) != DRAWLINESTR
+		DRAWLINE
 
 ;;;上記CHECKDRAWLINEのWAIT付き版
 @CHECKDRAWLINEW
-IF HTML_TOPLAINTEXT(HTML_GETPRINTEDSTR(0)) != DRAWLINESTR
-	WAIT
-	DRAWLINE
-ENDIF
+	IF HTML_TOPLAINTEXT(HTML_GETPRINTEDSTR(0)) != DRAWLINESTR
+		WAIT
+		DRAWLINE
+	ENDIF
 
 ;;;削除フラグ立ってるGIDを全部DISPOSEする
 @GIDDEL
 #DIM DYNAMIC LCOUNT
-FOR LCOUNT, 0, 8192
-	SIF GIDDEL:LCOUNT
-		GDISPOSE LCOUNT
-	GIDDEL:LCOUNT = 0
-NEXT
+	FOR LCOUNT, 0, 8192
+		SIF GIDDEL:LCOUNT
+			GDISPOSE LCOUNT
+		GIDDEL:LCOUNT = 0
+	NEXT
 
-;ついでにスプライトも消す
-SPRITEDISPOSEALL 0
+	;ついでにスプライトも消す
+	SPRITEDISPOSEALL 0
 
 ;///////////////////////////////////////////////
 ;一様分布乱数をARG回繰り返して下限ARG:1,上限ARG:2の疑似正規分布結果を出す関数
@@ -539,11 +535,14 @@ SPRITEDISPOSEALL 0
 @NORMAL_RANDOM_NUM(ARG,ARG:1,ARG:2)
 #FUNCTION
 
-VARSET LOCAL
-LOCAL:1 = ARG:2 - ARG:1
-;0から1000*ARGまでの数値を得る
-REPEAT ARG
-	LOCAL += RAND:1001
-REND
+	VARSET LOCAL
+	LOCAL:1 = ARG:2 - ARG:1
+	;0から1000*ARGまでの数値を得る
+	REPEAT ARG
+		LOCAL += RAND:1001
+	REND
 
-RETURNF (LOCAL * LOCAL:1) / (1000 * ARG) + ARG:1
+	RESULT = (LOCAL * LOCAL:1) / (1000 * ARG) + ARG:1
+	RETURNF RESULT
+
+

@@ -179,6 +179,7 @@ CALL SHOW_EQUIP_1
 ;=================================================
 @EVENTCOM
 #PRI
+DEBUGPRINTFORML EVENTCOM
 ;TFLAG:口で射精～30はコマンドを選択する度に空にする
 REPEAT 30
 	TFLAG:COUNT = 0
@@ -190,6 +191,8 @@ TFLAG:快楽経験 = 0
 ;=================================================
 @EVENTCOMEND
 #PRI
+DEBUGPRINTFORML EVENTCOMEND
+
 [IF_DEBUG]
 ;SIF BASE:体力 <= 500
 ;	BASE:体力 = 500

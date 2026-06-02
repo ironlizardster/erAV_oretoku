@@ -3,7 +3,7 @@
 
 PRINTL スライム生成
 SAVESTR:0 = スライム生成
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 IF TEQUIP:スライム生成
 	TEQUIP:スライム生成 = 0
@@ -14,7 +14,7 @@ IF TEQUIP:スライム生成
 	TEQUIP:スライム肛門進入 = 0
 	;スライム口辱
 	TEQUIP:スライム口辱 = 0
-	UP:[[UP:潤滑]] -= 8000
+	UP:潤滑 -= 8000
 ELSE
 	TEQUIP:スライム生成 = 1
 
@@ -139,7 +139,7 @@ ELSE
 	SOURCE:情愛 += 125
 ENDIF
 
-UP:[[UP:恐怖]] += A * 20
+UP:恐怖 += A * 20
 SOURCE:不潔 += A * 10
 SOURCE:逸脱 += A * 5
 
@@ -273,7 +273,7 @@ RETURN 1
 ;スライム口辱
 PRINTL スライム口辱
 SAVESTR:0 = スライム口辱
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 LOSEBASE:体力 += 60
 LOSEBASE:気力 += 80

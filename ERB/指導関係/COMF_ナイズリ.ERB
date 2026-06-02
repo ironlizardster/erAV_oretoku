@@ -1,0 +1,57 @@
+﻿;-------------------------------------------------
+;ナイズリ実行判定
+;-------------------------------------------------
+@COMABLE_[[TRAIN:ナイズリ]]
+#FUNCTION
+    ;ナイズリ実行判定
+    RESULT = COMABLE_DEF(TNUM("ナイズリ")) && COND("乳首の使用", PLAYER)
+    RETURNF RESULT
+
+
+;-------------------------------------------------
+;調教時メッセージ
+;-------------------------------------------------
+@TRAIN_MESSAGE_COM_[[TRAIN:ナイズリ]]
+    PRINTFORM %CALLNAME:PLAYER%は
+    IF (CFLAG:PLAYER:着衣状態 & 64) && CFLAG:PLAYER:特別コスタイプ <= 50
+        CALL PRINT_CLOTHTYPE_SPECIAL
+        PRINT ごしに、
+    ELSEIF CFLAG:PLAYER:着衣状態 & 28
+        CALL PRINT_上着タイプ(PLAYER)
+        PRINT ごしに、
+    ELSEIF (CFLAG:PLAYER:着衣状態 & 2)
+        PRINT 下着ごしに、
+    ENDIF
+    
+    SIF TALENT:PLAYER:恋心 && TARGET == MASTER
+        PRINT うっとりとした表情をしながら、
+    IF TALENT:PLAYER:オトコの娘
+        PRINT 懸命に薄い胸板に
+    ELSEIF IS_MALE(PLAYER)
+        PRINT 懸命に厚い胸板に
+    ELSE
+        PRINT 懸命に薄い胸に
+    ENDIF
+    PRINTFORML %CALLNAME:TARGET%のペニスを押しあて、擦り付けている…
+
+;-------------------------------------------------
+;ソースの計算
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_SOURCE_COM_[[TRAIN:ナイズリ]](ARG=100)       
+	CALL CALC_SOURCE_COM_[[TRAIN:パイズリ]](ARG)
+
+
+;-------------------------------------------------
+;経験上昇
+;ARG:100％倍率
+;-------------------------------------------------
+@CALC_NOWEX_COM_[[TRAIN:ナイズリ]](ARG=100)
+	CALL CALC_NOWEX_COM_[[TRAIN:パイズリ]](ARG)
+
+;-------------------------------------------------
+;FLAGの計算
+;-------------------------------------------------
+@CALC_FLAG_COM_[[TRAIN:ナイズリ]]
+	CALL CALC_FLAG_COM_[[TRAIN:パイズリ]]
+

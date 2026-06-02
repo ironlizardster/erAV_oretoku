@@ -6,7 +6,7 @@
 ;前のプレイが騎乗位かつ調教者の技巧3以上の場合、騎乗Ｇスポ責めまたは騎乗子宮口責めへ派生
 ;Ｖ感覚が高く欲情しているほど子宮口へ行きやすい
 IF FLAG:追加コマンドなし == 0
-	IF PREVCOM == [[TRAIN:騎乗位]] && ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
+	IF PREVCOM == TNUM("騎乗位") && ABL:PLAYER:技巧 > 2 && ((ASSIPLAY && TFLAG:前回の調教者が助手) || (ASSIPLAY == 0 && TFLAG:前回の調教者が助手 == 0))
 		;欲情
 		IF PALAM:欲情 < PALAMLV:1
 			A = 1
@@ -293,7 +293,7 @@ SIF RESULT == 0
 
 
 SAVESTR:0 = 騎乗位
-CALL TRAIN_MESSAGE_B
+CALL TRAIN_MESSAGE
 
 ;V経験を伴うコマンドのフラグ(処女膜再生対応)
 TFLAG:V経験を伴うコマンド = 1
@@ -577,10 +577,10 @@ TFLAG:快楽経験 = 1
 
 IF EXP:Ｖ経験 <= 1
 	;屈服刻印３に相当
-	TFLAG:屈服刻印2 = 3
+	TFLAG:屈服刻印取得 = 3
 ELSE
 	;屈服刻印２に相当
-	TFLAG:屈服刻印2 = 2
+	TFLAG:屈服刻印取得 = 2
 ENDIF
 
 ;調教者がふたなり
